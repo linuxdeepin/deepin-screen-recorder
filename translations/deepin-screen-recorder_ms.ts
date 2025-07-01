@@ -1,4 +1,6 @@
-<?xml version="1.0" ?><!DOCTYPE TS><TS version="2.1" language="ms">
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE TS>
+<TS version="2.1" language="ms">
 <context>
     <name>CountdownTooltip</name>
     <message>
@@ -105,16 +107,16 @@ atau klik pintasan sekali lagi untuk hentikan rakaman</translation>
         <translation>Tangkap tatal</translation>
     </message>
     <message>
-        <source>Open Folder</source>
-        <translation>Buka Folder</translation>
-    </message>
-    <message>
         <source>Pin Screenshots</source>
         <translation>Cemat Tangkap Layar</translation>
     </message>
     <message>
         <source>deepin-screen-recorder</source>
-        <translation>deepin-screen-recorder</translation>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Open Folder</source>
+        <translation>Buka Folder</translation>
     </message>
 </context>
 <context>
@@ -344,6 +346,10 @@ atau klik pintasan sekali lagi untuk hentikan rakaman</translation>
         <translation>Papar pintasan</translation>
     </message>
     <message>
+        <source>Sound</source>
+        <translation>Bunyi</translation>
+    </message>
+    <message>
         <source>Keystroke</source>
         <translation>Ketukan kekunci</translation>
     </message>
@@ -364,6 +370,10 @@ atau klik pintasan sekali lagi untuk hentikan rakaman</translation>
         <translation>Mula/Rakaman</translation>
     </message>
     <message>
+        <source>Mouse</source>
+        <translation>Tetikus</translation>
+    </message>
+    <message>
         <source>Tools</source>
         <translation>Alatan</translation>
     </message>
@@ -380,24 +390,16 @@ atau klik pintasan sekali lagi untuk hentikan rakaman</translation>
         <translation>Cemat tangkap layar</translation>
     </message>
     <message>
-        <source>Start scrollshot</source>
-        <translation>Mula tangkap tatal</translation>
-    </message>
-    <message>
         <source>Start OCR</source>
         <translation>Mula OCR</translation>
     </message>
     <message>
+        <source>Start scrollshot</source>
+        <translation>Mula tangkap tatal</translation>
+    </message>
+    <message>
         <source>Arrow</source>
         <translation>Anak Panah</translation>
-    </message>
-    <message>
-        <source>Sound</source>
-        <translation>Bunyi</translation>
-    </message>
-    <message>
-        <source>Mouse</source>
-        <translation>Tetikus</translation>
     </message>
 </context>
 <context>
@@ -459,12 +461,36 @@ pilih kawasan rakaman</translation>
 <context>
     <name>SubToolWidget</name>
     <message>
-        <source>Microphone</source>
-        <translation>Mikrofon</translation>
+        <source>Show keystroke (K)</source>
+        <translation>Tunjuk ketukan kekunci (K)</translation>
     </message>
     <message>
-        <source>Options</source>
-        <translation>Pilihan</translation>
+        <source>Hide Keystroke (K)</source>
+        <translation>Sembunyi Ketukan Kekunci (K)</translation>
+    </message>
+    <message>
+        <source>Show Keystroke (K)</source>
+        <translation>Tunjuk Ketukan Kekunci (K)</translation>
+    </message>
+    <message>
+        <source>Turn on camera (C)</source>
+        <translation>Hidupkan kamera (C)</translation>
+    </message>
+    <message>
+        <source>Turn off camera (C)</source>
+        <translation>Matikan kamera (C)</translation>
+    </message>
+    <message>
+        <source>Screenshot</source>
+        <translation>Tangkap Layar</translation>
+    </message>
+    <message>
+        <source>Settings</source>
+        <translation>Tetapan</translation>
+    </message>
+    <message>
+        <source>Settings (F3)</source>
+        <translation>Tetapan (F3)</translation>
     </message>
     <message>
         <source>Format:</source>
@@ -477,6 +503,14 @@ pilih kawasan rakaman</translation>
     <message>
         <source>MP4</source>
         <translation>MP4</translation>
+    </message>
+    <message>
+        <source>MKV</source>
+        <translation>MKV</translation>
+    </message>
+    <message>
+        <source>webm</source>
+        <translation>webm</translation>
     </message>
     <message>
         <source>FPS:</source>
@@ -503,128 +537,36 @@ pilih kawasan rakaman</translation>
         <translation>30 fps</translation>
     </message>
     <message>
-        <source>Save to</source>
-        <translation>Simpan ke</translation>
+        <source>Sound</source>
+        <translation>Bunyi</translation>
     </message>
     <message>
-        <source>Desktop</source>
-        <translation>Atas Meja</translation>
+        <source>Microphone</source>
+        <translation>Mikrofon</translation>
     </message>
     <message>
-        <source>Pictures</source>
-        <translation>Gambar</translation>
+        <source>System audio</source>
+        <translation>Audio sistem</translation>
     </message>
     <message>
-        <source>Folder</source>
-        <translation>Folder</translation>
-    </message>
-    <message>
-        <source>Format</source>
-        <translation>Format</translation>
-    </message>
-    <message>
-        <source>PNG</source>
-        <translation>PNG</translation>
-    </message>
-    <message>
-        <source>JPG</source>
-        <translation>JPG</translation>
-    </message>
-    <message>
-        <source>BMP</source>
-        <translation>BMP</translation>
-    </message>
-    <message>
-        <source>MKV</source>
-        <translation>MKV</translation>
-    </message>
-    <message>
-        <source>Clipboard</source>
-        <translation>Papan keratan</translation>
+        <source>Options</source>
+        <translation>Pilihan</translation>
     </message>
     <message>
         <source>Show pointer</source>
         <translation>Tunjuk penuding</translation>
     </message>
     <message>
-        <source>Extract Text</source>
-        <translation>Ekstrak Teks</translation>
+        <source>Show click</source>
+        <translation>Tunjuk klik</translation>
     </message>
     <message>
-        <source>Show keystroke (K)</source>
-        <translation>Tunjuk ketukan kekunci (K)</translation>
+        <source>Save to</source>
+        <translation>Simpan ke</translation>
     </message>
     <message>
-        <source>Settings</source>
-        <translation>Tetapan</translation>
-    </message>
-    <message>
-        <source>Settings (F3)</source>
-        <translation>Tetapan (F3)</translation>
-    </message>
-    <message>
-        <source>Blur (B)</source>
-        <translation>Kabur (B)</translation>
-    </message>
-    <message>
-        <source>Text (T)</source>
-        <translation>Teks (T)</translation>
-    </message>
-    <message>
-        <source>Scrollshot (Alt+I）</source>
-        <translation>Tangkapbertatal (Alt+I)</translation>
-    </message>
-    <message>
-        <source>Extract text (Alt+O）</source>
-        <translation>Ekstrak teks (Alt+O)</translation>
-    </message>
-    <message>
-        <source>Undo (Ctrl+Z)</source>
-        <translation>Buat asal (Ctrl+Z)</translation>
-    </message>
-    <message>
-        <source>Screenshot</source>
-        <translation>Tangkap Layar</translation>
-    </message>
-    <message>
-        <source>Pin screenshots (Alt+P）</source>
-        <translation>Cemat tangkap layar (Alt+P)</translation>
-    </message>
-    <message>
-        <source>Record</source>
-        <translation>Rakam</translation>
-    </message>
-    <message>
-        <source>Pencil (P)</source>
-        <translation>Pensel (P)</translation>
-    </message>
-    <message>
-        <source>Turn on camera (C)</source>
-        <translation>Hidupkan kamera (C)</translation>
-    </message>
-    <message>
-        <source>Border Effects</source>
-        <translation>Kesan Sempadan</translation>
-    </message>
-    <message>
-        <source>None</source>
-        <translation>Tiada</translation>
-    </message>
-    <message>
-        <source>Turn off camera (C)</source>
-        <translation>Matikan kamera (C)</translation>
-    </message>
-    <message>
-        <source>Hide Keystroke (K)</source>
-        <translation>Sembunyi Ketukan Kekunci (K)</translation>
-    </message>
-    <message>
-        <source>Show Keystroke (K)</source>
-        <translation>Tunjuk Ketukan Kekunci (K)</translation>
-    </message>
-    <message>
-        <source>webm</source>
-        <translation>webm</translation>
+        <source>Desktop</source>
+        <translation>Atas Meja</translation>
     </message>
     <message>
         <source>Videos</source>
@@ -655,6 +597,82 @@ Press and hold Shift to draw a vertical or horizontal arrow</source>
 Tekan dan tahan kekunci Shift untuk melukis anak panah menegak atau mengufuk</translation>
     </message>
     <message>
+        <source>Pencil (P)</source>
+        <translation>Pensel (P)</translation>
+    </message>
+    <message>
+        <source>Blur (B)</source>
+        <translation>Kabur (B)</translation>
+    </message>
+    <message>
+        <source>Text (T)</source>
+        <translation>Teks (T)</translation>
+    </message>
+    <message>
+        <source>Scrollshot (Alt+I）</source>
+        <translation>Tangkapbertatal (Alt+I)</translation>
+    </message>
+    <message>
+        <source>Extract text (Alt+O）</source>
+        <translation>Ekstrak teks (Alt+O)</translation>
+    </message>
+    <message>
+        <source>Pin screenshots (Alt+P）</source>
+        <translation>Cemat tangkap layar (Alt+P)</translation>
+    </message>
+    <message>
+        <source>Undo (Ctrl+Z)</source>
+        <translation>Buat asal (Ctrl+Z)</translation>
+    </message>
+    <message>
+        <source>Record</source>
+        <translation>Rakam</translation>
+    </message>
+    <message>
+        <source>Clipboard</source>
+        <translation>Papan keratan</translation>
+    </message>
+    <message>
+        <source>Pictures</source>
+        <translation>Gambar</translation>
+    </message>
+    <message>
+        <source>Folder</source>
+        <translation>Folder</translation>
+    </message>
+    <message>
+        <source>Set a path on save</source>
+        <translation>Tetapkan laluan ketika simpan</translation>
+    </message>
+    <message>
+        <source>Change the path on save</source>
+        <translation>Ubah laluan ketika simpan</translation>
+    </message>
+    <message>
+        <source>Format</source>
+        <translation>Format</translation>
+    </message>
+    <message>
+        <source>PNG</source>
+        <translation>PNG</translation>
+    </message>
+    <message>
+        <source>JPG</source>
+        <translation>JPG</translation>
+    </message>
+    <message>
+        <source>BMP</source>
+        <translation>BMP</translation>
+    </message>
+    <message>
+        <source>Border Effects</source>
+        <translation>Kesan Sempadan</translation>
+    </message>
+    <message>
+        <source>None</source>
+        <translation>Tiada</translation>
+    </message>
+    <message>
         <source>Shadow</source>
         <translation>Bayang</translation>
     </message>
@@ -667,24 +685,8 @@ Tekan dan tahan kekunci Shift untuk melukis anak panah menegak atau mengufuk</tr
         <translation>Peranti</translation>
     </message>
     <message>
-        <source>Sound</source>
-        <translation>Bunyi</translation>
-    </message>
-    <message>
-        <source>System audio</source>
-        <translation>Audio sistem</translation>
-    </message>
-    <message>
-        <source>Show click</source>
-        <translation>Tunjuk klik</translation>
-    </message>
-    <message>
-        <source>Set a path on save</source>
-        <translation>Tetapkan laluan ketika simpan</translation>
-    </message>
-    <message>
-        <source>Change the path on save</source>
-        <translation>Ubah laluan ketika simpan</translation>
+        <source>Extract Text</source>
+        <translation>Ekstrak Teks</translation>
     </message>
 </context>
 <context>

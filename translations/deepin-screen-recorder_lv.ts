@@ -1,4 +1,6 @@
-<?xml version="1.0" ?><!DOCTYPE TS><TS version="2.1" language="lv">
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE TS>
+<TS version="2.1" language="lv">
 <context>
     <name>CountdownTooltip</name>
     <message>
@@ -20,7 +22,7 @@ vai vēlreiz nospiediet saīsni, lai pārtrauktu ierakstīšanu</translation>
     </message>
     <message>
         <source>Recording</source>
-        <translation>Zanāme</translation>
+        <translation>Reģistrēšana</translation>
     </message>
 </context>
 <context>
@@ -98,23 +100,23 @@ vai vēlreiz nospiediet saīsni, lai pārtrauktu ierakstīšanu</translation>
     </message>
     <message>
         <source>Screenshot failed.</source>
-        <translation>Ekranšotu nevarēja izņemt.</translation>
+        <translation>Ekranšotu nevarēja izdarīt.</translation>
     </message>
     <message>
         <source>Scrollshot</source>
         <translation>Scrollshot</translation>
     </message>
     <message>
-        <source>Open Folder</source>
-        <translation>Atvērt apliku</translation>
-    </message>
-    <message>
         <source>Pin Screenshots</source>
-        <translation>Pārslēgt ekranšotus</translation>
+        <translation>Pinscreenshots</translation>
     </message>
     <message>
         <source>deepin-screen-recorder</source>
-        <translation>deepin-screen-recorder</translation>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Open Folder</source>
+        <translation>Atvērt aplodē</translation>
     </message>
 </context>
 <context>
@@ -136,7 +138,7 @@ vai vēlreiz nospiediet saīsni, lai pārtrauktu ierakstīšanu</translation>
     <name>QObject</name>
     <message>
         <source>Pin Screenshots</source>
-        <translation>Pārslēgt ekranšotus</translation>
+        <translation>Pinscreenshots</translation>
     </message>
 </context>
 <context>
@@ -147,7 +149,7 @@ vai vēlreiz nospiediet saīsni, lai pārtrauktu ierakstīšanu</translation>
     </message>
     <message>
         <source>Record</source>
-        <translation>Zanāme</translation>
+        <translation>Zīmēt</translation>
     </message>
 </context>
 <context>
@@ -158,7 +160,7 @@ vai vēlreiz nospiediet saīsni, lai pārtrauktu ierakstīšanu</translation>
     </message>
     <message>
         <source>Recording</source>
-        <translation>Zanāme</translation>
+        <translation>Reģistrēšana</translation>
     </message>
 </context>
 <context>
@@ -181,7 +183,7 @@ vai vēlreiz nospiediet saīsni, lai pārtrauktu ierakstīšanu</translation>
     </message>
     <message>
         <source>Open Folder</source>
-        <translation>Atvērt apliku</translation>
+        <translation>Atvērt aplodē</translation>
     </message>
 </context>
 <context>
@@ -195,35 +197,35 @@ vai vēlreiz nospiediet saīsni, lai pārtrauktu ierakstīšanu</translation>
     <name>ScrollShotTip</name>
     <message>
         <source>Get help.</source>
-        <translation>Iegūst palīdzību.</translation>
+        <translation>Iegūt palīdzību.</translation>
     </message>
     <message>
         <source>Failed to take a continuous screenshot.</source>
-        <translation>Neizdevās izņemt pārraizējošu ekranšotu.</translation>
+        <translation>Neizdevās izņemt nepārtrauktu ekranšotu.</translation>
     </message>
     <message>
         <source>Reached the bottom of the scroll area</source>
-        <translation>Sasniegtas rīkjoslas apakšas</translation>
+        <translation>Sasniegtas rullis sākumā</translation>
     </message>
     <message>
         <source>Reached the maximum length</source>
-        <translation>Sasniegta maksimāla garumā</translation>
+        <translation>Sasniegtas maksimālās garums</translation>
     </message>
     <message>
         <source>adjust the capture area</source>
-        <translation>Lielākās rūpnīcas laukuma pielāgošana</translation>
+        <translation>Pareizot izņemšanas laukumu</translation>
     </message>
     <message>
         <source>Scroll your mouse wheel or click to take a scrolling screenshot</source>
-        <translation>Pārvietojiet peli vai noklikšķiniet, lai izņemtu rīkjoslas ekranšotu</translation>
+        <translation>Pārvietināt jūsu peilē vai klikšķināt, lai izņemtu rullīti ekranšotu</translation>
     </message>
     <message>
         <source>Slow down the scrolling speed</source>
-        <translation>Lēcināt rīkjoslas ātrumu</translation>
+        <translation>Lēcināt rullīšanas ātrumu</translation>
     </message>
     <message>
         <source>Invalid area, click to </source>
-        <translation>Nepareiza zona, klikšķiniet, lai </translation>
+        <translation>Nepareiza zona, klikšķināt, lai </translation>
     </message>
 </context>
 <context>
@@ -344,6 +346,10 @@ vai vēlreiz nospiediet saīsni, lai pārtrauktu ierakstīšanu</translation>
         <translation>Rādīt saīsnes</translation>
     </message>
     <message>
+        <source>Sound</source>
+        <translation>Skaņa</translation>
+    </message>
+    <message>
         <source>Keystroke</source>
         <translation>Taustiņa nospiešana</translation>
     </message>
@@ -364,12 +370,16 @@ vai vēlreiz nospiediet saīsni, lai pārtrauktu ierakstīšanu</translation>
         <translation>Sākt/Ierakstīt</translation>
     </message>
     <message>
+        <source>Mouse</source>
+        <translation>Pele</translation>
+    </message>
+    <message>
         <source>Tools</source>
         <translation>Instrumenti</translation>
     </message>
     <message>
         <source>Extract text</source>
-        <translation>Izvilkums teksts</translation>
+        <translation>Izņemt tekstu</translation>
     </message>
     <message>
         <source>Scrollshot</source>
@@ -377,27 +387,19 @@ vai vēlreiz nospiediet saīsni, lai pārtrauktu ierakstīšanu</translation>
     </message>
     <message>
         <source>Pin screenshots</source>
-        <translation>Pārslēgt ekranšotus</translation>
-    </message>
-    <message>
-        <source>Start scrollshot</source>
-        <translation>Sākt scrollshot</translation>
+        <translation>Pinscreenshots</translation>
     </message>
     <message>
         <source>Start OCR</source>
         <translation>Sākt OCR</translation>
     </message>
     <message>
+        <source>Start scrollshot</source>
+        <translation>Sākt scrollshot</translation>
+    </message>
+    <message>
         <source>Arrow</source>
         <translation>Bulta</translation>
-    </message>
-    <message>
-        <source>Sound</source>
-        <translation>Skaņa</translation>
-    </message>
-    <message>
-        <source>Mouse</source>
-        <translation>Pele</translation>
     </message>
 </context>
 <context>
@@ -411,7 +413,7 @@ vai vēlreiz nospiediet saīsni, lai pārtrauktu ierakstīšanu</translation>
     <name>ShotStartRecordPlugin</name>
     <message>
         <source>Record</source>
-        <translation>Zanāme</translation>
+        <translation>Reģistrēt</translation>
     </message>
 </context>
 <context>
@@ -420,31 +422,30 @@ vai vēlreiz nospiediet saīsni, lai pārtrauktu ierakstīšanu</translation>
         <source>Rectangle
 Press and hold Shift to draw a square</source>
         <translation>Taisnstūris
-Spiediet un turējiet nospiegt Shift, lai izvilktu kvadrātu</translation>
+Ievērot Shift, lai izvēlētos kvadrātu</translation>
     </message>
     <message>
         <source>Ellipse
 Press and hold Shift to draw a circle</source>
-        <translation>Elipsa
-Spiediet un turējiet nospiegt Shift, lai izvilktu riņķi</translation>
+        <translation>Apļa
+Ievērot Shift, lai izvēlētos riņķi</translation>
     </message>
     <message>
         <source>Brush
 Press and hold Shift to draw a straight line</source>
-        <translation>Pārlieci
-Spiediet un turējiet nospiegt Shift, lai izvilktu taisnu līniju</translation>
+        <translation>Šķēpels</translation>
     </message>
     <message>
         <source>Adjust blur strength (Scroll to adjust it)</source>
-        <translation>Regulējiet šķīduma stiprumu (Pārvietojiet, lai mainītu)</translation>
+        <translation>Ievērojiet Shift, lai izvilktu taisnu līniju</translation>
     </message>
     <message>
         <source>Adjust brush size (Scroll to adjust it)</source>
-        <translation>Regulējiet šķērējāju izmēru (Pārvietojiet, lai mainītu)</translation>
+        <translation>Iestatiet nešķīstības stiprumu (Pārvietojiet, lai iestatītu)</translation>
     </message>
     <message>
         <source>Adjust text size (Scroll to adjust it)</source>
-        <translation>Regulējiet teksta izmēru (Pārvietojiet, lai mainītu)</translation>
+        <translation>Iestatiet šķēpela izmēru (Pārvietojiet, lai iestatītu)</translation>
     </message>
 </context>
 <context>
@@ -452,18 +453,42 @@ Spiediet un turējiet nospiegt Shift, lai izvilktu taisnu līniju</translation>
     <message>
         <source>Click or drag to
 select the area to record</source>
-        <translation>Klikšķiniet vai vilakiet, lai izvēlētos rekvizītu, ko reģistrēsiet</translation>
+        <translation>Iestatiet teksta izmēru (Pārvietojiet, lai iestatītu)</translation>
     </message>
 </context>
 <context>
     <name>SubToolWidget</name>
     <message>
-        <source>Microphone</source>
-        <translation>Mikrofons</translation>
+        <source>Show keystroke (K)</source>
+        <translation>Pašķīpējiet vai vilciet, lai izvēlētos zonu, kas tiks ierakstīta</translation>
     </message>
     <message>
-        <source>Options</source>
+        <source>Hide Keystroke (K)</source>
+        <translation>Rādīt tastatūras ievadi (K)</translation>
+    </message>
+    <message>
+        <source>Show Keystroke (K)</source>
+        <translation>Aizslēgt tastatūras ievadi (K)</translation>
+    </message>
+    <message>
+        <source>Turn on camera (C)</source>
+        <translation>Rādīt tastatūras ievadi (K)</translation>
+    </message>
+    <message>
+        <source>Turn off camera (C)</source>
+        <translation>Ieslēgt kameru (C)</translation>
+    </message>
+    <message>
+        <source>Screenshot</source>
+        <translation>Ekrānuzņēmums</translation>
+    </message>
+    <message>
+        <source>Settings</source>
         <translation>Iestatījumi</translation>
+    </message>
+    <message>
+        <source>Settings (F3)</source>
+        <translation>Izslēgt kameru (C)</translation>
     </message>
     <message>
         <source>Format:</source>
@@ -476,6 +501,14 @@ select the area to record</source>
     <message>
         <source>MP4</source>
         <translation>MP4</translation>
+    </message>
+    <message>
+        <source>MKV</source>
+        <translation>MKV</translation>
+    </message>
+    <message>
+        <source>webm</source>
+        <translation>Iestatījumi (F3)</translation>
     </message>
     <message>
         <source>FPS:</source>
@@ -502,6 +535,30 @@ select the area to record</source>
         <translation>30 kadri sekundē</translation>
     </message>
     <message>
+        <source>Sound</source>
+        <translation>Skaņa</translation>
+    </message>
+    <message>
+        <source>Microphone</source>
+        <translation>Mikrofons</translation>
+    </message>
+    <message>
+        <source>System audio</source>
+        <translation>webm</translation>
+    </message>
+    <message>
+        <source>Options</source>
+        <translation>Iestatījumi</translation>
+    </message>
+    <message>
+        <source>Show pointer</source>
+        <translation>Rādīt rādītāju</translation>
+    </message>
+    <message>
+        <source>Show click</source>
+        <translation>Sistēmas skaņa</translation>
+    </message>
+    <message>
         <source>Save to</source>
         <translation>Saglabāt</translation>
     </message>
@@ -510,12 +567,80 @@ select the area to record</source>
         <translation>Darbavirsma</translation>
     </message>
     <message>
+        <source>Videos</source>
+        <translation>Rādīt klikšķi</translation>
+    </message>
+    <message>
+        <source>Rectangle (R)
+Press and hold Shift to draw a square</source>
+        <translation>Video</translation>
+    </message>
+    <message>
+        <source>Ellipse (O)
+Press and hold Shift to draw a circle</source>
+        <translation>Taisnstūris (R)</translation>
+    </message>
+    <message>
+        <source>Line (L)
+Press and hold Shift to draw a vertical or horizontal line</source>
+        <translation>Ievērojiet Shift, lai izvilktu kvadrātu</translation>
+    </message>
+    <message>
+        <source>Arrow (X)
+Press and hold Shift to draw a vertical or horizontal arrow</source>
+        <translation>Elipse (O)</translation>
+    </message>
+    <message>
+        <source>Pencil (P)</source>
+        <translation>Ievērojiet Shift, lai izvilktu riņķi</translation>
+    </message>
+    <message>
+        <source>Blur (B)</source>
+        <translation>Līnija (L)</translation>
+    </message>
+    <message>
+        <source>Text (T)</source>
+        <translation>Ievērojiet Shift, lai izvilktu vertikālu vai horizontālu līniju</translation>
+    </message>
+    <message>
+        <source>Scrollshot (Alt+I）</source>
+        <translation>Stiepļis (X)</translation>
+    </message>
+    <message>
+        <source>Extract text (Alt+O）</source>
+        <translation>Ievērojiet Shift, lai izvilktu vertikālu vai horizontālu stiepļi</translation>
+    </message>
+    <message>
+        <source>Pin screenshots (Alt+P）</source>
+        <translation>Krustītis (P)</translation>
+    </message>
+    <message>
+        <source>Undo (Ctrl+Z)</source>
+        <translation>Nešķīstība (B)</translation>
+    </message>
+    <message>
+        <source>Record</source>
+        <translation>Ierakstīt</translation>
+    </message>
+    <message>
+        <source>Clipboard</source>
+        <translation>Starpliktuve</translation>
+    </message>
+    <message>
         <source>Pictures</source>
         <translation>Attēli</translation>
     </message>
     <message>
         <source>Folder</source>
         <translation>Mape</translation>
+    </message>
+    <message>
+        <source>Set a path on save</source>
+        <translation>Teksts (T)</translation>
+    </message>
+    <message>
+        <source>Change the path on save</source>
+        <translation>Vilkt skriptu (Alt+I)</translation>
     </message>
     <message>
         <source>Format</source>
@@ -534,156 +659,28 @@ select the area to record</source>
         <translation>BMP</translation>
     </message>
     <message>
-        <source>MKV</source>
-        <translation>MKV</translation>
-    </message>
-    <message>
-        <source>Clipboard</source>
-        <translation>Starpliktuve</translation>
-    </message>
-    <message>
-        <source>Show pointer</source>
-        <translation>Rādīt rādītāju</translation>
-    </message>
-    <message>
-        <source>Extract Text</source>
-        <translation>Izvilkiet tekstu</translation>
-    </message>
-    <message>
-        <source>Show keystroke (K)</source>
-        <translation>Rādīt tastatūras poga (K)</translation>
-    </message>
-    <message>
-        <source>Settings</source>
-        <translation>Iestatījumi</translation>
-    </message>
-    <message>
-        <source>Settings (F3)</source>
-        <translation>Iestatījumi (F3)</translation>
-    </message>
-    <message>
-        <source>Blur (B)</source>
-        <translation>Šķīdums (B)</translation>
-    </message>
-    <message>
-        <source>Text (T)</source>
-        <translation>Teksts (T)</translation>
-    </message>
-    <message>
-        <source>Scrollshot (Alt+I）</source>
-        <translation>Pārvietojiet (Alt+I)</translation>
-    </message>
-    <message>
-        <source>Extract text (Alt+O）</source>
-        <translation>Izvilkiet tekstu (Alt+O)</translation>
-    </message>
-    <message>
-        <source>Undo (Ctrl+Z)</source>
-        <translation>Atcelt (Ctrl+Z)</translation>
-    </message>
-    <message>
-        <source>Screenshot</source>
-        <translation>Ekrānuzņēmums</translation>
-    </message>
-    <message>
-        <source>Pin screenshots (Alt+P）</source>
-        <translation>Piesaistīt ekraņa attēlus (Alt+P)</translation>
-    </message>
-    <message>
-        <source>Record</source>
-        <translation>Ierakstīt</translation>
-    </message>
-    <message>
-        <source>Pencil (P)</source>
-        <translation>Cipēlis (P)</translation>
-    </message>
-    <message>
-        <source>Turn on camera (C)</source>
-        <translation>Ieslauciet kameru (C)</translation>
-    </message>
-    <message>
         <source>Border Effects</source>
-        <translation>Rimu efekti</translation>
+        <translation>Izvilkum tekstu (Alt+O)</translation>
     </message>
     <message>
         <source>None</source>
-        <translation>Nav</translation>
-    </message>
-    <message>
-        <source>Turn off camera (C)</source>
-        <translation>Ieslēgiet kameru (C)</translation>
-    </message>
-    <message>
-        <source>Hide Keystroke (K)</source>
-        <translation>Paslēpt tastatūras poga (K)</translation>
-    </message>
-    <message>
-        <source>Show Keystroke (K)</source>
-        <translation>Rādīt tastatūras poga (K)</translation>
-    </message>
-    <message>
-        <source>webm</source>
-        <translation>webm</translation>
-    </message>
-    <message>
-        <source>Videos</source>
-        <translation>Video</translation>
-    </message>
-    <message>
-        <source>Rectangle (R)
-Press and hold Shift to draw a square</source>
-        <translation>Taisnstūris (R)
-Nospiediet un turējiet Shift, lai izvilktu kvadrātu</translation>
-    </message>
-    <message>
-        <source>Ellipse (O)
-Press and hold Shift to draw a circle</source>
-        <translation>Elipsa (O)
-Nospiediet un turējiet Shift, lai izvilktu riņķi</translation>
-    </message>
-    <message>
-        <source>Line (L)
-Press and hold Shift to draw a vertical or horizontal line</source>
-        <translation>Līnija (L)
-Nospiediet un turējiet Shift, lai izvilktu vertikālu vai horizontālu līniju</translation>
-    </message>
-    <message>
-        <source>Arrow (X)
-Press and hold Shift to draw a vertical or horizontal arrow</source>
-        <translation>Sārtiņš (X)
-Nospiediet un turējiet Shift, lai izvilktu vertikālu vai horizontālu sārtiņu</translation>
+        <translation>Izvilkum skriptu (Alt+P)</translation>
     </message>
     <message>
         <source>Shadow</source>
-        <translation>Tumšums</translation>
+        <translation>Tumša</translation>
     </message>
     <message>
         <source>Border</source>
-        <translation>Rima</translation>
+        <translation>Roba</translation>
     </message>
     <message>
         <source>Device</source>
         <translation>Ierīce</translation>
     </message>
     <message>
-        <source>Sound</source>
-        <translation>Skaņa</translation>
-    </message>
-    <message>
-        <source>System audio</source>
-        <translation>Sistēmas audio</translation>
-    </message>
-    <message>
-        <source>Show click</source>
-        <translation>Rādot klikši</translation>
-    </message>
-    <message>
-        <source>Set a path on save</source>
-        <translation>Iestatīt ceļu glābšanas laikā</translation>
-    </message>
-    <message>
-        <source>Change the path on save</source>
-        <translation>Mainīt ceļu glābšanas laikā</translation>
+        <source>Extract Text</source>
+        <translation>Izvelt tekstu</translation>
     </message>
 </context>
 <context>
@@ -708,7 +705,7 @@ Nospiediet un turējiet Shift, lai izvilktu vertikālu vai horizontālu sārtiņ
     <name>Utils</name>
     <message>
         <source>Screen recording is not supported at present</source>
-        <translation>Ekrāna reģistrācija pašlaik nav atbalstīta</translation>
+        <translation>Ekraņa reģistrēšana šajā laikā nav atbalstīta</translation>
     </message>
     <message>
         <source>Exit</source>

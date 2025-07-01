@@ -1,22 +1,24 @@
-<?xml version="1.0" ?><!DOCTYPE TS><TS version="2.1" language="ur">
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE TS>
+<TS version="2.1" language="ur">
 <context>
     <name>CountdownTooltip</name>
     <message>
         <source>Click the tray icon 
 or press the shortcut again to stop recording</source>
-        <translation>ٹرے آئیکون کلک کریں
-یا اپنا کٹ ہوت کرکے ریکارڈنگ کو ختم کریں</translation>
+        <translation>ٹری ایکسون کلک کریں 
+ یا کٹ شورٹ کو دوبارہ دبائیں تاکریڈیٹ کو ختم کریں</translation>
     </message>
     <message>
         <source>Do not rotate your screen during recording</source>
-        <translation>ریکارڈنگ کے دوران آپ کی سکرین کو چھوٹو نہ کریں</translation>
+        <translation>ریکارڈنگ کے دوران آپ اپنی سکرین کو چھوٹے نہ کریں</translation>
     </message>
 </context>
 <context>
     <name>IconWidget</name>
     <message>
         <source>Screenshot</source>
-        <translation>Screenshot</translation>
+        <translation>سکرین شاٹ</translation>
     </message>
     <message>
         <source>Recording</source>
@@ -31,18 +33,18 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Screenshot</source>
-        <translation>Screenshot</translation>
+        <translation>سکرین شاٹ</translation>
     </message>
 </context>
 <context>
     <name>MainWindow</name>
     <message>
         <source>Screen Capture</source>
-        <translation>سکرین کیپچر</translation>
+        <translation>سکرین کپچر</translation>
     </message>
     <message>
         <source>Save failed. Please save it in your home directory.</source>
-        <translation>ذخیرہ کرنا ناکام ہو گیا۔ کیا آپ اپنی ہوم ڈائریکٹری میں اسے ذخیرہ کریں؟</translation>
+        <translation>ذخیرہ کرنا ناکام ہو گیا۔ کیاکریں آپ اپنی ہوم ڈائریکٹری میں اسے ذخیرہ کریں</translation>
     </message>
     <message>
         <source>View</source>
@@ -50,23 +52,23 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Screenshot finished</source>
-        <translation>Screenshot کامیابی سے مکمل ہو گیا</translation>
+        <translation>سکرین شاٹ مکمل ہو گیا</translation>
     </message>
     <message>
         <source>PNG (*.png);;JPEG (*.jpg *.jpeg);;BMP (*.bmp)</source>
-        <translation>PNG (*.png);;JPEG (*.jpg *.jpeg);;BMP (*.bmp)</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>JPEG (*.jpg *.jpeg);;PNG (*.png);;BMP (*.bmp)</source>
-        <translation>JPEG (*.jpg *.jpeg);;PNG (*.png);;BMP (*.bmp)</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>BMP (*.bmp);;JPEG (*.jpg *.jpeg);;PNG (*.png)</source>
-        <translation>BMP (*.bmp);;JPEG (*.jpg *.jpeg);;PNG (*.png)</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>select-area</source>
-        <translation>ڈائریکٹری کا انتخاب کریں</translation>
+        <translation>اریا منتخب کریں</translation>
     </message>
     <message>
         <source>Save</source>
@@ -74,11 +76,11 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Saved to %1</source>
-        <translation>اپنی %1 میں ذخیرہ کر دیا گیا</translation>
+        <translation>٪1 میں ذخیرہ کر دیا گیا</translation>
     </message>
     <message>
         <source>Ignore</source>
-        <translation>نہیں چھوڑیں</translation>
+        <translation>نہیں دیکھیں</translation>
     </message>
     <message>
         <source>Clipboard</source>
@@ -86,36 +88,36 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Saving the screen recording file, please wait...</source>
-        <translation>سکرین ریکارڈنگ فائل ذخیرہ کر رہے ہیں، بھیڑ میں رہیں</translation>
+        <translation>سکرین ریکارڈنگ فائل ذخیرہ کرنا، کیاکریں انتظار کریں...</translation>
     </message>
     <message>
         <source>As the window effect is disabled during the process, the recording has to be stopped</source>
-        <translation>پروسیس کے دوران ونڈو ایفکٹ غیر فعال ہے، اس لیے ریکارڈنگ کو
-ختم کرنا پڑے گا</translation>
+        <translation>پروسس کے دوران ونڈو ایفکٹ غیر فعال ہے، اس لیے ریکارڈنگ 
+ ختم کرنا پڑے گی</translation>
     </message>
     <message>
         <source>Screenshot</source>
-        <translation>Screenshot</translation>
+        <translation>سکرین شاٹ</translation>
     </message>
     <message>
         <source>Screenshot failed.</source>
-        <translation>Screenshot کامیابی سے مکمل نہ ہو سکی۔</translation>
+        <translation>سکرین شاٹ ناکام ہو گیا۔</translation>
     </message>
     <message>
         <source>Scrollshot</source>
-        <translation>Scrollshot</translation>
+        <translation>سکرول شاٹ</translation>
+    </message>
+    <message>
+        <source>Pin Screenshots</source>
+        <translation>سکرین شاٹ کو چسپا کریں</translation>
+    </message>
+    <message>
+        <source>deepin-screen-recorder</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Open Folder</source>
         <translation>فولڈر کھولیں</translation>
-    </message>
-    <message>
-        <source>Pin Screenshots</source>
-        <translation>Screenshot کو پن کریں</translation>
-    </message>
-    <message>
-        <source>deepin-screen-recorder</source>
-        <translation>deepin-screen-recorder</translation>
     </message>
 </context>
 <context>
@@ -130,55 +132,55 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Exit</source>
-        <translation>ختم کریں</translation>
+        <translation>نکلیں</translation>
     </message>
 </context>
 <context>
     <name>QObject</name>
     <message>
         <source>Pin Screenshots</source>
-        <translation>Screenshot کو پن کریں</translation>
+        <translation>سکرین شوٹس کو پن کریں</translation>
     </message>
 </context>
 <context>
     <name>QuickPanelWidget</name>
     <message>
         <source>Screenshot</source>
-        <translation>Screenshot</translation>
+        <translation>سکرین شوٹ</translation>
     </message>
     <message>
         <source>Record</source>
-        <translation>ریکارڈ</translation>
+        <translation>ریکارڈ کریں</translation>
     </message>
 </context>
 <context>
     <name>RecordIconWidget</name>
     <message>
         <source>Screenshot</source>
-        <translation>Screenshot</translation>
+        <translation>سکرین شوٹ</translation>
     </message>
     <message>
         <source>Recording</source>
-        <translation>ریکارڈ کر رہے ہیں</translation>
+        <translation>ریکارڈ کریں</translation>
     </message>
 </context>
 <context>
     <name>RecordProcess</name>
     <message>
         <source>View</source>
-        <translation>دیکھو</translation>
+        <translation>دیکھیں</translation>
     </message>
     <message>
         <source>Recording finished</source>
-        <translation>ریکارڈ کرنا مکمل ہو گیا</translation>
+        <translation>ریکارڈنگ تھم ہو گیا ہے</translation>
     </message>
     <message>
         <source>Saved to %1</source>
-        <translation>سیو کر دیا گیا %1</translation>
+        <translation>فائل %1 میں بچھا دی گئی ہے</translation>
     </message>
     <message>
         <source>Record</source>
-        <translation>ریکارڈ</translation>
+        <translation>ریکارڈ کریں</translation>
     </message>
     <message>
         <source>Open Folder</source>
@@ -189,7 +191,7 @@ or press the shortcut again to stop recording</source>
     <name>Screenshot</name>
     <message>
         <source>Screen Capture will start in %1 seconds</source>
-        <translation>سکرین کیپچر %1 ثانیہ کے بعد شروع ہو گی</translation>
+        <translation>سکرین کیپچر %1 سیکنڈ کے بعد شروع ہو گا</translation>
     </message>
 </context>
 <context>
@@ -200,141 +202,141 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Failed to take a continuous screenshot.</source>
-        <translation>کنٹینوئس سکرین کیپچر لینے میں کامیاب نہ ہو سکا۔</translation>
+        <translation>پیوست سکرین شوٹ کرنا ممکن نہیں ہے۔</translation>
     </message>
     <message>
         <source>Reached the bottom of the scroll area</source>
-        <translation>سکرول کے علاقے کے نیچے پہنچ گئے</translation>
+        <translation>سکرول کے ایریا کی چھوٹی تک پہنچ گیا ہے</translation>
     </message>
     <message>
         <source>Reached the maximum length</source>
-        <translation>مکسیمم لمبائی پہنچ گئے</translation>
+        <translation>مکسیمم لینگتھ کے لیے پہنچ گیا ہے</translation>
     </message>
     <message>
         <source>adjust the capture area</source>
-        <translation>کیپچر کے علاقے کو اڈجسٹ کریں</translation>
+        <translation>کیپچر ایریا کو اجسٹ کریں</translation>
     </message>
     <message>
         <source>Scroll your mouse wheel or click to take a scrolling screenshot</source>
-        <translation>سکرول کریں یا کلک کریں تاکہ سکرول سکرین کیپچر لے سکیں</translation>
+        <translation>سکرول کریں یا کلک کریں تاکہ سکرول کریں سکرین شوٹ لے سکیں</translation>
     </message>
     <message>
         <source>Slow down the scrolling speed</source>
-        <translation>سکرول س피ڈ کو کم کریں</translation>
+        <translation>سکرول سپیڈ کو تیز کریں</translation>
     </message>
     <message>
         <source>Invalid area, click to </source>
-        <translation>جائزہ علاقہ، کلک کریں</translation>
+        <translation>اکیلی جگہ، کلک کریں تاکہ </translation>
     </message>
 </context>
 <context>
     <name>ShapesWidget</name>
     <message>
         <source>Input text here</source>
-        <translation>یہاں تکسٹ داخل کریں</translation>
+        <translation>یہاں تیکس انٹر کریں</translation>
     </message>
 </context>
 <context>
     <name>Shortcut</name>
     <message>
         <source>Start/Screenshot</source>
-        <translation>شروع/سکرین کیپچر</translation>
+        <translation>شروع/سکرین شوٹ</translation>
     </message>
     <message>
         <source>Exit/Save</source>
-        <translation>نکل جائیں/سیو کریں</translation>
+        <translation>نکلیں/بچھا دیں</translation>
     </message>
     <message>
         <source>Size Adjustment</source>
-        <translation>سائز اڈجسٹمنٹ</translation>
+        <translation>سائز اجسٹمنٹ</translation>
     </message>
     <message>
         <source>Settings</source>
-        <translation>سیٹنگز</translation>
+        <translation>سیٹنگس</translation>
     </message>
     <message>
         <source>Quick start</source>
-        <translation>فاسٹ شروع</translation>
+        <translation>فیسٹ سٹارٹ</translation>
     </message>
     <message>
         <source>Window screenshot</source>
-        <translation>وینڈو سکرین کیپچر</translation>
+        <translation>وینڈو سکرین شوٹ</translation>
     </message>
     <message>
         <source>Delay screenshot</source>
-        <translation>ڈیلی سکرین کیپچر</translation>
+        <translation>ڈیلے سکرین شوٹ</translation>
     </message>
     <message>
         <source>Full screenshot</source>
-        <translation>فول سکرین کیپچر</translation>
+        <translation>فول سکرین شوٹ</translation>
     </message>
     <message>
         <source>Exit</source>
-        <translation>نکل جائیں</translation>
+        <translation>نکلیں</translation>
     </message>
     <message>
         <source>Save</source>
-        <translation>سیو کریں</translation>
+        <translation>بچھا دیں</translation>
     </message>
     <message>
         <source>Rectangle</source>
-        <translation> Rectangle</translation>
+        <translation>مربع</translation>
     </message>
     <message>
         <source>Ellipse</source>
-        <translation>اُرْدَانَ</translation>
+        <translation>کرک</translation>
     </message>
     <message>
         <source>Line</source>
-        <translation>لِنَ</translation>
+        <translation>لائن</translation>
     </message>
     <message>
         <source>Pencil</source>
-        <translation>قَلَمٌ</translation>
+        <translation>کیل</translation>
     </message>
     <message>
         <source>Text</source>
-        <translation>متن</translation>
+        <translation>ٹیکسٹ</translation>
     </message>
     <message>
         <source>Delete</source>
-        <translation>حذف</translation>
+        <translation>حذف کریں</translation>
     </message>
     <message>
         <source>Undo</source>
-        <translation>لغو</translation>
+        <translation>انڈو کریں</translation>
     </message>
     <message>
         <source>Increase height up</source>
-        <translation>زيادة ارتفاع خلوي</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Increase height down</source>
-        <translation>زيادة ارتفاع نازل</translation>
+        <translation>آ height کم کریں</translation>
     </message>
     <message>
         <source>Increase width left</source>
-        <translation>زيادة عرض يسار</translation>
+        <translation>آ width بڑھائیں</translation>
     </message>
     <message>
         <source>Increase width right</source>
-        <translation>زيادة عرض يمين</translation>
+        <translation>آ width کم کریں</translation>
     </message>
     <message>
         <source>Decrease height up</source>
-        <translation>کم کریں ارتفاع خلوي</translation>
+        <translation>آ height کم کریں</translation>
     </message>
     <message>
         <source>Decrease height down</source>
-        <translation>کم کریں ارتفاع نازل</translation>
+        <translation>آ height بڑھائیں</translation>
     </message>
     <message>
         <source>Decrease width left</source>
-        <translation>کم کریں عرض يسار</translation>
+        <translation>آ width کم کریں</translation>
     </message>
     <message>
         <source>Decrease width right</source>
-        <translation>کم کریں عرض يمين</translation>
+        <translation>آ width بڑھائیں</translation>
     </message>
     <message>
         <source>Help</source>
@@ -342,11 +344,15 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Display shortcuts</source>
-        <translation>کیفیات دکھاوا</translation>
+        <translation>کمیٹس دکھاوا</translation>
+    </message>
+    <message>
+        <source>Sound</source>
+        <translation>سونڈ</translation>
     </message>
     <message>
         <source>Keystroke</source>
-        <translation>کلید کی ایک ہے</translation>
+        <translation>کی استروک</translation>
     </message>
     <message>
         <source>Webcam</source>
@@ -358,11 +364,15 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Options</source>
-        <translation>اختیارات</translation>
+        <translation>آپشنز</translation>
     </message>
     <message>
         <source>Start/Recording</source>
         <translation>شروع/ریکارڈنگ</translation>
+    </message>
+    <message>
+        <source>Mouse</source>
+        <translation>Mouse</translation>
     </message>
     <message>
         <source>Tools</source>
@@ -370,35 +380,27 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Extract text</source>
-        <translation>متن نکالیں</translation>
+        <translation>ٹیکسٹ نکالیں</translation>
     </message>
     <message>
         <source>Scrollshot</source>
-        <translation>سکرول شوت</translation>
+        <translation>سکرول شوٹ</translation>
     </message>
     <message>
         <source>Pin screenshots</source>
-        <translation>سکرین شوت کو چپکائیں</translation>
-    </message>
-    <message>
-        <source>Start scrollshot</source>
-        <translation>سکرول شوت شروع کریں</translation>
+        <translation>سکرین شوٹس چسپکائیں</translation>
     </message>
     <message>
         <source>Start OCR</source>
         <translation>OCR شروع کریں</translation>
     </message>
     <message>
+        <source>Start scrollshot</source>
+        <translation>سکرول شوٹ شروع کریں</translation>
+    </message>
+    <message>
         <source>Arrow</source>
-        <translation>چوٹی</translation>
-    </message>
-    <message>
-        <source>Sound</source>
-        <translation>صدا</translation>
-    </message>
-    <message>
-        <source>Mouse</source>
-        <translation>ماؤس</translation>
+        <translation>چوکو</translation>
     </message>
 </context>
 <context>
@@ -412,7 +414,7 @@ or press the shortcut again to stop recording</source>
     <name>ShotStartRecordPlugin</name>
     <message>
         <source>Record</source>
-        <translation>Record</translation>
+        <translation>ریکارڈ کریں</translation>
     </message>
 </context>
 <context>
@@ -420,32 +422,32 @@ or press the shortcut again to stop recording</source>
     <message>
         <source>Rectangle
 Press and hold Shift to draw a square</source>
-        <translation>Reactangle
-Shift کو ہول کریں تاکر ایک تیلی کریں</translation>
+        <translation>مستطیل
+Shift کو دبائیں اور ہولڈ کریں تاکہ مربع بنا دیں</translation>
     </message>
     <message>
         <source>Ellipse
 Press and hold Shift to draw a circle</source>
-        <translation>Ellipse
-Shift کو ہول کریں تاکر ایک چوکور کریں</translation>
+        <translation>ELLIPSE
+Shift کو دبائیں اور ہولڈ کریں تاکہ گولی بنا دیں</translation>
     </message>
     <message>
         <source>Brush
 Press and hold Shift to draw a straight line</source>
-        <translation>Brush
-Shift کو ہول کریں تاکر ایک گھٹیا لائن کریں</translation>
+        <translation>برش
+Shift کو دبائیں اور ہولڈ کریں تاکہ ایک لمبی چھوٹی لائن بنا دیں</translation>
     </message>
     <message>
         <source>Adjust blur strength (Scroll to adjust it)</source>
-        <translation>اُدیت بلو ہیوں (Scroll کریں تاکر اُدیت کریں)</translation>
+        <translation>آبجیکشن بلو چھوٹی (Scroll کریں تاکہ اسے ایڈجسٹ کریں)</translation>
     </message>
     <message>
         <source>Adjust brush size (Scroll to adjust it)</source>
-        <translation>اُدیت Brush گھٹیا (Scroll کریں تاکر اُدیت کریں)</translation>
+        <translation>آبجیکشن برش چھوٹی (Scroll کریں تاکہ اسے ایڈجسٹ کریں)</translation>
     </message>
     <message>
         <source>Adjust text size (Scroll to adjust it)</source>
-        <translation>اُدیت تیکس گھٹیا (Scroll کریں تاکر اُدیت کریں)</translation>
+        <translation>آبجیکشن ٹیکسٹ چھوٹی (Scroll کریں تاکہ اسے ایڈجسٹ کریں)</translation>
     </message>
 </context>
 <context>
@@ -453,22 +455,47 @@ Shift کو ہول کریں تاکر ایک گھٹیا لائن کریں</transla
     <message>
         <source>Click or drag to
 select the area to record</source>
-        <translation>کلک یا ڈریگ کریں تاکر ریکارڈ کرنے والے ایریا کا انتخاب کریں</translation>
+        <translation>کلک یا ڈریگ کریں تاکہ
+ریکارڈ کرنے والے ایکی کا انتخاب کریں</translation>
     </message>
 </context>
 <context>
     <name>SubToolWidget</name>
     <message>
-        <source>Microphone</source>
-        <translation>میکرو فون</translation>
+        <source>Show keystroke (K)</source>
+        <translation>کلید کی کارکردگی دکھائیں (K)</translation>
     </message>
     <message>
-        <source>Options</source>
-        <translation>اختیارات</translation>
+        <source>Hide Keystroke (K)</source>
+        <translation>کلید کی کارکردگی چھپائیں (K)</translation>
+    </message>
+    <message>
+        <source>Show Keystroke (K)</source>
+        <translation>کلید کی کارکردگی دکھائیں (K)</translation>
+    </message>
+    <message>
+        <source>Turn on camera (C)</source>
+        <translation>کیمیرا کھولیں (C)</translation>
+    </message>
+    <message>
+        <source>Turn off camera (C)</source>
+        <translation>کیمیرا بند کریں (C)</translation>
+    </message>
+    <message>
+        <source>Screenshot</source>
+        <translation>Screenshot</translation>
+    </message>
+    <message>
+        <source>Settings</source>
+        <translation>Settings</translation>
+    </message>
+    <message>
+        <source>Settings (F3)</source>
+        <translation>Settings (F3)</translation>
     </message>
     <message>
         <source>Format:</source>
-        <translation>فورمیٹ:</translation>
+        <translation>Format:</translation>
     </message>
     <message>
         <source>GIF</source>
@@ -477,6 +504,14 @@ select the area to record</source>
     <message>
         <source>MP4</source>
         <translation>MP4</translation>
+    </message>
+    <message>
+        <source>MKV</source>
+        <translation>MKV</translation>
+    </message>
+    <message>
+        <source>webm</source>
+        <translation>webm</translation>
     </message>
     <message>
         <source>FPS:</source>
@@ -503,12 +538,104 @@ select the area to record</source>
         <translation>30 fps</translation>
     </message>
     <message>
+        <source>Sound</source>
+        <translation>صوت</translation>
+    </message>
+    <message>
+        <source>Microphone</source>
+        <translation>میکروفون</translation>
+    </message>
+    <message>
+        <source>System audio</source>
+        <translation>آڈیو سسٹم</translation>
+    </message>
+    <message>
+        <source>Options</source>
+        <translation>اختیارات</translation>
+    </message>
+    <message>
+        <source>Show pointer</source>
+        <translation>اشارہ دکھاوا کریں</translation>
+    </message>
+    <message>
+        <source>Show click</source>
+        <translation>کلک دکھاوا کریں</translation>
+    </message>
+    <message>
         <source>Save to</source>
         <translation>سیو کریں</translation>
     </message>
     <message>
         <source>Desktop</source>
         <translation>ڈیسک ٹاپ</translation>
+    </message>
+    <message>
+        <source>Videos</source>
+        <translation>ویڈیو</translation>
+    </message>
+    <message>
+        <source>Rectangle (R)
+Press and hold Shift to draw a square</source>
+        <translation>|-
+vierkant (R)
+Shift کو دبائیے رکھیے تاکہ ایک سرکل بنائیں</translation>
+    </message>
+    <message>
+        <source>Ellipse (O)
+Press and hold Shift to draw a circle</source>
+        <translation>|-
+Ellipse (O)
+Shift کو دبائیے رکھیے تاکہ ایک سرکل بنائیں</translation>
+    </message>
+    <message>
+        <source>Line (L)
+Press and hold Shift to draw a vertical or horizontal line</source>
+        <translation>|-
+لائن (L)
+Shift کو دبائیے رکھیے تاکہ ایک ہوریزونٹل یا ورٹیکل لائن بنائیں</translation>
+    </message>
+    <message>
+        <source>Arrow (X)
+Press and hold Shift to draw a vertical or horizontal arrow</source>
+        <translation>|-
+کیل (X)
+Shift کو دبائیے رکھیے تاکہ ایک ہوریزونٹل یا ورٹیکل کیل بنائیں</translation>
+    </message>
+    <message>
+        <source>Pencil (P)</source>
+        <translation>کیل (P)</translation>
+    </message>
+    <message>
+        <source>Blur (B)</source>
+        <translation>بلاور (B)</translation>
+    </message>
+    <message>
+        <source>Text (T)</source>
+        <translation>ٹیکسٹ (T)</translation>
+    </message>
+    <message>
+        <source>Scrollshot (Alt+I）</source>
+        <translation>سکرول شاٹ (Alt+I)</translation>
+    </message>
+    <message>
+        <source>Extract text (Alt+O）</source>
+        <translation>ٹیکسٹ اکثر (Alt+O)</translation>
+    </message>
+    <message>
+        <source>Pin screenshots (Alt+P）</source>
+        <translation>شٹوٹس پن کریں (Alt+P)</translation>
+    </message>
+    <message>
+        <source>Undo (Ctrl+Z)</source>
+        <translation>انڈو (Ctrl+Z)</translation>
+    </message>
+    <message>
+        <source>Record</source>
+        <translation>ریکارڈ کریں</translation>
+    </message>
+    <message>
+        <source>Clipboard</source>
+        <translation>کلیپ بورڈ</translation>
     </message>
     <message>
         <source>Pictures</source>
@@ -519,8 +646,16 @@ select the area to record</source>
         <translation>فولڈر</translation>
     </message>
     <message>
+        <source>Set a path on save</source>
+        <translation>سیو کرنے پر راستہ تلاش کریں</translation>
+    </message>
+    <message>
+        <source>Change the path on save</source>
+        <translation>سیو کرنے پر راستہ تبدیل کریں</translation>
+    </message>
+    <message>
         <source>Format</source>
-        <translation>فورمیٹ</translation>
+        <translation>ٹائل</translation>
     </message>
     <message>
         <source>PNG</source>
@@ -535,74 +670,6 @@ select the area to record</source>
         <translation>BMP</translation>
     </message>
     <message>
-        <source>MKV</source>
-        <translation>MKV</translation>
-    </message>
-    <message>
-        <source>Clipboard</source>
-        <translation>کلیپ بورڈ</translation>
-    </message>
-    <message>
-        <source>Show pointer</source>
-        <translation>نقاط دکھاؤ</translation>
-    </message>
-    <message>
-        <source>Extract Text</source>
-        <translation>متن نکالو</translation>
-    </message>
-    <message>
-        <source>Show keystroke (K)</source>
-        <translation>کلید کی کارروائی دکھاؤ (K)</translation>
-    </message>
-    <message>
-        <source>Settings</source>
-        <translation>Settings</translation>
-    </message>
-    <message>
-        <source>Settings (F3)</source>
-        <translation>Settings (F3)</translation>
-    </message>
-    <message>
-        <source>Blur (B)</source>
-        <translation>Blur (B)</translation>
-    </message>
-    <message>
-        <source>Text (T)</source>
-        <translation>متن (T)</translation>
-    </message>
-    <message>
-        <source>Scrollshot (Alt+I）</source>
-        <translation>Scrollshot (Alt+I)</translation>
-    </message>
-    <message>
-        <source>Extract text (Alt+O）</source>
-        <translation>متن نکالو (Alt+O)</translation>
-    </message>
-    <message>
-        <source>Undo (Ctrl+Z)</source>
-        <translation>Undo (Ctrl+Z)</translation>
-    </message>
-    <message>
-        <source>Screenshot</source>
-        <translation>Screenshot</translation>
-    </message>
-    <message>
-        <source>Pin screenshots (Alt+P）</source>
-        <translation>Screenshot چسپاو (Alt+P)</translation>
-    </message>
-    <message>
-        <source>Record</source>
-        <translation>Record</translation>
-    </message>
-    <message>
-        <source>Pencil (P)</source>
-        <translation>کلی (P)</translation>
-    </message>
-    <message>
-        <source>Turn on camera (C)</source>
-        <translation>کیمرا کھولو (C)</translation>
-    </message>
-    <message>
         <source>Border Effects</source>
         <translation>border اثرات</translation>
     </message>
@@ -611,80 +678,20 @@ select the area to record</source>
         <translation>کوئی نہیں</translation>
     </message>
     <message>
-        <source>Turn off camera (C)</source>
-        <translation>کیمرا بند کرو (C)</translation>
-    </message>
-    <message>
-        <source>Hide Keystroke (K)</source>
-        <translation>کلید کی کارروائی چھپاؤ (K)</translation>
-    </message>
-    <message>
-        <source>Show Keystroke (K)</source>
-        <translation>کلید کی کارروائی دکھاؤ (K)</translation>
-    </message>
-    <message>
-        <source>webm</source>
-        <translation>ویبم</translation>
-    </message>
-    <message>
-        <source>Videos</source>
-        <translation>Videos</translation>
-    </message>
-    <message>
-        <source>Rectangle (R)
-Press and hold Shift to draw a square</source>
-        <translation>باہو (R)
-Shift دبائو کرکے مربع بناو</translation>
-    </message>
-    <message>
-        <source>Ellipse (O)
-Press and hold Shift to draw a circle</source>
-        <translation>Ellipse (O)
-Shift دبائو کرکے گولہ بناو</translation>
-    </message>
-    <message>
-        <source>Line (L)
-Press and hold Shift to draw a vertical or horizontal line</source>
-        <translation>لائن (L)
-Shift دبائو کرکے گردن یا افقی لائن بناو</translation>
-    </message>
-    <message>
-        <source>Arrow (X)
-Press and hold Shift to draw a vertical or horizontal arrow</source>
-        <translation>Arrow (X)
-Shift دبائو کرکے گردن یا افقی Arrow بناو</translation>
-    </message>
-    <message>
         <source>Shadow</source>
-        <translation>Shadow</translation>
+        <translation>سایا</translation>
     </message>
     <message>
         <source>Border</source>
-        <translation>Border</translation>
+        <translation>border</translation>
     </message>
     <message>
         <source>Device</source>
-        <translation>Device</translation>
+        <translation>ڈیوائس</translation>
     </message>
     <message>
-        <source>Sound</source>
-        <translation>Sound</translation>
-    </message>
-    <message>
-        <source>System audio</source>
-        <translation>سیسٹم آڈیو</translation>
-    </message>
-    <message>
-        <source>Show click</source>
-        <translation>کلک دکھائیں</translation>
-    </message>
-    <message>
-        <source>Set a path on save</source>
-        <translation>انقلا دکھائیں</translation>
-    </message>
-    <message>
-        <source>Change the path on save</source>
-        <translation>انقلا تبدیل کریں</translation>
+        <source>Extract Text</source>
+        <translation>ٹیکسٹ اکثر</translation>
     </message>
 </context>
 <context>
@@ -695,32 +702,32 @@ Shift دبائو کرکے گردن یا افقی Arrow بناو</translation>
     </message>
     <message>
         <source>OK (Enter)</source>
-        <translation>ٹو ایکسٹر (Enter)</translation>
+        <translation>ٹھیک (Enter)</translation>
     </message>
 </context>
 <context>
     <name>TopTips</name>
     <message>
         <source> Adjust the recording area within %1*%2 to get better video effect</source>
-        <translation>ریکارڈنگ ایریا کو %1*%2 میں جس طرح سے آپ کو بهتر ویڈیو ایفکٹ حاصل ہو سکے اس طرح سازی کریں</translation>
+        <translation>ریکارڈنگ کے علاقے کو %1*%2 میں اڈجسٹ کریں تاکر خوبصورت ویڈیو اثر حاصل کریں</translation>
     </message>
 </context>
 <context>
     <name>Utils</name>
     <message>
         <source>Screen recording is not supported at present</source>
-        <translation>اگرچہ اب تک ڈسک ریکارڈنگ کو سپورٹ نہیں کیا جا رہا ہے</translation>
+        <translation>اکنہ اب تک سکرین ریکارڈنگ کو سپورٹ نہیں کرتا ہے</translation>
     </message>
     <message>
         <source>Exit</source>
-        <translation>نکل جائیں</translation>
+        <translation>نکل جائے</translation>
     </message>
 </context>
 <context>
     <name>VoiceRecordProcess</name>
     <message>
         <source>New recording</source>
-        <translation>نیو ریکارڈنگ</translation>
+        <translation>نیا ریکارڈنگ</translation>
     </message>
 </context>
 </TS>

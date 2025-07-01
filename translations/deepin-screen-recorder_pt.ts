@@ -1,4 +1,6 @@
-<?xml version="1.0" ?><!DOCTYPE TS><TS version="2.1" language="pt">
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE TS>
+<TS version="2.1" language="pt">
 <context>
     <name>CountdownTooltip</name>
     <message>
@@ -9,7 +11,7 @@ ou pressione novamente o atalho para parar de gravar</translation>
     </message>
     <message>
         <source>Do not rotate your screen during recording</source>
-        <translation>Não rodar o ecrã durante a gravação</translation>
+        <translation>Não rodar o seu ecrã durante a gravação</translation>
     </message>
 </context>
 <context>
@@ -50,7 +52,7 @@ ou pressione novamente o atalho para parar de gravar</translation>
     </message>
     <message>
         <source>Screenshot finished</source>
-        <translation>Captura de ecrã efetuada</translation>
+        <translation>Captura de ecrã concluída</translation>
     </message>
     <message>
         <source>PNG (*.png);;JPEG (*.jpg *.jpeg);;BMP (*.bmp)</source>
@@ -66,7 +68,7 @@ ou pressione novamente o atalho para parar de gravar</translation>
     </message>
     <message>
         <source>select-area</source>
-        <translation>Selecionar área</translation>
+        <translation>selecione a área</translation>
     </message>
     <message>
         <source>Save</source>
@@ -105,16 +107,16 @@ ou pressione novamente o atalho para parar de gravar</translation>
         <translation>Scrollshot</translation>
     </message>
     <message>
-        <source>Open Folder</source>
-        <translation>Abrir pasta</translation>
-    </message>
-    <message>
         <source>Pin Screenshots</source>
         <translation>Afixar capturas de ecrã</translation>
     </message>
     <message>
         <source>deepin-screen-recorder</source>
-        <translation>deepin-screen-recorder</translation>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Open Folder</source>
+        <translation>Abrir pasta</translation>
     </message>
 </context>
 <context>
@@ -143,22 +145,22 @@ ou pressione novamente o atalho para parar de gravar</translation>
     <name>QuickPanelWidget</name>
     <message>
         <source>Screenshot</source>
-        <translation>Captura de tela</translation>
+        <translation type="unfinished">Captura de ecrã</translation>
     </message>
     <message>
         <source>Record</source>
-        <translation>Gravar</translation>
+        <translation type="unfinished">Gravar</translation>
     </message>
 </context>
 <context>
     <name>RecordIconWidget</name>
     <message>
         <source>Screenshot</source>
-        <translation>Captura de tela</translation>
+        <translation type="unfinished">Captura de ecrã</translation>
     </message>
     <message>
         <source>Recording</source>
-        <translation>Gravando</translation>
+        <translation type="unfinished">Gravação</translation>
     </message>
 </context>
 <context>
@@ -344,6 +346,10 @@ ou pressione novamente o atalho para parar de gravar</translation>
         <translation>Mostrar atalhos</translation>
     </message>
     <message>
+        <source>Sound</source>
+        <translation>Som</translation>
+    </message>
+    <message>
         <source>Keystroke</source>
         <translation>Tecla</translation>
     </message>
@@ -364,6 +370,10 @@ ou pressione novamente o atalho para parar de gravar</translation>
         <translation>Iniciar/Gravação</translation>
     </message>
     <message>
+        <source>Mouse</source>
+        <translation>Rato</translation>
+    </message>
+    <message>
         <source>Tools</source>
         <translation>Ferramentas</translation>
     </message>
@@ -380,24 +390,16 @@ ou pressione novamente o atalho para parar de gravar</translation>
         <translation>Afixar capturas de ecrã</translation>
     </message>
     <message>
-        <source>Start scrollshot</source>
-        <translation>Iniciar scrollshot</translation>
-    </message>
-    <message>
         <source>Start OCR</source>
         <translation>Iniciar OCR</translation>
     </message>
     <message>
+        <source>Start scrollshot</source>
+        <translation>Iniciar scrollshot</translation>
+    </message>
+    <message>
         <source>Arrow</source>
         <translation>Seta</translation>
-    </message>
-    <message>
-        <source>Sound</source>
-        <translation>Som</translation>
-    </message>
-    <message>
-        <source>Mouse</source>
-        <translation>Rato</translation>
     </message>
 </context>
 <context>
@@ -411,7 +413,7 @@ ou pressione novamente o atalho para parar de gravar</translation>
     <name>ShotStartRecordPlugin</name>
     <message>
         <source>Record</source>
-        <translation>Gravar</translation>
+        <translation type="unfinished">Gravar</translation>
     </message>
 </context>
 <context>
@@ -459,12 +461,36 @@ selecionar a área a gravar</translation>
 <context>
     <name>SubToolWidget</name>
     <message>
-        <source>Microphone</source>
-        <translation>Microfone</translation>
+        <source>Show keystroke (K)</source>
+        <translation>Mostrar pressão da tecla (K)</translation>
     </message>
     <message>
-        <source>Options</source>
-        <translation>Opções</translation>
+        <source>Hide Keystroke (K)</source>
+        <translation>Ocultar pressão da tecla (K)</translation>
+    </message>
+    <message>
+        <source>Show Keystroke (K)</source>
+        <translation>Mostrar pressão da tecla (K)</translation>
+    </message>
+    <message>
+        <source>Turn on camera (C)</source>
+        <translation>Ligar câmara (C)</translation>
+    </message>
+    <message>
+        <source>Turn off camera (C)</source>
+        <translation>Desligar câmara (C)</translation>
+    </message>
+    <message>
+        <source>Screenshot</source>
+        <translation>Captura de ecrã</translation>
+    </message>
+    <message>
+        <source>Settings</source>
+        <translation>Definições</translation>
+    </message>
+    <message>
+        <source>Settings (F3)</source>
+        <translation>Definições (F3)</translation>
     </message>
     <message>
         <source>Format:</source>
@@ -477,6 +503,14 @@ selecionar a área a gravar</translation>
     <message>
         <source>MP4</source>
         <translation>MP4</translation>
+    </message>
+    <message>
+        <source>MKV</source>
+        <translation>MKV</translation>
+    </message>
+    <message>
+        <source>webm</source>
+        <translation>webm</translation>
     </message>
     <message>
         <source>FPS:</source>
@@ -503,128 +537,36 @@ selecionar a área a gravar</translation>
         <translation>30 fps</translation>
     </message>
     <message>
-        <source>Save to</source>
-        <translation>Guardar em</translation>
+        <source>Sound</source>
+        <translation>Som</translation>
     </message>
     <message>
-        <source>Desktop</source>
-        <translation>Ambiente de trabalho</translation>
+        <source>Microphone</source>
+        <translation>Microfone</translation>
     </message>
     <message>
-        <source>Pictures</source>
-        <translation>Imagens</translation>
+        <source>System audio</source>
+        <translation>Áudio do sistema</translation>
     </message>
     <message>
-        <source>Folder</source>
-        <translation>Pasta</translation>
-    </message>
-    <message>
-        <source>Format</source>
-        <translation>Formato</translation>
-    </message>
-    <message>
-        <source>PNG</source>
-        <translation>PNG</translation>
-    </message>
-    <message>
-        <source>JPG</source>
-        <translation>JPG</translation>
-    </message>
-    <message>
-        <source>BMP</source>
-        <translation>BMP</translation>
-    </message>
-    <message>
-        <source>MKV</source>
-        <translation>MKV</translation>
-    </message>
-    <message>
-        <source>Clipboard</source>
-        <translation>Área de transferência</translation>
+        <source>Options</source>
+        <translation>Opções</translation>
     </message>
     <message>
         <source>Show pointer</source>
         <translation>Mostrar cursor</translation>
     </message>
     <message>
-        <source>Extract Text</source>
-        <translation>Extrair texto</translation>
+        <source>Show click</source>
+        <translation>Mostrar clique</translation>
     </message>
     <message>
-        <source>Show keystroke (K)</source>
-        <translation>Mostrar pressão da tecla (K)</translation>
+        <source>Save to</source>
+        <translation>Guardar em</translation>
     </message>
     <message>
-        <source>Settings</source>
-        <translation>Definições</translation>
-    </message>
-    <message>
-        <source>Settings (F3)</source>
-        <translation>Definições (F3)</translation>
-    </message>
-    <message>
-        <source>Blur (B)</source>
-        <translation>Desfocar (D)</translation>
-    </message>
-    <message>
-        <source>Text (T)</source>
-        <translation>Texto (T)</translation>
-    </message>
-    <message>
-        <source>Scrollshot (Alt+I）</source>
-        <translation>Scrollshot (Alt+I）</translation>
-    </message>
-    <message>
-        <source>Extract text (Alt+O）</source>
-        <translation>Extrair texto (Alt+O）</translation>
-    </message>
-    <message>
-        <source>Undo (Ctrl+Z)</source>
-        <translation>Anular (Ctrl+Z)</translation>
-    </message>
-    <message>
-        <source>Screenshot</source>
-        <translation>Captura de ecrã</translation>
-    </message>
-    <message>
-        <source>Pin screenshots (Alt+P）</source>
-        <translation>Afixar capturas de ecrã (Alt+P)</translation>
-    </message>
-    <message>
-        <source>Record</source>
-        <translation>Gravar</translation>
-    </message>
-    <message>
-        <source>Pencil (P)</source>
-        <translation>Lápis (L)</translation>
-    </message>
-    <message>
-        <source>Turn on camera (C)</source>
-        <translation>Ligar câmara (C)</translation>
-    </message>
-    <message>
-        <source>Border Effects</source>
-        <translation>Efeitos de contorno</translation>
-    </message>
-    <message>
-        <source>None</source>
-        <translation>Nenhum</translation>
-    </message>
-    <message>
-        <source>Turn off camera (C)</source>
-        <translation>Desligar câmara (C)</translation>
-    </message>
-    <message>
-        <source>Hide Keystroke (K)</source>
-        <translation>Ocultar pressão da tecla (K)</translation>
-    </message>
-    <message>
-        <source>Show Keystroke (K)</source>
-        <translation>Mostrar pressão da tecla (K)</translation>
-    </message>
-    <message>
-        <source>webm</source>
-        <translation>webm</translation>
+        <source>Desktop</source>
+        <translation>Ambiente de trabalho</translation>
     </message>
     <message>
         <source>Videos</source>
@@ -655,6 +597,82 @@ Press and hold Shift to draw a vertical or horizontal arrow</source>
 Pressionar e manter Shift para desenhar uma seta vertical ou horizontal</translation>
     </message>
     <message>
+        <source>Pencil (P)</source>
+        <translation>Lápis (L)</translation>
+    </message>
+    <message>
+        <source>Blur (B)</source>
+        <translation>Desfocar (D)</translation>
+    </message>
+    <message>
+        <source>Text (T)</source>
+        <translation>Texto (T)</translation>
+    </message>
+    <message>
+        <source>Scrollshot (Alt+I）</source>
+        <translation>Scrollshot (Alt+I）</translation>
+    </message>
+    <message>
+        <source>Extract text (Alt+O）</source>
+        <translation>Extrair texto (Alt+O）</translation>
+    </message>
+    <message>
+        <source>Pin screenshots (Alt+P）</source>
+        <translation>Afixar capturas de ecrã (Alt+P)</translation>
+    </message>
+    <message>
+        <source>Undo (Ctrl+Z)</source>
+        <translation>Anular (Ctrl+Z)</translation>
+    </message>
+    <message>
+        <source>Record</source>
+        <translation>Gravar</translation>
+    </message>
+    <message>
+        <source>Clipboard</source>
+        <translation>Área de transferência</translation>
+    </message>
+    <message>
+        <source>Pictures</source>
+        <translation>Imagens</translation>
+    </message>
+    <message>
+        <source>Folder</source>
+        <translation>Pasta</translation>
+    </message>
+    <message>
+        <source>Set a path on save</source>
+        <translation>Definir um caminho ao salvar</translation>
+    </message>
+    <message>
+        <source>Change the path on save</source>
+        <translation>Alterar o caminho ao salvar</translation>
+    </message>
+    <message>
+        <source>Format</source>
+        <translation>Formato</translation>
+    </message>
+    <message>
+        <source>PNG</source>
+        <translation>PNG</translation>
+    </message>
+    <message>
+        <source>JPG</source>
+        <translation>JPG</translation>
+    </message>
+    <message>
+        <source>BMP</source>
+        <translation>BMP</translation>
+    </message>
+    <message>
+        <source>Border Effects</source>
+        <translation>Efeitos de contorno</translation>
+    </message>
+    <message>
+        <source>None</source>
+        <translation>Nenhum</translation>
+    </message>
+    <message>
         <source>Shadow</source>
         <translation>Sombra</translation>
     </message>
@@ -667,24 +685,8 @@ Pressionar e manter Shift para desenhar uma seta vertical ou horizontal</transla
         <translation>Dispositivo</translation>
     </message>
     <message>
-        <source>Sound</source>
-        <translation>Som</translation>
-    </message>
-    <message>
-        <source>System audio</source>
-        <translation>Áudio do sistema</translation>
-    </message>
-    <message>
-        <source>Show click</source>
-        <translation>Mostrar clique</translation>
-    </message>
-    <message>
-        <source>Set a path on save</source>
-        <translation>Definir um caminho para salvar</translation>
-    </message>
-    <message>
-        <source>Change the path on save</source>
-        <translation>Alterar o caminho para salvar</translation>
+        <source>Extract Text</source>
+        <translation>Extrair texto</translation>
     </message>
 </context>
 <context>

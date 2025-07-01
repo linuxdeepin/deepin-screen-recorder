@@ -1,4 +1,6 @@
-<?xml version="1.0" ?><!DOCTYPE TS><TS version="2.1" language="uk">
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE TS>
+<TS version="2.1" language="uk">
 <context>
     <name>CountdownTooltip</name>
     <message>
@@ -38,7 +40,7 @@ or press the shortcut again to stop recording</source>
     <name>MainWindow</name>
     <message>
         <source>Screen Capture</source>
-        <translation>Захоплення зображення на екрані</translation>
+        <translation>Захоплення екрана</translation>
     </message>
     <message>
         <source>Save failed. Please save it in your home directory.</source>
@@ -105,16 +107,16 @@ or press the shortcut again to stop recording</source>
         <translation>Знімок із гортанням</translation>
     </message>
     <message>
-        <source>Open Folder</source>
-        <translation>Відкрити теку</translation>
-    </message>
-    <message>
         <source>Pin Screenshots</source>
         <translation>Пришпилити знімки</translation>
     </message>
     <message>
         <source>deepin-screen-recorder</source>
-        <translation>deepin-screen-recorder</translation>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Open Folder</source>
+        <translation>Відкрити теку</translation>
     </message>
 </context>
 <context>
@@ -165,7 +167,7 @@ or press the shortcut again to stop recording</source>
     <name>RecordProcess</name>
     <message>
         <source>View</source>
-        <translation>Перегляд</translation>
+        <translation>Вид</translation>
     </message>
     <message>
         <source>Recording finished</source>
@@ -301,7 +303,7 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Undo</source>
-        <translation>Скасувати</translation>
+        <translation>Вернути</translation>
     </message>
     <message>
         <source>Increase height up</source>
@@ -344,6 +346,10 @@ or press the shortcut again to stop recording</source>
         <translation>Показати клавіатурні скорочення</translation>
     </message>
     <message>
+        <source>Sound</source>
+        <translation>Звук</translation>
+    </message>
+    <message>
         <source>Keystroke</source>
         <translation>Натискання клавіш</translation>
     </message>
@@ -364,6 +370,10 @@ or press the shortcut again to stop recording</source>
         <translation>Почати/Запис</translation>
     </message>
     <message>
+        <source>Mouse</source>
+        <translation>Миша</translation>
+    </message>
+    <message>
         <source>Tools</source>
         <translation>Інструменти</translation>
     </message>
@@ -380,24 +390,16 @@ or press the shortcut again to stop recording</source>
         <translation>Пришпилити знімки</translation>
     </message>
     <message>
-        <source>Start scrollshot</source>
-        <translation>Почати знімок із гортанням</translation>
-    </message>
-    <message>
         <source>Start OCR</source>
         <translation>Почати розпізнавання</translation>
     </message>
     <message>
+        <source>Start scrollshot</source>
+        <translation>Почати знімок із гортанням</translation>
+    </message>
+    <message>
         <source>Arrow</source>
         <translation>Стрілка</translation>
-    </message>
-    <message>
-        <source>Sound</source>
-        <translation>Звук</translation>
-    </message>
-    <message>
-        <source>Mouse</source>
-        <translation>Миша</translation>
     </message>
 </context>
 <context>
@@ -459,12 +461,36 @@ select the area to record</source>
 <context>
     <name>SubToolWidget</name>
     <message>
-        <source>Microphone</source>
-        <translation>Мікрофон</translation>
+        <source>Show keystroke (K)</source>
+        <translation>Показати натискання клавіш (K)</translation>
     </message>
     <message>
-        <source>Options</source>
+        <source>Hide Keystroke (K)</source>
+        <translation>Приховати натискання клавіш (K)</translation>
+    </message>
+    <message>
+        <source>Show Keystroke (K)</source>
+        <translation>Показати натискання клавіш (K)</translation>
+    </message>
+    <message>
+        <source>Turn on camera (C)</source>
+        <translation>Увімкнути камеру (C)</translation>
+    </message>
+    <message>
+        <source>Turn off camera (C)</source>
+        <translation>Вимкнути камеру (C)</translation>
+    </message>
+    <message>
+        <source>Screenshot</source>
+        <translation>Знімок</translation>
+    </message>
+    <message>
+        <source>Settings</source>
         <translation>Параметри</translation>
+    </message>
+    <message>
+        <source>Settings (F3)</source>
+        <translation>Параметри (F3)</translation>
     </message>
     <message>
         <source>Format:</source>
@@ -477,6 +503,14 @@ select the area to record</source>
     <message>
         <source>MP4</source>
         <translation>MP4</translation>
+    </message>
+    <message>
+        <source>MKV</source>
+        <translation>MKV</translation>
+    </message>
+    <message>
+        <source>webm</source>
+        <translation>webm</translation>
     </message>
     <message>
         <source>FPS:</source>
@@ -503,128 +537,36 @@ select the area to record</source>
         <translation>30 кд/с</translation>
     </message>
     <message>
-        <source>Save to</source>
-        <translation>Місце збереження</translation>
+        <source>Sound</source>
+        <translation>Звук</translation>
     </message>
     <message>
-        <source>Desktop</source>
-        <translation>Стільниця</translation>
+        <source>Microphone</source>
+        <translation>Мікрофон</translation>
     </message>
     <message>
-        <source>Pictures</source>
-        <translation>Зображення</translation>
+        <source>System audio</source>
+        <translation>Загальносистемний звук</translation>
     </message>
     <message>
-        <source>Folder</source>
-        <translation>Тека</translation>
-    </message>
-    <message>
-        <source>Format</source>
-        <translation>Формат</translation>
-    </message>
-    <message>
-        <source>PNG</source>
-        <translation>PNG</translation>
-    </message>
-    <message>
-        <source>JPG</source>
-        <translation>JPG</translation>
-    </message>
-    <message>
-        <source>BMP</source>
-        <translation>BMP</translation>
-    </message>
-    <message>
-        <source>MKV</source>
-        <translation>MKV</translation>
-    </message>
-    <message>
-        <source>Clipboard</source>
-        <translation>Буфер обміну</translation>
+        <source>Options</source>
+        <translation>Параметри</translation>
     </message>
     <message>
         <source>Show pointer</source>
         <translation>Показати вказівник</translation>
     </message>
     <message>
-        <source>Extract Text</source>
-        <translation>Видобути текст</translation>
+        <source>Show click</source>
+        <translation>Показати клацання</translation>
     </message>
     <message>
-        <source>Show keystroke (K)</source>
-        <translation>Показати натискання клавіш (K)</translation>
+        <source>Save to</source>
+        <translation>Місце збереження</translation>
     </message>
     <message>
-        <source>Settings</source>
-        <translation>Параметри</translation>
-    </message>
-    <message>
-        <source>Settings (F3)</source>
-        <translation>Параметри (F3)</translation>
-    </message>
-    <message>
-        <source>Blur (B)</source>
-        <translation>Розмивання (B)</translation>
-    </message>
-    <message>
-        <source>Text (T)</source>
-        <translation>Текст (T)</translation>
-    </message>
-    <message>
-        <source>Scrollshot (Alt+I）</source>
-        <translation>Знімок з гортанням (Alt+I）</translation>
-    </message>
-    <message>
-        <source>Extract text (Alt+O）</source>
-        <translation>Видобути текст (Alt+O）</translation>
-    </message>
-    <message>
-        <source>Undo (Ctrl+Z)</source>
-        <translation>Скасувати (Ctrl+Z)</translation>
-    </message>
-    <message>
-        <source>Screenshot</source>
-        <translation>Знімок</translation>
-    </message>
-    <message>
-        <source>Pin screenshots (Alt+P）</source>
-        <translation>Пришпилити знімки (Alt+P）</translation>
-    </message>
-    <message>
-        <source>Record</source>
-        <translation>Записати</translation>
-    </message>
-    <message>
-        <source>Pencil (P)</source>
-        <translation>Олівець (P)</translation>
-    </message>
-    <message>
-        <source>Turn on camera (C)</source>
-        <translation>Увімкнути камеру (C)</translation>
-    </message>
-    <message>
-        <source>Border Effects</source>
-        <translation>Ефекти рамки</translation>
-    </message>
-    <message>
-        <source>None</source>
-        <translation>Немає</translation>
-    </message>
-    <message>
-        <source>Turn off camera (C)</source>
-        <translation>Вимкнути камеру (C)</translation>
-    </message>
-    <message>
-        <source>Hide Keystroke (K)</source>
-        <translation>Приховати натискання клавіш (K)</translation>
-    </message>
-    <message>
-        <source>Show Keystroke (K)</source>
-        <translation>Показати натискання клавіш (K)</translation>
-    </message>
-    <message>
-        <source>webm</source>
-        <translation>webm</translation>
+        <source>Desktop</source>
+        <translation>Стільниця</translation>
     </message>
     <message>
         <source>Videos</source>
@@ -655,6 +597,82 @@ Press and hold Shift to draw a vertical or horizontal arrow</source>
 Натисніть і утримуйте клавішу Shift, щоб намалювати вертикальну або горизонтальну стрілку</translation>
     </message>
     <message>
+        <source>Pencil (P)</source>
+        <translation>Олівець (P)</translation>
+    </message>
+    <message>
+        <source>Blur (B)</source>
+        <translation>Розмивання (B)</translation>
+    </message>
+    <message>
+        <source>Text (T)</source>
+        <translation>Текст (T)</translation>
+    </message>
+    <message>
+        <source>Scrollshot (Alt+I）</source>
+        <translation>Знімок з гортанням (Alt+I）</translation>
+    </message>
+    <message>
+        <source>Extract text (Alt+O）</source>
+        <translation>Видобути текст (Alt+O）</translation>
+    </message>
+    <message>
+        <source>Pin screenshots (Alt+P）</source>
+        <translation>Пришпилити знімки (Alt+P）</translation>
+    </message>
+    <message>
+        <source>Undo (Ctrl+Z)</source>
+        <translation>Скасувати (Ctrl+Z)</translation>
+    </message>
+    <message>
+        <source>Record</source>
+        <translation>Записати</translation>
+    </message>
+    <message>
+        <source>Clipboard</source>
+        <translation>Буфер обміну</translation>
+    </message>
+    <message>
+        <source>Pictures</source>
+        <translation>Зображення</translation>
+    </message>
+    <message>
+        <source>Folder</source>
+        <translation>Тека</translation>
+    </message>
+    <message>
+        <source>Set a path on save</source>
+        <translation>Встановити шлях для збереження</translation>
+    </message>
+    <message>
+        <source>Change the path on save</source>
+        <translation>Змінити шлях для збереження</translation>
+    </message>
+    <message>
+        <source>Format</source>
+        <translation>Формат</translation>
+    </message>
+    <message>
+        <source>PNG</source>
+        <translation>PNG</translation>
+    </message>
+    <message>
+        <source>JPG</source>
+        <translation>JPG</translation>
+    </message>
+    <message>
+        <source>BMP</source>
+        <translation>BMP</translation>
+    </message>
+    <message>
+        <source>Border Effects</source>
+        <translation>Ефекти рамки</translation>
+    </message>
+    <message>
+        <source>None</source>
+        <translation>Немає</translation>
+    </message>
+    <message>
         <source>Shadow</source>
         <translation>Тінь</translation>
     </message>
@@ -667,24 +685,8 @@ Press and hold Shift to draw a vertical or horizontal arrow</source>
         <translation>Пристрій</translation>
     </message>
     <message>
-        <source>Sound</source>
-        <translation>Звук</translation>
-    </message>
-    <message>
-        <source>System audio</source>
-        <translation>Загальносистемний звук</translation>
-    </message>
-    <message>
-        <source>Show click</source>
-        <translation>Показати клацання</translation>
-    </message>
-    <message>
-        <source>Set a path on save</source>
-        <translation>Встановити шлях для збереження</translation>
-    </message>
-    <message>
-        <source>Change the path on save</source>
-        <translation>Змінити шлях для збереження</translation>
+        <source>Extract Text</source>
+        <translation>Видобути текст</translation>
     </message>
 </context>
 <context>

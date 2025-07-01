@@ -1,4 +1,6 @@
-<?xml version="1.0" ?><!DOCTYPE TS><TS version="2.1" language="hu">
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE TS>
+<TS version="2.1" language="hu">
 <context>
     <name>CountdownTooltip</name>
     <message>
@@ -105,16 +107,16 @@ vagy nyomja le a gyorsbillentyűt ismét a felvétel megállításához</transla
         <translation>Görgethető képernyőkép</translation>
     </message>
     <message>
-        <source>Open Folder</source>
-        <translation>Mappa megnyitása</translation>
-    </message>
-    <message>
         <source>Pin Screenshots</source>
         <translation>Képernyőképek kitűzése</translation>
     </message>
     <message>
         <source>deepin-screen-recorder</source>
-        <translation>Deepin® Képernyőrögzítő</translation>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Open Folder</source>
+        <translation>Mappa megnyitása</translation>
     </message>
 </context>
 <context>
@@ -344,6 +346,10 @@ vagy nyomja le a gyorsbillentyűt ismét a felvétel megállításához</transla
         <translation>Gyorsbillentyűk megjelenítése</translation>
     </message>
     <message>
+        <source>Sound</source>
+        <translation>Hang</translation>
+    </message>
+    <message>
         <source>Keystroke</source>
         <translation>Billentyűleütés</translation>
     </message>
@@ -364,6 +370,10 @@ vagy nyomja le a gyorsbillentyűt ismét a felvétel megállításához</transla
         <translation>Indítás/Felvétel</translation>
     </message>
     <message>
+        <source>Mouse</source>
+        <translation>Egér</translation>
+    </message>
+    <message>
         <source>Tools</source>
         <translation>Eszközök</translation>
     </message>
@@ -380,24 +390,16 @@ vagy nyomja le a gyorsbillentyűt ismét a felvétel megállításához</transla
         <translation>Képernyőképek kitűzése</translation>
     </message>
     <message>
-        <source>Start scrollshot</source>
-        <translation>Görgethető képernyőkép indítása</translation>
-    </message>
-    <message>
         <source>Start OCR</source>
         <translation>Optikai karakterfelismerés indítása</translation>
     </message>
     <message>
+        <source>Start scrollshot</source>
+        <translation>Görgethető képernyőkép indítása</translation>
+    </message>
+    <message>
         <source>Arrow</source>
         <translation>Nyíl</translation>
-    </message>
-    <message>
-        <source>Sound</source>
-        <translation>Hang</translation>
-    </message>
-    <message>
-        <source>Mouse</source>
-        <translation>Egér</translation>
     </message>
 </context>
 <context>
@@ -459,12 +461,36 @@ használjuk az egeret</translation>
 <context>
     <name>SubToolWidget</name>
     <message>
-        <source>Microphone</source>
-        <translation>Mikrofon</translation>
+        <source>Show keystroke (K)</source>
+        <translation>Billentyűleütés megjelenítése (K)</translation>
     </message>
     <message>
-        <source>Options</source>
+        <source>Hide Keystroke (K)</source>
+        <translation>Billentyűleütés elrejtése (K)</translation>
+    </message>
+    <message>
+        <source>Show Keystroke (K)</source>
+        <translation>Billentyűleütés megjelenítése (K)</translation>
+    </message>
+    <message>
+        <source>Turn on camera (C)</source>
+        <translation>Kamera bekapcsolása (C)</translation>
+    </message>
+    <message>
+        <source>Turn off camera (C)</source>
+        <translation>Kamera kikapcsolása (C)</translation>
+    </message>
+    <message>
+        <source>Screenshot</source>
+        <translation>Képernyőkép</translation>
+    </message>
+    <message>
+        <source>Settings</source>
         <translation>Beállítások</translation>
+    </message>
+    <message>
+        <source>Settings (F3)</source>
+        <translation>Beállítások (F3)</translation>
     </message>
     <message>
         <source>Format:</source>
@@ -477,6 +503,14 @@ használjuk az egeret</translation>
     <message>
         <source>MP4</source>
         <translation>MP4</translation>
+    </message>
+    <message>
+        <source>MKV</source>
+        <translation>MKV</translation>
+    </message>
+    <message>
+        <source>webm</source>
+        <translation>webm</translation>
     </message>
     <message>
         <source>FPS:</source>
@@ -503,128 +537,36 @@ használjuk az egeret</translation>
         <translation>30 fps</translation>
     </message>
     <message>
-        <source>Save to</source>
-        <translation>Mentés ide</translation>
+        <source>Sound</source>
+        <translation>Hang</translation>
     </message>
     <message>
-        <source>Desktop</source>
-        <translation>Asztal</translation>
+        <source>Microphone</source>
+        <translation>Mikrofon</translation>
     </message>
     <message>
-        <source>Pictures</source>
-        <translation>Képek</translation>
+        <source>System audio</source>
+        <translation>Rendszer hangok</translation>
     </message>
     <message>
-        <source>Folder</source>
-        <translation>Mappa</translation>
-    </message>
-    <message>
-        <source>Format</source>
-        <translation>Formátum</translation>
-    </message>
-    <message>
-        <source>PNG</source>
-        <translation>PNG</translation>
-    </message>
-    <message>
-        <source>JPG</source>
-        <translation>JPG</translation>
-    </message>
-    <message>
-        <source>BMP</source>
-        <translation>BMP</translation>
-    </message>
-    <message>
-        <source>MKV</source>
-        <translation>MKV</translation>
-    </message>
-    <message>
-        <source>Clipboard</source>
-        <translation>Vágólap</translation>
+        <source>Options</source>
+        <translation>Beállítások</translation>
     </message>
     <message>
         <source>Show pointer</source>
         <translation>Mutató megjelenítése</translation>
     </message>
     <message>
-        <source>Extract Text</source>
-        <translation>Szöveg kivonat</translation>
+        <source>Show click</source>
+        <translation>Kattintás megjelenítése</translation>
     </message>
     <message>
-        <source>Show keystroke (K)</source>
-        <translation>Billentyűleütés megjelenítése (K)</translation>
+        <source>Save to</source>
+        <translation>Mentés ide</translation>
     </message>
     <message>
-        <source>Settings</source>
-        <translation>Beállítások</translation>
-    </message>
-    <message>
-        <source>Settings (F3)</source>
-        <translation>Beállítások (F3)</translation>
-    </message>
-    <message>
-        <source>Blur (B)</source>
-        <translation>Elmosás (B)</translation>
-    </message>
-    <message>
-        <source>Text (T)</source>
-        <translation>Szöveg (T)</translation>
-    </message>
-    <message>
-        <source>Scrollshot (Alt+I）</source>
-        <translation>Görgethető képernyőkép (Alt+I）</translation>
-    </message>
-    <message>
-        <source>Extract text (Alt+O）</source>
-        <translation>Szöveg kibontása (Alt+O）</translation>
-    </message>
-    <message>
-        <source>Undo (Ctrl+Z)</source>
-        <translation>Visszavonás (Ctrl+Z)</translation>
-    </message>
-    <message>
-        <source>Screenshot</source>
-        <translation>Képernyőkép</translation>
-    </message>
-    <message>
-        <source>Pin screenshots (Alt+P）</source>
-        <translation>Képernyőképek rögzítése (Alt+P）</translation>
-    </message>
-    <message>
-        <source>Record</source>
-        <translation>Felvétel</translation>
-    </message>
-    <message>
-        <source>Pencil (P)</source>
-        <translation>Ceruza (P)</translation>
-    </message>
-    <message>
-        <source>Turn on camera (C)</source>
-        <translation>Kamera bekapcsolása (C)</translation>
-    </message>
-    <message>
-        <source>Border Effects</source>
-        <translation>Szegély Effektjei</translation>
-    </message>
-    <message>
-        <source>None</source>
-        <translation>Nincs</translation>
-    </message>
-    <message>
-        <source>Turn off camera (C)</source>
-        <translation>Kamera kikapcsolása (C)</translation>
-    </message>
-    <message>
-        <source>Hide Keystroke (K)</source>
-        <translation>Billentyűleütés elrejtése (K)</translation>
-    </message>
-    <message>
-        <source>Show Keystroke (K)</source>
-        <translation>Billentyűleütés megjelenítése (K)</translation>
-    </message>
-    <message>
-        <source>webm</source>
-        <translation>webm</translation>
+        <source>Desktop</source>
+        <translation>Asztal</translation>
     </message>
     <message>
         <source>Videos</source>
@@ -655,6 +597,82 @@ Press and hold Shift to draw a vertical or horizontal arrow</source>
 Függőleges vagy vízszintes nyíl rajzolásához tartsa lenyomva a Shift billentyűt</translation>
     </message>
     <message>
+        <source>Pencil (P)</source>
+        <translation>Ceruza (P)</translation>
+    </message>
+    <message>
+        <source>Blur (B)</source>
+        <translation>Elmosás (B)</translation>
+    </message>
+    <message>
+        <source>Text (T)</source>
+        <translation>Szöveg (T)</translation>
+    </message>
+    <message>
+        <source>Scrollshot (Alt+I）</source>
+        <translation>Görgethető képernyőkép (Alt+I）</translation>
+    </message>
+    <message>
+        <source>Extract text (Alt+O）</source>
+        <translation>Szöveg kibontása (Alt+O）</translation>
+    </message>
+    <message>
+        <source>Pin screenshots (Alt+P）</source>
+        <translation>Képernyőképek rögzítése (Alt+P）</translation>
+    </message>
+    <message>
+        <source>Undo (Ctrl+Z)</source>
+        <translation>Visszavonás (Ctrl+Z)</translation>
+    </message>
+    <message>
+        <source>Record</source>
+        <translation>Felvétel</translation>
+    </message>
+    <message>
+        <source>Clipboard</source>
+        <translation>Vágólap</translation>
+    </message>
+    <message>
+        <source>Pictures</source>
+        <translation>Képek</translation>
+    </message>
+    <message>
+        <source>Folder</source>
+        <translation>Mappa</translation>
+    </message>
+    <message>
+        <source>Set a path on save</source>
+        <translation>Állítson be egy elérési utat a mentéshez</translation>
+    </message>
+    <message>
+        <source>Change the path on save</source>
+        <translation>Mentéskor módosítsa az elérési utat</translation>
+    </message>
+    <message>
+        <source>Format</source>
+        <translation>Formátum</translation>
+    </message>
+    <message>
+        <source>PNG</source>
+        <translation>PNG</translation>
+    </message>
+    <message>
+        <source>JPG</source>
+        <translation>JPG</translation>
+    </message>
+    <message>
+        <source>BMP</source>
+        <translation>BMP</translation>
+    </message>
+    <message>
+        <source>Border Effects</source>
+        <translation>Szegély Effektjei</translation>
+    </message>
+    <message>
+        <source>None</source>
+        <translation>Nincs</translation>
+    </message>
+    <message>
         <source>Shadow</source>
         <translation>Árnyék</translation>
     </message>
@@ -667,24 +685,8 @@ Függőleges vagy vízszintes nyíl rajzolásához tartsa lenyomva a Shift bille
         <translation>Eszköz</translation>
     </message>
     <message>
-        <source>Sound</source>
-        <translation>Hang</translation>
-    </message>
-    <message>
-        <source>System audio</source>
-        <translation>Rendszer hangok</translation>
-    </message>
-    <message>
-        <source>Show click</source>
-        <translation>Kattintás megjelenítése</translation>
-    </message>
-    <message>
-        <source>Set a path on save</source>
-        <translation>Állítson be egy elérési utat a mentéshez</translation>
-    </message>
-    <message>
-        <source>Change the path on save</source>
-        <translation>Mentéskor módosítsa az elérési utat</translation>
+        <source>Extract Text</source>
+        <translation>Szöveg kivonat</translation>
     </message>
 </context>
 <context>

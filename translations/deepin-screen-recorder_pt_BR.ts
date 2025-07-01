@@ -1,11 +1,13 @@
-<?xml version="1.0" ?><!DOCTYPE TS><TS version="2.1" language="pt_BR">
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE TS>
+<TS version="2.1" language="pt_BR">
 <context>
     <name>CountdownTooltip</name>
     <message>
         <source>Click the tray icon 
 or press the shortcut again to stop recording</source>
-        <translation>Para interromper a gravação
-clique no ícone da bandeja ou pressione o atalho novamente</translation>
+        <translation>Para finalizar a gravação
+clique no ícone da bandeja ou use o atalho</translation>
     </message>
     <message>
         <source>Do not rotate your screen during recording</source>
@@ -105,16 +107,16 @@ clique no ícone da bandeja ou pressione o atalho novamente</translation>
         <translation>Tela de rolagem</translation>
     </message>
     <message>
-        <source>Open Folder</source>
-        <translation>Abrir pasta</translation>
-    </message>
-    <message>
         <source>Pin Screenshots</source>
         <translation>Fixar capturas de tela</translation>
     </message>
     <message>
         <source>deepin-screen-recorder</source>
-        <translation>deepin-screen-recorder</translation>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Open Folder</source>
+        <translation>Abrir pasta</translation>
     </message>
 </context>
 <context>
@@ -165,7 +167,7 @@ clique no ícone da bandeja ou pressione o atalho novamente</translation>
     <name>RecordProcess</name>
     <message>
         <source>View</source>
-        <translation>Ver</translation>
+        <translation>Visualizar</translation>
     </message>
     <message>
         <source>Recording finished</source>
@@ -344,6 +346,10 @@ clique no ícone da bandeja ou pressione o atalho novamente</translation>
         <translation>Exibir atalhos</translation>
     </message>
     <message>
+        <source>Sound</source>
+        <translation>Som</translation>
+    </message>
+    <message>
         <source>Keystroke</source>
         <translation>Pressionamento de tecla</translation>
     </message>
@@ -364,6 +370,10 @@ clique no ícone da bandeja ou pressione o atalho novamente</translation>
         <translation>Iniciar / Gravação</translation>
     </message>
     <message>
+        <source>Mouse</source>
+        <translation>Mouse</translation>
+    </message>
+    <message>
         <source>Tools</source>
         <translation>Ferramentas</translation>
     </message>
@@ -380,24 +390,16 @@ clique no ícone da bandeja ou pressione o atalho novamente</translation>
         <translation>Fixar capturas de tela</translation>
     </message>
     <message>
-        <source>Start scrollshot</source>
-        <translation>Iniciar tela de rolagem</translation>
-    </message>
-    <message>
         <source>Start OCR</source>
         <translation>Iniciar OCR</translation>
     </message>
     <message>
+        <source>Start scrollshot</source>
+        <translation>Iniciar tela de rolagem</translation>
+    </message>
+    <message>
         <source>Arrow</source>
         <translation>Seta</translation>
-    </message>
-    <message>
-        <source>Sound</source>
-        <translation>Som</translation>
-    </message>
-    <message>
-        <source>Mouse</source>
-        <translation>Mouse</translation>
     </message>
 </context>
 <context>
@@ -420,31 +422,31 @@ clique no ícone da bandeja ou pressione o atalho novamente</translation>
         <source>Rectangle
 Press and hold Shift to draw a square</source>
         <translation>Retângulo
-Pressione e segure a tecla Shift para desenhar um quadrado</translation>
+Mantenha pressionada a tecla Shift para desenhar um quadrado</translation>
     </message>
     <message>
         <source>Ellipse
 Press and hold Shift to draw a circle</source>
         <translation>Elipse
-Pressione e segure a tecla Shift para desenhar um círculo</translation>
+Mantenha pressionada a tecla Shift para desenhar um círculo</translation>
     </message>
     <message>
         <source>Brush
 Press and hold Shift to draw a straight line</source>
         <translation>Pincel
-Pressione e segure a tecla Shift para desenhar uma linha reta</translation>
+Mantenha pressionada a tecla Shift para desenhar uma linha reta</translation>
     </message>
     <message>
         <source>Adjust blur strength (Scroll to adjust it)</source>
-        <translation>Ajustar intensidade do desfoque (Role para ajustá-la)</translation>
+        <translation>Ajustar a intensidade do desfoque (Role para ajustá-la)</translation>
     </message>
     <message>
         <source>Adjust brush size (Scroll to adjust it)</source>
-        <translation>Ajustar tamanho do pincel (Role para ajustá-lo)</translation>
+        <translation>Ajustar o tamanho do pincel (Role para ajustá-lo)</translation>
     </message>
     <message>
         <source>Adjust text size (Scroll to adjust it)</source>
-        <translation>Ajustar tamanho do texto (Role para ajustá-lo)</translation>
+        <translation>Ajustar o tamanho do texto (Role para ajustá-lo)</translation>
     </message>
 </context>
 <context>
@@ -453,18 +455,42 @@ Pressione e segure a tecla Shift para desenhar uma linha reta</translation>
         <source>Click or drag to
 select the area to record</source>
         <translation>Clique ou arraste para
-selecionar a área a ser gravada</translation>
+selecione a área para gravar</translation>
     </message>
 </context>
 <context>
     <name>SubToolWidget</name>
     <message>
-        <source>Microphone</source>
-        <translation>Microfone</translation>
+        <source>Show keystroke (K)</source>
+        <translation>Exibir pressionamento de tecla (K)</translation>
     </message>
     <message>
-        <source>Options</source>
-        <translation>Opções</translation>
+        <source>Hide Keystroke (K)</source>
+        <translation>Ocultar tecla (K)</translation>
+    </message>
+    <message>
+        <source>Show Keystroke (K)</source>
+        <translation>Exibir tecla (K)</translation>
+    </message>
+    <message>
+        <source>Turn on camera (C)</source>
+        <translation>Ligar câmera (C)</translation>
+    </message>
+    <message>
+        <source>Turn off camera (C)</source>
+        <translation>Desligue câmera (C)</translation>
+    </message>
+    <message>
+        <source>Screenshot</source>
+        <translation>Capturar</translation>
+    </message>
+    <message>
+        <source>Settings</source>
+        <translation>Configurações</translation>
+    </message>
+    <message>
+        <source>Settings (F3)</source>
+        <translation>Configurações (F3)</translation>
     </message>
     <message>
         <source>Format:</source>
@@ -477,6 +503,14 @@ selecionar a área a ser gravada</translation>
     <message>
         <source>MP4</source>
         <translation>MP4</translation>
+    </message>
+    <message>
+        <source>MKV</source>
+        <translation>MKV</translation>
+    </message>
+    <message>
+        <source>webm</source>
+        <translation>webm</translation>
     </message>
     <message>
         <source>FPS:</source>
@@ -503,6 +537,30 @@ selecionar a área a ser gravada</translation>
         <translation>30 fps</translation>
     </message>
     <message>
+        <source>Sound</source>
+        <translation>Som</translation>
+    </message>
+    <message>
+        <source>Microphone</source>
+        <translation>Microfone</translation>
+    </message>
+    <message>
+        <source>System audio</source>
+        <translation>Áudio do sistema</translation>
+    </message>
+    <message>
+        <source>Options</source>
+        <translation>Opções</translation>
+    </message>
+    <message>
+        <source>Show pointer</source>
+        <translation>Exibir cursor</translation>
+    </message>
+    <message>
+        <source>Show click</source>
+        <translation>Exibir clique</translation>
+    </message>
+    <message>
         <source>Save to</source>
         <translation>Salvar em</translation>
     </message>
@@ -511,12 +569,84 @@ selecionar a área a ser gravada</translation>
         <translation>Área de Trabalho</translation>
     </message>
     <message>
+        <source>Videos</source>
+        <translation>Vídeos</translation>
+    </message>
+    <message>
+        <source>Rectangle (R)
+Press and hold Shift to draw a square</source>
+        <translation>Retângulo (R)
+Mantenha pressionada a tecla Shift para desenhar um quadrado</translation>
+    </message>
+    <message>
+        <source>Ellipse (O)
+Press and hold Shift to draw a circle</source>
+        <translation>Elipse (O)
+Mantenha pressionada a tecla Shift para desenhar um círculo</translation>
+    </message>
+    <message>
+        <source>Line (L)
+Press and hold Shift to draw a vertical or horizontal line</source>
+        <translation>Linha (L)
+Mantenha pressionada a tecla Shift para desenhar uma linha vertical ou horizontal</translation>
+    </message>
+    <message>
+        <source>Arrow (X)
+Press and hold Shift to draw a vertical or horizontal arrow</source>
+        <translation>Seta (X)
+Mantenha pressionada a tecla Shift para desenhar uma seta vertical ou horizontal</translation>
+    </message>
+    <message>
+        <source>Pencil (P)</source>
+        <translation>Lápis (P)</translation>
+    </message>
+    <message>
+        <source>Blur (B)</source>
+        <translation>Desfocar (B)</translation>
+    </message>
+    <message>
+        <source>Text (T)</source>
+        <translation>Texto (T)</translation>
+    </message>
+    <message>
+        <source>Scrollshot (Alt+I）</source>
+        <translation>Tela de rolagem (Alt+I)</translation>
+    </message>
+    <message>
+        <source>Extract text (Alt+O）</source>
+        <translation>Extrair texto (Alt+O)</translation>
+    </message>
+    <message>
+        <source>Pin screenshots (Alt+P）</source>
+        <translation>Fixar capturas de tela (Alt+P)</translation>
+    </message>
+    <message>
+        <source>Undo (Ctrl+Z)</source>
+        <translation>Desfazer (Ctrl+Z)</translation>
+    </message>
+    <message>
+        <source>Record</source>
+        <translation>Gravar</translation>
+    </message>
+    <message>
+        <source>Clipboard</source>
+        <translation>Área de Transferência</translation>
+    </message>
+    <message>
         <source>Pictures</source>
         <translation>Imagens</translation>
     </message>
     <message>
         <source>Folder</source>
         <translation>Pasta</translation>
+    </message>
+    <message>
+        <source>Set a path on save</source>
+        <translation>Definir caminho para salvar</translation>
+    </message>
+    <message>
+        <source>Change the path on save</source>
+        <translation>Alterar caminho ao salvar</translation>
     </message>
     <message>
         <source>Format</source>
@@ -535,124 +665,12 @@ selecionar a área a ser gravada</translation>
         <translation>BMP</translation>
     </message>
     <message>
-        <source>MKV</source>
-        <translation>MKV</translation>
-    </message>
-    <message>
-        <source>Clipboard</source>
-        <translation>Área de Transferência</translation>
-    </message>
-    <message>
-        <source>Show pointer</source>
-        <translation>Exibir cursor</translation>
-    </message>
-    <message>
-        <source>Extract Text</source>
-        <translation>Extrair texto</translation>
-    </message>
-    <message>
-        <source>Show keystroke (K)</source>
-        <translation>Exibir pressionamento de atalho (K)</translation>
-    </message>
-    <message>
-        <source>Settings</source>
-        <translation>Configurações</translation>
-    </message>
-    <message>
-        <source>Settings (F3)</source>
-        <translation>Configurações (F3)</translation>
-    </message>
-    <message>
-        <source>Blur (B)</source>
-        <translation>Desfocar (B)</translation>
-    </message>
-    <message>
-        <source>Text (T)</source>
-        <translation>Texto (T)</translation>
-    </message>
-    <message>
-        <source>Scrollshot (Alt+I）</source>
-        <translation>Capturar página inteira (Alt+I)</translation>
-    </message>
-    <message>
-        <source>Extract text (Alt+O）</source>
-        <translation>Extrair texto (Alt+O)</translation>
-    </message>
-    <message>
-        <source>Undo (Ctrl+Z)</source>
-        <translation>Desfazer (Ctrl+Z)</translation>
-    </message>
-    <message>
-        <source>Screenshot</source>
-        <translation>Capturar</translation>
-    </message>
-    <message>
-        <source>Pin screenshots (Alt+P）</source>
-        <translation>Fixar capturas de tela (Alt+P)</translation>
-    </message>
-    <message>
-        <source>Record</source>
-        <translation>Gravar</translation>
-    </message>
-    <message>
-        <source>Pencil (P)</source>
-        <translation>Lápis (P)</translation>
-    </message>
-    <message>
-        <source>Turn on camera (C)</source>
-        <translation>Ligar câmera (C)</translation>
-    </message>
-    <message>
         <source>Border Effects</source>
         <translation>Efeitos de borda</translation>
     </message>
     <message>
         <source>None</source>
         <translation>Nenhum</translation>
-    </message>
-    <message>
-        <source>Turn off camera (C)</source>
-        <translation>Desligar câmera (C)</translation>
-    </message>
-    <message>
-        <source>Hide Keystroke (K)</source>
-        <translation>Ocultar pressionamento de atalho (K)</translation>
-    </message>
-    <message>
-        <source>Show Keystroke (K)</source>
-        <translation>Exibir pressionamento de atalho (K)</translation>
-    </message>
-    <message>
-        <source>webm</source>
-        <translation>webm</translation>
-    </message>
-    <message>
-        <source>Videos</source>
-        <translation>Vídeos</translation>
-    </message>
-    <message>
-        <source>Rectangle (R)
-Press and hold Shift to draw a square</source>
-        <translation>Retângulo (R)
-Pressione e segure a tecla Shift para desenhar um quadrado</translation>
-    </message>
-    <message>
-        <source>Ellipse (O)
-Press and hold Shift to draw a circle</source>
-        <translation>Elipse (O)
-Pressione e segure a tecla Shift para desenhar um círculo</translation>
-    </message>
-    <message>
-        <source>Line (L)
-Press and hold Shift to draw a vertical or horizontal line</source>
-        <translation>Pincel (L)
-Pressione e segure a tecla Shift para desenhar uma linha reta</translation>
-    </message>
-    <message>
-        <source>Arrow (X)
-Press and hold Shift to draw a vertical or horizontal arrow</source>
-        <translation>Seta (X)
-Pressione e segure a tecla Shift para desenhar uma seta vertical ou horizontal</translation>
     </message>
     <message>
         <source>Shadow</source>
@@ -667,24 +685,8 @@ Pressione e segure a tecla Shift para desenhar uma seta vertical ou horizontal</
         <translation>Dispositivo</translation>
     </message>
     <message>
-        <source>Sound</source>
-        <translation>Som</translation>
-    </message>
-    <message>
-        <source>System audio</source>
-        <translation>Áudio do sistema</translation>
-    </message>
-    <message>
-        <source>Show click</source>
-        <translation>Exibir clique</translation>
-    </message>
-    <message>
-        <source>Set a path on save</source>
-        <translation>Definir caminho para salvar</translation>
-    </message>
-    <message>
-        <source>Change the path on save</source>
-        <translation>Alterar caminho ao salvar</translation>
+        <source>Extract Text</source>
+        <translation>Extrair texto</translation>
     </message>
 </context>
 <context>

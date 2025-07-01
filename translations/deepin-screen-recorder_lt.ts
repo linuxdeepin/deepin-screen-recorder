@@ -1,4 +1,6 @@
-<?xml version="1.0" ?><!DOCTYPE TS><TS version="2.1" language="lt">
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE TS>
+<TS version="2.1" language="lt">
 <context>
     <name>CountdownTooltip</name>
     <message>
@@ -10,14 +12,14 @@ arba dar kartą paspauskite trumpinį</translation>
     </message>
     <message>
         <source>Do not rotate your screen during recording</source>
-        <translation>Nepakreipkite ekrano per įrašymą</translation>
+        <translation>Nepriklausomai pasukite ekraną įrašant</translation>
     </message>
 </context>
 <context>
     <name>IconWidget</name>
     <message>
         <source>Screenshot</source>
-        <translation>Ekraninis nuotrauka</translation>
+        <translation>Ekraninis vaizdas</translation>
     </message>
     <message>
         <source>Recording</source>
@@ -32,26 +34,26 @@ arba dar kartą paspauskite trumpinį</translation>
     </message>
     <message>
         <source>Screenshot</source>
-        <translation>Ekraninė nuotrauka baigta</translation>
+        <translation>Ekraninis vaizdas</translation>
     </message>
 </context>
 <context>
     <name>MainWindow</name>
     <message>
         <source>Screen Capture</source>
-        <translation>Išsaugojama ekraninio įrašymo failas, prašom laukti...</translation>
+        <translation>Ekraninis vaizdas</translation>
     </message>
     <message>
         <source>Save failed. Please save it in your home directory.</source>
-        <translation>Kai per procesą išjungta langų efekto funkcija, įrašymas turi būti sustabdytas</translation>
+        <translation>Išsaugymas nepavyko. Išsaugykite jį savo namų kataloge.</translation>
     </message>
     <message>
         <source>View</source>
-        <translation>Žiūrėti</translation>
+        <translation>Peržiūrėti</translation>
     </message>
     <message>
         <source>Screenshot finished</source>
-        <translation>Ekraninė nuotrauka nepavyko.</translation>
+        <translation>Ekraninis vaizdas baigtas</translation>
     </message>
     <message>
         <source>PNG (*.png);;JPEG (*.jpg *.jpeg);;BMP (*.bmp)</source>
@@ -67,7 +69,7 @@ arba dar kartą paspauskite trumpinį</translation>
     </message>
     <message>
         <source>select-area</source>
-        <translation>select-area</translation>
+        <translation>pasirinkti zoną</translation>
     </message>
     <message>
         <source>Save</source>
@@ -87,35 +89,35 @@ arba dar kartą paspauskite trumpinį</translation>
     </message>
     <message>
         <source>Saving the screen recording file, please wait...</source>
-        <translation>Scrollshot</translation>
+        <translation>Išsaugojama ekraninis įrašymas, prašom laukti...</translation>
     </message>
     <message>
         <source>As the window effect is disabled during the process, the recording has to be stopped</source>
-        <translation>Fiksuoti ekranines nuotraukas</translation>
+        <translation>Kai langai vaizdo efektas išjungtas, įrašymas turi būti sustabdytas</translation>
     </message>
     <message>
         <source>Screenshot</source>
-        <translation>Ekrano kopija</translation>
+        <translation>Ekraninis vaizdas</translation>
     </message>
     <message>
         <source>Screenshot failed.</source>
-        <translation>deepin-screen-recorder</translation>
+        <translation>Ekraninis vaizdas nepavyko.</translation>
     </message>
     <message>
         <source>Scrollshot</source>
-        <translation>Fiksuoti ekranines nuotraukas</translation>
+        <translation>Scrollshot</translation>
+    </message>
+    <message>
+        <source>Pin Screenshots</source>
+        <translation>Įdėti ekraninius vaizdus</translation>
+    </message>
+    <message>
+        <source>deepin-screen-recorder</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Open Folder</source>
         <translation>Atverti aplanką</translation>
-    </message>
-    <message>
-        <source>Pin Screenshots</source>
-        <translation>Ekraninis nuotrauka</translation>
-    </message>
-    <message>
-        <source>deepin-screen-recorder</source>
-        <translation>Įrašyti</translation>
     </message>
 </context>
 <context>
@@ -137,14 +139,14 @@ arba dar kartą paspauskite trumpinį</translation>
     <name>QObject</name>
     <message>
         <source>Pin Screenshots</source>
-        <translation>Ekraninis nuotrauka</translation>
+        <translation>Įdėti ekraninius vaizdus</translation>
     </message>
 </context>
 <context>
     <name>QuickPanelWidget</name>
     <message>
         <source>Screenshot</source>
-        <translation>Įrašymas</translation>
+        <translation>Ekraninis vaizdas</translation>
     </message>
     <message>
         <source>Record</source>
@@ -155,11 +157,11 @@ arba dar kartą paspauskite trumpinį</translation>
     <name>RecordIconWidget</name>
     <message>
         <source>Screenshot</source>
-        <translation>Ekraninis įrašymas prasidės %1 sekundės</translation>
+        <translation>Ekraninis vaizdas</translation>
     </message>
     <message>
         <source>Recording</source>
-        <translation>Gauti pagalbą.</translation>
+        <translation>Įrašymas</translation>
     </message>
 </context>
 <context>
@@ -178,7 +180,7 @@ arba dar kartą paspauskite trumpinį</translation>
     </message>
     <message>
         <source>Record</source>
-        <translation>Nepavyko gauti nuoseklios ekraninės nuotraukos.</translation>
+        <translation>Įrašyti</translation>
     </message>
     <message>
         <source>Open Folder</source>
@@ -189,56 +191,56 @@ arba dar kartą paspauskite trumpinį</translation>
     <name>Screenshot</name>
     <message>
         <source>Screen Capture will start in %1 seconds</source>
-        <translation>Patekote į scroll srities apačią</translation>
+        <translation>Ekraninis vaizdas prasidės %1 sekundėmis</translation>
     </message>
 </context>
 <context>
     <name>ScrollShotTip</name>
     <message>
         <source>Get help.</source>
-        <translation>Pasiekėte maksimalų ilgį</translation>
+        <translation>Gauti pagalbą.</translation>
     </message>
     <message>
         <source>Failed to take a continuous screenshot.</source>
-        <translation>Įrašyti</translation>
+        <translation>Nepavyko pasiimti nuoseklaus ekraninio vaizdo.</translation>
     </message>
     <message>
         <source>Reached the bottom of the scroll area</source>
-        <translation>Pieštis (P)</translation>
+        <translation>Pasiekta apatine skrydžio zonos</translation>
     </message>
     <message>
         <source>Reached the maximum length</source>
-        <translation>Įjungti kamerą (C)</translation>
+        <translation>Pasiekta maksimalus ilgis</translation>
     </message>
     <message>
         <source>adjust the capture area</source>
-        <translation>keškininkinkite pasikartojamąją srityrą</translation>
+        <translation>Pareikškite snaptūro sritį</translation>
     </message>
     <message>
         <source>Scroll your mouse wheel or click to take a scrolling screenshot</source>
-        <translation>kelinkite miškinės valdytuvę arba spustelėkite, kad įsigalintumėte į ekrano nutraukimąsias vaizdines ivertinimus</translation>
+        <translation>Paverskite pelės ratuką arba spustelėkite, kad imtumėte skiriamą ekraninį atspalvį</translation>
     </message>
     <message>
         <source>Slow down the scrolling speed</source>
-        <translation>skurkinkite ekrano nutraukimąsio greičio</translation>
+        <translation>Lėtinkite skiriamos ekraninės atspalvio greitį</translation>
     </message>
     <message>
         <source>Invalid area, click to </source>
-        <translation>Neteisinga sritys, spustelėkite, kad</translation>
+        <translation>Nepatikima zona, spustelėkite, kad </translation>
     </message>
 </context>
 <context>
     <name>ShapesWidget</name>
     <message>
         <source>Input text here</source>
-        <translation>įveskite tekstą čia</translation>
+        <translation>Įveskite tekstą čia</translation>
     </message>
 </context>
 <context>
     <name>Shortcut</name>
     <message>
         <source>Start/Screenshot</source>
-        <translation>Pradėti/Kaip vaizdą</translation>
+        <translation>Pradėti/Ekraninis atspalvis</translation>
     </message>
     <message>
         <source>Exit/Save</source>
@@ -246,7 +248,7 @@ arba dar kartą paspauskite trumpinį</translation>
     </message>
     <message>
         <source>Size Adjustment</source>
-        <translation>Formos keitimas</translation>
+        <translation>Dydis</translation>
     </message>
     <message>
         <source>Settings</source>
@@ -254,19 +256,19 @@ arba dar kartą paspauskite trumpinį</translation>
     </message>
     <message>
         <source>Quick start</source>
-        <translation>Greitas pradžiavimas</translation>
+        <translation>Greita pradžia</translation>
     </message>
     <message>
         <source>Window screenshot</source>
-        <translation>Langas kaip vaizdas</translation>
+        <translation>Langas</translation>
     </message>
     <message>
         <source>Delay screenshot</source>
-        <translation>Palaikyti vaizdą</translation>
+        <translation>Vėlavimas</translation>
     </message>
     <message>
         <source>Full screenshot</source>
-        <translation>Visas ekras kaip vaizdas</translation>
+        <translation>Pilnas ekraninis atspalvis</translation>
     </message>
     <message>
         <source>Exit</source>
@@ -282,7 +284,7 @@ arba dar kartą paspauskite trumpinį</translation>
     </message>
     <message>
         <source>Ellipse</source>
-        <translation>Elipsė</translation>
+        <translation>Apvalus</translation>
     </message>
     <message>
         <source>Line</source>
@@ -290,7 +292,7 @@ arba dar kartą paspauskite trumpinį</translation>
     </message>
     <message>
         <source>Pencil</source>
-        <translation>Pieštukas</translation>
+        <translation>Piešiklis</translation>
     </message>
     <message>
         <source>Text</source>
@@ -298,43 +300,43 @@ arba dar kartą paspauskite trumpinį</translation>
     </message>
     <message>
         <source>Delete</source>
-        <translation>Ištrinti</translation>
+        <translation>Pašalinti</translation>
     </message>
     <message>
         <source>Undo</source>
-        <translation>Atšaukti</translation>
+        <translation>Atsaukti</translation>
     </message>
     <message>
         <source>Increase height up</source>
-        <translation>Padidinkite aukštį į viršų</translation>
+        <translation>Padidinkite aukštį aukštyn</translation>
     </message>
     <message>
         <source>Increase height down</source>
-        <translation>Padidinkite aukštį į apačią</translation>
+        <translation>Padidinkite aukštį žemyn</translation>
     </message>
     <message>
         <source>Increase width left</source>
-        <translation>Padidinkite plotį į kairę</translation>
+        <translation>Padidinkite plotį kairėn</translation>
     </message>
     <message>
         <source>Increase width right</source>
-        <translation>Padidinkite plotį į dešinę</translation>
+        <translation>Padidinkite plotį dešinėn</translation>
     </message>
     <message>
         <source>Decrease height up</source>
-        <translation>Sumaiškite aukštį į viršų</translation>
+        <translation>Sumažinkite aukštį aukštyn</translation>
     </message>
     <message>
         <source>Decrease height down</source>
-        <translation>Sumaiškite aukštį į apačią</translation>
+        <translation>Sumažinkite aukštį žemyn</translation>
     </message>
     <message>
         <source>Decrease width left</source>
-        <translation>Sumaiškite plotį į kairę</translation>
+        <translation>Sumažinkite plotį kairėn</translation>
     </message>
     <message>
         <source>Decrease width right</source>
-        <translation>Sumaiškite plotį į dešinę</translation>
+        <translation>Sumažinkite plotį dešinėn</translation>
     </message>
     <message>
         <source>Help</source>
@@ -342,15 +344,19 @@ arba dar kartą paspauskite trumpinį</translation>
     </message>
     <message>
         <source>Display shortcuts</source>
-        <translation>Rodyti įspūdžius</translation>
+        <translation>Rodyti trumpinįs</translation>
+    </message>
+    <message>
+        <source>Sound</source>
+        <translation>Garsas</translation>
     </message>
     <message>
         <source>Keystroke</source>
-        <translation>Klavišų spausdinimas</translation>
+        <translation>Klaviatūros žingsnis</translation>
     </message>
     <message>
         <source>Webcam</source>
-        <translation>Tinklo kamera</translation>
+        <translation>Webkamera</translation>
     </message>
     <message>
         <source>Start recording</source>
@@ -362,7 +368,11 @@ arba dar kartą paspauskite trumpinį</translation>
     </message>
     <message>
         <source>Start/Recording</source>
-        <translation>Pradėti/Kaip rinkinį</translation>
+        <translation>Pradėti/Įrašyti</translation>
+    </message>
+    <message>
+        <source>Mouse</source>
+        <translation>Pelė</translation>
     </message>
     <message>
         <source>Tools</source>
@@ -370,49 +380,41 @@ arba dar kartą paspauskite trumpinį</translation>
     </message>
     <message>
         <source>Extract text</source>
-        <translation>Išskirti tekstą</translation>
+        <translation>Ištraukti tekstą</translation>
     </message>
     <message>
         <source>Scrollshot</source>
-        <translation>Rolės nuoroda</translation>
+        <translation>Scrollshot</translation>
     </message>
     <message>
         <source>Pin screenshots</source>
-        <translation>Nuoroda nuotraukoms</translation>
-    </message>
-    <message>
-        <source>Start scrollshot</source>
-        <translation>Pradėti rolių nuorodą</translation>
+        <translation>Fiksuoti ekraninius nuotraukas</translation>
     </message>
     <message>
         <source>Start OCR</source>
         <translation>Pradėti OCR</translation>
     </message>
     <message>
+        <source>Start scrollshot</source>
+        <translation>Pradėti scrollshot</translation>
+    </message>
+    <message>
         <source>Arrow</source>
-        <translation>Žingsnis</translation>
-    </message>
-    <message>
-        <source>Sound</source>
-        <translation>Garsas</translation>
-    </message>
-    <message>
-        <source>Mouse</source>
-        <translation>Klaviatūra</translation>
+        <translation>Rodyklė</translation>
     </message>
 </context>
 <context>
     <name>ShotStartPlugin</name>
     <message>
         <source>Screenshot</source>
-        <translation>Nuotrauka</translation>
+        <translation>Ekraninė nuotrauka</translation>
     </message>
 </context>
 <context>
     <name>ShotStartRecordPlugin</name>
     <message>
         <source>Record</source>
-        <translation>Žiūrėti</translation>
+        <translation>Įrašyti</translation>
     </message>
 </context>
 <context>
@@ -420,32 +422,32 @@ arba dar kartą paspauskite trumpinį</translation>
     <message>
         <source>Rectangle
 Press and hold Shift to draw a square</source>
-        <translation>Lankstukas
-Spauskite ir helkite Shift norėdami naryti kvadratą</translation>
+        <translation>Stačiakampis
+Spustelėkite ir laikykite paspaudę Shift, kad nubrėžtumėte kvadratą</translation>
     </message>
     <message>
         <source>Ellipse
 Press and hold Shift to draw a circle</source>
-        <translation>Sukurolija
-Spauskite ir helkite Shift norėdami naryti kirkštuką</translation>
+        <translation>Apvalus apskritimas
+Spustelėkite ir laikykite paspaudę Shift, kad nubrėžtumėte apskritimą</translation>
     </message>
     <message>
         <source>Brush
 Press and hold Shift to draw a straight line</source>
-        <translation>Rypė
-Spauskite ir helkite Shift norėdami naryti tiesioginę liniją</translation>
+        <translation>Piegtuvis
+Spustelėkite ir laikykite paspaudę Shift, kad nubrėžtumėte tiesią liniją</translation>
     </message>
     <message>
         <source>Adjust blur strength (Scroll to adjust it)</source>
-        <translation>Nustatykite kabliavimo stiprumą (perkelkite, norėdami nustatyti)</translation>
+        <translation>Pareiginta neaiškumo stiprumas (Naudokite rodyklę, kad pakeistumėte)</translation>
     </message>
     <message>
         <source>Adjust brush size (Scroll to adjust it)</source>
-        <translation>Nustatykite rypės dydį (perkelkite, norėdami nustatyti)</translation>
+        <translation>Pareiginta piegtuvio dydis (Naudokite rodyklę, kad pakeistumėte)</translation>
     </message>
     <message>
         <source>Adjust text size (Scroll to adjust it)</source>
-        <translation>Nustatykite teksto dydį (perkelkite, norėdami nustatyti)</translation>
+        <translation>Pareiginta teksto dydis (Naudokite rodyklę, kad pakeistumėte)</translation>
     </message>
 </context>
 <context>
@@ -461,12 +463,36 @@ norėdami pasirinkti
 <context>
     <name>SubToolWidget</name>
     <message>
-        <source>Microphone</source>
-        <translation>Mikrofonas</translation>
+        <source>Show keystroke (K)</source>
+        <translation>Rodyti klaviatūros žingsnį (K)</translation>
     </message>
     <message>
-        <source>Options</source>
-        <translation>Parinktys</translation>
+        <source>Hide Keystroke (K)</source>
+        <translation>Pašalinti klaviatūros žingsnį (K)</translation>
+    </message>
+    <message>
+        <source>Show Keystroke (K)</source>
+        <translation>Rodyti klaviatūros žingsnį (K)</translation>
+    </message>
+    <message>
+        <source>Turn on camera (C)</source>
+        <translation>Įjungti kamerą (C)</translation>
+    </message>
+    <message>
+        <source>Turn off camera (C)</source>
+        <translation>Išjungti kamerą (C)</translation>
+    </message>
+    <message>
+        <source>Screenshot</source>
+        <translation>Ekraninė nuotrauka</translation>
+    </message>
+    <message>
+        <source>Settings</source>
+        <translation>Nustatymai</translation>
+    </message>
+    <message>
+        <source>Settings (F3)</source>
+        <translation>Nustatymai (F3)</translation>
     </message>
     <message>
         <source>Format:</source>
@@ -481,44 +507,152 @@ norėdami pasirinkti
         <translation>MP4</translation>
     </message>
     <message>
+        <source>MKV</source>
+        <translation>MKV</translation>
+    </message>
+    <message>
+        <source>webm</source>
+        <translation>webm</translation>
+    </message>
+    <message>
         <source>FPS:</source>
-        <translation>Kadr./sek.</translation>
+        <translation>FPS:</translation>
     </message>
     <message>
         <source>5 fps</source>
-        <translation>5 kadr./sek.</translation>
+        <translation>5 fps</translation>
     </message>
     <message>
         <source>10 fps</source>
-        <translation>10 kadr./sek.</translation>
+        <translation>10 fps</translation>
     </message>
     <message>
         <source>20 fps</source>
-        <translation>20 kadr./sek.</translation>
+        <translation>20 fps</translation>
     </message>
     <message>
         <source>24 fps</source>
-        <translation>24 kadr./sek.</translation>
+        <translation>24 fps</translation>
     </message>
     <message>
         <source>30 fps</source>
-        <translation>30 kadr./sek.</translation>
+        <translation>30 fps</translation>
+    </message>
+    <message>
+        <source>Sound</source>
+        <translation>Šviesa</translation>
+    </message>
+    <message>
+        <source>Microphone</source>
+        <translation>Mikrofonas</translation>
+    </message>
+    <message>
+        <source>System audio</source>
+        <translation>Sistemos šviesa</translation>
+    </message>
+    <message>
+        <source>Options</source>
+        <translation>Parinktys</translation>
+    </message>
+    <message>
+        <source>Show pointer</source>
+        <translation>Rodykite žymę</translation>
+    </message>
+    <message>
+        <source>Show click</source>
+        <translation>Rodykite spustelėjimą</translation>
     </message>
     <message>
         <source>Save to</source>
-        <translation>Įrašyti į</translation>
+        <translation>Išsaugoti į</translation>
     </message>
     <message>
         <source>Desktop</source>
-        <translation>Darbalaukis</translation>
+        <translation>Įrankių darbalaukį</translation>
+    </message>
+    <message>
+        <source>Videos</source>
+        <translation>Vaizdo įrašų</translation>
+    </message>
+    <message>
+        <source>Rectangle (R)
+Press and hold Shift to draw a square</source>
+        <translation>|-
+Stačiakampis (R)
+Spustelėkite ir laukite Shift, kad nubrėžtumėte kvadratą</translation>
+    </message>
+    <message>
+        <source>Ellipse (O)
+Press and hold Shift to draw a circle</source>
+        <translation>|-
+Apvalus (O)
+Spustelėkite ir laukite Shift, kad nubrėžtumėte apskritimą</translation>
+    </message>
+    <message>
+        <source>Line (L)
+Press and hold Shift to draw a vertical or horizontal line</source>
+        <translation>|-
+Linija (L)
+Spustelėkite ir laukite Shift, kad nubrėžtumėte vertikalią ar horizontalią liniją</translation>
+    </message>
+    <message>
+        <source>Arrow (X)
+Press and hold Shift to draw a vertical or horizontal arrow</source>
+        <translation>|-
+Žymė (X)
+Spustelėkite ir laukite Shift, kad nubrėžtumėte vertikalią ar horizontalią žymę</translation>
+    </message>
+    <message>
+        <source>Pencil (P)</source>
+        <translation>Piešiklis (P)</translation>
+    </message>
+    <message>
+        <source>Blur (B)</source>
+        <translation>Nematomumas (B)</translation>
+    </message>
+    <message>
+        <source>Text (T)</source>
+        <translation>Tekstas (T)</translation>
+    </message>
+    <message>
+        <source>Scrollshot (Alt+I）</source>
+        <translation>Scrollshot (Alt+I)</translation>
+    </message>
+    <message>
+        <source>Extract text (Alt+O）</source>
+        <translation>Ištraukite tekstą (Alt+O)</translation>
+    </message>
+    <message>
+        <source>Pin screenshots (Alt+P）</source>
+        <translation>Fiksuoti ekraninius (Alt+P)</translation>
+    </message>
+    <message>
+        <source>Undo (Ctrl+Z)</source>
+        <translation>Atšaukti (Ctrl+Z)</translation>
+    </message>
+    <message>
+        <source>Record</source>
+        <translation>Įrašyti</translation>
+    </message>
+    <message>
+        <source>Clipboard</source>
+        <translation>Iškarpinė</translation>
     </message>
     <message>
         <source>Pictures</source>
-        <translation>Nuotraukos</translation>
+        <translation>Vaizdai</translation>
     </message>
     <message>
         <source>Folder</source>
-        <translation>Ablakas</translation>
+        <translation>Mapė</translation>
+    </message>
+    <message>
+        <source>Set a path on save</source>
+        <translation>Nustatykite kelią išsaugojimo metu</translation>
+    </message>
+    <message>
+        <source>Change the path on save</source>
+        <translation>Keiskite kelią išsaugojimo metu</translation>
     </message>
     <message>
         <source>Format</source>
@@ -537,77 +671,6 @@ norėdami pasirinkti
         <translation>BMP</translation>
     </message>
     <message>
-        <source>MKV</source>
-        <translation>MKV</translation>
-    </message>
-    <message>
-        <source>Clipboard</source>
-        <translation>Iškarpinė</translation>
-    </message>
-    <message>
-        <source>Show pointer</source>
-        <translation>Rodyti rodyklę</translation>
-    </message>
-    <message>
-        <source>Extract Text</source>
-        <translation>Ištraukti tekstą</translation>
-    </message>
-    <message>
-        <source>Show keystroke (K)</source>
-        <translation>Rodyti klaviatūros klavišą (K)
-</translation>
-    </message>
-    <message>
-        <source>Settings</source>
-        <translation>Nustatymai</translation>
-    </message>
-    <message>
-        <source>Settings (F3)</source>
-        <translation>Nustatymai (F3)</translation>
-    </message>
-    <message>
-        <source>Blur (B)</source>
-        <translation>Kabliavimas (B)
-</translation>
-    </message>
-    <message>
-        <source>Text (T)</source>
-        <translation>Tekstas (T)</translation>
-    </message>
-    <message>
-        <source>Scrollshot (Alt+I）</source>
-        <translation>Scrollshot (Alt+I)</translation>
-    </message>
-    <message>
-        <source>Extract text (Alt+O）</source>
-        <translation>Ištraukti tekstą (Alt+O)</translation>
-    </message>
-    <message>
-        <source>Undo (Ctrl+Z)</source>
-        <translation>Atšaukti (Ctrl+Z)
-</translation>
-    </message>
-    <message>
-        <source>Screenshot</source>
-        <translation>Nuotrauka</translation>
-    </message>
-    <message>
-        <source>Pin screenshots (Alt+P）</source>
-        <translation>Nuoroda nuotraukoms (Alt+P)</translation>
-    </message>
-    <message>
-        <source>Record</source>
-        <translation>Rėmeliai</translation>
-    </message>
-    <message>
-        <source>Pencil (P)</source>
-        <translation>Nėra</translation>
-    </message>
-    <message>
-        <source>Turn on camera (C)</source>
-        <translation>Įjunkite kamerą (C)</translation>
-    </message>
-    <message>
         <source>Border Effects</source>
         <translation>Rėmų efektai</translation>
     </message>
@@ -616,87 +679,27 @@ norėdami pasirinkti
         <translation>Nėra</translation>
     </message>
     <message>
-        <source>Turn off camera (C)</source>
-        <translation>Išjungti kamerą (C)</translation>
-    </message>
-    <message>
-        <source>Hide Keystroke (K)</source>
-        <translation>Slėpti mygtukų spaudimą (K)</translation>
-    </message>
-    <message>
-        <source>Show Keystroke (K)</source>
-        <translation>Rodyti mygtukų spaudimą (K)</translation>
-    </message>
-    <message>
-        <source>webm</source>
-        <translation>webm</translation>
-    </message>
-    <message>
-        <source>Videos</source>
-        <translation>Vaizdo įrašai</translation>
-    </message>
-    <message>
-        <source>Rectangle (R)
-Press and hold Shift to draw a square</source>
-        <translation>Stačiakampis (R)
-Spustelėkite ir laikykite Shift mygtuką, kad nubrėžtumėte kvadratą</translation>
-    </message>
-    <message>
-        <source>Ellipse (O)
-Press and hold Shift to draw a circle</source>
-        <translation>Elipsė (O)
-Spustelėkite ir laikykite Shift mygtuką, kad nubrėžtumėte apskritimą</translation>
-    </message>
-    <message>
-        <source>Line (L)
-Press and hold Shift to draw a vertical or horizontal line</source>
-        <translation>Linija (L)
-Spustelėkite ir laikykite Shift mygtuką, kad nubrėžtumėte vertikalią ar horizontalią liniją</translation>
-    </message>
-    <message>
-        <source>Arrow (X)
-Press and hold Shift to draw a vertical or horizontal arrow</source>
-        <translation>Spalvotas rodyklė (X)
-Spustelėkite ir laikykite Shift mygtuką, kad nubrėžtumėte vertikalią ar horizontalią rodyklę</translation>
-    </message>
-    <message>
         <source>Shadow</source>
         <translation>Šešėlis</translation>
     </message>
     <message>
         <source>Border</source>
-        <translation>Rėmas</translation>
+        <translation>Riba</translation>
     </message>
     <message>
         <source>Device</source>
         <translation>Įrenginys</translation>
     </message>
     <message>
-        <source>Sound</source>
-        <translation>Garsas</translation>
-    </message>
-    <message>
-        <source>System audio</source>
-        <translation>Sistemos audio</translation>
-    </message>
-    <message>
-        <source>Show click</source>
-        <translation>Rodyti spustelėjimą</translation>
-    </message>
-    <message>
-        <source>Set a path on save</source>
-        <translation>Nustatyti kelią išsaugant</translation>
-    </message>
-    <message>
-        <source>Change the path on save</source>
-        <translation>Keisti kelią išsaugant</translation>
+        <source>Extract Text</source>
+        <translation>Ištraukti tekstą</translation>
     </message>
 </context>
 <context>
     <name>ToolBarWidget</name>
     <message>
         <source>Close (Esc)</source>
-        <translation>Uždaryti (Esc)</translation>
+        <translation>Užverti (Esc)</translation>
     </message>
     <message>
         <source>OK (Enter)</source>
@@ -707,14 +710,14 @@ Spustelėkite ir laikykite Shift mygtuką, kad nubrėžtumėte vertikalią ar ho
     <name>TopTips</name>
     <message>
         <source> Adjust the recording area within %1*%2 to get better video effect</source>
-        <translation>Pareikškite įrašymo zoną %1*%2, kad gautumėte geriau vaizdo efektą</translation>
+        <translation>Pakeiskite įrašymo sritį viduje %1*%2, kad gautumėte geriau vaizdo poveikį</translation>
     </message>
 </context>
 <context>
     <name>Utils</name>
     <message>
         <source>Screen recording is not supported at present</source>
-        <translation>Ekraninis įrašymas šiuo metu nėra palaikomas</translation>
+        <translation>Ekraninis įrašymas šiuo metu nepalaikomas</translation>
     </message>
     <message>
         <source>Exit</source>
@@ -725,7 +728,7 @@ Spustelėkite ir laikykite Shift mygtuką, kad nubrėžtumėte vertikalią ar ho
     <name>VoiceRecordProcess</name>
     <message>
         <source>New recording</source>
-        <translation>Naujas įrašas</translation>
+        <translation>Naujas įrašymas</translation>
     </message>
 </context>
 </TS>

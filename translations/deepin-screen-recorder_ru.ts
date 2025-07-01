@@ -1,4 +1,6 @@
-<?xml version="1.0" ?><!DOCTYPE TS><TS version="2.1" language="ru">
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE TS>
+<TS version="2.1" language="ru">
 <context>
     <name>CountdownTooltip</name>
     <message>
@@ -105,16 +107,16 @@ or press the shortcut again to stop recording</source>
         <translation>Скриншот с прокруткой</translation>
     </message>
     <message>
-        <source>Open Folder</source>
-        <translation>Открыть папку</translation>
-    </message>
-    <message>
         <source>Pin Screenshots</source>
         <translation>Закрепить скриншоты</translation>
     </message>
     <message>
         <source>deepin-screen-recorder</source>
-        <translation>deepin-screen-recorder</translation>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Open Folder</source>
+        <translation>Открыть папку</translation>
     </message>
 </context>
 <context>
@@ -143,22 +145,22 @@ or press the shortcut again to stop recording</source>
     <name>QuickPanelWidget</name>
     <message>
         <source>Screenshot</source>
-        <translation>Скриншот</translation>
+        <translation type="unfinished">Скриншот</translation>
     </message>
     <message>
         <source>Record</source>
-        <translation>Записать</translation>
+        <translation type="unfinished">Запись</translation>
     </message>
 </context>
 <context>
     <name>RecordIconWidget</name>
     <message>
         <source>Screenshot</source>
-        <translation>Скриншот</translation>
+        <translation type="unfinished">Скриншот</translation>
     </message>
     <message>
         <source>Recording</source>
-        <translation>Запись</translation>
+        <translation type="unfinished">Запись</translation>
     </message>
 </context>
 <context>
@@ -215,7 +217,7 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Scroll your mouse wheel or click to take a scrolling screenshot</source>
-        <translation>Прокрутите колесо мыши или нажмите, чтобы сделать прокручивающий скриншот</translation>
+        <translation>Прокрутите колесо мыши или нажмите, чтобы сделать прокручиваемый скриншот</translation>
     </message>
     <message>
         <source>Slow down the scrolling speed</source>
@@ -344,8 +346,12 @@ or press the shortcut again to stop recording</source>
         <translation>Показать комбинации клавиш</translation>
     </message>
     <message>
+        <source>Sound</source>
+        <translation>Звук</translation>
+    </message>
+    <message>
         <source>Keystroke</source>
-        <translation>Клавиши</translation>
+        <translation>Клавиша</translation>
     </message>
     <message>
         <source>Webcam</source>
@@ -364,6 +370,10 @@ or press the shortcut again to stop recording</source>
         <translation>Старт/Запись</translation>
     </message>
     <message>
+        <source>Mouse</source>
+        <translation>Мышь</translation>
+    </message>
+    <message>
         <source>Tools</source>
         <translation>Инструменты</translation>
     </message>
@@ -380,24 +390,16 @@ or press the shortcut again to stop recording</source>
         <translation>Закрепить скриншоты</translation>
     </message>
     <message>
-        <source>Start scrollshot</source>
-        <translation>Начать прокручивающий скриншот</translation>
+        <source>Start OCR</source>
+        <translation>Запустить OCR</translation>
     </message>
     <message>
-        <source>Start OCR</source>
-        <translation>Начать OCR</translation>
+        <source>Start scrollshot</source>
+        <translation>Запустить прокручиваемый скриншот</translation>
     </message>
     <message>
         <source>Arrow</source>
         <translation>Стрелка</translation>
-    </message>
-    <message>
-        <source>Sound</source>
-        <translation>Звук</translation>
-    </message>
-    <message>
-        <source>Mouse</source>
-        <translation>Мышь</translation>
     </message>
 </context>
 <context>
@@ -411,7 +413,7 @@ or press the shortcut again to stop recording</source>
     <name>ShotStartRecordPlugin</name>
     <message>
         <source>Record</source>
-        <translation>Записать</translation>
+        <translation type="unfinished">Запись</translation>
     </message>
 </context>
 <context>
@@ -436,7 +438,7 @@ Press and hold Shift to draw a straight line</source>
     </message>
     <message>
         <source>Adjust blur strength (Scroll to adjust it)</source>
-        <translation>Настроить силу размытия (прокрутите, чтобы изменить)</translation>
+        <translation>Настроить степень размытия (прокрутите, чтобы изменить)</translation>
     </message>
     <message>
         <source>Adjust brush size (Scroll to adjust it)</source>
@@ -459,12 +461,36 @@ select the area to record</source>
 <context>
     <name>SubToolWidget</name>
     <message>
-        <source>Microphone</source>
-        <translation>Микрофон</translation>
+        <source>Show keystroke (K)</source>
+        <translation>Показать клавишу (K)</translation>
     </message>
     <message>
-        <source>Options</source>
-        <translation>Опции</translation>
+        <source>Hide Keystroke (K)</source>
+        <translation>Скрыть клавишу (K)</translation>
+    </message>
+    <message>
+        <source>Show Keystroke (K)</source>
+        <translation>Показать клавишу (K)</translation>
+    </message>
+    <message>
+        <source>Turn on camera (C)</source>
+        <translation>Включить камеру (C)</translation>
+    </message>
+    <message>
+        <source>Turn off camera (C)</source>
+        <translation>Выключить камеру (C)</translation>
+    </message>
+    <message>
+        <source>Screenshot</source>
+        <translation>Скриншот</translation>
+    </message>
+    <message>
+        <source>Settings</source>
+        <translation>Настройки</translation>
+    </message>
+    <message>
+        <source>Settings (F3)</source>
+        <translation>Настройки (F3)</translation>
     </message>
     <message>
         <source>Format:</source>
@@ -477,6 +503,14 @@ select the area to record</source>
     <message>
         <source>MP4</source>
         <translation>MP4</translation>
+    </message>
+    <message>
+        <source>MKV</source>
+        <translation>MKV</translation>
+    </message>
+    <message>
+        <source>webm</source>
+        <translation>webm</translation>
     </message>
     <message>
         <source>FPS:</source>
@@ -503,128 +537,36 @@ select the area to record</source>
         <translation>30 fps</translation>
     </message>
     <message>
-        <source>Save to</source>
-        <translation>Сохранить в</translation>
+        <source>Sound</source>
+        <translation>Звук</translation>
     </message>
     <message>
-        <source>Desktop</source>
-        <translation>Рабочий стол</translation>
+        <source>Microphone</source>
+        <translation>Микрофон</translation>
     </message>
     <message>
-        <source>Pictures</source>
-        <translation>Изображения</translation>
+        <source>System audio</source>
+        <translation>Звук системы</translation>
     </message>
     <message>
-        <source>Folder</source>
-        <translation>Папка</translation>
-    </message>
-    <message>
-        <source>Format</source>
-        <translation>Формат</translation>
-    </message>
-    <message>
-        <source>PNG</source>
-        <translation>PNG</translation>
-    </message>
-    <message>
-        <source>JPG</source>
-        <translation>JPG</translation>
-    </message>
-    <message>
-        <source>BMP</source>
-        <translation>BMP</translation>
-    </message>
-    <message>
-        <source>MKV</source>
-        <translation>MKV</translation>
-    </message>
-    <message>
-        <source>Clipboard</source>
-        <translation>Буфер обмена</translation>
+        <source>Options</source>
+        <translation>Опции</translation>
     </message>
     <message>
         <source>Show pointer</source>
         <translation>Показать указатель</translation>
     </message>
     <message>
-        <source>Extract Text</source>
-        <translation>Извлечь Текст</translation>
+        <source>Show click</source>
+        <translation>Показать клик</translation>
     </message>
     <message>
-        <source>Show keystroke (K)</source>
-        <translation>Показать клавиши (K)</translation>
+        <source>Save to</source>
+        <translation>Сохранить в</translation>
     </message>
     <message>
-        <source>Settings</source>
-        <translation>Настройки</translation>
-    </message>
-    <message>
-        <source>Settings (F3)</source>
-        <translation>Настройки (F3)</translation>
-    </message>
-    <message>
-        <source>Blur (B)</source>
-        <translation>Размытие (B)</translation>
-    </message>
-    <message>
-        <source>Text (T)</source>
-        <translation>Текст (T)</translation>
-    </message>
-    <message>
-        <source>Scrollshot (Alt+I）</source>
-        <translation>Скриншот с прокруткой (Alt+I）</translation>
-    </message>
-    <message>
-        <source>Extract text (Alt+O）</source>
-        <translation>Извлечь текст (Alt+O）</translation>
-    </message>
-    <message>
-        <source>Undo (Ctrl+Z)</source>
-        <translation>Отмена (Ctrl+Z)</translation>
-    </message>
-    <message>
-        <source>Screenshot</source>
-        <translation>Скриншот</translation>
-    </message>
-    <message>
-        <source>Pin screenshots (Alt+P）</source>
-        <translation>Закрепить скриншоты (Alt+P)</translation>
-    </message>
-    <message>
-        <source>Record</source>
-        <translation>Запись</translation>
-    </message>
-    <message>
-        <source>Pencil (P)</source>
-        <translation>Карандаш (P)</translation>
-    </message>
-    <message>
-        <source>Turn on camera (C)</source>
-        <translation>Включить камеру (C)</translation>
-    </message>
-    <message>
-        <source>Border Effects</source>
-        <translation>Эффект краев</translation>
-    </message>
-    <message>
-        <source>None</source>
-        <translation>Нет</translation>
-    </message>
-    <message>
-        <source>Turn off camera (C)</source>
-        <translation>Выключить камеру (C)</translation>
-    </message>
-    <message>
-        <source>Hide Keystroke (K)</source>
-        <translation>Скрыть клавиши (K)</translation>
-    </message>
-    <message>
-        <source>Show Keystroke (K)</source>
-        <translation>Показать клавиши (K)</translation>
-    </message>
-    <message>
-        <source>webm</source>
-        <translation>webm</translation>
+        <source>Desktop</source>
+        <translation>Рабочий стол</translation>
     </message>
     <message>
         <source>Videos</source>
@@ -646,13 +588,89 @@ Press and hold Shift to draw a circle</source>
         <source>Line (L)
 Press and hold Shift to draw a vertical or horizontal line</source>
         <translation>Линия (L)
-Нажмите и удерживайте Shift, чтобы нарисовать вертикальную или горизонтальную линию</translation>
+Удерживайте Shift, чтобы нарисовать вертикальную или горизонтальную линию</translation>
     </message>
     <message>
         <source>Arrow (X)
 Press and hold Shift to draw a vertical or horizontal arrow</source>
         <translation>Стрелка (X)
-Нажмите и удерживайте Shift, чтобы нарисовать вертикальную или горизонтальную стрелку</translation>
+Удерживайте Shift, чтобы нарисовать вертикальную или горизонтальную стрелку</translation>
+    </message>
+    <message>
+        <source>Pencil (P)</source>
+        <translation>Карандаш (P)</translation>
+    </message>
+    <message>
+        <source>Blur (B)</source>
+        <translation>Размытие (B)</translation>
+    </message>
+    <message>
+        <source>Text (T)</source>
+        <translation>Текст (T)</translation>
+    </message>
+    <message>
+        <source>Scrollshot (Alt+I）</source>
+        <translation>Скриншот с прокруткой (Alt+I）</translation>
+    </message>
+    <message>
+        <source>Extract text (Alt+O）</source>
+        <translation>Извлечь текст (Alt+O）</translation>
+    </message>
+    <message>
+        <source>Pin screenshots (Alt+P）</source>
+        <translation>Закрепить скриншоты (Alt+P)</translation>
+    </message>
+    <message>
+        <source>Undo (Ctrl+Z)</source>
+        <translation>Отмена (Ctrl+Z)</translation>
+    </message>
+    <message>
+        <source>Record</source>
+        <translation>Запись</translation>
+    </message>
+    <message>
+        <source>Clipboard</source>
+        <translation>Буфер обмена</translation>
+    </message>
+    <message>
+        <source>Pictures</source>
+        <translation>Изображения</translation>
+    </message>
+    <message>
+        <source>Folder</source>
+        <translation>Папка</translation>
+    </message>
+    <message>
+        <source>Set a path on save</source>
+        <translation>Установить путь при сохранении</translation>
+    </message>
+    <message>
+        <source>Change the path on save</source>
+        <translation>Изменить путь при сохранении</translation>
+    </message>
+    <message>
+        <source>Format</source>
+        <translation>Формат</translation>
+    </message>
+    <message>
+        <source>PNG</source>
+        <translation>PNG</translation>
+    </message>
+    <message>
+        <source>JPG</source>
+        <translation>JPG</translation>
+    </message>
+    <message>
+        <source>BMP</source>
+        <translation>BMP</translation>
+    </message>
+    <message>
+        <source>Border Effects</source>
+        <translation>Эффект краев</translation>
+    </message>
+    <message>
+        <source>None</source>
+        <translation>Нет</translation>
     </message>
     <message>
         <source>Shadow</source>
@@ -667,24 +685,8 @@ Press and hold Shift to draw a vertical or horizontal arrow</source>
         <translation>Устройство</translation>
     </message>
     <message>
-        <source>Sound</source>
-        <translation>Звук</translation>
-    </message>
-    <message>
-        <source>System audio</source>
-        <translation>Системный звук</translation>
-    </message>
-    <message>
-        <source>Show click</source>
-        <translation>Показать клик</translation>
-    </message>
-    <message>
-        <source>Set a path on save</source>
-        <translation>Установить путь при сохранении</translation>
-    </message>
-    <message>
-        <source>Change the path on save</source>
-        <translation>Изменить путь при сохранении</translation>
+        <source>Extract Text</source>
+        <translation>Извлечь Текст</translation>
     </message>
 </context>
 <context>

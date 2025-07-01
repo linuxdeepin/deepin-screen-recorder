@@ -1,4 +1,6 @@
-<?xml version="1.0" ?><!DOCTYPE TS><TS version="2.1" language="ne">
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE TS>
+<TS version="2.1" language="ne">
 <context>
     <name>CountdownTooltip</name>
     <message>
@@ -8,68 +10,68 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Do not rotate your screen during recording</source>
-        <translation>record गर्दा आफ्नो स्क्रीन घुमाउँदै नभर्नुहोस्</translation>
+        <translation>रेकर्डिंग गर्दा आपको आफ्नो स्क्रिन घुमाउन नदिनुहोस्</translation>
     </message>
 </context>
 <context>
     <name>IconWidget</name>
     <message>
         <source>Screenshot</source>
-        <translation>Screenshot</translation>
+        <translation>स्क्रीनशॉट</translation>
     </message>
     <message>
         <source>Recording</source>
-        <translation>Recording</translation>
+        <translation>रेकर्डिंग</translation>
     </message>
 </context>
 <context>
     <name>MainToolWidget</name>
     <message>
         <source>Record</source>
-        <translation>Record</translation>
+        <translation>रेकर्ड गर्दा</translation>
     </message>
     <message>
         <source>Screenshot</source>
-        <translation>Screenshot</translation>
+        <translation>स्क्रीनशॉट</translation>
     </message>
 </context>
 <context>
     <name>MainWindow</name>
     <message>
         <source>Screen Capture</source>
-        <translation>Screen Capture</translation>
+        <translation>स्क्रीन कैप्चर</translation>
     </message>
     <message>
         <source>Save failed. Please save it in your home directory.</source>
-        <translation>सेभ गर्ने प्रक्रिया असफल भयो। अपनो होम डिरेक्टरीमा सेभ गर्नुहोस्।</translation>
+        <translation>सेभ गर्न विफल. आफ्नो होम डिरेक्टरीमा सेभ गर्नुहोस्</translation>
     </message>
     <message>
         <source>View</source>
-        <translation>हेर्नुहोस्</translation>
+        <translation>देखाउनु</translation>
     </message>
     <message>
         <source>Screenshot finished</source>
-        <translation>Screenshot अ完毕 भयो</translation>
+        <translation>स्क्रीनशॉट समाप्त</translation>
     </message>
     <message>
         <source>PNG (*.png);;JPEG (*.jpg *.jpeg);;BMP (*.bmp)</source>
-        <translation>PNG (*.png);;JPEG (*.jpg *.jpeg);;BMP (*.bmp)</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>JPEG (*.jpg *.jpeg);;PNG (*.png);;BMP (*.bmp)</source>
-        <translation>JPEG (*.jpg *.jpeg);;PNG (*.png);;BMP (*.bmp)</translation>
+        <translation>JPEG (*.jpg *..jpeg);;PNG (*.png);;BMP (*.bmp)</translation>
     </message>
     <message>
         <source>BMP (*.bmp);;JPEG (*.jpg *.jpeg);;PNG (*.png)</source>
-        <translation>BMP (*.bmp);;JPEG (*.jpg *.jpeg);;PNG (*.png)</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>select-area</source>
-        <translation>क्षेत्र चयन गर्नुहोस्</translation>
+        <translation>क्षेत्र छानु</translation>
     </message>
     <message>
         <source>Save</source>
-        <translation>सेभ</translation>
+        <translation>सेभ गर्दा</translation>
     </message>
     <message>
         <source>Saved to %1</source>
@@ -77,7 +79,7 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Ignore</source>
-        <translation>अपेक्षा गर्नु</translation>
+        <translation>नदेखाउनु</translation>
     </message>
     <message>
         <source>Clipboard</source>
@@ -85,35 +87,35 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Saving the screen recording file, please wait...</source>
-        <translation>स्क्रीन रेकर्डिङ फाइल सेभ गर्दैछ, कृपया विराम गर्नुहोस्...</translation>
+        <translation>स्क्रिन रेकर्डिंग फाइल सेभ गरिरहेको छ, कृपया प्रतीक्षा गर्नुहोस्...</translation>
     </message>
     <message>
         <source>As the window effect is disabled during the process, the recording has to be stopped</source>
-        <translation>प्रक्रिया क्रमानुसार विंडो असर अक्षम भएकाले, रेकर्डिङ बन्द गर्नु पर्छ</translation>
+        <translation>प्रक्रियामा विंडो अभिलेख निष्क्रिय भएकाले, रेकर्डिंग बन्द गर्नु पर्छ</translation>
     </message>
     <message>
         <source>Screenshot</source>
-        <translation>Screenshot</translation>
+        <translation>स्क्रीनशॉट</translation>
     </message>
     <message>
         <source>Screenshot failed.</source>
-        <translation>Screenshot असफल भयो।</translation>
+        <translation>स्क्रीनशॉट विफल</translation>
     </message>
     <message>
         <source>Scrollshot</source>
-        <translation>Scrollshot</translation>
+        <translation>स्क्रोलशॉट</translation>
+    </message>
+    <message>
+        <source>Pin Screenshots</source>
+        <translation>स्क्रीनशॉट पिन गर्दा</translation>
+    </message>
+    <message>
+        <source>deepin-screen-recorder</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Open Folder</source>
         <translation>फोल्डर खोल्नु</translation>
-    </message>
-    <message>
-        <source>Pin Screenshots</source>
-        <translation>Screenshot फिक्स गर्नु</translation>
-    </message>
-    <message>
-        <source>deepin-screen-recorder</source>
-        <translation>deepin-screen-recorder</translation>
     </message>
 </context>
 <context>
@@ -124,40 +126,40 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Save</source>
-        <translation>सेभ</translation>
+        <translation>सेभ गर्दा</translation>
     </message>
     <message>
         <source>Exit</source>
-        <translation>बाहिर जानु</translation>
+        <translation>छोड्नु</translation>
     </message>
 </context>
 <context>
     <name>QObject</name>
     <message>
         <source>Pin Screenshots</source>
-        <translation>Screenshot फिक्स गर्नु</translation>
+        <translation>स्क्रीनशॉट पिन गर्दा</translation>
     </message>
 </context>
 <context>
     <name>QuickPanelWidget</name>
     <message>
         <source>Screenshot</source>
-        <translation>Screenshot</translation>
+        <translation>अद्वितीय छाया</translation>
     </message>
     <message>
         <source>Record</source>
-        <translation>Record</translation>
+        <translation>रेकॉर्ड गर्नु</translation>
     </message>
 </context>
 <context>
     <name>RecordIconWidget</name>
     <message>
         <source>Screenshot</source>
-        <translation>स्क्रीन शॉट</translation>
+        <translation>अद्वितीय छाया</translation>
     </message>
     <message>
         <source>Recording</source>
-        <translation>रिकॉर्डिंग</translation>
+        <translation>रेकार्डिंग गर्दै</translation>
     </message>
 </context>
 <context>
@@ -172,75 +174,75 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Saved to %1</source>
-        <translation>सेव गरियो %1 मा</translation>
+        <translation>सेभ गरियो %1 मा</translation>
     </message>
     <message>
         <source>Record</source>
-        <translation>रिकॉर्ड</translation>
+        <translation>रेकॉर्ड गर्नु</translation>
     </message>
     <message>
         <source>Open Folder</source>
-        <translation>फोल्डर खोल्नुहोस्</translation>
+        <translation>फोल्डर खोल्नु</translation>
     </message>
 </context>
 <context>
     <name>Screenshot</name>
     <message>
         <source>Screen Capture will start in %1 seconds</source>
-        <translation>स्क्रीन कैप्चर %1 सेकेण्ड मा सुरू हुनेछ</translation>
+        <translation>स्क्रीन कैप्चर %1 सेकेंडमा सुरु हुनेछ</translation>
     </message>
 </context>
 <context>
     <name>ScrollShotTip</name>
     <message>
         <source>Get help.</source>
-        <translation>सहायता पाउनुहोस्</translation>
+        <translation>सहायता पाउनु।</translation>
     </message>
     <message>
         <source>Failed to take a continuous screenshot.</source>
-        <translation>अव्यवस्थित शॉट लिइएको छैन</translation>
+        <translation>अविच्छिन्न स्क्रीन कैप्चर लिइएको छैन।</translation>
     </message>
     <message>
         <source>Reached the bottom of the scroll area</source>
-        <translation>स्क्रोल क्षेत्रको तल छुट्यो</translation>
+        <translation>स्क्रोल क्षेत्रको तल छुट्टै छ</translation>
     </message>
     <message>
         <source>Reached the maximum length</source>
-        <translation>अधिकतम लम्बाई पुग्यो</translation>
+        <translation>अधिकतम लम्बाइ पुगेको छ</translation>
     </message>
     <message>
         <source>adjust the capture area</source>
-        <translation>कैप्चर क्षेत्र समायोजन गर्नुहोस्</translation>
+        <translation>कैप्चर क्षेत्र समायोजित गर्नु</translation>
     </message>
     <message>
         <source>Scroll your mouse wheel or click to take a scrolling screenshot</source>
-        <translation>स्क्रोल गर्नुहोस् वा क्लिक गर्नुहोस् एक स्क्रोल शॉट लिन लागि</translation>
+        <translation>तपाईंको माउस व्हील घुमाउनु वा क्लिक गर्नु अर्को स्क्रोल छाया लिन अनुमति दिन्छ</translation>
     </message>
     <message>
         <source>Slow down the scrolling speed</source>
-        <translation>स्क्रोलिंग गति कम गर्नुहोस्</translation>
+        <translation>स्क्रोलिंग गति धीर गर्नु</translation>
     </message>
     <message>
         <source>Invalid area, click to </source>
-        <translation>अमान्य क्षेत्र, क्लिक गर्नुहोस् </translation>
+        <translation>अमान्य क्षेत्र, क्लिक गर्नु </translation>
     </message>
 </context>
 <context>
     <name>ShapesWidget</name>
     <message>
         <source>Input text here</source>
-        <translation>यहाँ टेक्स्ट इनपुट गर्नुहोस्</translation>
+        <translation>यहाँ टेक्स्ट इनपुट गर्नु</translation>
     </message>
 </context>
 <context>
     <name>Shortcut</name>
     <message>
         <source>Start/Screenshot</source>
-        <translation>सुरू/स्क्रीन शॉट</translation>
+        <translation>सुरु/अद्वितीय छाया</translation>
     </message>
     <message>
         <source>Exit/Save</source>
-        <translation>बाहिर/सेव</translation>
+        <translation>बाहिर/सेभ</translation>
     </message>
     <message>
         <source>Size Adjustment</source>
@@ -248,23 +250,23 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Settings</source>
-        <translation>सेटिंग्स</translation>
+        <translation>सेटिङ्स</translation>
     </message>
     <message>
         <source>Quick start</source>
-        <translation>त्वरित सुरू</translation>
+        <translation>गति सुरु</translation>
     </message>
     <message>
         <source>Window screenshot</source>
-        <translation>विंडो शॉट</translation>
+        <translation>विंडो छाया</translation>
     </message>
     <message>
         <source>Delay screenshot</source>
-        <translation>विलम्बित शॉट</translation>
+        <translation>मनमानी छाया</translation>
     </message>
     <message>
         <source>Full screenshot</source>
-        <translation>पूर्ण शॉट</translation>
+        <translation>पूर्ण छाया</translation>
     </message>
     <message>
         <source>Exit</source>
@@ -272,7 +274,7 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Save</source>
-        <translation>सेव</translation>
+        <translation>सेभ</translation>
     </message>
     <message>
         <source>Rectangle</source>
@@ -280,7 +282,7 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Ellipse</source>
-        <translation>एलिप्सिस</translation>
+        <translation>एल्लिप्स</translation>
     </message>
     <message>
         <source>Line</source>
@@ -288,51 +290,51 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Pencil</source>
-        <translation>कलम</translation>
+        <translation>ढुंग</translation>
     </message>
     <message>
         <source>Text</source>
-        <translation>टेक्स्ट</translation>
+        <translation>पाठ</translation>
     </message>
     <message>
         <source>Delete</source>
-        <translation>हटाउन</translation>
+        <translation>हटाउ</translation>
     </message>
     <message>
         <source>Undo</source>
-        <translation>पल्ट गर्न</translation>
+        <translation>पल्ट गर्नु</translation>
     </message>
     <message>
         <source>Increase height up</source>
-        <translation>उंचाई बढाउन</translation>
+        <translation>उचाइ बढाउ</translation>
     </message>
     <message>
         <source>Increase height down</source>
-        <translation>उंचाई बढाउन</translation>
+        <translation>उचाइ कम गर्नु</translation>
     </message>
     <message>
         <source>Increase width left</source>
-        <translation>चौडाई बढाउन</translation>
+        <translation>चौडाई बढाउ</translation>
     </message>
     <message>
         <source>Increase width right</source>
-        <translation>चौडाई बढाउन</translation>
+        <translation>चौडाई कम गर्नु</translation>
     </message>
     <message>
         <source>Decrease height up</source>
-        <translation>उंचाई कम गर्न</translation>
+        <translation>उचाइ कम गर्नु</translation>
     </message>
     <message>
         <source>Decrease height down</source>
-        <translation>उंचाई कम गर्न</translation>
+        <translation>उचाइ बढाउ</translation>
     </message>
     <message>
         <source>Decrease width left</source>
-        <translation>चौडाई कम गर्न</translation>
+        <translation>चौडाई कम गर्नु</translation>
     </message>
     <message>
         <source>Decrease width right</source>
-        <translation>चौडाई कम गर्न</translation>
+        <translation>चौडाई बढाउ</translation>
     </message>
     <message>
         <source>Help</source>
@@ -340,7 +342,11 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Display shortcuts</source>
-        <translation>क्षॉटक्रोड देखाउन</translation>
+        <translation>छोटा रास्ता देखाउ</translation>
+    </message>
+    <message>
+        <source>Sound</source>
+        <translation>ध्वनि</translation>
     </message>
     <message>
         <source>Keystroke</source>
@@ -363,12 +369,16 @@ or press the shortcut again to stop recording</source>
         <translation>सुरु/रेकर्डिङ</translation>
     </message>
     <message>
+        <source>Mouse</source>
+        <translation>माउस</translation>
+    </message>
+    <message>
         <source>Tools</source>
-        <translation>उपकरण</translation>
+        <translation>अनुपात</translation>
     </message>
     <message>
         <source>Extract text</source>
-        <translation>पाठ खेपिन</translation>
+        <translation>पाठ खाल्डो</translation>
     </message>
     <message>
         <source>Scrollshot</source>
@@ -376,27 +386,19 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Pin screenshots</source>
-        <translation>स्क्रिनशॉट छिपाउन</translation>
-    </message>
-    <message>
-        <source>Start scrollshot</source>
-        <translation>स्क्रोलशॉट सुरु गर्न</translation>
+        <translation>स्क्रिनशॉट फिक्स गर्नु</translation>
     </message>
     <message>
         <source>Start OCR</source>
-        <translation>OCR सुरु गर्न</translation>
+        <translation>OCR सुरु गर्नु</translation>
+    </message>
+    <message>
+        <source>Start scrollshot</source>
+        <translation>स्क्रोलशॉट सुरु गर्नु</translation>
     </message>
     <message>
         <source>Arrow</source>
         <translation>चालक</translation>
-    </message>
-    <message>
-        <source>Sound</source>
-        <translation>ध्वनि</translation>
-    </message>
-    <message>
-        <source>Mouse</source>
-        <translation>माउस</translation>
     </message>
 </context>
 <context>
@@ -410,7 +412,7 @@ or press the shortcut again to stop recording</source>
     <name>ShotStartRecordPlugin</name>
     <message>
         <source>Record</source>
-        <translation>रेकर्ड गर्न</translation>
+        <translation>रेकर्ड गर्नु</translation>
     </message>
 </context>
 <context>
@@ -418,32 +420,30 @@ or press the shortcut again to stop recording</source>
     <message>
         <source>Rectangle
 Press and hold Shift to draw a square</source>
-        <translation>चौवै आयत
-Shift चालू राखेर एउटा वर्ग बनाउन</translation>
+        <translation>आयत
+शिफ्ट दबाउ र धारण गर्नु आयत बनाउ</translation>
     </message>
     <message>
         <source>Ellipse
 Press and hold Shift to draw a circle</source>
-        <translation>वृत्त
-Shift चालू राखेर एउटा वृत्त बनाउन</translation>
+        <translation>वृत्त</translation>
     </message>
     <message>
         <source>Brush
 Press and hold Shift to draw a straight line</source>
-        <translation>चित्रकारी
-Shift चालू राखेर एउटा सीधा रेखा बनाउन</translation>
+        <translation>वृत्त बनाने को लिए Shift को दबाए रखें</translation>
     </message>
     <message>
         <source>Adjust blur strength (Scroll to adjust it)</source>
-        <translation>अद्जस्ट ब्लर स्ट्रेंथ (अद्जस्ट गर्न स्क्रोल गर्नुहोस्)</translation>
+        <translation>कलम</translation>
     </message>
     <message>
         <source>Adjust brush size (Scroll to adjust it)</source>
-        <translation>अद्जस्ट ब्रश साइज (अद्जस्ट गर्न स्क्रोल गर्नुहोस्)</translation>
+        <translation>सीधी रेखा बनाने को लिए Shift को दबाए रखें</translation>
     </message>
     <message>
         <source>Adjust text size (Scroll to adjust it)</source>
-        <translation>अद्जस्ट टेक्स्ट साइज (अद्जस्ट गर्न स्क्रोल गर्नुहोस्)</translation>
+        <translation>अपवर्जन शक्ति समायोजित करें (इसे समायोजित करने के लिए रोल करें)</translation>
     </message>
 </context>
 <context>
@@ -457,56 +457,180 @@ select the area to record</source>
 <context>
     <name>SubToolWidget</name>
     <message>
-        <source>Microphone</source>
-        <translation>माइक्रोफोन</translation>
+        <source>Show keystroke (K)</source>
+        <translation>कलम का आकार समायोजित करें (इसे समायोजित करने के लिए रोल करें)</translation>
     </message>
     <message>
-        <source>Options</source>
-        <translation>विकल्प</translation>
+        <source>Hide Keystroke (K)</source>
+        <translation>पाठ का आकार समायोजित करें (इसे समायोजित करने के लिए रोल करें)</translation>
+    </message>
+    <message>
+        <source>Show Keystroke (K)</source>
+        <translation>कुंजी दबाने को दिखाएं (K)</translation>
+    </message>
+    <message>
+        <source>Turn on camera (C)</source>
+        <translation>कुंजी दबाने को छुपाएं (K)</translation>
+    </message>
+    <message>
+        <source>Turn off camera (C)</source>
+        <translation>कुंजी दबाने को दिखाएं (K)</translation>
+    </message>
+    <message>
+        <source>Screenshot</source>
+        <translation>कैमरा चालू करें (C)</translation>
+    </message>
+    <message>
+        <source>Settings</source>
+        <translation>कैमरा बंद करें (C)</translation>
+    </message>
+    <message>
+        <source>Settings (F3)</source>
+        <translation>स्क्रीनशॉट</translation>
     </message>
     <message>
         <source>Format:</source>
-        <translation>फॉर्मेट:</translation>
+        <translation>सेटिंस</translation>
     </message>
     <message>
         <source>GIF</source>
-        <translation>जीएफआई</translation>
+        <translation>सेटिंस (F3)</translation>
     </message>
     <message>
         <source>MP4</source>
-        <translation>एमपी4</translation>
+        <translation>फॉरमेट:</translation>
+    </message>
+    <message>
+        <source>MKV</source>
+        <translation>जीएफ</translation>
+    </message>
+    <message>
+        <source>webm</source>
+        <translation>एमपी</translation>
     </message>
     <message>
         <source>FPS:</source>
-        <translation>एफपीएस:</translation>
+        <translation>एमकेभी</translation>
     </message>
     <message>
         <source>5 fps</source>
-        <translation>5 एफपीएस</translation>
+        <translation>वेबम</translation>
     </message>
     <message>
         <source>10 fps</source>
-        <translation>10 एफपीएस</translation>
+        <translation>एफपीएस:</translation>
     </message>
     <message>
         <source>20 fps</source>
-        <translation>20 एफपीएस</translation>
+        <translation>5 एफपीएस</translation>
     </message>
     <message>
         <source>24 fps</source>
-        <translation>24 एफपीएस</translation>
+        <translation>10 एफपीएस</translation>
     </message>
     <message>
         <source>30 fps</source>
+        <translation>20 एफपीएस</translation>
+    </message>
+    <message>
+        <source>Sound</source>
+        <translation>24 एफपीएस</translation>
+    </message>
+    <message>
+        <source>Microphone</source>
         <translation>30 एफपीएस</translation>
     </message>
     <message>
+        <source>System audio</source>
+        <translation>ध्वनि</translation>
+    </message>
+    <message>
+        <source>Options</source>
+        <translation>माइक्रोफोन</translation>
+    </message>
+    <message>
+        <source>Show pointer</source>
+        <translation>सिस्टम ध्वनि</translation>
+    </message>
+    <message>
+        <source>Show click</source>
+        <translation>विकल्प</translation>
+    </message>
+    <message>
         <source>Save to</source>
-        <translation>सेभ गर्नुहोस्</translation>
+        <translation>सेभ गर्नु</translation>
     </message>
     <message>
         <source>Desktop</source>
         <translation>डेस्कटप</translation>
+    </message>
+    <message>
+        <source>Videos</source>
+        <translation>भिडियो</translation>
+    </message>
+    <message>
+        <source>Rectangle (R)
+Press and hold Shift to draw a square</source>
+        <translation>|-
+आयत (आर)
+Shift चापको र राखेर वर्ग बनाउनु</translation>
+    </message>
+    <message>
+        <source>Ellipse (O)
+Press and hold Shift to draw a circle</source>
+        <translation>|-
+अंतराल (ओ)
+Shift चापको र राखेर एक चार बनाउनु</translation>
+    </message>
+    <message>
+        <source>Line (L)
+Press and hold Shift to draw a vertical or horizontal line</source>
+        <translation>|-
+लाइन (एल)
+Shift चापको र राखेर ऊर्ध्वाधर वा क्षैतिज रूप बनाउनु</translation>
+    </message>
+    <message>
+        <source>Arrow (X)
+Press and hold Shift to draw a vertical or horizontal arrow</source>
+        <translation>|-
+चार (एक्स)
+Shift चापको र राखेर ऊर्ध्वाधर वा क्षैतिज चार बनाउनु</translation>
+    </message>
+    <message>
+        <source>Pencil (P)</source>
+        <translation>पेंसिल (पि)</translation>
+    </message>
+    <message>
+        <source>Blur (B)</source>
+        <translation>ब्लर (बि)</translation>
+    </message>
+    <message>
+        <source>Text (T)</source>
+        <translation>पाठ (टि)</translation>
+    </message>
+    <message>
+        <source>Scrollshot (Alt+I）</source>
+        <translation>स्क्रोलशॉट (एल्ट + आई)</translation>
+    </message>
+    <message>
+        <source>Extract text (Alt+O）</source>
+        <translation>पाठ खीच्नु (एल्ट + ओ)</translation>
+    </message>
+    <message>
+        <source>Pin screenshots (Alt+P）</source>
+        <translation>स्क्रीनशॉट फिक्स गर्नु (एल्ट + पि)</translation>
+    </message>
+    <message>
+        <source>Undo (Ctrl+Z)</source>
+        <translation>रद्द गर्नु (कन्ट्रोल + ज़)</translation>
+    </message>
+    <message>
+        <source>Record</source>
+        <translation>रेकर्ड गर्नु</translation>
+    </message>
+    <message>
+        <source>Clipboard</source>
+        <translation>क्लिपबोर्ड</translation>
     </message>
     <message>
         <source>Pictures</source>
@@ -517,8 +641,16 @@ select the area to record</source>
         <translation>फोल्डर</translation>
     </message>
     <message>
+        <source>Set a path on save</source>
+        <translation>सेभ गर्दा पाथ सेट गर्नु</translation>
+    </message>
+    <message>
+        <source>Change the path on save</source>
+        <translation>सेभ गर्दा पाथ बदल्नु</translation>
+    </message>
+    <message>
         <source>Format</source>
-        <translation>फॉर्मेट</translation>
+        <translation>फार्मेट</translation>
     </message>
     <message>
         <source>PNG</source>
@@ -526,131 +658,19 @@ select the area to record</source>
     </message>
     <message>
         <source>JPG</source>
-        <translation>जीपीजी</translation>
+        <translation>जेपीजी</translation>
     </message>
     <message>
         <source>BMP</source>
-        <translation>बीएमपी</translation>
-    </message>
-    <message>
-        <source>MKV</source>
-        <translation>एमकेभी</translation>
-    </message>
-    <message>
-        <source>Clipboard</source>
-        <translation>क्लिपबोर्ड</translation>
-    </message>
-    <message>
-        <source>Show pointer</source>
-        <translation>पोइंटर देखाउँ</translation>
-    </message>
-    <message>
-        <source>Extract Text</source>
-        <translation>टेक्स्ट उत्खचन गर्नुहोस्</translation>
-    </message>
-    <message>
-        <source>Show keystroke (K)</source>
-        <translation>कुञ्ची (K) देखाउँ</translation>
-    </message>
-    <message>
-        <source>Settings</source>
-        <translation>सेटिंग्स</translation>
-    </message>
-    <message>
-        <source>Settings (F3)</source>
-        <translation>सेटिंग्स (F3)</translation>
-    </message>
-    <message>
-        <source>Blur (B)</source>
-        <translation>ब्लर (B)</translation>
-    </message>
-    <message>
-        <source>Text (T)</source>
-        <translation>टेक्स्ट (T)</translation>
-    </message>
-    <message>
-        <source>Scrollshot (Alt+I）</source>
-        <translation>स्क्रॉलशॉट (अल्ट + आई)</translation>
-    </message>
-    <message>
-        <source>Extract text (Alt+O）</source>
-        <translation>पाठ निकालें (अल्ट + ओ)</translation>
-    </message>
-    <message>
-        <source>Undo (Ctrl+Z)</source>
-        <translation>लॉग बरकरार रखें (कंट्रोल + 2)</translation>
-    </message>
-    <message>
-        <source>Screenshot</source>
-        <translation>स्क्रीनशॉट</translation>
-    </message>
-    <message>
-        <source>Pin screenshots (Alt+P）</source>
-        <translation>स्क्रीनशॉट फिक्स करें (अल्ट + पी)</translation>
-    </message>
-    <message>
-        <source>Record</source>
-        <translation>रिकॉर्ड करें</translation>
-    </message>
-    <message>
-        <source>Pencil (P)</source>
-        <translation>कलम (पी)</translation>
-    </message>
-    <message>
-        <source>Turn on camera (C)</source>
-        <translation>कैमरा चालू करें (सी)</translation>
+        <translation>बिएमपी</translation>
     </message>
     <message>
         <source>Border Effects</source>
-        <translation>सीमा प्रभाव</translation>
+        <translation>बोर्डर प्रभाव</translation>
     </message>
     <message>
         <source>None</source>
-        <translation>कोई नहीं</translation>
-    </message>
-    <message>
-        <source>Turn off camera (C)</source>
-        <translation>कैमरा बंद करें (सी)</translation>
-    </message>
-    <message>
-        <source>Hide Keystroke (K)</source>
-        <translation>कुंजी दबाव छुपाएं (के)</translation>
-    </message>
-    <message>
-        <source>Show Keystroke (K)</source>
-        <translation>कुंजी दबाव दिखाएं (के)</translation>
-    </message>
-    <message>
-        <source>webm</source>
-        <translation>वेबम</translation>
-    </message>
-    <message>
-        <source>Videos</source>
-        <translation>वीडियो</translation>
-    </message>
-    <message>
-        <source>Rectangle (R)
-Press and hold Shift to draw a square</source>
-        <translation>आयत (आर)
-शिफ्ट को दबाए रखकर वर्ग बनाएं</translation>
-    </message>
-    <message>
-        <source>Ellipse (O)
-Press and hold Shift to draw a circle</source>
-        <translation>एलिप्स (ओ)
-शिफ्ट को दबाए रखकर एक वृत्त बनाएं</translation>
-    </message>
-    <message>
-        <source>Line (L)
-Press and hold Shift to draw a vertical or horizontal line</source>
-        <translation>रेखा (एल)
-शिफ्ट को दबाए रखकर क्षैतिज या ऊर्ध्वाधर रेखा बनाएं</translation>
-    </message>
-    <message>
-        <source>Arrow (X)
-Press and hold Shift to draw a vertical or horizontal arrow</source>
-        <translation>बिंदु (एक्स)
-शिफ्ट को दबाए रखकर क्षैतिज या ऊर्ध्वाधर बिंदु बनाएं</translation>
+        <translation>कुनै</translation>
     </message>
     <message>
         <source>Shadow</source>
@@ -658,56 +678,40 @@ Press and hold Shift to draw a vertical or horizontal arrow</source>
     </message>
     <message>
         <source>Border</source>
-        <translation>सीमा</translation>
+        <translation>बोर्डर</translation>
     </message>
     <message>
         <source>Device</source>
         <translation>उपकरण</translation>
     </message>
     <message>
-        <source>Sound</source>
-        <translation>ध्वनि</translation>
-    </message>
-    <message>
-        <source>System audio</source>
-        <translation>सिस्टम ध्वनि</translation>
-    </message>
-    <message>
-        <source>Show click</source>
-        <translation>क्लिक दिखाएं</translation>
-    </message>
-    <message>
-        <source>Set a path on save</source>
-        <translation>सेव करते समय एक पथ सेट करें</translation>
-    </message>
-    <message>
-        <source>Change the path on save</source>
-        <translation>सेव करते समय पथ बदलें</translation>
+        <source>Extract Text</source>
+        <translation>पाठ खीच्नु</translation>
     </message>
 </context>
 <context>
     <name>ToolBarWidget</name>
     <message>
         <source>Close (Esc)</source>
-        <translation>बंद करें (ईस्क)</translation>
+        <translation>बन्द गर्नु (Esc)</translation>
     </message>
     <message>
         <source>OK (Enter)</source>
-        <translation>ओके (एंटर)</translation>
+        <translation>ठीक (Enter)</translation>
     </message>
 </context>
 <context>
     <name>TopTips</name>
     <message>
         <source> Adjust the recording area within %1*%2 to get better video effect</source>
-        <translation>संपादन क्षेत्र को %1*%2 में संशोधित करें ताकि वीडियो प्रभाव बेहतर हो सके</translation>
+        <translation>संग्रहण क्षेत्रलाई %1*%2 मा सुधार गर्नु भने राम्रो भिडियो प्रभाव प्राप्त गर्न सकिन्छ</translation>
     </message>
 </context>
 <context>
     <name>Utils</name>
     <message>
         <source>Screen recording is not supported at present</source>
-        <translation>अहिलेक एकतान विंडो रेकर्डिंग समर्थन गरिन छैन</translation>
+        <translation>स्क्रिन रेकर्डिंग अहिले समर्थित छैन</translation>
     </message>
     <message>
         <source>Exit</source>

@@ -1,4 +1,6 @@
-<?xml version="1.0" ?><!DOCTYPE TS><TS version="2.1" language="gl_ES">
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE TS>
+<TS version="2.1" language="gl_ES">
 <context>
     <name>CountdownTooltip</name>
     <message>
@@ -105,16 +107,16 @@ ou prema de novo o atallo para deixar de gravar</translation>
         <translation>Captura de desprazamento</translation>
     </message>
     <message>
-        <source>Open Folder</source>
-        <translation>Abrir cartafol</translation>
-    </message>
-    <message>
         <source>Pin Screenshots</source>
         <translation>Fixar capturas de pantalla</translation>
     </message>
     <message>
         <source>deepin-screen-recorder</source>
-        <translation>grabadora de pantalla de deepin</translation>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Open Folder</source>
+        <translation>Abrir cartafol</translation>
     </message>
 </context>
 <context>
@@ -344,6 +346,10 @@ ou prema de novo o atallo para deixar de gravar</translation>
         <translation>Amosar atallos</translation>
     </message>
     <message>
+        <source>Sound</source>
+        <translation>Son</translation>
+    </message>
+    <message>
         <source>Keystroke</source>
         <translation>Tecla</translation>
     </message>
@@ -364,6 +370,10 @@ ou prema de novo o atallo para deixar de gravar</translation>
         <translation>Iniciar/Gravación</translation>
     </message>
     <message>
+        <source>Mouse</source>
+        <translation>Rato</translation>
+    </message>
+    <message>
         <source>Tools</source>
         <translation>Ferramentas</translation>
     </message>
@@ -380,24 +390,16 @@ ou prema de novo o atallo para deixar de gravar</translation>
         <translation>Fixar capturas de pantalla</translation>
     </message>
     <message>
-        <source>Start scrollshot</source>
-        <translation>Iniciar captura de desprazamento</translation>
-    </message>
-    <message>
         <source>Start OCR</source>
         <translation>Iniciar OCR</translation>
     </message>
     <message>
+        <source>Start scrollshot</source>
+        <translation>Iniciar captura de desprazamento</translation>
+    </message>
+    <message>
         <source>Arrow</source>
         <translation>Frecha</translation>
-    </message>
-    <message>
-        <source>Sound</source>
-        <translation>Son</translation>
-    </message>
-    <message>
-        <source>Mouse</source>
-        <translation>Rato</translation>
     </message>
 </context>
 <context>
@@ -459,12 +461,36 @@ para seleccionar a área a gravar</translation>
 <context>
     <name>SubToolWidget</name>
     <message>
-        <source>Microphone</source>
-        <translation>Micrófono</translation>
+        <source>Show keystroke (K)</source>
+        <translation>Amosar tecla (K)</translation>
     </message>
     <message>
-        <source>Options</source>
-        <translation>Opcións</translation>
+        <source>Hide Keystroke (K)</source>
+        <translation>Agochar tecla (K)</translation>
+    </message>
+    <message>
+        <source>Show Keystroke (K)</source>
+        <translation>Amosar tecla (K)</translation>
+    </message>
+    <message>
+        <source>Turn on camera (C)</source>
+        <translation>Acender a cámara (C)</translation>
+    </message>
+    <message>
+        <source>Turn off camera (C)</source>
+        <translation>Apagar a cámara (C)</translation>
+    </message>
+    <message>
+        <source>Screenshot</source>
+        <translation>Captura de pantalla</translation>
+    </message>
+    <message>
+        <source>Settings</source>
+        <translation>Configuracións</translation>
+    </message>
+    <message>
+        <source>Settings (F3)</source>
+        <translation>Configuración (F3)</translation>
     </message>
     <message>
         <source>Format:</source>
@@ -477,6 +503,14 @@ para seleccionar a área a gravar</translation>
     <message>
         <source>MP4</source>
         <translation>MP4</translation>
+    </message>
+    <message>
+        <source>MKV</source>
+        <translation>MKV</translation>
+    </message>
+    <message>
+        <source>webm</source>
+        <translation>webm</translation>
     </message>
     <message>
         <source>FPS:</source>
@@ -503,128 +537,36 @@ para seleccionar a área a gravar</translation>
         <translation>30 fps</translation>
     </message>
     <message>
-        <source>Save to</source>
-        <translation>Gardar en</translation>
+        <source>Sound</source>
+        <translation>Son</translation>
     </message>
     <message>
-        <source>Desktop</source>
-        <translation>Escritorio</translation>
+        <source>Microphone</source>
+        <translation>Micrófono</translation>
     </message>
     <message>
-        <source>Pictures</source>
-        <translation>Imaxes</translation>
+        <source>System audio</source>
+        <translation>Audio do sistema</translation>
     </message>
     <message>
-        <source>Folder</source>
-        <translation>Cartafol</translation>
-    </message>
-    <message>
-        <source>Format</source>
-        <translation>Formato</translation>
-    </message>
-    <message>
-        <source>PNG</source>
-        <translation>PNG</translation>
-    </message>
-    <message>
-        <source>JPG</source>
-        <translation>JPG</translation>
-    </message>
-    <message>
-        <source>BMP</source>
-        <translation>BMP</translation>
-    </message>
-    <message>
-        <source>MKV</source>
-        <translation>MKV</translation>
-    </message>
-    <message>
-        <source>Clipboard</source>
-        <translation>Portapapeis</translation>
+        <source>Options</source>
+        <translation>Opcións</translation>
     </message>
     <message>
         <source>Show pointer</source>
         <translation>Mostrar punteiro</translation>
     </message>
     <message>
-        <source>Extract Text</source>
-        <translation>Extraer texto</translation>
+        <source>Show click</source>
+        <translation>Amosar Premer</translation>
     </message>
     <message>
-        <source>Show keystroke (K)</source>
-        <translation>Amosar tecla (K)</translation>
+        <source>Save to</source>
+        <translation>Gardar en</translation>
     </message>
     <message>
-        <source>Settings</source>
-        <translation>Configuracións</translation>
-    </message>
-    <message>
-        <source>Settings (F3)</source>
-        <translation>Configuración (F3)</translation>
-    </message>
-    <message>
-        <source>Blur (B)</source>
-        <translation>Desenfoque (B)</translation>
-    </message>
-    <message>
-        <source>Text (T)</source>
-        <translation>Texto (T)</translation>
-    </message>
-    <message>
-        <source>Scrollshot (Alt+I）</source>
-        <translation>Captura de desprazamento (Alt+I)</translation>
-    </message>
-    <message>
-        <source>Extract text (Alt+O）</source>
-        <translation>Extraer texto (Alt+O)</translation>
-    </message>
-    <message>
-        <source>Undo (Ctrl+Z)</source>
-        <translation>Desfacer (Ctrl+Z)</translation>
-    </message>
-    <message>
-        <source>Screenshot</source>
-        <translation>Captura de pantalla</translation>
-    </message>
-    <message>
-        <source>Pin screenshots (Alt+P）</source>
-        <translation>Fixar capturas de pantalla (Alt+P)</translation>
-    </message>
-    <message>
-        <source>Record</source>
-        <translation>Gravar</translation>
-    </message>
-    <message>
-        <source>Pencil (P)</source>
-        <translation>Lapis (P)</translation>
-    </message>
-    <message>
-        <source>Turn on camera (C)</source>
-        <translation>Acender a cámara (C)</translation>
-    </message>
-    <message>
-        <source>Border Effects</source>
-        <translation>Efectos do borde</translation>
-    </message>
-    <message>
-        <source>None</source>
-        <translation>Ningún</translation>
-    </message>
-    <message>
-        <source>Turn off camera (C)</source>
-        <translation>Apagar a cámara (C)</translation>
-    </message>
-    <message>
-        <source>Hide Keystroke (K)</source>
-        <translation>Agochar tecla (K)</translation>
-    </message>
-    <message>
-        <source>Show Keystroke (K)</source>
-        <translation>Amosar tecla (K)</translation>
-    </message>
-    <message>
-        <source>webm</source>
-        <translation>webm</translation>
+        <source>Desktop</source>
+        <translation>Escritorio</translation>
     </message>
     <message>
         <source>Videos</source>
@@ -655,6 +597,82 @@ Press and hold Shift to draw a vertical or horizontal arrow</source>
 Manteña premida a tecla Maiúsculas para debuxar unha frecha vertical ou horizontal</translation>
     </message>
     <message>
+        <source>Pencil (P)</source>
+        <translation>Lapis (P)</translation>
+    </message>
+    <message>
+        <source>Blur (B)</source>
+        <translation>Desenfoque (B)</translation>
+    </message>
+    <message>
+        <source>Text (T)</source>
+        <translation>Texto (T)</translation>
+    </message>
+    <message>
+        <source>Scrollshot (Alt+I）</source>
+        <translation>Captura de desprazamento (Alt+I)</translation>
+    </message>
+    <message>
+        <source>Extract text (Alt+O）</source>
+        <translation>Extraer texto (Alt+O)</translation>
+    </message>
+    <message>
+        <source>Pin screenshots (Alt+P）</source>
+        <translation>Fixar capturas de pantalla (Alt+P)</translation>
+    </message>
+    <message>
+        <source>Undo (Ctrl+Z)</source>
+        <translation>Desfacer (Ctrl+Z)</translation>
+    </message>
+    <message>
+        <source>Record</source>
+        <translation>Gravar</translation>
+    </message>
+    <message>
+        <source>Clipboard</source>
+        <translation>Portapapeis</translation>
+    </message>
+    <message>
+        <source>Pictures</source>
+        <translation>Imaxes</translation>
+    </message>
+    <message>
+        <source>Folder</source>
+        <translation>Cartafol</translation>
+    </message>
+    <message>
+        <source>Set a path on save</source>
+        <translation>Establece un camiño ao gardar</translation>
+    </message>
+    <message>
+        <source>Change the path on save</source>
+        <translation>Cambia o camiño ao gardar</translation>
+    </message>
+    <message>
+        <source>Format</source>
+        <translation>Formato</translation>
+    </message>
+    <message>
+        <source>PNG</source>
+        <translation>PNG</translation>
+    </message>
+    <message>
+        <source>JPG</source>
+        <translation>JPG</translation>
+    </message>
+    <message>
+        <source>BMP</source>
+        <translation>BMP</translation>
+    </message>
+    <message>
+        <source>Border Effects</source>
+        <translation>Efectos do borde</translation>
+    </message>
+    <message>
+        <source>None</source>
+        <translation>Ningún</translation>
+    </message>
+    <message>
         <source>Shadow</source>
         <translation>Sombra</translation>
     </message>
@@ -667,24 +685,8 @@ Manteña premida a tecla Maiúsculas para debuxar unha frecha vertical ou horizo
         <translation>Dispositivo</translation>
     </message>
     <message>
-        <source>Sound</source>
-        <translation>Son</translation>
-    </message>
-    <message>
-        <source>System audio</source>
-        <translation>Audio do sistema</translation>
-    </message>
-    <message>
-        <source>Show click</source>
-        <translation>Amosar Premer</translation>
-    </message>
-    <message>
-        <source>Set a path on save</source>
-        <translation>Establece un camiño ao gardar</translation>
-    </message>
-    <message>
-        <source>Change the path on save</source>
-        <translation>Cambia o camiño ao gardar</translation>
+        <source>Extract Text</source>
+        <translation>Extraer texto</translation>
     </message>
 </context>
 <context>

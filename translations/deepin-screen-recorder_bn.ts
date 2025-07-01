@@ -1,4 +1,6 @@
-<?xml version="1.0" ?><!DOCTYPE TS><TS version="2.1" language="bn">
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE TS>
+<TS version="2.1" language="bn">
 <context>
     <name>CountdownTooltip</name>
     <message>
@@ -9,40 +11,40 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Do not rotate your screen during recording</source>
-        <translation>নক্ষত্র করার সময় তারার পরিকেন্দ্রকে ঘূর্ণিত করবেন না</translation>
+        <translation>প্রতিবেধন করার সময় আপনার স্ক্রিনকে ঘুরিয়ে ফেলবেন না</translation>
     </message>
 </context>
 <context>
     <name>IconWidget</name>
     <message>
         <source>Screenshot</source>
-        <translation>নক্ষত্র করা</translation>
+        <translation>স্ক্রিনশট</translation>
     </message>
     <message>
         <source>Recording</source>
-        <translation>নক্ষত্র করা হচ্ছে</translation>
+        <translation>রেকর্ডিং</translation>
     </message>
 </context>
 <context>
     <name>MainToolWidget</name>
     <message>
         <source>Record</source>
-        <translation>নক্ষত্র করুন</translation>
+        <translation>রেকর্ড করুন</translation>
     </message>
     <message>
         <source>Screenshot</source>
-        <translation>নক্ষত্র করা</translation>
+        <translation>স্ক্রিনশট</translation>
     </message>
 </context>
 <context>
     <name>MainWindow</name>
     <message>
         <source>Screen Capture</source>
-        <translation>নক্ষত্র করা</translation>
+        <translation>স্ক্রিন ধরে ফেলুন</translation>
     </message>
     <message>
         <source>Save failed. Please save it in your home directory.</source>
-        <translation>ভর্তি ব্যর্থ হয়েছে। কাছাকাছি দIRECTORYতে সংরক্ষণ করুন</translation>
+        <translation>সংরক্ষণ করা যায়নি। আপনার হোম ডিরেক্টরিতে সংরক্ষণ করুন</translation>
     </message>
     <message>
         <source>View</source>
@@ -50,26 +52,23 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Screenshot finished</source>
-        <translation>নক্ষত্র করা শেষ</translation>
+        <translation>স্ক্রিনশট সমাপ্ত</translation>
     </message>
     <message>
         <source>PNG (*.png);;JPEG (*.jpg *.jpeg);;BMP (*.bmp)</source>
-        <translation>PNG (*.png);;JPEG (*.jpg *.jpeg);;BMP (*.bmp)
-</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>JPEG (*.jpg *.jpeg);;PNG (*.png);;BMP (*.bmp)</source>
-        <translation>JPEG (*.jpg *.jpeg);;PNG (*.png);;BMP (*.bmp)
-</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>BMP (*.bmp);;JPEG (*.jpg *.jpeg);;PNG (*.png)</source>
-        <translation>BMP (*.bmp);;JPEG (*.jpg *.jpeg);;PNG (*.png)
-</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>select-area</source>
-        <translation>SELECT-AREA</translation>
+        <translation>অঞ্চল নির্বাচন করুন</translation>
     </message>
     <message>
         <source>Save</source>
@@ -77,91 +76,92 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Saved to %1</source>
-        <translation>%1 এ সংরক্ষণ করা হয়েছে</translation>
+        <translation>সংরক্ষণ করা হয়েছে %1 এ</translation>
     </message>
     <message>
         <source>Ignore</source>
-        <translation>IGNORER</translation>
+        <translation>আবৃত করুন</translation>
     </message>
     <message>
         <source>Clipboard</source>
-        <translation>CLIPBOARD</translation>
+        <translation>ক্লিপবোর্ড</translation>
     </message>
     <message>
         <source>Saving the screen recording file, please wait...</source>
-        <translation>স্ক্রিন রিকর্ডিং ফাইল সংরক্ষণ হচ্ছে, কিছু সময় অপেক্ষা করুন...</translation>
+        <translation>স্ক্রিন রেকর্ডিং ফাইল সংরক্ষণ করা হচ্ছে, অনুগ্রহ করে অপেক্ষা করুন...</translation>
     </message>
     <message>
         <source>As the window effect is disabled during the process, the recording has to be stopped</source>
-        <translation>প্রক্রিয়ার সময় বার্ণিক প্রভাব বন্ধ করা হয়েছে, তাই রিকর্ডিং বন্ধ করতে হবে</translation>
+        <translation>&gt;-
+  প্রক্রিয়া সময় উইন্ডো প্রভাব অক্ষম করা হয়েছে, রেকর্ডিং বন্ধ করা হবে</translation>
     </message>
     <message>
         <source>Screenshot</source>
-        <translation>নক্ষত্র করা</translation>
+        <translation>স্ক্রিনশট</translation>
     </message>
     <message>
         <source>Screenshot failed.</source>
-        <translation>নক্ষত্র করা ব্যর্থ হয়েছে।</translation>
+        <translation>স্ক্রিনশট করা যায়নি।</translation>
     </message>
     <message>
         <source>Scrollshot</source>
-        <translation>SCROLLSHOT</translation>
+        <translation>স্ক্রলশট</translation>
+    </message>
+    <message>
+        <source>Pin Screenshots</source>
+        <translation>স্ক্রিনশট পিন করুন</translation>
+    </message>
+    <message>
+        <source>deepin-screen-recorder</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Open Folder</source>
         <translation>ফোল্ডার খুলুন</translation>
-    </message>
-    <message>
-        <source>Pin Screenshots</source>
-        <translation>নক্ষত্র করার পিন রাখুন</translation>
-    </message>
-    <message>
-        <source>deepin-screen-recorder</source>
-        <translation>deepin-screen-recorder</translation>
     </message>
 </context>
 <context>
     <name>MenuController</name>
     <message>
         <source>Undo</source>
-        <translation>REVERT</translation>
+        <translation>বাতিল করুন</translation>
     </message>
     <message>
         <source>Save</source>
-        <translation>পreservation</translation>
+        <translation>সংরক্ষণ</translation>
     </message>
     <message>
         <source>Exit</source>
-        <translation>বের হওয়া</translation>
+        <translation>বাহির হন</translation>
     </message>
 </context>
 <context>
     <name>QObject</name>
     <message>
         <source>Pin Screenshots</source>
-        <translation>ছবিগুলি নির্দেশিত করুন</translation>
+        <translation>স্ক্রিনশট পিন করুন</translation>
     </message>
 </context>
 <context>
     <name>QuickPanelWidget</name>
     <message>
         <source>Screenshot</source>
-        <translation>ছবি তৈরি</translation>
+        <translation>ছবি তৈরি করুন</translation>
     </message>
     <message>
         <source>Record</source>
-        <translation>পাঠ্য</translation>
+        <translation>প্রতিবেদন</translation>
     </message>
 </context>
 <context>
     <name>RecordIconWidget</name>
     <message>
         <source>Screenshot</source>
-        <translation>ছবি তৈরি</translation>
+        <translation>ছবি তৈরি করুন</translation>
     </message>
     <message>
         <source>Recording</source>
-        <translation>পাঠ্যকরণ</translation>
+        <translation>প্রতিবেদন চালু</translation>
     </message>
 </context>
 <context>
@@ -176,79 +176,79 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Saved to %1</source>
-        <translation>%1 এ সেভ করা হয়েছে</translation>
+        <translation>সংরক্ষিত হয়েছে %1</translation>
     </message>
     <message>
         <source>Record</source>
-        <translation>পাঠ্য</translation>
+        <translation>প্রতিবেদন</translation>
     </message>
     <message>
         <source>Open Folder</source>
-        <translation>মূল্যায়ন ফোল্ডারটা খুলুন</translation>
+        <translation>ফোল্ডার খুলুন</translation>
     </message>
 </context>
 <context>
     <name>Screenshot</name>
     <message>
         <source>Screen Capture will start in %1 seconds</source>
-        <translation>%1 সেকেন্ড পর স্ক্রিন ক্যাপচার শুরু হবে</translation>
+        <translation>পর্দার ছবি তৈরি করা শুরু হবে %1 সেকেন্ডে</translation>
     </message>
 </context>
 <context>
     <name>ScrollShotTip</name>
     <message>
         <source>Get help.</source>
-        <translation>সাহায্য লাভ করুন.</translation>
+        <translation>সাহায্য পান।</translation>
     </message>
     <message>
         <source>Failed to take a continuous screenshot.</source>
-        <translation>চালাকি ছবি লাভ করা স্বাভাবিক হয়নি.</translation>
+        <translation>পরিবর্তনশীল ছবি তোলার অপর্যাপ্ত।</translation>
     </message>
     <message>
         <source>Reached the bottom of the scroll area</source>
-        <translation>স্ক্রিন স্ক্রিন অংশের নিচে পৌঁছেছি</translation>
+        <translation>স্ক্রল এলাকার নিচে পৌঁছেছেন</translation>
     </message>
     <message>
         <source>Reached the maximum length</source>
-        <translation>সর্বাধিক দৈর্ঘ্যে পৌঁছেছি</translation>
+        <translation>মোট দৈর্ঘ্যে পৌঁছেছেন</translation>
     </message>
     <message>
         <source>adjust the capture area</source>
-        <translation>ছবি অংশ রেখে স্থান রুবলো</translation>
+        <translation>প্রতিবেদন এলাকা পরিবর্তন করুন</translation>
     </message>
     <message>
         <source>Scroll your mouse wheel or click to take a scrolling screenshot</source>
-        <translation>মাউস মিউজিয়াল যাতায়াত করুন বা ক্লিক করুন যে ক্লিপ শুরু করার জন্য</translation>
+        <translation>আপনার মাউস ওল ঘুরান বা ক্লিক করুন যাতে স্ক্রল করা ছবি তোলা যায়</translation>
     </message>
     <message>
         <source>Slow down the scrolling speed</source>
-        <translation>স্ক্রিন স্ক্রিন যাতায়াতের গতিটা ধীর করুন</translation>
+        <translation>স্ক্রল গতি কমান</translation>
     </message>
     <message>
         <source>Invalid area, click to </source>
-        <translation>অকার্যকর অংশ, ক্লিক করুন যে</translation>
+        <translation>অবৈধ এলাকা, ক্লিক করুন যাতে </translation>
     </message>
 </context>
 <context>
     <name>ShapesWidget</name>
     <message>
         <source>Input text here</source>
-        <translation>নিচে টেক্সট প্রবেশ করুন</translation>
+        <translation>এখানে টেক্সট লিখুন</translation>
     </message>
 </context>
 <context>
     <name>Shortcut</name>
     <message>
         <source>Start/Screenshot</source>
-        <translation>প্রারম্ভ/ছবি তৈরি</translation>
+        <translation>শুরু/ছবি তৈরি করুন</translation>
     </message>
     <message>
         <source>Exit/Save</source>
-        <translation>বের হওয়া/সেভ</translation>
+        <translation>বাতিল করুন/সংরক্ষণ</translation>
     </message>
     <message>
         <source>Size Adjustment</source>
-        <translation>বায়োমেট্রিক রুবলন</translation>
+        <translation>আকার পরিবর্তন</translation>
     </message>
     <message>
         <source>Settings</source>
@@ -256,43 +256,43 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Quick start</source>
-        <translation>গ্রহণ করুন</translation>
+        <translation>বেশি দ্রুত শুরু</translation>
     </message>
     <message>
         <source>Window screenshot</source>
-        <translation>বার্নাস্কো স্নায়াপ</translation>
+        <translation>ও পর্দার ছবি</translation>
     </message>
     <message>
         <source>Delay screenshot</source>
-        <translation>প্রতিবেদনের দীর্ঘ স্নায়াপ</translation>
+        <translation>মনোয়ন ছবি</translation>
     </message>
     <message>
         <source>Full screenshot</source>
-        <translation>পূর্ণ স্নায়াপ</translation>
+        <translation>পূর্ণ ছবি</translation>
     </message>
     <message>
         <source>Exit</source>
-        <translation>বের হওয়া</translation>
+        <translation>বাতিল করুন</translation>
     </message>
     <message>
         <source>Save</source>
-        <translation>পরিবর্তন সংরক্ষণ করুন</translation>
+        <translation>সংরক্ষণ</translation>
     </message>
     <message>
         <source>Rectangle</source>
-        <translation>বর্গক্ষেত্র</translation>
+        <translation>আয়তক্ষেত্র</translation>
     </message>
     <message>
         <source>Ellipse</source>
-        <translation>অ্যায়লান</translation>
+        <translation>বৃত্ত</translation>
     </message>
     <message>
         <source>Line</source>
-        <translation>রেখা</translation>
+        <translation>লাইন</translation>
     </message>
     <message>
         <source>Pencil</source>
-        <translation>কালনায়ক</translation>
+        <translation>বাস্কেল</translation>
     </message>
     <message>
         <source>Text</source>
@@ -300,43 +300,43 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Delete</source>
-        <translation>ডিলিট</translation>
+        <translation>মুছুন</translation>
     </message>
     <message>
         <source>Undo</source>
-        <translation>রিসেট</translation>
+        <translation>অ্যান্ডো</translation>
     </message>
     <message>
         <source>Increase height up</source>
-        <translation>আরো উপরে উচ্চতা বাড়ানো</translation>
+        <translation>উপরে উচ্চতা বৃদ্ধি করুন</translation>
     </message>
     <message>
         <source>Increase height down</source>
-        <translation>আরো নিচে উচ্চতা বাড়ানো</translation>
+        <translation>নিচে উচ্চতা বৃদ্ধি করুন</translation>
     </message>
     <message>
         <source>Increase width left</source>
-        <translation>আরো বামে প্রস্থ বাড়ানো</translation>
+        <translation>বামে প্রস্থ বৃদ্ধি করুন</translation>
     </message>
     <message>
         <source>Increase width right</source>
-        <translation>আরো ডানে প্রস্থ বাড়ানো</translation>
+        <translation>ডানে প্রস্থ বৃদ্ধি করুন</translation>
     </message>
     <message>
         <source>Decrease height up</source>
-        <translation>আরো উপরে উচ্চতা ঘনানো</translation>
+        <translation>উপরে উচ্চতা কমান</translation>
     </message>
     <message>
         <source>Decrease height down</source>
-        <translation>আরো নিচে উচ্চতা ঘনানো</translation>
+        <translation>নিচে উচ্চতা কমান</translation>
     </message>
     <message>
         <source>Decrease width left</source>
-        <translation>আরো বামে প্রস্থ ঘনানো</translation>
+        <translation>বামে প্রস্থ কমান</translation>
     </message>
     <message>
         <source>Decrease width right</source>
-        <translation>আরো ডানে প্রস্থ ঘনানো</translation>
+        <translation>ডানে প্রস্থ কমান</translation>
     </message>
     <message>
         <source>Help</source>
@@ -344,15 +344,19 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Display shortcuts</source>
-        <translation>স্কুটচর্ট প্রদর্শন করুন</translation>
+        <translation>শর্টকাট দেখুন</translation>
+    </message>
+    <message>
+        <source>Sound</source>
+        <translation>সাউন্ড</translation>
     </message>
     <message>
         <source>Keystroke</source>
-        <translation>কেয়স্ট্রোক</translation>
+        <translation>কিস্ট্রোক</translation>
     </message>
     <message>
         <source>Webcam</source>
-        <translation>ইউবিএস ক্যামেরা</translation>
+        <translation>ওয়েবকেম</translation>
     </message>
     <message>
         <source>Start recording</source>
@@ -360,47 +364,43 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Options</source>
-        <translation>পছন্দ সেট করুন</translation>
+        <translation>বিকল্প</translation>
     </message>
     <message>
         <source>Start/Recording</source>
-        <translation>স্টার্ট/রেকর্ডিং</translation>
+        <translation>প্রারম্ভ/প্রসারণ</translation>
+    </message>
+    <message>
+        <source>Mouse</source>
+        <translation>মাউস</translation>
     </message>
     <message>
         <source>Tools</source>
-        <translation>টুলস</translation>
+        <translation>ওয়াইটস</translation>
     </message>
     <message>
         <source>Extract text</source>
-        <translation>টেক্সট প্রস্তুত করুন</translation>
+        <translation>টেক্সট নির্গচন করুন</translation>
     </message>
     <message>
         <source>Scrollshot</source>
-        <translation>স্কোলশট</translation>
+        <translation>স্কুরলশট</translation>
     </message>
     <message>
         <source>Pin screenshots</source>
         <translation>স্ক্রিনশট পিন করুন</translation>
     </message>
     <message>
-        <source>Start scrollshot</source>
-        <translation>স্কোলশট শুরু করুন</translation>
+        <source>Start OCR</source>
+        <translation>ওয়াইট স্টার্ট ওসিআর</translation>
     </message>
     <message>
-        <source>Start OCR</source>
-        <translation>স্টার্ট ওসআর</translation>
+        <source>Start scrollshot</source>
+        <translation>স্কুরলশট শুরু করুন</translation>
     </message>
     <message>
         <source>Arrow</source>
-        <translation>ছোটো ছোটো</translation>
-    </message>
-    <message>
-        <source>Sound</source>
-        <translation>সাউন্ড</translation>
-    </message>
-    <message>
-        <source>Mouse</source>
-        <translation>মাউস</translation>
+        <translation>বৃত্ত</translation>
     </message>
 </context>
 <context>
@@ -423,31 +423,29 @@ or press the shortcut again to stop recording</source>
         <source>Rectangle
 Press and hold Shift to draw a square</source>
         <translation>আয়তক্ষেত্র
-শিফট চাপ ধরে রেখে বর্গ আঁকুন</translation>
+শিফট চাপ ধরে রাখুন একটি বর্গ আঁকুন</translation>
     </message>
     <message>
         <source>Ellipse
 Press and hold Shift to draw a circle</source>
-        <translation>বৃত্ত
-শিফট চাপ ধরে রেখে বৃত্ত আঁকুন</translation>
+        <translation>বৃত্ত</translation>
     </message>
     <message>
         <source>Brush
 Press and hold Shift to draw a straight line</source>
-        <translation>ছড়া
-শিফট চাপ ধরে রেখে সরল রেখা আঁকুন</translation>
+        <translation>বৃত্ত আঁকুন, স্থির চাপ দিয়ে হোল্ড কৰো</translation>
     </message>
     <message>
         <source>Adjust blur strength (Scroll to adjust it)</source>
-        <translation>ব্লার শক্তি সামান্য করুন (স্কোল করে সামান্য করুন)</translation>
+        <translation>ছাপা</translation>
     </message>
     <message>
         <source>Adjust brush size (Scroll to adjust it)</source>
-        <translation>ছড়ার আকার সামান্য করুন (স্কোল করে সামান্য করুন)</translation>
+        <translation>স্থির চাপ দিয়ে হোল্ড কৰো যাতে সৰল লাইন আঁকো</translation>
     </message>
     <message>
         <source>Adjust text size (Scroll to adjust it)</source>
-        <translation>টেক্সট আকার সামান্য করুন (স্কোল করে সামান্য করুন)</translation>
+        <translation>ব্লার শক্তি সমায়োজন কৰো (সমায়োজন কৰার জন্য স্ক্রোল কৰো)</translation>
     </message>
 </context>
 <context>
@@ -462,172 +460,112 @@ select the area to record</source>
 <context>
     <name>SubToolWidget</name>
     <message>
-        <source>Microphone</source>
-        <translation>মাইক্রোফোন</translation>
+        <source>Show keystroke (K)</source>
+        <translation>ছাপা আকার সমায়োজন কৰো (সমায়োজন কৰার জন্য স্ক্রোল কৰো)</translation>
     </message>
     <message>
-        <source>Options</source>
-        <translation>বিকল্প</translation>
+        <source>Hide Keystroke (K)</source>
+        <translation>টেক্সট আকার সমায়োজন কৰো (সমায়োজন কৰার জন্য স্ক্রোল কৰো)</translation>
+    </message>
+    <message>
+        <source>Show Keystroke (K)</source>
+        <translation>কী প্রেস দেখাও (K)</translation>
+    </message>
+    <message>
+        <source>Turn on camera (C)</source>
+        <translation>কী প্রেস লুকাও (K)</translation>
+    </message>
+    <message>
+        <source>Turn off camera (C)</source>
+        <translation>কী প্রেস দেখাও (K)</translation>
+    </message>
+    <message>
+        <source>Screenshot</source>
+        <translation>ক্যামেরা চালু কৰো (C)</translation>
+    </message>
+    <message>
+        <source>Settings</source>
+        <translation>ক্যামেরা বন্ধ কৰো (C)</translation>
+    </message>
+    <message>
+        <source>Settings (F3)</source>
+        <translation>স্ক্রীনশট</translation>
     </message>
     <message>
         <source>Format:</source>
-        <translation>ফরম্যাট:</translation>
+        <translation>সেটিংস</translation>
     </message>
     <message>
         <source>GIF</source>
-        <translation>জিএফআই</translation>
+        <translation>সেটিংস (F3)</translation>
     </message>
     <message>
         <source>MP4</source>
+        <translation>ফরম্যাট:</translation>
+    </message>
+    <message>
+        <source>MKV</source>
+        <translation>জিএফ</translation>
+    </message>
+    <message>
+        <source>webm</source>
         <translation>এমপিভি</translation>
     </message>
     <message>
         <source>FPS:</source>
-        <translation>এফপিএস:</translation>
+        <translation>এমকেভি</translation>
     </message>
     <message>
         <source>5 fps</source>
-        <translation>5 এফপিএস</translation>
+        <translation>ওবিম</translation>
     </message>
     <message>
         <source>10 fps</source>
-        <translation>10 fps</translation>
+        <translation>এফপিএস:</translation>
     </message>
     <message>
         <source>20 fps</source>
-        <translation>20 fps</translation>
+        <translation>5 এফপিএস</translation>
     </message>
     <message>
         <source>24 fps</source>
-        <translation>24 fps</translation>
+        <translation>10 এফপিএস</translation>
     </message>
     <message>
         <source>30 fps</source>
-        <translation>30 fps</translation>
+        <translation>20 এফপিএস</translation>
+    </message>
+    <message>
+        <source>Sound</source>
+        <translation>24 এফপিএস</translation>
+    </message>
+    <message>
+        <source>Microphone</source>
+        <translation>30 এফপিএস</translation>
+    </message>
+    <message>
+        <source>System audio</source>
+        <translation>সাউন্ড</translation>
+    </message>
+    <message>
+        <source>Options</source>
+        <translation>মাইক্রোফোন</translation>
+    </message>
+    <message>
+        <source>Show pointer</source>
+        <translation>সিস্টেম সাউন্ড</translation>
+    </message>
+    <message>
+        <source>Show click</source>
+        <translation>অপশন</translation>
     </message>
     <message>
         <source>Save to</source>
-        <translation>তৈরি করুন এবং সংরক্ষণ করুন</translation>
+        <translation>সংরক্ষণ করুন</translation>
     </message>
     <message>
         <source>Desktop</source>
         <translation>ডেস্কটপ</translation>
-    </message>
-    <message>
-        <source>Pictures</source>
-        <translation>ছবি</translation>
-    </message>
-    <message>
-        <source>Folder</source>
-        <translation>মূল্যায়ন</translation>
-    </message>
-    <message>
-        <source>Format</source>
-        <translation>ফর্ম্যাট</translation>
-    </message>
-    <message>
-        <source>PNG</source>
-        <translation>PNG</translation>
-    </message>
-    <message>
-        <source>JPG</source>
-        <translation>JPG</translation>
-    </message>
-    <message>
-        <source>BMP</source>
-        <translation>BMP</translation>
-    </message>
-    <message>
-        <source>MKV</source>
-        <translation>MKV</translation>
-    </message>
-    <message>
-        <source>Clipboard</source>
-        <translation>ক্লিপবোর্ড</translation>
-    </message>
-    <message>
-        <source>Show pointer</source>
-        <translation>পয়েন্টার দেখান</translation>
-    </message>
-    <message>
-        <source>Extract Text</source>
-        <translation>টেক্সট পরিষ্কার করুন</translation>
-    </message>
-    <message>
-        <source>Show keystroke (K)</source>
-        <translation>ক্যাবেন্স দেখান (K</translation>
-    </message>
-    <message>
-        <source>Settings</source>
-        <translation>সেটিংস</translation>
-    </message>
-    <message>
-        <source>Settings (F3)</source>
-        <translation>সেটিংস (F3</translation>
-    </message>
-    <message>
-        <source>Blur (B)</source>
-        <translation>ব্লার (B</translation>
-    </message>
-    <message>
-        <source>Text (T)</source>
-        <translation>টেক্সট (T</translation>
-    </message>
-    <message>
-        <source>Scrollshot (Alt+I）</source>
-        <translation>স্ক্রিনশট (Alt+I)</translation>
-    </message>
-    <message>
-        <source>Extract text (Alt+O）</source>
-        <translation>টেক্সট পরিষ্কার করুন (Alt+O)</translation>
-    </message>
-    <message>
-        <source>Undo (Ctrl+Z)</source>
-        <translation>রিসেট (Ctrl+Z</translation>
-    </message>
-    <message>
-        <source>Screenshot</source>
-        <translation>স্ক্রিনশট</translation>
-    </message>
-    <message>
-        <source>Pin screenshots (Alt+P）</source>
-        <translation>স্ক্রিনশট পিন করুন (Alt+P)</translation>
-    </message>
-    <message>
-        <source>Record</source>
-        <translation>রেকর্ড</translation>
-    </message>
-    <message>
-        <source>Pencil (P)</source>
-        <translation>মাল্টি (P]</translation>
-    </message>
-    <message>
-        <source>Turn on camera (C)</source>
-        <translation>ক্যামারা চালিয়ে দাও (C]</translation>
-    </message>
-    <message>
-        <source>Border Effects</source>
-        <translation>বার্ডার আর্ক্টিক</translation>
-    </message>
-    <message>
-        <source>None</source>
-        <translation>কোনো কিছু নেই</translation>
-    </message>
-    <message>
-        <source>Turn off camera (C)</source>
-        <translation>ক্যামারা বন্ধ করুন (C]</translation>
-    </message>
-    <message>
-        <source>Hide Keystroke (K)</source>
-        <translation>কীস্ট্রোক সরান (K]</translation>
-    </message>
-    <message>
-        <source>Show Keystroke (K)</source>
-        <translation>কীস্ট্রোক প্রদর্শন করুন (K]</translation>
-    </message>
-    <message>
-        <source>webm</source>
-        <translation>webm</translation>
     </message>
     <message>
         <source>Videos</source>
@@ -636,87 +574,147 @@ select the area to record</source>
     <message>
         <source>Rectangle (R)
 Press and hold Shift to draw a square</source>
-        <translation>মূল্যায়ন বৃত্ত (R)
-Shift দপ্তর রেখে একটি বর্গ আঁকুন</translation>
+        <translation>আয়তক্ষেত্র (R)
+Shift চাপ দিয়ে বর্গক্ষেত্র আঁকুন</translation>
     </message>
     <message>
         <source>Ellipse (O)
 Press and hold Shift to draw a circle</source>
-        <translation>অপারেশন বৃত্ত (O)
-Shift দপ্তর রেখে একটি বৃত্ত আঁকুন</translation>
+        <translation>বৃত্ত (O)
+Shift চাপ দিয়ে বৃত্ত আঁকুন</translation>
     </message>
     <message>
         <source>Line (L)
 Press and hold Shift to draw a vertical or horizontal line</source>
-        <translation>রেখা (L)
-Shift দপ্তর রেখে উল্লম্ব বা এক্সট্রাহোরিজাল রেখা আঁকুন</translation>
+        <translation>লাইন (L)
+Shift চাপ দিয়ে লম্ব বা সমতল লাইন আঁকুন</translation>
     </message>
     <message>
         <source>Arrow (X)
 Press and hold Shift to draw a vertical or horizontal arrow</source>
-        <translation>ছক (X)
-Shift দপ্তর রেখে উল্লম্ব বা এক্সট্রাহোরিজাল ছক আঁকুন</translation>
+        <translation>বার্ন (X)
+Shift চাপ দিয়ে লম্ব বা সমতল বার্ন আঁকুন</translation>
+    </message>
+    <message>
+        <source>Pencil (P)</source>
+        <translation>চাকশি (P)</translation>
+    </message>
+    <message>
+        <source>Blur (B)</source>
+        <translation>বাদ পড়ানো (B)</translation>
+    </message>
+    <message>
+        <source>Text (T)</source>
+        <translation>টেক্সট (T)</translation>
+    </message>
+    <message>
+        <source>Scrollshot (Alt+I）</source>
+        <translation>স্ক্রল স্ক্রিনশট (Alt+I)</translation>
+    </message>
+    <message>
+        <source>Extract text (Alt+O）</source>
+        <translation>টেক্সট নির্গমন (Alt+O)</translation>
+    </message>
+    <message>
+        <source>Pin screenshots (Alt+P）</source>
+        <translation>স্ক্রিনশট পিন করুন (Alt+P)</translation>
+    </message>
+    <message>
+        <source>Undo (Ctrl+Z)</source>
+        <translation>অ্যান্ডো (Ctrl+Z)</translation>
+    </message>
+    <message>
+        <source>Record</source>
+        <translation>রেকর্ড করুন</translation>
+    </message>
+    <message>
+        <source>Clipboard</source>
+        <translation>ক্লিপবোর্ড</translation>
+    </message>
+    <message>
+        <source>Pictures</source>
+        <translation>ছবি</translation>
+    </message>
+    <message>
+        <source>Folder</source>
+        <translation>ফোল্ডার</translation>
+    </message>
+    <message>
+        <source>Set a path on save</source>
+        <translation>সংরক্ষণে পাথ সেট করুন</translation>
+    </message>
+    <message>
+        <source>Change the path on save</source>
+        <translation>সংরক্ষণে পাথ পরিবর্তন করুন</translation>
+    </message>
+    <message>
+        <source>Format</source>
+        <translation>ফরম্যাট</translation>
+    </message>
+    <message>
+        <source>PNG</source>
+        <translation>পিএনজি</translation>
+    </message>
+    <message>
+        <source>JPG</source>
+        <translation>জেপিজি</translation>
+    </message>
+    <message>
+        <source>BMP</source>
+        <translation>বিএমপি</translation>
+    </message>
+    <message>
+        <source>Border Effects</source>
+        <translation>বাউন্ডারি প্রভাব</translation>
+    </message>
+    <message>
+        <source>None</source>
+        <translation>কোনো</translation>
     </message>
     <message>
         <source>Shadow</source>
-        <translation>স্বার্থ</translation>
+        <translation>ছায়া</translation>
     </message>
     <message>
         <source>Border</source>
-        <translation>বার্ডার</translation>
+        <translation>বাউন্ডারি</translation>
     </message>
     <message>
         <source>Device</source>
         <translation>ডিভাইস</translation>
     </message>
     <message>
-        <source>Sound</source>
-        <translation>সোন্ড</translation>
-    </message>
-    <message>
-        <source>System audio</source>
-        <translation>সিস্টেম আউডিও</translation>
-    </message>
-    <message>
-        <source>Show click</source>
-        <translation>ক্লিক প্রদর্শন করুন</translation>
-    </message>
-    <message>
-        <source>Set a path on save</source>
-        <translation>সঠিক পথ নির্ধারণ করুন</translation>
-    </message>
-    <message>
-        <source>Change the path on save</source>
-        <translation>সঠিক পথ পরিবর্তন করুন</translation>
+        <source>Extract Text</source>
+        <translation>টেক্সট নির্গমন</translation>
     </message>
 </context>
 <context>
     <name>ToolBarWidget</name>
     <message>
         <source>Close (Esc)</source>
-        <translation>বন্ধ করুন (Esc]</translation>
+        <translation>বন্ধ করুন (Esc)</translation>
     </message>
     <message>
         <source>OK (Enter)</source>
-        <translation>যা হোক (Enter]</translation>
+        <translation>ও.কি (Enter)</translation>
     </message>
 </context>
 <context>
     <name>TopTips</name>
     <message>
         <source> Adjust the recording area within %1*%2 to get better video effect</source>
-        <translation>%1*%2 অনুযায়ী রেকর্ডিং অঞ্চল রূপান্তর করুন যাতে ভিডিও কাজের ভাল হয়</translation>
+        <translation>প্রতিবেশী %1*%2 এর মধ্যে রেকর্ডিং এলাকা যুক্ত করুন যাতে ভিডিও প্রভাবটি ভালো হয়</translation>
     </message>
 </context>
 <context>
     <name>Utils</name>
     <message>
         <source>Screen recording is not supported at present</source>
-        <translation>বর্তমানে তীব্র দৃশ্য রেকর্ডিং সমর্থন করা হয় না</translation>
+        <translation>প্রতিবেশী স্ক্রিন রেকর্ডিং বর্তমানে সমর্থিত নয়</translation>
     </message>
     <message>
         <source>Exit</source>
-        <translation>বের হওয়া</translation>
+        <translation>বাইরে যান</translation>
     </message>
 </context>
 <context>

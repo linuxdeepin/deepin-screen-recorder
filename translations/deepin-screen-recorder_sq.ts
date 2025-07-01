@@ -1,4 +1,6 @@
-<?xml version="1.0" ?><!DOCTYPE TS><TS version="2.1" language="sq">
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE TS>
+<TS version="2.1" language="sq">
 <context>
     <name>CountdownTooltip</name>
     <message>
@@ -90,7 +92,7 @@ klikoni ikonën e panelit, ose rishtypni shkurtoren</translation>
     </message>
     <message>
         <source>As the window effect is disabled during the process, the recording has to be stopped</source>
-        <translation>Ngaqë efekti dritare është i çaktivizuar gjatë procesit, regjistrimi duhet të ndalet.</translation>
+        <translation>Ngaqë efekti i dritares është çaktivizuar gjatë procesit, regjistrimi duhet të ndalet.</translation>
     </message>
     <message>
         <source>Screenshot</source>
@@ -102,11 +104,7 @@ klikoni ikonën e panelit, ose rishtypni shkurtoren</translation>
     </message>
     <message>
         <source>Scrollshot</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <source>Open Folder</source>
-        <translation>Hapni Dosje</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Pin Screenshots</source>
@@ -114,7 +112,11 @@ klikoni ikonën e panelit, ose rishtypni shkurtoren</translation>
     </message>
     <message>
         <source>deepin-screen-recorder</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Open Folder</source>
+        <translation>Hapni Dosje</translation>
     </message>
 </context>
 <context>
@@ -344,6 +346,10 @@ klikoni ikonën e panelit, ose rishtypni shkurtoren</translation>
         <translation>Shfaq shkurtore</translation>
     </message>
     <message>
+        <source>Sound</source>
+        <translation>Tingull</translation>
+    </message>
+    <message>
         <source>Keystroke</source>
         <translation>Shtypje tastesh</translation>
     </message>
@@ -364,6 +370,10 @@ klikoni ikonën e panelit, ose rishtypni shkurtoren</translation>
         <translation>Fillo/Regjistrim</translation>
     </message>
     <message>
+        <source>Mouse</source>
+        <translation>Mi</translation>
+    </message>
+    <message>
         <source>Tools</source>
         <translation>Mjete</translation>
     </message>
@@ -373,31 +383,23 @@ klikoni ikonën e panelit, ose rishtypni shkurtoren</translation>
     </message>
     <message>
         <source>Scrollshot</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Pin screenshots</source>
         <translation>Fiksoni foto ekrani</translation>
     </message>
     <message>
-        <source>Start scrollshot</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
         <source>Start OCR</source>
         <translation>Nis OCR</translation>
     </message>
     <message>
+        <source>Start scrollshot</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>Arrow</source>
         <translation>Shigjetë</translation>
-    </message>
-    <message>
-        <source>Sound</source>
-        <translation>Tingull</translation>
-    </message>
-    <message>
-        <source>Mouse</source>
-        <translation>Mi</translation>
     </message>
 </context>
 <context>
@@ -436,15 +438,15 @@ Shtypni dhe mbani të shtypur tastin Shift që të vizatohet një vijë e drejt�
     </message>
     <message>
         <source>Adjust blur strength (Scroll to adjust it)</source>
-        <translation>Rregulloni fortësi turbullimi (Për ta rregulluar, rrëshqiteni)</translation>
+        <translation>Rregulloni fortësi turbullimi (Për ta rregulluar, rrëshqitni)</translation>
     </message>
     <message>
         <source>Adjust brush size (Scroll to adjust it)</source>
-        <translation>Rregulloni madhësi peneli (Për ta rregulluar, rrëshqiteni)</translation>
+        <translation>Rregulloni madhësi peneli (Për ta rregulluar, rrëshqitni)</translation>
     </message>
     <message>
         <source>Adjust text size (Scroll to adjust it)</source>
-        <translation>Rregulloni madhësi teksti (Për ta rregulluar, rrëshqiteni)</translation>
+        <translation>Rregulloni madhësi teksti (Për ta rregulluar, rrëshqitni)</translation>
     </message>
 </context>
 <context>
@@ -459,12 +461,36 @@ regjistrim, klikoni, ose tërhiqeni</translation>
 <context>
     <name>SubToolWidget</name>
     <message>
-        <source>Microphone</source>
-        <translation>Mikrofon</translation>
+        <source>Show keystroke (K)</source>
+        <translation>Shfaq varg tastesh për shtypje (K)</translation>
     </message>
     <message>
-        <source>Options</source>
-        <translation>Mundësi</translation>
+        <source>Hide Keystroke (K)</source>
+        <translation>Fshih Varg Tastesh Për Shtypje (K)</translation>
+    </message>
+    <message>
+        <source>Show Keystroke (K)</source>
+        <translation>Shfaq Varg Tastesh Për Shtypje (K)</translation>
+    </message>
+    <message>
+        <source>Turn on camera (C)</source>
+        <translation>Hapni kamerën (C)</translation>
+    </message>
+    <message>
+        <source>Turn off camera (C)</source>
+        <translation>Mbyllni kamerën (C)</translation>
+    </message>
+    <message>
+        <source>Screenshot</source>
+        <translation>Foto ekrani</translation>
+    </message>
+    <message>
+        <source>Settings</source>
+        <translation>Rregullime</translation>
+    </message>
+    <message>
+        <source>Settings (F3)</source>
+        <translation>Rregullime (F3)</translation>
     </message>
     <message>
         <source>Format:</source>
@@ -477,6 +503,14 @@ regjistrim, klikoni, ose tërhiqeni</translation>
     <message>
         <source>MP4</source>
         <translation>MP4</translation>
+    </message>
+    <message>
+        <source>MKV</source>
+        <translation>MKV</translation>
+    </message>
+    <message>
+        <source>webm</source>
+        <translation>webm</translation>
     </message>
     <message>
         <source>FPS:</source>
@@ -503,128 +537,36 @@ regjistrim, klikoni, ose tërhiqeni</translation>
         <translation>30 kps</translation>
     </message>
     <message>
-        <source>Save to</source>
-        <translation>Ruaje te</translation>
+        <source>Sound</source>
+        <translation>Tingull</translation>
     </message>
     <message>
-        <source>Desktop</source>
-        <translation>Desktop</translation>
+        <source>Microphone</source>
+        <translation>Mikrofon</translation>
     </message>
     <message>
-        <source>Pictures</source>
-        <translation>Foto</translation>
+        <source>System audio</source>
+        <translation>Audio sistemi</translation>
     </message>
     <message>
-        <source>Folder</source>
-        <translation>Dosje</translation>
-    </message>
-    <message>
-        <source>Format</source>
-        <translation>Format</translation>
-    </message>
-    <message>
-        <source>PNG</source>
-        <translation>PNG</translation>
-    </message>
-    <message>
-        <source>JPG</source>
-        <translation>JPG</translation>
-    </message>
-    <message>
-        <source>BMP</source>
-        <translation>BMP</translation>
-    </message>
-    <message>
-        <source>MKV</source>
-        <translation>MKV</translation>
-    </message>
-    <message>
-        <source>Clipboard</source>
-        <translation>E papastër</translation>
+        <source>Options</source>
+        <translation>Mundësi</translation>
     </message>
     <message>
         <source>Show pointer</source>
         <translation>Shfaq treguesin</translation>
     </message>
     <message>
-        <source>Extract Text</source>
-        <translation>Përfto Tekst</translation>
+        <source>Show click</source>
+        <translation>Shfaq klikim</translation>
     </message>
     <message>
-        <source>Show keystroke (K)</source>
-        <translation>Shfaq varg tastesh për shtypje (K)</translation>
+        <source>Save to</source>
+        <translation>Ruaje te</translation>
     </message>
     <message>
-        <source>Settings</source>
-        <translation>Rregullime</translation>
-    </message>
-    <message>
-        <source>Settings (F3)</source>
-        <translation>Rregullime (F3)</translation>
-    </message>
-    <message>
-        <source>Blur (B)</source>
-        <translation>Turbulloje (B)</translation>
-    </message>
-    <message>
-        <source>Text (T)</source>
-        <translation>Tekst (T)</translation>
-    </message>
-    <message>
-        <source>Scrollshot (Alt+I）</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <source>Extract text (Alt+O）</source>
-        <translation>Përfto tekstin (Alt+O）</translation>
-    </message>
-    <message>
-        <source>Undo (Ctrl+Z)</source>
-        <translation>Zhbëje (Ctrl+Z)</translation>
-    </message>
-    <message>
-        <source>Screenshot</source>
-        <translation>Foto ekrani</translation>
-    </message>
-    <message>
-        <source>Pin screenshots (Alt+P）</source>
-        <translation>Fiksoni foto ekrani (Alt+P）</translation>
-    </message>
-    <message>
-        <source>Record</source>
-        <translation>Regjistro</translation>
-    </message>
-    <message>
-        <source>Pencil (P)</source>
-        <translation>Laps (P)</translation>
-    </message>
-    <message>
-        <source>Turn on camera (C)</source>
-        <translation>Hapni kamerën (C)</translation>
-    </message>
-    <message>
-        <source>Border Effects</source>
-        <translation>Efekte Anësh</translation>
-    </message>
-    <message>
-        <source>None</source>
-        <translation>Asnjë</translation>
-    </message>
-    <message>
-        <source>Turn off camera (C)</source>
-        <translation>Mbyllni kamerën (C)</translation>
-    </message>
-    <message>
-        <source>Hide Keystroke (K)</source>
-        <translation>Fshih Varg Tastesh Për Shtypje (K)</translation>
-    </message>
-    <message>
-        <source>Show Keystroke (K)</source>
-        <translation>Shfaq Varg Tastesh Për Shtypje (K)</translation>
-    </message>
-    <message>
-        <source>webm</source>
-        <translation>webm</translation>
+        <source>Desktop</source>
+        <translation>Desktop</translation>
     </message>
     <message>
         <source>Videos</source>
@@ -655,6 +597,82 @@ Press and hold Shift to draw a vertical or horizontal arrow</source>
 Shtypni dhe mbani të shtypur tastin Shift, që të vizatohet një shigjetë vertikale ose horizontale</translation>
     </message>
     <message>
+        <source>Pencil (P)</source>
+        <translation>Laps (P)</translation>
+    </message>
+    <message>
+        <source>Blur (B)</source>
+        <translation>Turbulloje (B)</translation>
+    </message>
+    <message>
+        <source>Text (T)</source>
+        <translation>Tekst (T)</translation>
+    </message>
+    <message>
+        <source>Scrollshot (Alt+I）</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Extract text (Alt+O）</source>
+        <translation>Përfto tekstin (Alt+O）</translation>
+    </message>
+    <message>
+        <source>Pin screenshots (Alt+P）</source>
+        <translation>Fiksoni foto ekrani (Alt+P）</translation>
+    </message>
+    <message>
+        <source>Undo (Ctrl+Z)</source>
+        <translation>Zhbëje (Ctrl+Z)</translation>
+    </message>
+    <message>
+        <source>Record</source>
+        <translation>Regjistro</translation>
+    </message>
+    <message>
+        <source>Clipboard</source>
+        <translation>E papastër</translation>
+    </message>
+    <message>
+        <source>Pictures</source>
+        <translation>Foto</translation>
+    </message>
+    <message>
+        <source>Folder</source>
+        <translation>Dosje</translation>
+    </message>
+    <message>
+        <source>Set a path on save</source>
+        <translation>Caktoni shteg gjatë ruajtjes</translation>
+    </message>
+    <message>
+        <source>Change the path on save</source>
+        <translation>Ndryshoni shtegun gjatë ruajtjes</translation>
+    </message>
+    <message>
+        <source>Format</source>
+        <translation>Format</translation>
+    </message>
+    <message>
+        <source>PNG</source>
+        <translation>PNG</translation>
+    </message>
+    <message>
+        <source>JPG</source>
+        <translation>JPG</translation>
+    </message>
+    <message>
+        <source>BMP</source>
+        <translation>BMP</translation>
+    </message>
+    <message>
+        <source>Border Effects</source>
+        <translation>Efekte Anësh</translation>
+    </message>
+    <message>
+        <source>None</source>
+        <translation>Asnjë</translation>
+    </message>
+    <message>
         <source>Shadow</source>
         <translation>Hije</translation>
     </message>
@@ -667,24 +685,8 @@ Shtypni dhe mbani të shtypur tastin Shift, që të vizatohet një shigjetë ver
         <translation>Pajisje</translation>
     </message>
     <message>
-        <source>Sound</source>
-        <translation>Tingull</translation>
-    </message>
-    <message>
-        <source>System audio</source>
-        <translation>Audio sistemi</translation>
-    </message>
-    <message>
-        <source>Show click</source>
-        <translation>Shfaq klikim</translation>
-    </message>
-    <message>
-        <source>Set a path on save</source>
-        <translation>Caktoni shteg gjatë ruajtjes</translation>
-    </message>
-    <message>
-        <source>Change the path on save</source>
-        <translation>Ndryshoni shtegun gjatë ruajtjes</translation>
+        <source>Extract Text</source>
+        <translation>Përfto Tekst</translation>
     </message>
 </context>
 <context>

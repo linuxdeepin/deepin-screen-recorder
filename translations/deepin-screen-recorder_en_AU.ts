@@ -1,56 +1,57 @@
-<?xml version="1.0" ?><!DOCTYPE TS><TS version="2.1" language="en_AU">
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE TS>
+<TS version="2.1" language="en_AU">
 <context>
     <name>CountdownTooltip</name>
     <message>
         <source>Click the tray icon 
 or press the shortcut again to stop recording</source>
-        <translation>انقر على رمز الدرج
-أو اضغط على المختصر مرة أخرى لوقف التسجيل</translation>
+        <translation>Click the tray icon or press the shortcut again to stop recording</translation>
     </message>
     <message>
         <source>Do not rotate your screen during recording</source>
-        <translation>لا تدور شاشتك أثناء التسجيل</translation>
+        <translation>Do not rotate your screen during recording</translation>
     </message>
 </context>
 <context>
     <name>IconWidget</name>
     <message>
         <source>Screenshot</source>
-        <translation>الصورة الشاشة</translation>
+        <translation>Screenshot</translation>
     </message>
     <message>
         <source>Recording</source>
-        <translation>التسجيل</translation>
+        <translation>Recording</translation>
     </message>
 </context>
 <context>
     <name>MainToolWidget</name>
     <message>
         <source>Record</source>
-        <translation>تسجيل</translation>
+        <translation>Record</translation>
     </message>
     <message>
         <source>Screenshot</source>
-        <translation>الصورة الشاشة</translation>
+        <translation>Screenshot</translation>
     </message>
 </context>
 <context>
     <name>MainWindow</name>
     <message>
         <source>Screen Capture</source>
-        <translation>التقاط الشاشة</translation>
+        <translation>Screen Capture</translation>
     </message>
     <message>
         <source>Save failed. Please save it in your home directory.</source>
-        <translation>فشل الحفظ. من فضلك حفظه في دليلك الشخصي.</translation>
+        <translation>Save failed. Please save it in your home directory.</translation>
     </message>
     <message>
         <source>View</source>
-        <translation>عرض</translation>
+        <translation>View</translation>
     </message>
     <message>
         <source>Screenshot finished</source>
-        <translation>انتهت الصورة الشاشة</translation>
+        <translation>Screenshot finished</translation>
     </message>
     <message>
         <source>PNG (*.png);;JPEG (*.jpg *.jpeg);;BMP (*.bmp)</source>
@@ -66,77 +67,77 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>select-area</source>
-        <translation>اختيار المنطقة</translation>
+        <translation>select area</translation>
     </message>
     <message>
         <source>Save</source>
-        <translation>حفظ</translation>
+        <translation>Save</translation>
     </message>
     <message>
         <source>Saved to %1</source>
-        <translation>تم الحفظ في %1</translation>
+        <translation>Saved to %1</translation>
     </message>
     <message>
         <source>Ignore</source>
-        <translation>تجاهل</translation>
+        <translation>Ignore</translation>
     </message>
     <message>
         <source>Clipboard</source>
-        <translation>اللصق</translation>
+        <translation>Clipboard</translation>
     </message>
     <message>
         <source>Saving the screen recording file, please wait...</source>
-        <translation>جارٍ حفظ ملف تسجيل الشاشة، من فضلك انتظر...</translation>
+        <translation>Saving the screen recording file, please wait...</translation>
     </message>
     <message>
         <source>As the window effect is disabled during the process, the recording has to be stopped</source>
-        <translation>بما أن تأثير النافذة مغلق أثناء العملية، يجب أن توقف التسجيل</translation>
+        <translation>As the window effect is disabled during the process, the recording has to be stopped</translation>
     </message>
     <message>
         <source>Screenshot</source>
-        <translation>الصورة الشاشة</translation>
+        <translation>Screenshot</translation>
     </message>
     <message>
         <source>Screenshot failed.</source>
-        <translation>فشل التقاط الشاشة.</translation>
+        <translation>Screenshot failed.</translation>
     </message>
     <message>
         <source>Scrollshot</source>
-        <translation>التقاط الشاشة باللوك</translation>
-    </message>
-    <message>
-        <source>Open Folder</source>
-        <translation>فتح المجلد</translation>
+        <translation>Scrollshot</translation>
     </message>
     <message>
         <source>Pin Screenshots</source>
-        <translation>إرفاق الصور الشاشة</translation>
+        <translation>Pin Screenshots</translation>
     </message>
     <message>
         <source>deepin-screen-recorder</source>
         <translation>deepin-screen-recorder</translation>
+    </message>
+    <message>
+        <source>Open Folder</source>
+        <translation>Open Folder</translation>
     </message>
 </context>
 <context>
     <name>MenuController</name>
     <message>
         <source>Undo</source>
-        <translation>الغاء</translation>
+        <translation>Undo</translation>
     </message>
     <message>
         <source>Save</source>
-        <translation>حفظ</translation>
+        <translation>Save</translation>
     </message>
     <message>
         <source>Exit</source>
-        <translation>خروج</translation>
+        <translation>Exit</translation>
     </message>
 </context>
 <context>
     <name>QObject</name>
     <message>
         <source>Pin Screenshots</source>
-        <translation>إرفاق الصور الشاشة</translation>
+        <translation>Pin Screenshots</translation>
     </message>
 </context>
 <context>
@@ -344,6 +345,10 @@ or press the shortcut again to stop recording</source>
         <translation>Display shortcuts</translation>
     </message>
     <message>
+        <source>Sound</source>
+        <translation>Sound</translation>
+    </message>
+    <message>
         <source>Keystroke</source>
         <translation>Keystroke</translation>
     </message>
@@ -364,6 +369,10 @@ or press the shortcut again to stop recording</source>
         <translation>Start/Recording</translation>
     </message>
     <message>
+        <source>Mouse</source>
+        <translation>Mouse</translation>
+    </message>
+    <message>
         <source>Tools</source>
         <translation>Tools</translation>
     </message>
@@ -380,24 +389,16 @@ or press the shortcut again to stop recording</source>
         <translation>Pin screenshots</translation>
     </message>
     <message>
-        <source>Start scrollshot</source>
-        <translation>Start scrollshot</translation>
-    </message>
-    <message>
         <source>Start OCR</source>
         <translation>Start OCR</translation>
     </message>
     <message>
+        <source>Start scrollshot</source>
+        <translation>Start scrollshot</translation>
+    </message>
+    <message>
         <source>Arrow</source>
         <translation>Arrow</translation>
-    </message>
-    <message>
-        <source>Sound</source>
-        <translation>Sound</translation>
-    </message>
-    <message>
-        <source>Mouse</source>
-        <translation>Mouse</translation>
     </message>
 </context>
 <context>
@@ -459,12 +460,36 @@ select the area to record</translation>
 <context>
     <name>SubToolWidget</name>
     <message>
-        <source>Microphone</source>
-        <translation>Microphone</translation>
+        <source>Show keystroke (K)</source>
+        <translation>Show keystroke (K)</translation>
     </message>
     <message>
-        <source>Options</source>
-        <translation>Options</translation>
+        <source>Hide Keystroke (K)</source>
+        <translation>Hide Keystroke (K)</translation>
+    </message>
+    <message>
+        <source>Show Keystroke (K)</source>
+        <translation>Show Keystroke (K)</translation>
+    </message>
+    <message>
+        <source>Turn on camera (C)</source>
+        <translation>Turn on camera (C)</translation>
+    </message>
+    <message>
+        <source>Turn off camera (C)</source>
+        <translation>Turn off camera (C)</translation>
+    </message>
+    <message>
+        <source>Screenshot</source>
+        <translation>Screenshot</translation>
+    </message>
+    <message>
+        <source>Settings</source>
+        <translation>Settings</translation>
+    </message>
+    <message>
+        <source>Settings (F3)</source>
+        <translation>Settings (F3)</translation>
     </message>
     <message>
         <source>Format:</source>
@@ -477,6 +502,14 @@ select the area to record</translation>
     <message>
         <source>MP4</source>
         <translation>MP4</translation>
+    </message>
+    <message>
+        <source>MKV</source>
+        <translation>MKV</translation>
+    </message>
+    <message>
+        <source>webm</source>
+        <translation>webm</translation>
     </message>
     <message>
         <source>FPS:</source>
@@ -503,128 +536,36 @@ select the area to record</translation>
         <translation>30 fps</translation>
     </message>
     <message>
-        <source>Save to</source>
-        <translation>Save to</translation>
+        <source>Sound</source>
+        <translation>Sound</translation>
     </message>
     <message>
-        <source>Desktop</source>
-        <translation>Desktop</translation>
+        <source>Microphone</source>
+        <translation>Microphone</translation>
     </message>
     <message>
-        <source>Pictures</source>
-        <translation>Pictures</translation>
+        <source>System audio</source>
+        <translation>System audio</translation>
     </message>
     <message>
-        <source>Folder</source>
-        <translation>Folder</translation>
-    </message>
-    <message>
-        <source>Format</source>
-        <translation>Format</translation>
-    </message>
-    <message>
-        <source>PNG</source>
-        <translation>PNG</translation>
-    </message>
-    <message>
-        <source>JPG</source>
-        <translation>JPG</translation>
-    </message>
-    <message>
-        <source>BMP</source>
-        <translation>BMP</translation>
-    </message>
-    <message>
-        <source>MKV</source>
-        <translation>MKV</translation>
-    </message>
-    <message>
-        <source>Clipboard</source>
-        <translation>Clipboard</translation>
+        <source>Options</source>
+        <translation>Options</translation>
     </message>
     <message>
         <source>Show pointer</source>
         <translation>Show pointer</translation>
     </message>
     <message>
-        <source>Extract Text</source>
-        <translation>Extract Text</translation>
+        <source>Show click</source>
+        <translation>Show click</translation>
     </message>
     <message>
-        <source>Show keystroke (K)</source>
-        <translation>Show keystroke (K)</translation>
+        <source>Save to</source>
+        <translation>Save to</translation>
     </message>
     <message>
-        <source>Settings</source>
-        <translation>Settings</translation>
-    </message>
-    <message>
-        <source>Settings (F3)</source>
-        <translation>Settings (F3)</translation>
-    </message>
-    <message>
-        <source>Blur (B)</source>
-        <translation>Blur (B)</translation>
-    </message>
-    <message>
-        <source>Text (T)</source>
-        <translation>Text (T)</translation>
-    </message>
-    <message>
-        <source>Scrollshot (Alt+I）</source>
-        <translation>Scrollshot (Alt+I)</translation>
-    </message>
-    <message>
-        <source>Extract text (Alt+O）</source>
-        <translation>Extract text (Alt+O)</translation>
-    </message>
-    <message>
-        <source>Undo (Ctrl+Z)</source>
-        <translation>Undo (Ctrl+Z)</translation>
-    </message>
-    <message>
-        <source>Screenshot</source>
-        <translation>Screenshot</translation>
-    </message>
-    <message>
-        <source>Pin screenshots (Alt+P）</source>
-        <translation>Pin screenshots (Alt+P)</translation>
-    </message>
-    <message>
-        <source>Record</source>
-        <translation>Record</translation>
-    </message>
-    <message>
-        <source>Pencil (P)</source>
-        <translation>Pencil (P)</translation>
-    </message>
-    <message>
-        <source>Turn on camera (C)</source>
-        <translation>Turn on camera (C)</translation>
-    </message>
-    <message>
-        <source>Border Effects</source>
-        <translation>Border Effects</translation>
-    </message>
-    <message>
-        <source>None</source>
-        <translation>None</translation>
-    </message>
-    <message>
-        <source>Turn off camera (C)</source>
-        <translation>Turn off camera (C)</translation>
-    </message>
-    <message>
-        <source>Hide Keystroke (K)</source>
-        <translation>Hide Keystroke (K)</translation>
-    </message>
-    <message>
-        <source>Show Keystroke (K)</source>
-        <translation>Show Keystroke (K)</translation>
-    </message>
-    <message>
-        <source>webm</source>
-        <translation>webm</translation>
+        <source>Desktop</source>
+        <translation>Desktop</translation>
     </message>
     <message>
         <source>Videos</source>
@@ -655,6 +596,82 @@ Press and hold Shift to draw a vertical or horizontal arrow</source>
 Press and hold Shift to draw a vertical or horizontal arrow</translation>
     </message>
     <message>
+        <source>Pencil (P)</source>
+        <translation>Pencil (P)</translation>
+    </message>
+    <message>
+        <source>Blur (B)</source>
+        <translation>Blur (B)</translation>
+    </message>
+    <message>
+        <source>Text (T)</source>
+        <translation>Text (T)</translation>
+    </message>
+    <message>
+        <source>Scrollshot (Alt+I）</source>
+        <translation>Scrollshot (Alt+I)</translation>
+    </message>
+    <message>
+        <source>Extract text (Alt+O）</source>
+        <translation>Extract text (Alt+O)</translation>
+    </message>
+    <message>
+        <source>Pin screenshots (Alt+P）</source>
+        <translation>Pin screenshots (Alt+P)</translation>
+    </message>
+    <message>
+        <source>Undo (Ctrl+Z)</source>
+        <translation>Undo (Ctrl+Z)</translation>
+    </message>
+    <message>
+        <source>Record</source>
+        <translation>Record</translation>
+    </message>
+    <message>
+        <source>Clipboard</source>
+        <translation>Clipboard</translation>
+    </message>
+    <message>
+        <source>Pictures</source>
+        <translation>Pictures</translation>
+    </message>
+    <message>
+        <source>Folder</source>
+        <translation>Folder</translation>
+    </message>
+    <message>
+        <source>Set a path on save</source>
+        <translation>Set a path on save</translation>
+    </message>
+    <message>
+        <source>Change the path on save</source>
+        <translation>Change the path on save</translation>
+    </message>
+    <message>
+        <source>Format</source>
+        <translation>Format</translation>
+    </message>
+    <message>
+        <source>PNG</source>
+        <translation>PNG</translation>
+    </message>
+    <message>
+        <source>JPG</source>
+        <translation>JPG</translation>
+    </message>
+    <message>
+        <source>BMP</source>
+        <translation>BMP</translation>
+    </message>
+    <message>
+        <source>Border Effects</source>
+        <translation>Border Effects</translation>
+    </message>
+    <message>
+        <source>None</source>
+        <translation>None</translation>
+    </message>
+    <message>
         <source>Shadow</source>
         <translation>Shadow</translation>
     </message>
@@ -667,24 +684,8 @@ Press and hold Shift to draw a vertical or horizontal arrow</translation>
         <translation>Device</translation>
     </message>
     <message>
-        <source>Sound</source>
-        <translation>Sound</translation>
-    </message>
-    <message>
-        <source>System audio</source>
-        <translation>System audio</translation>
-    </message>
-    <message>
-        <source>Show click</source>
-        <translation>Show click</translation>
-    </message>
-    <message>
-        <source>Set a path on save</source>
-        <translation>Set a path on save</translation>
-    </message>
-    <message>
-        <source>Change the path on save</source>
-        <translation>Change the path on save</translation>
+        <source>Extract Text</source>
+        <translation>Extract Text</translation>
     </message>
 </context>
 <context>

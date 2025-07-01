@@ -1,4 +1,6 @@
-<?xml version="1.0" ?><!DOCTYPE TS><TS version="2.1" language="ca">
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE TS>
+<TS version="2.1" language="ca">
 <context>
     <name>CountdownTooltip</name>
     <message>
@@ -105,16 +107,16 @@ o premeu la drecera de nou per aturar la gravació.</translation>
         <translation>Captura de desplaçament</translation>
     </message>
     <message>
-        <source>Open Folder</source>
-        <translation>Obre la carpeta</translation>
-    </message>
-    <message>
         <source>Pin Screenshots</source>
         <translation>Fixa les captures</translation>
     </message>
     <message>
         <source>deepin-screen-recorder</source>
-        <translation>deepin-screen-recorder</translation>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Open Folder</source>
+        <translation>Obre la carpeta</translation>
     </message>
 </context>
 <context>
@@ -261,11 +263,11 @@ o premeu la drecera de nou per aturar la gravació.</translation>
     </message>
     <message>
         <source>Delay screenshot</source>
-        <translation>Retarda la captura</translation>
+        <translation>Captura de pantalla amb retard</translation>
     </message>
     <message>
         <source>Full screenshot</source>
-        <translation>Captura completa</translation>
+        <translation>Captura de pantalla completa</translation>
     </message>
     <message>
         <source>Exit</source>
@@ -344,6 +346,10 @@ o premeu la drecera de nou per aturar la gravació.</translation>
         <translation>Mostra les dreceres</translation>
     </message>
     <message>
+        <source>Sound</source>
+        <translation>So</translation>
+    </message>
+    <message>
         <source>Keystroke</source>
         <translation>Pulsació</translation>
     </message>
@@ -364,6 +370,10 @@ o premeu la drecera de nou per aturar la gravació.</translation>
         <translation>Inici / gravació</translation>
     </message>
     <message>
+        <source>Mouse</source>
+        <translation>Ratolí</translation>
+    </message>
+    <message>
         <source>Tools</source>
         <translation>Eines</translation>
     </message>
@@ -380,24 +390,16 @@ o premeu la drecera de nou per aturar la gravació.</translation>
         <translation>Fixa les captures</translation>
     </message>
     <message>
-        <source>Start scrollshot</source>
-        <translation>Inicia la captura de desplaçament</translation>
-    </message>
-    <message>
         <source>Start OCR</source>
         <translation>Inicia el ROC</translation>
     </message>
     <message>
+        <source>Start scrollshot</source>
+        <translation>Inicia la captura de desplaçament</translation>
+    </message>
+    <message>
         <source>Arrow</source>
         <translation>Fletxa</translation>
-    </message>
-    <message>
-        <source>Sound</source>
-        <translation>So</translation>
-    </message>
-    <message>
-        <source>Mouse</source>
-        <translation>Ratolí</translation>
     </message>
 </context>
 <context>
@@ -459,12 +461,36 @@ per seleccionar l&apos;àrea a gravar</translation>
 <context>
     <name>SubToolWidget</name>
     <message>
-        <source>Microphone</source>
-        <translation>Micròfon</translation>
+        <source>Show keystroke (K)</source>
+        <translation>Mostra la pulsació de la tecla (K)</translation>
     </message>
     <message>
-        <source>Options</source>
-        <translation>Opcions</translation>
+        <source>Hide Keystroke (K)</source>
+        <translation>Amaga la pulsació de tecles (K)</translation>
+    </message>
+    <message>
+        <source>Show Keystroke (K)</source>
+        <translation>Mostra la pulsació de tecles (K)</translation>
+    </message>
+    <message>
+        <source>Turn on camera (C)</source>
+        <translation>Activa la càmera (C)</translation>
+    </message>
+    <message>
+        <source>Turn off camera (C)</source>
+        <translation>Apaga la càmera (C)</translation>
+    </message>
+    <message>
+        <source>Screenshot</source>
+        <translation>Captura de pantalla</translation>
+    </message>
+    <message>
+        <source>Settings</source>
+        <translation>Configuració</translation>
+    </message>
+    <message>
+        <source>Settings (F3)</source>
+        <translation>Configuració (F3)</translation>
     </message>
     <message>
         <source>Format:</source>
@@ -477,6 +503,14 @@ per seleccionar l&apos;àrea a gravar</translation>
     <message>
         <source>MP4</source>
         <translation>MP4</translation>
+    </message>
+    <message>
+        <source>MKV</source>
+        <translation>MKV</translation>
+    </message>
+    <message>
+        <source>webm</source>
+        <translation>webm</translation>
     </message>
     <message>
         <source>FPS:</source>
@@ -503,128 +537,36 @@ per seleccionar l&apos;àrea a gravar</translation>
         <translation>30 fps</translation>
     </message>
     <message>
-        <source>Save to</source>
-        <translation>Desa a</translation>
+        <source>Sound</source>
+        <translation>So</translation>
     </message>
     <message>
-        <source>Desktop</source>
-        <translation>Escriptori</translation>
+        <source>Microphone</source>
+        <translation>Micròfon</translation>
     </message>
     <message>
-        <source>Pictures</source>
-        <translation>Fotos</translation>
+        <source>System audio</source>
+        <translation>Àudio del sistema</translation>
     </message>
     <message>
-        <source>Folder</source>
-        <translation>Carpeta</translation>
-    </message>
-    <message>
-        <source>Format</source>
-        <translation>Format</translation>
-    </message>
-    <message>
-        <source>PNG</source>
-        <translation>PNG</translation>
-    </message>
-    <message>
-        <source>JPG</source>
-        <translation>JPG</translation>
-    </message>
-    <message>
-        <source>BMP</source>
-        <translation>BMP</translation>
-    </message>
-    <message>
-        <source>MKV</source>
-        <translation>MKV</translation>
-    </message>
-    <message>
-        <source>Clipboard</source>
-        <translation>Porta-retalls</translation>
+        <source>Options</source>
+        <translation>Opcions</translation>
     </message>
     <message>
         <source>Show pointer</source>
         <translation>Mostra el punter</translation>
     </message>
     <message>
-        <source>Extract Text</source>
-        <translation>Extreu-ne el text</translation>
+        <source>Show click</source>
+        <translation>Mostra els clics</translation>
     </message>
     <message>
-        <source>Show keystroke (K)</source>
-        <translation>Mostra la pulsació de la tecla (K)</translation>
+        <source>Save to</source>
+        <translation>Desa a</translation>
     </message>
     <message>
-        <source>Settings</source>
-        <translation>Configuració</translation>
-    </message>
-    <message>
-        <source>Settings (F3)</source>
-        <translation>Configuració (F3)</translation>
-    </message>
-    <message>
-        <source>Blur (B)</source>
-        <translation>Desenfocament (B)</translation>
-    </message>
-    <message>
-        <source>Text (T)</source>
-        <translation>Text (T)</translation>
-    </message>
-    <message>
-        <source>Scrollshot (Alt+I）</source>
-        <translation>Captura de desplaçament (Alt+I)</translation>
-    </message>
-    <message>
-        <source>Extract text (Alt+O）</source>
-        <translation>Extreu text (Alt+O)</translation>
-    </message>
-    <message>
-        <source>Undo (Ctrl+Z)</source>
-        <translation>Desfés (Ctrl+Z)</translation>
-    </message>
-    <message>
-        <source>Screenshot</source>
-        <translation>Captura de pantalla</translation>
-    </message>
-    <message>
-        <source>Pin screenshots (Alt+P）</source>
-        <translation>Fixa les captures de pantalla (Alt+P)</translation>
-    </message>
-    <message>
-        <source>Record</source>
-        <translation>Grava</translation>
-    </message>
-    <message>
-        <source>Pencil (P)</source>
-        <translation>Llapis (P)</translation>
-    </message>
-    <message>
-        <source>Turn on camera (C)</source>
-        <translation>Activa la càmera (C)</translation>
-    </message>
-    <message>
-        <source>Border Effects</source>
-        <translation>Efectes de la vora</translation>
-    </message>
-    <message>
-        <source>None</source>
-        <translation>Cap</translation>
-    </message>
-    <message>
-        <source>Turn off camera (C)</source>
-        <translation>Apaga la càmera (C)</translation>
-    </message>
-    <message>
-        <source>Hide Keystroke (K)</source>
-        <translation>Amaga la pulsació de tecles (K)</translation>
-    </message>
-    <message>
-        <source>Show Keystroke (K)</source>
-        <translation>Mostra la pulsació de tecles (K)</translation>
-    </message>
-    <message>
-        <source>webm</source>
-        <translation>webm</translation>
+        <source>Desktop</source>
+        <translation>Escriptori</translation>
     </message>
     <message>
         <source>Videos</source>
@@ -655,6 +597,82 @@ Press and hold Shift to draw a vertical or horizontal arrow</source>
 Manteniu premuda la tecla Maj per dibuixar una fletxa vertical o horitzontal.</translation>
     </message>
     <message>
+        <source>Pencil (P)</source>
+        <translation>Llapis (P)</translation>
+    </message>
+    <message>
+        <source>Blur (B)</source>
+        <translation>Desenfocament (B)</translation>
+    </message>
+    <message>
+        <source>Text (T)</source>
+        <translation>Text (T)</translation>
+    </message>
+    <message>
+        <source>Scrollshot (Alt+I）</source>
+        <translation>Captura de desplaçament (Alt+I)</translation>
+    </message>
+    <message>
+        <source>Extract text (Alt+O）</source>
+        <translation>Extreu text (Alt+O)</translation>
+    </message>
+    <message>
+        <source>Pin screenshots (Alt+P）</source>
+        <translation>Fixa les captures de pantalla (Alt+P)</translation>
+    </message>
+    <message>
+        <source>Undo (Ctrl+Z)</source>
+        <translation>Desfés (Ctrl+Z)</translation>
+    </message>
+    <message>
+        <source>Record</source>
+        <translation>Grava</translation>
+    </message>
+    <message>
+        <source>Clipboard</source>
+        <translation>Porta-retalls</translation>
+    </message>
+    <message>
+        <source>Pictures</source>
+        <translation>Fotos</translation>
+    </message>
+    <message>
+        <source>Folder</source>
+        <translation>Carpeta</translation>
+    </message>
+    <message>
+        <source>Set a path on save</source>
+        <translation>Estableix un camí per desar</translation>
+    </message>
+    <message>
+        <source>Change the path on save</source>
+        <translation>Canvia el camí per desar</translation>
+    </message>
+    <message>
+        <source>Format</source>
+        <translation>Format</translation>
+    </message>
+    <message>
+        <source>PNG</source>
+        <translation>PNG</translation>
+    </message>
+    <message>
+        <source>JPG</source>
+        <translation>JPG</translation>
+    </message>
+    <message>
+        <source>BMP</source>
+        <translation>BMP</translation>
+    </message>
+    <message>
+        <source>Border Effects</source>
+        <translation>Efectes de la vora</translation>
+    </message>
+    <message>
+        <source>None</source>
+        <translation>Cap</translation>
+    </message>
+    <message>
         <source>Shadow</source>
         <translation>Ombra</translation>
     </message>
@@ -667,24 +685,8 @@ Manteniu premuda la tecla Maj per dibuixar una fletxa vertical o horitzontal.</t
         <translation>Dispositiu</translation>
     </message>
     <message>
-        <source>Sound</source>
-        <translation>So</translation>
-    </message>
-    <message>
-        <source>System audio</source>
-        <translation>Àudio del sistema</translation>
-    </message>
-    <message>
-        <source>Show click</source>
-        <translation>Mostra els clics</translation>
-    </message>
-    <message>
-        <source>Set a path on save</source>
-        <translation>Estableix un camí per desar</translation>
-    </message>
-    <message>
-        <source>Change the path on save</source>
-        <translation>Canvia el camí per desar</translation>
+        <source>Extract Text</source>
+        <translation>Extreu-ne el text</translation>
     </message>
 </context>
 <context>

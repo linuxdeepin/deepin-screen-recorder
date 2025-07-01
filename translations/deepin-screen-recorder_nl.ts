@@ -1,4 +1,6 @@
-<?xml version="1.0" ?><!DOCTYPE TS><TS version="2.1" language="nl">
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE TS>
+<TS version="2.1" language="nl">
 <context>
     <name>CountdownTooltip</name>
     <message>
@@ -38,7 +40,7 @@ of druk nogmaals op de sneltoets om te stoppen</translation>
     <name>MainWindow</name>
     <message>
         <source>Screen Capture</source>
-        <translation>Schermfoto</translation>
+        <translation>Scherm vastleggen</translation>
     </message>
     <message>
         <source>Save failed. Please save it in your home directory.</source>
@@ -105,16 +107,16 @@ of druk nogmaals op de sneltoets om te stoppen</translation>
         <translation>Scrollende schermfoto</translation>
     </message>
     <message>
-        <source>Open Folder</source>
-        <translation>Map openen</translation>
-    </message>
-    <message>
         <source>Pin Screenshots</source>
         <translation>Schermfoto&apos;s vastmaken</translation>
     </message>
     <message>
         <source>deepin-screen-recorder</source>
-        <translation>deepin-screen-recorder</translation>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Open Folder</source>
+        <translation>Map openen</translation>
     </message>
 </context>
 <context>
@@ -344,6 +346,10 @@ of druk nogmaals op de sneltoets om te stoppen</translation>
         <translation>Sneltoetsen tonen</translation>
     </message>
     <message>
+        <source>Sound</source>
+        <translation>Geluid</translation>
+    </message>
+    <message>
         <source>Keystroke</source>
         <translation>Toetsaanslag</translation>
     </message>
@@ -364,6 +370,10 @@ of druk nogmaals op de sneltoets om te stoppen</translation>
         <translation>Opname starten</translation>
     </message>
     <message>
+        <source>Mouse</source>
+        <translation>Cursor</translation>
+    </message>
+    <message>
         <source>Tools</source>
         <translation>Gereedschap</translation>
     </message>
@@ -380,24 +390,16 @@ of druk nogmaals op de sneltoets om te stoppen</translation>
         <translation>Schermfoto&apos;s vastmaken</translation>
     </message>
     <message>
-        <source>Start scrollshot</source>
-        <translation>Scrollende schermfoto maken</translation>
-    </message>
-    <message>
         <source>Start OCR</source>
         <translation>Ocr maken</translation>
     </message>
     <message>
+        <source>Start scrollshot</source>
+        <translation>Scrollende schermfoto maken</translation>
+    </message>
+    <message>
         <source>Arrow</source>
         <translation>Pijl</translation>
-    </message>
-    <message>
-        <source>Sound</source>
-        <translation>Geluid</translation>
-    </message>
-    <message>
-        <source>Mouse</source>
-        <translation>Cursor</translation>
     </message>
 </context>
 <context>
@@ -459,12 +461,36 @@ het opnamegebied te kiezen</translation>
 <context>
     <name>SubToolWidget</name>
     <message>
-        <source>Microphone</source>
-        <translation>Microfoon</translation>
+        <source>Show keystroke (K)</source>
+        <translation>Toetsaanslagen tonen (K)</translation>
     </message>
     <message>
-        <source>Options</source>
-        <translation>Opties</translation>
+        <source>Hide Keystroke (K)</source>
+        <translation>Toetsaanslagen verbergen (K)</translation>
+    </message>
+    <message>
+        <source>Show Keystroke (K)</source>
+        <translation>Toetsaanslagen tonen (K)</translation>
+    </message>
+    <message>
+        <source>Turn on camera (C)</source>
+        <translation>Camera aanzetten (C)</translation>
+    </message>
+    <message>
+        <source>Turn off camera (C)</source>
+        <translation>Camera uitzetten (C)</translation>
+    </message>
+    <message>
+        <source>Screenshot</source>
+        <translation>Schermfoto</translation>
+    </message>
+    <message>
+        <source>Settings</source>
+        <translation>Instellingen</translation>
+    </message>
+    <message>
+        <source>Settings (F3)</source>
+        <translation>Instellingen (F3)</translation>
     </message>
     <message>
         <source>Format:</source>
@@ -477,6 +503,14 @@ het opnamegebied te kiezen</translation>
     <message>
         <source>MP4</source>
         <translation>MP4</translation>
+    </message>
+    <message>
+        <source>MKV</source>
+        <translation>MKV</translation>
+    </message>
+    <message>
+        <source>webm</source>
+        <translation>webm</translation>
     </message>
     <message>
         <source>FPS:</source>
@@ -503,128 +537,36 @@ het opnamegebied te kiezen</translation>
         <translation>30 fps</translation>
     </message>
     <message>
-        <source>Save to</source>
-        <translation>Opslaan op/in</translation>
+        <source>Sound</source>
+        <translation>Geluid</translation>
     </message>
     <message>
-        <source>Desktop</source>
-        <translation>Bureaublad</translation>
+        <source>Microphone</source>
+        <translation>Microfoon</translation>
     </message>
     <message>
-        <source>Pictures</source>
-        <translation>Afbeeldingen</translation>
+        <source>System audio</source>
+        <translation>Systeemgeluid</translation>
     </message>
     <message>
-        <source>Folder</source>
-        <translation>Andere map</translation>
-    </message>
-    <message>
-        <source>Format</source>
-        <translation>Formaat:</translation>
-    </message>
-    <message>
-        <source>PNG</source>
-        <translation>PNG</translation>
-    </message>
-    <message>
-        <source>JPG</source>
-        <translation>JPG</translation>
-    </message>
-    <message>
-        <source>BMP</source>
-        <translation>BMP</translation>
-    </message>
-    <message>
-        <source>MKV</source>
-        <translation>MKV</translation>
-    </message>
-    <message>
-        <source>Clipboard</source>
-        <translation>Klembord</translation>
+        <source>Options</source>
+        <translation>Opties</translation>
     </message>
     <message>
         <source>Show pointer</source>
         <translation>Cursor vastleggen</translation>
     </message>
     <message>
-        <source>Extract Text</source>
-        <translation>Tekst extraheren</translation>
+        <source>Show click</source>
+        <translation>Muisklikken tonen</translation>
     </message>
     <message>
-        <source>Show keystroke (K)</source>
-        <translation>Toetsaanslagen tonen (K)</translation>
+        <source>Save to</source>
+        <translation>Opslaan op/in</translation>
     </message>
     <message>
-        <source>Settings</source>
-        <translation>Instellingen</translation>
-    </message>
-    <message>
-        <source>Settings (F3)</source>
-        <translation>Instellingen (F3)</translation>
-    </message>
-    <message>
-        <source>Blur (B)</source>
-        <translation>Vervagen (B)</translation>
-    </message>
-    <message>
-        <source>Text (T)</source>
-        <translation>Tekst (T)</translation>
-    </message>
-    <message>
-        <source>Scrollshot (Alt+I）</source>
-        <translation>Scrollende schermfoto (Alt+I)</translation>
-    </message>
-    <message>
-        <source>Extract text (Alt+O）</source>
-        <translation>Tekst extraheren (Alt+O)</translation>
-    </message>
-    <message>
-        <source>Undo (Ctrl+Z)</source>
-        <translation>Ongedaan maken (Ctrl+Z)</translation>
-    </message>
-    <message>
-        <source>Screenshot</source>
-        <translation>Schermfoto</translation>
-    </message>
-    <message>
-        <source>Pin screenshots (Alt+P）</source>
-        <translation>Schermfoto&apos;s vastmaken (Alt+P)</translation>
-    </message>
-    <message>
-        <source>Record</source>
-        <translation>Opnemen</translation>
-    </message>
-    <message>
-        <source>Pencil (P)</source>
-        <translation>Potlood (P)</translation>
-    </message>
-    <message>
-        <source>Turn on camera (C)</source>
-        <translation>Camera aanzetten (C)</translation>
-    </message>
-    <message>
-        <source>Border Effects</source>
-        <translation>Randeffecten</translation>
-    </message>
-    <message>
-        <source>None</source>
-        <translation>Geen</translation>
-    </message>
-    <message>
-        <source>Turn off camera (C)</source>
-        <translation>Camera uitzetten (C)</translation>
-    </message>
-    <message>
-        <source>Hide Keystroke (K)</source>
-        <translation>Toetsaanslagen verbergen (K)</translation>
-    </message>
-    <message>
-        <source>Show Keystroke (K)</source>
-        <translation>Toetsaanslagen tonen (K)</translation>
-    </message>
-    <message>
-        <source>webm</source>
-        <translation>webm</translation>
+        <source>Desktop</source>
+        <translation>Bureaublad</translation>
     </message>
     <message>
         <source>Videos</source>
@@ -655,6 +597,82 @@ Press and hold Shift to draw a vertical or horizontal arrow</source>
 Houd Shift ingedrukt om een verticale of horizontale pijl te tekenen</translation>
     </message>
     <message>
+        <source>Pencil (P)</source>
+        <translation>Potlood (P)</translation>
+    </message>
+    <message>
+        <source>Blur (B)</source>
+        <translation>Vervagen (B)</translation>
+    </message>
+    <message>
+        <source>Text (T)</source>
+        <translation>Tekst (T)</translation>
+    </message>
+    <message>
+        <source>Scrollshot (Alt+I）</source>
+        <translation>Scrollende schermfoto (Alt+I)</translation>
+    </message>
+    <message>
+        <source>Extract text (Alt+O）</source>
+        <translation>Tekst extraheren (Alt+O)</translation>
+    </message>
+    <message>
+        <source>Pin screenshots (Alt+P）</source>
+        <translation>Schermfoto&apos;s vastmaken (Alt+P)</translation>
+    </message>
+    <message>
+        <source>Undo (Ctrl+Z)</source>
+        <translation>Ongedaan maken (Ctrl+Z)</translation>
+    </message>
+    <message>
+        <source>Record</source>
+        <translation>Opnemen</translation>
+    </message>
+    <message>
+        <source>Clipboard</source>
+        <translation>Klembord</translation>
+    </message>
+    <message>
+        <source>Pictures</source>
+        <translation>Afbeeldingen</translation>
+    </message>
+    <message>
+        <source>Folder</source>
+        <translation>Andere map</translation>
+    </message>
+    <message>
+        <source>Set a path on save</source>
+        <translation>Locatie kiezen na klikken op opslaan</translation>
+    </message>
+    <message>
+        <source>Change the path on save</source>
+        <translation>Locatie wijzigen na klikken op opslaan</translation>
+    </message>
+    <message>
+        <source>Format</source>
+        <translation>Formaat:</translation>
+    </message>
+    <message>
+        <source>PNG</source>
+        <translation>PNG</translation>
+    </message>
+    <message>
+        <source>JPG</source>
+        <translation>JPG</translation>
+    </message>
+    <message>
+        <source>BMP</source>
+        <translation>BMP</translation>
+    </message>
+    <message>
+        <source>Border Effects</source>
+        <translation>Randeffecten</translation>
+    </message>
+    <message>
+        <source>None</source>
+        <translation>Geen</translation>
+    </message>
+    <message>
         <source>Shadow</source>
         <translation>Schaduw</translation>
     </message>
@@ -667,24 +685,8 @@ Houd Shift ingedrukt om een verticale of horizontale pijl te tekenen</translatio
         <translation>Apparaat</translation>
     </message>
     <message>
-        <source>Sound</source>
-        <translation>Geluid</translation>
-    </message>
-    <message>
-        <source>System audio</source>
-        <translation>Systeemgeluid</translation>
-    </message>
-    <message>
-        <source>Show click</source>
-        <translation>Muisklikken tonen</translation>
-    </message>
-    <message>
-        <source>Set a path on save</source>
-        <translation>Locatie kiezen na klikken op opslaan</translation>
-    </message>
-    <message>
-        <source>Change the path on save</source>
-        <translation>Locatie wijzigen na klikken op opslaan</translation>
+        <source>Extract Text</source>
+        <translation>Tekst extraheren</translation>
     </message>
 </context>
 <context>

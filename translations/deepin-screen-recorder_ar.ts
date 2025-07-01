@@ -1,4 +1,6 @@
-<?xml version="1.0" ?><!DOCTYPE TS><TS version="2.1" language="ar">
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE TS>
+<TS version="2.1" language="ar">
 <context>
     <name>CountdownTooltip</name>
     <message>
@@ -74,7 +76,7 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Saved to %1</source>
-        <translation>تم الحفظ إلى 1%</translation>
+        <translation>تم حفظ 1%</translation>
     </message>
     <message>
         <source>Ignore</source>
@@ -102,26 +104,26 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Scrollshot</source>
-        <translation>لتقطيرة�新建回复</translation>
+        <translation>التقاط الشاشة</translation>
+    </message>
+    <message>
+        <source>Pin Screenshots</source>
+        <translation>إرفاق الشاشات</translation>
+    </message>
+    <message>
+        <source>deepin-screen-recorder</source>
+        <translation>مُسجل شاشة ديبين</translation>
     </message>
     <message>
         <source>Open Folder</source>
         <translation>فتح المجلد</translation>
-    </message>
-    <message>
-        <source>Pin Screenshots</source>
-        <translation>م划分屏幕截图</translation>
-    </message>
-    <message>
-        <source>deepin-screen-recorder</source>
-        <translation>deepin-screen-recorder</translation>
     </message>
 </context>
 <context>
     <name>MenuController</name>
     <message>
         <source>Undo</source>
-        <translation>تراجع</translation>
+        <translation>التراجع عن آخر إجراء</translation>
     </message>
     <message>
         <source>Save</source>
@@ -136,7 +138,7 @@ or press the shortcut again to stop recording</source>
     <name>QObject</name>
     <message>
         <source>Pin Screenshots</source>
-        <translation>م划分屏幕截图</translation>
+        <translation>إرفاق الشاشات</translation>
     </message>
 </context>
 <context>
@@ -173,7 +175,7 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Saved to %1</source>
-        <translation>تم الحفظ إلى 1%</translation>
+        <translation>تم حفظ 1%</translation>
     </message>
     <message>
         <source>Record</source>
@@ -223,7 +225,7 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Invalid area, click to </source>
-        <translation>منطقة غير صالحة، انقر لل</translation>
+        <translation>المنطقة غير صالحة، انقر لـ </translation>
     </message>
 </context>
 <context>
@@ -257,7 +259,7 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Window screenshot</source>
-        <translation>لقطة نافذة</translation>
+        <translation>لقطة شاشة</translation>
     </message>
     <message>
         <source>Delay screenshot</source>
@@ -344,8 +346,12 @@ or press the shortcut again to stop recording</source>
         <translation>اختصارات شاشة العرض</translation>
     </message>
     <message>
+        <source>Sound</source>
+        <translation>الصوت</translation>
+    </message>
+    <message>
         <source>Keystroke</source>
-        <translation>طريقة الضغط</translation>
+        <translation>ضربة المفتاح</translation>
     </message>
     <message>
         <source>Webcam</source>
@@ -364,6 +370,10 @@ or press the shortcut again to stop recording</source>
         <translation>بدء التسجيل</translation>
     </message>
     <message>
+        <source>Mouse</source>
+        <translation>الفأرة</translation>
+    </message>
+    <message>
         <source>Tools</source>
         <translation>أدوات</translation>
     </message>
@@ -373,31 +383,23 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Scrollshot</source>
-        <translation>لتقطيرة屏幕</translation>
+        <translation>التقاط الشاشة</translation>
     </message>
     <message>
         <source>Pin screenshots</source>
-        <translation>م划分屏幕截图</translation>
-    </message>
-    <message>
-        <source>Start scrollshot</source>
-        <translation>بدء التقطيرة屏幕</translation>
+        <translation>تثبيت الصور</translation>
     </message>
     <message>
         <source>Start OCR</source>
         <translation>بدء تشغيل التعرف الضوئي على الحروف</translation>
     </message>
     <message>
+        <source>Start scrollshot</source>
+        <translation>بدء التقاط الشاشة</translation>
+    </message>
+    <message>
         <source>Arrow</source>
         <translation>سهم</translation>
-    </message>
-    <message>
-        <source>Sound</source>
-        <translation>الصوت</translation>
-    </message>
-    <message>
-        <source>Mouse</source>
-        <translation>الفأرة</translation>
     </message>
 </context>
 <context>
@@ -419,20 +421,20 @@ or press the shortcut again to stop recording</source>
     <message>
         <source>Rectangle
 Press and hold Shift to draw a square</source>
-        <translation> Diedge
-держите Shift, чтобы нарисовать квадрат</translation>
+        <translation>مستطيل
+اضغط واحمل Shift لرسم مربع</translation>
     </message>
     <message>
         <source>Ellipse
 Press and hold Shift to draw a circle</source>
-        <translation>圆形
-держите Shift, чтобы нарисовать круг</translation>
+        <translation>أسطوан
+اضغط واحمل Shift لرسم دائرة</translation>
     </message>
     <message>
         <source>Brush
 Press and hold Shift to draw a straight line</source>
-        <translation>画刷
-держите Shift, чтобы нарисовать прямую</translation>
+        <translation>فرشاة
+اضغط واحمل Shift لرسم خط مستقيم</translation>
     </message>
     <message>
         <source>Adjust blur strength (Scroll to adjust it)</source>
@@ -459,12 +461,36 @@ select the area to record</source>
 <context>
     <name>SubToolWidget</name>
     <message>
-        <source>Microphone</source>
-        <translation>ميكروفون</translation>
+        <source>Show keystroke (K)</source>
+        <translation>عرض ضربة المفتاح (K)</translation>
     </message>
     <message>
-        <source>Options</source>
-        <translation>خيارات</translation>
+        <source>Hide Keystroke (K)</source>
+        <translation>إخفاء ضربة المفتاح (K)</translation>
+    </message>
+    <message>
+        <source>Show Keystroke (K)</source>
+        <translation>عرض ضربة المفتاح (K)</translation>
+    </message>
+    <message>
+        <source>Turn on camera (C)</source>
+        <translation>بدء تشغيل الكاميرا</translation>
+    </message>
+    <message>
+        <source>Turn off camera (C)</source>
+        <translation>إيقاف تشغيل الكاميرا</translation>
+    </message>
+    <message>
+        <source>Screenshot</source>
+        <translation>لقطة شاشة</translation>
+    </message>
+    <message>
+        <source>Settings</source>
+        <translation>اعدادات</translation>
+    </message>
+    <message>
+        <source>Settings (F3)</source>
+        <translation>اعدادات</translation>
     </message>
     <message>
         <source>Format:</source>
@@ -479,28 +505,60 @@ select the area to record</source>
         <translation>MP4</translation>
     </message>
     <message>
+        <source>MKV</source>
+        <translation>إطار في الثانية</translation>
+    </message>
+    <message>
+        <source>webm</source>
+        <translation>كاميرا الويب</translation>
+    </message>
+    <message>
         <source>FPS:</source>
-        <translation>إطار في الثانية:</translation>
+        <translation>إطار في الثانية FPS:</translation>
     </message>
     <message>
         <source>5 fps</source>
-        <translation>5 إطارات في الثانية</translation>
+        <translation>5 fps</translation>
     </message>
     <message>
         <source>10 fps</source>
-        <translation>10 إطارات في الثانية</translation>
+        <translation>10 fps</translation>
     </message>
     <message>
         <source>20 fps</source>
-        <translation>20 إطار في الثانية</translation>
+        <translation>20 fps</translation>
     </message>
     <message>
         <source>24 fps</source>
-        <translation>24 إطار في الثانية</translation>
+        <translation>24 fps</translation>
     </message>
     <message>
         <source>30 fps</source>
-        <translation>30 إطار في الثانية</translation>
+        <translation>30 fps</translation>
+    </message>
+    <message>
+        <source>Sound</source>
+        <translation>الصوت</translation>
+    </message>
+    <message>
+        <source>Microphone</source>
+        <translation>ميكروفون</translation>
+    </message>
+    <message>
+        <source>System audio</source>
+        <translation>نظام الصوت</translation>
+    </message>
+    <message>
+        <source>Options</source>
+        <translation>خيارات</translation>
+    </message>
+    <message>
+        <source>Show pointer</source>
+        <translation>إظهار المؤشر</translation>
+    </message>
+    <message>
+        <source>Show click</source>
+        <translation>إظهار النقرات</translation>
     </message>
     <message>
         <source>Save to</source>
@@ -511,6 +569,70 @@ select the area to record</source>
         <translation>سطح المكتب</translation>
     </message>
     <message>
+        <source>Videos</source>
+        <translation>مقاطع</translation>
+    </message>
+    <message>
+        <source>Rectangle (R)
+Press and hold Shift to draw a square</source>
+        <translation>مستطيل (R)
+اضغط واحمل Shift لرسم مربع</translation>
+    </message>
+    <message>
+        <source>Ellipse (O)
+Press and hold Shift to draw a circle</source>
+        <translation>أسطوан (O)
+اضغط واحمل Shift لرسم دائرة</translation>
+    </message>
+    <message>
+        <source>Line (L)
+Press and hold Shift to draw a vertical or horizontal line</source>
+        <translation>خط (L)
+اضغط واحمل Shift لرسم خط عمودي أو أفقي</translation>
+    </message>
+    <message>
+        <source>Arrow (X)
+Press and hold Shift to draw a vertical or horizontal arrow</source>
+        <translation>سهم (X)
+اضغط واحمل Shift لرسم سهم عمودي أو أفقي</translation>
+    </message>
+    <message>
+        <source>Pencil (P)</source>
+        <translation>قلم الرصاص</translation>
+    </message>
+    <message>
+        <source>Blur (B)</source>
+        <translation>التمويه</translation>
+    </message>
+    <message>
+        <source>Text (T)</source>
+        <translation>النص</translation>
+    </message>
+    <message>
+        <source>Scrollshot (Alt+I）</source>
+        <translation>الجرس (Alt+I)</translation>
+    </message>
+    <message>
+        <source>Extract text (Alt+O）</source>
+        <translation>استخراج النص</translation>
+    </message>
+    <message>
+        <source>Pin screenshots (Alt+P）</source>
+        <translation>تثبيت الصور (Alt+P)</translation>
+    </message>
+    <message>
+        <source>Undo (Ctrl+Z)</source>
+        <translation>تراجع</translation>
+    </message>
+    <message>
+        <source>Record</source>
+        <translation>تسجيل</translation>
+    </message>
+    <message>
+        <source>Clipboard</source>
+        <translation>حافظة</translation>
+    </message>
+    <message>
         <source>Pictures</source>
         <translation>صور</translation>
     </message>
@@ -519,8 +641,16 @@ select the area to record</source>
         <translation>مجلد</translation>
     </message>
     <message>
+        <source>Set a path on save</source>
+        <translation>تعيين مسار عند الحفظ</translation>
+    </message>
+    <message>
+        <source>Change the path on save</source>
+        <translation>تغيير المسار عند الحفظ</translation>
+    </message>
+    <message>
         <source>Format</source>
-        <translation>الصيغة</translation>
+        <translation>النوع</translation>
     </message>
     <message>
         <source>PNG</source>
@@ -535,124 +665,12 @@ select the area to record</source>
         <translation>BMP</translation>
     </message>
     <message>
-        <source>MKV</source>
-        <translation>إطار في الثانية</translation>
-    </message>
-    <message>
-        <source>Clipboard</source>
-        <translation>حافظة</translation>
-    </message>
-    <message>
-        <source>Show pointer</source>
-        <translation>إظهار المؤشر</translation>
-    </message>
-    <message>
-        <source>Extract Text</source>
-        <translation>استخراج النص</translation>
-    </message>
-    <message>
-        <source>Show keystroke (K)</source>
-        <translation>Показать метод ввода (K)️</translation>
-    </message>
-    <message>
-        <source>Settings</source>
-        <translation>اعدادات</translation>
-    </message>
-    <message>
-        <source>Settings (F3)</source>
-        <translation>اعدادات</translation>
-    </message>
-    <message>
-        <source>Blur (B)</source>
-        <translation>التمويه</translation>
-    </message>
-    <message>
-        <source>Text (T)</source>
-        <translation>النص</translation>
-    </message>
-    <message>
-        <source>Scrollshot (Alt+I）</source>
-        <translation>Показать метод скролла (Alt+I)️</translation>
-    </message>
-    <message>
-        <source>Extract text (Alt+O）</source>
-        <translation>استخراج النص</translation>
-    </message>
-    <message>
-        <source>Undo (Ctrl+Z)</source>
-        <translation>تراجع</translation>
-    </message>
-    <message>
-        <source>Screenshot</source>
-        <translation>لقطة شاشة</translation>
-    </message>
-    <message>
-        <source>Pin screenshots (Alt+P）</source>
-        <translation>Поставить скриншоты (Alt+P)️</translation>
-    </message>
-    <message>
-        <source>Record</source>
-        <translation>تسجيل</translation>
-    </message>
-    <message>
-        <source>Pencil (P)</source>
-        <translation>قلم الرصاص</translation>
-    </message>
-    <message>
-        <source>Turn on camera (C)</source>
-        <translation>بدء تشغيل الكاميرا</translation>
-    </message>
-    <message>
         <source>Border Effects</source>
         <translation>تأثيرات الحدود</translation>
     </message>
     <message>
         <source>None</source>
         <translation>لا شيء</translation>
-    </message>
-    <message>
-        <source>Turn off camera (C)</source>
-        <translation>إيقاف تشغيل الكاميرا</translation>
-    </message>
-    <message>
-        <source>Hide Keystroke (K)</source>
-        <translation>Спрятать метод ввода (K)️</translation>
-    </message>
-    <message>
-        <source>Show Keystroke (K)</source>
-        <translation>Показать метод ввода (K)️</translation>
-    </message>
-    <message>
-        <source>webm</source>
-        <translation>كاميرا الويب</translation>
-    </message>
-    <message>
-        <source>Videos</source>
-        <translation>مقاطع</translation>
-    </message>
-    <message>
-        <source>Rectangle (R)
-Press and hold Shift to draw a square</source>
-        <translation>Diedge (R)
-держите Shift, чтобы нарисовать квадрат</translation>
-    </message>
-    <message>
-        <source>Ellipse (O)
-Press and hold Shift to draw a circle</source>
-        <translation>Circle (O)
-держите Shift, чтобы нарисовать круг</translation>
-    </message>
-    <message>
-        <source>Line (L)
-Press and hold Shift to draw a vertical or horizontal line</source>
-        <translation>Line (L)
-держите Shift, чтобы нарисовать вертикальную или горизонтальную линию</translation>
-    </message>
-    <message>
-        <source>Arrow (X)
-Press and hold Shift to draw a vertical or horizontal arrow</source>
-        <translation>Arrow (X)
-держите Shift, чтобы нарисовать вертикальную или горизонтальную стрелку</translation>
     </message>
     <message>
         <source>Shadow</source>
@@ -667,24 +685,8 @@ Press and hold Shift to draw a vertical or horizontal arrow</source>
         <translation>الجهاز</translation>
     </message>
     <message>
-        <source>Sound</source>
-        <translation>الصوت</translation>
-    </message>
-    <message>
-        <source>System audio</source>
-        <translation>نظام الصوت</translation>
-    </message>
-    <message>
-        <source>Show click</source>
-        <translation>إظهار النقرات</translation>
-    </message>
-    <message>
-        <source>Set a path on save</source>
-        <translation>تعيين مسار عند الحفظ</translation>
-    </message>
-    <message>
-        <source>Change the path on save</source>
-        <translation>تغيير المسار عند الحفظ</translation>
+        <source>Extract Text</source>
+        <translation>استخراج النص</translation>
     </message>
 </context>
 <context>
@@ -702,7 +704,7 @@ Press and hold Shift to draw a vertical or horizontal arrow</source>
     <name>TopTips</name>
     <message>
         <source> Adjust the recording area within %1*%2 to get better video effect</source>
-        <translation>Ajuste área de gravação dentro de %1*%2 para obter um efeito de vídeo melhor</translation>
+        <translation>استخدم %1*%2 لضبط منطقة التسجيل لتحسين تأثير الفيديو</translation>
     </message>
 </context>
 <context>

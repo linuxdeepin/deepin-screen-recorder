@@ -1,10 +1,12 @@
-<?xml version="1.0" ?><!DOCTYPE TS><TS version="2.1" language="ko">
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE TS>
+<TS version="2.1" language="ko">
 <context>
     <name>CountdownTooltip</name>
     <message>
         <source>Click the tray icon 
 or press the shortcut again to stop recording</source>
-        <translation>트레이 아이콘 클릭 
+        <translation>트레이 아이콘 클릭&#xa0;
 또는 단축키를 다시 눌러 녹화를 중지하십시오</translation>
     </message>
     <message>
@@ -90,23 +92,15 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>As the window effect is disabled during the process, the recording has to be stopped</source>
-        <translation>녹화 과정 중 창 효과가 비활성화되었기 때문에 녹화를 중단해야 합니다</translation>
+        <translation>과정 중 창 효과가 비활성화되었기 때문에 녹화를 중단해야 합니다</translation>
     </message>
     <message>
         <source>Screenshot</source>
         <translation>스크린샷</translation>
     </message>
     <message>
-        <source>Screenshot failed.</source>
-        <translation>화면 캡처 실패.</translation>
-    </message>
-    <message>
         <source>Scrollshot</source>
         <translation>스크롤샷</translation>
-    </message>
-    <message>
-        <source>Open Folder</source>
-        <translation>폴더 열기</translation>
     </message>
     <message>
         <source>Pin Screenshots</source>
@@ -114,7 +108,15 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>deepin-screen-recorder</source>
-        <translation>deepin-screen-recorder</translation>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Open Folder</source>
+        <translation>폴더 열기</translation>
+    </message>
+    <message>
+        <source>Screenshot failed.</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -143,22 +145,22 @@ or press the shortcut again to stop recording</source>
     <name>QuickPanelWidget</name>
     <message>
         <source>Screenshot</source>
-        <translation>화면 캡처</translation>
+        <translation type="unfinished">스크린샷</translation>
     </message>
     <message>
         <source>Record</source>
-        <translation>녹화</translation>
+        <translation type="unfinished">녹화하기</translation>
     </message>
 </context>
 <context>
     <name>RecordIconWidget</name>
     <message>
         <source>Screenshot</source>
-        <translation>화면 캡처</translation>
+        <translation type="unfinished">스크린샷</translation>
     </message>
     <message>
         <source>Recording</source>
-        <translation>녹화 중</translation>
+        <translation>녹화</translation>
     </message>
 </context>
 <context>
@@ -195,11 +197,11 @@ or press the shortcut again to stop recording</source>
     <name>ScrollShotTip</name>
     <message>
         <source>Get help.</source>
-        <translation>도움말 보기</translation>
+        <translation>도움말을 확인하세요.</translation>
     </message>
     <message>
         <source>Failed to take a continuous screenshot.</source>
-        <translation>지속적인 화면 캡처 실패.</translation>
+        <translation>연속 스크린샷을 캡처하지 못했습니다.</translation>
     </message>
     <message>
         <source>Reached the bottom of the scroll area</source>
@@ -215,7 +217,7 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Scroll your mouse wheel or click to take a scrolling screenshot</source>
-        <translation>마우스 휠을 스크롤하거나 클릭하여 스크롤 캡처를 수행하세요</translation>
+        <translation>마우스 휠을 스크롤하거나 클릭하여 스크롤 스크린샷을 캡처하세요</translation>
     </message>
     <message>
         <source>Slow down the scrolling speed</source>
@@ -344,6 +346,10 @@ or press the shortcut again to stop recording</source>
         <translation>단축키 표시</translation>
     </message>
     <message>
+        <source>Sound</source>
+        <translation>음성</translation>
+    </message>
+    <message>
         <source>Keystroke</source>
         <translation>키 입력</translation>
     </message>
@@ -364,6 +370,10 @@ or press the shortcut again to stop recording</source>
         <translation>시작/녹화</translation>
     </message>
     <message>
+        <source>Mouse</source>
+        <translation>마우스</translation>
+    </message>
+    <message>
         <source>Tools</source>
         <translation>도구</translation>
     </message>
@@ -380,24 +390,16 @@ or press the shortcut again to stop recording</source>
         <translation>스크린샷 고정</translation>
     </message>
     <message>
-        <source>Start scrollshot</source>
-        <translation>스크롤샷 시작</translation>
-    </message>
-    <message>
         <source>Start OCR</source>
         <translation>OCR 시작</translation>
     </message>
     <message>
+        <source>Start scrollshot</source>
+        <translation>스크롤샷 시작</translation>
+    </message>
+    <message>
         <source>Arrow</source>
         <translation>화살표</translation>
-    </message>
-    <message>
-        <source>Sound</source>
-        <translation>소리</translation>
-    </message>
-    <message>
-        <source>Mouse</source>
-        <translation>마우스</translation>
     </message>
 </context>
 <context>
@@ -411,7 +413,7 @@ or press the shortcut again to stop recording</source>
     <name>ShotStartRecordPlugin</name>
     <message>
         <source>Record</source>
-        <translation>녹음</translation>
+        <translation type="unfinished">녹화하기</translation>
     </message>
 </context>
 <context>
@@ -420,31 +422,31 @@ or press the shortcut again to stop recording</source>
         <source>Rectangle
 Press and hold Shift to draw a square</source>
         <translation>사각형
-Shift를 누르고 있어야 정사각형을 그릴 수 있습니다</translation>
+Shift를 클릭하고 끌어 정사각형을 그립니다</translation>
     </message>
     <message>
         <source>Ellipse
 Press and hold Shift to draw a circle</source>
         <translation>타원
-Shift를 누르고 있어야 원을 그릴 수 있습니다</translation>
+Shift를 클릭하고 끌어 원을 그립니다</translation>
     </message>
     <message>
         <source>Brush
 Press and hold Shift to draw a straight line</source>
         <translation>브러시
-Shift를 누르고 있어야 직선을 그릴 수 있습니다</translation>
+Shift를 클릭하고 끌어 직선을 그립니다</translation>
     </message>
     <message>
         <source>Adjust blur strength (Scroll to adjust it)</source>
-        <translation>흐림 강도 조절 (스크롤하여 조절)</translation>
+        <translation>흐림 강도 조정 (스크롤하여 조정)</translation>
     </message>
     <message>
         <source>Adjust brush size (Scroll to adjust it)</source>
-        <translation>브러시 크기 조절 (스크롤하여 조절)</translation>
+        <translation>브러시 크기 조정 (스크롤하여 조정)</translation>
     </message>
     <message>
         <source>Adjust text size (Scroll to adjust it)</source>
-        <translation>텍스트 크기 조절 (스크롤하여 조절)</translation>
+        <translation>문자 크기 조정 (스크롤하여 조정)</translation>
     </message>
 </context>
 <context>
@@ -459,12 +461,36 @@ select the area to record</source>
 <context>
     <name>SubToolWidget</name>
     <message>
-        <source>Microphone</source>
-        <translation>마이크</translation>
+        <source>Show keystroke (K)</source>
+        <translation>키스트로크 표시 (K)</translation>
     </message>
     <message>
-        <source>Options</source>
-        <translation>옵션</translation>
+        <source>Hide Keystroke (K)</source>
+        <translation>키스트로크 숨기기 (K)</translation>
+    </message>
+    <message>
+        <source>Show Keystroke (K)</source>
+        <translation>키스트로크 표시 (K)</translation>
+    </message>
+    <message>
+        <source>Turn on camera (C)</source>
+        <translation>카메라 켜기 (C)</translation>
+    </message>
+    <message>
+        <source>Turn off camera (C)</source>
+        <translation>카메라 끄기 (C)</translation>
+    </message>
+    <message>
+        <source>Screenshot</source>
+        <translation>스크린샷</translation>
+    </message>
+    <message>
+        <source>Settings</source>
+        <translation>설정</translation>
+    </message>
+    <message>
+        <source>Settings (F3)</source>
+        <translation>설정 (F3)</translation>
     </message>
     <message>
         <source>Format:</source>
@@ -477,6 +503,14 @@ select the area to record</source>
     <message>
         <source>MP4</source>
         <translation>MP4</translation>
+    </message>
+    <message>
+        <source>MKV</source>
+        <translation>MKV</translation>
+    </message>
+    <message>
+        <source>webm</source>
+        <translation>webm</translation>
     </message>
     <message>
         <source>FPS:</source>
@@ -503,6 +537,30 @@ select the area to record</source>
         <translation>30 fps</translation>
     </message>
     <message>
+        <source>Sound</source>
+        <translation>음성</translation>
+    </message>
+    <message>
+        <source>Microphone</source>
+        <translation>마이크</translation>
+    </message>
+    <message>
+        <source>System audio</source>
+        <translation>시스템 음성</translation>
+    </message>
+    <message>
+        <source>Options</source>
+        <translation>옵션</translation>
+    </message>
+    <message>
+        <source>Show pointer</source>
+        <translation>포인터 표시</translation>
+    </message>
+    <message>
+        <source>Show click</source>
+        <translation>클릭 표시</translation>
+    </message>
+    <message>
         <source>Save to</source>
         <translation>저장 위치</translation>
     </message>
@@ -511,56 +569,36 @@ select the area to record</source>
         <translation>바탕화면</translation>
     </message>
     <message>
-        <source>Pictures</source>
-        <translation>사진</translation>
+        <source>Videos</source>
+        <translation>동영상</translation>
     </message>
     <message>
-        <source>Folder</source>
-        <translation>폴더</translation>
+        <source>Rectangle (R)
+Press and hold Shift to draw a square</source>
+        <translation>사각형 (R)
+Shift를 클릭하고 끌어 정사각형을 그립니다</translation>
     </message>
     <message>
-        <source>Format</source>
-        <translation>형식</translation>
+        <source>Ellipse (O)
+Press and hold Shift to draw a circle</source>
+        <translation>타원 (O)
+Shift를 클릭하고 끌어 원을 그립니다</translation>
     </message>
     <message>
-        <source>PNG</source>
-        <translation>PNG</translation>
+        <source>Line (L)
+Press and hold Shift to draw a vertical or horizontal line</source>
+        <translation>선 (L)
+Shift를 클릭하고 끌어 수직 또는 수평선을 그립니다</translation>
     </message>
     <message>
-        <source>JPG</source>
-        <translation>JPG</translation>
+        <source>Arrow (X)
+Press and hold Shift to draw a vertical or horizontal arrow</source>
+        <translation>화살표 (X)
+Shift를 클릭하고 끌어 수직 또는 수평 화살표를 그립니다</translation>
     </message>
     <message>
-        <source>BMP</source>
-        <translation>BMP</translation>
-    </message>
-    <message>
-        <source>MKV</source>
-        <translation>MKV</translation>
-    </message>
-    <message>
-        <source>Clipboard</source>
-        <translation>클립보드</translation>
-    </message>
-    <message>
-        <source>Show pointer</source>
-        <translation>포인터 표시</translation>
-    </message>
-    <message>
-        <source>Extract Text</source>
-        <translation>텍스트 추출</translation>
-    </message>
-    <message>
-        <source>Show keystroke (K)</source>
-        <translation>키스트로크 표시 (K)</translation>
-    </message>
-    <message>
-        <source>Settings</source>
-        <translation>설정</translation>
-    </message>
-    <message>
-        <source>Settings (F3)</source>
-        <translation>설정 (F3)</translation>
+        <source>Pencil (P)</source>
+        <translation>연필 (P)</translation>
     </message>
     <message>
         <source>Blur (B)</source>
@@ -579,28 +617,52 @@ select the area to record</source>
         <translation>텍스트 추출 (Alt+O)</translation>
     </message>
     <message>
-        <source>Undo (Ctrl+Z)</source>
-        <translation>실행 취소 (Ctrl+Z)</translation>
-    </message>
-    <message>
-        <source>Screenshot</source>
-        <translation>스크린샷</translation>
-    </message>
-    <message>
         <source>Pin screenshots (Alt+P）</source>
         <translation>스크린샷 고정 (Alt+P)</translation>
+    </message>
+    <message>
+        <source>Undo (Ctrl+Z)</source>
+        <translation>실행 취소 (Ctrl+Z)</translation>
     </message>
     <message>
         <source>Record</source>
         <translation>녹화하기</translation>
     </message>
     <message>
-        <source>Pencil (P)</source>
-        <translation>연笔 (P)</translation>
+        <source>Clipboard</source>
+        <translation>클립보드</translation>
     </message>
     <message>
-        <source>Turn on camera (C)</source>
-        <translation>카메라 켜기 (C)</translation>
+        <source>Pictures</source>
+        <translation>사진</translation>
+    </message>
+    <message>
+        <source>Folder</source>
+        <translation>폴더</translation>
+    </message>
+    <message>
+        <source>Set a path on save</source>
+        <translation>저장 시 경로 설정</translation>
+    </message>
+    <message>
+        <source>Change the path on save</source>
+        <translation>저장 시 경로 변경</translation>
+    </message>
+    <message>
+        <source>Format</source>
+        <translation>형식</translation>
+    </message>
+    <message>
+        <source>PNG</source>
+        <translation>PNG</translation>
+    </message>
+    <message>
+        <source>JPG</source>
+        <translation>JPG</translation>
+    </message>
+    <message>
+        <source>BMP</source>
+        <translation>BMP</translation>
     </message>
     <message>
         <source>Border Effects</source>
@@ -609,50 +671,6 @@ select the area to record</source>
     <message>
         <source>None</source>
         <translation>없음</translation>
-    </message>
-    <message>
-        <source>Turn off camera (C)</source>
-        <translation>카메라 끄기 (C)</translation>
-    </message>
-    <message>
-        <source>Hide Keystroke (K)</source>
-        <translation> Keystroke 숨기기 (K)</translation>
-    </message>
-    <message>
-        <source>Show Keystroke (K)</source>
-        <translation> Keystroke 표시 (K)</translation>
-    </message>
-    <message>
-        <source>webm</source>
-        <translation>webm</translation>
-    </message>
-    <message>
-        <source>Videos</source>
-        <translation>비디오</translation>
-    </message>
-    <message>
-        <source>Rectangle (R)
-Press and hold Shift to draw a square</source>
-        <translation>사각형 (R)
-Shift를 누르고 놓아서 정사각형을 그려주세요</translation>
-    </message>
-    <message>
-        <source>Ellipse (O)
-Press and hold Shift to draw a circle</source>
-        <translation>타원 (O)
-Shift를 누르고 놓아서 원을 그려주세요</translation>
-    </message>
-    <message>
-        <source>Line (L)
-Press and hold Shift to draw a vertical or horizontal line</source>
-        <translation>선 (L)
-Shift를 누르고 놓아서 수직 또는 수평 선을 그려주세요</translation>
-    </message>
-    <message>
-        <source>Arrow (X)
-Press and hold Shift to draw a vertical or horizontal arrow</source>
-        <translation>화살표 (X)
-Shift를 누르고 놓아서 수직 또는 수평 화살표를 그려주세요</translation>
     </message>
     <message>
         <source>Shadow</source>
@@ -667,24 +685,8 @@ Shift를 누르고 놓아서 수직 또는 수평 화살표를 그려주세요</
         <translation>장치</translation>
     </message>
     <message>
-        <source>Sound</source>
-        <translation>소리</translation>
-    </message>
-    <message>
-        <source>System audio</source>
-        <translation>시스템 오디오</translation>
-    </message>
-    <message>
-        <source>Show click</source>
-        <translation>클릭 표시</translation>
-    </message>
-    <message>
-        <source>Set a path on save</source>
-        <translation>저장 시 경로 설정</translation>
-    </message>
-    <message>
-        <source>Change the path on save</source>
-        <translation>저장 시 경로 변경</translation>
+        <source>Extract Text</source>
+        <translation>텍스트 추출</translation>
     </message>
 </context>
 <context>
@@ -702,7 +704,7 @@ Shift를 누르고 놓아서 수직 또는 수평 화살표를 그려주세요</
     <name>TopTips</name>
     <message>
         <source> Adjust the recording area within %1*%2 to get better video effect</source>
-        <translation> %1*%2 내에서 녹화 영역을 조정하여 더 나은 비디오 효과를 얻으세요</translation>
+        <translation> %1*%2 내에서 녹화 영역을 조정하여 더 좋은 화면 효과를 얻을 수 있습니다</translation>
     </message>
 </context>
 <context>

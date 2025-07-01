@@ -1,22 +1,24 @@
-<?xml version="1.0" ?><!DOCTYPE TS><TS version="2.1" language="th">
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE TS>
+<TS version="2.1" language="th">
 <context>
     <name>CountdownTooltip</name>
     <message>
         <source>Click the tray icon 
 or press the shortcut again to stop recording</source>
         <translation>คลิกไอคอนถาด
-หรือกดสั้นที่อีกครั้งเพื่อหยุดบันทึก</translation>
+หรือกดสั้นทางลัดอีกครั้งเพื่อหยุดบันทึก</translation>
     </message>
     <message>
         <source>Do not rotate your screen during recording</source>
-        <translation>อย่าหมุนหน้าจอขณะบันทึก</translation>
+        <translation>ห้ามหมุนหน้าจอขณะบันทึก</translation>
     </message>
 </context>
 <context>
     <name>IconWidget</name>
     <message>
         <source>Screenshot</source>
-        <translation>ภาพหน้าจอ</translation>
+        <translation>หน้าจอนิรันดร์</translation>
     </message>
     <message>
         <source>Recording</source>
@@ -31,7 +33,7 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Screenshot</source>
-        <translation>ภาพหน้าจอ</translation>
+        <translation>หน้าจอนิรันดร์</translation>
     </message>
 </context>
 <context>
@@ -42,7 +44,7 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Save failed. Please save it in your home directory.</source>
-        <translation>การบันทึกล้มเหลว กรุณาบันทึกไฟล์ในโฟลเดอร์ของคุณ</translation>
+        <translation>การบันทึกล้มเหลว กรุณาบันทึกไฟล์ในไดเรกทอรีของคุณ</translation>
     </message>
     <message>
         <source>View</source>
@@ -50,19 +52,19 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Screenshot finished</source>
-        <translation>การจับภาพหน้าจอเสร็จสิ้น</translation>
+        <translation>การจับภาพหน้าจอนิรันดร์เสร็จ</translation>
     </message>
     <message>
         <source>PNG (*.png);;JPEG (*.jpg *.jpeg);;BMP (*.bmp)</source>
-        <translation>PNG (*.png);;JPEG (*.jpg *.jpeg);;BMP (*.bmp)</translation>
+        <translation>ไฟล์ PNG (*.png);;ไฟล์ JPEG (*.jpg *.jpeg);;ไฟล์ BMP (*.bmp)</translation>
     </message>
     <message>
         <source>JPEG (*.jpg *.jpeg);;PNG (*.png);;BMP (*.bmp)</source>
-        <translation>JPEG (*.jpg *.jpeg);;PNG (*.png);;BMP (*.bmp)</translation>
+        <translation>ไฟล์ JPEG (*.jpg *.jpeg);;ไฟล์ PNG (*.png);;ไฟล์ BMP (*.bmp)</translation>
     </message>
     <message>
         <source>BMP (*.bmp);;JPEG (*.jpg *.jpeg);;PNG (*.png)</source>
-        <translation>BMP (*.bmp);;JPEG (*.jpg *.jpeg);;PNG (*.png)</translation>
+        <translation>ไฟล์ BMP (*.bmp);;ไฟล์ JPEG (*.jpg *.jpeg);;ไฟล์ PNG (*.png)</translation>
     </message>
     <message>
         <source>select-area</source>
@@ -78,11 +80,11 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Ignore</source>
-        <translation>ละเว้น</translation>
+        <translation>ละเลย</translation>
     </message>
     <message>
         <source>Clipboard</source>
-        <translation>คลิปบอร์ด</translation>
+        <translation>กระดานคัดลอก</translation>
     </message>
     <message>
         <source>Saving the screen recording file, please wait...</source>
@@ -90,39 +92,40 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>As the window effect is disabled during the process, the recording has to be stopped</source>
-        <translation>เนื่องจากเอฟเฟกต์หน้าจอถูกปิดใช้งานในระหว่างกระบวนการ การบันทึกจึงต้อง
-หยุดลง</translation>
+        <translation>&gt;-
+      เนื่องจากเอฟเฟกต์หน้าต่างถูกปิดใช้งานในระหว่างกระบวนการ การบันทึกจึงต้อง
+      หยุด</translation>
     </message>
     <message>
         <source>Screenshot</source>
-        <translation>ภาพหน้าจอ</translation>
+        <translation>หน้าจอนิรันดร์</translation>
     </message>
     <message>
         <source>Screenshot failed.</source>
-        <translation>การจับภาพหน้าจอล้มเหลว</translation>
+        <translation>การจับภาพหน้าจอนิรันดร์ล้มเหลว</translation>
     </message>
     <message>
         <source>Scrollshot</source>
-        <translation>ภาพเลื่อน</translation>
+        <translation>การจับภาพหน้าจอนิรันดร์แบบเลื่อน</translation>
+    </message>
+    <message>
+        <source>Pin Screenshots</source>
+        <translation>ยึดหน้าจอนิรันดร์</translation>
+    </message>
+    <message>
+        <source>deepin-screen-recorder</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Open Folder</source>
         <translation>เปิดโฟลเดอร์</translation>
-    </message>
-    <message>
-        <source>Pin Screenshots</source>
-        <translation>ตรึงภาพหน้าจอ</translation>
-    </message>
-    <message>
-        <source>deepin-screen-recorder</source>
-        <translation>deepin-screen-recorder</translation>
     </message>
 </context>
 <context>
     <name>MenuController</name>
     <message>
         <source>Undo</source>
-        <translation>ย้อนกลับ</translation>
+        <translation>ยกเลิก</translation>
     </message>
     <message>
         <source>Save</source>
@@ -144,7 +147,7 @@ or press the shortcut again to stop recording</source>
     <name>QuickPanelWidget</name>
     <message>
         <source>Screenshot</source>
-        <translation>หน้าจอกำลังถูกถ่ายภาพ</translation>
+        <translation>ภาพหน้าจอ</translation>
     </message>
     <message>
         <source>Record</source>
@@ -155,7 +158,7 @@ or press the shortcut again to stop recording</source>
     <name>RecordIconWidget</name>
     <message>
         <source>Screenshot</source>
-        <translation>หน้าจอกำลังถูกถ่ายภาพ</translation>
+        <translation>ภาพหน้าจอ</translation>
     </message>
     <message>
         <source>Recording</source>
@@ -189,7 +192,7 @@ or press the shortcut again to stop recording</source>
     <name>Screenshot</name>
     <message>
         <source>Screen Capture will start in %1 seconds</source>
-        <translation>การถ่ายภาพหน้าจอจะเริ่มใน %1 วินาที</translation>
+        <translation>การจับภาพหน้าจอกำลังจะเริ่มใน %1 วินาที</translation>
     </message>
 </context>
 <context>
@@ -200,7 +203,7 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Failed to take a continuous screenshot.</source>
-        <translation>ไม่สามารถถ่ายภาพหน้าจอแบบต่อเนื่องได้</translation>
+        <translation>ไม่สามารถจับภาพหน้าจอแบบต่อเนื่องได้</translation>
     </message>
     <message>
         <source>Reached the bottom of the scroll area</source>
@@ -212,15 +215,15 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>adjust the capture area</source>
-        <translation>ปรับพื้นที่ถ่ายภาพ</translation>
+        <translation>ปรับพื้นที่จับภาพ</translation>
     </message>
     <message>
         <source>Scroll your mouse wheel or click to take a scrolling screenshot</source>
-        <translation>เลื่อนล้อแม우สหรือคลิกเพื่อถ่ายภาพหน้าจอแบบเลื่อน</translation>
+        <translation>เลื่อนล้อลูกศรเมาส์หรือคลิกเพื่อจับภาพหน้าจอแบบเลื่อน</translation>
     </message>
     <message>
         <source>Slow down the scrolling speed</source>
-        <translation>ลดความเร็วการเลื่อน</translation>
+        <translation>ช้าลงความเร็วการเลื่อน</translation>
     </message>
     <message>
         <source>Invalid area, click to </source>
@@ -231,14 +234,14 @@ or press the shortcut again to stop recording</source>
     <name>ShapesWidget</name>
     <message>
         <source>Input text here</source>
-        <translation>ป้อนข้อความที่นี่</translation>
+        <translation>กรอกข้อความที่นี่</translation>
     </message>
 </context>
 <context>
     <name>Shortcut</name>
     <message>
         <source>Start/Screenshot</source>
-        <translation>เริ่ม/ถ่ายภาพหน้าจอ</translation>
+        <translation>เริ่ม/ภาพหน้าจอ</translation>
     </message>
     <message>
         <source>Exit/Save</source>
@@ -250,7 +253,7 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Settings</source>
-        <translation>การตั้งค่า</translation>
+        <translation>ตั้งค่า</translation>
     </message>
     <message>
         <source>Quick start</source>
@@ -258,15 +261,15 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Window screenshot</source>
-        <translation>การถ่ายภาพหน้าต่าง</translation>
+        <translation>ภาพหน้าจอหน้าต่าง</translation>
     </message>
     <message>
         <source>Delay screenshot</source>
-        <translation>ถ่ายภาพหน้าจอแบบมีช่วงเวลา</translation>
+        <translation>หน่วงเวลาการจับภาพ</translation>
     </message>
     <message>
         <source>Full screenshot</source>
-        <translation>การถ่ายภาพหน้าจอเต็ม</translation>
+        <translation>ภาพหน้าจอเต็ม</translation>
     </message>
     <message>
         <source>Exit</source>
@@ -278,7 +281,7 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Rectangle</source>
-        <translation>รูปสี่เหลี่ยม</translation>
+        <translation>สี่เหลี่ยม</translation>
     </message>
     <message>
         <source>Ellipse</source>
@@ -314,11 +317,11 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Increase width left</source>
-        <translation>เพิ่มความกว้างทางซ้าย</translation>
+        <translation>เพิ่มความกว้างซ้าย</translation>
     </message>
     <message>
         <source>Increase width right</source>
-        <translation>เพิ่มความกว้างทางขวา</translation>
+        <translation>เพิ่มความกว้างขวา</translation>
     </message>
     <message>
         <source>Decrease height up</source>
@@ -330,19 +333,23 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Decrease width left</source>
-        <translation>ลดความกว้างทางซ้าย</translation>
+        <translation>ลดความกว้างซ้าย</translation>
     </message>
     <message>
         <source>Decrease width right</source>
-        <translation>ลดความกว้างทางขวา</translation>
+        <translation>ลดความกว้างขวา</translation>
     </message>
     <message>
         <source>Help</source>
-        <translation>ช่วยเหลือ</translation>
+        <translation>ความช่วยเหลือ</translation>
     </message>
     <message>
         <source>Display shortcuts</source>
-        <translation>แสดงคำสั่งลัด</translation>
+        <translation>แสดงการลัด</translation>
+    </message>
+    <message>
+        <source>Sound</source>
+        <translation>เสียง</translation>
     </message>
     <message>
         <source>Keystroke</source>
@@ -354,7 +361,7 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Start recording</source>
-        <translation>เริ่มการบันทึก</translation>
+        <translation>เริ่มบันทึก</translation>
     </message>
     <message>
         <source>Options</source>
@@ -365,47 +372,43 @@ or press the shortcut again to stop recording</source>
         <translation>เริ่ม/บันทึก</translation>
     </message>
     <message>
+        <source>Mouse</source>
+        <translation>เมาส์</translation>
+    </message>
+    <message>
         <source>Tools</source>
         <translation>เครื่องมือ</translation>
     </message>
     <message>
         <source>Extract text</source>
-        <translation>แยกข้อความ</translation>
+        <translation>ดึงข้อความ</translation>
     </message>
     <message>
         <source>Scrollshot</source>
-        <translation>การถ่ายภาพแบบเลื่อน</translation>
+        <translation>ภาพเลื่อน</translation>
     </message>
     <message>
         <source>Pin screenshots</source>
-        <translation>จัดเก็บภาพหน้าจอ</translation>
-    </message>
-    <message>
-        <source>Start scrollshot</source>
-        <translation>เริ่มการถ่ายภาพแบบเลื่อน</translation>
+        <translation>จับภาพหน้าจอกำลัง</translation>
     </message>
     <message>
         <source>Start OCR</source>
         <translation>เริ่ม OCR</translation>
     </message>
     <message>
+        <source>Start scrollshot</source>
+        <translation>เริ่มภาพเลื่อน</translation>
+    </message>
+    <message>
         <source>Arrow</source>
         <translation>ลูกศร</translation>
-    </message>
-    <message>
-        <source>Sound</source>
-        <translation>เสียง</translation>
-    </message>
-    <message>
-        <source>Mouse</source>
-        <translation>เมาส์</translation>
     </message>
 </context>
 <context>
     <name>ShotStartPlugin</name>
     <message>
         <source>Screenshot</source>
-        <translation>หน้าจอภาพ</translation>
+        <translation>ภาพหน้าจอ</translation>
     </message>
 </context>
 <context>
@@ -420,20 +423,20 @@ or press the shortcut again to stop recording</source>
     <message>
         <source>Rectangle
 Press and hold Shift to draw a square</source>
-        <translation>สี่เหลี่ยม
-กดและลาก Shift เพื่อวาดเป็นรูปเหลี่ยม</translation>
+        <translation>สี่เหลี่ยมผืนผ้า
+กดและถือ Shift เพื่อวาดเป็นรูปสี่เหลี่ยม</translation>
     </message>
     <message>
         <source>Ellipse
 Press and hold Shift to draw a circle</source>
         <translation>วงกลม
-กดและลาก Shift เพื่อวาดเป็นวงกลม</translation>
+กดและถือ Shift เพื่อวาดเป็นวงกลม</translation>
     </message>
     <message>
         <source>Brush
 Press and hold Shift to draw a straight line</source>
         <translation>แปรง
-กดและลาก Shift เพื่อวาดเส้นตรง</translation>
+กดและถือ Shift เพื่อวาดเส้นตรง</translation>
     </message>
     <message>
         <source>Adjust blur strength (Scroll to adjust it)</source>
@@ -445,7 +448,7 @@ Press and hold Shift to draw a straight line</source>
     </message>
     <message>
         <source>Adjust text size (Scroll to adjust it)</source>
-        <translation>ปรับขนาดข้อความ (เลื่อนเพื่อปรับ)</translation>
+        <translation>ปรับขนาดตัวอักษร (เลื่อนเพื่อปรับ)</translation>
     </message>
 </context>
 <context>
@@ -454,18 +457,42 @@ Press and hold Shift to draw a straight line</source>
         <source>Click or drag to
 select the area to record</source>
         <translation>คลิกหรือลากเพื่อ
-เลือกพื้นที่ที่จะบันทึก</translation>
+เลือกพื้นที่ที่ต้องการบันทึก</translation>
     </message>
 </context>
 <context>
     <name>SubToolWidget</name>
     <message>
-        <source>Microphone</source>
-        <translation>ไมโครโฟน</translation>
+        <source>Show keystroke (K)</source>
+        <translation>แสดงการกดแป้น (K)</translation>
     </message>
     <message>
-        <source>Options</source>
-        <translation>ตัวเลือก</translation>
+        <source>Hide Keystroke (K)</source>
+        <translation>ซ่อนการกดแป้น (K)</translation>
+    </message>
+    <message>
+        <source>Show Keystroke (K)</source>
+        <translation>แสดงการกดแป้น (K)</translation>
+    </message>
+    <message>
+        <source>Turn on camera (C)</source>
+        <translation>เปิดกล้อง (C)</translation>
+    </message>
+    <message>
+        <source>Turn off camera (C)</source>
+        <translation>ปิดกล้อง (C)</translation>
+    </message>
+    <message>
+        <source>Screenshot</source>
+        <translation>ภาพหน้าจอ</translation>
+    </message>
+    <message>
+        <source>Settings</source>
+        <translation>ตั้งค่า</translation>
+    </message>
+    <message>
+        <source>Settings (F3)</source>
+        <translation>ตั้งค่า (F3)</translation>
     </message>
     <message>
         <source>Format:</source>
@@ -480,28 +507,60 @@ select the area to record</source>
         <translation>MP4</translation>
     </message>
     <message>
+        <source>MKV</source>
+        <translation>MKV</translation>
+    </message>
+    <message>
+        <source>webm</source>
+        <translation>webm</translation>
+    </message>
+    <message>
         <source>FPS:</source>
-        <translation>FPS:</translation>
+        <translation>เฟรมต่อวินาที:</translation>
     </message>
     <message>
         <source>5 fps</source>
-        <translation>5 fps</translation>
+        <translation>5 เฟรมต่อวินาที</translation>
     </message>
     <message>
         <source>10 fps</source>
-        <translation>10 fps</translation>
+        <translation>10 เฟรมต่อวินาที</translation>
     </message>
     <message>
         <source>20 fps</source>
-        <translation>20 fps</translation>
+        <translation>20 เฟรมต่อวินาที</translation>
     </message>
     <message>
         <source>24 fps</source>
-        <translation>24 fps</translation>
+        <translation>24 เฟรมต่อวินาที</translation>
     </message>
     <message>
         <source>30 fps</source>
-        <translation>30 fps</translation>
+        <translation>30 เฟรมต่อวินาที</translation>
+    </message>
+    <message>
+        <source>Sound</source>
+        <translation>เสียง</translation>
+    </message>
+    <message>
+        <source>Microphone</source>
+        <translation>ไมโครโฟน</translation>
+    </message>
+    <message>
+        <source>System audio</source>
+        <translation>เสียงระบบ</translation>
+    </message>
+    <message>
+        <source>Options</source>
+        <translation>ตัวเลือก</translation>
+    </message>
+    <message>
+        <source>Show pointer</source>
+        <translation>แสดงเคอร์เซอร์</translation>
+    </message>
+    <message>
+        <source>Show click</source>
+        <translation>แสดงการคลิก</translation>
     </message>
     <message>
         <source>Save to</source>
@@ -512,12 +571,84 @@ select the area to record</source>
         <translation>เดสก์ท็อป</translation>
     </message>
     <message>
+        <source>Videos</source>
+        <translation>วิดีโอ</translation>
+    </message>
+    <message>
+        <source>Rectangle (R)
+Press and hold Shift to draw a square</source>
+        <translation>สี่เหลี่ยม (R)
+กดและกดค้าง Shift เพื่อวาดเป็นรูปเหลี่ยมจัตุรัส</translation>
+    </message>
+    <message>
+        <source>Ellipse (O)
+Press and hold Shift to draw a circle</source>
+        <translation>วงกลม (O)
+กดและกดค้าง Shift เพื่อวาดเป็นวงกลม</translation>
+    </message>
+    <message>
+        <source>Line (L)
+Press and hold Shift to draw a vertical or horizontal line</source>
+        <translation>เส้น (L)
+กดและกดค้าง Shift เพื่อวาดเส้นตั้งตรงหรือเส้นราบ</translation>
+    </message>
+    <message>
+        <source>Arrow (X)
+Press and hold Shift to draw a vertical or horizontal arrow</source>
+        <translation>ลูกศร (X)
+กดและกดค้าง Shift เพื่อวาดลูกศรตั้งตรงหรือลูกศรราบ</translation>
+    </message>
+    <message>
+        <source>Pencil (P)</source>
+        <translation>ดินสอ (P)</translation>
+    </message>
+    <message>
+        <source>Blur (B)</source>
+        <translation>เบลอ (B)</translation>
+    </message>
+    <message>
+        <source>Text (T)</source>
+        <translation>ข้อความ (T)</translation>
+    </message>
+    <message>
+        <source>Scrollshot (Alt+I）</source>
+        <translation>การถ่ายภาพแบบเลื่อน (Alt+I)</translation>
+    </message>
+    <message>
+        <source>Extract text (Alt+O）</source>
+        <translation>ดึงข้อความ (Alt+O)</translation>
+    </message>
+    <message>
+        <source>Pin screenshots (Alt+P）</source>
+        <translation>ตรึงภาพหน้าจอ (Alt+P)</translation>
+    </message>
+    <message>
+        <source>Undo (Ctrl+Z)</source>
+        <translation>ยกเลิก (Ctrl+Z)</translation>
+    </message>
+    <message>
+        <source>Record</source>
+        <translation>บันทึก</translation>
+    </message>
+    <message>
+        <source>Clipboard</source>
+        <translation>คลิปบอรด์</translation>
+    </message>
+    <message>
         <source>Pictures</source>
         <translation>รูปภาพ</translation>
     </message>
     <message>
         <source>Folder</source>
         <translation>โฟลเดอร์</translation>
+    </message>
+    <message>
+        <source>Set a path on save</source>
+        <translation>กำหนดเสือทางเมื่อบันทึก</translation>
+    </message>
+    <message>
+        <source>Change the path on save</source>
+        <translation>เปลี่ยนเสือทางเมื่อบันทึก</translation>
     </message>
     <message>
         <source>Format</source>
@@ -536,124 +667,12 @@ select the area to record</source>
         <translation>BMP</translation>
     </message>
     <message>
-        <source>MKV</source>
-        <translation>MKV</translation>
-    </message>
-    <message>
-        <source>Clipboard</source>
-        <translation>คลิปบอร์ด</translation>
-    </message>
-    <message>
-        <source>Show pointer</source>
-        <translation>แสดงเคอร์เซอร์</translation>
-    </message>
-    <message>
-        <source>Extract Text</source>
-        <translation>ดึงข้อความ</translation>
-    </message>
-    <message>
-        <source>Show keystroke (K)</source>
-        <translation>แสดงการกดแป้นพิมพ์ (K)</translation>
-    </message>
-    <message>
-        <source>Settings</source>
-        <translation>ตั้งค่า</translation>
-    </message>
-    <message>
-        <source>Settings (F3)</source>
-        <translation>ตั้งค่า (F3)</translation>
-    </message>
-    <message>
-        <source>Blur (B)</source>
-        <translation>เบลอ (B)</translation>
-    </message>
-    <message>
-        <source>Text (T)</source>
-        <translation>ข้อความ (T)</translation>
-    </message>
-    <message>
-        <source>Scrollshot (Alt+I）</source>
-        <translation>การถ่ายภาพเลื่อน (Alt+I)</translation>
-    </message>
-    <message>
-        <source>Extract text (Alt+O）</source>
-        <translation>การดึงข้อความ (Alt+O)</translation>
-    </message>
-    <message>
-        <source>Undo (Ctrl+Z)</source>
-        <translation>เลิกทำ (Ctrl+Z)</translation>
-    </message>
-    <message>
-        <source>Screenshot</source>
-        <translation>การถ่ายภาพหน้าจอ</translation>
-    </message>
-    <message>
-        <source>Pin screenshots (Alt+P）</source>
-        <translation>จับการถ่ายภาพหน้าจอ (Alt+P)</translation>
-    </message>
-    <message>
-        <source>Record</source>
-        <translation>บันทึก</translation>
-    </message>
-    <message>
-        <source>Pencil (P)</source>
-        <translation>ดินสอ (P)</translation>
-    </message>
-    <message>
-        <source>Turn on camera (C)</source>
-        <translation>เปิดกล้อง (C)</translation>
-    </message>
-    <message>
         <source>Border Effects</source>
-        <translation>เอฟเฟกต์เส้นขอบ</translation>
+        <translation>ผลลัพธ์ของเส้นขอบ</translation>
     </message>
     <message>
         <source>None</source>
         <translation>ไม่มี</translation>
-    </message>
-    <message>
-        <source>Turn off camera (C)</source>
-        <translation>ปิดกล้อง (C)</translation>
-    </message>
-    <message>
-        <source>Hide Keystroke (K)</source>
-        <translation>ซ่อนการกดแป้นพิมพ์ (K)</translation>
-    </message>
-    <message>
-        <source>Show Keystroke (K)</source>
-        <translation>แสดงการกดแป้นพิมพ์ (K)</translation>
-    </message>
-    <message>
-        <source>webm</source>
-        <translation>webm</translation>
-    </message>
-    <message>
-        <source>Videos</source>
-        <translation>วิดีโอ</translation>
-    </message>
-    <message>
-        <source>Rectangle (R)
-Press and hold Shift to draw a square</source>
-        <translation>สี่เหลี่ยม (R)
-กดและลาก Shift เพื่อวาดเป็นรูปวงกลม</translation>
-    </message>
-    <message>
-        <source>Ellipse (O)
-Press and hold Shift to draw a circle</source>
-        <translation>วงกลม (O)
-กดและลาก Shift เพื่อวาดเป็นรูปวงกลม</translation>
-    </message>
-    <message>
-        <source>Line (L)
-Press and hold Shift to draw a vertical or horizontal line</source>
-        <translation>เส้น (L)
-กดและลาก Shift เพื่อวาดเส้นตั้งตรงหรือเส้นนอน</translation>
-    </message>
-    <message>
-        <source>Arrow (X)
-Press and hold Shift to draw a vertical or horizontal arrow</source>
-        <translation>ลูกศร (X)
-กดและลาก Shift เพื่อวาดลูกศรตั้งตรงหรือลูกศรนอน</translation>
     </message>
     <message>
         <source>Shadow</source>
@@ -668,24 +687,8 @@ Press and hold Shift to draw a vertical or horizontal arrow</source>
         <translation>อุปกรณ์</translation>
     </message>
     <message>
-        <source>Sound</source>
-        <translation>เสียง</translation>
-    </message>
-    <message>
-        <source>System audio</source>
-        <translation>เสียงระบบ</translation>
-    </message>
-    <message>
-        <source>Show click</source>
-        <translation>แสดงการคลิก</translation>
-    </message>
-    <message>
-        <source>Set a path on save</source>
-        <translation>ตั้งเส้นทางเมื่อบันทึก</translation>
-    </message>
-    <message>
-        <source>Change the path on save</source>
-        <translation>เปลี่ยนเส้นทางเมื่อบันทึก</translation>
+        <source>Extract Text</source>
+        <translation>ดึงข้อความ</translation>
     </message>
 </context>
 <context>
@@ -710,7 +713,7 @@ Press and hold Shift to draw a vertical or horizontal arrow</source>
     <name>Utils</name>
     <message>
         <source>Screen recording is not supported at present</source>
-        <translation>การบันทึกหน้าจอไม่ได้รับการสนับสนุนในปัจจุบัน</translation>
+        <translation>การบันทึกหน้าจอไม่ได้รับการสนับสนุนในขณะนี้</translation>
     </message>
     <message>
         <source>Exit</source>

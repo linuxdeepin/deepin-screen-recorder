@@ -1,4 +1,6 @@
-<?xml version="1.0" ?><!DOCTYPE TS><TS version="2.1" language="az">
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE TS>
+<TS version="2.1" language="az">
 <context>
     <name>CountdownTooltip</name>
     <message>
@@ -105,16 +107,16 @@ və ya qısayolu yenidən basaraaq yazıkmanı dayandırın</translation>
         <translation>Sürüşdürmə</translation>
     </message>
     <message>
-        <source>Open Folder</source>
-        <translation>Qovluğu açın</translation>
-    </message>
-    <message>
         <source>Pin Screenshots</source>
         <translation>Ekran şəkllərini sancaqlayın</translation>
     </message>
     <message>
         <source>deepin-screen-recorder</source>
-        <translation>deepin-skrin-növbətçi</translation>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Open Folder</source>
+        <translation>Qovluğu açın</translation>
     </message>
 </context>
 <context>
@@ -344,6 +346,10 @@ və ya qısayolu yenidən basaraaq yazıkmanı dayandırın</translation>
         <translation>Ekran qısayolları</translation>
     </message>
     <message>
+        <source>Sound</source>
+        <translation>Səs</translation>
+    </message>
+    <message>
         <source>Keystroke</source>
         <translation>Düymə basılması</translation>
     </message>
@@ -364,6 +370,10 @@ və ya qısayolu yenidən basaraaq yazıkmanı dayandırın</translation>
         <translation>Başlatmaq/Yazılma</translation>
     </message>
     <message>
+        <source>Mouse</source>
+        <translation>Siçan</translation>
+    </message>
+    <message>
         <source>Tools</source>
         <translation>Alətlər</translation>
     </message>
@@ -380,24 +390,16 @@ və ya qısayolu yenidən basaraaq yazıkmanı dayandırın</translation>
         <translation>Ekran şəkllərini sancaqlayın</translation>
     </message>
     <message>
-        <source>Start scrollshot</source>
-        <translation>Sürüşdürməni başladın</translation>
-    </message>
-    <message>
         <source>Start OCR</source>
         <translation>OCR-i başladın</translation>
     </message>
     <message>
+        <source>Start scrollshot</source>
+        <translation>Sürüşdürməni başladın</translation>
+    </message>
+    <message>
         <source>Arrow</source>
         <translation>Ox</translation>
-    </message>
-    <message>
-        <source>Sound</source>
-        <translation>Səs</translation>
-    </message>
-    <message>
-        <source>Mouse</source>
-        <translation>Siçan</translation>
     </message>
 </context>
 <context>
@@ -459,12 +461,36 @@ yazılacaq sahəni seçin</translation>
 <context>
     <name>SubToolWidget</name>
     <message>
-        <source>Microphone</source>
-        <translation>Mikrofon</translation>
+        <source>Show keystroke (K)</source>
+        <translation>Düymə basılması göstərilsin (K)</translation>
     </message>
     <message>
-        <source>Options</source>
-        <translation>Seçimlər</translation>
+        <source>Hide Keystroke (K)</source>
+        <translation>Düymə basılmasını gizlətmək (K)</translation>
+    </message>
+    <message>
+        <source>Show Keystroke (K)</source>
+        <translation>Düymə basılması göstərilsin (K)</translation>
+    </message>
+    <message>
+        <source>Turn on camera (C)</source>
+        <translation>Kameranı açın (C)</translation>
+    </message>
+    <message>
+        <source>Turn off camera (C)</source>
+        <translation>Kameranı söndürün (C)</translation>
+    </message>
+    <message>
+        <source>Screenshot</source>
+        <translation>Ekran şəkli</translation>
+    </message>
+    <message>
+        <source>Settings</source>
+        <translation>Ayarlar</translation>
+    </message>
+    <message>
+        <source>Settings (F3)</source>
+        <translation>Ayarlar (F3)</translation>
     </message>
     <message>
         <source>Format:</source>
@@ -477,6 +503,14 @@ yazılacaq sahəni seçin</translation>
     <message>
         <source>MP4</source>
         <translation>MP4</translation>
+    </message>
+    <message>
+        <source>MKV</source>
+        <translation>MKV</translation>
+    </message>
+    <message>
+        <source>webm</source>
+        <translation>webm</translation>
     </message>
     <message>
         <source>FPS:</source>
@@ -503,128 +537,36 @@ yazılacaq sahəni seçin</translation>
         <translation>30 fps</translation>
     </message>
     <message>
-        <source>Save to</source>
-        <translation>Belə saxlayın</translation>
+        <source>Sound</source>
+        <translation>Səs</translation>
     </message>
     <message>
-        <source>Desktop</source>
-        <translation>İş Masası</translation>
+        <source>Microphone</source>
+        <translation>Mikrofon</translation>
     </message>
     <message>
-        <source>Pictures</source>
-        <translation>Şəkillər</translation>
+        <source>System audio</source>
+        <translation>Sistem səsi</translation>
     </message>
     <message>
-        <source>Folder</source>
-        <translation>Qovluq</translation>
-    </message>
-    <message>
-        <source>Format</source>
-        <translation>Format</translation>
-    </message>
-    <message>
-        <source>PNG</source>
-        <translation>PNG</translation>
-    </message>
-    <message>
-        <source>JPG</source>
-        <translation>JPG</translation>
-    </message>
-    <message>
-        <source>BMP</source>
-        <translation>BMP</translation>
-    </message>
-    <message>
-        <source>MKV</source>
-        <translation>MKV</translation>
-    </message>
-    <message>
-        <source>Clipboard</source>
-        <translation>Mübadilə yaddaşı</translation>
+        <source>Options</source>
+        <translation>Seçimlər</translation>
     </message>
     <message>
         <source>Show pointer</source>
         <translation>Göstərici görünsün</translation>
     </message>
     <message>
-        <source>Extract Text</source>
-        <translation>Mətni çıxarın</translation>
+        <source>Show click</source>
+        <translation>Klikləmə görünsün</translation>
     </message>
     <message>
-        <source>Show keystroke (K)</source>
-        <translation>Düymə basılması göstərilsin (K)</translation>
+        <source>Save to</source>
+        <translation>Belə saxlayın</translation>
     </message>
     <message>
-        <source>Settings</source>
-        <translation>Ayarlar</translation>
-    </message>
-    <message>
-        <source>Settings (F3)</source>
-        <translation>Ayarlar (F3)</translation>
-    </message>
-    <message>
-        <source>Blur (B)</source>
-        <translation>Bulanıq (B)</translation>
-    </message>
-    <message>
-        <source>Text (T)</source>
-        <translation>Mətn (M)</translation>
-    </message>
-    <message>
-        <source>Scrollshot (Alt+I）</source>
-        <translation>Sürüşdürmə (Alt+İ)</translation>
-    </message>
-    <message>
-        <source>Extract text (Alt+O）</source>
-        <translation>Mətni çıxarın (Alt+O)</translation>
-    </message>
-    <message>
-        <source>Undo (Ctrl+Z)</source>
-        <translation>Geriyə (Ctrl+Z)</translation>
-    </message>
-    <message>
-        <source>Screenshot</source>
-        <translation>Ekran şəkli</translation>
-    </message>
-    <message>
-        <source>Pin screenshots (Alt+P）</source>
-        <translation>Ekran şəklini sancaqla (Alt+P)</translation>
-    </message>
-    <message>
-        <source>Record</source>
-        <translation>Yazmaq</translation>
-    </message>
-    <message>
-        <source>Pencil (P)</source>
-        <translation>Qələm (P)</translation>
-    </message>
-    <message>
-        <source>Turn on camera (C)</source>
-        <translation>Kameranı açın (C)</translation>
-    </message>
-    <message>
-        <source>Border Effects</source>
-        <translation>Çərçivə effektləri</translation>
-    </message>
-    <message>
-        <source>None</source>
-        <translation>Heç biri</translation>
-    </message>
-    <message>
-        <source>Turn off camera (C)</source>
-        <translation>Kameranı söndürün (C)</translation>
-    </message>
-    <message>
-        <source>Hide Keystroke (K)</source>
-        <translation>Düymə basılmasını gizlətmək (K)</translation>
-    </message>
-    <message>
-        <source>Show Keystroke (K)</source>
-        <translation>Düymə basılması göstərilsin (K)</translation>
-    </message>
-    <message>
-        <source>webm</source>
-        <translation>webm</translation>
+        <source>Desktop</source>
+        <translation>İş Masası</translation>
     </message>
     <message>
         <source>Videos</source>
@@ -655,6 +597,82 @@ Press and hold Shift to draw a vertical or horizontal arrow</source>
 Üfüqi və ya şaquli ox çəkmək üçün Shift düyməsini basıb saxlayın</translation>
     </message>
     <message>
+        <source>Pencil (P)</source>
+        <translation>Qələm (P)</translation>
+    </message>
+    <message>
+        <source>Blur (B)</source>
+        <translation>Bulanıq (B)</translation>
+    </message>
+    <message>
+        <source>Text (T)</source>
+        <translation>Mətn (M)</translation>
+    </message>
+    <message>
+        <source>Scrollshot (Alt+I）</source>
+        <translation>Sürüşdürmə (Alt+İ)</translation>
+    </message>
+    <message>
+        <source>Extract text (Alt+O）</source>
+        <translation>Mətni çıxarın (Alt+O)</translation>
+    </message>
+    <message>
+        <source>Pin screenshots (Alt+P）</source>
+        <translation>Ekran şəklini sancaqla (Alt+P)</translation>
+    </message>
+    <message>
+        <source>Undo (Ctrl+Z)</source>
+        <translation>Geriyə (Ctrl+Z)</translation>
+    </message>
+    <message>
+        <source>Record</source>
+        <translation>Yazmaq</translation>
+    </message>
+    <message>
+        <source>Clipboard</source>
+        <translation>Mübadilə yaddaşı</translation>
+    </message>
+    <message>
+        <source>Pictures</source>
+        <translation>Şəkillər</translation>
+    </message>
+    <message>
+        <source>Folder</source>
+        <translation>Qovluq</translation>
+    </message>
+    <message>
+        <source>Set a path on save</source>
+        <translation>Saxlamaq üçün bir yol təyin edin</translation>
+    </message>
+    <message>
+        <source>Change the path on save</source>
+        <translation>Saxlamaq üçün yolu dəyişin</translation>
+    </message>
+    <message>
+        <source>Format</source>
+        <translation>Format</translation>
+    </message>
+    <message>
+        <source>PNG</source>
+        <translation>PNG</translation>
+    </message>
+    <message>
+        <source>JPG</source>
+        <translation>JPG</translation>
+    </message>
+    <message>
+        <source>BMP</source>
+        <translation>BMP</translation>
+    </message>
+    <message>
+        <source>Border Effects</source>
+        <translation>Çərçivə effektləri</translation>
+    </message>
+    <message>
+        <source>None</source>
+        <translation>Heç biri</translation>
+    </message>
+    <message>
         <source>Shadow</source>
         <translation>Kölgə</translation>
     </message>
@@ -667,24 +685,8 @@ Press and hold Shift to draw a vertical or horizontal arrow</source>
         <translation>Cihaz</translation>
     </message>
     <message>
-        <source>Sound</source>
-        <translation>Səs</translation>
-    </message>
-    <message>
-        <source>System audio</source>
-        <translation>Sistem səsi</translation>
-    </message>
-    <message>
-        <source>Show click</source>
-        <translation>Klikləmə görünsün</translation>
-    </message>
-    <message>
-        <source>Set a path on save</source>
-        <translation>Saxlamaq üçün bir yol təyin edin</translation>
-    </message>
-    <message>
-        <source>Change the path on save</source>
-        <translation>Saxlamaq üçün yolu dəyişin</translation>
+        <source>Extract Text</source>
+        <translation>Mətni çıxarın</translation>
     </message>
 </context>
 <context>

@@ -1,15 +1,17 @@
-<?xml version="1.0" ?><!DOCTYPE TS><TS version="2.1" language="nb">
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE TS>
+<TS version="2.1" language="nb">
 <context>
     <name>CountdownTooltip</name>
     <message>
         <source>Click the tray icon 
 or press the shortcut again to stop recording</source>
-        <translation>Klikk på ikonen i opphavsfeltet
-eller trykk på hurtigtasten på nytt for å stoppe opptaket</translation>
+        <translation>Klikk på trådikonet
+eller trykk på hurtigtasten igjen for å stoppe opptaket</translation>
     </message>
     <message>
         <source>Do not rotate your screen during recording</source>
-        <translation>Rotér ikke skjermen under opptaket</translation>
+        <translation>Dra ikke skjermen under opptaket</translation>
     </message>
 </context>
 <context>
@@ -27,7 +29,7 @@ eller trykk på hurtigtasten på nytt for å stoppe opptaket</translation>
     <name>MainToolWidget</name>
     <message>
         <source>Record</source>
-        <translation>Opptak</translation>
+        <translation>Start opptak</translation>
     </message>
     <message>
         <source>Screenshot</source>
@@ -42,7 +44,7 @@ eller trykk på hurtigtasten på nytt for å stoppe opptaket</translation>
     </message>
     <message>
         <source>Save failed. Please save it in your home directory.</source>
-        <translation>Lagring feilet. Vennligst lagre filen i hjemmappen din.</translation>
+        <translation>Lagring feilet. Lagre det i din hjemmekatalog.</translation>
     </message>
     <message>
         <source>View</source>
@@ -50,19 +52,19 @@ eller trykk på hurtigtasten på nytt for å stoppe opptaket</translation>
     </message>
     <message>
         <source>Screenshot finished</source>
-        <translation>Skjermbilde tatt</translation>
+        <translation>Skjermbildet er ferdig</translation>
     </message>
     <message>
         <source>PNG (*.png);;JPEG (*.jpg *.jpeg);;BMP (*.bmp)</source>
-        <translation>PNG (*.png);;JPEG (*.jpg *.jpeg);;BMP (*.bmp)</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>JPEG (*.jpg *.jpeg);;PNG (*.png);;BMP (*.bmp)</source>
-        <translation>JPEG (*.jpg *.jpeg);;PNG (*.png);;BMP (*.bmp)</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>BMP (*.bmp);;JPEG (*.jpg *.jpeg);;PNG (*.png)</source>
-        <translation>BMP (*.bmp);;JPEG (*.jpg *.jpeg);;PNG (*.png)</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>select-area</source>
@@ -82,32 +84,28 @@ eller trykk på hurtigtasten på nytt for å stoppe opptaket</translation>
     </message>
     <message>
         <source>Clipboard</source>
-        <translation>Uttaksbrett</translation>
+        <translation>Uttaksbord</translation>
     </message>
     <message>
         <source>Saving the screen recording file, please wait...</source>
-        <translation>Lager skjermbildetakerfilen, vennligst vent...</translation>
+        <translation>Lager skjermbildetaket, vennligst vent...</translation>
     </message>
     <message>
         <source>As the window effect is disabled during the process, the recording has to be stopped</source>
-        <translation>Da vindus-effekten er deaktivert underveis, må opptaket
-stoppes</translation>
+        <translation>Som vindueeffekten er deaktivert underveis, må opptaket stoppes
+å</translation>
     </message>
     <message>
         <source>Screenshot</source>
-        <translation>Skjermbilde</translation>
+        <translation>Skjermbild</translation>
     </message>
     <message>
         <source>Screenshot failed.</source>
-        <translation>Skjermbildet feil.</translation>
+        <translation>Skjermbildet feilet.</translation>
     </message>
     <message>
         <source>Scrollshot</source>
-        <translation>Scrollshot</translation>
-    </message>
-    <message>
-        <source>Open Folder</source>
-        <translation>Åpne mappe</translation>
+        <translation>Scrollskjermbild</translation>
     </message>
     <message>
         <source>Pin Screenshots</source>
@@ -115,7 +113,11 @@ stoppes</translation>
     </message>
     <message>
         <source>deepin-screen-recorder</source>
-        <translation>deepin-screen-recorder</translation>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Open Folder</source>
+        <translation>Åpne mappe</translation>
     </message>
 </context>
 <context>
@@ -137,29 +139,29 @@ stoppes</translation>
     <name>QObject</name>
     <message>
         <source>Pin Screenshots</source>
-        <translation>Fiks skjermbilder</translation>
+        <translation>Fiksp bilder</translation>
     </message>
 </context>
 <context>
     <name>QuickPanelWidget</name>
     <message>
         <source>Screenshot</source>
-        <translation>Skjermbild</translation>
+        <translation>Bild</translation>
     </message>
     <message>
         <source>Record</source>
-        <translation>Opptak</translation>
+        <translation>Oppførsel</translation>
     </message>
 </context>
 <context>
     <name>RecordIconWidget</name>
     <message>
         <source>Screenshot</source>
-        <translation>Skjermbild</translation>
+        <translation>Bild</translation>
     </message>
     <message>
         <source>Recording</source>
-        <translation>Opptak</translation>
+        <translation>Oppførsel</translation>
     </message>
 </context>
 <context>
@@ -170,7 +172,7 @@ stoppes</translation>
     </message>
     <message>
         <source>Recording finished</source>
-        <translation>Opptaket ferdig</translation>
+        <translation>Oppførsel ferdig</translation>
     </message>
     <message>
         <source>Saved to %1</source>
@@ -178,7 +180,7 @@ stoppes</translation>
     </message>
     <message>
         <source>Record</source>
-        <translation>Opptak</translation>
+        <translation>Oppførsel</translation>
     </message>
     <message>
         <source>Open Folder</source>
@@ -189,7 +191,7 @@ stoppes</translation>
     <name>Screenshot</name>
     <message>
         <source>Screen Capture will start in %1 seconds</source>
-        <translation>Skjermbildetaker starter i %1 sekunder</translation>
+        <translation>Bildetaker starter i %1 sekunder</translation>
     </message>
 </context>
 <context>
@@ -200,11 +202,11 @@ stoppes</translation>
     </message>
     <message>
         <source>Failed to take a continuous screenshot.</source>
-        <translation>Mislyktes å ta en kontinuerlig skjermbilde.</translation>
+        <translation>Feil ved å ta et kontinuerlig bilde.</translation>
     </message>
     <message>
         <source>Reached the bottom of the scroll area</source>
-        <translation>Har nådd bunnen av scroll-området</translation>
+        <translation>Har nådd bunnen av scrollområdet</translation>
     </message>
     <message>
         <source>Reached the maximum length</source>
@@ -212,11 +214,11 @@ stoppes</translation>
     </message>
     <message>
         <source>adjust the capture area</source>
-        <translation>juster skjermbildetområdet</translation>
+        <translation>juster bildeområdet</translation>
     </message>
     <message>
         <source>Scroll your mouse wheel or click to take a scrolling screenshot</source>
-        <translation>Scroll med musehjulet eller klikk for å ta et scroll-skjermbilde</translation>
+        <translation>Scroll musetavlen eller klikk for å ta et scrollbilde</translation>
     </message>
     <message>
         <source>Slow down the scrolling speed</source>
@@ -224,7 +226,7 @@ stoppes</translation>
     </message>
     <message>
         <source>Invalid area, click to </source>
-        <translation>Ugyldig område, klikk for å </translation>
+        <translation>Ugyldig område, klikk for </translation>
     </message>
 </context>
 <context>
@@ -238,7 +240,7 @@ stoppes</translation>
     <name>Shortcut</name>
     <message>
         <source>Start/Screenshot</source>
-        <translation>Start/Skjermbilde</translation>
+        <translation>Start/Bilde</translation>
     </message>
     <message>
         <source>Exit/Save</source>
@@ -258,15 +260,15 @@ stoppes</translation>
     </message>
     <message>
         <source>Window screenshot</source>
-        <translation>Fenster-skjermbilde</translation>
+        <translation>Fensterbilde</translation>
     </message>
     <message>
         <source>Delay screenshot</source>
-        <translation>Forsink skjermbilde</translation>
+        <translation>Forsink bilde</translation>
     </message>
     <message>
         <source>Full screenshot</source>
-        <translation>Fullskjermbilde</translation>
+        <translation>Fullt bilde</translation>
     </message>
     <message>
         <source>Exit</source>
@@ -314,11 +316,11 @@ stoppes</translation>
     </message>
     <message>
         <source>Increase width left</source>
-        <translation>Øk bredde til venstre</translation>
+        <translation>Øk bredde venstre</translation>
     </message>
     <message>
         <source>Increase width right</source>
-        <translation>Øk bredde til høyre</translation>
+        <translation>Øk bredde høyre</translation>
     </message>
     <message>
         <source>Decrease height up</source>
@@ -330,11 +332,11 @@ stoppes</translation>
     </message>
     <message>
         <source>Decrease width left</source>
-        <translation>Reduser bredde til venstre</translation>
+        <translation>Reduser bredde venstre</translation>
     </message>
     <message>
         <source>Decrease width right</source>
-        <translation>Reduser bredde til høyre</translation>
+        <translation>Reduser bredde høyre</translation>
     </message>
     <message>
         <source>Help</source>
@@ -342,7 +344,11 @@ stoppes</translation>
     </message>
     <message>
         <source>Display shortcuts</source>
-        <translation>Vis hurtigtaster</translation>
+        <translation>Vis snarveier</translation>
+    </message>
+    <message>
+        <source>Sound</source>
+        <translation>Lyd</translation>
     </message>
     <message>
         <source>Keystroke</source>
@@ -354,15 +360,19 @@ stoppes</translation>
     </message>
     <message>
         <source>Start recording</source>
-        <translation>Start opptag</translation>
+        <translation>Start opptak</translation>
     </message>
     <message>
         <source>Options</source>
-        <translation>Valg</translation>
+        <translation>Alternativer</translation>
     </message>
     <message>
         <source>Start/Recording</source>
-        <translation>Start/Oppstart</translation>
+        <translation>Start/Opptak</translation>
+    </message>
+    <message>
+        <source>Mouse</source>
+        <translation>Mus</translation>
     </message>
     <message>
         <source>Tools</source>
@@ -370,7 +380,7 @@ stoppes</translation>
     </message>
     <message>
         <source>Extract text</source>
-        <translation>Hente ut tekst</translation>
+        <translation>Ekstraher tekst</translation>
     </message>
     <message>
         <source>Scrollshot</source>
@@ -381,24 +391,16 @@ stoppes</translation>
         <translation>Fiks skjermbilder</translation>
     </message>
     <message>
-        <source>Start scrollshot</source>
-        <translation>Start scrollshot</translation>
-    </message>
-    <message>
         <source>Start OCR</source>
         <translation>Start OCR</translation>
     </message>
     <message>
+        <source>Start scrollshot</source>
+        <translation>Start scrollshot</translation>
+    </message>
+    <message>
         <source>Arrow</source>
         <translation>Pil</translation>
-    </message>
-    <message>
-        <source>Sound</source>
-        <translation>Lyd</translation>
-    </message>
-    <message>
-        <source>Mouse</source>
-        <translation>Mus</translation>
     </message>
 </context>
 <context>
@@ -412,7 +414,7 @@ stoppes</translation>
     <name>ShotStartRecordPlugin</name>
     <message>
         <source>Record</source>
-        <translation>Oppstart</translation>
+        <translation>Oppfølging</translation>
     </message>
 </context>
 <context>
@@ -420,32 +422,35 @@ stoppes</translation>
     <message>
         <source>Rectangle
 Press and hold Shift to draw a square</source>
-        <translation>Rektangel
-Hold Shift nede for å tegne en firkant</translation>
+        <translation>|-
+  Rektangel
+  Hold Shift inneholdt for å tegne en firkant</translation>
     </message>
     <message>
         <source>Ellipse
 Press and hold Shift to draw a circle</source>
-        <translation>Ellipse
-Hold Shift nede for å tegne en sirkel</translation>
+        <translation>|-
+  Ellipse
+  Hold Shift inneholdt for å tegne en sirkel</translation>
     </message>
     <message>
         <source>Brush
 Press and hold Shift to draw a straight line</source>
-        <translation>Maling
-Hold Shift nede for å tegne en rett linje</translation>
+        <translation>|-
+  Blyant
+  Hold Shift inneholdt for å tegne en rett linje</translation>
     </message>
     <message>
         <source>Adjust blur strength (Scroll to adjust it)</source>
-        <translation>Justér styrken på blurring (Rull for å justere)</translation>
+        <translation>Justér blurringsstyrke (Rull for å justere den)</translation>
     </message>
     <message>
         <source>Adjust brush size (Scroll to adjust it)</source>
-        <translation>Justér malingstørrelse (Rull for å justere)</translation>
+        <translation>Justér blyantsstørrelse (Rull for å justere den)</translation>
     </message>
     <message>
         <source>Adjust text size (Scroll to adjust it)</source>
-        <translation>Justér tekststørrelse (Rull for å justere)</translation>
+        <translation>Justér tekststørrelse (Rull for å justere den)</translation>
     </message>
 </context>
 <context>
@@ -453,19 +458,44 @@ Hold Shift nede for å tegne en rett linje</translation>
     <message>
         <source>Click or drag to
 select the area to record</source>
-        <translation>Klikk eller dra for å
-velge området du vil opprette</translation>
+        <translation>|-
+  Klikk eller dra for å
+  velge området å oppfølge</translation>
     </message>
 </context>
 <context>
     <name>SubToolWidget</name>
     <message>
-        <source>Microphone</source>
-        <translation>Mikrofon</translation>
+        <source>Show keystroke (K)</source>
+        <translation>Vis tastetrykk (K)</translation>
     </message>
     <message>
-        <source>Options</source>
-        <translation>Alternativer</translation>
+        <source>Hide Keystroke (K)</source>
+        <translation>Skjul tastetrykk (K)</translation>
+    </message>
+    <message>
+        <source>Show Keystroke (K)</source>
+        <translation>Vis tastetrykk (K)</translation>
+    </message>
+    <message>
+        <source>Turn on camera (C)</source>
+        <translation>Tenn på kamera (C)</translation>
+    </message>
+    <message>
+        <source>Turn off camera (C)</source>
+        <translation>Tenn av kamera (C)</translation>
+    </message>
+    <message>
+        <source>Screenshot</source>
+        <translation>Skjermbilde</translation>
+    </message>
+    <message>
+        <source>Settings</source>
+        <translation>Innstillinger</translation>
+    </message>
+    <message>
+        <source>Settings (F3)</source>
+        <translation>Innstillinger (F3)</translation>
     </message>
     <message>
         <source>Format:</source>
@@ -478,6 +508,14 @@ velge området du vil opprette</translation>
     <message>
         <source>MP4</source>
         <translation>MP4</translation>
+    </message>
+    <message>
+        <source>MKV</source>
+        <translation>MKV</translation>
+    </message>
+    <message>
+        <source>webm</source>
+        <translation>webm</translation>
     </message>
     <message>
         <source>FPS:</source>
@@ -504,6 +542,30 @@ velge området du vil opprette</translation>
         <translation>30 fps</translation>
     </message>
     <message>
+        <source>Sound</source>
+        <translation>Lyd</translation>
+    </message>
+    <message>
+        <source>Microphone</source>
+        <translation>Mikrofon</translation>
+    </message>
+    <message>
+        <source>System audio</source>
+        <translation>Systemlyd</translation>
+    </message>
+    <message>
+        <source>Options</source>
+        <translation>Alternativer</translation>
+    </message>
+    <message>
+        <source>Show pointer</source>
+        <translation>Vis peker</translation>
+    </message>
+    <message>
+        <source>Show click</source>
+        <translation>Vis klikk</translation>
+    </message>
+    <message>
         <source>Save to</source>
         <translation>Lagre til</translation>
     </message>
@@ -512,12 +574,84 @@ velge området du vil opprette</translation>
         <translation>Skrivebord</translation>
     </message>
     <message>
+        <source>Videos</source>
+        <translation>Videoer</translation>
+    </message>
+    <message>
+        <source>Rectangle (R)
+Press and hold Shift to draw a square</source>
+        <translation>Rektangel (R)
+Hold Shift inne for å tegne en firkant</translation>
+    </message>
+    <message>
+        <source>Ellipse (O)
+Press and hold Shift to draw a circle</source>
+        <translation>Ellipse (O)
+Hold Shift inne for å tegne en sirkel</translation>
+    </message>
+    <message>
+        <source>Line (L)
+Press and hold Shift to draw a vertical or horizontal line</source>
+        <translation>Linje (L)
+Hold Shift inne for å tegne en vertikal eller horisontal linje</translation>
+    </message>
+    <message>
+        <source>Arrow (X)
+Press and hold Shift to draw a vertical or horizontal arrow</source>
+        <translation>Pil (X)
+Hold Shift inne for å tegne en vertikal eller horisontal pil</translation>
+    </message>
+    <message>
+        <source>Pencil (P)</source>
+        <translation>Blyant (P)</translation>
+    </message>
+    <message>
+        <source>Blur (B)</source>
+        <translation>Måte (B)</translation>
+    </message>
+    <message>
+        <source>Text (T)</source>
+        <translation>Tekst (T)</translation>
+    </message>
+    <message>
+        <source>Scrollshot (Alt+I）</source>
+        <translation>Scrollskjerm (Alt+I)</translation>
+    </message>
+    <message>
+        <source>Extract text (Alt+O）</source>
+        <translation>Opphøyst tekst (Alt+O)</translation>
+    </message>
+    <message>
+        <source>Pin screenshots (Alt+P）</source>
+        <translation>Fiks skjermbilder (Alt+P)</translation>
+    </message>
+    <message>
+        <source>Undo (Ctrl+Z)</source>
+        <translation>Angre (Ctrl+Z)</translation>
+    </message>
+    <message>
+        <source>Record</source>
+        <translation>Oppfølging</translation>
+    </message>
+    <message>
+        <source>Clipboard</source>
+        <translation>Utklippstavle</translation>
+    </message>
+    <message>
         <source>Pictures</source>
         <translation>Bilder</translation>
     </message>
     <message>
         <source>Folder</source>
         <translation>Mappe</translation>
+    </message>
+    <message>
+        <source>Set a path on save</source>
+        <translation>Velg en mappe ved å lagre</translation>
+    </message>
+    <message>
+        <source>Change the path on save</source>
+        <translation>Endre stien ved å lagre</translation>
     </message>
     <message>
         <source>Format</source>
@@ -536,124 +670,12 @@ velge området du vil opprette</translation>
         <translation>BMP</translation>
     </message>
     <message>
-        <source>MKV</source>
-        <translation>MKV</translation>
-    </message>
-    <message>
-        <source>Clipboard</source>
-        <translation>Utklippstavle</translation>
-    </message>
-    <message>
-        <source>Show pointer</source>
-        <translation>Vis pointer</translation>
-    </message>
-    <message>
-        <source>Extract Text</source>
-        <translation>Hent ut tekst</translation>
-    </message>
-    <message>
-        <source>Show keystroke (K)</source>
-        <translation>Vis tastetrykk (K)</translation>
-    </message>
-    <message>
-        <source>Settings</source>
-        <translation>Innstillinger</translation>
-    </message>
-    <message>
-        <source>Settings (F3)</source>
-        <translation>Innstillinger (F3)</translation>
-    </message>
-    <message>
-        <source>Blur (B)</source>
-        <translation>Blurr (B)</translation>
-    </message>
-    <message>
-        <source>Text (T)</source>
-        <translation>Tekst (T)</translation>
-    </message>
-    <message>
-        <source>Scrollshot (Alt+I）</source>
-        <translation>Scrollshot (Alt+I)</translation>
-    </message>
-    <message>
-        <source>Extract text (Alt+O）</source>
-        <translation>Opphøfe tekst (Alt+O)</translation>
-    </message>
-    <message>
-        <source>Undo (Ctrl+Z)</source>
-        <translation>Angre (Ctrl+Z)</translation>
-    </message>
-    <message>
-        <source>Screenshot</source>
-        <translation>Skjermbilde</translation>
-    </message>
-    <message>
-        <source>Pin screenshots (Alt+P）</source>
-        <translation>Fikse skjermbilder (Alt+P)</translation>
-    </message>
-    <message>
-        <source>Record</source>
-        <translation>Opprett</translation>
-    </message>
-    <message>
-        <source>Pencil (P)</source>
-        <translation>Blyant (P)</translation>
-    </message>
-    <message>
-        <source>Turn on camera (C)</source>
-        <translation>Tenn kamera (C)</translation>
-    </message>
-    <message>
         <source>Border Effects</source>
         <translation>Kanteffekter</translation>
     </message>
     <message>
         <source>None</source>
-        <translation>Ingenting</translation>
-    </message>
-    <message>
-        <source>Turn off camera (C)</source>
-        <translation>Slå av kamera (C)</translation>
-    </message>
-    <message>
-        <source>Hide Keystroke (K)</source>
-        <translation>Skjul tastetrykk (K)</translation>
-    </message>
-    <message>
-        <source>Show Keystroke (K)</source>
-        <translation>Vis tastetrykk (K)</translation>
-    </message>
-    <message>
-        <source>webm</source>
-        <translation>webm</translation>
-    </message>
-    <message>
-        <source>Videos</source>
-        <translation>Videoer</translation>
-    </message>
-    <message>
-        <source>Rectangle (R)
-Press and hold Shift to draw a square</source>
-        <translation>Rektangel (R)
-Hold shift for å tegne en firkant</translation>
-    </message>
-    <message>
-        <source>Ellipse (O)
-Press and hold Shift to draw a circle</source>
-        <translation>Ellipse (O)
-Hold shift for å tegne en sirkel</translation>
-    </message>
-    <message>
-        <source>Line (L)
-Press and hold Shift to draw a vertical or horizontal line</source>
-        <translation>Linje (L)
-Hold shift for å tegne en vertikal eller horisontal linje</translation>
-    </message>
-    <message>
-        <source>Arrow (X)
-Press and hold Shift to draw a vertical or horizontal arrow</source>
-        <translation>Pil (X)
-Hold shift for å tegne en vertikal eller horisontal pil</translation>
+        <translation>Ingen</translation>
     </message>
     <message>
         <source>Shadow</source>
@@ -661,31 +683,15 @@ Hold shift for å tegne en vertikal eller horisontal pil</translation>
     </message>
     <message>
         <source>Border</source>
-        <translation>Ramme</translation>
+        <translation>Kant</translation>
     </message>
     <message>
         <source>Device</source>
         <translation>Enhet</translation>
     </message>
     <message>
-        <source>Sound</source>
-        <translation>Lyd</translation>
-    </message>
-    <message>
-        <source>System audio</source>
-        <translation>Systemlyd</translation>
-    </message>
-    <message>
-        <source>Show click</source>
-        <translation>Vis klikk</translation>
-    </message>
-    <message>
-        <source>Set a path on save</source>
-        <translation>Velg en plassering ved lagring</translation>
-    </message>
-    <message>
-        <source>Change the path on save</source>
-        <translation>Endre plasseringen ved lagring</translation>
+        <source>Extract Text</source>
+        <translation>Opphøne tekst</translation>
     </message>
 </context>
 <context>
@@ -703,14 +709,14 @@ Hold shift for å tegne en vertikal eller horisontal pil</translation>
     <name>TopTips</name>
     <message>
         <source> Adjust the recording area within %1*%2 to get better video effect</source>
-        <translation>Justér oppfølgingen innenfor %1*%2 for å få bedre videoeffekt</translation>
+        <translation>Justér opphøningsområdet innen %1*%2 for å få bedre videoeffekt</translation>
     </message>
 </context>
 <context>
     <name>Utils</name>
     <message>
         <source>Screen recording is not supported at present</source>
-        <translation>Skrimning er ikke støttet i dette tilfellet</translation>
+        <translation>Skjermopptak støttes ikke i tilfelle</translation>
     </message>
     <message>
         <source>Exit</source>
@@ -721,7 +727,7 @@ Hold shift for å tegne en vertikal eller horisontal pil</translation>
     <name>VoiceRecordProcess</name>
     <message>
         <source>New recording</source>
-        <translation>Ny opptag</translation>
+        <translation>Nytt opptak</translation>
     </message>
 </context>
 </TS>

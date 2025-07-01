@@ -29,11 +29,11 @@ or press the shortcut again to stop recording</translation>
     <name>MainToolWidget</name>
     <message>
         <source>Record</source>
-        <translation type="unfinished">Record</translation>
+        <translation>Record</translation>
     </message>
     <message>
         <source>Screenshot</source>
-        <translation type="unfinished">Screenshot</translation>
+        <translation>Screenshot</translation>
     </message>
 </context>
 <context>
@@ -107,16 +107,16 @@ or press the shortcut again to stop recording</translation>
         <translation>Scrollshot</translation>
     </message>
     <message>
-        <source>Open Folder</source>
-        <translation>Open Folder</translation>
-    </message>
-    <message>
         <source>Pin Screenshots</source>
         <translation>Pin Screenshots</translation>
     </message>
     <message>
         <source>deepin-screen-recorder</source>
-        <translation type="unfinished"></translation>
+        <translation>deepin-screen-recorder</translation>
+    </message>
+    <message>
+        <source>Open Folder</source>
+        <translation type="unfinished">Open Folder</translation>
     </message>
 </context>
 <context>
@@ -346,6 +346,10 @@ or press the shortcut again to stop recording</translation>
         <translation>Display shortcuts</translation>
     </message>
     <message>
+        <source>Sound</source>
+        <translation>Sound</translation>
+    </message>
+    <message>
         <source>Keystroke</source>
         <translation>Keystroke</translation>
     </message>
@@ -366,6 +370,10 @@ or press the shortcut again to stop recording</translation>
         <translation>Start/Recording</translation>
     </message>
     <message>
+        <source>Mouse</source>
+        <translation>Mouse</translation>
+    </message>
+    <message>
         <source>Tools</source>
         <translation>Tools</translation>
     </message>
@@ -382,24 +390,16 @@ or press the shortcut again to stop recording</translation>
         <translation>Pin screenshots</translation>
     </message>
     <message>
-        <source>Start scrollshot</source>
-        <translation>Start scrollshot</translation>
-    </message>
-    <message>
         <source>Start OCR</source>
         <translation>Start OCR</translation>
     </message>
     <message>
+        <source>Start scrollshot</source>
+        <translation>Start scrollshot</translation>
+    </message>
+    <message>
         <source>Arrow</source>
-        <translation>Arrow</translation>
-    </message>
-    <message>
-        <source>Sound</source>
-        <translation>Sound</translation>
-    </message>
-    <message>
-        <source>Mouse</source>
-        <translation>Mouse</translation>
+        <translation type="unfinished">Arrow</translation>
     </message>
 </context>
 <context>
@@ -460,160 +460,60 @@ select the area to record</source>
 <context>
     <name>SubToolWidget</name>
     <message>
-        <source>Microphone</source>
-        <translation>Microphone</translation>
+        <source>Extract Text</source>
+        <translation type="unfinished">Extract Text</translation>
     </message>
     <message>
         <source>Options</source>
-        <translation>Options</translation>
-    </message>
-    <message>
-        <source>Format:</source>
-        <translation>Format:</translation>
-    </message>
-    <message>
-        <source>GIF</source>
-        <translation>GIF</translation>
-    </message>
-    <message>
-        <source>MP4</source>
-        <translation>MP4</translation>
-    </message>
-    <message>
-        <source>FPS:</source>
-        <translation>FPS:</translation>
-    </message>
-    <message>
-        <source>5 fps</source>
-        <translation>5 fps</translation>
-    </message>
-    <message>
-        <source>10 fps</source>
-        <translation>10 fps</translation>
-    </message>
-    <message>
-        <source>20 fps</source>
-        <translation>20 fps</translation>
-    </message>
-    <message>
-        <source>24 fps</source>
-        <translation>24 fps</translation>
-    </message>
-    <message>
-        <source>30 fps</source>
-        <translation>30 fps</translation>
-    </message>
-    <message>
-        <source>Save to</source>
-        <translation>Save to</translation>
-    </message>
-    <message>
-        <source>Desktop</source>
-        <translation>Desktop</translation>
-    </message>
-    <message>
-        <source>Pictures</source>
-        <translation>Pictures</translation>
+        <translation type="unfinished">Options</translation>
     </message>
     <message>
         <source>Folder</source>
-        <translation>Folder</translation>
+        <translation type="unfinished">Folder</translation>
     </message>
     <message>
-        <source>Format</source>
-        <translation>Format</translation>
+        <source>Set a path on save</source>
+        <translation type="unfinished">Set a path on save</translation>
     </message>
     <message>
-        <source>PNG</source>
-        <translation>PNG</translation>
+        <source>Save to</source>
+        <translation type="unfinished">Save to</translation>
     </message>
     <message>
-        <source>JPG</source>
-        <translation>JPG</translation>
+        <source>Desktop</source>
+        <translation type="unfinished">Desktop</translation>
     </message>
     <message>
-        <source>BMP</source>
-        <translation>BMP</translation>
-    </message>
-    <message>
-        <source>MKV</source>
-        <translation>MKV</translation>
+        <source>Pictures</source>
+        <translation type="unfinished">Pictures</translation>
     </message>
     <message>
         <source>Clipboard</source>
-        <translation>Clipboard</translation>
+        <translation type="unfinished">Clipboard</translation>
     </message>
     <message>
-        <source>Show pointer</source>
-        <translation>Show pointer</translation>
+        <source>Format</source>
+        <translation type="unfinished">Format</translation>
     </message>
     <message>
-        <source>Extract Text</source>
-        <translation>Extract Text</translation>
+        <source>PNG</source>
+        <translation type="unfinished">PNG</translation>
+    </message>
+    <message>
+        <source>JPG</source>
+        <translation type="unfinished">JPG</translation>
+    </message>
+    <message>
+        <source>BMP</source>
+        <translation type="unfinished">BMP</translation>
+    </message>
+    <message>
+        <source>Change the path on save</source>
+        <translation type="unfinished">Change the path on save</translation>
     </message>
     <message>
         <source>Show keystroke (K)</source>
         <translation>Show keystroke (K)</translation>
-    </message>
-    <message>
-        <source>Settings</source>
-        <translation>Settings</translation>
-    </message>
-    <message>
-        <source>Settings (F3)</source>
-        <translation>Settings (F3)</translation>
-    </message>
-    <message>
-        <source>Blur (B)</source>
-        <translation>Blur (B)</translation>
-    </message>
-    <message>
-        <source>Text (T)</source>
-        <translation>Text (T)</translation>
-    </message>
-    <message>
-        <source>Scrollshot (Alt+I）</source>
-        <translation>Scrollshot (Alt+I）</translation>
-    </message>
-    <message>
-        <source>Extract text (Alt+O）</source>
-        <translation>Extract text (Alt+O）</translation>
-    </message>
-    <message>
-        <source>Undo (Ctrl+Z)</source>
-        <translation>Undo (Ctrl+Z)</translation>
-    </message>
-    <message>
-        <source>Screenshot</source>
-        <translation>Screenshot</translation>
-    </message>
-    <message>
-        <source>Pin screenshots (Alt+P）</source>
-        <translation>Pin screenshots (Alt+P）</translation>
-    </message>
-    <message>
-        <source>Record</source>
-        <translation>Record</translation>
-    </message>
-    <message>
-        <source>Pencil (P)</source>
-        <translation>Pencil (P)</translation>
-    </message>
-    <message>
-        <source>Turn on camera (C)</source>
-        <translation>Turn on camera (C)</translation>
-    </message>
-    <message>
-        <source>Border Effects</source>
-        <translation>Border Effects</translation>
-    </message>
-    <message>
-        <source>None</source>
-        <translation>None</translation>
-    </message>
-    <message>
-        <source>Turn off camera (C)</source>
-        <translation>Turn off camera (C)</translation>
     </message>
     <message>
         <source>Hide Keystroke (K)</source>
@@ -624,12 +524,92 @@ select the area to record</source>
         <translation>Show Keystroke (K)</translation>
     </message>
     <message>
+        <source>Turn on camera (C)</source>
+        <translation>Turn on camera (C)</translation>
+    </message>
+    <message>
+        <source>Turn off camera (C)</source>
+        <translation>Turn off camera (C)</translation>
+    </message>
+    <message>
+        <source>Screenshot</source>
+        <translation type="unfinished">Screenshot</translation>
+    </message>
+    <message>
+        <source>Settings</source>
+        <translation type="unfinished">Settings</translation>
+    </message>
+    <message>
+        <source>Settings (F3)</source>
+        <translation>Settings (F3)</translation>
+    </message>
+    <message>
+        <source>Format:</source>
+        <translation type="unfinished">Format:</translation>
+    </message>
+    <message>
+        <source>GIF</source>
+        <translation type="unfinished">GIF</translation>
+    </message>
+    <message>
+        <source>MP4</source>
+        <translation type="unfinished">MP4</translation>
+    </message>
+    <message>
+        <source>MKV</source>
+        <translation type="unfinished">MKV</translation>
+    </message>
+    <message>
         <source>webm</source>
-        <translation>webm</translation>
+        <translation type="unfinished">webm</translation>
+    </message>
+    <message>
+        <source>FPS:</source>
+        <translation type="unfinished">FPS:</translation>
+    </message>
+    <message>
+        <source>5 fps</source>
+        <translation type="unfinished">5 fps</translation>
+    </message>
+    <message>
+        <source>10 fps</source>
+        <translation type="unfinished">10 fps</translation>
+    </message>
+    <message>
+        <source>20 fps</source>
+        <translation type="unfinished">20 fps</translation>
+    </message>
+    <message>
+        <source>24 fps</source>
+        <translation type="unfinished">24 fps</translation>
+    </message>
+    <message>
+        <source>30 fps</source>
+        <translation type="unfinished">30 fps</translation>
+    </message>
+    <message>
+        <source>Sound</source>
+        <translation type="unfinished">Sound</translation>
+    </message>
+    <message>
+        <source>Microphone</source>
+        <translation type="unfinished">Microphone</translation>
+    </message>
+    <message>
+        <source>System audio</source>
+        <translation>System audio</translation>
+    </message>
+    <message>
+        <source>Show pointer</source>
+        <translation type="unfinished">Show pointer</translation>
+    </message>
+    <message>
+        <source>Show click</source>
+        <translation>Show click</translation>
     </message>
     <message>
         <source>Videos</source>
-        <translation>Videos</translation>
+        <translation type="unfinished">Videos</translation>
     </message>
     <message>
         <source>Rectangle (R)
@@ -656,6 +636,46 @@ Press and hold Shift to draw a vertical or horizontal arrow</source>
 Press and hold Shift to draw a vertical or horizontal arrow</translation>
     </message>
     <message>
+        <source>Pencil (P)</source>
+        <translation>Pencil (P)</translation>
+    </message>
+    <message>
+        <source>Blur (B)</source>
+        <translation>Blur (B)</translation>
+    </message>
+    <message>
+        <source>Text (T)</source>
+        <translation>Text (T)</translation>
+    </message>
+    <message>
+        <source>Scrollshot (Alt+I）</source>
+        <translation>Scrollshot (Alt+I)</translation>
+    </message>
+    <message>
+        <source>Extract text (Alt+O）</source>
+        <translation>Extract text (Alt+O)</translation>
+    </message>
+    <message>
+        <source>Pin screenshots (Alt+P）</source>
+        <translation>Pin screenshots (Alt+P)</translation>
+    </message>
+    <message>
+        <source>Undo (Ctrl+Z)</source>
+        <translation>Undo (Ctrl+Z)</translation>
+    </message>
+    <message>
+        <source>Record</source>
+        <translation type="unfinished">Record</translation>
+    </message>
+    <message>
+        <source>Border Effects</source>
+        <translation>Border Effects</translation>
+    </message>
+    <message>
+        <source>None</source>
+        <translation>None</translation>
+    </message>
+    <message>
         <source>Shadow</source>
         <translation>Shadow</translation>
     </message>
@@ -666,26 +686,6 @@ Press and hold Shift to draw a vertical or horizontal arrow</translation>
     <message>
         <source>Device</source>
         <translation>Device</translation>
-    </message>
-    <message>
-        <source>Sound</source>
-        <translation>Sound</translation>
-    </message>
-    <message>
-        <source>System audio</source>
-        <translation>System audio</translation>
-    </message>
-    <message>
-        <source>Show click</source>
-        <translation>Show click</translation>
-    </message>
-    <message>
-        <source>Set a path on save</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Change the path on save</source>
-        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

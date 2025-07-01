@@ -1,15 +1,18 @@
-<?xml version="1.0" ?><!DOCTYPE TS><TS version="2.1" language="ta">
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE TS>
+<TS version="2.1" language="ta">
 <context>
     <name>CountdownTooltip</name>
     <message>
         <source>Click the tray icon 
 or press the shortcut again to stop recording</source>
-        <translation>தடாக்கின் குறியை கிளிக் செய்யவும்
- அல்லது மீண்டும் சுட்டிக்காட்டி போட்டியை அழுத்தவும் பதிவெடுப்பை நிறுத்தவும்</translation>
+        <translation>|
+திரை குறியீட்டை கிளிக் செய்யவும்
+அல்லது மீண்டும் சுட்டியை அழுத்தி பதிவெடுப்பை நிறுத்தவும்</translation>
     </message>
     <message>
         <source>Do not rotate your screen during recording</source>
-        <translation>பதிவெடுப்பு போது உங்கள் திரையை சுழலாதீர்கள்</translation>
+        <translation>பதிவெடுப்பு போது உங்கள் திரையை சுழல வேண்டாம்</translation>
     </message>
 </context>
 <context>
@@ -42,11 +45,11 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Save failed. Please save it in your home directory.</source>
-        <translation>சேமிக்க வேண்டாம். உங்கள் வீடு இருக்கின்ற திசைவழியில் சேமிக்கவும்.</translation>
+        <translation>சேமிக்க வேண்டாம். உங்கள் பொது தொடர்பு திரையில் சேமிக்கவும்.</translation>
     </message>
     <message>
         <source>View</source>
-        <translation>உள்ளூர்</translation>
+        <translation>காண</translation>
     </message>
     <message>
         <source>Screenshot finished</source>
@@ -54,19 +57,19 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>PNG (*.png);;JPEG (*.jpg *.jpeg);;BMP (*.bmp)</source>
-        <translation>PNG (*.png);;JPEG (*.jpg *.jpeg);;BMP (*.bmp)</translation>
+        <translation>பிக் அன்பில் (*.png);;ஜிபிக் (*.jpg *.jpeg);;பிம் (*.bmp)</translation>
     </message>
     <message>
         <source>JPEG (*.jpg *.jpeg);;PNG (*.png);;BMP (*.bmp)</source>
-        <translation>JPEG (*.jpg *.jpeg);;PNG (*.png);;BMP (*.bmp)</translation>
+        <translation>ஜிபிக் (*.jpg *.jpeg);;பிக் அன்பில் (*.png);;பிம் (*.bmp)</translation>
     </message>
     <message>
         <source>BMP (*.bmp);;JPEG (*.jpg *.jpeg);;PNG (*.png)</source>
-        <translation>BMP (*.bmp);;JPEG (*.jpg *.jpeg);;PNG (*.png)</translation>
+        <translation>பிம் (*.bmp);;ஜிபிக் (*.jpg *.jpeg);;பிக் அன்பில் (*.png)</translation>
     </message>
     <message>
         <source>select-area</source>
-        <translation>பரிஸ்தலை தேர்வு செய்ய</translation>
+        <translation>பகுதி தேர்வு</translation>
     </message>
     <message>
         <source>Save</source>
@@ -74,7 +77,7 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Saved to %1</source>
-        <translation>மாற்றம் செய்யப்பட்டது %1</translation>
+        <translation>சேமிக்கப்பட்டது %1</translation>
     </message>
     <message>
         <source>Ignore</source>
@@ -82,16 +85,16 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Clipboard</source>
-        <translation>குறிப்பிடு</translation>
+        <translation>கோப்பை</translation>
     </message>
     <message>
         <source>Saving the screen recording file, please wait...</source>
-        <translation>திரை பதிவெடுப்பு பைலை சேமிக்கிறது, காத்திருக்கவும்...</translation>
+        <translation>திரை பதிவெடுப்பு கோப்பை சேமிக்கப்படுகிறது, பயன்பாட்டை காத்திருக்கவும்...</translation>
     </message>
     <message>
         <source>As the window effect is disabled during the process, the recording has to be stopped</source>
-        <translation>பதிவெடுப்பு போது புறப்படுத்தும் வின்டோ விளைவு நிறுத்தப்பட்டுள்ளது, பதிவெடுப்பு நிறுத்த வேண்டும்
- நிறுத்தவும்</translation>
+        <translation>&gt;
+பதிவெடுப்பு போது புறநிலை விளைவு நிர்விருத்தி செய்யப்பட்டுள்ளது, அதனால் பதிவெடுப்பு நிறுத்தப்பட வேண்டும்</translation>
     </message>
     <message>
         <source>Screenshot</source>
@@ -99,30 +102,30 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Screenshot failed.</source>
-        <translation>பதிவெடுப்பு தோல்வியில்</translation>
+        <translation>பதிவெடுப்பு பெறவில்லை.</translation>
     </message>
     <message>
         <source>Scrollshot</source>
-        <translation>நகர்த்தும் பதிவெடுப்பு</translation>
-    </message>
-    <message>
-        <source>Open Folder</source>
-        <translation>அட்டை திறந்து</translation>
+        <translation>முறையான பதிவெடுப்பு</translation>
     </message>
     <message>
         <source>Pin Screenshots</source>
-        <translation>பதிவெடுப்பு பற்றிய குறியை அட்டையில் சேர்க்க</translation>
+        <translation>பதிவெடுப்புகளை சிற்றிதழில் அமர்த்து</translation>
     </message>
     <message>
         <source>deepin-screen-recorder</source>
-        <translation>deepin-screen-recorder</translation>
+        <translation>டீபின்-ஸ்கிரீன்-ரிகார்டர்</translation>
+    </message>
+    <message>
+        <source>Open Folder</source>
+        <translation>குறிப்பிட்ட திரை</translation>
     </message>
 </context>
 <context>
     <name>MenuController</name>
     <message>
         <source>Undo</source>
-        <translation>திரும்பியெடு</translation>
+        <translation>திரும்பப்படுத்து</translation>
     </message>
     <message>
         <source>Save</source>
@@ -130,21 +133,21 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Exit</source>
-        <translation>விடு</translation>
+        <translation>முடிவு</translation>
     </message>
 </context>
 <context>
     <name>QObject</name>
     <message>
         <source>Pin Screenshots</source>
-        <translation>பதிவெடுப்பு பற்றிய குறியை அட்டையில் சேர்க்க</translation>
+        <translation>செய்திகளை பற்றிடு</translation>
     </message>
 </context>
 <context>
     <name>QuickPanelWidget</name>
     <message>
         <source>Screenshot</source>
-        <translation>திரைப்படம்</translation>
+        <translation>ஸ்கிரீன்சீன்</translation>
     </message>
     <message>
         <source>Record</source>
@@ -155,26 +158,26 @@ or press the shortcut again to stop recording</source>
     <name>RecordIconWidget</name>
     <message>
         <source>Screenshot</source>
-        <translation>திரைப்படம்</translation>
+        <translation>ஸ்கிரீன்சீன்</translation>
     </message>
     <message>
         <source>Recording</source>
-        <translation>பதிவு செய்யப்பட்டுள்ளது</translation>
+        <translation>பதிவு செய்யப்படுகிறது</translation>
     </message>
 </context>
 <context>
     <name>RecordProcess</name>
     <message>
         <source>View</source>
-        <translation>காண்க</translation>
+        <translation>உள்ளார்ந்து</translation>
     </message>
     <message>
         <source>Recording finished</source>
-        <translation>பதிவு முடிந்துள்ளது</translation>
+        <translation>பதிவு முடிவடைந்துள்ளது</translation>
     </message>
     <message>
         <source>Saved to %1</source>
-        <translation>பதிவு %1 க்கு சேமிக்கப்பட்டுள்ளது</translation>
+        <translation>%1 க்கு சேமிக்கப்பட்டுள்ளது</translation>
     </message>
     <message>
         <source>Record</source>
@@ -182,67 +185,67 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Open Folder</source>
-        <translation>மூடி திறந்து</translation>
+        <translation>கையேடு திறக்கவும்</translation>
     </message>
 </context>
 <context>
     <name>Screenshot</name>
     <message>
         <source>Screen Capture will start in %1 seconds</source>
-        <translation>%1 வினாடிகளுக்கு பின்னர் திரைப்படம் தொடங்கும்</translation>
+        <translation>%1 வினாடிகளுக்கு பின்பு ஸ்கிரீன் பிடிப்பு தொடங்கும்</translation>
     </message>
 </context>
 <context>
     <name>ScrollShotTip</name>
     <message>
         <source>Get help.</source>
-        <translation>துணை பெறுங்கள்</translation>
+        <translation>துணை பெறவும்</translation>
     </message>
     <message>
         <source>Failed to take a continuous screenshot.</source>
-        <translation>தொடர்ச்சி திரைப்படம் எடுக்க தவறியது</translation>
+        <translation>தொடர்ந்த ஸ்கிரீன்சீனை எடுக்க வேண்டிய தேவை இல் தோல்வியடைந்துள்ளது</translation>
     </message>
     <message>
         <source>Reached the bottom of the scroll area</source>
-        <translation>கிளிக்க் பகுதியின் கீழே எட்டியுள்ளது</translation>
+        <translation>மேல் கட்டுப்பாட்டு பகுதியின் கீழ் தொடர்கிறது</translation>
     </message>
     <message>
         <source>Reached the maximum length</source>
-        <translation>மோட்டாக்கு நீளத்தில் எட்டியுள்ளது</translation>
+        <translation>மோட்டாக்கு நீளம் அதிகமாக வேண்டிய தேவை இல் தொடர்கிறது</translation>
     </message>
     <message>
         <source>adjust the capture area</source>
-        <translation>திரைப்படம் எடுக்க பகுதியை மாற்றுங்கள்</translation>
+        <translation>பிடிப்பு பகுதியை மாற்றவும்</translation>
     </message>
     <message>
         <source>Scroll your mouse wheel or click to take a scrolling screenshot</source>
-        <translation>மோசை வீல் அல்லது கிளிக்க் செய்யுங்கள், தொடர்ச்சி திரைப்படம் எடுக்க</translation>
+        <translation>மோசே வீல் அல்லது கிளிக் செய்யவும் என்பது தொடர்ந்த ஸ்கிரீன்சீனை எடுக்க உதவும்</translation>
     </message>
     <message>
         <source>Slow down the scrolling speed</source>
-        <translation>தொடர்ச்சி திரைப்படம் வேகத்தை குறைக்கவும்</translation>
+        <translation>தொடர்ந்த ஸ்கிரீன்சீன் வேகத்தை குறைக்கவும்</translation>
     </message>
     <message>
         <source>Invalid area, click to </source>
-        <translation>தவறான பகுதி, கிளிக்க் செய்யவும்</translation>
+        <translation>தவறான பகுதி, கிளிக் செய்யவும்</translation>
     </message>
 </context>
 <context>
     <name>ShapesWidget</name>
     <message>
         <source>Input text here</source>
-        <translation>இங்கே பார்கள்</translation>
+        <translation>இங்கு பெயரை உள்ளிடவும்</translation>
     </message>
 </context>
 <context>
     <name>Shortcut</name>
     <message>
         <source>Start/Screenshot</source>
-        <translation>தொடங்கு/திரைப்படம்</translation>
+        <translation>தொடங்கு/ஸ்கிரீன்சீன்</translation>
     </message>
     <message>
         <source>Exit/Save</source>
-        <translation>முடிவு/சேமிக்க</translation>
+        <translation>விடு/சேமிக்கவும்</translation>
     </message>
     <message>
         <source>Size Adjustment</source>
@@ -254,35 +257,35 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Quick start</source>
-        <translation>விரைவாக தொடங்கு</translation>
+        <translation>விரைவாக தொடங்கவும்</translation>
     </message>
     <message>
         <source>Window screenshot</source>
-        <translation>நிலை திரைப்படம்</translation>
+        <translation>நிலை ஸ்கிரீன்சீன்</translation>
     </message>
     <message>
         <source>Delay screenshot</source>
-        <translation>காலம் தாமதமாக திரைப்படம்</translation>
+        <translation>கால தூரம் ஸ்கிரீன்சீன்</translation>
     </message>
     <message>
         <source>Full screenshot</source>
-        <translation>முழு திரைப்படம்</translation>
+        <translation>முழு ஸ்கிரீன்சீன்</translation>
     </message>
     <message>
         <source>Exit</source>
-        <translation>முடிவு</translation>
+        <translation>விடு</translation>
     </message>
     <message>
         <source>Save</source>
-        <translation>சேமிக்க</translation>
+        <translation>சேமிக்கவும்</translation>
     </message>
     <message>
         <source>Rectangle</source>
-        <translation>வட்டி</translation>
+        <translation>முக்கோணம்</translation>
     </message>
     <message>
         <source>Ellipse</source>
-        <translation>ஈலிப்சிஸ்</translation>
+        <translation>வட்டம்</translation>
     </message>
     <message>
         <source>Line</source>
@@ -294,67 +297,71 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Text</source>
-        <translation>தொகுதி</translation>
+        <translation>மெய்ப்பொருள்</translation>
     </message>
     <message>
         <source>Delete</source>
-        <translation>அழி</translation>
+        <translation>அகற்று</translation>
     </message>
     <message>
         <source>Undo</source>
-        <translation>திரும்ப அமை</translation>
+        <translation>திரும்பப்பெறு</translation>
     </message>
     <message>
         <source>Increase height up</source>
-        <translation>உயரம் அதிகரிக்கவும்</translation>
+        <translation>உயரம் மேலே அதிகரிக்க</translation>
     </message>
     <message>
         <source>Increase height down</source>
-        <translation>உயரம் அதிகரிக்கவும்</translation>
+        <translation>உயரம் கீழே அதிகரிக்க</translation>
     </message>
     <message>
         <source>Increase width left</source>
-        <translation>அகலம் அதிகரிக்கவும்</translation>
+        <translation>அகலம் இடது புறம் அதிகரிக்க</translation>
     </message>
     <message>
         <source>Increase width right</source>
-        <translation>அகலம் அதிகரிக்கவும்</translation>
+        <translation>அகலம் வலது புறம் அதிகரிக்க</translation>
     </message>
     <message>
         <source>Decrease height up</source>
-        <translation>உயரம் குறைக்கவும்</translation>
+        <translation>உயரம் மேலே குறைக்க</translation>
     </message>
     <message>
         <source>Decrease height down</source>
-        <translation>உயரம் குறைக்கவும்</translation>
+        <translation>உயரம் கீழே குறைக்க</translation>
     </message>
     <message>
         <source>Decrease width left</source>
-        <translation>அகலம் குறைக்கவும்</translation>
+        <translation>அகலம் இடது புறம் குறைக்க</translation>
     </message>
     <message>
         <source>Decrease width right</source>
-        <translation>அகலம் குறைக்கவும்</translation>
+        <translation>அகலம் வலது புறம் குறைக்க</translation>
     </message>
     <message>
         <source>Help</source>
-        <translation>முதல் உதவி</translation>
+        <translation>துணை</translation>
     </message>
     <message>
         <source>Display shortcuts</source>
-        <translation>சுரூட்களை காட்டு</translation>
+        <translation>சுருக்கம் காட்ட</translation>
+    </message>
+    <message>
+        <source>Sound</source>
+        <translation>சத்தம்</translation>
     </message>
     <message>
         <source>Keystroke</source>
-        <translation>கீயஸ்ட்ரோ</translation>
+        <translation>கீய்ஸ்ட்ரோக்</translation>
     </message>
     <message>
         <source>Webcam</source>
-        <translation>வீடியோ கேம்</translation>
+        <translation>வெப்கேம்</translation>
     </message>
     <message>
         <source>Start recording</source>
-        <translation>பதிவெடுத்தலை ஆரம்பிக்கவும்</translation>
+        <translation>பதிவு ஆரம்பிக்க</translation>
     </message>
     <message>
         <source>Options</source>
@@ -362,50 +369,46 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Start/Recording</source>
-        <translation>ஆரம்பிக்க/பதிவெடுத்தல்</translation>
-    </message>
-    <message>
-        <source>Tools</source>
-        <translation>அருந்தை</translation>
-    </message>
-    <message>
-        <source>Extract text</source>
-        <translation>தொகுதி மீட்டெடு</translation>
-    </message>
-    <message>
-        <source>Scrollshot</source>
-        <translation>காட்டுதல்</translation>
-    </message>
-    <message>
-        <source>Pin screenshots</source>
-        <translation>சிர்க்க்ஷாட்டுகளை சிலிப்பு</translation>
-    </message>
-    <message>
-        <source>Start scrollshot</source>
-        <translation>காட்டுதலை ஆரம்பிக்கவும்</translation>
-    </message>
-    <message>
-        <source>Start OCR</source>
-        <translation>OCR ஆரம்பிக்கவும்</translation>
-    </message>
-    <message>
-        <source>Arrow</source>
-        <translation>முன்னேற்றம்</translation>
-    </message>
-    <message>
-        <source>Sound</source>
-        <translation>சத்தம்</translation>
+        <translation>பதிவு/ஆரம்பிக்க</translation>
     </message>
     <message>
         <source>Mouse</source>
         <translation>மௌச்</translation>
+    </message>
+    <message>
+        <source>Tools</source>
+        <translation>அரங்கேற்று</translation>
+    </message>
+    <message>
+        <source>Extract text</source>
+        <translation>மெய்ப்பொருள் பிரிக்க</translation>
+    </message>
+    <message>
+        <source>Scrollshot</source>
+        <translation>கோல்ச்ஹாட்</translation>
+    </message>
+    <message>
+        <source>Pin screenshots</source>
+        <translation>சிற்றினி பெட்டிக்கு சிற்றினி பெட்டி செய்க</translation>
+    </message>
+    <message>
+        <source>Start OCR</source>
+        <translation>OCR ஆரம்பிக்க</translation>
+    </message>
+    <message>
+        <source>Start scrollshot</source>
+        <translation>கோல்ச்ஹாட் ஆரம்பிக்க</translation>
+    </message>
+    <message>
+        <source>Arrow</source>
+        <translation>மேல் குறிப்பு</translation>
     </message>
 </context>
 <context>
     <name>ShotStartPlugin</name>
     <message>
         <source>Screenshot</source>
-        <translation>படமெடு</translation>
+        <translation>புகைப்படம்</translation>
     </message>
 </context>
 <context>
@@ -420,32 +423,35 @@ or press the shortcut again to stop recording</source>
     <message>
         <source>Rectangle
 Press and hold Shift to draw a square</source>
-        <translation>செவ்வாழை
-Shift ஐ அழுத்தி வைத்திருந்து சதுரம் வரை</translation>
+        <translation>|-
+  செவ்வாய்
+  Shift ஐ அழுத்தி வைத்து சதுரம் வரை</translation>
     </message>
     <message>
         <source>Ellipse
 Press and hold Shift to draw a circle</source>
-        <translation>வட்டமெடு
-Shift ஐ அழுத்தி வைத்திருந்து வட்டம் வரை</translation>
+        <translation>|-
+  பரவளையம்
+  Shift ஐ அழுத்தி வைத்து வட்டம் வரை</translation>
     </message>
     <message>
         <source>Brush
 Press and hold Shift to draw a straight line</source>
-        <translation>கோடு
-Shift ஐ அழுத்தி வைத்திருந்து கோடு வரை</translation>
+        <translation>|-
+  பூச்சு
+  Shift ஐ அழுத்தி வைத்து கோடு வரை</translation>
     </message>
     <message>
         <source>Adjust blur strength (Scroll to adjust it)</source>
-        <translation>நுண்ணோர்மை அளவை மாற்ற (அதை மாற்ற சூழ்ச்சி செய்யவும்)</translation>
+        <translation>புதர்ப்பு தெளிவை மாற்ற (தொடர்ந்து மாற்ற)</translation>
     </message>
     <message>
         <source>Adjust brush size (Scroll to adjust it)</source>
-        <translation>கோடு அளவை மாற்ற (அதை மாற்ற சூழ்ச்சி செய்யவும்)</translation>
+        <translation>பூச்சு அளவை மாற்ற (தொடர்ந்து மாற்ற)</translation>
     </message>
     <message>
         <source>Adjust text size (Scroll to adjust it)</source>
-        <translation>மென்பொருள் அளவை மாற்ற (அதை மாற்ற சூழ்ச்சி செய்யவும்)</translation>
+        <translation>குறிப்பு அளவை மாற்ற (தொடர்ந்து மாற்ற)</translation>
     </message>
 </context>
 <context>
@@ -453,55 +459,112 @@ Shift ஐ அழுத்தி வைத்திருந்து கோட�
     <message>
         <source>Click or drag to
 select the area to record</source>
-        <translation>கிளிக் செய்யவும் அல்லது இழுக்கவும்
-பதிவு செய்ய தேர்வு செய்யவும்</translation>
+        <translation>|-
+  கிளிக் அல்லது கிளிக் செய்ய
+  பதிவு செய்ய பகுதியை தேர்வு செய்ய</translation>
     </message>
 </context>
 <context>
     <name>SubToolWidget</name>
     <message>
+        <source>Show keystroke (K)</source>
+        <translation>குறிப்பு கிளிக் (K)</translation>
+    </message>
+    <message>
+        <source>Hide Keystroke (K)</source>
+        <translation>குறிப்பு கிளிக் அகற்ற (K)</translation>
+    </message>
+    <message>
+        <source>Show Keystroke (K)</source>
+        <translation>குறிப்பு கிளிக் (K)</translation>
+    </message>
+    <message>
+        <source>Turn on camera (C)</source>
+        <translation>கேமரா தெரிவு செய்ய (C)</translation>
+    </message>
+    <message>
+        <source>Turn off camera (C)</source>
+        <translation>கேமரா அகற்ற (C)</translation>
+    </message>
+    <message>
+        <source>Screenshot</source>
+        <translation>புகைப்படம்</translation>
+    </message>
+    <message>
+        <source>Settings</source>
+        <translation>அமைப்புகள்</translation>
+    </message>
+    <message>
+        <source>Settings (F3)</source>
+        <translation>அமைப்புகள் (F3)</translation>
+    </message>
+    <message>
+        <source>Format:</source>
+        <translation>&apos;பார்மாட்:&apos;</translation>
+    </message>
+    <message>
+        <source>GIF</source>
+        <translation>ஜிபி.ஈ</translation>
+    </message>
+    <message>
+        <source>MP4</source>
+        <translation>எம்பி.அ</translation>
+    </message>
+    <message>
+        <source>MKV</source>
+        <translation>எம்க்வி</translation>
+    </message>
+    <message>
+        <source>webm</source>
+        <translation>வெப்ம்</translation>
+    </message>
+    <message>
+        <source>FPS:</source>
+        <translation>&apos;பிஎஃப்எஸ்ஃ&apos;</translation>
+    </message>
+    <message>
+        <source>5 fps</source>
+        <translation>5 பிஎஃப்எஸ்</translation>
+    </message>
+    <message>
+        <source>10 fps</source>
+        <translation>10 பிஎஃப்எஸ்</translation>
+    </message>
+    <message>
+        <source>20 fps</source>
+        <translation>20 பிஎஃப்எஸ்</translation>
+    </message>
+    <message>
+        <source>24 fps</source>
+        <translation>24 பிஎஃப்எஸ்</translation>
+    </message>
+    <message>
+        <source>30 fps</source>
+        <translation>30 பிஎஃப்எஸ்</translation>
+    </message>
+    <message>
+        <source>Sound</source>
+        <translation>சிறிப்பு</translation>
+    </message>
+    <message>
         <source>Microphone</source>
-        <translation>மைக்ரோஃபோன்</translation>
+        <translation>மீக்ரோஃபோன்</translation>
+    </message>
+    <message>
+        <source>System audio</source>
+        <translation>சிஸ்டம் ஆடியோ</translation>
     </message>
     <message>
         <source>Options</source>
         <translation>விருப்பங்கள்</translation>
     </message>
     <message>
-        <source>Format:</source>
-        <translation>பிராம்ட்:</translation>
+        <source>Show pointer</source>
+        <translation>நிரூபிக்கவும்</translation>
     </message>
     <message>
-        <source>GIF</source>
-        <translation>ஜிஎஃப்</translation>
-    </message>
-    <message>
-        <source>MP4</source>
-        <translation>எம்பி4</translation>
-    </message>
-    <message>
-        <source>FPS:</source>
-        <translation>எஃப்பிஎஸ்ஃ</translation>
-    </message>
-    <message>
-        <source>5 fps</source>
-        <translation>5 எஃப்பிஎஸ்</translation>
-    </message>
-    <message>
-        <source>10 fps</source>
-        <translation>10 எஃப்பிஎஸ்</translation>
-    </message>
-    <message>
-        <source>20 fps</source>
-        <translation>20 எஃப்பிஎஸ்</translation>
-    </message>
-    <message>
-        <source>24 fps</source>
-        <translation>24 எஃப்பிஎஸ்</translation>
-    </message>
-    <message>
-        <source>30 fps</source>
-        <translation>30 எஃப்பிஎஸ்</translation>
+        <source>Show click</source>
+        <translation>கிளிக் காட்டவும்</translation>
     </message>
     <message>
         <source>Save to</source>
@@ -509,19 +572,91 @@ select the area to record</source>
     </message>
     <message>
         <source>Desktop</source>
-        <translation>டேட்டாப்</translation>
+        <translation>டெஸ்க்டாப்</translation>
+    </message>
+    <message>
+        <source>Videos</source>
+        <translation>வினைடியோக்கள்</translation>
+    </message>
+    <message>
+        <source>Rectangle (R)
+Press and hold Shift to draw a square</source>
+        <translation>செவ்வாய்ப் பட்டை (R)
+Shift ஐ அழுத்தி விட்டு இருக்கும்போது ஒரு சதுரம் வரைக</translation>
+    </message>
+    <message>
+        <source>Ellipse (O)
+Press and hold Shift to draw a circle</source>
+        <translation>வட்டம் (O)
+Shift ஐ அழுத்தி விட்டு இருக்கும்போது ஒரு வட்டம் வரைக</translation>
+    </message>
+    <message>
+        <source>Line (L)
+Press and hold Shift to draw a vertical or horizontal line</source>
+        <translation>கோடு (L)
+Shift ஐ அழுத்தி விட்டு இருக்கும்போது செங்குத்து அல்லது கிடைமடை கோடு வரைக</translation>
+    </message>
+    <message>
+        <source>Arrow (X)
+Press and hold Shift to draw a vertical or horizontal arrow</source>
+        <translation>மேல் கோடு (X)
+Shift ஐ அழுத்தி விட்டு இருக்கும்போது செங்குத்து அல்லது கிடைமடை குறியீடு வரைக</translation>
+    </message>
+    <message>
+        <source>Pencil (P)</source>
+        <translation>கவசம் (P)</translation>
+    </message>
+    <message>
+        <source>Blur (B)</source>
+        <translation>செருகல் (B)</translation>
+    </message>
+    <message>
+        <source>Text (T)</source>
+        <translation>மேலோடு (T)</translation>
+    </message>
+    <message>
+        <source>Scrollshot (Alt+I）</source>
+        <translation>சொல்லாட்டு (Alt+I)</translation>
+    </message>
+    <message>
+        <source>Extract text (Alt+O）</source>
+        <translation>மேலோடு பிரிக (Alt+O)</translation>
+    </message>
+    <message>
+        <source>Pin screenshots (Alt+P）</source>
+        <translation>சிர்க்ரீன் பிடிக்கவும் (Alt+P)</translation>
+    </message>
+    <message>
+        <source>Undo (Ctrl+Z)</source>
+        <translation>திரும்ப அழிக்கவும் (Ctrl+Z)</translation>
+    </message>
+    <message>
+        <source>Record</source>
+        <translation>பதிவு செய்க</translation>
+    </message>
+    <message>
+        <source>Clipboard</source>
+        <translation>கிளிப்பேட்</translation>
     </message>
     <message>
         <source>Pictures</source>
-        <translation>படங்கள்</translation>
+        <translation>புகைப்படங்கள்</translation>
     </message>
     <message>
         <source>Folder</source>
-        <translation>புத்தகம்</translation>
+        <translation>கோப்பை</translation>
+    </message>
+    <message>
+        <source>Set a path on save</source>
+        <translation>சேமிப்பதற்கு ஒரு பாதம் தீர்மானிக்கவும்</translation>
+    </message>
+    <message>
+        <source>Change the path on save</source>
+        <translation>சேமிப்பதற்கு பாதம் மாற்றவும்</translation>
     </message>
     <message>
         <source>Format</source>
-        <translation>பிராம்ட்</translation>
+        <translation>வடிவமைப்பு</translation>
     </message>
     <message>
         <source>PNG</source>
@@ -529,174 +664,42 @@ select the area to record</source>
     </message>
     <message>
         <source>JPG</source>
-        <translation>ஜிப்ஜி</translation>
+        <translation>ஜிபிஜி</translation>
     </message>
     <message>
         <source>BMP</source>
         <translation>பிஎம்பி</translation>
     </message>
     <message>
-        <source>MKV</source>
-        <translation>மெக்கிவி</translation>
-    </message>
-    <message>
-        <source>Clipboard</source>
-        <translation>கிளிப்பேட்</translation>
-    </message>
-    <message>
-        <source>Show pointer</source>
-        <translation>காட்டு குறியீடு</translation>
-    </message>
-    <message>
-        <source>Extract Text</source>
-        <translation>தேடு தெறி</translation>
-    </message>
-    <message>
-        <source>Show keystroke (K)</source>
-        <translation>குறியீடு காட்ட (K)</translation>
-    </message>
-    <message>
-        <source>Settings</source>
-        <translation>அம்பலங்கள்</translation>
-    </message>
-    <message>
-        <source>Settings (F3)</source>
-        <translation>அம்பலங்கள் (F3)</translation>
-    </message>
-    <message>
-        <source>Blur (B)</source>
-        <translation>மறைக்க (B)</translation>
-    </message>
-    <message>
-        <source>Text (T)</source>
-        <translation>தெறி (T)</translation>
-    </message>
-    <message>
-        <source>Scrollshot (Alt+I）</source>
-        <translation>கீழ் காட்டு (Alt+I)</translation>
-    </message>
-    <message>
-        <source>Extract text (Alt+O）</source>
-        <translation>தேடு தெறி (Alt+O)</translation>
-    </message>
-    <message>
-        <source>Undo (Ctrl+Z)</source>
-        <translation>திரும்ப தொடர (Ctrl+Z)</translation>
-    </message>
-    <message>
-        <source>Screenshot</source>
-        <translation>திரைப்படம்</translation>
-    </message>
-    <message>
-        <source>Pin screenshots (Alt+P）</source>
-        <translation>திரைப்படம் பற்றி பொருத்த (Alt+P)</translation>
-    </message>
-    <message>
-        <source>Record</source>
-        <translation>பதிவு செய்</translation>
-    </message>
-    <message>
-        <source>Pencil (P)</source>
-        <translation>கவசம் (P)</translation>
-    </message>
-    <message>
-        <source>Turn on camera (C)</source>
-        <translation>கேமரா தொடர (C)</translation>
-    </message>
-    <message>
         <source>Border Effects</source>
-        <translation>வரிசை விளைவுகள்</translation>
+        <translation>பெரிய விளைவுகள்</translation>
     </message>
     <message>
         <source>None</source>
         <translation>ஒன்றும் இல்லை</translation>
     </message>
     <message>
-        <source>Turn off camera (C)</source>
-        <translation>கேமரா அணை (C)</translation>
-    </message>
-    <message>
-        <source>Hide Keystroke (K)</source>
-        <translation>குறியீடு மறை (K)</translation>
-    </message>
-    <message>
-        <source>Show Keystroke (K)</source>
-        <translation>குறியீடு காட்ட (K)</translation>
-    </message>
-    <message>
-        <source>webm</source>
-        <translation>வெப்ம்</translation>
-    </message>
-    <message>
-        <source>Videos</source>
-        <translation>வினைகள்</translation>
-    </message>
-    <message>
-        <source>Rectangle (R)
-Press and hold Shift to draw a square</source>
-        <translation>|-
-வட்டி (R)
-Shiftஐ அழுத்தி வைத்து சதுரம் வரைந்து பிடிக்கவும்</translation>
-    </message>
-    <message>
-        <source>Ellipse (O)
-Press and hold Shift to draw a circle</source>
-        <translation>|-
-வட்டி (O)
-Shiftஐ அழுத்தி வைத்து வட்டம் வரைந்து பிடிக்கவும்</translation>
-    </message>
-    <message>
-        <source>Line (L)
-Press and hold Shift to draw a vertical or horizontal line</source>
-        <translation>|-
-கோடு (L)
-Shiftஐ அழுத்தி வைத்து குறுக்கு அல்லது நேர்க்கோடு வரைந்து பிடிக்கவும்</translation>
-    </message>
-    <message>
-        <source>Arrow (X)
-Press and hold Shift to draw a vertical or horizontal arrow</source>
-        <translation>|-
-குறியீடு (X)
-Shiftஐ அழுத்தி வைத்து குறுக்கு அல்லது நேர்க்கோடு குறியீடு வரைந்து பிடிக்கவும்</translation>
-    </message>
-    <message>
         <source>Shadow</source>
-        <translation>நிலை</translation>
+        <translation>ஒளியின் மேல்</translation>
     </message>
     <message>
         <source>Border</source>
-        <translation>வரி</translation>
+        <translation>வரைவு</translation>
     </message>
     <message>
         <source>Device</source>
-        <translation>அமைப்பு</translation>
+        <translation>அகராதி</translation>
     </message>
     <message>
-        <source>Sound</source>
-        <translation>சத்தம்</translation>
-    </message>
-    <message>
-        <source>System audio</source>
-        <translation>முதன்மை ஒலியை</translation>
-    </message>
-    <message>
-        <source>Show click</source>
-        <translation>கிளிக் காட்டு</translation>
-    </message>
-    <message>
-        <source>Set a path on save</source>
-        <translation>பாதம் சேமி போது நிர்ணயிக்கவும்</translation>
-    </message>
-    <message>
-        <source>Change the path on save</source>
-        <translation>பாதம் சேமி போது மாற்றவும்</translation>
+        <source>Extract Text</source>
+        <translation>உள்ளடக்கிய பொருள்</translation>
     </message>
 </context>
 <context>
     <name>ToolBarWidget</name>
     <message>
         <source>Close (Esc)</source>
-        <translation>மூடு (Esc)</translation>
+        <translation>மூடி (Esc)</translation>
     </message>
     <message>
         <source>OK (Enter)</source>
@@ -707,25 +710,25 @@ Shiftஐ அழுத்தி வைத்து குறுக்கு அ�
     <name>TopTips</name>
     <message>
         <source> Adjust the recording area within %1*%2 to get better video effect</source>
-        <translation>மேலும் தற்போதைய %1*%2 இனுடைய பதிவு பகுதியை மாற்றி, உயர்தர விரைவு பாதிப்பை பெறவும்</translation>
+        <translation>உங்கள் பதிவேடு பகுதியை %1*%2 இனுடையதாக மாற்றி, சிறந்த வீடியோ பாதிப்பை பெறவும்</translation>
     </message>
 </context>
 <context>
     <name>Utils</name>
     <message>
         <source>Screen recording is not supported at present</source>
-        <translation>தற்போதைய தரத்தில் திரைப்பதிவு ஆதரிக்கப்படவில்லை</translation>
+        <translation>திரைப்பதிவேடு தற்போது ஆதரிக்கப்படவில்லை</translation>
     </message>
     <message>
         <source>Exit</source>
-        <translation>முடிவு</translation>
+        <translation>விடு</translation>
     </message>
 </context>
 <context>
     <name>VoiceRecordProcess</name>
     <message>
         <source>New recording</source>
-        <translation>புதிய பதிவு</translation>
+        <translation>புதிய பதிவேடு</translation>
     </message>
 </context>
 </TS>

@@ -1,4 +1,6 @@
-<?xml version="1.0" ?><!DOCTYPE TS><TS version="2.1" language="bo">
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE TS>
+<TS version="2.1" language="bo">
 <context>
     <name>CountdownTooltip</name>
     <message>
@@ -105,16 +107,16 @@ or press the shortcut again to stop recording</source>
         <translation>འགུལ་ནས་ཡོལ་པར་བླངས།</translation>
     </message>
     <message>
-        <source>Open Folder</source>
-        <translation>ཡིག་ཁུག་ཁ་ཕྱེ།</translation>
-    </message>
-    <message>
         <source>Pin Screenshots</source>
         <translation>སྦྱར་རིས།</translation>
     </message>
     <message>
         <source>deepin-screen-recorder</source>
-        <translation>deepin-screen-recorder</translation>
+        <translation>དེའུ་སྔོན་གྱི་རྗེས་འཇུག་བཟོ་སྒྲིག་ཆ་</translation>
+    </message>
+    <message>
+        <source>Open Folder</source>
+        <translation>ཡིག་ཁུག་ཁ་ཕྱེ།</translation>
     </message>
 </context>
 <context>
@@ -143,22 +145,22 @@ or press the shortcut again to stop recording</source>
     <name>QuickPanelWidget</name>
     <message>
         <source>Screenshot</source>
-        <translation>གཞིར་འོག</translation>
+        <translation>བརྙན་བཤུས།</translation>
     </message>
     <message>
         <source>Record</source>
-        <translation>གསར་འོག</translation>
+        <translation>བརྙན་ཕབ།</translation>
     </message>
 </context>
 <context>
     <name>RecordIconWidget</name>
     <message>
         <source>Screenshot</source>
-        <translation>གཞིར་འོག</translation>
+        <translation>བརྙན་བཤུས།</translation>
     </message>
     <message>
         <source>Recording</source>
-        <translation>གསར་འོག་བཟོ་སྐབས</translation>
+        <translation type="unfinished">བརྙན་ཕབ།</translation>
     </message>
 </context>
 <context>
@@ -344,6 +346,10 @@ or press the shortcut again to stop recording</source>
         <translation>མྱུར་མཐེབ་གསལ་བ།</translation>
     </message>
     <message>
+        <source>Sound</source>
+        <translation>སྒྲ་འབེབས།</translation>
+    </message>
+    <message>
         <source>Keystroke</source>
         <translation>མཐེབ་གནོན།</translation>
     </message>
@@ -364,6 +370,10 @@ or press the shortcut again to stop recording</source>
         <translation>བརྙན་འབེབས་དང་འགོ་སློང་།</translation>
     </message>
     <message>
+        <source>Mouse</source>
+        <translation>ཕབ་བཟོའི་ཙི་གུ།</translation>
+    </message>
+    <message>
         <source>Tools</source>
         <translation>ཡོ་བྱད།</translation>
     </message>
@@ -380,24 +390,16 @@ or press the shortcut again to stop recording</source>
         <translation>སྦྱར་རིས།</translation>
     </message>
     <message>
-        <source>Start scrollshot</source>
-        <translation>འགུལ་ནས་བཪྙན་ལེན་འགོ་སློང་།</translation>
-    </message>
-    <message>
         <source>Start OCR</source>
         <translation>པར་རིས་དབྱེ་འབྱེད་མགྱོགས་མྱུར་འགོ་སློང་།</translation>
     </message>
     <message>
+        <source>Start scrollshot</source>
+        <translation>འགུལ་ནས་བཪྙན་ལེན་འགོ་སློང་།</translation>
+    </message>
+    <message>
         <source>Arrow</source>
         <translation>མདའ་རྟགས།</translation>
-    </message>
-    <message>
-        <source>Sound</source>
-        <translation>སྒྲ་འབེབས།</translation>
-    </message>
-    <message>
-        <source>Mouse</source>
-        <translation>ཕབ་བཟོའི་ཙི་གུ།</translation>
     </message>
 </context>
 <context>
@@ -411,7 +413,7 @@ or press the shortcut again to stop recording</source>
     <name>ShotStartRecordPlugin</name>
     <message>
         <source>Record</source>
-        <translation>གསར་འོག</translation>
+        <translation>བརྙན་ཕབ།</translation>
     </message>
 </context>
 <context>
@@ -452,18 +454,42 @@ Shiftམནན་ནས་དྲང་ཐིག་འབྲི་ཐུབ།</t
     <message>
         <source>Click or drag to
 select the area to record</source>
-        <translation>གསར་འོག</translation>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>SubToolWidget</name>
     <message>
-        <source>Microphone</source>
-        <translation>སྐད་དུང་།</translation>
+        <source>Show keystroke (K)</source>
+        <translation>མཐེབ་གཅུས་Kམངོན་པ།</translation>
     </message>
     <message>
-        <source>Options</source>
-        <translation>གདམ་ག</translation>
+        <source>Hide Keystroke (K)</source>
+        <translation>མཐེབ་གཅུས་ཡིབ་པ་ (K)</translation>
+    </message>
+    <message>
+        <source>Show Keystroke (K)</source>
+        <translation>མཐེབ་གཅུས་མངོན་པ་ (K)</translation>
+    </message>
+    <message>
+        <source>Turn on camera (C)</source>
+        <translation>བཪྙན་མིག་ཁ་ཕྱེ།(C)</translation>
+    </message>
+    <message>
+        <source>Turn off camera (C)</source>
+        <translation>བཪྙན་མིག་ཁ་རྒྱོབ་ (C)</translation>
+    </message>
+    <message>
+        <source>Screenshot</source>
+        <translation>བརྙན་བཤུས།</translation>
+    </message>
+    <message>
+        <source>Settings</source>
+        <translation>སྒྲིག་བཀོད།</translation>
+    </message>
+    <message>
+        <source>Settings (F3)</source>
+        <translation>སྒྲིག་བཀོད་(F3)</translation>
     </message>
     <message>
         <source>Format:</source>
@@ -476,6 +502,14 @@ select the area to record</source>
     <message>
         <source>MP4</source>
         <translation>MP4</translation>
+    </message>
+    <message>
+        <source>MKV</source>
+        <translation>MKV</translation>
+    </message>
+    <message>
+        <source>webm</source>
+        <translation>webm</translation>
     </message>
     <message>
         <source>FPS:</source>
@@ -502,128 +536,36 @@ select the area to record</source>
         <translation>30 fps</translation>
     </message>
     <message>
-        <source>Save to</source>
-        <translation>དུ་ཉར་བ།</translation>
+        <source>Sound</source>
+        <translation>སྒྲ་འབེབས།</translation>
     </message>
     <message>
-        <source>Desktop</source>
-        <translation>ཅོག་ངོས།</translation>
+        <source>Microphone</source>
+        <translation>སྐད་དུང་།</translation>
     </message>
     <message>
-        <source>Pictures</source>
-        <translation>པར་རིས།</translation>
+        <source>System audio</source>
+        <translation>མ་ལག་སྒྲ་ཟློས།</translation>
     </message>
     <message>
-        <source>Folder</source>
-        <translation>དམིགས་བཙུགས་ས་གནས།</translation>
-    </message>
-    <message>
-        <source>Format</source>
-        <translation>རྣམ་བཞག་ </translation>
-    </message>
-    <message>
-        <source>PNG</source>
-        <translation>PNG</translation>
-    </message>
-    <message>
-        <source>JPG</source>
-        <translation>JPG</translation>
-    </message>
-    <message>
-        <source>BMP</source>
-        <translation>BMP</translation>
-    </message>
-    <message>
-        <source>MKV</source>
-        <translation>MKV</translation>
-    </message>
-    <message>
-        <source>Clipboard</source>
-        <translation>དྲས་སྦྱར་པང་།</translation>
+        <source>Options</source>
+        <translation>གདམ་ག</translation>
     </message>
     <message>
         <source>Show pointer</source>
         <translation>འོད་རྟགས་གསལ་བ།</translation>
     </message>
     <message>
-        <source>Extract Text</source>
-        <translation>ཡི་གེ་ངོས་འཛིན།</translation>
+        <source>Show click</source>
+        <translation>གནོན་པ་གསལ་བ།</translation>
     </message>
     <message>
-        <source>Show keystroke (K)</source>
-        <translation>མཐེབ་གཅུས་Kམངོན་པ།</translation>
+        <source>Save to</source>
+        <translation>དུ་ཉར་བ།</translation>
     </message>
     <message>
-        <source>Settings</source>
-        <translation>སྒྲིག་བཀོད།</translation>
-    </message>
-    <message>
-        <source>Settings (F3)</source>
-        <translation>སྒྲིག་བཀོད་(F3)</translation>
-    </message>
-    <message>
-        <source>Blur (B)</source>
-        <translation>རབ་རིབ། (B)</translation>
-    </message>
-    <message>
-        <source>Text (T)</source>
-        <translation>ཡི་གེ། (T)</translation>
-    </message>
-    <message>
-        <source>Scrollshot (Alt+I）</source>
-        <translation>འགྲིལ་ནས་པར་ལེན་ (Alt+I）</translation>
-    </message>
-    <message>
-        <source>Extract text (Alt+O）</source>
-        <translation>ཡི་གེ་ངོས་འཛིན་ Alt+O</translation>
-    </message>
-    <message>
-        <source>Undo (Ctrl+Z)</source>
-        <translation>ཕྱིར་འཐེན་ Ctrl+Z</translation>
-    </message>
-    <message>
-        <source>Screenshot</source>
-        <translation>བརྙན་བཤུས།</translation>
-    </message>
-    <message>
-        <source>Pin screenshots (Alt+P）</source>
-        <translation>སྦྱར་རིས་ (Alt+P）</translation>
-    </message>
-    <message>
-        <source>Record</source>
-        <translation>བརྙན་ཕབ།</translation>
-    </message>
-    <message>
-        <source>Pencil (P)</source>
-        <translation>པིར་སྨྱུག་ (P)</translation>
-    </message>
-    <message>
-        <source>Turn on camera (C)</source>
-        <translation>བཪྙན་མིག་ཁ་ཕྱེ།(C)</translation>
-    </message>
-    <message>
-        <source>Border Effects</source>
-        <translation>མཐའ་སྒྲོམ་ཕན་ནུས།</translation>
-    </message>
-    <message>
-        <source>None</source>
-        <translation>མཐའ་སྒྲོམ་མེད་པ།</translation>
-    </message>
-    <message>
-        <source>Turn off camera (C)</source>
-        <translation>བཪྙན་མིག་ཁ་རྒྱོབ་ (C)</translation>
-    </message>
-    <message>
-        <source>Hide Keystroke (K)</source>
-        <translation>མཐེབ་གཅུས་ཡིབ་པ་ (K)</translation>
-    </message>
-    <message>
-        <source>Show Keystroke (K)</source>
-        <translation>མཐེབ་གཅུས་མངོན་པ་ (K)</translation>
-    </message>
-    <message>
-        <source>webm</source>
-        <translation>webm</translation>
+        <source>Desktop</source>
+        <translation>ཅོག་ངོས།</translation>
     </message>
     <message>
         <source>Videos</source>
@@ -654,6 +596,82 @@ Press and hold Shift to draw a vertical or horizontal arrow</source>
 Shiftམནན་ནས་ཐད་དཔྱང་དང་ཆུ་སྙོམས་ཀྱི་དྲང་ཐིག་འབྲི་ཐུབ།</translation>
     </message>
     <message>
+        <source>Pencil (P)</source>
+        <translation>པིར་སྨྱུག་ (P)</translation>
+    </message>
+    <message>
+        <source>Blur (B)</source>
+        <translation>རབ་རིབ། (B)</translation>
+    </message>
+    <message>
+        <source>Text (T)</source>
+        <translation>ཡི་གེ། (T)</translation>
+    </message>
+    <message>
+        <source>Scrollshot (Alt+I）</source>
+        <translation>འགྲིལ་ནས་པར་ལེན་ (Alt+I）</translation>
+    </message>
+    <message>
+        <source>Extract text (Alt+O）</source>
+        <translation>ཡི་གེ་ངོས་འཛིན་ Alt+O</translation>
+    </message>
+    <message>
+        <source>Pin screenshots (Alt+P）</source>
+        <translation>སྦྱར་རིས་ (Alt+P）</translation>
+    </message>
+    <message>
+        <source>Undo (Ctrl+Z)</source>
+        <translation>ཕྱིར་འཐེན་ Ctrl+Z</translation>
+    </message>
+    <message>
+        <source>Record</source>
+        <translation>བརྙན་ཕབ།</translation>
+    </message>
+    <message>
+        <source>Clipboard</source>
+        <translation>དྲས་སྦྱར་པང་།</translation>
+    </message>
+    <message>
+        <source>Pictures</source>
+        <translation>པར་རིས།</translation>
+    </message>
+    <message>
+        <source>Folder</source>
+        <translation>དམིགས་བཙུགས་ས་གནས།</translation>
+    </message>
+    <message>
+        <source>Set a path on save</source>
+        <translation>ཉར་སྐབས་གནས་ས་སྒྲིག་འགོད་བྱེད་པ། </translation>
+    </message>
+    <message>
+        <source>Change the path on save</source>
+        <translation>ཉར་སྐབས་གནས་ས་གསར་སྒྱུར་བྱེད་པ།</translation>
+    </message>
+    <message>
+        <source>Format</source>
+        <translation>རྣམ་བཞག་ </translation>
+    </message>
+    <message>
+        <source>PNG</source>
+        <translation>PNG</translation>
+    </message>
+    <message>
+        <source>JPG</source>
+        <translation>JPG</translation>
+    </message>
+    <message>
+        <source>BMP</source>
+        <translation>BMP</translation>
+    </message>
+    <message>
+        <source>Border Effects</source>
+        <translation>མཐའ་སྒྲོམ་ཕན་ནུས།</translation>
+    </message>
+    <message>
+        <source>None</source>
+        <translation>མཐའ་སྒྲོམ་མེད་པ།</translation>
+    </message>
+    <message>
         <source>Shadow</source>
         <translation>བརྙན་སྟོན།</translation>
     </message>
@@ -666,24 +684,8 @@ Shiftམནན་ནས་ཐད་དཔྱང་དང་ཆུ་སྙོམ
         <translation>བཟོ་ལྟ།</translation>
     </message>
     <message>
-        <source>Sound</source>
-        <translation>སྒྲ་འབེབས།</translation>
-    </message>
-    <message>
-        <source>System audio</source>
-        <translation>མ་ལག་སྒྲ་ཟློས།</translation>
-    </message>
-    <message>
-        <source>Show click</source>
-        <translation>གནོན་པ་གསལ་བ།</translation>
-    </message>
-    <message>
-        <source>Set a path on save</source>
-        <translation>ཉར་སྐབས་གནས་ས་སྒྲིག་འགོད་བྱེད་པ། </translation>
-    </message>
-    <message>
-        <source>Change the path on save</source>
-        <translation>ཉར་སྐབས་གནས་ས་གསར་སྒྱུར་བྱེད་པ།</translation>
+        <source>Extract Text</source>
+        <translation>ཡི་གེ་ངོས་འཛིན།</translation>
     </message>
 </context>
 <context>
@@ -719,7 +721,7 @@ Shiftམནན་ནས་ཐད་དཔྱང་དང་ཆུ་སྙོམ
     <name>VoiceRecordProcess</name>
     <message>
         <source>New recording</source>
-        <translation>གསར་འོག་གི་གསར་གྱི</translation>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 </TS>

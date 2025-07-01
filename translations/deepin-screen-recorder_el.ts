@@ -1,22 +1,24 @@
-<?xml version="1.0" ?><!DOCTYPE TS><TS version="2.1" language="el">
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE TS>
+<TS version="2.1" language="el">
 <context>
     <name>CountdownTooltip</name>
     <message>
         <source>Click the tray icon 
 or press the shortcut again to stop recording</source>
-        <translation>Κάντε κλικ στο εικονίδιο του επιπέδου
-ή πατήστε το σύντομο πάλι για να σταματήσετε την καταγραφή</translation>
+        <translation>Κάντε κλικ στο εικονίδιο του τραπεζικού
+ή πατήστε το συντομεύτατο ξανά για να σταματήσετε την καταγραφή</translation>
     </message>
     <message>
         <source>Do not rotate your screen during recording</source>
-        <translation>Μην περιστρέψετε την οθόνη κατά τη διάρκεια της καταγραφής</translation>
+        <translation>Μην περιστρέψετε την οθόνη σας κατά τη διάρκεια της καταγραφής</translation>
     </message>
 </context>
 <context>
     <name>IconWidget</name>
     <message>
         <source>Screenshot</source>
-        <translation>Εικόνα</translation>
+        <translation>Σταματήματα</translation>
     </message>
     <message>
         <source>Recording</source>
@@ -27,42 +29,42 @@ or press the shortcut again to stop recording</source>
     <name>MainToolWidget</name>
     <message>
         <source>Record</source>
-        <translation>Καταγραφή</translation>
+        <translation>Καταγράφει</translation>
     </message>
     <message>
         <source>Screenshot</source>
-        <translation>Εικόνα</translation>
+        <translation>Σταματήματα</translation>
     </message>
 </context>
 <context>
     <name>MainWindow</name>
     <message>
         <source>Screen Capture</source>
-        <translation>Αντίγραφο οθόνης</translation>
+        <translation>Εικόνα Οθόνης</translation>
     </message>
     <message>
         <source>Save failed. Please save it in your home directory.</source>
-        <translation>Η αποθήκευση απέτυχε. Παρακαλώ αποθηκεύστε το στον κατάλογο του περιβάλλοντος.</translation>
+        <translation>Αποθήκευση απέτυχε. Παρακαλώ αποθηκεύστε το στον καταλόγο περιβάλλοντος σας.</translation>
     </message>
     <message>
         <source>View</source>
-        <translation>Εμφάνιση</translation>
+        <translation>Προβολή</translation>
     </message>
     <message>
         <source>Screenshot finished</source>
-        <translation>Η εικόνα ολοκληρώθηκε</translation>
+        <translation>Σταματήματα ολοκληρώθηκαν</translation>
     </message>
     <message>
         <source>PNG (*.png);;JPEG (*.jpg *.jpeg);;BMP (*.bmp)</source>
-        <translation>PNG (*.png);;JPEG (*.jpg *.jpeg);;BMP (*.bmp)</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>JPEG (*.jpg *.jpeg);;PNG (*.png);;BMP (*.bmp)</source>
-        <translation>JPEG (*.jpg *.jpeg);;PNG (*.png);;BMP (*.bmp)</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>BMP (*.bmp);;JPEG (*.jpg *.jpeg);;PNG (*.png)</source>
-        <translation>BMP (*.bmp);;JPEG (*.jpg *.jpeg);;PNG (*.png)</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>select-area</source>
@@ -78,51 +80,51 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Ignore</source>
-        <translation>Αγνόηση</translation>
+        <translation>Εγκαταλείψτε</translation>
     </message>
     <message>
         <source>Clipboard</source>
-        <translation>Πινακίδιο</translation>
+        <translation>Διατραβέλιο</translation>
     </message>
     <message>
         <source>Saving the screen recording file, please wait...</source>
-        <translation>Αποθήκευση του αρχείου αντίγραφου οθόνης, παρακαλώ περιμένετε...</translation>
+        <translation>Αποθήκευση του αρχείου καταγραφής οθόνης, παρακαλώ περιμένετε...</translation>
     </message>
     <message>
         <source>As the window effect is disabled during the process, the recording has to be stopped</source>
-        <translation>Ως το αποτύπωμα του παραθύρου είναι απενεργοποιημένο κατά τη διάρκεια της διαδικασίας, η καταγραφή πρέπει
+        <translation>Όπως ο αποστειρωτικός επίπτωτος είναι απενεργοποιημένος κατά τη διάρκεια του διαδικαστικού, η καταγραφή πρέπει
 να σταματήσει</translation>
     </message>
     <message>
         <source>Screenshot</source>
-        <translation>Εικόνα</translation>
+        <translation>Σταματήματα</translation>
     </message>
     <message>
         <source>Screenshot failed.</source>
-        <translation>Η εικόνα απέτυχε.</translation>
+        <translation>Σταματήματα απέτυχαν.</translation>
     </message>
     <message>
         <source>Scrollshot</source>
-        <translation>Σκρολ εικόνας</translation>
-    </message>
-    <message>
-        <source>Open Folder</source>
-        <translation>Άνοιγμα φακέλου</translation>
+        <translation>Σκρολσταματα</translation>
     </message>
     <message>
         <source>Pin Screenshots</source>
-        <translation>Κράτηση εικόνων</translation>
+        <translation>Σταματήματα σταθεροποιημένα</translation>
     </message>
     <message>
         <source>deepin-screen-recorder</source>
-        <translation>deepin-screen-recorder</translation>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Open Folder</source>
+        <translation>Άνοιγμα Καταλόγου</translation>
     </message>
 </context>
 <context>
     <name>MenuController</name>
     <message>
         <source>Undo</source>
-        <translation>Αναίρεση</translation>
+        <translation>Αναστροφή</translation>
     </message>
     <message>
         <source>Save</source>
@@ -137,14 +139,14 @@ or press the shortcut again to stop recording</source>
     <name>QObject</name>
     <message>
         <source>Pin Screenshots</source>
-        <translation>Κράτηση εικόνων</translation>
+        <translation>Συνδέστε φωτογραφίες</translation>
     </message>
 </context>
 <context>
     <name>QuickPanelWidget</name>
     <message>
         <source>Screenshot</source>
-        <translation>Εικόνα</translation>
+        <translation>Φωτογραφία</translation>
     </message>
     <message>
         <source>Record</source>
@@ -155,7 +157,7 @@ or press the shortcut again to stop recording</source>
     <name>RecordIconWidget</name>
     <message>
         <source>Screenshot</source>
-        <translation>Στιγμιότυπο οθόνης</translation>
+        <translation>Φωτογραφία</translation>
     </message>
     <message>
         <source>Recording</source>
@@ -174,7 +176,7 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Saved to %1</source>
-        <translation>Αποθηκεύτηκε στο %1</translation>
+        <translation>Αποθηκεύτε στο %1</translation>
     </message>
     <message>
         <source>Record</source>
@@ -196,11 +198,11 @@ or press the shortcut again to stop recording</source>
     <name>ScrollShotTip</name>
     <message>
         <source>Get help.</source>
-        <translation>Πάρε βοήθεια.</translation>
+        <translation>Πάρτε βοήθεια.</translation>
     </message>
     <message>
         <source>Failed to take a continuous screenshot.</source>
-        <translation>Αποτυχία στη λήψη συνεχούς στιγμιότυπου οθόνης.</translation>
+        <translation>Αποτυχία στη λήψη μιας συνεχούς φωτογραφίας.</translation>
     </message>
     <message>
         <source>Reached the bottom of the scroll area</source>
@@ -212,15 +214,15 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>adjust the capture area</source>
-        <translation>Ρυθμίστε την περιοχή ανάληψης</translation>
+        <translation>προσαρμόστε την περιοχή ανάληψης</translation>
     </message>
     <message>
         <source>Scroll your mouse wheel or click to take a scrolling screenshot</source>
-        <translation>Κυλήστε το τροχοειδές του ποντικιού ή κάντε κλικ για να πάρετε στιγμιότυπο οθόνης με κύλλιση</translation>
+        <translation>Κυλάτε το κουμπί του ποντικιού ή κάντε κλικ για να πάρετε μια συνεχόμενη φωτογραφία</translation>
     </message>
     <message>
         <source>Slow down the scrolling speed</source>
-        <translation>Ελαχιστοποιήστε την ταχύτητα κύλλισης</translation>
+        <translation>Γλυκαίνετε την ταχύτητα κύλλισης</translation>
     </message>
     <message>
         <source>Invalid area, click to </source>
@@ -231,14 +233,14 @@ or press the shortcut again to stop recording</source>
     <name>ShapesWidget</name>
     <message>
         <source>Input text here</source>
-        <translation>Εισαγείτε κείμενο εδώ</translation>
+        <translation>Εισαγάγετε κείμενο εδώ</translation>
     </message>
 </context>
 <context>
     <name>Shortcut</name>
     <message>
         <source>Start/Screenshot</source>
-        <translation>Εκκίνηση/Στιγμιότυπο οθόνης</translation>
+        <translation>Έναρξη/Φωτογραφία</translation>
     </message>
     <message>
         <source>Exit/Save</source>
@@ -254,19 +256,19 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Quick start</source>
-        <translation>Γρήγορη εκκίνηση</translation>
+        <translation>Γρήγορη έναρξη</translation>
     </message>
     <message>
         <source>Window screenshot</source>
-        <translation>Στιγμιότυπο παραθύρου</translation>
+        <translation>Φωτογραφία παραθύρου</translation>
     </message>
     <message>
         <source>Delay screenshot</source>
-        <translation>Στιγμιότυπο με καθυστέρηση</translation>
+        <translation>Φωτογραφία με καθυστέρηση</translation>
     </message>
     <message>
         <source>Full screenshot</source>
-        <translation>Πλήρες στιγμιότυπο</translation>
+        <translation>Πλήρης φωτογραφία</translation>
     </message>
     <message>
         <source>Exit</source>
@@ -282,7 +284,7 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Ellipse</source>
-        <translation>Ελλειπτικό</translation>
+        <translation>Ελλειψη</translation>
     </message>
     <message>
         <source>Line</source>
@@ -290,7 +292,7 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Pencil</source>
-        <translation>Μολύβδινο</translation>
+        <translation>Μολύβι</translation>
     </message>
     <message>
         <source>Text</source>
@@ -322,19 +324,19 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Decrease height up</source>
-        <translation>Μείωση ύψους προς τα πάνω</translation>
+        <translation>Ελάχιστη ύψους προς τα πάνω</translation>
     </message>
     <message>
         <source>Decrease height down</source>
-        <translation>Μείωση ύψους προς τα κάτω</translation>
+        <translation>Ελάχιστη ύψους προς τα κάτω</translation>
     </message>
     <message>
         <source>Decrease width left</source>
-        <translation>Μείωση πλάτους προς τα αριστερά</translation>
+        <translation>Ελάχιστη πλάτους προς τα αριστερά</translation>
     </message>
     <message>
         <source>Decrease width right</source>
-        <translation>Μείωση πλάτους προς τα δεξιά</translation>
+        <translation>Ελάχιστη πλάτους προς τα δεξιά</translation>
     </message>
     <message>
         <source>Help</source>
@@ -345,12 +347,16 @@ or press the shortcut again to stop recording</source>
         <translation>Προβολή συντομεύσεων</translation>
     </message>
     <message>
+        <source>Sound</source>
+        <translation>Ήχος</translation>
+    </message>
+    <message>
         <source>Keystroke</source>
         <translation>Πλήκτρο</translation>
     </message>
     <message>
         <source>Webcam</source>
-        <translation>Κάμερα</translation>
+        <translation>Webcam</translation>
     </message>
     <message>
         <source>Start recording</source>
@@ -358,11 +364,15 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Options</source>
-        <translation>Επιλογές</translation>
+        <translation>Επιlections</translation>
     </message>
     <message>
         <source>Start/Recording</source>
         <translation>Εκκίνηση/Εγγραφή</translation>
+    </message>
+    <message>
+        <source>Mouse</source>
+        <translation>Ποντίκι</translation>
     </message>
     <message>
         <source>Tools</source>
@@ -374,38 +384,30 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Scrollshot</source>
-        <translation>Κύρσο</translation>
+        <translation>Σκρολλσχότ</translation>
     </message>
     <message>
         <source>Pin screenshots</source>
-        <translation>Σταθμεύστε τις εικόνες</translation>
-    </message>
-    <message>
-        <source>Start scrollshot</source>
-        <translation>Εκκίνηση κύρσος</translation>
+        <translation>Κράτηση σχότων</translation>
     </message>
     <message>
         <source>Start OCR</source>
         <translation>Εκκίνηση OCR</translation>
     </message>
     <message>
+        <source>Start scrollshot</source>
+        <translation>Εκκίνηση σκρολλσχότ</translation>
+    </message>
+    <message>
         <source>Arrow</source>
         <translation>Βέλος</translation>
-    </message>
-    <message>
-        <source>Sound</source>
-        <translation>Ήχος</translation>
-    </message>
-    <message>
-        <source>Mouse</source>
-        <translation>Ποντίκι</translation>
     </message>
 </context>
 <context>
     <name>ShotStartPlugin</name>
     <message>
         <source>Screenshot</source>
-        <translation>Εικόνα</translation>
+        <translation>Σχότος</translation>
     </message>
 </context>
 <context>
@@ -420,32 +422,29 @@ or press the shortcut again to stop recording</source>
     <message>
         <source>Rectangle
 Press and hold Shift to draw a square</source>
-        <translation>Τετράγωνο
-Πατήστε και κρατήστε πατημένο το Shift για να σχεδιάσετε ένα τετράγωνο</translation>
+        <translation>Τετράγωνο</translation>
     </message>
     <message>
         <source>Ellipse
 Press and hold Shift to draw a circle</source>
-        <translation>Ελλειπσοειδές
-Πατήστε και κρατήστε πατημένο το Shift για να σχεδιάσετε ένα κύκλο</translation>
+        <translation>Πατήστε και κρατήστε το Shift για να σχεδιάσετε ένα τετράγωνο</translation>
     </message>
     <message>
         <source>Brush
 Press and hold Shift to draw a straight line</source>
-        <translation>Σφαίρα
-Πιέστε και κρατήστε το Shift για να σχεδιάσετε ευθεία γραμμή</translation>
+        <translation>Ελλειψη</translation>
     </message>
     <message>
         <source>Adjust blur strength (Scroll to adjust it)</source>
-        <translation>Ρύθμιση της αποστακτικότητας (κάντε σύρραξη για να τη ρυθμίσετε)</translation>
+        <translation>Πατήστε και κρατήστε το Shift για να σχεδιάσετε ένα κύκλο</translation>
     </message>
     <message>
         <source>Adjust brush size (Scroll to adjust it)</source>
-        <translation>Ρύθμιση της μεγέθυνσης της σφαίρας (κάντε σύρραξη για να τη ρυθμίσετε)</translation>
+        <translation>Στυλί</translation>
     </message>
     <message>
         <source>Adjust text size (Scroll to adjust it)</source>
-        <translation>Ρύθμιση της μεγέθυνσης του κειμένου (κάντε σύρραξη για να τη ρυθμίσετε)</translation>
+        <translation>Πατήστε και κρατήστε το Shift για να σχεδιάσετε μια ευθεία γραμμή</translation>
     </message>
 </context>
 <context>
@@ -460,48 +459,104 @@ select the area to record</source>
 <context>
     <name>SubToolWidget</name>
     <message>
-        <source>Microphone</source>
-        <translation>Μικρόφωνο</translation>
+        <source>Show keystroke (K)</source>
+        <translation>Ρυθμίστε την ένταση της απόκρουσης (Σπρώξτε για να το κάνετε)</translation>
     </message>
     <message>
-        <source>Options</source>
-        <translation>Επιλογές</translation>
+        <source>Hide Keystroke (K)</source>
+        <translation>Ρυθμίστε το μέγεθος του στυλιού (Σπρώξτε για να το κάνετε)</translation>
+    </message>
+    <message>
+        <source>Show Keystroke (K)</source>
+        <translation>Ρυθμίστε το μέγεθος του κειμένου (Σπρώξτε για να το κάνετε)</translation>
+    </message>
+    <message>
+        <source>Turn on camera (C)</source>
+        <translation>Εμφάνιση πλήκτρου (K)</translation>
+    </message>
+    <message>
+        <source>Turn off camera (C)</source>
+        <translation>Κρύψιμο πλήκτρου (K)</translation>
+    </message>
+    <message>
+        <source>Screenshot</source>
+        <translation>Εμφάνιση πλήκτρου (K)</translation>
+    </message>
+    <message>
+        <source>Settings</source>
+        <translation>Ενεργοποιήστε την κάμερα (C)</translation>
+    </message>
+    <message>
+        <source>Settings (F3)</source>
+        <translation>Απενεργοποιήστε την κάμερα (C)</translation>
     </message>
     <message>
         <source>Format:</source>
-        <translation>Διαμόρφωση:</translation>
+        <translation>Εικόνα οθόνης</translation>
     </message>
     <message>
         <source>GIF</source>
-        <translation>GIF</translation>
+        <translation>Ρυθμίσεις</translation>
     </message>
     <message>
         <source>MP4</source>
-        <translation>MP4</translation>
+        <translation>Ρυθμίσεις (F3)</translation>
+    </message>
+    <message>
+        <source>MKV</source>
+        <translation>Διατύπωση:</translation>
+    </message>
+    <message>
+        <source>webm</source>
+        <translation>GIF</translation>
     </message>
     <message>
         <source>FPS:</source>
-        <translation>FPS:</translation>
+        <translation>MP4</translation>
     </message>
     <message>
         <source>5 fps</source>
-        <translation>5 fps</translation>
+        <translation>MKV</translation>
     </message>
     <message>
         <source>10 fps</source>
-        <translation>10 fps</translation>
+        <translation>webm</translation>
     </message>
     <message>
         <source>20 fps</source>
-        <translation>20 fps</translation>
+        <translation>FPS:</translation>
     </message>
     <message>
         <source>24 fps</source>
-        <translation>24 fps</translation>
+        <translation>5 fps</translation>
     </message>
     <message>
         <source>30 fps</source>
+        <translation>10 fps</translation>
+    </message>
+    <message>
+        <source>Sound</source>
+        <translation>20 fps</translation>
+    </message>
+    <message>
+        <source>Microphone</source>
+        <translation>24 fps</translation>
+    </message>
+    <message>
+        <source>System audio</source>
         <translation>30 fps</translation>
+    </message>
+    <message>
+        <source>Options</source>
+        <translation>Ήχος</translation>
+    </message>
+    <message>
+        <source>Show pointer</source>
+        <translation>Μικρόφωνο</translation>
+    </message>
+    <message>
+        <source>Show click</source>
+        <translation>Εμφάνιση κλικ</translation>
     </message>
     <message>
         <source>Save to</source>
@@ -509,7 +564,71 @@ select the area to record</source>
     </message>
     <message>
         <source>Desktop</source>
-        <translation>Επιφάνια εργασίας</translation>
+        <translation>Επιφάνεια εργασίας</translation>
+    </message>
+    <message>
+        <source>Videos</source>
+        <translation>Βίντεο</translation>
+    </message>
+    <message>
+        <source>Rectangle (R)
+Press and hold Shift to draw a square</source>
+        <translation>Τετράγωνο (R)
+Πατήστε και κρατήστε παρατεταγμένο το Shift για να σχεδιάσετε ένα τετράγωνο</translation>
+    </message>
+    <message>
+        <source>Ellipse (O)
+Press and hold Shift to draw a circle</source>
+        <translation>Ελλειψη (O)
+Πατήστε και κρατήστε παρατεταγμένο το Shift για να σχεδιάσετε ένα κύκλο</translation>
+    </message>
+    <message>
+        <source>Line (L)
+Press and hold Shift to draw a vertical or horizontal line</source>
+        <translation>Γραμμή (L)
+Πατήστε και κρατήστε παρατεταγμένο το Shift για να σχεδιάσετε μια κατακόρυφη ή οριζόντια γραμμή</translation>
+    </message>
+    <message>
+        <source>Arrow (X)
+Press and hold Shift to draw a vertical or horizontal arrow</source>
+        <translation>Βέλος (X)
+Πατήστε και κρατήστε παρατεταγμένο το Shift για να σχεδιάσετε ένα κατακόρυφο ή οριζόντιο βέλος</translation>
+    </message>
+    <message>
+        <source>Pencil (P)</source>
+        <translation>Μολύβι (P)</translation>
+    </message>
+    <message>
+        <source>Blur (B)</source>
+        <translation>Επισκιάστε (B)</translation>
+    </message>
+    <message>
+        <source>Text (T)</source>
+        <translation>Κείμενο (T)</translation>
+    </message>
+    <message>
+        <source>Scrollshot (Alt+I）</source>
+        <translation>Σκρολ παρατήρηση (Alt+I)</translation>
+    </message>
+    <message>
+        <source>Extract text (Alt+O）</source>
+        <translation>Εξαγωγή κειμένου (Alt+O)</translation>
+    </message>
+    <message>
+        <source>Pin screenshots (Alt+P）</source>
+        <translation>Κράτηση σκρίν παρατηρήσεων (Alt+P)</translation>
+    </message>
+    <message>
+        <source>Undo (Ctrl+Z)</source>
+        <translation>Αναίρεση (Ctrl+Z)</translation>
+    </message>
+    <message>
+        <source>Record</source>
+        <translation>Εγγραφή</translation>
+    </message>
+    <message>
+        <source>Clipboard</source>
+        <translation>Πλατφόρμα</translation>
     </message>
     <message>
         <source>Pictures</source>
@@ -517,7 +636,15 @@ select the area to record</source>
     </message>
     <message>
         <source>Folder</source>
-        <translation>Φάκελο</translation>
+        <translation>Φάκελος</translation>
+    </message>
+    <message>
+        <source>Set a path on save</source>
+        <translation>Ορισμός διαδρομής κατά την αποθήκευση</translation>
+    </message>
+    <message>
+        <source>Change the path on save</source>
+        <translation>Αλλαγή του μορφής κατά την αποθήκευση</translation>
     </message>
     <message>
         <source>Format</source>
@@ -536,124 +663,12 @@ select the area to record</source>
         <translation>BMP</translation>
     </message>
     <message>
-        <source>MKV</source>
-        <translation>MKV</translation>
-    </message>
-    <message>
-        <source>Clipboard</source>
-        <translation>Πινακίδα Αντιγραφής</translation>
-    </message>
-    <message>
-        <source>Show pointer</source>
-        <translation>Εμφάνιση δείκτη</translation>
-    </message>
-    <message>
-        <source>Extract Text</source>
-        <translation>Εξαγωγή Κειμένου</translation>
-    </message>
-    <message>
-        <source>Show keystroke (K)</source>
-        <translation>Εμφάνιση πλήκτρου (K)</translation>
-    </message>
-    <message>
-        <source>Settings</source>
-        <translation>Ρυθμίσεις</translation>
-    </message>
-    <message>
-        <source>Settings (F3)</source>
-        <translation>Ρυθμίσεις (F3)</translation>
-    </message>
-    <message>
-        <source>Blur (B)</source>
-        <translation>Αποστακτικότητα (B)</translation>
-    </message>
-    <message>
-        <source>Text (T)</source>
-        <translation>Κείμενο (T)</translation>
-    </message>
-    <message>
-        <source>Scrollshot (Alt+I）</source>
-        <translation>Σκρολ σκρέμ (Alt+I)</translation>
-    </message>
-    <message>
-        <source>Extract text (Alt+O）</source>
-        <translation>Εξαγωγή κειμένου (Alt+O)</translation>
-    </message>
-    <message>
-        <source>Undo (Ctrl+Z)</source>
-        <translation>Αναίρεση (Ctrl+Z)</translation>
-    </message>
-    <message>
-        <source>Screenshot</source>
-        <translation>Εικόνα Παρακολούθησης</translation>
-    </message>
-    <message>
-        <source>Pin screenshots (Alt+P）</source>
-        <translation>Κράτηση εικόνων παρακολούθησης (Alt+P)</translation>
-    </message>
-    <message>
-        <source>Record</source>
-        <translation>Εγγραφή</translation>
-    </message>
-    <message>
-        <source>Pencil (P)</source>
-        <translation>Μολύβι (P)</translation>
-    </message>
-    <message>
-        <source>Turn on camera (C)</source>
-        <translation>Ενεργοποίηση καμερας (C)</translation>
-    </message>
-    <message>
         <source>Border Effects</source>
-        <translation>Εφαρμογές Περιορισμού</translation>
+        <translation>Επιδείξεις Περιβλίματος</translation>
     </message>
     <message>
         <source>None</source>
         <translation>Κανένα</translation>
-    </message>
-    <message>
-        <source>Turn off camera (C)</source>
-        <translation>Διακοπή καμερας (C)</translation>
-    </message>
-    <message>
-        <source>Hide Keystroke (K)</source>
-        <translation>Κρύψιμο πλήκτρωσης (K)</translation>
-    </message>
-    <message>
-        <source>Show Keystroke (K)</source>
-        <translation>Εμφάνιση πλήκτρωσης (K)</translation>
-    </message>
-    <message>
-        <source>webm</source>
-        <translation>webm</translation>
-    </message>
-    <message>
-        <source>Videos</source>
-        <translation>Βίντεο</translation>
-    </message>
-    <message>
-        <source>Rectangle (R)
-Press and hold Shift to draw a square</source>
-        <translation>Τετράγωνο (R)
-Πατήστε και κρατήστε παρατεταγμένο για να σχεδιάσετε ένα τετράγωνο</translation>
-    </message>
-    <message>
-        <source>Ellipse (O)
-Press and hold Shift to draw a circle</source>
-        <translation>Ελλειψοειδές (O)
-Πατήστε και κρατήστε παρατεταγμένο για να σχεδιάσετε έναν κύκλο</translation>
-    </message>
-    <message>
-        <source>Line (L)
-Press and hold Shift to draw a vertical or horizontal line</source>
-        <translation>Γραμμή (L)
-Πατήστε και κρατήστε παρατεταγμένο για να σχεδιάσετε κατακόρυφη ή οριζόντια γραμμή</translation>
-    </message>
-    <message>
-        <source>Arrow (X)
-Press and hold Shift to draw a vertical or horizontal arrow</source>
-        <translation>Βέλος (X)
-Πατήστε και κρατήστε παρατεταγμένο για να σχεδιάσετε κατακόρυφο ή οριζόντιο βέλος</translation>
     </message>
     <message>
         <source>Shadow</source>
@@ -661,31 +676,15 @@ Press and hold Shift to draw a vertical or horizontal arrow</source>
     </message>
     <message>
         <source>Border</source>
-        <translation>Περίγραμμα</translation>
+        <translation>Περίβλημα</translation>
     </message>
     <message>
         <source>Device</source>
         <translation>Συσκευή</translation>
     </message>
     <message>
-        <source>Sound</source>
-        <translation>Ήχος</translation>
-    </message>
-    <message>
-        <source>System audio</source>
-        <translation>Ήχος συστήματος</translation>
-    </message>
-    <message>
-        <source>Show click</source>
-        <translation>Εμφάνιση κλικ</translation>
-    </message>
-    <message>
-        <source>Set a path on save</source>
-        <translation>Ορισμός διαδρομής κατά την αποθήκευση</translation>
-    </message>
-    <message>
-        <source>Change the path on save</source>
-        <translation>Αλλαγή διαδρομής κατά την αποθήκευση</translation>
+        <source>Extract Text</source>
+        <translation>Εξαγωγή Κειμένου</translation>
     </message>
 </context>
 <context>
@@ -703,14 +702,14 @@ Press and hold Shift to draw a vertical or horizontal arrow</source>
     <name>TopTips</name>
     <message>
         <source> Adjust the recording area within %1*%2 to get better video effect</source>
-        <translation>Επιλέξτε την περιοχή καταγραφής μέσα στο %1*%2 για να βελτιωθεί το αποτέλεσμα της βίντεο</translation>
+        <translation>Επιλέξτε την περιοχή καταγραφής μέσα στο %1*%2 για να βελτιώσετε το αποτέλεσμα της βίντεο</translation>
     </message>
 </context>
 <context>
     <name>Utils</name>
     <message>
         <source>Screen recording is not supported at present</source>
-        <translation>Η καταγραφή οθόνης δεν υποστηρίζεται σήμερα</translation>
+        <translation>Η καταγραφή οθόνης δεν υποστηρίζεται τώρα</translation>
     </message>
     <message>
         <source>Exit</source>

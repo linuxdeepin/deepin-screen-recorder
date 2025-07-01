@@ -1,4 +1,6 @@
-<?xml version="1.0" ?><!DOCTYPE TS><TS version="2.1" language="ug">
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE TS>
+<TS version="2.1" language="ug">
 <context>
     <name>CountdownTooltip</name>
     <message>
@@ -73,7 +75,7 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Saved to %1</source>
-        <translation> %1 گە ساقلاندى</translation>
+        <translation>رەسىم %1 گە ساقلاندى</translation>
     </message>
     <message>
         <source>Ignore</source>
@@ -104,16 +106,16 @@ or press the shortcut again to stop recording</source>
         <translation>سىيرىلما سۈرەت تۇتۇش</translation>
     </message>
     <message>
-        <source>Open Folder</source>
-        <translation>ھۆججەت قىسقۇچنى ئېچىش</translation>
-    </message>
-    <message>
         <source>Pin Screenshots</source>
         <translation>چاپلاق</translation>
     </message>
     <message>
         <source>deepin-screen-recorder</source>
-        <translation>دېپىن شىرېن رېكۆردر</translation>
+        <translation>دېپىن شىرەن رېكۆردر</translation>
+    </message>
+    <message>
+        <source>Open Folder</source>
+        <translation>ھۆججەت قىسقۇچنى ئېچىش</translation>
     </message>
 </context>
 <context>
@@ -142,22 +144,22 @@ or press the shortcut again to stop recording</source>
     <name>QuickPanelWidget</name>
     <message>
         <source>Screenshot</source>
-        <translation>پۈشىتە</translation>
+        <translation>رەسىم تۇتۇش</translation>
     </message>
     <message>
         <source>Record</source>
-        <translation>رېكۆردن</translation>
+        <translation>سىنغا ئېلىش</translation>
     </message>
 </context>
 <context>
     <name>RecordIconWidget</name>
     <message>
         <source>Screenshot</source>
-        <translation>پۈشىتە</translation>
+        <translation>رەسىم تۇتۇش</translation>
     </message>
     <message>
         <source>Recording</source>
-        <translation>رېكۆردن چۈشىنىشى</translation>
+        <translation>سىنغا ئېلىش</translation>
     </message>
 </context>
 <context>
@@ -343,6 +345,10 @@ or press the shortcut again to stop recording</source>
         <translation>تېزلەتمە كۆرۈنسۇن</translation>
     </message>
     <message>
+        <source>Sound</source>
+        <translation>ئۈن ئېلىش</translation>
+    </message>
+    <message>
         <source>Keystroke</source>
         <translation>كۇنۇپكا</translation>
     </message>
@@ -363,6 +369,10 @@ or press the shortcut again to stop recording</source>
         <translation>باشلاش/سىنغا ئېلىش</translation>
     </message>
     <message>
+        <source>Mouse</source>
+        <translation>مائۇسنى سىنغا ئېلىش</translation>
+    </message>
+    <message>
         <source>Tools</source>
         <translation>قورال</translation>
     </message>
@@ -379,24 +389,16 @@ or press the shortcut again to stop recording</source>
         <translation>چاپلاق</translation>
     </message>
     <message>
-        <source>Start scrollshot</source>
-        <translation>سىيرىلما سۈرەت تۇتۇشنى قوزغىتىش</translation>
-    </message>
-    <message>
         <source>Start OCR</source>
         <translation>سۈرەتتىكى خەتنى تونۇتۇشنى قوزغىتىش</translation>
     </message>
     <message>
+        <source>Start scrollshot</source>
+        <translation>سىيرىلما سۈرەت تۇتۇشنى قوزغىتىش</translation>
+    </message>
+    <message>
         <source>Arrow</source>
         <translation>ئوقيا</translation>
-    </message>
-    <message>
-        <source>Sound</source>
-        <translation>ئۈن ئېلىش</translation>
-    </message>
-    <message>
-        <source>Mouse</source>
-        <translation>مائۇسنى سىنغا ئېلىش</translation>
     </message>
 </context>
 <context>
@@ -410,7 +412,7 @@ or press the shortcut again to stop recording</source>
     <name>ShotStartRecordPlugin</name>
     <message>
         <source>Record</source>
-        <translation>رېكۆردن</translation>
+        <translation>سىنغا ئېلىش</translation>
     </message>
 </context>
 <context>
@@ -457,12 +459,36 @@ select the area to record</source>
 <context>
     <name>SubToolWidget</name>
     <message>
-        <source>Microphone</source>
-        <translation>مىكروفون</translation>
+        <source>Show keystroke (K)</source>
+        <translation>كۇنۇپكا كۆرۈنسۇن (K)</translation>
     </message>
     <message>
-        <source>Options</source>
-        <translation>تاللاش</translation>
+        <source>Hide Keystroke (K)</source>
+        <translation>كۇنۇپكا يوشۇرۇنسۇن (K)</translation>
+    </message>
+    <message>
+        <source>Show Keystroke (K)</source>
+        <translation>كۇنۇپكا كۆرۈنسۇن (K)</translation>
+    </message>
+    <message>
+        <source>Turn on camera (C)</source>
+        <translation>كامېرانى ئېچىش (C)</translation>
+    </message>
+    <message>
+        <source>Turn off camera (C)</source>
+        <translation>كامېرانى تاقاش (C)</translation>
+    </message>
+    <message>
+        <source>Screenshot</source>
+        <translation>رەسىم تۇتۇش</translation>
+    </message>
+    <message>
+        <source>Settings</source>
+        <translation>تەڭشەك</translation>
+    </message>
+    <message>
+        <source>Settings (F3)</source>
+        <translation>تەڭشەك (F3)</translation>
     </message>
     <message>
         <source>Format:</source>
@@ -475,6 +501,14 @@ select the area to record</source>
     <message>
         <source>MP4</source>
         <translation>MP4</translation>
+    </message>
+    <message>
+        <source>MKV</source>
+        <translation>MKV</translation>
+    </message>
+    <message>
+        <source>webm</source>
+        <translation>webm</translation>
     </message>
     <message>
         <source>FPS:</source>
@@ -501,128 +535,36 @@ select the area to record</source>
         <translation>30 fps</translation>
     </message>
     <message>
+        <source>Sound</source>
+        <translation>ئۈن ئېلىش</translation>
+    </message>
+    <message>
+        <source>Microphone</source>
+        <translation>مىكروفون</translation>
+    </message>
+    <message>
+        <source>System audio</source>
+        <translation>سىستما ئاۋازى</translation>
+    </message>
+    <message>
+        <source>Options</source>
+        <translation>تاللاش</translation>
+    </message>
+    <message>
+        <source>Show pointer</source>
+        <translation>مائوس كۆرۈنسۇن</translation>
+    </message>
+    <message>
+        <source>Show click</source>
+        <translation>كۇنۇپكا كۆرۈنسۇن</translation>
+    </message>
+    <message>
         <source>Save to</source>
         <translation>گە ساقلاش</translation>
     </message>
     <message>
         <source>Desktop</source>
         <translation>ئۈستەليۈزى</translation>
-    </message>
-    <message>
-        <source>Pictures</source>
-        <translation>رەسىم</translation>
-    </message>
-    <message>
-        <source>Folder</source>
-        <translation>بەلگىلەنگەن ئورۇن</translation>
-    </message>
-    <message>
-        <source>Format</source>
-        <translation>فورماتى</translation>
-    </message>
-    <message>
-        <source>PNG</source>
-        <translation>PNG</translation>
-    </message>
-    <message>
-        <source>JPG</source>
-        <translation>JPG</translation>
-    </message>
-    <message>
-        <source>BMP</source>
-        <translation>BMP</translation>
-    </message>
-    <message>
-        <source>MKV</source>
-        <translation>MKV</translation>
-    </message>
-    <message>
-        <source>Clipboard</source>
-        <translation>چاپلاش تاختىسى</translation>
-    </message>
-    <message>
-        <source>Show pointer</source>
-        <translation>سىن بەلگە كۆرۈنسۇن</translation>
-    </message>
-    <message>
-        <source>Extract Text</source>
-        <translation>تېكىستنى تونۇتۇش</translation>
-    </message>
-    <message>
-        <source>Show keystroke (K)</source>
-        <translation>كۇنۇپكا كۆرۈنسۇن (K)</translation>
-    </message>
-    <message>
-        <source>Settings</source>
-        <translation>تەڭشەك</translation>
-    </message>
-    <message>
-        <source>Settings (F3)</source>
-        <translation>تەڭشەك (F3)</translation>
-    </message>
-    <message>
-        <source>Blur (B)</source>
-        <translation>سۇسلاشتۇرۇش (B)</translation>
-    </message>
-    <message>
-        <source>Text (T)</source>
-        <translation>تېكىست (T)</translation>
-    </message>
-    <message>
-        <source>Scrollshot (Alt+I）</source>
-        <translation>دومىلىما سۈرەت تۇتۇش (Alt+I）</translation>
-    </message>
-    <message>
-        <source>Extract text (Alt+O）</source>
-        <translation>تېكىستنى تونۇتۇش (Alt+O）</translation>
-    </message>
-    <message>
-        <source>Undo (Ctrl+Z)</source>
-        <translation>بىكار قىلىش (Ctrl+Z)</translation>
-    </message>
-    <message>
-        <source>Screenshot</source>
-        <translation>رەسىم تۇتۇش</translation>
-    </message>
-    <message>
-        <source>Pin screenshots (Alt+P）</source>
-        <translation>رەسىم چاپلاش (Alt+P）</translation>
-    </message>
-    <message>
-        <source>Record</source>
-        <translation>سىنغا ئېلىش</translation>
-    </message>
-    <message>
-        <source>Pencil (P)</source>
-        <translation>قەلەم (P)</translation>
-    </message>
-    <message>
-        <source>Turn on camera (C)</source>
-        <translation>كامېرانى ئېچىش (C)</translation>
-    </message>
-    <message>
-        <source>Border Effects</source>
-        <translation>رامكا ئۈنۈمى</translation>
-    </message>
-    <message>
-        <source>None</source>
-        <translation>رامكىسىز</translation>
-    </message>
-    <message>
-        <source>Turn off camera (C)</source>
-        <translation>كامېرانى تاقاش (C)</translation>
-    </message>
-    <message>
-        <source>Hide Keystroke (K)</source>
-        <translation>كۇنۇپكا يوشۇرۇنسۇن (K)</translation>
-    </message>
-    <message>
-        <source>Show Keystroke (K)</source>
-        <translation>كۇنۇپكا كۆرۈنسۇن (K)</translation>
-    </message>
-    <message>
-        <source>webm</source>
-        <translation>webm</translation>
     </message>
     <message>
         <source>Videos</source>
@@ -653,28 +595,48 @@ Press and hold Shift to draw a vertical or horizontal arrow</source>
 Shift نى بېسىپ تۇرسىڭىز تىك ۋە توغرىسىغا تۈز كۆرسەتكۈچ سىزغىلى بولىدۇ</translation>
     </message>
     <message>
-        <source>Shadow</source>
-        <translation>يېڭىلەمە</translation>
+        <source>Pencil (P)</source>
+        <translation>قەلەم (P)</translation>
     </message>
     <message>
-        <source>Border</source>
-        <translation>چەقىرىش</translation>
+        <source>Blur (B)</source>
+        <translation>سۇسلاشتۇرۇش (B)</translation>
     </message>
     <message>
-        <source>Device</source>
-        <translation>تەسىرلىشى</translation>
+        <source>Text (T)</source>
+        <translation>تېكىست (T)</translation>
     </message>
     <message>
-        <source>Sound</source>
-        <translation>ئۈن ئېلىش</translation>
+        <source>Scrollshot (Alt+I）</source>
+        <translation>دومىلىما سۈرەت تۇتۇش (Alt+I）</translation>
     </message>
     <message>
-        <source>System audio</source>
-        <translation>سىستېم ئاۋىو</translation>
+        <source>Extract text (Alt+O）</source>
+        <translation>تېكىستنى تونۇتۇش (Alt+O）</translation>
     </message>
     <message>
-        <source>Show click</source>
-        <translation>كىچىكلىشىنى كۆرسىتى</translation>
+        <source>Pin screenshots (Alt+P）</source>
+        <translation>رەسىم چاپلاش (Alt+P）</translation>
+    </message>
+    <message>
+        <source>Undo (Ctrl+Z)</source>
+        <translation>بىكار قىلىش (Ctrl+Z)</translation>
+    </message>
+    <message>
+        <source>Record</source>
+        <translation>سىنغا ئېلىش</translation>
+    </message>
+    <message>
+        <source>Clipboard</source>
+        <translation>چاپلاش تاختىسى</translation>
+    </message>
+    <message>
+        <source>Pictures</source>
+        <translation>رەسىم</translation>
+    </message>
+    <message>
+        <source>Folder</source>
+        <translation>بەلگىلەنگەن ئورۇن</translation>
     </message>
     <message>
         <source>Set a path on save</source>
@@ -683,6 +645,46 @@ Shift نى بېسىپ تۇرسىڭىز تىك ۋە توغرىسىغا تۈز ك�
     <message>
         <source>Change the path on save</source>
         <translation>ئورۇننى ساقلىغاندا تەڭشەش</translation>
+    </message>
+    <message>
+        <source>Format</source>
+        <translation>فورماتى</translation>
+    </message>
+    <message>
+        <source>PNG</source>
+        <translation>PNG</translation>
+    </message>
+    <message>
+        <source>JPG</source>
+        <translation>JPG</translation>
+    </message>
+    <message>
+        <source>BMP</source>
+        <translation>BMP</translation>
+    </message>
+    <message>
+        <source>Border Effects</source>
+        <translation>رامكا ئۈنۈمى</translation>
+    </message>
+    <message>
+        <source>None</source>
+        <translation>رامكىسىز</translation>
+    </message>
+    <message>
+        <source>Shadow</source>
+        <translation>تەنگىلىك</translation>
+    </message>
+    <message>
+        <source>Border</source>
+        <translation>چەقىرىق</translation>
+    </message>
+    <message>
+        <source>Device</source>
+        <translation>تەسىر</translation>
+    </message>
+    <message>
+        <source>Extract Text</source>
+        <translation>تېكىستنى تونۇتۇش</translation>
     </message>
 </context>
 <context>
@@ -718,7 +720,7 @@ Shift نى بېسىپ تۇرسىڭىز تىك ۋە توغرىسىغا تۈز ك�
     <name>VoiceRecordProcess</name>
     <message>
         <source>New recording</source>
-        <translation>يېڭى رېكۆردن</translation>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 </TS>

@@ -1,4 +1,6 @@
-<?xml version="1.0" ?><!DOCTYPE TS><TS version="2.1" language="sr">
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE TS>
+<TS version="2.1" language="sr">
 <context>
     <name>CountdownTooltip</name>
     <message>
@@ -38,7 +40,7 @@ or press the shortcut again to stop recording</source>
     <name>MainWindow</name>
     <message>
         <source>Screen Capture</source>
-        <translation>Снимач Екрана</translation>
+        <translation>Снимак екрана</translation>
     </message>
     <message>
         <source>Save failed. Please save it in your home directory.</source>
@@ -105,16 +107,16 @@ or press the shortcut again to stop recording</source>
         <translation>Слика клизањa</translation>
     </message>
     <message>
-        <source>Open Folder</source>
-        <translation>Отвори фолдер</translation>
-    </message>
-    <message>
         <source>Pin Screenshots</source>
-        <translation>Фиксије снимке</translation>
+        <translation>Фиксирајте снимке</translation>
     </message>
     <message>
         <source>deepin-screen-recorder</source>
-        <translation>deepin-screen-recorder</translation>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Open Folder</source>
+        <translation>Отвори фолдер</translation>
     </message>
 </context>
 <context>
@@ -136,25 +138,25 @@ or press the shortcut again to stop recording</source>
     <name>QObject</name>
     <message>
         <source>Pin Screenshots</source>
-        <translation>Фиксије снимке</translation>
+        <translation>Фиксирајте снимке</translation>
     </message>
 </context>
 <context>
     <name>QuickPanelWidget</name>
     <message>
         <source>Screenshot</source>
-        <translation>Снимак</translation>
+        <translation type="unfinished">Усликавање</translation>
     </message>
     <message>
         <source>Record</source>
-        <translation>Запис</translation>
+        <translation type="unfinished">Снимање</translation>
     </message>
 </context>
 <context>
     <name>RecordIconWidget</name>
     <message>
         <source>Screenshot</source>
-        <translation>Снимак</translation>
+        <translation type="unfinished">Усликавање</translation>
     </message>
     <message>
         <source>Recording</source>
@@ -165,7 +167,7 @@ or press the shortcut again to stop recording</source>
     <name>RecordProcess</name>
     <message>
         <source>View</source>
-        <translation>Прикажи</translation>
+        <translation>Пусти</translation>
     </message>
     <message>
         <source>Recording finished</source>
@@ -344,6 +346,10 @@ or press the shortcut again to stop recording</source>
         <translation>Прикажи пречице</translation>
     </message>
     <message>
+        <source>Sound</source>
+        <translation>Звук</translation>
+    </message>
+    <message>
         <source>Keystroke</source>
         <translation>Куцање</translation>
     </message>
@@ -364,6 +370,10 @@ or press the shortcut again to stop recording</source>
         <translation>Почни/Снимање</translation>
     </message>
     <message>
+        <source>Mouse</source>
+        <translation>Миш</translation>
+    </message>
+    <message>
         <source>Tools</source>
         <translation>Алати</translation>
     </message>
@@ -377,27 +387,19 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Pin screenshots</source>
-        <translation>Фиксије снимке</translation>
-    </message>
-    <message>
-        <source>Start scrollshot</source>
-        <translation>Почни скролшот</translation>
+        <translation>Фиксирајте снимке</translation>
     </message>
     <message>
         <source>Start OCR</source>
         <translation>Почни OCR</translation>
     </message>
     <message>
+        <source>Start scrollshot</source>
+        <translation>Почни снимак</translation>
+    </message>
+    <message>
         <source>Arrow</source>
         <translation>Стрелица</translation>
-    </message>
-    <message>
-        <source>Sound</source>
-        <translation>Звук</translation>
-    </message>
-    <message>
-        <source>Mouse</source>
-        <translation>Миш</translation>
     </message>
 </context>
 <context>
@@ -411,7 +413,7 @@ or press the shortcut again to stop recording</source>
     <name>ShotStartRecordPlugin</name>
     <message>
         <source>Record</source>
-        <translation>Запис</translation>
+        <translation type="unfinished">Снимање</translation>
     </message>
 </context>
 <context>
@@ -420,31 +422,31 @@ or press the shortcut again to stop recording</source>
         <source>Rectangle
 Press and hold Shift to draw a square</source>
         <translation>Правоугаоник
-Притисни и задржи Shift да би цртао квадрат</translation>
+Притисните и задржите Shift да бисте цртали квадрат</translation>
     </message>
     <message>
         <source>Ellipse
 Press and hold Shift to draw a circle</source>
-        <translation>Еллипса
-Притисни и задржи Shift да би цртао круг</translation>
+        <translation>Елипса
+Притисните и задржите Shift да бисте цртали круг</translation>
     </message>
     <message>
         <source>Brush
 Press and hold Shift to draw a straight line</source>
-        <translation>Браш
-Притисни и задржи Shift да би цртао праву линију</translation>
+        <translation>Брӯш
+Притисните и задржите Shift да бисте цртали праву линију</translation>
     </message>
     <message>
         <source>Adjust blur strength (Scroll to adjust it)</source>
-        <translation>Прилагоди степен размазивања (Скроловај да би прилагодио)</translation>
+        <translation>Прилагодите степен размака (Scroll за прилагођавање)</translation>
     </message>
     <message>
         <source>Adjust brush size (Scroll to adjust it)</source>
-        <translation>Прилагоди величину браша (Скроловај да би прилагодио)</translation>
+        <translation>Прилагодите величину брӯша (Scroll за прилагођавање)</translation>
     </message>
     <message>
         <source>Adjust text size (Scroll to adjust it)</source>
-        <translation>Прилагоди величину текста (Скроловај да би прилагодио)</translation>
+        <translation>Прилагодите величину текста (Scroll за прилагођавање)</translation>
     </message>
 </context>
 <context>
@@ -459,12 +461,36 @@ select the area to record</source>
 <context>
     <name>SubToolWidget</name>
     <message>
-        <source>Microphone</source>
-        <translation>Микрофон</translation>
+        <source>Show keystroke (K)</source>
+        <translation>Прикажи притисак (K)</translation>
     </message>
     <message>
-        <source>Options</source>
-        <translation>Опције</translation>
+        <source>Hide Keystroke (K)</source>
+        <translation>Сакријте притисак (K)</translation>
+    </message>
+    <message>
+        <source>Show Keystroke (K)</source>
+        <translation>Прикажи притисак (K)</translation>
+    </message>
+    <message>
+        <source>Turn on camera (C)</source>
+        <translation>Укључи камеру (C)</translation>
+    </message>
+    <message>
+        <source>Turn off camera (C)</source>
+        <translation>Искључи камеру (C)</translation>
+    </message>
+    <message>
+        <source>Screenshot</source>
+        <translation>Усликавање</translation>
+    </message>
+    <message>
+        <source>Settings</source>
+        <translation>Подешавања</translation>
+    </message>
+    <message>
+        <source>Settings (F3)</source>
+        <translation>Поставке (F3)</translation>
     </message>
     <message>
         <source>Format:</source>
@@ -477,6 +503,14 @@ select the area to record</source>
     <message>
         <source>MP4</source>
         <translation>MP4</translation>
+    </message>
+    <message>
+        <source>MKV</source>
+        <translation>MKV</translation>
+    </message>
+    <message>
+        <source>webm</source>
+        <translation>webm</translation>
     </message>
     <message>
         <source>FPS:</source>
@@ -503,6 +537,30 @@ select the area to record</source>
         <translation>30 fps</translation>
     </message>
     <message>
+        <source>Sound</source>
+        <translation>Звук</translation>
+    </message>
+    <message>
+        <source>Microphone</source>
+        <translation>Микрофон</translation>
+    </message>
+    <message>
+        <source>System audio</source>
+        <translation>Системски аудио</translation>
+    </message>
+    <message>
+        <source>Options</source>
+        <translation>Опције</translation>
+    </message>
+    <message>
+        <source>Show pointer</source>
+        <translation>Прикажи показивач</translation>
+    </message>
+    <message>
+        <source>Show click</source>
+        <translation>Прикажи клик</translation>
+    </message>
+    <message>
         <source>Save to</source>
         <translation>Сачувај у</translation>
     </message>
@@ -511,12 +569,83 @@ select the area to record</source>
         <translation>Радна површина</translation>
     </message>
     <message>
+        <source>Videos</source>
+        <translation>Видео</translation>
+    </message>
+    <message>
+        <source>Rectangle (R)
+Press and hold Shift to draw a square</source>
+        <translation>Правоугаоник (R)
+Притисните и задржите Shift да бисте цртали квадрат</translation>
+    </message>
+    <message>
+        <source>Ellipse (O)
+Press and hold Shift to draw a circle</source>
+        <translation>Елипса (O)
+Притисните и задржите Shift да бисте цртали круг</translation>
+    </message>
+    <message>
+        <source>Line (L)
+Press and hold Shift to draw a vertical or horizontal line</source>
+        <translation>Линија (L)
+Притисните и задржите Shift да бисте цртали вертикалну или хоризонталну линију</translation>
+    </message>
+    <message>
+        <source>Arrow (X)
+Press and hold Shift to draw a vertical or horizontal arrow</source>
+        <translation>Стрелка (X)</translation>
+    </message>
+    <message>
+        <source>Pencil (P)</source>
+        <translation>Притисните и задржите Shift за цртање вертикалне или хоризонталне стрелке</translation>
+    </message>
+    <message>
+        <source>Blur (B)</source>
+        <translation>Оловка (P)</translation>
+    </message>
+    <message>
+        <source>Text (T)</source>
+        <translation>Мања (B)</translation>
+    </message>
+    <message>
+        <source>Scrollshot (Alt+I）</source>
+        <translation>Текст (T)</translation>
+    </message>
+    <message>
+        <source>Extract text (Alt+O）</source>
+        <translation>Скролшот (Alt+I)</translation>
+    </message>
+    <message>
+        <source>Pin screenshots (Alt+P）</source>
+        <translation>Извади текст (Alt+O)</translation>
+    </message>
+    <message>
+        <source>Undo (Ctrl+Z)</source>
+        <translation>Фиксирајте снимке (Alt+P)</translation>
+    </message>
+    <message>
+        <source>Record</source>
+        <translation>Снимање</translation>
+    </message>
+    <message>
+        <source>Clipboard</source>
+        <translation>Остава</translation>
+    </message>
+    <message>
         <source>Pictures</source>
         <translation>Слике</translation>
     </message>
     <message>
         <source>Folder</source>
         <translation>Фасцикла</translation>
+    </message>
+    <message>
+        <source>Set a path on save</source>
+        <translation>Поврати (Ctrl+Z)</translation>
+    </message>
+    <message>
+        <source>Change the path on save</source>
+        <translation>Поставите путању приликом сачувања</translation>
     </message>
     <message>
         <source>Format</source>
@@ -535,167 +664,39 @@ select the area to record</source>
         <translation>BMP</translation>
     </message>
     <message>
-        <source>MKV</source>
-        <translation>MKV</translation>
+        <source>Border Effects</source>
+        <translation>Промените путању приликом сачувања</translation>
     </message>
     <message>
-        <source>Clipboard</source>
-        <translation>Остава</translation>
+        <source>None</source>
+        <translation>Ефекти обода</translation>
     </message>
     <message>
-        <source>Show pointer</source>
-        <translation>Прикажи показивач</translation>
+        <source>Shadow</source>
+        <translation>Ништа</translation>
+    </message>
+    <message>
+        <source>Border</source>
+        <translation>Сенка</translation>
+    </message>
+    <message>
+        <source>Device</source>
+        <translation>Обод</translation>
     </message>
     <message>
         <source>Extract Text</source>
         <translation>Издвоји текст</translation>
-    </message>
-    <message>
-        <source>Show keystroke (K)</source>
-        <translation>Прикажи притисак тастатура (K)</translation>
-    </message>
-    <message>
-        <source>Settings</source>
-        <translation>Подешавања</translation>
-    </message>
-    <message>
-        <source>Settings (F3)</source>
-        <translation>Поставке (F3)</translation>
-    </message>
-    <message>
-        <source>Blur (B)</source>
-        <translation>Размаз (B)</translation>
-    </message>
-    <message>
-        <source>Text (T)</source>
-        <translation>Текст (T)</translation>
-    </message>
-    <message>
-        <source>Scrollshot (Alt+I）</source>
-        <translation>Скролшот (Alt+I)</translation>
-    </message>
-    <message>
-        <source>Extract text (Alt+O）</source>
-        <translation>Извади текст (Alt+O)</translation>
-    </message>
-    <message>
-        <source>Undo (Ctrl+Z)</source>
-        <translation>Поништи (Ctrl+Z)</translation>
-    </message>
-    <message>
-        <source>Screenshot</source>
-        <translation>Усликавање</translation>
-    </message>
-    <message>
-        <source>Pin screenshots (Alt+P）</source>
-        <translation>Фиксије снимке (Alt+P)</translation>
-    </message>
-    <message>
-        <source>Record</source>
-        <translation>Снимање</translation>
-    </message>
-    <message>
-        <source>Pencil (P)</source>
-        <translation>Молив (P)</translation>
-    </message>
-    <message>
-        <source>Turn on camera (C)</source>
-        <translation>Укључи камеру (C)</translation>
-    </message>
-    <message>
-        <source>Border Effects</source>
-        <translation>Efekti ruba</translation>
-    </message>
-    <message>
-        <source>None</source>
-        <translation>Ništa</translation>
-    </message>
-    <message>
-        <source>Turn off camera (C)</source>
-        <translation>Isključi kameru (C)</translation>
-    </message>
-    <message>
-        <source>Hide Keystroke (K)</source>
-        <translation>Sakrij tastaturu (K)</translation>
-    </message>
-    <message>
-        <source>Show Keystroke (K)</source>
-        <translation>Pokaži tastaturu (K)</translation>
-    </message>
-    <message>
-        <source>webm</source>
-        <translation>webm</translation>
-    </message>
-    <message>
-        <source>Videos</source>
-        <translation>Видео</translation>
-    </message>
-    <message>
-        <source>Rectangle (R)
-Press and hold Shift to draw a square</source>
-        <translation>Pravougaonik (R)
-Pritisni i drži Shift da nacrtas kvadrat</translation>
-    </message>
-    <message>
-        <source>Ellipse (O)
-Press and hold Shift to draw a circle</source>
-        <translation>Elipsa (O)
-Pritisni i drži Shift da nacrtas krug</translation>
-    </message>
-    <message>
-        <source>Line (L)
-Press and hold Shift to draw a vertical or horizontal line</source>
-        <translation>Linija (L)
-Pritisni i drži Shift da nacrtas vertikalnu ili horizontalnu liniju</translation>
-    </message>
-    <message>
-        <source>Arrow (X)
-Press and hold Shift to draw a vertical or horizontal arrow</source>
-        <translation>Smer (X)
-Pritisni i drži Shift da nacrtas vertikalnu ili horizontalnu strelicu</translation>
-    </message>
-    <message>
-        <source>Shadow</source>
-        <translation>Svetlost</translation>
-    </message>
-    <message>
-        <source>Border</source>
-        <translation>Ruba</translation>
-    </message>
-    <message>
-        <source>Device</source>
-        <translation>Uređaj</translation>
-    </message>
-    <message>
-        <source>Sound</source>
-        <translation>Звук</translation>
-    </message>
-    <message>
-        <source>System audio</source>
-        <translation>Sistemski audio</translation>
-    </message>
-    <message>
-        <source>Show click</source>
-        <translation>Pokaži klik</translation>
-    </message>
-    <message>
-        <source>Set a path on save</source>
-        <translation>Postavi putanju pri sačuvanju</translation>
-    </message>
-    <message>
-        <source>Change the path on save</source>
-        <translation>Promeni putanju pri sačuvanju</translation>
     </message>
 </context>
 <context>
     <name>ToolBarWidget</name>
     <message>
         <source>Close (Esc)</source>
-        <translation>Zatvori (Esc)</translation>
+        <translation>Уређај</translation>
     </message>
     <message>
         <source>OK (Enter)</source>
-        <translation>OK (Enter)</translation>
+        <translation>Затвори (Esc)</translation>
     </message>
 </context>
 <context>

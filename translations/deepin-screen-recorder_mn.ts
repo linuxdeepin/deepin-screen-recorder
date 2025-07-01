@@ -1,15 +1,17 @@
-<?xml version="1.0" ?><!DOCTYPE TS><TS version="2.1" language="mn">
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE TS>
+<TS version="2.1" language="mn">
 <context>
     <name>CountdownTooltip</name>
     <message>
         <source>Click the tray icon 
 or press the shortcut again to stop recording</source>
-        <translation>Три-иконоо түрүүлэх
-эмчлэхэд түүнийг дахин нэгтэл</translation>
+        <translation>Три-зургийн икон дарна
+эмээлэх үед түүнийг түрхээрэй</translation>
     </message>
     <message>
         <source>Do not rotate your screen during recording</source>
-        <translation>Хөөрөөлөхөд та түүнийг үүргэл</translation>
+        <translation>Хөрвөөлөх үед үүнийг түрхээрэй</translation>
     </message>
 </context>
 <context>
@@ -38,11 +40,11 @@ or press the shortcut again to stop recording</source>
     <name>MainWindow</name>
     <message>
         <source>Screen Capture</source>
-        <translation>Эрхэм хуваалцах</translation>
+        <translation>Эрхэнд хуваалцах</translation>
     </message>
     <message>
         <source>Save failed. Please save it in your home directory.</source>
-        <translation>Хадгалахад амжилтгүй боллоо. Та нэгдүгээр бүлэгт хадгалахыг хүснэ</translation>
+        <translation>Хадгалахад алдаа гарлаа. Хадгалахдаа таны нүүдэлд байрлахыг хүснэ</translation>
     </message>
     <message>
         <source>View</source>
@@ -50,23 +52,23 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Screenshot finished</source>
-        <translation>Скриншот дууссан</translation>
+        <translation>Скриншот дууслаа</translation>
     </message>
     <message>
         <source>PNG (*.png);;JPEG (*.jpg *.jpeg);;BMP (*.bmp)</source>
-        <translation>PNG (*.png);;JPEG (*.jpg *.jpeg);;BMP (*.bmp)</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>JPEG (*.jpg *.jpeg);;PNG (*.png);;BMP (*.bmp)</source>
-        <translation>JPEG (*.jpg *.jpeg);;PNG (*.png);;BMP (*.bmp)</translation>
+        <translation>JPEG (*.jpg *.jpeg);;PNG (*.png);;BMP (*)(.bmp)</translation>
     </message>
     <message>
         <source>BMP (*.bmp);;JPEG (*.jpg *.jpeg);;PNG (*.png)</source>
-        <translation>BMP (*.bmp);;JPEG (*.jpg *.jpeg);;PNG (*.png)</translation>
+        <translation>BMP (*bmp);;JPEG (*.jpg *.jpeg);;PNG (*.png)</translation>
     </message>
     <message>
         <source>select-area</source>
-        <translation>түүнийг сонгох</translation>
+        <translation>хүрээлэн сонгох</translation>
     </message>
     <message>
         <source>Save</source>
@@ -74,24 +76,24 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Saved to %1</source>
-        <translation>Хадгалагдсан %1</translation>
+        <translation>Хадгалагдсан %1-д</translation>
     </message>
     <message>
         <source>Ignore</source>
-        <translation>Хийх</translation>
+        <translation>Хүсээгүй</translation>
     </message>
     <message>
         <source>Clipboard</source>
-        <translation>Түрэг</translation>
+        <translation>Түрхэгч</translation>
     </message>
     <message>
         <source>Saving the screen recording file, please wait...</source>
-        <translation>Эрхэм хуваалцах файлыг хадгалах, байхад байна...</translation>
+        <translation>Эрхэнд хуваалцах файл хадгалахад, дараах хүсээнд түрхээрэй...</translation>
     </message>
     <message>
         <source>As the window effect is disabled during the process, the recording has to be stopped</source>
-        <translation>Хүчирхэг байдал нь ажиллах процессд сонголт хийгдсэн тул хуваалцах нь дуусах ёстой
-хуваалцах</translation>
+        <translation>Үйлдлийн үед хүрээлэх үнэгүй байгаа тул хуваалцахыг хэрэгжүүлэх ёстой
+хуваалцахыг түрхээрэй</translation>
     </message>
     <message>
         <source>Screenshot</source>
@@ -99,23 +101,23 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Screenshot failed.</source>
-        <translation>Скриншот дууссангүй.</translation>
+        <translation>Скриншот хүрээлэхэд алдаа гарлаа.</translation>
     </message>
     <message>
         <source>Scrollshot</source>
-        <translation>Хөдөлгөөнүүд</translation>
-    </message>
-    <message>
-        <source>Open Folder</source>
-        <translation>Фолдер нь нээх</translation>
+        <translation>Скриншот</translation>
     </message>
     <message>
         <source>Pin Screenshots</source>
-        <translation>Скриншотуудыг түрүүлэх</translation>
+        <translation>Скриншотыг нэгтгэх</translation>
     </message>
     <message>
         <source>deepin-screen-recorder</source>
-        <translation>deepin-screen-recorder</translation>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Open Folder</source>
+        <translation>Фолдерыг нээх</translation>
     </message>
 </context>
 <context>
@@ -137,29 +139,29 @@ or press the shortcut again to stop recording</source>
     <name>QObject</name>
     <message>
         <source>Pin Screenshots</source>
-        <translation>Скриншотуудыг түрүүлэх</translation>
+        <translation>Сүлжээний снимагууд</translation>
     </message>
 </context>
 <context>
     <name>QuickPanelWidget</name>
     <message>
         <source>Screenshot</source>
-        <translation>Сүүлчийн хэмжээ</translation>
+        <translation>Снимаг</translation>
     </message>
     <message>
         <source>Record</source>
-        <translation>Зураг авах</translation>
+        <translation>Хадгалах</translation>
     </message>
 </context>
 <context>
     <name>RecordIconWidget</name>
     <message>
         <source>Screenshot</source>
-        <translation>Сүүлчийн хэмжээ</translation>
+        <translation>Снимаг</translation>
     </message>
     <message>
         <source>Recording</source>
-        <translation>Зураг авагдаж байна</translation>
+        <translation>Хадгалах</translation>
     </message>
 </context>
 <context>
@@ -170,37 +172,37 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Recording finished</source>
-        <translation>Зураг авагдаж байна</translation>
+        <translation>Хадгалах нь дууссан</translation>
     </message>
     <message>
         <source>Saved to %1</source>
-        <translation>Хадгалах %1</translation>
+        <translation>Хадгалагдсан %1-д</translation>
     </message>
     <message>
         <source>Record</source>
-        <translation>Зураг авах</translation>
+        <translation>Хадгалах</translation>
     </message>
     <message>
         <source>Open Folder</source>
-        <translation>Фолдер нь нээх</translation>
+        <translation>Фолдерийг нээх</translation>
     </message>
 </context>
 <context>
     <name>Screenshot</name>
     <message>
         <source>Screen Capture will start in %1 seconds</source>
-        <translation>Энэ %1 секундад сүүлчийн хэмжээ нээх</translation>
+        <translation>%1 секунд дараах хугацаанд сүлжээний снимаг нь эхлэнэ</translation>
     </message>
 </context>
 <context>
     <name>ScrollShotTip</name>
     <message>
         <source>Get help.</source>
-        <translation>Тансаглах</translation>
+        <translation>Тусламж авах</translation>
     </message>
     <message>
         <source>Failed to take a continuous screenshot.</source>
-        <translation>Хүчирхэг сүүлчийн хэмжээ авахад амжилтгүй</translation>
+        <translation>Хэрэгцээтэй сүлжээний снимаг авахад амжилтгүй байна.</translation>
     </message>
     <message>
         <source>Reached the bottom of the scroll area</source>
@@ -208,37 +210,37 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Reached the maximum length</source>
-        <translation>Хамгийн их уртад хүрлээ</translation>
+        <translation>Хамгийн том урт хүрлээ</translation>
     </message>
     <message>
         <source>adjust the capture area</source>
-        <translation>Хүчирхэг сүүлчийн хэмжээг засах</translation>
+        <translation>Снимаг авах талбайг засах</translation>
     </message>
     <message>
         <source>Scroll your mouse wheel or click to take a scrolling screenshot</source>
-        <translation>Хөдөлгэх талбайн дээр дээдэс хөдөлгөхөөсөө хүчирхэг сүүлчийн хэмжээ авах</translation>
+        <translation>Хөдөлгэх талбайн снимаг авахын тулд мусын цагаан талбайг хөдөлгөөнөөр эсвэл дарж харуулна уу</translation>
     </message>
     <message>
         <source>Slow down the scrolling speed</source>
-        <translation>Хөдөлгэх хурдыг бууруулах</translation>
+        <translation>Хөдөлгэх хурдад буурна уу</translation>
     </message>
     <message>
         <source>Invalid area, click to </source>
-        <translation>Буруу талбай, дарах</translation>
+        <translation>Буруу талбай, дарж </translation>
     </message>
 </context>
 <context>
     <name>ShapesWidget</name>
     <message>
         <source>Input text here</source>
-        <translation>Хэсэгт текст оруулах</translation>
+        <translation>Текст оруулах</translation>
     </message>
 </context>
 <context>
     <name>Shortcut</name>
     <message>
         <source>Start/Screenshot</source>
-        <translation>Хөдөлгэх/Сүүлчийн хэмжээ</translation>
+        <translation>Эхлэх/Снимаг</translation>
     </message>
     <message>
         <source>Exit/Save</source>
@@ -246,27 +248,27 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Size Adjustment</source>
-        <translation>Хэмжээг засах</translation>
+        <translation>Хэмжээний засах</translation>
     </message>
     <message>
         <source>Settings</source>
-        <translation>Сонголт</translation>
+        <translation>Тогтмол сэтгэл</translation>
     </message>
     <message>
         <source>Quick start</source>
-        <translation>Хурдан эхлүүлэх</translation>
+        <translation>Хурдан эхлэх</translation>
     </message>
     <message>
         <source>Window screenshot</source>
-        <translation>Хүчирхэг сүүлчийн хэмжээ</translation>
+        <translation>Хүүхэний снимаг</translation>
     </message>
     <message>
         <source>Delay screenshot</source>
-        <translation>Хугацаа давтах</translation>
+        <translation>Хугацаа дээр снимаг</translation>
     </message>
     <message>
         <source>Full screenshot</source>
-        <translation>Бүх сүүлчийн хэмжээ</translation>
+        <translation>Бүх снимаг</translation>
     </message>
     <message>
         <source>Exit</source>
@@ -278,7 +280,7 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Rectangle</source>
-        <translation>Тэгшөнцөг</translation>
+        <translation>Хүрээ</translation>
     </message>
     <message>
         <source>Ellipse</source>
@@ -286,11 +288,11 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Line</source>
-        <translation>Хэрчим</translation>
+        <translation>Хөрөнгө</translation>
     </message>
     <message>
         <source>Pencil</source>
-        <translation>Хөрвөө</translation>
+        <translation>Хөөрөө</translation>
     </message>
     <message>
         <source>Text</source>
@@ -302,39 +304,39 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Undo</source>
-        <translation>Болих</translation>
+        <translation>Буцаах</translation>
     </message>
     <message>
         <source>Increase height up</source>
-        <translation>Өндөрөөс дээш</translation>
+        <translation>Өндөрөө дээшлүүлэх</translation>
     </message>
     <message>
         <source>Increase height down</source>
-        <translation>Өндөрөөс доош</translation>
+        <translation>Өндөрөө доошлүүлэх</translation>
     </message>
     <message>
         <source>Increase width left</source>
-        <translation>Хэмжээгээс зүүн</translation>
+        <translation>Хэмжээг баруун тийш дээшлүүлэх</translation>
     </message>
     <message>
         <source>Increase width right</source>
-        <translation>Хэмжээгээс баруун</translation>
+        <translation>Хэмжээг зүүн тийш дээшлүүлэх</translation>
     </message>
     <message>
         <source>Decrease height up</source>
-        <translation>Өндөрөөс дээш</translation>
+        <translation>Өндөрөө дээшлүүлэх</translation>
     </message>
     <message>
         <source>Decrease height down</source>
-        <translation>Өндөрөөс доош</translation>
+        <translation>Өндөрөө доошлүүлэх</translation>
     </message>
     <message>
         <source>Decrease width left</source>
-        <translation>Хэмжээгээс зүүн</translation>
+        <translation>Хэмжээг баруун тийш доошлүүлэх</translation>
     </message>
     <message>
         <source>Decrease width right</source>
-        <translation>Хэмжээгээс баруун</translation>
+        <translation>Хэмжээг зүүн тийш доошлүүлэх</translation>
     </message>
     <message>
         <source>Help</source>
@@ -342,31 +344,39 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Display shortcuts</source>
-        <translation>Хялбарчлалыг үзүүлэх</translation>
+        <translation>Түүхийн товчлосон үүргийг харуулах</translation>
+    </message>
+    <message>
+        <source>Sound</source>
+        <translation>Хуваалцаж буй звук</translation>
     </message>
     <message>
         <source>Keystroke</source>
-        <translation>Клавишны дуудлага</translation>
+        <translation>Товчлуур</translation>
     </message>
     <message>
         <source>Webcam</source>
-        <translation>Хөнгөн камера</translation>
+        <translation>Вэбкэм</translation>
     </message>
     <message>
         <source>Start recording</source>
-        <translation>Хуваалцах</translation>
+        <translation>Хуваалцах эхлүүлэх</translation>
     </message>
     <message>
         <source>Options</source>
-        <translation>Хүчээ</translation>
+        <translation>Үүргүүд</translation>
     </message>
     <message>
         <source>Start/Recording</source>
-        <translation>Хуваалцах</translation>
+        <translation>Хуваалцах/Хуваалцах</translation>
+    </message>
+    <message>
+        <source>Mouse</source>
+        <translation>Хөдөлгэгч</translation>
     </message>
     <message>
         <source>Tools</source>
-        <translation>Үзүүлэгч</translation>
+        <translation>Үүргүүд</translation>
     </message>
     <message>
         <source>Extract text</source>
@@ -374,38 +384,30 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Scrollshot</source>
-        <translation>Хуваалцах</translation>
+        <translation>Скрулшот</translation>
     </message>
     <message>
         <source>Pin screenshots</source>
-        <translation>Хуваалцах</translation>
-    </message>
-    <message>
-        <source>Start scrollshot</source>
-        <translation>Хуваалцах</translation>
+        <translation>Скрулшотыг тэмдэглэх</translation>
     </message>
     <message>
         <source>Start OCR</source>
-        <translation>OCR-ийг эхлүүлэх</translation>
+        <translation>OCR-ыг эхлүүлэх</translation>
+    </message>
+    <message>
+        <source>Start scrollshot</source>
+        <translation>Скрулшотыг эхлүүлэх</translation>
     </message>
     <message>
         <source>Arrow</source>
         <translation>Хүрээ</translation>
-    </message>
-    <message>
-        <source>Sound</source>
-        <translation>Хуваалцах</translation>
-    </message>
-    <message>
-        <source>Mouse</source>
-        <translation>Мөрөө</translation>
     </message>
 </context>
 <context>
     <name>ShotStartPlugin</name>
     <message>
         <source>Screenshot</source>
-        <translation>Хуудас авах</translation>
+        <translation>Скриншот</translation>
     </message>
 </context>
 <context>
@@ -421,31 +423,31 @@ or press the shortcut again to stop recording</source>
         <source>Rectangle
 Press and hold Shift to draw a square</source>
         <translation>Нэгтэлт
-Shift товхим хүртэл дарж квадратыг байгуулна</translation>
+Shift товчныг нэгтэлтээр нэгтэлт зүйл бүтээх</translation>
     </message>
     <message>
         <source>Ellipse
 Press and hold Shift to draw a circle</source>
-        <translation>Эллипс
-Shift товхим хүртэл дарж тойрогыг байгуулна</translation>
+        <translation>Цилиндр
+Shift товчныг нэгтэлтээр цилиндр зүйл бүтээх</translation>
     </message>
     <message>
         <source>Brush
 Press and hold Shift to draw a straight line</source>
         <translation>Хөөрөг
-Shift товхим хүртэл дарж төгсөн хүрээг байгуулна</translation>
+Shift товчныг нэгтэлтээр тэгш өнцөгт зүйл бүтээх</translation>
     </message>
     <message>
         <source>Adjust blur strength (Scroll to adjust it)</source>
-        <translation>Хөөрөгний хөөрөгтэй хэмжээг засах (Хөдөлгөөнөөр засах)</translation>
+        <translation>Тэгш өнцөгт зүйл хүчнийг зөөх (Сүлгэхэд зөөх)</translation>
     </message>
     <message>
         <source>Adjust brush size (Scroll to adjust it)</source>
-        <translation>Хөөрөгний хэмжээг засах (Хөдөлгөөнөөр засах)</translation>
+        <translation>Хөөрөгнийг зөөх (Сүлгэхэд зөөх)</translation>
     </message>
     <message>
         <source>Adjust text size (Scroll to adjust it)</source>
-        <translation>Текстний хэмжээг засах (Хөдөлгөөнөөр засах)</translation>
+        <translation>Текстийг зөөх (Сүлгэхэд зөөх)</translation>
     </message>
 </context>
 <context>
@@ -453,19 +455,43 @@ Shift товхим хүртэл дарж төгсөн хүрээг байгуу�
     <message>
         <source>Click or drag to
 select the area to record</source>
-        <translation>Хуудас авахын төлөө нэгтэлт дээр дарж
-зураг авах талбайг сонгоно</translation>
+        <translation>Харагдаж болох эсвэл дарж болох талбайг
+зураг авах талбайг сонгох</translation>
     </message>
 </context>
 <context>
     <name>SubToolWidget</name>
     <message>
-        <source>Microphone</source>
-        <translation>Микрофон</translation>
+        <source>Show keystroke (K)</source>
+        <translation>Хөрөөнийг харуулах (K)</translation>
     </message>
     <message>
-        <source>Options</source>
-        <translation>Таамаглал</translation>
+        <source>Hide Keystroke (K)</source>
+        <translation>Хөрөөнийг харгүйлэх (K)</translation>
+    </message>
+    <message>
+        <source>Show Keystroke (K)</source>
+        <translation>Хөрөөнийг харуулах (K)</translation>
+    </message>
+    <message>
+        <source>Turn on camera (C)</source>
+        <translation>Камерыг бүрэн ажлуулгүйлэх (C)</translation>
+    </message>
+    <message>
+        <source>Turn off camera (C)</source>
+        <translation>Камерыг ажиллуулахгүйлэх (C)</translation>
+    </message>
+    <message>
+        <source>Screenshot</source>
+        <translation>Скриншот</translation>
+    </message>
+    <message>
+        <source>Settings</source>
+        <translation>Хуваарь</translation>
+    </message>
+    <message>
+        <source>Settings (F3)</source>
+        <translation>Хуваарь (F3)</translation>
     </message>
     <message>
         <source>Format:</source>
@@ -478,6 +504,14 @@ select the area to record</source>
     <message>
         <source>MP4</source>
         <translation>MP4</translation>
+    </message>
+    <message>
+        <source>MKV</source>
+        <translation>MKV</translation>
+    </message>
+    <message>
+        <source>webm</source>
+        <translation>webm</translation>
     </message>
     <message>
         <source>FPS:</source>
@@ -504,6 +538,30 @@ select the area to record</source>
         <translation>30 fps</translation>
     </message>
     <message>
+        <source>Sound</source>
+        <translation>Хуваарь</translation>
+    </message>
+    <message>
+        <source>Microphone</source>
+        <translation>Хөгжмөн</translation>
+    </message>
+    <message>
+        <source>System audio</source>
+        <translation>Системын хөгжмөн</translation>
+    </message>
+    <message>
+        <source>Options</source>
+        <translation>Таамаг</translation>
+    </message>
+    <message>
+        <source>Show pointer</source>
+        <translation>Хүрээлэн харуулах</translation>
+    </message>
+    <message>
+        <source>Show click</source>
+        <translation>Хүрээлэн дарах</translation>
+    </message>
+    <message>
         <source>Save to</source>
         <translation>Хадгалах</translation>
     </message>
@@ -512,12 +570,84 @@ select the area to record</source>
         <translation>Хөбөр</translation>
     </message>
     <message>
+        <source>Videos</source>
+        <translation>Видео</translation>
+    </message>
+    <message>
+        <source>Rectangle (R)
+Press and hold Shift to draw a square</source>
+        <translation>Хүрээ (R)
+Shift-ийг дарж үлдээхэд квадратыг байгуулна</translation>
+    </message>
+    <message>
+        <source>Ellipse (O)
+Press and hold Shift to draw a circle</source>
+        <translation>Эллипс (O)
+Shift-ийг дарж үлдээхэд тойрогыг байгуулах</translation>
+    </message>
+    <message>
+        <source>Line (L)
+Press and hold Shift to draw a vertical or horizontal line</source>
+        <translation>Хөрвөө (L)
+Shift-ийг дарж үлдээхэд хэвтээ эсвэл вертикаал хөрвөөг байгуулах</translation>
+    </message>
+    <message>
+        <source>Arrow (X)
+Press and hold Shift to draw a vertical or horizontal arrow</source>
+        <translation>Хүрээлэн (X)
+Shift-ийг дарж үлдээхэд хэвтээ эсвэл вертикаал хүрээлэн байгуулах</translation>
+    </message>
+    <message>
+        <source>Pencil (P)</source>
+        <translation>Хөрөө (P)</translation>
+    </message>
+    <message>
+        <source>Blur (B)</source>
+        <translation>Хөрөөлөг (B)</translation>
+    </message>
+    <message>
+        <source>Text (T)</source>
+        <translation>Текст (T)</translation>
+    </message>
+    <message>
+        <source>Scrollshot (Alt+I）</source>
+        <translation>Скорошот (Alt+I)</translation>
+    </message>
+    <message>
+        <source>Extract text (Alt+O）</source>
+        <translation>Текстийг таслаж авах (Alt+O)</translation>
+    </message>
+    <message>
+        <source>Pin screenshots (Alt+P）</source>
+        <translation>Скорошотыг нэмэх (Alt+P)</translation>
+    </message>
+    <message>
+        <source>Undo (Ctrl+Z)</source>
+        <translation>Хүчээс авах (Ctrl+Z)</translation>
+    </message>
+    <message>
+        <source>Record</source>
+        <translation>Хадгалах</translation>
+    </message>
+    <message>
+        <source>Clipboard</source>
+        <translation>Хадгалах</translation>
+    </message>
+    <message>
         <source>Pictures</source>
         <translation>Зураг</translation>
     </message>
     <message>
         <source>Folder</source>
-        <translation>Фолдер</translation>
+        <translation>Хавтас</translation>
+    </message>
+    <message>
+        <source>Set a path on save</source>
+        <translation>Хадгалах үед замыг сонгох</translation>
+    </message>
+    <message>
+        <source>Change the path on save</source>
+        <translation>Хадгалах үед замыг өөрчлөх</translation>
     </message>
     <message>
         <source>Format</source>
@@ -536,156 +666,28 @@ select the area to record</source>
         <translation>BMP</translation>
     </message>
     <message>
-        <source>MKV</source>
-        <translation>MKV</translation>
-    </message>
-    <message>
-        <source>Clipboard</source>
-        <translation>Товхим</translation>
-    </message>
-    <message>
-        <source>Show pointer</source>
-        <translation>Хүрээлэн</translation>
-    </message>
-    <message>
-        <source>Extract Text</source>
-        <translation>Текстийг гаргах</translation>
-    </message>
-    <message>
-        <source>Show keystroke (K)</source>
-        <translation>Хүчээ шүргэх (K)</translation>
-    </message>
-    <message>
-        <source>Settings</source>
-        <translation>Сонголтууд</translation>
-    </message>
-    <message>
-        <source>Settings (F3)</source>
-        <translation>Сонголтууд (F3)</translation>
-    </message>
-    <message>
-        <source>Blur (B)</source>
-        <translation>Хөндлөн (B)</translation>
-    </message>
-    <message>
-        <source>Text (T)</source>
-        <translation>Текст (T)</translation>
-    </message>
-    <message>
-        <source>Scrollshot (Alt+I）</source>
-        <translation>Сүлжээний снимаг (Alt+I)</translation>
-    </message>
-    <message>
-        <source>Extract text (Alt+O）</source>
-        <translation>Текстийг гаргах (Alt+O)</translation>
-    </message>
-    <message>
-        <source>Undo (Ctrl+Z)</source>
-        <translation>Хүчээ шүргэх (Ctrl+Z)</translation>
-    </message>
-    <message>
-        <source>Screenshot</source>
-        <translation>Снимаг</translation>
-    </message>
-    <message>
-        <source>Pin screenshots (Alt+P）</source>
-        <translation>Снимагыг нь тэмдэглэх (Alt+P)</translation>
-    </message>
-    <message>
-        <source>Record</source>
-        <translation>Хадгалах</translation>
-    </message>
-    <message>
-        <source>Pencil (P)</source>
-        <translation>Хөрөнгө (P)</translation>
-    </message>
-    <message>
-        <source>Turn on camera (C)</source>
-        <translation>Камерыг үүсгэх (C)</translation>
-    </message>
-    <message>
         <source>Border Effects</source>
-        <translation>Хажуу хэмжээний үзүүлэлт</translation>
+        <translation>Хүрээний үйлдэл</translation>
     </message>
     <message>
         <source>None</source>
-        <translation>Хэтий</translation>
-    </message>
-    <message>
-        <source>Turn off camera (C)</source>
-        <translation>Камерыг салгах (C)</translation>
-    </message>
-    <message>
-        <source>Hide Keystroke (K)</source>
-        <translation>Хүчээ шүргэхийг нь хөшөөжүүлэх (K)</translation>
-    </message>
-    <message>
-        <source>Show Keystroke (K)</source>
-        <translation>Хүчээ шүргэх (K)</translation>
-    </message>
-    <message>
-        <source>webm</source>
-        <translation>webm</translation>
-    </message>
-    <message>
-        <source>Videos</source>
-        <translation>Видео</translation>
-    </message>
-    <message>
-        <source>Rectangle (R)
-Press and hold Shift to draw a square</source>
-        <translation>Нэгтгэл (R)
-Shift-ийг нь нэгтгэж үүсгэхэд квадрат үүснэ</translation>
-    </message>
-    <message>
-        <source>Ellipse (O)
-Press and hold Shift to draw a circle</source>
-        <translation>Эллипс (O)
-Shift-ийг нь нэгтгэж үүсгэхэд үүсгэхэд бөмбөг үүснэ</translation>
-    </message>
-    <message>
-        <source>Line (L)
-Press and hold Shift to draw a vertical or horizontal line</source>
-        <translation>Хэрчим (L)
-Shift-ийг нь нэгтгэж үүсгэхэд хөндлөн, хэвтээ хэрчим үүснэ</translation>
-    </message>
-    <message>
-        <source>Arrow (X)
-Press and hold Shift to draw a vertical or horizontal arrow</source>
-        <translation>Хүрээлэн (X)
-Shift-ийг нь нэгтгэж үүсгэхэд хөндлөн, хэвтээ хүрээлэн үүснэ</translation>
+        <translation>Хэцээгүй</translation>
     </message>
     <message>
         <source>Shadow</source>
-        <translation>Түрэг</translation>
+        <translation>Сүргэл</translation>
     </message>
     <message>
         <source>Border</source>
-        <translation>Хажуу хэмжээ</translation>
+        <translation>Хажуу хэсэг</translation>
     </message>
     <message>
         <source>Device</source>
-        <translation>Хөгжим</translation>
+        <translation>Хөгжмөөр</translation>
     </message>
     <message>
-        <source>Sound</source>
-        <translation>Хэлэл</translation>
-    </message>
-    <message>
-        <source>System audio</source>
-        <translation>Системын хураа</translation>
-    </message>
-    <message>
-        <source>Show click</source>
-        <translation>Хүчээ бичих</translation>
-    </message>
-    <message>
-        <source>Set a path on save</source>
-        <translation>Хадгалахад зам үзүүлэх</translation>
-    </message>
-    <message>
-        <source>Change the path on save</source>
-        <translation>Хадгалахад зам өөрчлөх</translation>
+        <source>Extract Text</source>
+        <translation>Текстийг бүтээх</translation>
     </message>
 </context>
 <context>
@@ -696,21 +698,21 @@ Shift-ийг нь нэгтгэж үүсгэхэд хөндлөн, хэвтээ �
     </message>
     <message>
         <source>OK (Enter)</source>
-        <translation>Хүлээн авах (Enter)</translation>
+        <translation>Хүсэх (Enter)</translation>
     </message>
 </context>
 <context>
     <name>TopTips</name>
     <message>
         <source> Adjust the recording area within %1*%2 to get better video effect</source>
-        <translation>Хураагдах талбайг %1*%2 -д шинэчлэхэд тодорхой хөрөнгөтэй видео үр дүнг авах боломжтой</translation>
+        <translation> %1*%2 -д дүрсэлдэх хэсэгийг өөрчлөхөөр томъёололын үр дүнгээ сайжуулах</translation>
     </message>
 </context>
 <context>
     <name>Utils</name>
     <message>
         <source>Screen recording is not supported at present</source>
-        <translation>Хөнгөн хураагчлаа үүсгэх нь үүнийгээ түрүүлэх боломжгүй</translation>
+        <translation>Хөгжмөөр дүрсэлдэх нь үүнийг нэмэгдүүлэхээс өмнө үндэсгүй</translation>
     </message>
     <message>
         <source>Exit</source>
@@ -721,7 +723,7 @@ Shift-ийг нь нэгтгэж үүсгэхэд хөндлөн, хэвтээ �
     <name>VoiceRecordProcess</name>
     <message>
         <source>New recording</source>
-        <translation>Шинэ хураагч</translation>
+        <translation>Нэмэгдүүлэх дүрсэл</translation>
     </message>
 </context>
 </TS>

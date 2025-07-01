@@ -113,16 +113,6 @@ int main(int argc, char *argv[])
     QAccessible::installFactory(accessibleFactory);
 #endif
 
-
-    // Add test translation strings
-    qDebug() << QObject::tr("Hello World Test");
-    qDebug() << QObject::tr("Testing 12345");
-    qDebug() << QObject::tr("Sample Text 15");
-    qDebug() << QObject::tr("Debug Message 1");
-    qDebug() << QObject::tr("Final Test Text");
-
-
-
     QDBusConnection dbus = QDBusConnection::sessionBus();
     //    dbus.registerService("com.deepin.ScreenRecorder");
     if (dbus.registerService("com.deepin.ScreenRecorder")) {
