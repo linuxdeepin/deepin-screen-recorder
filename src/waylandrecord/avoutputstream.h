@@ -12,7 +12,7 @@
 #include "waylandintegration_p.h"
 
 using namespace std;
-
+#define AUDIO_BITRATE 64000
 class CAVOutputStream
 {
 public:
