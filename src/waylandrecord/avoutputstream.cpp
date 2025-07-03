@@ -43,11 +43,11 @@ CAVOutputStream::CAVOutputStream(WaylandIntegration::WaylandIntegrationPrivate *
     m_video_bitrate = 500000;
     m_samplerate = 0;
     m_channels = 1;
-    m_audio_bitrate = 32000;
+    m_audio_bitrate = AUDIO_BITRATE;
     m_samplerate_card = 0;
     is_fifo_scardinit = 0;
     m_channels_card = 1;
-    m_audio_bitrate_card = 32000;
+    m_audio_bitrate_card = AUDIO_BITRATE;
     m_videoStream = nullptr;
     m_micAudioStream = nullptr;
     m_sysAudioStream = nullptr;

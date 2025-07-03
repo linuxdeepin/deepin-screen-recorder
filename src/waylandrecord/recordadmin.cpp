@@ -154,10 +154,10 @@ int RecordAdmin::startStream()
     int sample_rate = 0, channels = 0, layout;
     AVSampleFormat  sample_fmt;
     if (m_pInputStream->GetAudioInputInfo(sample_fmt, sample_rate, channels, layout)) { //获取音频采集源的信息
-        m_pOutputStream->SetAudioCodecProp(AV_CODEC_ID_MP3, sample_rate, channels, layout, 32000); //AV_CODEC_ID_MP3 AV_CODEC_ID_AAC设置音频编码器属性
+        m_pOutputStream->SetAudioCodecProp(AV_CODEC_ID_MP3, sample_rate, channels, layout, AUDIO_BITRATE); //AV_CODEC_ID_MP3 AV_CODEC_ID_AAC设置音频编码器属性
     }
     if (m_pInputStream->GetAudioSCardInputInfo(sample_fmt, sample_rate, channels, layout)) { //获取音频采集源的信息
-        m_pOutputStream->SetAudioCardCodecProp(AV_CODEC_ID_MP3, sample_rate, channels, layout, 32000); //设置音频编码器属性
+        m_pOutputStream->SetAudioCardCodecProp(AV_CODEC_ID_MP3, sample_rate, channels, layout, AUDIO_BITRATE); //设置音频编码器属性
     }
     qInfo() << "打开输出!";
     bRet = m_pOutputStream->open(m_filePath);
