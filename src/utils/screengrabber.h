@@ -22,12 +22,12 @@ public:
 
 private:
     QPixmap grabWaylandScreenshot(bool &ok, const QRect &rect, const qreal devicePixelRatio);
-    QPixmap grabX11Screenshot(bool &ok, const QRect &rect);
+    QPixmap grabX11Screenshot(bool &ok, const QRect &rect, const qreal devicePixelRatio);
     QList<QScreen*> findIntersectingScreens(const QRect &rect);
-    QPixmap grabPrimaryScreenFallback(bool &ok, const QRect &rect);
-    QPixmap grabSingleScreen(bool &ok, const QRect &rect, QScreen *screen);
-    QPixmap grabMultipleScreens(bool &ok, const QRect &rect, const QList<QScreen*> &screens);
-    QPixmap grabScreenFragment(QScreen *screen, const QRect &intersection);
+    QPixmap grabPrimaryScreenFallback(bool &ok, const QRect &rect, const qreal devicePixelRatio);
+    QPixmap grabSingleScreen(bool &ok, const QRect &rect, QScreen *screen, const qreal devicePixelRatio);
+    QPixmap grabMultipleScreens(bool &ok, const QRect &rect, const QList<QScreen*> &screens, const qreal devicePixelRatio);
+    QPixmap grabScreenFragment(QScreen *screen, const QRect &intersection, const qreal devicePixelRatio);
 };
 
 #endif // SCREENGRABBER_H
