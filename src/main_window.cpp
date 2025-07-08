@@ -580,8 +580,8 @@ void MainWindow::waylandwindowinfo(const QVector<ClientManagement::WindowState> 
                                 static_cast<int>(windowStates.at(i).geometry.height / ratio));
             }
             windowNames << windowStates.at(i).resourceName;
-            if (windowNames.contains("dde-dock")) {
-                ddeDockLayerIndex = i;
+            if (windowNames.last().contains("dde-dock")) {
+                ddeDockLayerIndex = windowNames.size() - 1;
             }
         }
     }
