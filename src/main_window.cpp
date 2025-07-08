@@ -693,6 +693,9 @@ void MainWindow::waylandwindowinfo(const QVector<ClientManagement::WindowState> 
                                      static_cast<int>(windowStates.at(i).geometry.height / ratio));
             }
             windowNames << windowStates.at(i).resourceName;
+            if (windowNames.contains("dde-dock")) {
+                ddeDockLayerIndex = windowNames.size() - 1;
+            }
         }
     }
     if (windowStates.count() > 0) {
@@ -2255,7 +2258,11 @@ void MainWindow::topWindow()
 void MainWindow::saveTopWindow()
 {
     qCDebug(dsrApp) << "saveTopWindow";
+#ifdef KF5_WAYLAND_FLAGE_ON
+    int topWindowIndex = ddeDockLayerIndex - 1;
+#else
     int topWindowIndex = windowRects.size() - 2;
+#endif
     if (topWindowIndex < 0) {
         topWindowIndex = 0;
     }
