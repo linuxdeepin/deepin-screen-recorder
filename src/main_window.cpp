@@ -580,6 +580,9 @@ void MainWindow::waylandwindowinfo(const QVector<ClientManagement::WindowState> 
                                 static_cast<int>(windowStates.at(i).geometry.height / ratio));
             }
             windowNames << windowStates.at(i).resourceName;
+            if (windowNames.contains("dde-dock")) {
+                ddeDockLayerIndex = i;
+            }
         }
     }
     if (windowStates.count() > 0) {
@@ -1847,7 +1850,7 @@ void MainWindow::topWindow()
 
 void MainWindow::saveTopWindow()
 {
-    int topWindowIndex = windowRects.size() - 2;
+    int topWindowIndex = ddeDockLayerIndex - 1;
     if (topWindowIndex < 0) {
         topWindowIndex = 0;
     }
