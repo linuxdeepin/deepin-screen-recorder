@@ -1221,7 +1221,7 @@ private:
     /**
      * @brief 功能类型  0: record, 1: shot , 2: scrollshot , 3: ocr , 4: pinscreenshots
      */
-    unsigned int m_functionType = status::record;  //0: record, 1: shot , 2: scrollshot
+    unsigned int m_functionType = status::shot;  //0: record, 1: shot , 2: scrollshot
     /**
      * @brief 此坐标用来记录截图和录屏切换时一级工具栏右上角的坐标
      *  确保切换功能后一级工具栏能够右对齐
