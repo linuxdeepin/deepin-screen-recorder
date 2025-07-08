@@ -957,7 +957,7 @@ private:
     /**
      * @brief 功能类型
      */
-    unsigned int m_functionType = status::record;  //0: record, 1: shot , 2: scrollshot
+    unsigned int m_functionType = status::shot;  //0: record, 1: shot , 2: scrollshot
     /**
      * @brief 键盘开关状态
      */
