@@ -755,6 +755,7 @@ private:
      * @brief 所有窗口的名称，与windowRects一一对应
      */
     QList<QString> windowNames;
+    int ddeDockLayerIndex = -1;
     ShowButtons *m_showButtons = nullptr;
     //QTimer *flashTrayIconTimer = nullptr;
     QRect screenRect;
