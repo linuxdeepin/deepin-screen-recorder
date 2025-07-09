@@ -1,3 +1,9 @@
+deepin-screen-recorder (6.5.29) unstable; urgency=medium
+
+  * chore: Update deepin-manual resources
+
+ -- dengzhongyuan <dengzhongyuan@uniontech.com>  Wed, 09 Jul 2025 17:19:39 +0800
+
 deepin-screen-recorder (6.5.28) unstable; urgency=medium
 
   * fix: Enhance screenshot functionality for multi-screen setups
