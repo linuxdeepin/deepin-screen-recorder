@@ -327,6 +327,7 @@ In the screenshot toolbar, click the options dropdown:
 - **Custom Location**: Save to user-specified folder
 - **Show Cursor**: Include cursor position and style in screenshots
 - **PNG/JPG/BMP**: Set image format
+- **none/shadow/border/device**: Set the image border effect.
 
 ## Screen Recording
 
@@ -362,10 +363,10 @@ In the recording toolbar, you can:
 
 - **Show Keys**: Click ![icon](../common/key_normal.svg) to display keyboard presses (max 5 simultaneous keys).
 - **Enable Camera**: Click ![icon](../common/webcam_normal.svg) to record both screen and camera. Drag to reposition the camera window.
-   
+  
    > ![attention](../common/attention.svg) Note: Ensure connected devices support audio recording or camera functionality.
 - **Options**: In the dropdown menu, select **GIF**, **MP4**, or **MKV** format, and configure frame rate, audio recording, cursor display, etc.
-   
+  
    > ![notes](../common/notes.svg) Note: MIPS architecture does not support GIF format.
 
 ### Recording Screen
