@@ -1970,7 +1970,6 @@ void MainWindow::fullScreenshot()
     // DDesktopServices::playSystemSoundEffect(DDesktopServices::SEE_Screenshot);
     this->initAttributes();
     this->initLaunchMode("screenShot");
-    this->showFullScreen();
     this->initResource();
     qCDebug(dsrApp) << "fullScreenshot repaint";
     repaint();
@@ -1994,6 +1993,7 @@ void MainWindow::fullScreenshot()
     //
     this->move(m_backgroundRect.x(), m_backgroundRect.y());
     this->setFixedSize(m_backgroundRect.size());
+    this->showFullScreen();
     m_needSaveScreenshot = true;
     qCDebug(dsrApp) << "fullScreenshot m_needSaveScreenshot";
     //    m_toolBar = new ToolBar(this);
