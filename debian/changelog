@@ -1,3 +1,9 @@
+deepin-screen-recorder (6.5.30) unstable; urgency=medium
+
+  * fix: Correct fullscreen behavior in screenshot functionality
+
+ -- dengzhongyuan <dengzhongyuan@uniontech.com>  Wed, 16 Jul 2025 14:44:13 +0800
+
 deepin-screen-recorder (6.5.29) unstable; urgency=medium
 
   * chore: Update deepin-manual resources
