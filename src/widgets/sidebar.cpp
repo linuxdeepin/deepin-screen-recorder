@@ -9,6 +9,7 @@
 #include "../utils/log.h"
 #include "../accessibility/acTextDefine.h"
 #include "../main_window.h"
+#include "shapetoolwidget.h"
 
 #include <QPainter>
 #include <QDebug>
@@ -32,6 +33,7 @@ namespace {
 const QSize TOOLBAR_WIDGET_SIZE1 = QSize(290, 68);
 const QSize TOOLBAR_WIDGET_SIZE2 = QSize(370, 68);
 const QSize TOOLBAR_WIDGET_SIZE3 = QSize(500, 68);
+const QSize TOOLBAR_WIDGET_SIZE4 = QSize(500, 68);
 
 //const int BUTTON_SPACING = 3;
 //const int BTN_RADIUS = 3;
@@ -77,12 +79,16 @@ void SideBarWidget::initSideBarWidget()
     m_seperator = new DVerticalLine(this);
     //m_seperator->setDisabled(true);
     m_seperator->setFixedSize(SPLITTER_SIZE);
-
+    m_seperator1 = new DVerticalLine(this);
+    m_seperator1->setFixedSize(SPLITTER_SIZE);
+    m_shapeTool = new ShapeToolWidget(this);
     m_colorTool = new ColorToolWidget(this);
     m_shotTool = new ShotToolWidget(m_pMainWindow, this);
 
     QHBoxLayout *hLayout = new QHBoxLayout(this);
     hLayout->setContentsMargins(10, 0, 10, 0);
+    hLayout->addWidget(m_shapeTool);
+    hLayout->addWidget(m_seperator1);
     hLayout->addWidget(m_shotTool);
     hLayout->addWidget(m_seperator);
     hLayout->addWidget(m_colorTool);
@@ -106,11 +112,15 @@ void SideBarWidget::changeShotToolWidget(const QString &func)
     }
 
     //不同图形下二级菜单的大小及长度不一样
-    if (func == "rectangle" ||
-            func == "oval" ||
-            func == "line" ||
-            func == "arrow" ||
-            func == "pen") {
+    if (func == "gio" ||
+        func == "oval") {
+        qCDebug(dsrApp) << "Resizing sidebar for rectangle, oval, line, arrow, or pen.";
+        resize(TOOLBAR_WIDGET_SIZE1);
+    }
+    else if(
+        func == "line" ||
+        func == "arrow" ||
+        func == "pen") {
         qCDebug(dsrApp) << "Resizing sidebar for rectangle, oval, line, arrow, or pen.";
         resize(TOOLBAR_WIDGET_SIZE1);
     } else if (func == "text") {

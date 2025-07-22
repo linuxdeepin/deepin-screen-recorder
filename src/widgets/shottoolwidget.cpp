@@ -114,18 +114,14 @@ void ShotToolWidget::initEffectLabel()
 
     QButtonGroup *shapBtnGroup = new QButtonGroup(this);
     shapBtnGroup->setExclusive(true);
-    ToolButton *rectBut = new ToolButton(this);
-    rectBut->setFixedSize(TOOL_BUTTON_SIZE);
-    rectBut->setIconSize(TOOL_ICON_SIZE);
-    rectBut->setIcon(QIcon::fromTheme(QString("rectangle-normal")));
-    installTipHint(rectBut, tr("Rectangle\nPress and hold Shift to draw a square"));
-    shapBtnGroup->addButton(rectBut);
-    ToolButton *ovalBut = new ToolButton(this);
-    ovalBut->setFixedSize(TOOL_BUTTON_SIZE);
-    ovalBut->setIconSize(TOOL_ICON_SIZE);
-    ovalBut->setIcon(QIcon::fromTheme(QString("oval-normal")));
-    installTipHint(ovalBut, tr("Ellipse\nPress and hold Shift to draw a circle"));
-    shapBtnGroup->addButton(ovalBut);
+
+    ToolButton *geometryBut = new ToolButton(this);
+    geometryBut->setFixedSize(TOOL_BUTTON_SIZE);
+    geometryBut->setIconSize(TOOL_ICON_SIZE);
+    geometryBut->setIcon(QIcon::fromTheme(QString("geometry-normal")));
+    installTipHint(geometryBut, tr("Geometry\nPress and hold Shift to draw a square or circle"));
+    shapBtnGroup->addButton(geometryBut);
+    
     ToolButton *penBut = new ToolButton(this);
     penBut->setFixedSize(TOOL_BUTTON_SIZE);
     penBut->setIconSize(TOOL_ICON_SIZE);
