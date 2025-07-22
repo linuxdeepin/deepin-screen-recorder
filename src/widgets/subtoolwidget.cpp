@@ -676,24 +676,13 @@ void SubToolWidget::initShotLabel()
     m_shotOptionButton = new ToolButton();
     DPalette pa = m_shotOptionButton->palette();
     m_shotOptionButton->setOptionButtonFlag(true);
-    if (Utils::themeType == 1) {
-        pa.setColor(DPalette::ButtonText, QColor(28, 28, 28, 255));
-        pa.setColor(DPalette::Dark, QColor(192, 192, 192, 255));
-        pa.setColor(DPalette::Light, QColor(192, 192, 192, 255));
-    } else {
-        pa.setColor(DPalette::ButtonText, QColor(228, 228, 228, 255));
-        pa.setColor(DPalette::Dark, QColor(64, 64, 64, 255));
-        pa.setColor(DPalette::Light, QColor(64, 64, 64, 255));
-    }
-    m_shotOptionButton->setPalette(pa);
+    m_shotOptionButton->setIconSize(TOOL_ICON_SIZE);
+    m_shotOptionButton->setIcon(QIcon::fromTheme("configure"));
     m_shotOptionButton->setCheckable(false);
-    m_shotOptionButton->setFlat(false);
-    m_shotOptionButton->setHoverState(false);
-    DFontSizeManager::instance()->bind(m_shotOptionButton, DFontSizeManager::T6);
-    m_shotOptionButton->setText(tr("Settings"));
     Utils::setAccessibility(m_shotOptionButton, AC_SUBTOOLWIDGET_SHOT_OPTION_BUT);
-    m_shotOptionButton->setMinimumSize(MEDIUM_TOOL_BUTTON_SIZE);
+    m_shotOptionButton->setFixedSize(TOOL_BUTTON_SIZE);
     installTipHint(m_shotOptionButton, tr("Settings (F3)"));
+    
     m_shotBtnGroup->addButton(m_shotOptionButton);
     btnList.append(m_shotOptionButton);
 
@@ -767,9 +756,9 @@ void SubToolWidget::initShotLabel()
 void SubToolWidget::initShotOption()
 {
     qCDebug(dsrApp) << "正在初始化截图工具栏选项UI...";
-    QActionGroup *t_saveGroup = new QActionGroup(this);
+    // QActionGroup *t_saveGroup = new QActionGroup(this);  // 屏蔽保存组
     QActionGroup *t_formatGroup = new QActionGroup(this);
-    t_saveGroup->setExclusive(true);
+    // t_saveGroup->setExclusive(true);  // 屏蔽保存组
     t_formatGroup->setExclusive(true);
 
     m_optionMenu = new DMenu(this);
@@ -777,42 +766,43 @@ void SubToolWidget::initShotOption()
     //系统级别为 T6 的字体大小, 默认是14 px
     DFontSizeManager::instance()->bind(m_optionMenu, DFontSizeManager::T6);
 
-    // 保存位置
-    QAction *saveTitleAction = new QAction(tr("Save to"), m_optionMenu);
-    QAction *saveToClipAction = new QAction(tr("Clipboard"), m_optionMenu);
-    QAction *saveToDesktopAction = new QAction(tr("Desktop"), m_optionMenu);
-    QAction *saveToPictureAction = new QAction(tr("Pictures"), m_optionMenu);
-    QAction *saveToSpecialPath = new QAction(tr("Folder"), m_optionMenu);
-    m_saveToSpecialPathMenu = new DMenu(m_optionMenu);
-    m_saveToSpecialPathMenu->installEventFilter(this);
-    m_saveToSpecialPathMenu->setTitle(tr("Folder"));
-    m_saveToSpecialPathMenu->setToolTipsVisible(true);
-    m_saveToSpecialPathMenu->menuAction()->setCheckable(true);
-    DFontSizeManager::instance()->bind(m_saveToSpecialPathMenu, DFontSizeManager::T8);
-    QString specialPath = ConfigSettings::instance()->getValue("shot", "save_dir").value<QString>();
-    //设置或更新指定路径的菜单按键
-    m_changeSaveToSpecialPath = new QAction(m_saveToSpecialPathMenu);
-    m_changeSaveToSpecialPath->setCheckable(true);
-    //历史保存路径
-    m_saveToSpecialPathAction = new QAction(m_saveToSpecialPathMenu);
-    if (specialPath.isEmpty() || !QFileInfo::exists(specialPath)) {
-        qCDebug(dsrApp) << "不存在指定路径";
-        m_changeSaveToSpecialPath->setText(tr("Set a path on save"));
-    } else {
-        qCDebug(dsrApp) << "存在指定路径: " /*<< specialPath*/;
-        m_changeSaveToSpecialPath->setText(tr("Change the path on save"));
-        //根据字体大小计算字符串宽度，确定路径省略的长度
-        QFontMetrics tempFont(m_changeSaveToSpecialPath->font());
-        auto changeSaveToSpecialPathFontWidth = tempFont.boundingRect(m_changeSaveToSpecialPath->text()).width();
-        QFontMetrics tmpFont(m_saveToSpecialPathAction->font());
-        QString sFileName = tmpFont.elidedText(specialPath, Qt::TextElideMode::ElideRight, changeSaveToSpecialPathFontWidth);
-        m_saveToSpecialPathAction->setText(sFileName);
-        m_saveToSpecialPathAction->setToolTip(specialPath);
-        m_saveToSpecialPathAction->setCheckable(true);
-        m_saveToSpecialPathMenu->addAction(m_saveToSpecialPathAction);
-        t_saveGroup->addAction(m_saveToSpecialPathAction);
-    }
-    m_saveToSpecialPathMenu->addAction(m_changeSaveToSpecialPath);
+    // 保存位置 - 全部屏蔽
+
+    // QAction *saveTitleAction = new QAction(tr("Save to"), m_optionMenu);
+    // QAction *saveToClipAction = new QAction(tr("Clipboard"), m_optionMenu);
+    // QAction *saveToDesktopAction = new QAction(tr("Desktop"), m_optionMenu);
+    // QAction *saveToPictureAction = new QAction(tr("Pictures"), m_optionMenu);
+    // QAction *saveToSpecialPath = new QAction(tr("Folder"), m_optionMenu);
+    // m_saveToSpecialPathMenu = new DMenu(m_optionMenu);
+    // m_saveToSpecialPathMenu->installEventFilter(this);
+    // m_saveToSpecialPathMenu->setTitle(tr("Folder"));
+    // m_saveToSpecialPathMenu->setToolTipsVisible(true);
+    // m_saveToSpecialPathMenu->menuAction()->setCheckable(true);
+    // DFontSizeManager::instance()->bind(m_saveToSpecialPathMenu, DFontSizeManager::T8);
+    // QString specialPath = ConfigSettings::instance()->getValue("shot", "save_dir").value<QString>();
+    // //设置或更新指定路径的菜单按键
+    // m_changeSaveToSpecialPath = new QAction(m_saveToSpecialPathMenu);
+    // m_changeSaveToSpecialPath->setCheckable(true);
+    // //历史保存路径
+    // m_saveToSpecialPathAction = new QAction(m_saveToSpecialPathMenu);
+    // if (specialPath.isEmpty() || !QFileInfo::exists(specialPath)) {
+    //     qCDebug(dsrApp) << "不存在指定路径";
+    //     m_changeSaveToSpecialPath->setText(tr("Set a path on save"));
+    // } else {
+    //     qCDebug(dsrApp) << "存在指定路径: " /*<< specialPath*/;
+    //     m_changeSaveToSpecialPath->setText(tr("Change the path on save"));
+    //     //根据字体大小计算字符串宽度，确定路径省略的长度
+    //     QFontMetrics tempFont(m_changeSaveToSpecialPath->font());
+    //     auto changeSaveToSpecialPathFontWidth = tempFont.boundingRect(m_changeSaveToSpecialPath->text()).width();
+    //     QFontMetrics tmpFont(m_saveToSpecialPathAction->font());
+    //     QString sFileName = tmpFont.elidedText(specialPath, Qt::TextElideMode::ElideRight, changeSaveToSpecialPathFontWidth);
+    //     m_saveToSpecialPathAction->setText(sFileName);
+    //     m_saveToSpecialPathAction->setToolTip(specialPath);
+    //     m_saveToSpecialPathAction->setCheckable(true);
+    //     m_saveToSpecialPathMenu->addAction(m_saveToSpecialPathAction);
+    //     t_saveGroup->addAction(m_saveToSpecialPathAction);
+    // }
+    // m_saveToSpecialPathMenu->addAction(m_changeSaveToSpecialPath);
 
     // 保存格式
     QAction *formatTitleAction = new QAction(tr("Format"), m_optionMenu);
@@ -831,15 +821,18 @@ void SubToolWidget::initShotOption()
     ImageMenu *externalBorderMenu = ImageBorderHelper::instance()->getBorderMenu(ImageBorderHelper::BorderType::External, tr("Border"), m_optionMenu);
     ImageMenu *borderPrototypeMenu = ImageBorderHelper::instance()->getBorderMenu(ImageBorderHelper::BorderType::Prototype, tr("Device"), m_optionMenu);
 
+    /*
     Utils::setAccessibility(saveToDesktopAction, "saveToDesktopAction");
     Utils::setAccessibility(saveToPictureAction, "saveToPictureAction");
     Utils::setAccessibility(saveToSpecialPath, "saveToSpecialPath");
     Utils::setAccessibility(saveToClipAction, "saveToClipAction");
+    */
     Utils::setAccessibility(m_saveCursorAction, "saveCursorAction");
     Utils::setAccessibility(pngAction, "pngAction");
     Utils::setAccessibility(jpgAction, "jpgAction");
     Utils::setAccessibility(bmpAction, "bmpAction");
 
+    /*
     saveTitleAction->setDisabled(true);
     saveToDesktopAction->setCheckable(true);
     saveToPictureAction->setCheckable(true);
@@ -850,6 +843,7 @@ void SubToolWidget::initShotOption()
     t_saveGroup->addAction(saveToSpecialPath);
     t_saveGroup->addAction(m_changeSaveToSpecialPath);
     t_saveGroup->addAction(saveToClipAction);
+    */
 
     formatTitleAction->setDisabled(true);
     pngAction->setCheckable(true);
@@ -866,14 +860,16 @@ void SubToolWidget::initShotOption()
     noBorderAction->setCheckable(true);
     noBorderAction->setChecked(true);
 
-    //保存目录
+    //保存目录 - 全部屏蔽
+    /*
     m_optionMenu->addAction(saveTitleAction);
     m_optionMenu->addAction(saveToClipAction);
     m_optionMenu->addAction(saveToDesktopAction);
     m_optionMenu->addAction(saveToPictureAction);
-    //m_optionMenu->addAction(saveToSpecialPath);
+    m_optionMenu->addAction(saveToSpecialPath);
     m_optionMenu->addMenu(m_saveToSpecialPathMenu);
-    //m_optionMenu->addSeparator();
+    m_optionMenu->addSeparator();
+    */
 
     //边框样式
     m_optionMenu->addAction(borderTitleAction);
@@ -905,7 +901,8 @@ void SubToolWidget::initShotOption()
     });
 
     }
-    // 根据配置，初始化Action状态
+    // 根据配置，初始化Action状态 - 屏蔽保存相关
+    /*
     SaveAction t_saveIndex = ConfigSettings::instance()->getValue("shot", "save_op").value<SaveAction>();
 
     switch (t_saveIndex) {
@@ -933,7 +930,10 @@ void SubToolWidget::initShotOption()
         saveToClipAction->setChecked(true);
         break;
     }
+    */
 
+    // 屏蔽保存相关的信号连接
+    /*
     connect(t_saveGroup, QOverload<QAction *>::of(&QActionGroup::triggered),
     [ = ](QAction * t_act) {
         if (t_act == saveToDesktopAction) {
@@ -961,6 +961,7 @@ void SubToolWidget::initShotOption()
             ConfigSettings::instance()->setValue("shot", "save_dir_change", false);
         }
     });
+    */
 
     int t_pictureFormat = ConfigSettings::instance()->getValue("shot", "format").toInt();
     switch (t_pictureFormat) {
@@ -1059,6 +1060,10 @@ void SubToolWidget::initScrollLabel()
     m_scrollOptionButton->setText(tr("Settings"));
     m_scrollOptionButton->setMinimumSize(MEDIUM_TOOL_BUTTON_SIZE);
     installTipHint(m_scrollOptionButton, tr("Settings"));
+    
+    // 隐藏下拉箭头但保持菜单功能
+    m_scrollOptionButton->setStyleSheet("QPushButton::menu-indicator { image: none; }");
+    
     btnList.append(m_scrollOptionButton);
 
 
