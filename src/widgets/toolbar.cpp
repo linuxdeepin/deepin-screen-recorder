@@ -113,7 +113,7 @@ ToolBarWidget::ToolBarWidget(MainWindow *pMainwindow, DWidget *parent)
     if (!connectHandle) {
         qCDebug(dsrApp) << "Connect cameraActionChecked signal failed!";
     }
-    connect(m_subTool, SIGNAL(changeShotToolFunc(const QString &)), pMainwindow, SLOT(changeShotToolEvent(const QString &)));
+    connect(m_subTool, &SubToolWidget::changeShotToolFunc, pMainwindow, &MainWindow::changeShotToolEvent);
     connect(m_subTool, &SubToolWidget::changeShotToolFunc, this, &ToolBarWidget::changeShotToolEvent);
 }
 

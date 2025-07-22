@@ -21,6 +21,7 @@
 
 DWIDGET_USE_NAMESPACE
 class MainWindow;
+class ShapeToolWidget;
 class SideBarWidget : public DFloatingWidget
 {
     Q_OBJECT
@@ -48,6 +49,8 @@ protected:
     void showEvent(QShowEvent *event) Q_DECL_OVERRIDE;
 
 private:
+    DVerticalLine* m_seperator1= nullptr;
+    ShapeToolWidget* m_shapeTool = nullptr;
     DVerticalLine *m_seperator;
     ColorToolWidget *m_colorTool;
     ShotToolWidget *m_shotTool;
