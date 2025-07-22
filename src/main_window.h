@@ -476,6 +476,12 @@ public slots:
      */
     void changeShotToolEvent(const QString &func);
     void saveScreenShot();
+    void saveScreenShotToClipboardOnly();
+    void saveScreenShotToFile();
+    void prepareScreenshot();
+    void hideScreenshotTips();
+    void captureScreenshotImage();
+    void finishScreenshot();
     bool saveAction(const QPixmap &pix);
     void sendNotify(SaveAction saveAction, QString saveFilePath, const bool succeed);
     void reloadImage(QString effect, int radius);

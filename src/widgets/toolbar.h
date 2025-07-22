@@ -67,7 +67,7 @@ public slots:
     void setVideoInitFromMain();
     void shapeClickedFromBar(QString shape);
     void setCameraDeviceEnable(bool status);
-
+    void changeShotToolEvent(const QString &func);
 private:
     DLabel *m_hSeparatorLine;
     /**
@@ -88,6 +88,12 @@ private:
      * @brief 截图录屏工具栏确认按钮
      */
     ToolButton *m_confirmButton;
+
+    /**
+     * @brief 截图录屏保存按钮
+     *
+     */
+    ToolButton* m_saveToLocalDirButton = nullptr;
 };
 
 class ToolBar : public DLabel
