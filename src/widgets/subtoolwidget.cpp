@@ -666,15 +666,37 @@ void SubToolWidget::initShotLabel()
     m_shotOptionButton = new ToolButton();
     DPalette pa = m_shotOptionButton->palette();
     m_shotOptionButton->setOptionButtonFlag(true);
-    m_shotOptionButton->setIconSize(TOOL_ICON_SIZE);
-    m_shotOptionButton->setIcon(QIcon::fromTheme("configure"));
+    if (Utils::themeType == 1) {
+        pa.setColor(DPalette::ButtonText, QColor(28, 28, 28, 255));
+        pa.setColor(DPalette::Dark, QColor(192, 192, 192, 255));
+        pa.setColor(DPalette::Light, QColor(192, 192, 192, 255));
+    } else {
+        pa.setColor(DPalette::ButtonText, QColor(228, 228, 228, 255));
+        pa.setColor(DPalette::Dark, QColor(64, 64, 64, 255));
+        pa.setColor(DPalette::Light, QColor(64, 64, 64, 255));
+    }
+    m_shotOptionButton->setPalette(pa);
     m_shotOptionButton->setCheckable(false);
+    m_shotOptionButton->setFlat(false);
+    m_shotOptionButton->setHoverState(false);
+    DFontSizeManager::instance()->bind(m_shotOptionButton, DFontSizeManager::T6);
+    m_shotOptionButton->setText(tr("Settings"));
     Utils::setAccessibility(m_shotOptionButton, AC_SUBTOOLWIDGET_SHOT_OPTION_BUT);
-    m_shotOptionButton->setFixedSize(TOOL_BUTTON_SIZE);
+    m_shotOptionButton->setMinimumSize(MEDIUM_TOOL_BUTTON_SIZE);
     installTipHint(m_shotOptionButton, tr("Settings (F3)"));
     
     m_shotBtnGroup->addButton(m_shotOptionButton);
     btnList.append(m_shotOptionButton);
+
+    m_saveLocalDirButton = new ToolButton();
+    m_saveLocalDirButton->setIconSize(TOOL_ICON_SIZE);
+    installTipHint(m_saveLocalDirButton, tr("Save to local"));
+    m_saveLocalDirButton->setIcon(QIcon::fromTheme("document-save"));
+    Utils::setAccessibility(m_saveLocalDirButton, AC_SUBTOOLWIDGET_SAVETOLOCAL_BUTTON);
+    m_shotBtnGroup->addButton(m_saveLocalDirButton);
+    m_saveLocalDirButton->setFixedSize(TOOL_BUTTON_SIZE);
+    btnList.append(m_saveLocalDirButton);
+
 
     if (Utils::is3rdInterfaceStart) {
         m_shotOptionButton->hide();

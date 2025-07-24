@@ -55,13 +55,13 @@ ToolBarWidget::ToolBarWidget(MainWindow *pMainwindow, DWidget *parent)
     m_subTool = new SubToolWidget(pMainwindow, this);
     // m_subTool->setVisible(false);
     //关闭按钮
+    m_saveToLocalDirButton = new ToolButton(this);
+    m_saveToLocalDirButton->setCheckable(false);
+    m_saveToLocalDirButton->setFlat(true);
     m_closeButton = new ToolButton(this);
     m_closeButton->setCheckable(false);
     m_confirmButton = new ToolButton(this);
     m_confirmButton->setCheckable(false);
-    m_saveToLocalDirButton = new ToolButton(this);
-    m_saveToLocalDirButton->setCheckable(false);
-    m_saveToLocalDirButton->setFlat(true);
 
     m_closeButton->setIconSize(QSize(36, 36));
     m_confirmButton->setIconSize(QSize(36, 36));
