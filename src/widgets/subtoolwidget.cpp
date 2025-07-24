@@ -519,25 +519,15 @@ void SubToolWidget::initShotLabel()
 
     QList<ToolButton *> btnList;
 
-    //添加矩形按钮
-    m_rectButton = new ToolButton();
-    m_rectButton->setIconSize(TOOL_ICON_SIZE);
-    m_rectButton->setIcon(QIcon::fromTheme("rectangle-normal"));
-    Utils::setAccessibility(m_rectButton, AC_SUBTOOLWIDGET_RECT_BUTTON);
-    m_shotBtnGroup->addButton(m_rectButton);
-    m_rectButton->setFixedSize(TOOL_BUTTON_SIZE);
-    installTipHint(m_rectButton, tr("Rectangle (R)\nPress and hold Shift to draw a square"));
-    btnList.append(m_rectButton);
-
-    //添加椭圆按钮
-    m_circleButton = new ToolButton();
-    m_circleButton->setIconSize(TOOL_ICON_SIZE);
-    m_circleButton->setIcon(QIcon::fromTheme("oval-normal"));
-    installTipHint(m_circleButton, tr("Ellipse (O)\nPress and hold Shift to draw a circle"));
-    Utils::setAccessibility(m_circleButton, AC_SUBTOOLWIDGET_CIRCL_BUTTON);
-    m_shotBtnGroup->addButton(m_circleButton);
-    m_circleButton->setFixedSize(TOOL_BUTTON_SIZE);
-    btnList.append(m_circleButton);
+    //添加几何图形按钮
+    m_gioButton = new ToolButton();
+    m_gioButton->setIconSize(TOOL_ICON_SIZE);
+    m_gioButton->setIcon(QIcon::fromTheme("gio-normal"));
+    Utils::setAccessibility(m_gioButton, AC_SUBTOOLWIDGET_GIO_BUTTON);
+    m_shotBtnGroup->addButton(m_gioButton);
+    m_gioButton->setFixedSize(TOOL_BUTTON_SIZE);
+    installTipHint(m_gioButton, tr("Geometry shapes (G)"));
+    btnList.append(m_gioButton);
 
     //添加直线按钮
     m_lineButton = new ToolButton();
@@ -722,13 +712,15 @@ void SubToolWidget::initShotLabel()
         if (m_ocrButton->isChecked()) {
             emit changeShotToolFunc("ocr");
         }
-        if (m_rectButton->isChecked()) {
-            emit changeShotToolFunc("rectangle");
+        if (m_gioButton->isChecked()) {
+            // 读取上次选中的形状，如果没有则默认使用矩形
+            QString currentShape = ConfigSettings::instance()->getValue("shape", "current").toString();
+            if (currentShape.isEmpty() || (currentShape != "rectangle" && currentShape != "oval")) {
+                currentShape = "rectangle"; // 默认使用矩形
+            }
+            qCDebug(dsrApp) << "Geometry button clicked, using shape:" << currentShape;
+            emit changeShotToolFunc(currentShape);
         }
-        if (m_circleButton->isChecked()) {
-            emit changeShotToolFunc("oval");
-        }
-
         if (m_lineButton->isChecked()) {
             emit changeShotToolFunc("line");
         }
@@ -1301,10 +1293,8 @@ int SubToolWidget::getFuncSubToolX(QString &shape)
 //    qCDebug(dsrApp) << __FUNCTION__ << "m_arrowButton->x() : " << m_arrowButton->x();
 //    qCDebug(dsrApp) << __FUNCTION__ << "m_penButton->x() : " << m_penButton->x();
     if (!shape.isEmpty()) {
-        if (shape == "rectangle") {
-            x = m_rectButton->x();
-        } else if (shape == "oval") {
-            x = m_circleButton->x();
+        if (shape == "gio" || shape == "rectangle" || shape == "oval" || shape == "rect" || shape == "circ") {
+            x = m_gioButton->x();
         } else if (shape == "line") {
             x = m_lineButton->x();
         } else if (shape == "arrow") {
@@ -1431,12 +1421,9 @@ void SubToolWidget::shapeClickedFromWidget(QString shape)
         } else if (shape == "ocr") {
             if (!m_ocrButton->isChecked())
                 m_ocrButton->click();
-        } else if (shape == "rect") {
-            if (!m_rectButton->isChecked())
-                m_rectButton->click();
-        } else if (shape == "circ") {
-            if (!m_circleButton->isChecked())
-                m_circleButton->click();
+        } else if (shape == "gio" || shape == "rect" || shape == "circ" || shape == "rectangle" || shape == "oval") {
+            if (!m_gioButton->isChecked())
+                m_gioButton->click();
         } else if (shape == "line") {
             m_lineButton->click();
         } else if (shape == "arrow") {

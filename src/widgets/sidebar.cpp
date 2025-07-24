@@ -33,7 +33,7 @@ namespace {
 const QSize TOOLBAR_WIDGET_SIZE1 = QSize(290, 68);
 const QSize TOOLBAR_WIDGET_SIZE2 = QSize(370, 68);
 const QSize TOOLBAR_WIDGET_SIZE3 = QSize(500, 68);
-const QSize TOOLBAR_WIDGET_SIZE4 = QSize(500, 68);
+const QSize TOOLBAR_WIDGET_SIZE4 = QSize(400, 68);
 
 //const int BUTTON_SPACING = 3;
 //const int BTN_RADIUS = 3;
@@ -81,12 +81,19 @@ void SideBarWidget::initSideBarWidget()
     m_seperator->setFixedSize(SPLITTER_SIZE);
     m_seperator1 = new DVerticalLine(this);
     m_seperator1->setFixedSize(SPLITTER_SIZE);
+    
+    // 初始化各个工具组件
     m_shapeTool = new ShapeToolWidget(this);
     m_colorTool = new ColorToolWidget(this);
     m_shotTool = new ShotToolWidget(m_pMainWindow, this);
 
+    // 默认隐藏ShapeToolWidget和对应的分割线
+    m_shapeTool->hide();
+    m_seperator1->hide();
+
     QHBoxLayout *hLayout = new QHBoxLayout(this);
     hLayout->setContentsMargins(10, 0, 10, 0);
+    hLayout->setSpacing(0);  // 设置组件间距为0
     hLayout->addWidget(m_shapeTool);
     hLayout->addWidget(m_seperator1);
     hLayout->addWidget(m_shotTool);
@@ -98,11 +105,17 @@ void SideBarWidget::initSideBarWidget()
 
     connect(m_shotTool, &ShotToolWidget::changeArrowAndLine, this, &SideBarWidget::changeArrowAndLineEvent);
     connect(m_colorTool, &ColorToolWidget::colorChecked, m_shotTool, &ShotToolWidget::colorChecked);
-
+    connect(m_shapeTool, &ShapeToolWidget::shapeSelected, m_shotTool, &ShotToolWidget::shapeSelected);
 }
 void SideBarWidget::changeShotToolWidget(const QString &func)
 {
     qCDebug(dsrApp) << "SideBarWidget::changeShotToolWidget called with func:" << func;
+    
+    // 先切换内容，确保布局正确
+    m_shotTool->switchContent(func);
+    m_colorTool->setFunction(func);
+    
+    // 处理分隔符显示
     if (func == "effect") {
         qCDebug(dsrApp) << "Effect mode: hiding separator";
         m_seperator->hide();
@@ -111,17 +124,37 @@ void SideBarWidget::changeShotToolWidget(const QString &func)
         m_seperator->show();
     }
 
+    // 显示或隐藏ShapeToolWidget
+    if (func == "gio" || func == "rectangle" || func == "oval") {
+        qCDebug(dsrApp) << "Geometry mode: showing ShapeToolWidget";
+        m_shapeTool->show();
+        m_seperator1->show();
+        
+        // 如果是几何图形模式，需要读取上次选中的形状并选中对应按钮
+        if (func == "gio") {
+            QString currentShape = ConfigSettings::instance()->getValue("shape", "current").toString();
+            if (currentShape.isEmpty() || (currentShape != "rectangle" && currentShape != "oval")) {
+                currentShape = "rectangle"; // 默认使用矩形
+            }
+            qCDebug(dsrApp) << "Selecting shape for gio mode:" << currentShape;
+            m_shapeTool->selectShape(currentShape);
+        }
+    } else {
+        qCDebug(dsrApp) << "Non-geometry mode: hiding ShapeToolWidget";
+        m_shapeTool->hide();
+        m_seperator1->hide();
+    }
+
     //不同图形下二级菜单的大小及长度不一样
-    if (func == "gio" ||
-        func == "oval") {
-        qCDebug(dsrApp) << "Resizing sidebar for rectangle, oval, line, arrow, or pen.";
-        resize(TOOLBAR_WIDGET_SIZE1);
+    if (func == "gio" || func == "rectangle" || func == "oval") {
+        qCDebug(dsrApp) << "Resizing sidebar for geometry shapes.";
+        resize(TOOLBAR_WIDGET_SIZE4);
     }
     else if(
         func == "line" ||
         func == "arrow" ||
         func == "pen") {
-        qCDebug(dsrApp) << "Resizing sidebar for rectangle, oval, line, arrow, or pen.";
+        qCDebug(dsrApp) << "Resizing sidebar for line, arrow, or pen.";
         resize(TOOLBAR_WIDGET_SIZE1);
     } else if (func == "text") {
         qCDebug(dsrApp) << "Resizing sidebar for text.";
@@ -129,9 +162,15 @@ void SideBarWidget::changeShotToolWidget(const QString &func)
     } else if (func == "effect") {
         qCDebug(dsrApp) << "Resizing sidebar for effect.";
         resize(TOOLBAR_WIDGET_SIZE3);
+    } else {
+        resize(TOOLBAR_WIDGET_SIZE1);
     }
-    m_shotTool->switchContent(func);
-    m_colorTool->setFunction(func);
+    
+    // 确保布局更新
+    layout()->invalidate();
+    layout()->activate();
+    updateGeometry();
+    update();
 }
 
 int SideBarWidget::getSideBarWidth(const QString &func)

@@ -22,6 +22,7 @@ public:
     ~ShapeToolWidget();
 
     void initWidget();
+    void selectShape(const QString &shape);
 
 signals:
     void shapeSelected(const QString &shape);

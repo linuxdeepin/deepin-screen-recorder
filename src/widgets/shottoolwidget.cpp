@@ -51,11 +51,20 @@ void ShotToolWidget::initWidget()
 //    this->setStyleSheet("background-color: rgb(0,255, 0)");
 //    setMinimumSize(TOOLBAR_WIDTH, TOOLBAR_HEIGHT);
     hintFilter = new HintFilter(this);
+    
+    // 初始化各个组件
     initEffectLabel();
+    addWidget(m_effectSubTool);
+    
+    // 初始化标志
     m_textInitFlag = false;
-    m_thicknessLabel = nullptr;
     m_thicknessInitFlag = false;
+    
+    // 初始化指针
+    m_thicknessLabel = nullptr;
     m_textSubTool = nullptr;
+    
+    qCDebug(dsrApp) << "ShotToolWidget::initWidget completed.";
 }
 
 void ShotToolWidget::installTipHint(QWidget *w, const QString &hintstr)
@@ -115,12 +124,21 @@ void ShotToolWidget::initEffectLabel()
     QButtonGroup *shapBtnGroup = new QButtonGroup(this);
     shapBtnGroup->setExclusive(true);
 
-    ToolButton *geometryBut = new ToolButton(this);
-    geometryBut->setFixedSize(TOOL_BUTTON_SIZE);
-    geometryBut->setIconSize(TOOL_ICON_SIZE);
-    geometryBut->setIcon(QIcon::fromTheme(QString("geometry-normal")));
-    installTipHint(geometryBut, tr("Geometry\nPress and hold Shift to draw a square or circle"));
-    shapBtnGroup->addButton(geometryBut);
+    // 创建矩形按钮
+    ToolButton *rectBut = new ToolButton(this);
+    rectBut->setFixedSize(TOOL_BUTTON_SIZE);
+    rectBut->setIconSize(TOOL_ICON_SIZE);
+    rectBut->setIcon(QIcon::fromTheme(QString("rectangle-normal")));
+    installTipHint(rectBut, tr("Rectangle\nPress and hold Shift to draw a square"));
+    shapBtnGroup->addButton(rectBut);
+    
+    // 创建椭圆按钮
+    ToolButton *ovalBut = new ToolButton(this);
+    ovalBut->setFixedSize(TOOL_BUTTON_SIZE);
+    ovalBut->setIconSize(TOOL_ICON_SIZE);
+    ovalBut->setIcon(QIcon::fromTheme(QString("oval-normal")));
+    installTipHint(ovalBut, tr("Ellipse\nPress and hold Shift to draw a circle"));
+    shapBtnGroup->addButton(ovalBut);
     
     ToolButton *penBut = new ToolButton(this);
     penBut->setFixedSize(TOOL_BUTTON_SIZE);
@@ -204,12 +222,16 @@ void ShotToolWidget::initEffectLabel()
     } else if (isOvalBut == 1) {
         qCDebug(dsrApp) << "Rectangle tool is selected.";
         rectBut->setChecked(true);
-    } else {
+    } else if (isOvalBut == 2) {
         qCDebug(dsrApp) << "Pen tool is selected, showing width controls.";
         penBut->setChecked(true);
         t_lineWidthSize->show();
         penWidth->show();
         t_seperator1->show();
+    } else {
+        // 默认选择矩形
+        qCDebug(dsrApp) << "Default to rectangle tool.";
+        rectBut->setChecked(true);
     }
 
     connect(effectTypeBtnGroup, QOverload<QAbstractButton *>::of(&QButtonGroup::buttonClicked),
@@ -373,59 +395,93 @@ void ShotToolWidget::switchContent(QString shapeType)
 {
     qCDebug(dsrApp) << "ShotToolWidget::switchContent called with shapeType:" << shapeType;
     m_shapeName = shapeType;
-    if (!shapeType.isEmpty()) {
-        //矩形、圆形、直线、箭头、画笔会加载粗细调整面板
-        if (shapeType == "rectangle" ||
-                shapeType == "oval" ||
-                shapeType == "line" ||
-                shapeType == "arrow" ||
-                shapeType == "pen") {
-            if (m_textSubTool)
+    
+    if (shapeType.isEmpty()) {
+        qCDebug(dsrApp) << "Empty shape type, ignoring.";
+        return;
+    }
+    
+    qCDebug(dsrApp) << "Current widget:" << (currentWidget() == m_thicknessLabel ? "thickness" : 
+                                          (currentWidget() == m_textSubTool ? "text" : 
+                                          (currentWidget() == m_effectSubTool ? "effect" : "unknown")));
+    
+    // 根据形状类型切换到相应的工具栏
+    if (shapeType == "rectangle" || shapeType == "oval" || shapeType == "gio" || 
+        shapeType == "line" || shapeType == "arrow" || shapeType == "pen") {
+        
+        qCDebug(dsrApp) << "Switching to thickness panel for shape:" << shapeType;
+        if (m_textSubTool)
                 removeWidget(m_textSubTool);
-            if (m_thicknessInitFlag == false) {
-                initThicknessLabel();
-                m_thicknessInitFlag = true;
-            }
-            int linewidth_index  = -1;
-            linewidth_index = ConfigSettings::instance()->getValue(m_shapeName, "line_width").toInt();
-            if (linewidth_index != -1)
-                m_thicknessBtnGroup->button(linewidth_index)->click();
-            addWidget(m_thicknessLabel);
-            setCurrentWidget(m_thicknessLabel);
+        // 确保粗细调整面板已初始化
+        if (m_thicknessInitFlag == false) {
+            qCDebug(dsrApp) << "Initializing thickness panel.";
+            initThicknessLabel();
+            m_thicknessInitFlag = true;
         }
-        //文本会加载字体调整面板
-        else if (shapeType == "text") {
-            if (m_thicknessLabel)
+        
+        // 设置粗细
+        int linewidth_index = -1;
+        if (shapeType == "gio") {
+            // 对于几何图形，使用矩形的粗细设置
+            linewidth_index = ConfigSettings::instance()->getValue("rectangle", "line_width").toInt();
+            qCDebug(dsrApp) << "Using rectangle line width for gio:" << linewidth_index;
+        } else {
+            linewidth_index = ConfigSettings::instance()->getValue(shapeType, "line_width").toInt();
+            qCDebug(dsrApp) << "Using line width for" << shapeType << ":" << linewidth_index;
+        }
+        
+        if (linewidth_index != -1 && linewidth_index < m_thicknessBtnGroup->buttons().size()) {
+            qCDebug(dsrApp) << "Setting line width to:" << linewidth_index;
+            m_thicknessBtnGroup->button(linewidth_index)->click();
+        } else {
+            qCDebug(dsrApp) << "Invalid line width index:" << linewidth_index;
+        }
+        addWidget(m_thicknessLabel);
+        // 显示粗细调整面板
+        setCurrentWidget(m_thicknessLabel);
+        qCDebug(dsrApp) << "Switched to thickness panel.";
+    }
+    // 文本会加载字体调整面板
+    else if (shapeType == "text") {
+        qCDebug(dsrApp) << "Switching to text panel.";
+        if (m_thicknessLabel)
                 removeWidget(m_thicknessLabel);
-            if (m_textInitFlag == false) {
-                initTextLabel();
-                m_textInitFlag = true;
-            }
-            addWidget(m_textSubTool);
-            setCurrentWidget(m_textSubTool);
+        if (m_textInitFlag == false) {
+            qCDebug(dsrApp) << "Initializing text panel.";
+            initTextLabel();
+            m_textInitFlag = true;
         }
-        //模糊会加载模糊调整面板
-        else if (shapeType == "effect") {
-            setCurrentWidget(m_effectSubTool);
-        }
+        addWidget(m_textSubTool);
+        setCurrentWidget(m_textSubTool);
+        qCDebug(dsrApp) << "Switched to text panel.";
+    }
+    // 模糊会加载模糊调整面板
+    else if (shapeType == "effect") {
+        qCDebug(dsrApp) << "Switching to effect panel.";
+        setCurrentWidget(m_effectSubTool);
+        qCDebug(dsrApp) << "Switched to effect panel.";
+    } else {
+        qCDebug(dsrApp) << "Unknown shape type:" << shapeType;
     }
 }
 
 void ShotToolWidget::colorChecked(QString colorType)
 {
-    qCDebug(dsrApp) << "ShotToolWidget::colorChecked called with colorType:" << colorType;
     Q_UNUSED(colorType);
-    //if(m_currentType == "rectangle"){
-//    if (m_blurRectButton && m_blurRectButton->isChecked())
-//        m_blurRectButton->click();
-//    if (m_mosaicRectButton && m_mosaicRectButton->isChecked())
-//        m_mosaicRectButton->click();
-//    //}else if(m_currentType == "oval"){
-//    if (m_blurCircButton && m_blurCircButton->isChecked())
-//        m_blurCircButton->click();
-//    if (m_mosaicCircButton && m_mosaicCircButton->isChecked())
-//        m_mosaicCircButton->click();
-//    // }
+}
+
+void ShotToolWidget::shapeSelected(const QString &shape)
+{
+    qCDebug(dsrApp) << "ShotToolWidget::shapeSelected called with shape:" << shape;
+    
+    if (m_pMainWindow) {
+        if (shape == "rectangle") {
+            m_pMainWindow->changeShotToolEvent("rectangle");
+        } else if (shape == "oval") {
+            m_pMainWindow->changeShotToolEvent("oval");
+        }
+        ConfigSettings::instance()->setValue("shape", "current", shape);
+    }
 }
 ShotToolWidget::~ShotToolWidget()
 {

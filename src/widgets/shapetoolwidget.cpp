@@ -43,32 +43,20 @@ void ShapeToolWidget::initWidget()
     setMouseTracking(true);
     setAcceptDrops(true);
     
-    // 创建模糊背景效果
-    // DBlurEffectWidget *blurWidget = new DBlurEffectWidget(this);
-    // blurWidget->setBlurRectXRadius(7);
-    // blurWidget->setBlurRectYRadius(7);
-    // blurWidget->setRadius(15);
-    // blurWidget->setMode(DBlurEffectWidget::GaussianBlur);
-    // blurWidget->setBlurEnabled(true);
-    // blurWidget->setBlendMode(DBlurEffectWidget::InWidgetBlend);
-    
-    // 根据主题设置模糊背景颜色
-    // if (Utils::themeType == 1) {
-    //     blurWidget->setMaskColor(QColor(0xF7, 0xF7, 0xF7, 153));
-    // } else {
-    //     blurWidget->setMaskColor(QColor(0, 0, 0, 76));
-    // }
-    
     // 初始化形状按钮
     initShapeButtons();
     
     // 创建布局
     QHBoxLayout *mainLayout = new QHBoxLayout(this);
     mainLayout->setContentsMargins(0, 0, 0, 0);
+    mainLayout->setSpacing(4);  // 设置合适的间距
     mainLayout->addWidget(m_rectButton);
     mainLayout->addWidget(m_ovalButton);
+    mainLayout->addStretch();  // 添加弹性空间，确保按钮靠左对齐
     
     setLayout(mainLayout);
+    
+    qCDebug(dsrApp) << "ShapeToolWidget initialized with size:" << size();
 }
 
 void ShapeToolWidget::initShapeButtons()
@@ -120,5 +108,17 @@ void ShapeToolWidget::initShapeButtons()
     } else {
         // 默认选中矩形
         m_rectButton->setChecked(true);
+    }
+}
+
+void ShapeToolWidget::selectShape(const QString &shape)
+{
+    qCDebug(dsrApp) << "ShapeToolWidget::selectShape called with shape:" << shape;
+    if (shape == "rectangle") {
+        m_rectButton->setChecked(true);
+        emit shapeSelected("rectangle");
+    } else if (shape == "oval") {
+        m_ovalButton->setChecked(true);
+        emit shapeSelected("oval");
     }
 }
