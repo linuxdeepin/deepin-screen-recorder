@@ -136,13 +136,9 @@ private:
     ToolButton *m_cancelButton = nullptr;
     ToolButton *m_recorderButton = nullptr;
     /**
-     * @brief 截图功能中矩形工具按钮
+     * @brief 几何图形工具按钮
      */
-    ToolButton *m_rectButton = nullptr;
-    /**
-     * @brief 截图功能中圆形工具按钮
-     */
-    ToolButton *m_circleButton = nullptr;
+    ToolButton *m_gioButton = nullptr;
     /**
      * @brief 截图功能中直线工具按钮
      */

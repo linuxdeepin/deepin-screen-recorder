@@ -56,6 +56,8 @@ private:
     ShotToolWidget *m_shotTool;
     bool  m_expanded;
     MainWindow *m_pMainWindow = nullptr;
+    
+    void handleShapeChanged(const QString &shape);
 };
 
 class SideBar : public DLabel

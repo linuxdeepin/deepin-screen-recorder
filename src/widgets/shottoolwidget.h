@@ -41,6 +41,7 @@ signals:
 public slots:
     void switchContent(QString shapeName);
     void colorChecked(QString colorType);
+    void shapeSelected(const QString &shape);
 
 private:
 

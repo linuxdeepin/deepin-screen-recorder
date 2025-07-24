@@ -35,6 +35,7 @@
 #define AC_SUBTOOLWIDGET_PINSCREENSHOTS_BUTTON "pinscreenshots_button"// 截图 贴图工具按钮
 #define AC_SUBTOOLWIDGET_SCROLLSHOT_BUTTON "scrollshot_button"// 截图 滚动截图别工具按钮
 #define AC_SUBTOOLWIDGET_OCR_BUTTON "orc_button"// 截图 文字识别工具按钮
+#define AC_SUBTOOLWIDGET_GIO_BUTTON "gio_button"// 截图 几何图形工具按钮
 #define AC_SUBTOOLWIDGET_RECT_BUTTON "rect_button"// 截图 矩形工具按钮
 #define AC_SUBTOOLWIDGET_CIRCL_BUTTON "circl_button"//截图 椭圆工具按钮
 #define AC_SUBTOOLWIDGET_LINE_BUTTON "line_button"// 截图 直线按钮
