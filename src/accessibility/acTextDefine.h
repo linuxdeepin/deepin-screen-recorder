@@ -45,6 +45,7 @@
 #define AC_SUBTOOLWIDGET_UNDO_BUTTON "undo_button"// 截图撤销按钮
 #define AC_SUBTOOLWIDGET_RECORDER_BUTTON "recorder_button"// 截图 录屏按钮
 #define AC_SUBTOOLWIDGET_SHOT_OPTION_BUT "shot_option_but" // 截图 选项按钮
+#define AC_SUBTOOLWIDGET_SAVETOLOCAL_BUTTON "save_local_button"// 截图 画笔按钮
 
 
 // 边侧工具栏按钮

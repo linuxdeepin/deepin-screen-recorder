@@ -178,6 +178,7 @@ private:
      */
     ToolButton *m_shotOptionButton = nullptr;
     HintFilter *hintFilter = nullptr;
+    ToolButton *m_saveLocalDirButton = nullptr;
     /**
      * @brief m_optionMenu 截图的选项菜单
      */
