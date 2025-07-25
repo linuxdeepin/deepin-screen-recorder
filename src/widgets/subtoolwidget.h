@@ -11,7 +11,7 @@
 
 #include <DLabel>
 #include <DStackedWidget>
-
+#include <DVerticalLine>
 #include <QObject>
 
 DWIDGET_USE_NAMESPACE
@@ -214,6 +214,8 @@ private:
      */
     QAction *m_scrollChangeSaveToSpecialPath = nullptr;
     MainWindow *m_pMainWindow = nullptr;
+    DVerticalLine* m_saveSeperatorBeg= nullptr;
+    DVerticalLine* m_saveSeperatorEnd= nullptr;
 };
 
 #endif // SUBTOOLWIDGET_H
