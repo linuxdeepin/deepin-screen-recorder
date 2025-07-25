@@ -10,6 +10,7 @@
 
 #include <QActionGroup>
 #include <QMouseEvent>
+#include <QTimer>
 
 #include <DFontSizeManager>
 #include <DSysInfo>
@@ -133,4 +134,50 @@ void ToolBarWidget::mouseMoveEvent(QMouseEvent *event)
     Q_UNUSED(event);
     //qDebug() << event->button() << event->x() << event->y();
     //QWidget::mouseMoveEvent(event);
+}
+
+// 确保鼠标进入工具栏时工具栏保持显示
+void ToolBarWidget::enterEvent(QEnterEvent *event)
+{
+    Q_UNUSED(event);
+    qCDebug(dsrApp) << "Mouse entered ToolBarWidget.";
+    // 确保工具栏保持显示
+    if (this->isHidden()) {
+        this->show();
+    }
+    QWidget::enterEvent(event);
+}
+
+// 处理鼠标离开工具栏的情况
+void ToolBarWidget::leaveEvent(QEvent *event)
+{
+    Q_UNUSED(event);
+    qCDebug(dsrApp) << "Mouse left ToolBarWidget.";
+    
+    // 获取当前鼠标全局位置
+    QPoint globalPos = QCursor::pos();
+    
+    // 获取父窗口（MainWindow）
+    QWidget *parentWidget = qobject_cast<QWidget*>(parent());
+    if (!parentWidget) {
+        QWidget::leaveEvent(event);
+        return;
+    }
+    
+    // 检查鼠标是否在父窗口上
+    if (!parentWidget->geometry().contains(parentWidget->mapFromGlobal(globalPos))) {
+        // 鼠标既不在工具栏上也不在主窗口上，隐藏工具栏
+        QTimer::singleShot(100, this, [this]() {
+            // 再次检查鼠标位置，避免在移动过程中错误隐藏
+            QPoint currentPos = QCursor::pos();
+            if (!this->geometry().contains(currentPos) && 
+                !qobject_cast<QWidget*>(parent())->geometry().contains(
+                    qobject_cast<QWidget*>(parent())->mapFromGlobal(currentPos))) {
+                this->hide();
+                qCDebug(dsrApp) << "Hiding toolbar after mouse left both toolbar and main window.";
+            }
+        });
+    }
+    
+    QWidget::leaveEvent(event);
 }
