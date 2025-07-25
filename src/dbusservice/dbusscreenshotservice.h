@@ -43,6 +43,9 @@ class DBusScreenshotService: public QDBusAbstractAdaptor
                 "    </method>\n"
                 "    <method name=\"OcrScreenshot\"/>\n"
                 "    <method name=\"ScrollScreenshot\"/>\n"
+                "    <method name=\"CustomScreenshot\">\n"
+                "      <arg direction=\"in\" type=\"a{sv}\"/>\n"
+                "    </method>\n"
                 "    <method name=\"SavePathScreenshot\">\n"
                 "      <arg direction=\"in\" type=\"s\"/>\n"
                 "    </method>\n"
@@ -68,6 +71,7 @@ public:
 public: // PROPERTIES
 public Q_SLOTS: // METHODS
     void StartScreenshot();
+    void CustomScreenshot(const QVariantMap &params);
     void DelayScreenshot(qlonglong in0);
     void NoNotifyScreenshot();
     void OcrScreenshot();

@@ -349,6 +349,9 @@ public:
      * 注意：如果快捷键会打开下拉列表，则不能使用全局快捷键处理
      */
     void initShortcut();
+    void initToolBarShortcut();
+    void initSaveShortcut();
+
     void initLaunchMode(const QString &launchMode);
     //void delayScreenshot(double num);
     void fullScreenshot();
@@ -393,6 +396,9 @@ public:
      * 确保不会功能问题
      */
     void initTreelandtAttributes();
+
+    void setToolbarVisable(bool visable) { isHideToolBar =  visable;};
+
 signals:
     void releaseEvent();
     void saveActionTriggered();
@@ -1388,6 +1394,7 @@ private:
 
     bool isWayland = false;
     // Note: m_toolBar already exists as ShowButtons *m_showButtons
+    bool isHideToolBar = false;
 };
 
 #endif //MAINWINDOW_H

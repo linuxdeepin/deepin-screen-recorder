@@ -26,7 +26,7 @@ class ToolBarWidget : public DFloatingWidget
 {
     Q_OBJECT
 public:
-    explicit ToolBarWidget(MainWindow *pMainwindow, DWidget *parent = nullptr);
+    explicit ToolBarWidget(MainWindow *pMainwindow, DWidget *parent = nullptr, bool hideToolBar = false);
     ~ToolBarWidget() Q_DECL_OVERRIDE;
 
     /**
@@ -52,6 +52,8 @@ public:
      * @return 当前按钮坐标的x值
      */
     int getFuncSubToolX(QString &func);
+
+    void setHideToolbar(bool hidetoolbar);
 signals:
     void buttonChecked(QString shapeType);
     void closed();
@@ -88,6 +90,7 @@ private:
      * @brief 截图录屏工具栏确认按钮
      */
     ToolButton *m_confirmButton;
+    bool m_hideToolBar = false;
 };
 
 class ToolBar : public DLabel
@@ -97,8 +100,7 @@ public:
     explicit ToolBar(DWidget *parent = nullptr);
     ~ToolBar() Q_DECL_OVERRIDE;
     //public接口非slots
-    void initToolBar(MainWindow *pmainWindow);
-
+    void initToolBar(MainWindow *pmainWindow, bool hideToolbar = false);
 
     /**
      * @brief show toolBarWidget and hide toolBarWidget

@@ -14,6 +14,8 @@
 #include <QtCore/QStringList>
 #include <QtCore/QVariant>
 #include <QDebug>
+#include <QJsonDocument>
+#include <QJsonObject>
 
 /*
  * Implementation of adaptor class DBusScreenshotService
@@ -217,4 +219,24 @@ void DBusScreenshotService::FullScreenRecord(const QString &in0)
     }
     m_singleInstance = true;
     qCDebug(dsrApp) << "FullScreenRecord method finished.";
+}
+
+void DBusScreenshotService::CustomScreenshot(const QVariantMap &params)
+{
+    qCDebug(dsrApp) << "CustomScreenshot method called with QVariantMap parameters";
+    
+    // 解析参数
+    bool showToolbar = params.value("showToolBar", true).toBool();
+    bool showNotification = params.value("showNotification", true).toBool();
+    
+    qCDebug(dsrApp) << "Parsed parameters:" << "showToolbar:" << showToolbar << "showNotification:" << showNotification;
+    
+    if (!m_singleInstance) {
+        qCDebug(dsrApp) << "Starting new custom screenshot instance";
+        parent()->customScreenshot(showToolbar, showNotification);
+    } else {
+        qCDebug(dsrApp) << "Screenshot instance already running";
+    }
+    m_singleInstance = true;
+    qCDebug(dsrApp) << "CustomScreenshot method finished.";
 }

@@ -478,7 +478,7 @@ void MainWindow::initAttributes()
 
         // TODO: treeland适配，不加会有显示异常，暂时方案
         if (Utils::isTreelandMode) {
-            m_toolBar->initToolBar(this);
+            m_toolBar->initToolBar(this, isHideToolBar);
             m_toolBar->showWidget();
         }
         m_toolBar->hide();
@@ -941,6 +941,16 @@ void MainWindow::onExit()
 void MainWindow::initShortcut()
 {
     qCDebug(dsrApp) << "initShortcut";
+
+    // 如果存在外部调用设置了隐藏工具栏，则将工具栏的快捷方式也屏蔽
+    if (!isHideToolBar)
+        initToolBarShortcut();
+
+    initSaveShortcut();
+}
+
+void MainWindow::initToolBarShortcut()
+{
     // 截图模式 贴图 截图应用内快捷键
     QShortcut *pinScreenshotsSC = new QShortcut(QKeySequence("Alt+P"), this);
     // 截图模式 滚动截图应用内快捷键
@@ -969,14 +979,8 @@ void MainWindow::initShortcut()
     QShortcut *keyBoardSC = new QShortcut(QKeySequence("K"), this);
     // 录屏模式（未做穿透） 摄像头
     QShortcut *cameraSC = new QShortcut(QKeySequence("C"), this);
-    // 截图模式/滚动模式 保存截图 大键盘的enter
-    QShortcut *returnSC = new QShortcut(QKeySequence(Qt::Key_Return), this);
-    // 截图模式/滚动模式 保存截图 小键盘的enter
-    QShortcut *enterSC = new QShortcut(QKeySequence(Qt::Key_Enter), this);
-    // 截图模式/滚动模式 保存截图
-    QShortcut *saveShotSC = new QShortcut(QKeySequence("Ctrl+S"), this);
-    // 截图模式/录屏模式（未做穿透）/滚动模式 退出
-    QShortcut *escSC = new QShortcut(QKeySequence("Escape"), this);
+
+
     // 截图模式/录屏模式（未做穿透）/滚动模式 帮助快捷面板
 #if (QT_VERSION_MAJOR == 5)
     QShortcut *shortCutSC = new QShortcut(QKeySequence(Qt::CTRL + Qt::SHIFT + Qt::Key_Slash), this);
@@ -1102,6 +1106,33 @@ void MainWindow::initShortcut()
         if (status::record == m_functionType && Utils::isWaylandMode)
             m_showButtons->showContentButtons(KEY_W);
     });
+    // 截图模式/录屏模式（未做穿透）/滚动模式）帮助面板
+    shortCutSC->setAutoRepeat(false);
+    connect(shortCutSC, &QShortcut::activated, this, [=] {
+        qCDebug(dsrApp) << "shortcut : helpSC (key: ctrl+shift+?)";
+        onViewShortcut();
+    });
+    bool isExistManual = DGuiApplicationHelper::instance()->hasUserManual();
+    qCDebug(dsrApp) << "DGuiApplicationHelper::instance()->hasUserManual(): " << isExistManual;
+    if (isExistManual) {
+        qCDebug(dsrApp) << "DGuiApplicationHelper::instance()->hasUserManual()";
+        QShortcut *helpSC = new QShortcut(QKeySequence("F1"), this);
+        helpSC->setAutoRepeat(false);
+        connect(helpSC, SIGNAL(activated()), this, SLOT(onHelp()));
+    }
+    qCDebug(dsrApp) << "initShortcut end";
+}
+
+void MainWindow::initSaveShortcut()
+{
+    // 截图模式/滚动模式 保存截图 大键盘的enter
+    QShortcut *returnSC = new QShortcut(QKeySequence(Qt::Key_Return), this);
+    // 截图模式/滚动模式 保存截图 小键盘的enter
+    QShortcut *enterSC = new QShortcut(QKeySequence(Qt::Key_Enter), this);
+    // 截图模式/滚动模式 保存截图
+    QShortcut *saveShotSC = new QShortcut(QKeySequence("Ctrl+S"), this);
+    // 截图模式/录屏模式（未做穿透）/滚动模式 退出
+    QShortcut *escSC = new QShortcut(QKeySequence("Escape"), this);
     // 截图模式/滚动模式 保存截图 大键盘
     connect(returnSC, &QShortcut::activated, this, [=] {
         if (status::shot == m_functionType || status::scrollshot == m_functionType) {
@@ -1135,21 +1166,6 @@ void MainWindow::initShortcut()
         if (status::record == m_functionType && Utils::isWaylandMode)
             m_showButtons->showContentButtons(KEY_ESCAPE);
     });
-    // 截图模式/录屏模式（未做穿透）/滚动模式）帮助面板
-    shortCutSC->setAutoRepeat(false);
-    connect(shortCutSC, &QShortcut::activated, this, [=] {
-        qCDebug(dsrApp) << "shortcut : helpSC (key: ctrl+shift+?)";
-        onViewShortcut();
-    });
-    bool isExistManual = DGuiApplicationHelper::instance()->hasUserManual();
-    qCDebug(dsrApp) << "DGuiApplicationHelper::instance()->hasUserManual(): " << isExistManual;
-    if (isExistManual) {
-        qCDebug(dsrApp) << "DGuiApplicationHelper::instance()->hasUserManual()";
-        QShortcut *helpSC = new QShortcut(QKeySequence("F1"), this);
-        helpSC->setAutoRepeat(false);
-        connect(helpSC, SIGNAL(activated()), this, SLOT(onHelp()));
-    }
-    qCDebug(dsrApp) << "initShortcut end";
 }
 
 void MainWindow::onHelp()
@@ -1540,7 +1556,6 @@ void MainWindow::moveToolBars(QPoint startPoint, QPoint moveDistance)
     }
     qCDebug(dsrApp) << "moveToolBars end";
 }
-
 // 限制工具栏的移动范围
 QPoint MainWindow::limitToolbarScope(QPoint movePoint, int type)
 {
@@ -2614,7 +2629,7 @@ void MainWindow::updateToolBarPos()
     if (m_toolBarInit == false) {
         m_toolBarInit = true;
         qCDebug(dsrApp) << "正在初始化工具栏...";
-        m_toolBar->initToolBar(this);
+        m_toolBar->initToolBar(this, isHideToolBar);
         m_toolBar->setRecordLaunchMode(m_functionType);
         // m_toolBar->setIsZhaoxinPlatform(m_isZhaoxin);
         m_toolBar->setScrollShotDisabled(!m_wmHelper->hasComposite());
@@ -7042,7 +7057,7 @@ void MainWindow::updateCaptureRegion()
     QRect region = context->captureRegion().toRect();
 
     m_toolBar = new ToolBar(this);
-    m_toolBar->initToolBar(this);
+    m_toolBar->initToolBar(this, isHideToolBar);
 
     m_toolBar->setAttribute(Qt::WA_TranslucentBackground);
     m_toolBar->setWindowFlags(Qt::FramelessWindowHint | Qt::Tool | Qt::WindowStaysOnTopHint);
@@ -7063,3 +7078,4 @@ void MainWindow::updateCaptureRegion()
         }
     }
 }
+

@@ -21,6 +21,7 @@ public:
     ~Screenshot();
 public slots:
     void startScreenshot();
+    void customScreenshot(bool hideToolbar, bool notify = true);
     void delayScreenshot(double num);
     void fullscreenScreenshot();
     void topWindowScreenshot();
