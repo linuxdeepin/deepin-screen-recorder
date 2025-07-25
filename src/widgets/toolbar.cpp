@@ -55,9 +55,6 @@ ToolBarWidget::ToolBarWidget(MainWindow *pMainwindow, DWidget *parent)
     m_subTool = new SubToolWidget(pMainwindow, this);
     // m_subTool->setVisible(false);
     //关闭按钮
-    m_saveToLocalDirButton = new ToolButton(this);
-    m_saveToLocalDirButton->setCheckable(false);
-    m_saveToLocalDirButton->setFlat(true);
     m_closeButton = new ToolButton(this);
     m_closeButton->setCheckable(false);
     m_confirmButton = new ToolButton(this);
@@ -65,22 +62,16 @@ ToolBarWidget::ToolBarWidget(MainWindow *pMainwindow, DWidget *parent)
 
     m_closeButton->setIconSize(QSize(36, 36));
     m_confirmButton->setIconSize(QSize(36, 36));
-    m_saveToLocalDirButton->setIconSize(QSize(56, 36));
     m_closeButton->setFixedSize(QSize(36, 36));
     m_confirmButton->setFixedSize(QSize(36, 36));
-    m_saveToLocalDirButton->setFixedSize(QSize(56, 36));
     m_closeButton->setIcon(QIcon::fromTheme("close"));
     m_confirmButton->setIcon(QIcon::fromTheme("confirm"));
 
-    m_saveToLocalDirButton->setText(QString(tr("save")));
-
     m_subTool->installTipHint(m_closeButton, tr("Close (Esc)"));
     m_subTool->installTipHint(m_confirmButton, tr("OK (Enter)"));
-    m_subTool->installTipHint(m_saveToLocalDirButton, tr("save"));
 
     Utils::setAccessibility(m_closeButton, AC_TOOLBARWIDGET_CLOSE_BUTTON_TOOL);
     Utils::setAccessibility(m_confirmButton, AC_TOOLBARWIDGET_CLOSE_BUTTON_TOOL);
-    Utils::setAccessibility(m_saveToLocalDirButton, AC_TOOLBARWIDGET_CLOSE_BUTTON_TOOL);
 
     setFixedHeight(TOOLBAR_HEIGHT);
     if (Utils::is3rdInterfaceStart) {
@@ -95,12 +86,10 @@ ToolBarWidget::ToolBarWidget(MainWindow *pMainwindow, DWidget *parent)
     hLayout->addSpacing(10);
     hLayout->addWidget(m_closeButton, 0,  Qt::AlignCenter);
     hLayout->addWidget(m_confirmButton, 0,  Qt::AlignCenter);
-    hLayout->addWidget(m_saveToLocalDirButton, 0,  Qt::AlignCenter);
     hLayout->addSpacing(10);
     setLayout(hLayout);
 
     connect(m_confirmButton, &ToolButton::clicked, pMainwindow, &MainWindow::confirm);
-    connect(m_saveToLocalDirButton, &ToolButton::clicked,pMainwindow, &MainWindow::saveScreenShotToFile);
 
     connect(m_closeButton, &ToolButton::clicked, pMainwindow, &MainWindow::exitApp);    
     connect(m_subTool, &SubToolWidget::keyBoardButtonClicked, pMainwindow, &MainWindow::changeKeyBoardShowEvent);
@@ -181,14 +170,6 @@ void ToolBarWidget::setCameraDeviceEnable(bool status)
 
 void ToolBarWidget::changeShotToolEvent(const QString &func)
 {
-    if (!m_saveToLocalDirButton)
-        return;
-
-    if(func == "shot" && !m_saveToLocalDirButton->isVisible()) {
-        m_saveToLocalDirButton->setVisible(true);
-    } else if(func == "record") {
-        m_saveToLocalDirButton->setVisible(false);
-    }
 }
 /*
 void ToolBarWidget::setExpand(bool expand, QString shapeType)

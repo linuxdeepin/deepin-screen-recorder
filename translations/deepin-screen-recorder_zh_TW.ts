@@ -26,17 +26,6 @@ or press the shortcut again to stop recording</source>
     </message>
 </context>
 <context>
-    <name>MainToolWidget</name>
-    <message>
-        <source>Record</source>
-        <translation>录屏</translation>
-    </message>
-    <message>
-        <source>Screenshot</source>
-        <translation>截图</translation>
-    </message>
-</context>
-<context>
     <name>MainWindow</name>
     <message>
         <source>Screen Capture</source>
@@ -450,15 +439,6 @@ Press and hold Shift to draw a straight line</source>
     </message>
 </context>
 <context>
-    <name>StartTooltip</name>
-    <message>
-        <source>Click or drag to
-select the area to record</source>
-        <translation>单击或拖动以
-选择要录制的区域</translation>
-    </message>
-</context>
-<context>
     <name>SubToolWidget</name>
     <message>
         <source>Show keystroke (K)</source>
@@ -573,18 +553,6 @@ select the area to record</source>
         <translation>视频</translation>
     </message>
     <message>
-        <source>Rectangle (R)
-Press and hold Shift to draw a square</source>
-        <translation>矩形（R）
-按住Shift可画正方形</translation>
-    </message>
-    <message>
-        <source>Ellipse (O)
-Press and hold Shift to draw a circle</source>
-        <translation>椭圆（O）
-按住Shift可画圆形</translation>
-    </message>
-    <message>
         <source>Line (L)
 Press and hold Shift to draw a vertical or horizontal line</source>
         <translation>直线（L）
@@ -688,6 +656,30 @@ Press and hold Shift to draw a vertical or horizontal arrow</source>
         <source>Extract Text</source>
         <translation>识别文字</translation>
     </message>
+    <message>
+        <source>Geometric Tools (G)</source>
+        <translation>幾何工具 (G)</translation>
+    </message>
+    <message>
+        <source>Save to local</source>
+        <translation>保存到本地</translation>
+    </message>
+    <message>
+        <source>Specified Location</source>
+        <translation>指定位置</translation>
+    </message>
+    <message>
+        <source>Custom Location</source>
+        <translation>自定義位置</translation>
+    </message>
+    <message>
+        <source>Each inquiry</source>
+        <translation>每次詢問</translation>
+    </message>
+    <message>
+        <source>Update location on save</source>
+        <translation>保存時更新位置</translation>
+    </message>
 </context>
 <context>
     <name>ToolBarWidget</name>
@@ -716,13 +708,6 @@ Press and hold Shift to draw a vertical or horizontal arrow</source>
     <message>
         <source>Exit</source>
         <translation>退出</translation>
-    </message>
-</context>
-<context>
-    <name>VoiceRecordProcess</name>
-    <message>
-        <source>New recording</source>
-        <translation>新录音</translation>
     </message>
 </context>
 </TS>

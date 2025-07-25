@@ -88,12 +88,6 @@ private:
      * @brief 截图录屏工具栏确认按钮
      */
     ToolButton *m_confirmButton;
-
-    /**
-     * @brief 截图录屏保存按钮
-     *
-     */
-    ToolButton* m_saveToLocalDirButton = nullptr;
 };
 
 class ToolBar : public DLabel

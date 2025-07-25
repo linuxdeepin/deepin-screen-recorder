@@ -3754,100 +3754,118 @@ bool MainWindow::saveAction(const QPixmap &pix)
     switch (m_saveIndex) {
         case SaveToDesktop: {
             qCInfo(dsrApp) << __FUNCTION__ << __LINE__ << "保存到桌面！";
-            // 修改：桌面保存也弹出对话框
-            this->hide();
-            this->releaseKeyboard();
-
-            // 获取上次保存路径，如果没有则使用桌面
-            QString lastSavePath = ConfigSettings::instance()->getValue("shot", "save_dir").toString();
-            if (lastSavePath.isEmpty() || !QDir(lastSavePath).exists()) {
-                lastSavePath = QStandardPaths::writableLocation(QStandardPaths::DesktopLocation);
-            }
-
-            QString fileName = selectAreaName.isEmpty() ?
-                QString("%1_%2").arg(functionTypeStr).arg(currentTime) :
-                QString("%1_%2_%3").arg(functionTypeStr).arg(selectAreaName).arg(currentTime);
-
-            // 使用上次保存路径作为默认路径
-            QString defaultFileName = QString("%1/%2.png").arg(lastSavePath).arg(fileName);
-
-            m_saveFileName = QFileDialog::getSaveFileName(
-                this, tr("Save"), defaultFileName,
-                tr("PNG (*.png);;JPEG (*.jpg *.jpeg);;BMP (*.bmp)")
-            );
-
-            if (Utils::isWaylandMode) {
-                this->show();
-            }
-
-            if (m_saveFileName.isEmpty() || QFileInfo(m_saveFileName).isDir()) {
-                m_noNotify = true;
-                qCInfo(dsrApp) << __FUNCTION__ << __LINE__ << "取消保存到桌面！";
-                return false;
-            }
-
-            // 记住用户选择的路径
-            ConfigSettings::instance()->setValue("shot", "save_dir",
-                QFileInfo(m_saveFileName).dir().absolutePath());
-
-            // 处理文件扩展名
-            QString fileSuffix = QFileInfo(m_saveFileName).completeSuffix();
-            if (fileSuffix.isEmpty()) {
-                m_saveFileName = m_saveFileName + ".png";
-            } else if (!BaseUtils::isValidFormat(fileSuffix)) {
-                m_saveFileName = m_saveFileName + ".png";
-            }
-
+            saveOption = QStandardPaths::DesktopLocation;
+            // ConfigSettings::instance()->setValue("shot", "save_dir",
+            // QStandardPaths::writableLocation(QStandardPaths::DesktopLocation));
             break;
         }
         case SaveToImage: {
-            qCInfo(dsrApp) << __FUNCTION__ << __LINE__ << "保存到图片！";
-            // 修改：图片文件夹保存也弹出对话框
-            this->hide();
-            this->releaseKeyboard();
+            saveOption = QStandardPaths::PicturesLocation;
+            qCInfo(dsrApp) << __FUNCTION__ << __LINE__ << "保存到图片！" <<saveOption;
 
-            // 获取上次保存路径，如果没有则使用图片文件夹
-            QString lastSavePath = ConfigSettings::instance()->getValue("shot", "save_dir").toString();
-            if (lastSavePath.isEmpty() || !QDir(lastSavePath).exists()) {
-                lastSavePath = QStandardPaths::writableLocation(QStandardPaths::PicturesLocation);
-            }
-
-            QString fileName = selectAreaName.isEmpty() ?
-                QString("%1_%2").arg(functionTypeStr).arg(currentTime) :
-                QString("%1_%2_%3").arg(functionTypeStr).arg(selectAreaName).arg(currentTime);
-
-            // 使用上次保存路径作为默认路径
-            QString defaultFileName = QString("%1/%2.png").arg(lastSavePath).arg(fileName);
-
-            m_saveFileName = QFileDialog::getSaveFileName(
-                this, tr("Save"), defaultFileName,
-                tr("PNG (*.png);;JPEG (*.jpg *.jpeg);;BMP (*.bmp)")
-            );
-
-            if (Utils::isWaylandMode) {
-                this->show();
-            }
-
-            if (m_saveFileName.isEmpty() || QFileInfo(m_saveFileName).isDir()) {
-                m_noNotify = true;
-                qCInfo(dsrApp) << __FUNCTION__ << __LINE__ << "取消保存到图片文件夹！";
-                return false;
-            }
-
-            // 记住用户选择的路径
-            ConfigSettings::instance()->setValue("shot", "save_dir",
-                QFileInfo(m_saveFileName).dir().absolutePath());
-
-            // 处理文件扩展名
-            QString fileSuffix = QFileInfo(m_saveFileName).completeSuffix();
-            if (fileSuffix.isEmpty()) {
-                m_saveFileName = m_saveFileName + ".png";
-            } else if (!BaseUtils::isValidFormat(fileSuffix)) {
-                m_saveFileName = m_saveFileName + ".png";
-            }
-
+            // ConfigSettings::instance()->setValue("shot", "save_dir",
+            // QStandardPaths::writableLocation(QStandardPaths::PicturesLocation));
             break;
         }
+    case SaveToAsk: {
+        qCInfo(dsrApp) << __FUNCTION__ << __LINE__ << "每次询问保存位置！";
+        // 贴图不用保存
+        if (status::pinscreenshots == m_functionType) {
+            break;
+        }
+        this->hide();
+        this->releaseKeyboard();
+
+        // 获取上次保存路径，如果没有则使用图片文件夹
+        QString lastSavePath = ConfigSettings::instance()->getValue("shot", "save_dir").toString();
+        if (lastSavePath.isEmpty() || !QDir(lastSavePath).exists()) {
+            lastSavePath = QStandardPaths::writableLocation(QStandardPaths::PicturesLocation);
+        }
+
+        QString fileName = selectAreaName.isEmpty() ?
+            QString("%1_%2").arg(functionTypeStr).arg(currentTime) :
+            QString("%1_%2_%3").arg(functionTypeStr).arg(selectAreaName).arg(currentTime);
+
+        // 使用上次保存路径作为默认路径
+        QString defaultFileName;
+        switch (t_pictureFormat) {
+            case 0:
+                defaultFileName = QString("%1/%2.png").arg(lastSavePath).arg(fileName);
+                m_saveFileName = QFileDialog::getSaveFileName(
+                    this, tr("Save"), defaultFileName, tr("PNG (*.png);;JPEG (*.jpg *.jpeg);;BMP (*.bmp)"));
+                break;
+            case 1:
+                defaultFileName = QString("%1/%2.jpg").arg(lastSavePath).arg(fileName);
+                m_saveFileName = QFileDialog::getSaveFileName(
+                    this, tr("Save"), defaultFileName, tr("JPEG (*.jpg *.jpeg);;PNG (*.png);;BMP (*.bmp)"));
+                break;
+            case 2:
+                defaultFileName = QString("%1/%2.bmp").arg(lastSavePath).arg(fileName);
+                m_saveFileName = QFileDialog::getSaveFileName(
+                    this, tr("Save"), defaultFileName, tr("BMP (*.bmp);;JPEG (*.jpg *.jpeg);;PNG (*.png)"));
+                break;
+            default:
+                defaultFileName = QString("%1/%2.png").arg(lastSavePath).arg(fileName);
+                m_saveFileName = QFileDialog::getSaveFileName(
+                    this, tr("Save"), defaultFileName, tr("PNG (*.png);;JPEG (*.jpg *.jpeg);;BMP (*.bmp)"));
+                break;
+        }
+
+        if (Utils::isWaylandMode) {
+            this->show();
+        }
+
+        if (m_saveFileName.isEmpty() || QFileInfo(m_saveFileName).isDir()) {
+            m_noNotify = true;
+            qCInfo(dsrApp) << __FUNCTION__ << __LINE__ << "取消保存！";
+            return false;
+        }
+
+        // 记住用户选择的路径（仅保存路径，不改变保存选项）
+        ConfigSettings::instance()->setValue("shot", "save_dir",
+            QFileInfo(m_saveFileName).dir().absolutePath());
+
+        // 处理文件扩展名
+        QString fileSuffix = QFileInfo(m_saveFileName).completeSuffix();
+        if (fileSuffix.isEmpty()) {
+            switch (t_pictureFormat) {
+                case 0:
+                    m_saveFileName = m_saveFileName + ".png";
+                    break;
+                case 1:
+                    m_saveFileName = m_saveFileName + ".jpg";
+                    break;
+                case 2:
+                    m_saveFileName = m_saveFileName + ".bmp";
+                    break;
+                default:
+                    m_saveFileName = m_saveFileName + ".png";
+                    break;
+            }
+        } else if (!BaseUtils::isValidFormat(fileSuffix)) {
+            //检查后缀是以.png|.jpg|.jpeg|.bmp中的一种进行结尾
+            bool flag = checkSuffix(fileSuffix);
+            if (!flag) {
+                qWarning() << "The fileName has invalid suffix! fileSuffix: " << fileSuffix;
+                switch (t_pictureFormat) {
+                    case 0:
+                        m_saveFileName = m_saveFileName + ".png";
+                        break;
+                    case 1:
+                        m_saveFileName = m_saveFileName + ".jpg";
+                        break;
+                    case 2:
+                        m_saveFileName = m_saveFileName + ".bmp";
+                        break;
+                    default:
+                        m_saveFileName = m_saveFileName + ".png";
+                        break;
+                }
+            }
+        }
+        qCInfo(dsrApp) << __FUNCTION__ << __LINE__ << "每次询问保存位置，保存到：" << m_saveFileName;
+        break;
+    }
         case SaveToSpecificDir: {
             // 贴图不用保存
             if (status::pinscreenshots == m_functionType) {
@@ -3856,48 +3874,121 @@ bool MainWindow::saveAction(const QPixmap &pix)
             this->hide();
             this->releaseKeyboard();
 
-            // 获取上次保存路径，如果没有则使用图片文件夹
-            QString lastSavePath = ConfigSettings::instance()->getValue("shot", "save_dir").toString();
-            if (lastSavePath.isEmpty() || !QDir(lastSavePath).exists()) {
-                lastSavePath = QStandardPaths::writableLocation(QStandardPaths::PicturesLocation);
+            // QString path = ConfigSettings::instance()->getValue("save", "save_dir").toString();
+            QString path = ConfigSettings::instance()->getValue("shot", "save_dir").toString();
+            QString fileName = selectAreaName;
+
+            if (path.isEmpty() || !QDir(path).exists()) {
+                path = QStandardPaths::writableLocation(QStandardPaths::PicturesLocation);
             }
 
-            QString fileName = selectAreaName.isEmpty() ?
-                QString("%1_%2").arg(functionTypeStr).arg(currentTime) :
-                QString("%1_%2_%3").arg(functionTypeStr).arg(selectAreaName).arg(currentTime);
+            if (fileName.isEmpty()) {
+                fileName = QString("%1_%2").arg(functionTypeStr).arg(currentTime);
+            } else {
+                fileName = QString("%1_%2_%3").arg(functionTypeStr).arg(selectAreaName).arg(currentTime);
+            }
+            QString lastFileName;
 
-            // 使用上次保存路径作为默认路径
-            QString defaultFileName = QString("%1/%2.png").arg(lastSavePath).arg(fileName);
+            // 是否设置或更新指定目录
+            bool isChangeSpecificDir = ConfigSettings::instance()->getValue("shot", "save_dir_change").value<bool>();
+            qCInfo(dsrApp) << __FUNCTION__ << __LINE__ << "isChangeSpecificDir: " << isChangeSpecificDir;
+            // 自动化测试反馈, dde-desktop里面有2个computer_window. 修改直接调用QFileDialog类的静态函数. 不用创建其对象
+            // QFileDialog fileDialog;
+            switch (t_pictureFormat) {
+                case 0:
+                    lastFileName = QString("%1/%2.png").arg(path).arg(fileName);
+                    m_saveFileName =
+                        isChangeSpecificDir ?
+                            QFileDialog::getSaveFileName(
+                                this, tr("Save"), lastFileName, tr("PNG (*.png);;JPEG (*.jpg *.jpeg);;BMP (*.bmp)")) :
+                            lastFileName;
+                    break;
+                case 1:
+                    lastFileName = QString("%1/%2.jpg").arg(path).arg(fileName);
+                    m_saveFileName =
+                        isChangeSpecificDir ?
+                            QFileDialog::getSaveFileName(
+                                this, tr("Save"), lastFileName, tr("JPEG (*.jpg *.jpeg);;PNG (*.png);;BMP (*.bmp)")) :
+                            lastFileName;
+                    break;
+                case 2:
+                    lastFileName = QString("%1/%2.bmp").arg(path).arg(fileName);
+                    m_saveFileName =
+                        isChangeSpecificDir ?
+                            QFileDialog::getSaveFileName(
+                                this, tr("Save"), lastFileName, tr("BMP (*.bmp);;JPEG (*.jpg *.jpeg);;PNG (*.png)")) :
+                            lastFileName;
+                    break;
+                default:
+                    lastFileName = QString("%1/%2.png").arg(path).arg(fileName);
+                    m_saveFileName =
+                        isChangeSpecificDir ?
+                            QFileDialog::getSaveFileName(
+                                this, tr("Save"), lastFileName, tr("PNG (*.png);;JPEG (*.jpg *.jpeg);;BMP (*.bmp)")) :
+                            lastFileName;
+                    break;
+            }
 
-            m_saveFileName = QFileDialog::getSaveFileName(
-                this, tr("Save"), defaultFileName,
-                tr("PNG (*.png);;JPEG (*.jpg *.jpeg);;BMP (*.bmp)")
-            );
+            if (isChangeSpecificDir) {
+                ConfigSettings::instance()->setValue("shot", "save_dir_change", false);
+            }
 
             if (Utils::isWaylandMode) {
                 this->show();
             }
 
             if (m_saveFileName.isEmpty() || QFileInfo(m_saveFileName).isDir()) {
+                // 保存到指定位置, 用户在选择保存目录时，点击取消。保存失败，且不显示通知信息
                 m_noNotify = true;
                 qCInfo(dsrApp) << __FUNCTION__ << __LINE__ << "取消保存到指定位置！";
                 return false;
             }
 
-            // 记住用户选择的路径
-            ConfigSettings::instance()->setValue("shot", "save_dir",
-                QFileInfo(m_saveFileName).dir().absolutePath());
-
-            // 处理文件扩展名
             QString fileSuffix = QFileInfo(m_saveFileName).completeSuffix();
             if (fileSuffix.isEmpty()) {
-                m_saveFileName = m_saveFileName + ".png";
+                //            m_saveFileName = m_saveFileName + ".png";
+
+                switch (t_pictureFormat) {
+                    case 0:
+                        m_saveFileName = m_saveFileName + ".png";
+                        break;
+                    case 1:
+                        m_saveFileName = m_saveFileName + ".jpg";
+                        break;
+                    case 2:
+                        m_saveFileName = m_saveFileName + ".bmp";
+                        break;
+                    default:
+                        m_saveFileName = m_saveFileName + ".png";
+                        break;
+                }
             } else if (!BaseUtils::isValidFormat(fileSuffix)) {
-                m_saveFileName = m_saveFileName + ".png";
+                //检查后缀是以.png|.jpg|.jpeg|.bmp中的一种进行结尾。false:否 true：是
+                bool flag = checkSuffix(fileSuffix);
+                if (!flag) {
+                    qWarning() << "The fileName has invalid suffix! fileSuffix: " << fileSuffix;
+                    switch (t_pictureFormat) {
+                        case 0:
+                            m_saveFileName = m_saveFileName + ".png";
+                            break;
+                        case 1:
+                            m_saveFileName = m_saveFileName + ".jpg";
+                            break;
+                        case 2:
+                            m_saveFileName = m_saveFileName + ".bmp";
+                            break;
+                        default:
+                            m_saveFileName = m_saveFileName + ".png";
+                            break;
+                    }
+                }
+            } else {
+                qCDebug(dsrApp) << "The fileSuffix is right!  " << fileSuffix;
             }
 
             qCInfo(dsrApp) << __FUNCTION__ << __LINE__ << "保存到指定文件夹！";
             qCDebug(dsrApp) << "The fileName is: " << m_saveFileName;
+            ConfigSettings::instance()->setValue("shot", "save_dir", QFileInfo(m_saveFileName).dir().absolutePath());
             break;
         }
         case AutoSave:
