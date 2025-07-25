@@ -1106,14 +1106,14 @@ void MainWindow::initShortcut()
     connect(returnSC, &QShortcut::activated, this, [=] {
         if (status::shot == m_functionType || status::scrollshot == m_functionType) {
             qCDebug(dsrApp) << "shortcut : returnSC (key: enter)";
-            saveScreenShot();
+            saveScreenShotToClipboardOnly();
         }
     });
     // 截图模式/滚动模式 保存截图 小键盘
     connect(enterSC, &QShortcut::activated, this, [=] {
         if (status::shot == m_functionType || status::scrollshot == m_functionType) {
             qCDebug(dsrApp) << "shortcut : enterSC (key: enter)";
-            saveScreenShot();
+            saveScreenShotToClipboardOnly();
         }
         if (status::record == m_functionType && Utils::isWaylandMode)
             m_showButtons->showContentButtons(KEY_ENTER);
@@ -1122,7 +1122,7 @@ void MainWindow::initShortcut()
     connect(saveShotSC, &QShortcut::activated, this, [=] {
         if (status::shot == m_functionType || status::scrollshot == m_functionType) {
             qCDebug(dsrApp) << "shortcut : saveShotSC (key: ctrl+s)";
-            saveScreenShot();
+            saveScreenShotToClipboardOnly();
         }
     });
     // 截图模式/录屏模式（未做穿透）/滚动模式 退出
