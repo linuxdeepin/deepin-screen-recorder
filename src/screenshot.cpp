@@ -50,6 +50,12 @@ void Screenshot::startScreenshot()
     }
 }
 
+void Screenshot::customScreenshot(bool hideToolbar, bool notify)
+{
+    m_window.setToolbarVisable(hideToolbar);
+    startScreenshot();
+}
+
 void Screenshot::delayScreenshot(double num)
 {
     qCDebug(dsrApp) << "delayScreenshot() called with delay:" << num << "seconds.";

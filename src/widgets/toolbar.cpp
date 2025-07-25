@@ -32,8 +32,9 @@ const int TOOLBAR_HEIGHT = 68;
 const int TOOLBAR_WIDTH = 425;
 }
 
-ToolBarWidget::ToolBarWidget(MainWindow *pMainwindow, DWidget *parent)
+ToolBarWidget::ToolBarWidget(MainWindow *pMainwindow, DWidget *parent, bool hideToolBar)
     : DFloatingWidget(parent)
+    , m_hideToolBar(hideToolBar)
 {
     qCDebug(dsrApp) << "ToolBarWidget constructor called.";
     setBlurBackgroundEnabled(true);
@@ -82,7 +83,11 @@ ToolBarWidget::ToolBarWidget(MainWindow *pMainwindow, DWidget *parent)
         qCDebug(dsrApp) << "Setting minimum width for 3rd interface mode";
         m_subTool->setMinimumWidth(TOOLBAR_WIDTH - 160); //减去隐藏按钮的最小宽度和
     }
-
+    qWarning()<<"hideToolBar"<<m_hideToolBar;
+    if (m_hideToolBar)
+    {
+        m_subTool->hide();
+    }
     QHBoxLayout *hLayout = new QHBoxLayout();
     hLayout->setContentsMargins(0, 0, 0, 0);
     hLayout->setSpacing(0);
@@ -139,6 +144,11 @@ int ToolBarWidget::getFuncSubToolX(QString &func)
 {
     qCDebug(dsrApp) << "ToolBarWidget::getFuncSubToolX called for function:" << func;
     return m_subTool->getFuncSubToolX(func);
+}
+
+void ToolBarWidget::setHideToolbar(bool hidetoolbar)
+{
+    m_hideToolBar = hidetoolbar;
 }
 
 void ToolBarWidget::setRecordLaunchFromMain(const unsigned int funType)
@@ -330,12 +340,12 @@ void ToolBar::currentFunctionMode(QString shapeType)
     emit currentFunctionToMain(shapeType);
 }
 
-void ToolBar::initToolBar(MainWindow *pmainWindow)
+void ToolBar::initToolBar(MainWindow *pmainWindow, bool hideToolbar)
 {
     m_pMainWindow = pmainWindow;
     setFixedHeight(TOOLBAR_HEIGHT);
 
-    m_toolbarWidget = new ToolBarWidget(pmainWindow, this);
+    m_toolbarWidget = new ToolBarWidget(pmainWindow, this, hideToolbar);
     QHBoxLayout *vLayout = new QHBoxLayout();
     vLayout->setSizeConstraint(QLayout::SetFixedSize);
     vLayout->setContentsMargins(0, 0, 0, 0);
@@ -397,3 +407,4 @@ QRect ToolBar::getShotOptionRect(){
 ToolBar::~ToolBar()
 {
 }
+
