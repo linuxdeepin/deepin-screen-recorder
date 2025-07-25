@@ -13,6 +13,7 @@ enum SaveAction : unsigned int {
     SaveToDesktop,
     SaveToImage,
     SaveToSpecificDir,
+    SaveToAsk,
     AutoSave, // 自定义保存目录
 };
 Q_DECLARE_METATYPE(SaveAction);
