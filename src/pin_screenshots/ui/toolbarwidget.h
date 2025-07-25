@@ -40,6 +40,18 @@ protected:
      * @param event
      */
     void mouseMoveEvent(QMouseEvent *event) override;
+    
+    /**
+     * @brief 重写鼠标进入事件：确保鼠标进入工具栏时工具栏保持显示
+     * @param event
+     */
+    void enterEvent(QEnterEvent *event) override;
+    
+    /**
+     * @brief 重写鼠标离开事件：当鼠标离开工具栏且不在主窗口上时隐藏工具栏
+     * @param event
+     */
+    void leaveEvent(QEvent *event) override;
 private:
     MainToolWidget *m_mainTool;
     SubToolWidget *m_subTool;
