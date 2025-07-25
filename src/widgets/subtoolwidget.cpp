@@ -706,13 +706,32 @@ void SubToolWidget::initShotLabel()
         m_pinButton->hide(); //隐藏pin按钮
     }
 
+    m_saveSeperatorBeg = new DVerticalLine(this);
+    m_saveSeperatorEnd = new DVerticalLine(this);
+    m_saveSeperatorBeg->setFixedSize(QSize(3, 30));
+    m_saveSeperatorEnd->setFixedSize(QSize(3, 30));
+
     QHBoxLayout *rectLayout = new QHBoxLayout();
     rectLayout->setSizeConstraint(QLayout::SetFixedSize);
     rectLayout->setContentsMargins(0, 0, 0, 0);
     rectLayout->setSpacing(0);
     rectLayout->addSpacing(10);
     for (int i = 0; i < btnList.length(); i++) {
+        // 在m_shotOptionButton之前添加第一个分割线
+        if (btnList[i] == m_shotOptionButton) {
+            rectLayout->addWidget(m_saveSeperatorBeg);
+            rectLayout->addSpacing(5); // 添加一些间距
+        }
+        
         rectLayout->addWidget(btnList[i]);
+        
+        // 在m_saveLocalDirButton之后添加第二个分割线
+        if (btnList[i] == m_saveLocalDirButton) {
+            rectLayout->addSpacing(5); // 添加一些间距
+            rectLayout->addWidget(m_saveSeperatorEnd);
+        }
+        
+        // 原有的条件保持不变
         if (btnList[i] == m_recorderButton) {
             rectLayout->addSpacing(10);
         }
@@ -1134,14 +1153,30 @@ void SubToolWidget::initScrollLabel()
     btnList.append(m_saveLocalDirButton);
     connect(m_saveLocalDirButton, &ToolButton::clicked, m_pMainWindow, &MainWindow::saveScreenShotToFile);
 
-
+    m_saveSeperatorBeg = new DVerticalLine(this);
+    m_saveSeperatorEnd = new DVerticalLine(this);
+    m_saveSeperatorBeg->setFixedSize(QSize(3, 30));
+    m_saveSeperatorEnd->setFixedSize(QSize(3, 30));
+    
     QHBoxLayout *rectLayout = new QHBoxLayout();
     rectLayout->setSizeConstraint(QLayout::SetFixedSize);
     rectLayout->setContentsMargins(0, 0, 0, 0);
     rectLayout->setSpacing(0);
     rectLayout->addSpacing(10);
     for (int i = 0; i < btnList.length(); i++) {
+          // 在m_shotOptionButton之前添加第一个分割线
+        if (btnList[i] == m_scrollOptionButton) {
+            rectLayout->addWidget(m_saveSeperatorBeg);
+            rectLayout->addSpacing(5); // 添加一些间距
+        }
+        
         rectLayout->addWidget(btnList[i]);
+        
+        // 在m_saveLocalDirButton之后添加第二个分割线
+        if (btnList[i] == m_saveLocalDirButton) {
+            rectLayout->addSpacing(5); // 添加一些间距
+            rectLayout->addWidget(m_saveSeperatorEnd);
+        }
     }
     m_scrollSubTool->setLayout(rectLayout);
     addWidget(m_scrollSubTool);

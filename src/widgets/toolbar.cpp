@@ -73,6 +73,10 @@ ToolBarWidget::ToolBarWidget(MainWindow *pMainwindow, DWidget *parent)
     Utils::setAccessibility(m_closeButton, AC_TOOLBARWIDGET_CLOSE_BUTTON_TOOL);
     Utils::setAccessibility(m_confirmButton, AC_TOOLBARWIDGET_CLOSE_BUTTON_TOOL);
 
+    // 当从uos ai的调用过来则将该窗口隐藏
+    if (false)
+        m_subTool->setVisible(false);
+
     setFixedHeight(TOOLBAR_HEIGHT);
     if (Utils::is3rdInterfaceStart) {
         qCDebug(dsrApp) << "Setting minimum width for 3rd interface mode";
