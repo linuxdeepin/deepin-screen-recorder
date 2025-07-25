@@ -688,8 +688,8 @@ Press and hold Shift to draw a vertical or horizontal arrow</source>
         <translation>关闭 Esc</translation>
     </message>
     <message>
-        <source>OK (Enter)</source>
-        <translation>确认 Enter</translation>
+        <source>Copy to clipboard (Enter)</source>
+        <translation>複製到剪貼板</translation>
     </message>
 </context>
 <context>

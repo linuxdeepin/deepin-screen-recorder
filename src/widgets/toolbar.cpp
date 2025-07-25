@@ -68,7 +68,7 @@ ToolBarWidget::ToolBarWidget(MainWindow *pMainwindow, DWidget *parent)
     m_confirmButton->setIcon(QIcon::fromTheme("confirm"));
 
     m_subTool->installTipHint(m_closeButton, tr("Close (Esc)"));
-    m_subTool->installTipHint(m_confirmButton, tr("OK (Enter)"));
+    m_subTool->installTipHint(m_confirmButton, tr("Copy to clipboard (Enter)"));
 
     Utils::setAccessibility(m_closeButton, AC_TOOLBARWIDGET_CLOSE_BUTTON_TOOL);
     Utils::setAccessibility(m_confirmButton, AC_TOOLBARWIDGET_CLOSE_BUTTON_TOOL);
