@@ -1992,23 +1992,33 @@ void MainWindow::save2Clipboard(const QPixmap &pix)
     }
     if (Utils::is3rdInterfaceStart == false) {
         if (DSysInfo::minorVersion().toInt() >= 1070) {
-            //检测保存到剪切板是否完成
-            qInfo() << "Connecting the clipboard feedback signal..."
-                    << "\nClipboardService: " << ClipboardService
-                    << "\nClipboardPath: " << ClipboardPath
-                    << "\nClipboardInterface: " << ClipboardInterface
-                    << "\nClipboardSignal: " << ClipboardSignal;
-            bool isSuccess = QDBusConnection::sessionBus().connect(ClipboardService,
-                                                                   ClipboardPath,
-                                                                   ClipboardInterface,
-                                                                   ClipboardSignal,
-                                                                   this,
-                                                                   SLOT(onSaveClipboardComing(const QByteArray &))
-                                                                  );
-            if (isSuccess) {
-                qInfo() << "The clipper feedback signal connection is successfully established!";
+            QDBusInterface clipboardInterface(ClipboardService,
+                                              ClipboardPath,
+                                              "org.freedesktop.DBus.Peer",
+                                              QDBusConnection::sessionBus());
+
+            QDBusReply<QString> reply = clipboardInterface.call("GetMachineId");
+            if (reply.isValid()) {
+                //检测保存到剪切板是否完成
+                qInfo() << "Connecting the clipboard feedback signal..."
+                        << "\nClipboardService: " << ClipboardService
+                        << "\nClipboardPath: " << ClipboardPath
+                        << "\nClipboardInterface: " << ClipboardInterface
+                        << "\nClipboardSignal: " << ClipboardSignal;
+                bool isSuccess = QDBusConnection::sessionBus().connect(ClipboardService,
+                                                                       ClipboardPath,
+                                                                       ClipboardInterface,
+                                                                       ClipboardSignal,
+                                                                       this,
+                                                                       SLOT(onSaveClipboardComing(const QByteArray &))
+                                                                      );
+                if (isSuccess) {
+                    qInfo() << "The clipper feedback signal connection is successfully established!";
+                } else {
+                    qWarning() << "Clipper feedback signal connection failed!";
+                }
             } else {
-                qWarning() << "Clipper feedback signal connection failed!";
+                qWarning() << tr("%1服务有错误：%2").arg(ClipboardService).arg(reply.error().message());
             }
         }
 
