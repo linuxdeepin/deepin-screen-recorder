@@ -50,6 +50,11 @@ public:
     void installHint(QWidget *w, QWidget *hint);
 
     /**
+     * @brief 更新保存按钮的提示信息，显示实际保存路径
+     */
+    void updateSaveButtonTip();
+
+    /**
      * @brief 设置禁止滚动截图
      */
     void setScrollShotDisabled(const bool state);

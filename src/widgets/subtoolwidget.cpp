@@ -708,7 +708,8 @@ void SubToolWidget::initShotLabel()
     m_saveLocalDirButton = new ToolButton();
     m_saveLocalDirButton->setCheckable(false);
     m_saveLocalDirButton->setIconSize(TOOL_ICON_SIZE);
-    installTipHint(m_saveLocalDirButton, tr("Save to local"));
+    // 根据当前设置获取保存路径，并在悬浮提示中显示
+    updateSaveButtonTip();
     m_saveLocalDirButton->setIcon(QIcon(":/icons/deepin/builtin/toolbar/save.svg"));
     Utils::setAccessibility(m_saveLocalDirButton, AC_SUBTOOLWIDGET_SAVETOLOCAL_BUTTON);
     m_shotBtnGroup->addButton(m_saveLocalDirButton);
@@ -799,6 +800,41 @@ void SubToolWidget::initShotLabel()
 
     initShotOption();
     qCDebug(dsrApp) << "截图工具栏UI已初始化";
+}
+
+// 更新保存按钮的提示信息
+void SubToolWidget::updateSaveButtonTip()
+{
+    // 获取当前保存设置
+    SaveAction saveAction = ConfigSettings::instance()->getValue("shot", "save_op").value<SaveAction>();
+    QString tipText;
+    
+    switch (saveAction) {
+    case SaveToDesktop: {
+        QString desktopPath = QStandardPaths::writableLocation(QStandardPaths::DesktopLocation);
+        tipText = tr("Save to %1").arg(desktopPath);
+        break;
+    }
+    case SaveToImage: {
+        QString picturePath = QStandardPaths::writableLocation(QStandardPaths::PicturesLocation);
+        tipText = tr("Save to %1").arg(picturePath);
+        break;
+    }
+    case SaveToSpecificDir: {
+        QString specificPath = ConfigSettings::instance()->getValue("shot", "save_dir").toString();
+        if (!specificPath.isEmpty() && QFileInfo::exists(specificPath)) {
+            tipText = tr("Save to %1").arg(specificPath);
+        } else {
+            tipText = tr("Save to local");
+        }
+        break;
+    }
+    default:
+        tipText = tr("Save to local");
+        break;
+    }
+    
+    installTipHint(m_saveLocalDirButton, tipText);
 }
 
 void SubToolWidget::initShotOption()
@@ -1026,6 +1062,9 @@ void SubToolWidget::initShotOption()
         } else if (t_act == askEveryTimeAction) {
             ConfigSettings::instance()->setValue("shot", "save_op", SaveAction::SaveToAsk);
         }
+        
+        // 更新保存按钮提示
+        updateSaveButtonTip();
     });
 
     // 指定位置子菜单的信号连接
@@ -1039,6 +1078,9 @@ void SubToolWidget::initShotOption()
         } else if (t_act == m_saveToSpecialPathMenu->menuAction()) {
             ConfigSettings::instance()->setValue("shot", "save_op", SaveAction::SaveToSpecificDir);
         }
+        
+        // 更新保存按钮提示
+        updateSaveButtonTip();
     });
 
     // 自定义位置子菜单的信号连接
@@ -1055,6 +1097,9 @@ void SubToolWidget::initShotOption()
             qCDebug(dsrApp) << ">>>>>>>>>>> 使用上次保存位置";
             ConfigSettings::instance()->setValue("shot", "save_dir_change", false);
         }
+        
+        // 更新保存按钮提示
+        updateSaveButtonTip();
     });
 
     int t_pictureFormat = ConfigSettings::instance()->getValue("shot", "format").toInt();
@@ -1159,7 +1204,8 @@ void SubToolWidget::initScrollLabel()
     m_saveLocalDirButton = new ToolButton();
     m_saveLocalDirButton->setCheckable(false);
     m_saveLocalDirButton->setIconSize(TOOL_ICON_SIZE);
-    installTipHint(m_saveLocalDirButton, tr("Save to local"));
+    // 根据当前设置获取保存路径，并在悬浮提示中显示
+    updateSaveButtonTip();
     m_saveLocalDirButton->setIcon(QIcon(":/icons/deepin/builtin/toolbar/save.svg"));
     Utils::setAccessibility(m_saveLocalDirButton, AC_SUBTOOLWIDGET_SAVETOLOCAL_BUTTON);
     m_shotBtnGroup->addButton(m_saveLocalDirButton);
@@ -1371,6 +1417,9 @@ void SubToolWidget::initScrollLabel()
             ConfigSettings::instance()->setValue("shot", "save_op", SaveAction::SaveToAsk);
             m_scrollOptionMenu->hide(); // 关闭菜单
         }
+        
+        // 更新保存按钮提示
+        updateSaveButtonTip();
     });
 
     // 指定位置子菜单的信号连接
@@ -1387,6 +1436,9 @@ void SubToolWidget::initScrollLabel()
             ConfigSettings::instance()->setValue("shot", "save_op", SaveAction::SaveToSpecificDir);
             // 不立即关闭菜单，因为用户可能需要在子菜单中继续选择
         }
+        
+        // 更新保存按钮提示
+        updateSaveButtonTip();
     });
 
     // 自定义位置子菜单的信号连接
@@ -1405,6 +1457,9 @@ void SubToolWidget::initScrollLabel()
             ConfigSettings::instance()->setValue("shot", "save_dir_change", false);
             m_scrollOptionMenu->hide(); // 关闭菜单
         }
+        
+        // 更新保存按钮提示
+        updateSaveButtonTip();
     });
 
     // 格式选项的信号连接
