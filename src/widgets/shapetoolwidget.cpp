@@ -48,7 +48,7 @@ void ShapeToolWidget::initWidget()
     
     // 创建布局
     QHBoxLayout *mainLayout = new QHBoxLayout(this);
-    mainLayout->setContentsMargins(0, 0, 0, 0);
+    mainLayout->setContentsMargins(0, 0, 10, 0);
     mainLayout->setSpacing(4);  // 设置合适的间距
     mainLayout->addWidget(m_rectButton);
     mainLayout->addWidget(m_ovalButton);
@@ -62,7 +62,7 @@ void ShapeToolWidget::initWidget()
 void ShapeToolWidget::initShapeButtons()
 {
     qCDebug(dsrApp) << "ShapeToolWidget::initShapeButtons called.";
-    setFixedSize(72,50);
+    setFixedSize(78,50);
     // 创建按钮组
     m_shapeBtnGroup = new QButtonGroup(this);
     m_shapeBtnGroup->setExclusive(true);

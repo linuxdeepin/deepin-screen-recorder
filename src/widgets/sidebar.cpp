@@ -33,7 +33,7 @@ namespace {
 const QSize TOOLBAR_WIDGET_SIZE1 = QSize(290, 68);
 const QSize TOOLBAR_WIDGET_SIZE2 = QSize(370, 68);
 const QSize TOOLBAR_WIDGET_SIZE3 = QSize(500, 68);
-const QSize TOOLBAR_WIDGET_SIZE4 = QSize(400, 68);
+const QSize TOOLBAR_WIDGET_SIZE4 = QSize(368, 68);
 
 //const int BUTTON_SPACING = 3;
 //const int BTN_RADIUS = 3;
