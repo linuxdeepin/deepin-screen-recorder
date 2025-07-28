@@ -682,6 +682,10 @@ Hold down Shift to draw squares or circles.</source>
         <translation>幾何工具 (G)
 按住Shift可畫正方形或圓形</translation>
     </message>
+    <message>
+        <source>Save to %1</source>
+        <translation>保存到%1</translation>
+    </message>
 </context>
 <context>
     <name>ToolBarWidget</name>
