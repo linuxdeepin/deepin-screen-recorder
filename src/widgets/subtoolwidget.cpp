@@ -543,7 +543,7 @@ void SubToolWidget::initShotLabel()
     Utils::setAccessibility(m_gioButton, AC_SUBTOOLWIDGET_GIO_BUTTON);
     m_shotBtnGroup->addButton(m_gioButton);
     m_gioButton->setFixedSize(TOOL_BUTTON_SIZE);
-    installTipHint(m_gioButton, tr("Geometric Tools (G)"));
+    installTipHint(m_gioButton, tr("Geometric Tools (G)\nHold down Shift to draw squares or circles."));
     btnList.append(m_gioButton);
 
     //添加直线按钮
@@ -772,13 +772,10 @@ void SubToolWidget::initShotLabel()
             emit changeShotToolFunc("ocr");
         }
         if (m_gioButton->isChecked()) {
-            // 读取上次选中的形状，如果没有则默认使用矩形
-            QString currentShape = ConfigSettings::instance()->getValue("shape", "current").toString();
-            if (currentShape.isEmpty() || (currentShape != "rectangle" && currentShape != "oval")) {
-                currentShape = "rectangle"; // 默认使用矩形
-            }
-            qCDebug(dsrApp) << "Geometry button clicked, using shape:" << currentShape;
-            emit changeShotToolFunc(currentShape);
+            // 当几何图形按钮被点击时，发送"gio"信号，而不是直接发送具体形状
+            // 这样SideBarWidget可以正确识别这是几何图形按钮被点击的事件
+            qCDebug(dsrApp) << "Geometry button clicked, sending gio signal";
+            emit changeShotToolFunc("gio");
         }
         if (m_lineButton->isChecked()) {
             emit changeShotToolFunc("line");

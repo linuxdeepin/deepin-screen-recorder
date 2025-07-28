@@ -103,22 +103,63 @@ void ShapeToolWidget::initShapeButtons()
     
     // 根据配置设置默认选中状态
     QString currentShape = ConfigSettings::instance()->getValue("shape", "current").toString();
+    qDebug(dsrApp) << "Current shape from config:" << currentShape;
+    
     if (currentShape == "oval") {
+        qDebug(dsrApp) << "Selecting oval button based on config.";
         m_ovalButton->setChecked(true);
     } else {
         // 默认选中矩形
+        qDebug(dsrApp) << "Selecting rectangle button as default.";
         m_rectButton->setChecked(true);
+        
+        // 如果没有保存过形状，则保存默认的矩形形状
+        if (currentShape.isEmpty()) {
+            qDebug(dsrApp) << "No shape in config, saving rectangle as default.";
+            ConfigSettings::instance()->setValue("shape", "current", "rectangle");
+        }
     }
 }
 
 void ShapeToolWidget::selectShape(const QString &shape)
 {
-    qCDebug(dsrApp) << "ShapeToolWidget::selectShape called with shape:" << shape;
-    if (shape == "rectangle") {
+    qDebug(dsrApp) << "ShapeToolWidget::selectShape called with shape:" << shape;
+    
+    // 如果形状为空或无效，则使用历史记录或默认值
+    QString currentShape = shape;
+    if (currentShape.isEmpty() || (currentShape != "rectangle" && currentShape != "oval")) {
+        currentShape = ConfigSettings::instance()->getValue("shape", "current").toString();
+        if (currentShape.isEmpty() || (currentShape != "rectangle" && currentShape != "oval")) {
+            currentShape = "rectangle"; // 默认使用矩形
+            qDebug(dsrApp) << "No valid shape provided or in config, using rectangle as default.";
+            ConfigSettings::instance()->setValue("shape", "current", currentShape);
+        } else {
+            qDebug(dsrApp) << "Using shape from config:" << currentShape;
+        }
+    }
+    
+    // 根据形状选择按钮
+    if (currentShape == "rectangle") {
+        qDebug(dsrApp) << "Selecting rectangle button.";
         m_rectButton->setChecked(true);
         emit shapeSelected("rectangle");
-    } else if (shape == "oval") {
+    } else if (currentShape == "oval") {
+        qDebug(dsrApp) << "Selecting oval button.";
         m_ovalButton->setChecked(true);
         emit shapeSelected("oval");
     }
+}
+
+// 只设置矩形按钮状态但不发送信号
+void ShapeToolWidget::selectRectangleWithoutSignal()
+{
+    qDebug(dsrApp) << "ShapeToolWidget::selectRectangleWithoutSignal called.";
+    m_rectButton->setChecked(true);
+}
+
+// 只设置椭圆按钮状态但不发送信号
+void ShapeToolWidget::selectOvalWithoutSignal()
+{
+    qDebug(dsrApp) << "ShapeToolWidget::selectOvalWithoutSignal called.";
+    m_ovalButton->setChecked(true);
 }

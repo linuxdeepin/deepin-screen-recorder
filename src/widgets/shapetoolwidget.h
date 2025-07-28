@@ -14,6 +14,8 @@
 
 DWIDGET_USE_NAMESPACE
 
+class MainWindow;  // 前向声明MainWindow类
+
 class ShapeToolWidget : public DLabel
 {
     Q_OBJECT
@@ -23,6 +25,13 @@ public:
 
     void initWidget();
     void selectShape(const QString &shape);
+    
+    // 只设置按钮状态但不发送信号的方法
+    void selectRectangleWithoutSignal();
+    void selectOvalWithoutSignal();
+    
+    // 设置MainWindow指针
+    void setMainWindow(MainWindow *mainWindow) { m_pMainWindow = mainWindow; }
 
 signals:
     void shapeSelected(const QString &shape);
@@ -34,6 +43,7 @@ private:
     QButtonGroup *m_shapeBtnGroup;
     ToolButton *m_rectButton;
     ToolButton *m_ovalButton;
+    MainWindow *m_pMainWindow = nullptr;  // MainWindow指针
 };
 
 #endif // SHAPETOOLWIDGET_H
