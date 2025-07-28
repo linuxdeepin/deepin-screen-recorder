@@ -2851,8 +2851,11 @@ void MainWindow::updateSideBarPos()
     } /*else if (m_currentToolShape == "text") {
         sidebarPoint.setX(m_toolBar->x() + m_toolBar->width() - m_sideBar->getSideBarWidth("text"));
     }*/
-    else if (m_currentToolShape == "rectangle") {
-        sidebarPoint.setX(m_toolBar->x());
+    else if (m_currentToolShape == "rectangle" || m_currentToolShape == "oval" || m_currentToolShape == "gio") {
+        // 几何图形工具(包括矩形和椭圆)都使用 gioButton 的位置
+        QString gioShape = "gio";
+        if (m_toolBar->getFuncSubToolX(gioShape) > -1)
+            sidebarPoint.setX(m_toolBar->x() + m_toolBar->getFuncSubToolX(gioShape));
     } else {
         if (m_toolBar->getFuncSubToolX(m_currentToolShape) > -1)
             sidebarPoint.setX(m_toolBar->x() + m_toolBar->getFuncSubToolX(m_currentToolShape));
