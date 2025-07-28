@@ -618,6 +618,13 @@ protected:
     QPixmap getPixmapofRect(const QRect &rect);
     bool saveImg(const QPixmap &pix, const QString &fileName, const char *format = nullptr);
     void save2Clipboard(const QPixmap &pix);
+    
+    /**
+     * @brief 根据图片大小获取等待时间
+     * @param pix 图片对象
+     * @return 等待时间（秒）
+     */
+    int getWaitTimeByImageSize(const QPixmap &pix);
 
     /**
      * @brief 检查传入的字符串是否包含.png | .jpg | .bmp | .jepg
