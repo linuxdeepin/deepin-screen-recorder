@@ -264,7 +264,7 @@ void SubToolWidget::initRecordOption()
     //notAudio->setCheckable(true);
     m_microphoneAction->setCheckable(true);
     sysAudio->setCheckable(true);
-    sysAudio->setChecked(true);
+    //sysAudio->setChecked(true);
     //t_audioGroup->addAction(notAudio);
     t_audioGroup->addAction(m_microphoneAction);
     t_audioGroup->addAction(sysAudio);
@@ -439,7 +439,7 @@ void SubToolWidget::initRecordOption()
         break;
     }
 
-    t_settings->setValue("recorder", "audio", 0);
+    //t_settings->setValue("recorder", "audio", 0);
 //    t_settings->setValue("recorder", "cursor", 1);
     //notAudio->setChecked(true);
     //notMouse->setChecked(true);
@@ -484,6 +484,23 @@ void SubToolWidget::initRecordOption()
     }else{
         showPointer->setChecked(false);
         showClick->setChecked(false);
+    }
+
+    // 读取历史音频设置
+    int audioSetting = t_settings->getValue("recorder", "audio").toInt();
+    qCDebug(dsrApp) << "历史音频设置：(0 无音频, 1 仅麦克风, 2 仅系统音频, 3 麦克风和系统音频)" << audioSetting;
+    if (audioSetting == 3) {
+        m_microphoneAction->setChecked(true);
+        sysAudio->setChecked(true);
+    } else if (audioSetting == 2) {
+        sysAudio->setChecked(true);
+        m_microphoneAction->setChecked(false);
+    } else if (audioSetting == 1) {
+        m_microphoneAction->setChecked(true);
+        sysAudio->setChecked(false);
+    } else {
+        m_microphoneAction->setChecked(false);
+        sysAudio->setChecked(false);
     }
 
     int save_opt = t_settings->getValue("recorder", "save_op").toInt();
@@ -1637,9 +1654,10 @@ void SubToolWidget::setMicroPhoneEnable(bool status)
     qCDebug(dsrApp) << "Setting microphone enable status:" << status;
     qCDebug(dsrApp) << "mic 是否可选？" << status;
     m_microphoneAction->setEnabled(status);
-    m_microphoneAction->setChecked(!status);
-    //trigger()函数会改变当前的checked状态
-    m_microphoneAction->trigger();
+    // 不再强制设置麦克风的选中状态，保留用户的选择
+    // m_microphoneAction->setChecked(!status);
+    // trigger()函数会改变当前的checked状态
+    // m_microphoneAction->trigger();
 }
 
 void SubToolWidget::setCameraDeviceEnable(bool status)
