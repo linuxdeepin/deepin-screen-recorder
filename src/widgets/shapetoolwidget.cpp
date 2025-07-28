@@ -62,7 +62,7 @@ void ShapeToolWidget::initWidget()
 void ShapeToolWidget::initShapeButtons()
 {
     qCDebug(dsrApp) << "ShapeToolWidget::initShapeButtons called.";
-    setFixedSize(96,50);
+    setFixedSize(72,50);
     // 创建按钮组
     m_shapeBtnGroup = new QButtonGroup(this);
     m_shapeBtnGroup->setExclusive(true);

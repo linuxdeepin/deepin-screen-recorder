@@ -70,10 +70,20 @@ void ToolBarWidget::showAt(QPoint pos, bool isfirstTime)
 {
     qCDebug(dsrApp) << "Showing toolbar at position:" << pos << ", isFirstTime:" << isfirstTime;
     this->move(pos);
+    
+    // 确保几何信息更新
+    this->updateGeometry();
+    this->layout()->activate();
+    
     if (this->isHidden()) {
         this->show();
         qCDebug(dsrApp) << "Toolbar was hidden, now shown.";
     }
+    
+    // 再次确保几何信息正确
+    QRect geom = this->geometry();
+    qCDebug(dsrApp) << "Toolbar geometry after showing:" << geom;
+    
     if (isfirstTime) {
         this->hide();
         qCDebug(dsrApp) << "First time showing, hiding toolbar.";
@@ -141,10 +151,17 @@ void ToolBarWidget::enterEvent(QEnterEvent *event)
 {
     Q_UNUSED(event);
     qCDebug(dsrApp) << "Mouse entered ToolBarWidget.";
+    
+    // 获取父窗口（MainWindow）
+    QWidget *parentWidget = qobject_cast<QWidget*>(parent());
+    
     // 确保工具栏保持显示
     if (this->isHidden()) {
         this->show();
+        this->activateWindow();
+        qCDebug(dsrApp) << "Showing toolbar in enterEvent";
     }
+    
     QWidget::enterEvent(event);
 }
 
@@ -154,9 +171,6 @@ void ToolBarWidget::leaveEvent(QEvent *event)
     Q_UNUSED(event);
     qCDebug(dsrApp) << "Mouse left ToolBarWidget.";
     
-    // 获取当前鼠标全局位置
-    QPoint globalPos = QCursor::pos();
-    
     // 获取父窗口（MainWindow）
     QWidget *parentWidget = qobject_cast<QWidget*>(parent());
     if (!parentWidget) {
@@ -164,20 +178,67 @@ void ToolBarWidget::leaveEvent(QEvent *event)
         return;
     }
     
-    // 检查鼠标是否在父窗口上
-    if (!parentWidget->geometry().contains(parentWidget->mapFromGlobal(globalPos))) {
-        // 鼠标既不在工具栏上也不在主窗口上，隐藏工具栏
-        QTimer::singleShot(100, this, [this]() {
-            // 再次检查鼠标位置，避免在移动过程中错误隐藏
-            QPoint currentPos = QCursor::pos();
-            if (!this->geometry().contains(currentPos) && 
-                !qobject_cast<QWidget*>(parent())->geometry().contains(
-                    qobject_cast<QWidget*>(parent())->mapFromGlobal(currentPos))) {
-                this->hide();
-                qCDebug(dsrApp) << "Hiding toolbar after mouse left both toolbar and main window.";
-            }
-        });
-    }
+    // 使用QTimer延迟处理，确保几何信息更新
+    QTimer::singleShot(50, this, [this, parentWidget]() {
+        // 获取当前鼠标全局位置
+        QPoint globalPos = QCursor::pos();
+        
+        // 获取工具栏和父窗口的几何信息
+        QRect toolBarGeom = this->geometry();
+        QRect parentGeom = parentWidget->geometry();
+        
+        // 打印调试信息
+        qCDebug(dsrApp) << "ToolBar geometry:" << toolBarGeom;
+        qCDebug(dsrApp) << "Parent geometry:" << parentGeom;
+        qCDebug(dsrApp) << "Mouse position:" << globalPos;
+        
+        // 创建父窗口和工具栏之间的连接区域
+        QRect connectionArea;
+        
+        // 计算工具栏相对于父窗口的位置
+        bool isBelow = toolBarGeom.top() > parentGeom.bottom();
+        bool isAbove = toolBarGeom.bottom() < parentGeom.top();
+        bool isRight = toolBarGeom.left() > parentGeom.right();
+        bool isLeft = toolBarGeom.right() < parentGeom.left();
+        
+        // 根据相对位置创建连接区域，只包含工具栏和主区域之间的空隙
+        if (isBelow) {
+            connectionArea = QRect(
+                QPoint(toolBarGeom.left(), parentGeom.bottom()),
+                QPoint(toolBarGeom.right(), toolBarGeom.top())
+            );
+        } else if (isAbove) {
+            connectionArea = QRect(
+                QPoint(toolBarGeom.left(), toolBarGeom.bottom()),
+                QPoint(toolBarGeom.right(), parentGeom.top())
+            );
+        } else if (isRight) {
+            connectionArea = QRect(
+                QPoint(parentGeom.right(), toolBarGeom.top()),
+                QPoint(toolBarGeom.left(), toolBarGeom.bottom())
+            );
+        } else if (isLeft) {
+            connectionArea = QRect(
+                QPoint(toolBarGeom.right(), toolBarGeom.top()),
+                QPoint(parentGeom.left(), toolBarGeom.bottom())
+            );
+        }
+        
+        // 打印连接区域信息
+        qCDebug(dsrApp) << "Connection area:" << connectionArea;
+        qCDebug(dsrApp) << "Mouse in parent:" << parentGeom.contains(parentWidget->mapFromGlobal(globalPos));
+        qCDebug(dsrApp) << "Mouse in connection:" << connectionArea.contains(globalPos);
+        
+        // 如果鼠标在父窗口或连接区域内，不隐藏工具栏
+        if (parentGeom.contains(parentWidget->mapFromGlobal(globalPos)) || 
+            connectionArea.contains(globalPos)) {
+            return;
+        }
+        
+        // 如果鼠标既不在工具栏上，也不在父窗口上，也不在连接区域内，隐藏工具栏
+        this->hide();
+        qCDebug(dsrApp) << "Hiding toolbar after mouse left both toolbar and main window.";
+    });
     
     QWidget::leaveEvent(event);
 }
