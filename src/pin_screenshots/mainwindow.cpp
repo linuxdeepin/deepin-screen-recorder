@@ -83,6 +83,13 @@ void MainWindow::initMainWindow()
 
     QWidget::installEventFilter(this);
     qCDebug(dsrApp) << "Event filter installed.";
+    
+    // 初始化鼠标监控计时器
+    // m_mouseMonitorTimer = new QTimer(this);
+    // m_mouseMonitorTimer->setInterval(500);  // 增加到500毫秒检查一次，减少干扰
+    // connect(m_mouseMonitorTimer, &QTimer::timeout, this, &MainWindow::checkMousePosition);
+    // m_mouseMonitorTimer->start();
+    // qCDebug(dsrApp) << "Mouse monitor timer started.";
 }
 
 bool MainWindow::openFile(const QString &filePaths)
@@ -358,8 +365,9 @@ void MainWindow::mousePressEvent(QMouseEvent *event)
         } else {
             dragPosition = (event->globalPosition() - this->frameGeometry().topLeft()).toPoint();
         }
+        // 鼠标按下时隐藏工具栏
         if (!m_toolBar->isHidden())
-            m_toolBar->hide(); //隐藏工具栏
+            m_toolBar->hide();
         //qCDebug(dsrApp) << this << __FUNCTION__ << __LINE__ ;
         break;
     case Qt::RightButton:
@@ -468,17 +476,12 @@ void MainWindow::mouseReleaseEvent(QMouseEvent *event)
         }
         this->setCursor(QCursor(Qt::ArrowCursor));
         
-        // 在拖拽结束后显示工具栏
-        // 短暂延迟确保所有状态都已更新
-        QTimer::singleShot(50, this, [this]() {
-            // 检查鼠标是否仍在窗口内
-            QPoint globalPos = QCursor::pos();
-            QPoint localPos = this->mapFromGlobal(globalPos);
-            if (this->rect().contains(localPos)) {
-                updateToolBarPosition();
-                qCDebug(dsrApp) << "Showing toolbar after drag operation";
-            }
-        });
+        // 在拖拽结束后，如果鼠标在窗口内，显示工具栏
+        QPoint globalPos = QCursor::pos();
+        QPoint localPos = this->mapFromGlobal(globalPos);
+        if (this->rect().contains(localPos)) {
+            updateToolBarPosition();
+        }
     }
 }
 
@@ -595,7 +598,14 @@ bool MainWindow::eventFilter(QObject *watched, QEvent *event)
             if (PUtils::isWaylandMode && !isLeftPressDown) {
                 this->m_toolBar->hide();
             }
-            updateToolBarPosition();
+            
+            // 窗口激活时，如果鼠标在窗口内，显示工具栏
+            QPoint globalPos = QCursor::pos();
+            QPoint localPos = this->mapFromGlobal(globalPos);
+            if (this->rect().contains(localPos)) {
+                updateToolBarPosition();
+            }
+            
             //规避wayland下打开多个贴图，通过鼠标连续切换贴图时，贴图激活状态不对(工具栏已经设置显示，但实际上未显示。)。
             if (PUtils::isWaylandMode && isLeftPressDown) {
                 this->m_toolBar->hide();
@@ -604,10 +614,12 @@ bool MainWindow::eventFilter(QObject *watched, QEvent *event)
             return false;
         } else if (QEvent::WindowDeactivate == event->type()) {
             //qCDebug(dsrApp) << this << m_toolBar <<__FUNCTION__ << __LINE__ << event->type();
+            
             // 检查鼠标是否在工具栏上，如果是则不隐藏工具栏
             QPoint globalPos = QCursor::pos();
             if (m_toolBar->isActiveWindow() || m_toolBar->geometry().contains(globalPos))
                 return false;
+                
             m_toolBar->hide();
             //qCDebug(dsrApp) << this << m_toolBar <<__FUNCTION__ << __LINE__ << event->type();
             return false;
@@ -802,9 +814,12 @@ void MainWindow::updateToolBarPosition()
 void MainWindow::enterEvent(QEnterEvent *event)
 {
     Q_UNUSED(event);
+    
+    // 如果鼠标左键没有按下且工具栏当前隐藏，则显示工具栏
     if (!isLeftPressDown && !m_toolBar->isVisible()) {
         updateToolBarPosition();
     }
+    
     QWidget::enterEvent(event);
 }
 
@@ -812,49 +827,78 @@ void MainWindow::leaveEvent(QEvent *event)
 {
     Q_UNUSED(event);
     
-    // 获取当前鼠标全局位置
-    QPoint globalPos = QCursor::pos();
-    
-    // 获取工具栏几何信息
-    QRect toolBarGeom = m_toolBar->geometry();
-    
-    // 获取主窗口底部边缘位置
-    QPoint brPoint = mapToGlobal(this->rect().bottomRight());
-    QPoint blPoint = mapToGlobal(this->rect().bottomLeft());
-    
-    // 创建一个连接主窗口和工具栏的区域
-    QRect connectionArea;
-    
-    // 如果工具栏在窗口下方
-    if (toolBarGeom.top() > brPoint.y()) {
-        connectionArea = QRect(
-            QPoint(qMin(blPoint.x(), toolBarGeom.left()), brPoint.y()),
-            QPoint(qMax(brPoint.x(), toolBarGeom.right()), toolBarGeom.top())
-        );
+    // 如果鼠标左键按下，不处理离开事件
+    if (isLeftPressDown) {
+        QWidget::leaveEvent(event);
+        return;
     }
-    // 如果工具栏在窗口上方
-    else if (toolBarGeom.bottom() < mapToGlobal(this->rect().topLeft()).y()) {
-        QPoint tlPoint = mapToGlobal(this->rect().topLeft());
+    
+    // 使用QTimer延迟处理，确保几何信息更新
+    QTimer::singleShot(50, this, [this]() {
+        // 获取当前鼠标全局位置
+        QPoint globalPos = QCursor::pos();
+        
+        // 获取工具栏几何信息
+        QRect toolBarGeom = m_toolBar->geometry();
+        
+        qCDebug(dsrApp) << "MainWindow::leaveEvent - Mouse position:" << globalPos;
+        qCDebug(dsrApp) << "MainWindow::leaveEvent - ToolBar geometry:" << toolBarGeom;
+        
+        // 创建一个连接主窗口和工具栏之间的空隙区域
+        QRect connectionArea;
+        
+        // 获取主窗口各边缘位置
+        QPoint brPoint = mapToGlobal(this->rect().bottomRight());
+        QPoint blPoint = mapToGlobal(this->rect().bottomLeft());
         QPoint trPoint = mapToGlobal(this->rect().topRight());
-        connectionArea = QRect(
-            QPoint(qMin(tlPoint.x(), toolBarGeom.left()), toolBarGeom.bottom()),
-            QPoint(qMax(trPoint.x(), toolBarGeom.right()), tlPoint.y())
-        );
-    }
-    
-    // 只有当鼠标既不在工具栏上，也不在连接区域内时才隐藏工具栏
-    // 但是如果鼠标在工具栏上，让工具栏自己的leaveEvent处理
-    if (!toolBarGeom.contains(globalPos) && !connectionArea.contains(globalPos)) {
-        // 使用短暂延迟，避免在快速移动时错误隐藏
-        QTimer::singleShot(100, this, [this, toolBarGeom]() {
-            QPoint currentPos = QCursor::pos();
-            if (!this->geometry().contains(this->mapFromGlobal(currentPos)) && 
-                !toolBarGeom.contains(currentPos)) {
-                m_toolBar->hide();
-                qCDebug(dsrApp) << "Hiding toolbar after delay check in MainWindow::leaveEvent";
-            }
-        });
-    }
+        QPoint tlPoint = mapToGlobal(this->rect().topLeft());
+        
+        // 如果工具栏在窗口下方
+        if (toolBarGeom.top() > brPoint.y()) {
+            // 连接区域只包含工具栏上方与主窗口下方之间的空隙
+            connectionArea = QRect(
+                QPoint(toolBarGeom.left(), brPoint.y()),
+                QPoint(toolBarGeom.right(), toolBarGeom.top())
+            );
+        }
+        // 如果工具栏在窗口上方
+        else if (toolBarGeom.bottom() < tlPoint.y()) {
+            // 连接区域只包含工具栏下方与主窗口上方之间的空隙
+            connectionArea = QRect(
+                QPoint(toolBarGeom.left(), toolBarGeom.bottom()),
+                QPoint(toolBarGeom.right(), tlPoint.y())
+            );
+        }
+        // 如果工具栏在窗口右侧
+        else if (toolBarGeom.left() > brPoint.x()) {
+            // 连接区域只包含工具栏左侧与主窗口右侧之间的空隙
+            connectionArea = QRect(
+                QPoint(brPoint.x(), toolBarGeom.top()),
+                QPoint(toolBarGeom.left(), toolBarGeom.bottom())
+            );
+        }
+        // 如果工具栏在窗口左侧
+        else if (toolBarGeom.right() < tlPoint.x()) {
+            // 连接区域只包含工具栏右侧与主窗口左侧之间的空隙
+            connectionArea = QRect(
+                QPoint(toolBarGeom.right(), toolBarGeom.top()),
+                QPoint(tlPoint.x(), toolBarGeom.bottom())
+            );
+        }
+        
+        qCDebug(dsrApp) << "MainWindow::leaveEvent - Connection area:" << connectionArea;
+        qCDebug(dsrApp) << "MainWindow::leaveEvent - Mouse in toolbar:" << toolBarGeom.contains(globalPos);
+        qCDebug(dsrApp) << "MainWindow::leaveEvent - Mouse in connection:" << connectionArea.contains(globalPos);
+        
+        // 如果鼠标在工具栏上或连接区域内，不隐藏工具栏
+        if (toolBarGeom.contains(globalPos) || connectionArea.contains(globalPos)) {
+            return;
+        }
+        
+        // 如果鼠标既不在工具栏上，也不在连接区域内，隐藏工具栏
+        m_toolBar->hide();
+        qCDebug(dsrApp) << "MainWindow::leaveEvent - Hiding toolbar";
+    });
     
     QWidget::leaveEvent(event);
 }

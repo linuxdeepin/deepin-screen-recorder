@@ -18,6 +18,7 @@
 #include <QDebug>
 #include <QApplication>
 #include <QShortcut>
+#include <QTimer>
 
 DWIDGET_USE_NAMESPACE
 
