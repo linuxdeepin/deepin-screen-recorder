@@ -657,10 +657,6 @@ Press and hold Shift to draw a vertical or horizontal arrow</source>
         <translation>识别文字</translation>
     </message>
     <message>
-        <source>Geometric Tools (G)</source>
-        <translation>幾何工具 (G)</translation>
-    </message>
-    <message>
         <source>Save to local</source>
         <translation>保存到本地</translation>
     </message>
@@ -679,6 +675,12 @@ Press and hold Shift to draw a vertical or horizontal arrow</source>
     <message>
         <source>Update location on save</source>
         <translation>保存時更新位置</translation>
+    </message>
+    <message>
+        <source>Geometric Tools (G)
+Hold down Shift to draw squares or circles.</source>
+        <translation>几何工具 (G)
+按住Shift可画正方形或圆形</translation>
     </message>
 </context>
 <context>

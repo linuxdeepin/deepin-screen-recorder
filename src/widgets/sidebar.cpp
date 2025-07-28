@@ -126,17 +126,36 @@ void SideBarWidget::changeShotToolWidget(const QString &func)
 
     // 显示或隐藏ShapeToolWidget
     if (func == "gio" || func == "rectangle" || func == "oval") {
-        qCDebug(dsrApp) << "Geometry mode: showing ShapeToolWidget";
+        qDebug(dsrApp) << "Geometry mode: showing ShapeToolWidget";
         m_shapeTool->show();
         m_seperator1->show();
         
-        // 如果是几何图形模式，需要读取上次选中的形状并选中对应按钮
-        if (func == "gio") {
-            QString currentShape = ConfigSettings::instance()->getValue("shape", "current").toString();
-            if (currentShape.isEmpty() || (currentShape != "rectangle" && currentShape != "oval")) {
-                currentShape = "rectangle"; // 默认使用矩形
+        // 无论是几何图形模式还是直接选择矩形/椭圆，都读取上次选中的形状
+        QString currentShape = ConfigSettings::instance()->getValue("shape", "current").toString();
+        qDebug(dsrApp) << "Current shape from config:" << currentShape;
+        
+        // 如果没有历史记录，则默认使用矩形
+        if (currentShape.isEmpty() || (currentShape != "rectangle" && currentShape != "oval")) {
+            currentShape = "rectangle"; // 默认使用矩形
+            qDebug(dsrApp) << "No valid shape in config, using rectangle as default.";
+            ConfigSettings::instance()->setValue("shape", "current", currentShape);
+        }
+        
+        // 如果直接选择了具体形状，则使用该形状，但不触发信号
+        if (func == "rectangle" || func == "oval") {
+            // 直接设置按钮状态，但不发送信号
+            if (func == "rectangle") {
+                qDebug(dsrApp) << "Directly selecting rectangle button.";
+                m_shapeTool->selectRectangleWithoutSignal();
+            } else if (func == "oval") {
+                qDebug(dsrApp) << "Directly selecting oval button.";
+                m_shapeTool->selectOvalWithoutSignal();
             }
-            qCDebug(dsrApp) << "Selecting shape for gio mode:" << currentShape;
+            // 更新配置
+            ConfigSettings::instance()->setValue("shape", "current", func);
+        } else {
+            // 如果是gio模式，则选择上次使用的形状
+            qDebug(dsrApp) << "Selecting shape based on history:" << currentShape;
             m_shapeTool->selectShape(currentShape);
         }
     } else {
