@@ -58,6 +58,7 @@ extern "C" {
 #include <fcntl.h>
 #include <unistd.h>
 #include <time.h>
+#include <cmath>
 #define EPSILON 1e-10
 //const int MainWindow::CURSOR_BOUND = 5;
 const int MainWindow::RECORD_MIN_SIZE = 580;
@@ -1983,6 +1984,44 @@ bool MainWindow::saveImg(const QPixmap &pix, const QString &fileName, const char
 
 }
 
+int MainWindow::getWaitTimeByImageSize(const QPixmap &pix)
+{
+    if (pix.isNull()) {
+        qWarning() << __FUNCTION__ << "Empty pixmap, using default wait time";
+        return 2; // 默认等待时间
+    }
+    
+    // 计算图片像素总数
+    qint64 totalPixels = static_cast<qint64>(pix.width()) * pix.height();
+    qInfo() << __FUNCTION__ << "Image size:" << pix.width() << "x" << pix.height() 
+            << "Total pixels:" << totalPixels;
+    
+    int waitTime = 2; // 默认等待时间
+    
+    // 根据图片大小区间确定等待时间，按像素数倍数关系设计
+    if (totalPixels <= 921600) { // 720p及以下 (1280×720) - 基准
+        waitTime = 2;
+    } else if (totalPixels <= 2073600) { // 1080p (1920×1080) - 约2.25倍像素
+        waitTime = 4;
+    } else if (totalPixels <= 3686400) { // 2K (2560×1440) - 约4倍像素
+        waitTime = 6;
+    } else if (totalPixels <= 8294400) { // 4K (3840×2160) - 约9倍像素
+        waitTime = 8;
+    } else if (totalPixels <= 33177600) { // 8K (7680×4320) - 约36倍像素
+        waitTime = 10;
+    } else { // 8K以上超大图片
+        // 对于超大图片，使用像素数平方根的对数关系计算
+        double pixelRatio = static_cast<double>(totalPixels) / 921600.0; // 相对于720p的倍数
+        waitTime = static_cast<int>(2 + log2(pixelRatio) * 2); // 对数增长，避免时间过长
+        waitTime = qMin(waitTime, 15); // 最大不超过15秒
+    }
+    
+    qInfo() << __FUNCTION__ << "Calculated wait time:" << waitTime << "seconds for image size:" 
+            << pix.width() << "x" << pix.height() << "(total pixels:" << totalPixels << ")";
+    
+    return waitTime;
+}
+
 void MainWindow::save2Clipboard(const QPixmap &pix)
 {
     qInfo() << __FUNCTION__ << __LINE__ << "正在执行保存到剪贴板...";
@@ -2078,9 +2117,10 @@ void MainWindow::save2Clipboard(const QPixmap &pix)
             if (!Utils::isWaylandMode) {
                 this->hide(); //隐藏主界面
             }
-            //等待15s如果数据还没有传递到剪切板，则退出程序
-            time_t endTime = time(nullptr) + 15;
-            qInfo() << "Start Wait 15s for data to be saved to the clipboard..." << endTime;
+            //根据图片大小动态计算等待时间，如果数据还没有传递到剪切板，则退出程序
+            int waitSeconds = getWaitTimeByImageSize(pix);
+            time_t endTime = time(nullptr) + waitSeconds;
+            qInfo() << "Start Wait" << waitSeconds << "s for data to be saved to the clipboard..." << endTime;
             time_t lastTime = 0;
             while (1) {
                 time_t curTime = time(nullptr);
@@ -2089,7 +2129,7 @@ void MainWindow::save2Clipboard(const QPixmap &pix)
                     lastTime = curTime;
                 }
                 if (curTime >= endTime) {
-                    qInfo() << "15s delayed completion" << time(nullptr);
+                    qInfo() << waitSeconds << "s delayed completion" << time(nullptr);
                     break;
                 }
                 if (m_isSaveClipboard) {
