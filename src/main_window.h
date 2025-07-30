@@ -413,6 +413,7 @@ signals:
      * @brief saveClipboardComing 数据是否已传递到剪切板
      */
     void saveClipboardComing();
+    void screenshotSaved(const QString &savePath); // 截图保存完成信号，返回保存路径
 public slots:
     void onExit();
     /**

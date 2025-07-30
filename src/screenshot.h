@@ -42,6 +42,7 @@ public slots:
     Q_SCRIPTABLE QString getRecorderNormalIcon();
 signals:
     Q_SCRIPTABLE void RecorderState(const bool isStart); // true begin recorder; false stop recorder;
+    void screenshotSaved(const QString &savePath); // 截图保存完成信号，返回保存路径
 
 private:
     //void initUI();
@@ -49,6 +50,7 @@ private:
 //    EventContainer *m_eventContainer = nullptr;
     QString m_launchMode;
     MainWindow m_window;
+    bool m_isCustomScreenshot = false; // 标记是否是自定义截图
 
 };
 

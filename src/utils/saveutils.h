@@ -15,6 +15,7 @@ enum SaveAction : unsigned int {
     SaveToSpecificDir,
     SaveToAsk,
     AutoSave, // 自定义保存目录
+    CustomScreenSave // 通过dbus调用customscreen截图保存的位置
 };
 Q_DECLARE_METATYPE(SaveAction);
 #endif // SAVEUTILS_H

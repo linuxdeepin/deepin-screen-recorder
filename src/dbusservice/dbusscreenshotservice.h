@@ -55,6 +55,9 @@ class DBusScreenshotService: public QDBusAbstractAdaptor
                 "    <signal name=\"Done\">\n"
                 "      <arg type=\"s\"/>\n"
                 "    </signal>\n"
+                "    <signal name=\"CustomDone\">\n"
+                "      <arg type=\"s\"/>\n"
+                "    </signal>\n"
                 "  </interface>\n"
                 "")
 public:
@@ -84,6 +87,7 @@ public Q_SLOTS: // METHODS
 
 Q_SIGNALS: // SIGNALS
     void Done(const QString &in0);
+    void CustomDone(const QString &in0);
 private:
     bool m_singleInstance;
 };

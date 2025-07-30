@@ -29,6 +29,12 @@ DBusScreenshotService::DBusScreenshotService(Screenshot *parent)
     // constructor
     Q_UNUSED(parent);
     setAutoRelaySignals(true);
+    
+    // 连接Screenshot的screenshotSaved信号到CustomDone信号
+    connect(parent, &Screenshot::screenshotSaved, this, [this](const QString &savePath) {
+        emit CustomDone(savePath);
+        qCInfo(dsrApp) << "CustomDone signal emitted with path:" << savePath;
+    });
 }
 
 DBusScreenshotService::~DBusScreenshotService()
@@ -230,6 +236,7 @@ void DBusScreenshotService::CustomScreenshot(const QVariantMap &params)
     bool showNotification = params.value("showNotification", true).toBool();
     
     qCDebug(dsrApp) << "Parsed parameters:" << "showToolbar:" << showToolbar << "showNotification:" << showNotification;
+    qCDebug(dsrApp) << "CustomScreenshot will emit CustomDone signal when screenshot is saved";
     
     if (!m_singleInstance) {
         qCDebug(dsrApp) << "Starting new custom screenshot instance";
