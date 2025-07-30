@@ -20,6 +20,12 @@ Screenshot::Screenshot(QObject *parent)
     : QObject(parent)
 {
     qCDebug(dsrApp) << "Screenshot constructor called.";
+    connect(&m_window, &MainWindow::screenshotSaved, this, [this](const QString &savePath) {
+        if (m_isCustomScreenshot) {
+            emit screenshotSaved(savePath);
+            m_isCustomScreenshot = false; // 重置标记
+        }
+    });
 }
 
 void Screenshot::startScreenshot()
@@ -53,6 +59,7 @@ void Screenshot::startScreenshot()
 void Screenshot::customScreenshot(bool hideToolbar, bool notify)
 {
     m_window.setToolbarVisable(hideToolbar);
+    m_isCustomScreenshot = true; // 标记为自定义截图
     startScreenshot();
 }
 
