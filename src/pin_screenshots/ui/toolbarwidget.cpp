@@ -119,6 +119,7 @@ void ToolBarWidget::initToolBarWidget()
     m_subTool = new SubToolWidget(this);
     qCDebug(dsrApp) << "SubToolWidget created.";
     connect(m_subTool, SIGNAL(signalOcrButtonClicked()), this, SIGNAL(sendOcrButtonClicked()));
+    connect(m_subTool, &SubToolWidget::signalSaveToLocalButtonClicked, this, &ToolBarWidget::signalSaveToLocalButtonClicked);
     qCDebug(dsrApp) << "Connected signalOcrButtonClicked.";
 
     m_mainTool = new MainToolWidget(this);
@@ -127,6 +128,8 @@ void ToolBarWidget::initToolBarWidget()
     qCDebug(dsrApp) << "Connected signalCloseButtonClicked.";
     connect(m_mainTool, SIGNAL(signalSaveButtonClicked()), this, SIGNAL(sendSaveButtonClicked()));
     qCDebug(dsrApp) << "Connected signalSaveButtonClicked.";
+    connect(m_mainTool, SIGNAL(signalSaveToLocalButtonClicked()), this, SIGNAL(sendSaveToLocalButtonClicked()));
+    qCDebug(dsrApp) << "Connected signalSaveToLocalButtonClicked.";
 
     QHBoxLayout *hLayout = new QHBoxLayout(this);
     qCDebug(dsrApp) << "Horizontal layout created.";

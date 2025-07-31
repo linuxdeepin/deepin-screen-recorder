@@ -3,5 +3,6 @@
         <file>texts/confirm_32px.svg</file>
         <file>texts/ocr-normal_32px.svg</file>
         <file>texts/close_32px.svg</file>
+        <file>texts/save.svg</file>
     </qresource>
 </RCC>
