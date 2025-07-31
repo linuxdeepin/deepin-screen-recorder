@@ -542,7 +542,7 @@ Press and hold Shift to draw a straight line</source>
     </message>
     <message>
         <source>Save to</source>
-        <translation>保存到</translation>
+        <translation>保存方式</translation>
     </message>
     <message>
         <source>Desktop</source>
@@ -597,16 +597,8 @@ Press and hold Shift to draw a vertical or horizontal arrow</source>
         <translation>录屏</translation>
     </message>
     <message>
-        <source>Clipboard</source>
-        <translation>剪贴板</translation>
-    </message>
-    <message>
         <source>Pictures</source>
         <translation>图片</translation>
-    </message>
-    <message>
-        <source>Folder</source>
-        <translation>指定位置</translation>
     </message>
     <message>
         <source>Set a path on save</source>
@@ -685,6 +677,14 @@ Hold down Shift to draw squares or circles.</source>
     <message>
         <source>Save to %1</source>
         <translation>保存到%1</translation>
+    </message>
+    <message>
+        <source>Save to desktop</source>
+        <translation>保存到桌面</translation>
+    </message>
+    <message>
+        <source>Save to pictures</source>
+        <translation>保存到图片</translation>
     </message>
 </context>
 <context>

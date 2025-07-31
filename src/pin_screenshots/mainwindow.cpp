@@ -75,7 +75,8 @@ void MainWindow::initMainWindow()
     // 工具栏设置
     m_toolBar = new ToolBarWidget(this); //初始化
     connect(m_toolBar, SIGNAL(sendOcrButtonClicked()), this, SLOT(onOpenOCR()));
-    connect(m_toolBar, SIGNAL(sendSaveButtonClicked()), this, SLOT(onSave()));
+    connect(m_toolBar, SIGNAL(sendSaveButtonClicked()), this, SLOT(saveToClipboard()));  // 保存到剪贴板
+    connect(m_toolBar, &ToolBarWidget::signalSaveToLocalButtonClicked, this, &MainWindow::onSave);
     connect(m_toolBar, SIGNAL(sendCloseButtonClicked()), this, SLOT(onExit()));
 
     m_toolBar->setFocusPolicy(Qt::StrongFocus);
@@ -215,84 +216,139 @@ void MainWindow::saveImg()
         }
         m_lastImagePath = QString("%1/%2.%3").arg(savePath).arg(m_imageName).arg(formatStr);
         qCDebug(dsrApp) << "Image will be saved to:" << m_lastImagePath;
-    } else if (m_saveInfo.first == SubToolWidget::FOLDER_CHANGE) {
+    } else if (m_saveInfo.first == SubToolWidget::ASK) {
+        // 每次询问保存位置
+        qCDebug(dsrApp) << "每次询问保存位置";
         m_toolBar->hide();
         this->hide();
-        qCDebug(dsrApp) << "保存到指定位置";
-        QString saveFileName;
-        QString imgName = Settings::instance()->getSavePath();
-        if (!imgName.isEmpty()) {
-            qCDebug(dsrApp) << "Custom save path is not empty.";
-            imgName += "/";
+        
+        // 获取上次保存路径，如果没有则使用图片文件夹
+        QString lastSavePath = Settings::instance()->getSavePath();
+        if (lastSavePath.isEmpty() || !QDir(lastSavePath).exists()) {
+            lastSavePath = QStandardPaths::standardLocations(QStandardPaths::PicturesLocation).first();
         }
+        
+        QString formatStr;
+        QString filter;
         if (m_saveInfo.second == static_cast<SubToolWidget::SAVEFORMAT>(SubToolWidget::PNG)) {
-            imgName += QString("%1.png").arg(m_imageName);
-            saveFileName = QFileDialog::getSaveFileName(this, tr("Save"),  imgName,
-                                                        tr("PNG (*.png);;JPEG (*.jpg *.jpeg);;BMP (*.bmp)"));
-            qCDebug(dsrApp) << "PNG save dialog opened.";
+            formatStr = QString("png");
+            filter = tr("PNG (*.png);;JPEG (*.jpg *.jpeg);;BMP (*.bmp)");
         } else if (m_saveInfo.second == static_cast<SubToolWidget::SAVEFORMAT>(SubToolWidget::JPG)) {
-            imgName += QString("%1.jpg").arg(m_imageName);
-            saveFileName = QFileDialog::getSaveFileName(this, tr("Save"),  imgName,
-                                                        tr("JPEG (*.jpg *.jpeg);;PNG (*.png);;BMP (*.bmp)"));
-            qCDebug(dsrApp) << "JPG save dialog opened.";
+            formatStr = QString("jpg");
+            filter = tr("JPEG (*.jpg *.jpeg);;PNG (*.png);;BMP (*.bmp)");
         } else if (m_saveInfo.second == static_cast<SubToolWidget::SAVEFORMAT>(SubToolWidget::BMP)) {
-            imgName += QString("%1.bmp").arg(m_imageName);
-            saveFileName = QFileDialog::getSaveFileName(this, tr("Save"),  imgName,
-                                                        tr("BMP (*.bmp);;JPEG (*.jpg *.jpeg);;PNG (*.png)"));
-            qCDebug(dsrApp) << "BMP save dialog opened.";
+            formatStr = QString("bmp");
+            filter = tr("BMP (*.bmp);;JPEG (*.jpg *.jpeg);;PNG (*.png)");
         }
-        if (saveFileName.isEmpty()) {
+        
+        QString defaultFileName = QString("%1/%2.%3").arg(lastSavePath).arg(m_imageName).arg(formatStr);
+        m_lastImagePath = QFileDialog::getSaveFileName(this, tr("Save"), defaultFileName, filter);
+        
+        // 如果用户取消了保存，则退出
+        if (m_lastImagePath.isEmpty()) {
             qCDebug(dsrApp) << "User cancelled save dialog.";
-            qWarning() << "指定路径为空！";
             onExit();
             return;
         }
-        qCDebug(dsrApp) << "saveFileName" << saveFileName;
-        m_lastImagePath = saveFileName;
-        Settings::instance()->setSavePath(QFileInfo(saveFileName).path());
-        qCDebug(dsrApp) << "Save path updated in settings.";
+        
+        // 记住用户选择的路径（仅保存路径，不改变保存选项）
+        Settings::instance()->setSavePath(QFileInfo(m_lastImagePath).dir().absolutePath());
+        
+        // 处理文件扩展名
+        QString fileSuffix = QFileInfo(m_lastImagePath).completeSuffix();
+        if (fileSuffix.isEmpty()) {
+            m_lastImagePath = m_lastImagePath + "." + formatStr;
+        }
+        
+        this->show();
+        m_toolBar->show();
     } else if (m_saveInfo.first == SubToolWidget::FOLDER) {
+        // 使用指定位置保存
         QString savePath = Settings::instance()->getSavePath();
-        qCDebug(dsrApp) << "保存到历史路径" << savePath;
+        qCDebug(dsrApp) << "保存到指定路径" << savePath;
+        
+        // 如果指定路径不存在或无法访问，则切换到 FOLDER_CHANGE 模式
+        if (savePath.isEmpty() || !QDir(savePath).exists() || !QFileInfo(savePath).isWritable()) {
+            qCDebug(dsrApp) << "Specified path does not exist or is not writable, switching to folder change mode";
+            m_saveInfo.first = SubToolWidget::FOLDER_CHANGE;
+        } else {
+            QString formatStr;
+            if (m_saveInfo.second == static_cast<SubToolWidget::SAVEFORMAT>(SubToolWidget::PNG)) {
+                formatStr = QString("png");
+                qCDebug(dsrApp) << "Save format set to PNG.";
+            } else if (m_saveInfo.second == static_cast<SubToolWidget::SAVEFORMAT>(SubToolWidget::JPG)) {
+                formatStr = QString("jpg");
+                qCDebug(dsrApp) << "Save format set to JPG.";
+            } else if (m_saveInfo.second == static_cast<SubToolWidget::SAVEFORMAT>(SubToolWidget::BMP)) {
+                formatStr = QString("bmp");
+                qCDebug(dsrApp) << "Save format set to BMP.";
+            }
+            m_lastImagePath = QString("%1/%2.%3").arg(savePath).arg(m_imageName).arg(formatStr);
+        }
+    }
+    
+    if (m_saveInfo.first == SubToolWidget::FOLDER_CHANGE) {
+        // 需要设置或更新指定位置
+        qCDebug(dsrApp) << "设置或更新指定位置";
+        m_toolBar->hide();
+        this->hide();
+        
+        // 获取上次保存路径，如果没有则使用图片文件夹
+        QString lastSavePath = Settings::instance()->getSavePath();
+        if (lastSavePath.isEmpty() || !QDir(lastSavePath).exists()) {
+            lastSavePath = QStandardPaths::standardLocations(QStandardPaths::PicturesLocation).first();
+        }
+        
         QString formatStr;
+        QString filter;
         if (m_saveInfo.second == static_cast<SubToolWidget::SAVEFORMAT>(SubToolWidget::PNG)) {
             formatStr = QString("png");
-            qCDebug(dsrApp) << "Save format set to PNG.";
+            filter = tr("PNG (*.png);;JPEG (*.jpg *.jpeg);;BMP (*.bmp)");
         } else if (m_saveInfo.second == static_cast<SubToolWidget::SAVEFORMAT>(SubToolWidget::JPG)) {
             formatStr = QString("jpg");
-            qCDebug(dsrApp) << "Save format set to JPG.";
+            filter = tr("JPEG (*.jpg *.jpeg);;PNG (*.png);;BMP (*.bmp)");
         } else if (m_saveInfo.second == static_cast<SubToolWidget::SAVEFORMAT>(SubToolWidget::BMP)) {
             formatStr = QString("bmp");
-            qCDebug(dsrApp) << "Save format set to BMP.";
+            filter = tr("BMP (*.bmp);;JPEG (*.jpg *.jpeg);;PNG (*.png)");
         }
-        m_lastImagePath = QString("%1/%2.%3").arg(savePath).arg(m_imageName).arg(formatStr);
-    } else if (m_saveInfo.first == SubToolWidget::CLIPBOARD) {
-        qCDebug(dsrApp) << "保存到剪切板";
-        m_lastImagePath = "";
+        
+        QString defaultFileName = QString("%1/%2.%3").arg(lastSavePath).arg(m_imageName).arg(formatStr);
+        m_lastImagePath = QFileDialog::getSaveFileName(this, tr("Save"), defaultFileName, filter);
+        
+        // 如果用户取消了保存，则退出
+        if (m_lastImagePath.isEmpty()) {
+            qCDebug(dsrApp) << "User cancelled save dialog.";
+            onExit();
+            return;
+        }
+        
+        // 保存用户选择的路径作为指定路径
+        QString selectedPath = QFileInfo(m_lastImagePath).dir().absolutePath();
+        Settings::instance()->setSavePath(selectedPath);
+        
+        // 将 FOLDER_CHANGE 标记设置为 false，表示已经设置了指定路径
+        Settings::instance()->setIsChangeSavePath(false);
+        
+        // 将保存选项更新为 FOLDER，表示下次直接使用指定路径
+        m_saveInfo.first = SubToolWidget::FOLDER;
+        Settings::instance()->setSaveOption(m_saveInfo);
+        
+        // 处理文件扩展名
+        QString fileSuffix = QFileInfo(m_lastImagePath).completeSuffix();
+        if (fileSuffix.isEmpty()) {
+            m_lastImagePath = m_lastImagePath + "." + formatStr;
+        }
+        
+        this->show();
+        m_toolBar->show();
     }
+    
     //每次保存时重设isChangeSavePath
     Settings::instance()->setIsChangeSavePath(false);
 
     bool isSaveState = true;
     if (m_saveInfo.first != SubToolWidget::CLIPBOARD) {
         isSaveState = m_image.save(m_lastImagePath);
-    }
-
-    // 保存到剪贴板
-    QMimeData *t_imageData = new QMimeData;
-    // 图片数据过大时，可能影响后端剪贴板处理，调整为保存 PNG 图片
-    QByteArray bytes;
-    QBuffer buffer(&bytes);
-    buffer.open(QIODevice::WriteOnly);
-    m_image.save(&buffer, "PNG");
-    t_imageData->setData("image/png", bytes);
-    QClipboard *cb = qApp->clipboard();
-    cb->setMimeData(t_imageData, QClipboard::Clipboard);
-
-    if (PUtils::isWaylandMode) {
-        QEventLoop eventloop;
-        connect(cb, SIGNAL(dataChanged()), &eventloop, SLOT(quit()));
-        eventloop.exec();
     }
 
     // 发送通知
@@ -901,6 +957,32 @@ void MainWindow::leaveEvent(QEvent *event)
     });
     
     QWidget::leaveEvent(event);
+}
+
+// 保存到剪贴板
+void MainWindow::saveToClipboard()
+{
+    qCDebug(dsrApp) << "saveToClipboard called, saving to clipboard only.";
+
+    // 保存到剪贴板
+    QMimeData *t_imageData = new QMimeData;
+    // 图片数据过大时，可能影响后端剪贴板处理，调整为保存 PNG 图片
+    QByteArray bytes;
+    QBuffer buffer(&bytes);
+    buffer.open(QIODevice::WriteOnly);
+    m_image.save(&buffer, "PNG");
+    t_imageData->setData("image/png", bytes);
+    QClipboard *cb = qApp->clipboard();
+    cb->setMimeData(t_imageData, QClipboard::Clipboard);
+
+    if (PUtils::isWaylandMode) {
+        QEventLoop eventloop;
+        connect(cb, SIGNAL(dataChanged()), &eventloop, SLOT(quit()));
+        eventloop.exec();
+    }
+
+    // 发送通知
+    sendNotify("", true);
 }
 
 

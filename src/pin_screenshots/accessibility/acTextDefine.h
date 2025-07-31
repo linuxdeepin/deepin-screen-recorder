@@ -13,5 +13,6 @@
 #define AC_SUBTOOLWIDGET_PIN_OCR_BUT "pin_ocr_but"//
 #define AC_MAINWINDOW_PIN_SAVE_BUT "pin_save_but" //
 #define AC_TOOLBARWIDGET_CLOSE_PIN_BUT "pin_close_but"//
+#define AC_TOOLBARWIDGET_SAVE_LOACL_PIN_BUT "pin_save_local_but"//
 
 #endif //

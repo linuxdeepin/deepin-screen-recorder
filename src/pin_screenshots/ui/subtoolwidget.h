@@ -16,6 +16,7 @@
 #include <DIconButton>
 #include <DPushButton>
 #include <DMenu>
+#include <DVerticalLine>
 
 DWIDGET_USE_NAMESPACE
 class SubToolWidget : public DStackedWidget
@@ -28,6 +29,7 @@ public:
         PICTURES, //图片
         FOLDER, //指定位置>历史位置
         FOLDER_CHANGE, //指定位置>设置或更新
+        ASK
     };
     enum SAVEFORMAT {
         PNG = 0,
@@ -36,6 +38,12 @@ public:
     };
     explicit SubToolWidget(DWidget *parent = nullptr);
     QPair<int, int> getSaveInfo();
+    
+    /**
+     * @brief 更新保存按钮的提示文本
+     */
+    void updateSaveButtonTip();
+    
 public slots:
     void onOptionButtonClicked(); // 选项按钮被点击
     /**
@@ -45,6 +53,7 @@ public slots:
 signals:
     void signalOcrButtonClicked(); // ocr被点击
     void signalCloseButtonClicked();// 关闭按钮被点击
+    void signalSaveToLocalButtonClicked();  // 保存到本地
 protected:
     void initShotLable();
     void initChangeSaveToSpecialAction(const QString specialPath);
@@ -96,6 +105,15 @@ private:
      * @brief m_saveGroup 保存路径的QAction组
      */
     QActionGroup *m_saveGroup = nullptr;
+    QAction *m_askEveryTimeAction = nullptr;
+    ToolButton *m_saveLocalDirButton = nullptr;
+    
+    /**
+     * @brief 分隔线
+     */
+    DVerticalLine *m_saveSeperatorBeg = nullptr;
+    DVerticalLine *m_saveSeperatorEnd = nullptr;
+
 };
 
 #endif // SUBTOOLWIDGET_H

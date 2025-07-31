@@ -86,6 +86,8 @@ public slots:
      * @brief 开启ocr
      */
     void onOpenOCR();
+
+    void saveToClipboard();
 protected:
     /**
      * @brief 贴图主窗口的初始化函数

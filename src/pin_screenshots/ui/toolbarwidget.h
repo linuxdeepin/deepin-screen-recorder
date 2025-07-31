@@ -32,6 +32,8 @@ signals:
     void sendOcrButtonClicked(); // ocr被点击
     void sendCloseButtonClicked();// 关闭按钮被点击
     void sendSaveButtonClicked();
+    void signalSaveToLocalButtonClicked();
+
 protected:
     void initToolBarWidget(); //初始化工具栏
     /**
