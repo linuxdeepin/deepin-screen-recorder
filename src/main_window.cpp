@@ -1161,6 +1161,9 @@ void MainWindow::initSaveShortcut()
         // 只有正在录屏时，此快捷键无法退出程序
         if (RECORD_BUTTON_RECORDING != recordButtonStatus) {
             qCDebug(dsrApp) << "shortcut : escSC (key: esc)";
+            if (isHideToolBar){
+                emit screenshotSaved("");
+            }
             exitApp();
         }
         if (status::record == m_functionType && Utils::isWaylandMode)

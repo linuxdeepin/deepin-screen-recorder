@@ -100,7 +100,12 @@ ToolBarWidget::ToolBarWidget(MainWindow *pMainwindow, DWidget *parent, bool hide
 
     connect(m_confirmButton, &ToolButton::clicked, pMainwindow, &MainWindow::confirm);
 
-    connect(m_closeButton, &ToolButton::clicked, pMainwindow, &MainWindow::exitApp);    
+    connect(m_closeButton, &ToolButton::clicked, pMainwindow, [=](){
+        if (m_hideToolBar) {
+            emit pMainwindow->screenshotSaved("");
+        }
+        pMainwindow->exitApp();
+    });
     connect(m_subTool, &SubToolWidget::keyBoardButtonClicked, pMainwindow, &MainWindow::changeKeyBoardShowEvent);
     connect(m_subTool, &SubToolWidget::mouseBoardButtonClicked, pMainwindow, &MainWindow::changeMouseShowEvent);
 
