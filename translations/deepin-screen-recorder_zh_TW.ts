@@ -686,6 +686,14 @@ Hold down Shift to draw squares or circles.</source>
         <source>Save to pictures</source>
         <translation>保存到圖片</translation>
     </message>
+    <message>
+        <source>Save to Desktop</source>
+        <translation>保存到桌面</translation>
+    </message>
+    <message>
+        <source>Save to Pictures</source>
+        <translation>保存到圖片</translation>
+    </message>
 </context>
 <context>
     <name>ToolBarWidget</name>
