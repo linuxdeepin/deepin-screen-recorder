@@ -8,14 +8,18 @@
 
 #include <QObject>
 
+enum SaveWays : unsigned int {
+    Ask, // 每次都询问
+    SpecifyLocation // 指定位置
+};
+
 enum SaveAction : unsigned int {
     SaveToClipboard,
     SaveToDesktop,
     SaveToImage,
     SaveToSpecificDir,
-    SaveToAsk,
     AutoSave, // 自定义保存目录
-    CustomScreenSave // 通过dbus调用customscreen截图保存的位置
+    CustomScreenSave, // 通过dbus调用customscreen截图保存的位置
 };
 Q_DECLARE_METATYPE(SaveAction);
 #endif // SAVEUTILS_H

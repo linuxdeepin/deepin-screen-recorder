@@ -13,6 +13,7 @@
 #include <QHelpEvent>
 #include <QToolTip>
 #include <DFontSizeManager>
+#include <QDir>
 
 #define THEMETYPE 1 // 主题颜色为浅色
 
@@ -452,11 +453,23 @@ void SubToolWidget::initChangeSaveToSpecialAction(const QString specialPath)
 {
     m_changeSaveToSpecialPath->setText(tr("Change the path on save"));
     //根据字体大小计算字符串宽度，确定路径省略的长度
-    QFontMetrics tempFont(m_changeSaveToSpecialPath->font());
-    auto changeSaveToSpecialPathFontWidth = tempFont.boundingRect(m_changeSaveToSpecialPath->text()).width();
-    QFontMetrics tmpFont(m_saveToSpecialPathAction->font());
-    QString sFileName = tmpFont.elidedText(specialPath, Qt::TextElideMode::ElideRight, changeSaveToSpecialPathFontWidth);
-    m_saveToSpecialPathAction->setText(sFileName);
+    // QFontMetrics tempFont(m_changeSaveToSpecialPath->font());
+    // auto changeSaveToSpecialPathFontWidth = tempFont.boundingRect(m_changeSaveToSpecialPath->text()).width();
+    
+    // 处理路径显示逻辑为【/上级文件夹/本文件夹】，本文件夹限制10个字符
+    QFileInfo fileInfo(specialPath);
+    QString dirName = fileInfo.fileName();
+    QString parentDir = fileInfo.dir().dirName();
+    
+    // 限制本文件夹名称为10个字符，超过则用省略号
+    if (dirName.length() > 10) {
+        dirName = dirName.left(7) + "...";
+    }
+    
+    // 组合成【/上级文件夹/本文件夹】格式
+    QString displayPath = QString("/%1/%2").arg(parentDir).arg(dirName);
+    
+    m_saveToSpecialPathAction->setText(displayPath);
     m_saveToSpecialPathAction->setToolTip(specialPath);
     m_saveToSpecialPathAction->setCheckable(true);
     m_saveToSpecialPathMenu->insertAction(m_changeSaveToSpecialPath, m_saveToSpecialPathAction);
@@ -620,11 +633,18 @@ void SubToolWidget::updateOptionChecked()
                     initChangeSaveToSpecialAction(specialPath);
                 } else {
                     // 更新历史路径的显示
-                    QFontMetrics tempFont(m_changeSaveToSpecialPath->font());
-                    auto changeSaveToSpecialPathFontWidth = tempFont.boundingRect(m_changeSaveToSpecialPath->text()).width();
-                    QFontMetrics tmpFont(m_saveToSpecialPathAction->font());
-                    QString sFileName = tmpFont.elidedText(specialPath, Qt::TextElideMode::ElideRight, changeSaveToSpecialPathFontWidth);
-                    m_saveToSpecialPathAction->setText(sFileName);
+                    QFileInfo fileInfo(specialPath);
+                    QString dirName = fileInfo.fileName();
+                    QString parentDir = fileInfo.dir().dirName();
+
+                    if (dirName.length() > 10) {
+                        dirName = dirName.left(7) + "...";
+                    }
+
+                    // 组合成【/上级文件夹/本文件夹】格式
+                    QString displayPath = QString("/%1/%2").arg(parentDir).arg(dirName);
+
+                    m_saveToSpecialPathAction->setText(displayPath);
                     m_saveToSpecialPathAction->setToolTip(specialPath);
                 }
                 
