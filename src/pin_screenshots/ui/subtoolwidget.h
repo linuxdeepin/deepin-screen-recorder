@@ -113,7 +113,6 @@ private:
      */
     DVerticalLine *m_saveSeperatorBeg = nullptr;
     DVerticalLine *m_saveSeperatorEnd = nullptr;
-
 };
 
 #endif // SUBTOOLWIDGET_H

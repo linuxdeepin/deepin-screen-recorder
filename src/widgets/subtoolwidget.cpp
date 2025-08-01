@@ -811,13 +811,11 @@ void SubToolWidget::updateSaveButtonTip()
     
     switch (saveAction) {
     case SaveToDesktop: {
-        QString desktopPath = QStandardPaths::writableLocation(QStandardPaths::DesktopLocation);
-        tipText = tr("Save to %1").arg(desktopPath);
+        tipText = tr("Save to Desktop");
         break;
     }
     case SaveToImage: {
-        QString picturePath = QStandardPaths::writableLocation(QStandardPaths::PicturesLocation);
-        tipText = tr("Save to %1").arg(picturePath);
+        tipText = tr("Save to Pictures");
         break;
     }
     case SaveToSpecificDir: {
@@ -827,6 +825,11 @@ void SubToolWidget::updateSaveButtonTip()
         } else {
             tipText = tr("Save to local");
         }
+        break;
+    }
+    case SaveToAsk: {
+        // 每次询问
+        tipText = tr("Save to local");
         break;
     }
     default:
