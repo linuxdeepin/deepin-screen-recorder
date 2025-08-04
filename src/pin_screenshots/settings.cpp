@@ -56,7 +56,7 @@ QPair<int, int> Settings::getSaveOption()
     return pair;
 }
 
-void Settings::setSavePath(const QString savePathDir)
+void Settings::setSavePath(const QString& savePathDir)
 {
     qCDebug(dsrApp) << "Setting save path directory:" << savePathDir;
     m_settings->setValue("savePathDir", savePathDir);
@@ -68,6 +68,20 @@ QString Settings::getSavePath()
     QString path = m_settings->value("savePathDir").toString();
     qCDebug(dsrApp) << "Getting save path directory:" << path;
     return path;
+}
+
+QString Settings::getAskSavePath()
+{
+    QString path = m_settings->value("askSavePathDir").toString();
+    qCDebug(dsrApp) << "Getting ask save path directory:" << path;
+    return path;
+}
+
+void Settings::setAskSavePath(const QString &savePathDir)
+{
+    qCDebug(dsrApp) << "Setting ask save path directory:" << savePathDir;
+    m_settings->setValue("askSavePathDir", savePathDir);
+    qCDebug(dsrApp) << "Save path directory set.";
 }
 
 void Settings::setIsChangeSavePath(const bool isChange)

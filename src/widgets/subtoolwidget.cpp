@@ -488,7 +488,7 @@ void SubToolWidget::initRecordOption()
 
     // 读取历史音频设置
     int audioSetting = t_settings->getValue("recorder", "audio").toInt();
-    qCDebug(dsrApp) << "历史音频设置：(0 无音频, 1 仅麦克风, 2 仅系统音频, 3 麦克风和系统音频)" << audioSetting;
+    qCWarning(dsrApp) << "历史音频设置：(0 无音频, 1 仅麦克风, 2 仅系统音频, 3 麦克风和系统音频)" << audioSetting;
     if (audioSetting == 3) {
         m_microphoneAction->setChecked(true);
         sysAudio->setChecked(true);
@@ -498,9 +498,12 @@ void SubToolWidget::initRecordOption()
     } else if (audioSetting == 1) {
         m_microphoneAction->setChecked(true);
         sysAudio->setChecked(false);
-    } else {
+    } else if (audioSetting == 0) {
         m_microphoneAction->setChecked(false);
         sysAudio->setChecked(false);
+    } else {
+        m_microphoneAction->setChecked(true);
+        sysAudio->setChecked(true);
     }
 
     int save_opt = t_settings->getValue("recorder", "save_op").toInt();
@@ -543,7 +546,7 @@ void SubToolWidget::initShotLabel()
     Utils::setAccessibility(m_gioButton, AC_SUBTOOLWIDGET_GIO_BUTTON);
     m_shotBtnGroup->addButton(m_gioButton);
     m_gioButton->setFixedSize(TOOL_BUTTON_SIZE);
-    installTipHint(m_gioButton, tr("Geometric Tools (G)\nHold down Shift to draw squares or circles."));
+    installTipHint(m_gioButton, tr("Geometric Tools (R)\nHold down Shift to draw squares or circles."));
     btnList.append(m_gioButton);
 
     //添加直线按钮
@@ -805,33 +808,62 @@ void SubToolWidget::initShotLabel()
 // 更新保存按钮的提示信息
 void SubToolWidget::updateSaveButtonTip()
 {
-    // 获取当前保存设置
-    SaveAction saveAction = ConfigSettings::instance()->getValue("shot", "save_op").value<SaveAction>();
-    QString tipText;
-    
-    switch (saveAction) {
-    case SaveToDesktop: {
-        tipText = tr("Save to Desktop");
-        break;
-    }
-    case SaveToImage: {
-        tipText = tr("Save to Pictures");
-        break;
-    }
-    case SaveToSpecificDir: {
-        QString specificPath = ConfigSettings::instance()->getValue("shot", "save_dir").toString();
-        if (!specificPath.isEmpty() && QFileInfo::exists(specificPath)) {
-            tipText = tr("Save to %1").arg(specificPath);
-        } else {
-            tipText = tr("Save to local");
-        }
-        break;
-    }
-    default:
+    SaveWays t_saveWays = ConfigSettings::instance()->getValue("shot", "save_ways").value<SaveWays>();
+     QString tipText;
+    if (t_saveWays == Ask) {
         tipText = tr("Save to local");
-        break;
+    } else if (t_saveWays == SpecifyLocation) {
+        // 获取当前保存设置
+        SaveAction saveAction = ConfigSettings::instance()->getValue("shot", "save_op").value<SaveAction>();
+
+        switch (saveAction) {
+        case SaveToDesktop: {
+            tipText = tr("Save to Desktop");
+            break;
+        }
+        case SaveToImage: {
+            tipText = tr("Save to Pictures");
+            break;
+        }
+        case SaveToSpecificDir: {
+            bool changeIsChecked = m_changeSaveToSpecialPath && m_changeSaveToSpecialPath->isChecked();
+            qWarning() << "changeIsChecked:"<<changeIsChecked;
+            QString specificPath = ConfigSettings::instance()->getValue("shot", "save_dir").toString();
+            bool specialPathExits = !specificPath.isEmpty() && QFileInfo::exists(specificPath);
+            qWarning() << "specialPathExits:"<<specialPathExits;
+            // 保存时更新
+            bool tipsUpdateSaved = specialPathExits && changeIsChecked;
+            qWarning() << "tipsUpdateSaved:"<<tipsUpdateSaved;
+            // 保存时设置(选中且目录为空不为空)
+            bool tipsSetSaved = changeIsChecked;
+            qWarning() << "tipsSetSaved:"<<tipsSetSaved;
+            // 保存到目录 (目录不为空且存在)
+            bool tipsSpecialSaved = m_saveToSpecialPathAction && m_saveToSpecialPathAction->isChecked() && specialPathExits;
+             qWarning() << "tipsSpecialSaved:"<<tipsSpecialSaved;
+
+            if (tipsUpdateSaved) {
+                tipText = tr("Change the path on save");
+                qWarning() << "tipsUpdateSaved";
+
+            }
+            else if(tipsSetSaved) {
+                tipText = tr("Set a path on save");
+                qWarning() << "tipsSetSaved";
+            } else if(tipsSpecialSaved) {
+                tipText = tr("Save to %1").arg(specificPath);
+                qWarning() << "tipsSpecialSaved";
+            } else {
+                 tipText = tr("Save to local");
+                qWarning() << "not set saved";
+            }
+            qWarning() << tipText;
+            break;
+        }
+        default:
+            tipText = tr("Save to local");
+            break;
+        }
     }
-    
     installTipHint(m_saveLocalDirButton, tipText);
 }
 
@@ -883,30 +915,34 @@ void SubToolWidget::initShotOption()
     m_saveToSpecialPathAction->setCheckable(true);
     
     // 保存时更新位置
-    m_changeSaveToSpecialPath = new QAction(tr("Update location on save"), m_saveToSpecialPathMenu);
+    m_changeSaveToSpecialPath = new QAction(m_saveToSpecialPathMenu);
     m_changeSaveToSpecialPath->setCheckable(true);
     
-    // 如果有保存路径，显示上次保存位置
-    if (!specialPath.isEmpty() && QFileInfo::exists(specialPath)) {
+    if (specialPath.isEmpty() || !QFileInfo::exists(specialPath)) {
+        qCDebug(dsrApp) << "不存在指定路径";
+        m_changeSaveToSpecialPath->setText(tr("Set a path on save"));
+    } else {
+        qCDebug(dsrApp) << "存在指定路径: " /*<< specialPath*/;
+        m_changeSaveToSpecialPath->setText(tr("Change the path on save"));
         qCDebug(dsrApp) << "存在指定路径";
         // 获取路径的最后一个文件夹名称和上一级文件夹名称
         QFileInfo fileInfo(specialPath);
         QString folderName = fileInfo.fileName();
         QString parentDir = fileInfo.dir().dirName();
-        
+
         // 限制文件夹名称为10个字符
         if (folderName.length() > 7) {
             folderName = folderName.left(7) + "...";
         }
-        
+
         // 格式为 /上级文件夹/本文件夹
         QString displayPath = QString("/%1/%2").arg(parentDir).arg(folderName);
-        
+
         m_saveToSpecialPathAction->setText(displayPath);
         m_saveToSpecialPathAction->setToolTip(specialPath);
         m_saveToSpecialPathMenu->addAction(m_saveToSpecialPathAction);
     }
-    
+
     // 添加"保存时更新位置"选项
     m_saveToSpecialPathMenu->addAction(m_changeSaveToSpecialPath);
 
@@ -1058,8 +1094,10 @@ void SubToolWidget::initShotOption()
         bool isChangeSpecificDir = ConfigSettings::instance()->getValue("shot", "save_dir_change").value<bool>();
         if (specialPath.isEmpty() || isChangeSpecificDir || !QFileInfo::exists(specialPath)) {
             m_changeSaveToSpecialPath->setChecked(true);
+            ConfigSettings::instance()->setValue("shot", "save_dir_change", true);
         } else if (!specialPath.isEmpty() && QFileInfo::exists(specialPath)) {
             m_saveToSpecialPathAction->setChecked(true);
+            ConfigSettings::instance()->setValue("shot", "save_dir_change", false);
         }
         break;
     }
@@ -1068,17 +1106,21 @@ void SubToolWidget::initShotOption()
     connect(t_saveGroup, QOverload<QAction *>::of(&QActionGroup::triggered),
     [ = ](QAction * t_act) {
         if (t_act == specifiedLocationMenu->menuAction()) {
+             qWarning()<<"save to memue triggered";
             // 当选择指定位置时，根据子菜单选中项设置保存位置
             ConfigSettings::instance()->setValue("shot", "save_ways", SaveWays::SpecifyLocation);
             if (saveToDesktopAction->isChecked()) {
                 ConfigSettings::instance()->setValue("shot", "save_op", SaveAction::SaveToDesktop);
             } else if (saveToPictureAction->isChecked()) {
                 ConfigSettings::instance()->setValue("shot", "save_op", SaveAction::SaveToImage);
+                qWarning() << "save_op SaveToImage";
             } else if (m_saveToSpecialPathMenu->menuAction()->isChecked()) {
                 ConfigSettings::instance()->setValue("shot", "save_op", SaveAction::SaveToSpecificDir);
+                qWarning() << "save_op SaveAction::SaveToSpecificDir";
             }
         } else if (t_act == askEveryTimeAction) {
             ConfigSettings::instance()->setValue("shot", "save_ways", SaveWays::Ask);
+            m_optionMenu->hide();
         }
         
         // 更新保存按钮提示
@@ -1089,11 +1131,13 @@ void SubToolWidget::initShotOption()
     connect(specifiedLocationGroup, QOverload<QAction *>::of(&QActionGroup::triggered),
     [ = ](QAction * t_act) {
         specifiedLocationMenu->menuAction()->setChecked(true);
+        qWarning()<<"save to memue triggered";
         ConfigSettings::instance()->setValue("shot", "save_ways", SaveWays::SpecifyLocation);
         if (t_act == saveToDesktopAction) {
             ConfigSettings::instance()->setValue("shot", "save_op", SaveAction::SaveToDesktop);
         } else if (t_act == saveToPictureAction) {
             ConfigSettings::instance()->setValue("shot", "save_op", SaveAction::SaveToImage);
+            qWarning() << "save_op SaveToImage";
         } else if (t_act == m_saveToSpecialPathMenu->menuAction()) {
             ConfigSettings::instance()->setValue("shot", "save_op", SaveAction::SaveToSpecificDir);
         }
@@ -1120,6 +1164,7 @@ void SubToolWidget::initShotOption()
         
         // 更新保存按钮提示
         updateSaveButtonTip();
+        m_optionMenu->hide();
     });
 
     int t_pictureFormat = ConfigSettings::instance()->getValue("shot", "format").toInt();
@@ -1178,6 +1223,7 @@ void SubToolWidget::initShotOption()
         }
     });
     qCDebug(dsrApp) << "截图工具栏选项UI已初始化";
+    updateSaveButtonTip();
 }
 
 void SubToolWidget::initScrollLabel()
@@ -1447,6 +1493,7 @@ void SubToolWidget::initScrollLabel()
                 ConfigSettings::instance()->setValue("shot", "save_op", SaveAction::SaveToDesktop);
             } else if (saveToPictureAction->isChecked()) {
                 ConfigSettings::instance()->setValue("shot", "save_op", SaveAction::SaveToImage);
+                qWarning() << "save_op SaveToImage";
             } else if (m_scrollSaveToSpecialPathMenu->menuAction()->isChecked()) {
                 ConfigSettings::instance()->setValue("shot", "save_op", SaveAction::SaveToSpecificDir);
             }
@@ -1467,6 +1514,7 @@ void SubToolWidget::initScrollLabel()
             m_scrollOptionMenu->hide(); // 关闭菜单
         } else if (t_act == saveToPictureAction) {
             ConfigSettings::instance()->setValue("shot", "save_op", SaveAction::SaveToImage);
+            qWarning() << "save_op SaveToImage";
             m_scrollOptionMenu->hide(); // 关闭菜单
         } else if (t_act == m_scrollSaveToSpecialPathMenu->menuAction()) {
             ConfigSettings::instance()->setValue("shot", "save_op", SaveAction::SaveToSpecificDir);

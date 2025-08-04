@@ -3805,9 +3805,9 @@ bool MainWindow::saveAction(const QPixmap &pix)
             this->releaseKeyboard();
 
             // 获取上次保存路径，如果没有则使用图片文件夹
-            QString lastSavePath = ConfigSettings::instance()->getValue("shot", "save_dir").toString();
+            QString lastSavePath = ConfigSettings::instance()->getValue("shot", "save_ask_dir").toString();
             if (lastSavePath.isEmpty() || !QDir(lastSavePath).exists()) {
-                lastSavePath = QStandardPaths::writableLocation(QStandardPaths::PicturesLocation);
+                lastSavePath = QStandardPaths::writableLocation(QStandardPaths::DesktopLocation);
             }
 
             QString fileName = selectAreaName.isEmpty() ?
@@ -3850,7 +3850,7 @@ bool MainWindow::saveAction(const QPixmap &pix)
             }
 
             // 记住用户选择的路径（仅保存路径，不改变保存选项）
-            ConfigSettings::instance()->setValue("shot", "save_dir",
+            ConfigSettings::instance()->setValue("shot", "save_ask_dir",
                     QFileInfo(m_saveFileName).dir().absolutePath());
 
                     // 处理文件扩展名
@@ -3930,7 +3930,7 @@ bool MainWindow::saveAction(const QPixmap &pix)
                 QString fileName = selectAreaName;
 
                 if (path.isEmpty() || !QDir(path).exists()) {
-                    path = QStandardPaths::writableLocation(QStandardPaths::PicturesLocation);
+                    path = QStandardPaths::writableLocation(QStandardPaths::DesktopLocation);
                 }
 
                 if (fileName.isEmpty()) {
@@ -4501,7 +4501,7 @@ int MainWindow::mouseDblClickEF(QMouseEvent *mouseEvent, bool &needRepaint)
     if (mouseEvent->button() == Qt::LeftButton) {
         if (status::shot == m_functionType) {
             qCDebug(dsrApp) << "双击鼠标按钮！进行截图保存！";
-            saveScreenShot();
+            saveScreenShotToClipboardOnly();
         }
     }
     return 1;

@@ -19,8 +19,10 @@ public:
 
     bool setSaveOption(const QPair<int, int> &value);
     QPair<int, int> getSaveOption();
-    void setSavePath(const QString savePathDir);
+    void setSavePath(const QString& savePathDir);
     QString getSavePath();
+    QString getAskSavePath();
+    void setAskSavePath(const QString& savePathDir);
     void setIsChangeSavePath(const bool isChange);
     bool getIsChangeSavePath();
 private:
