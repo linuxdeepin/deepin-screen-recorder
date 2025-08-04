@@ -1,3 +1,9 @@
+deepin-screen-recorder (6.5.31) unstable; urgency=medium
+
+  * fix: Update save path handling and tooltip logic in screenshot tool
+
+ -- dengzhongyuan <dengzhongyuan@uniontech.com>  Mon, 04 Aug 2025 18:14:33 +0800
+
 deepin-screen-recorder (6.5.30) unstable; urgency=medium
 
   * fix: Correct fullscreen behavior in screenshot functionality
