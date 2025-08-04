@@ -149,11 +149,11 @@ void SubToolWidget::initShotLable()
     if (specialPath.isEmpty() || !QFileInfo::exists(specialPath)) {
         qCDebug(dsrApp) << "Specified path does not exist or is empty.";
         m_changeSaveToSpecialPath->setText(tr("Set a path on save"));
-        // 默认选中"保存时选择位置"选项
-        m_changeSaveToSpecialPath->setChecked(true);
-        // 同时选中指定位置菜单和自定义位置子菜单
-        specifiedLocationMenu->menuAction()->setChecked(true);
-        m_saveToSpecialPathMenu->menuAction()->setChecked(true);
+        // 默认选中"每次询问"选项
+        m_askEveryTimeAction->setChecked(true);
+        // 取消选中指定位置菜单和自定义位置子菜单
+        specifiedLocationMenu->menuAction()->setChecked(false);
+        m_saveToSpecialPathMenu->menuAction()->setChecked(false);
     } else {
         qCDebug(dsrApp) << "Specified path exists.";
         initChangeSaveToSpecialAction(specialPath);
@@ -502,7 +502,7 @@ void SubToolWidget::updateSaveButtonTip()
             break;
         case FOLDER_CHANGE:
             // 保存时选择位置
-            m_saveLocalDirButton->setToolTip(tr("Set a path on save"));
+            m_saveLocalDirButton->setToolTip(m_changeSaveToSpecialPath->text());
             break;
         case FOLDER:
             // 保存到指定位置
@@ -541,23 +541,23 @@ void SubToolWidget::updateOptionChecked()
 {
     qInfo() << __LINE__ << __FUNCTION__ << "更新菜单选项";
     QPair<int, int> saveInfo = Settings::instance()->getSaveOption();
-    qDebug() << "saveInfo: " << saveInfo;
+    qWarning() << "saveInfo: " << saveInfo;
     if (saveInfo.second != PNG && saveInfo.second != JPG && saveInfo.second != BMP) { //不存在保存格式的情况
         saveInfo.second = PNG; // 默认保存格式
         qCDebug(dsrApp) << "Invalid save format, defaulting to PNG";
     }
     //没有配置文件时，给定一个默认值
     if (saveInfo.first == 0 && saveInfo.second == 0) {
-        // 首次使用时，默认选择自定义位置的"保存时选择位置"选项
-        m_SaveInfo.first = FOLDER_CHANGE;
+        // 首次使用时，默认选择"每次询问"选项
+        m_SaveInfo.first = ASK;
         m_SaveInfo.second = PNG; // 默认保存格式
-        qCDebug(dsrApp) << "No configuration found, using defaults: FOLDER_CHANGE and PNG";
+        qWarning(dsrApp) << "No configuration found, using defaults: ASK and PNG";
         // 保存默认设置到配置文件
         Settings::instance()->setSaveOption(m_SaveInfo);
     } else {
         m_SaveInfo = saveInfo;
     }
-    qDebug() << "m_SaveInfo: " << m_SaveInfo;
+    qWarning() << "m_SaveInfo: " << m_SaveInfo;
     
     // 获取指定位置菜单
     QAction *specifiedLocationAction = nullptr;

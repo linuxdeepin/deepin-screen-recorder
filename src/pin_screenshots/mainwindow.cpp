@@ -223,9 +223,9 @@ void MainWindow::saveImg()
         this->hide();
         
         // 获取上次保存路径，如果没有则使用图片文件夹
-        QString lastSavePath = Settings::instance()->getSavePath();
+        QString lastSavePath = Settings::instance()->getAskSavePath();
         if (lastSavePath.isEmpty() || !QDir(lastSavePath).exists()) {
-            lastSavePath = QStandardPaths::standardLocations(QStandardPaths::PicturesLocation).first();
+            lastSavePath = QStandardPaths::standardLocations(QStandardPaths::DesktopLocation).first();
         }
         
         QString formatStr;
@@ -252,7 +252,7 @@ void MainWindow::saveImg()
         }
         
         // 记住用户选择的路径（仅保存路径，不改变保存选项）
-        Settings::instance()->setSavePath(QFileInfo(m_lastImagePath).dir().absolutePath());
+        Settings::instance()->setAskSavePath(QFileInfo(m_lastImagePath).dir().absolutePath());
         
         // 处理文件扩展名
         QString fileSuffix = QFileInfo(m_lastImagePath).completeSuffix();
