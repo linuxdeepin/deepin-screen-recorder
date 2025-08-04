@@ -44,7 +44,7 @@ const QMap<QString, QMap<QString, QVariant>> ConfigSettings::m_defaultConfig = {
     // curor 0 不录制鼠标，及不录制鼠标点击,1 录制鼠标,2 录制鼠标点击,3 录制鼠标，及录制鼠标点击,
     // audio 0 不录制任何音频,1 麦克风音频, 2 录制系统音频,3 录制混音,
     // save_op 保存位置视频目录 0, 桌面 1
-    {"recorder", {{"format", 1}, {"frame_rate", 24}, {"save_op", 0}, {"save_dir", ""}, {"cursor", 0}, {"audio", 0}}},
+    {"recorder", {{"format", 1}, {"frame_rate", 24}, {"save_op", 0}, {"save_dir", ""}, {"cursor", 0}, {"audio", 3}}},
 };
 
 ConfigSettings *ConfigSettings::instance()
