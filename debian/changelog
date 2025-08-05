@@ -1,3 +1,9 @@
+deepin-screen-recorder (6.5.32) unstable; urgency=medium
+
+  * fix: Correct sidebar position calculation in MainWindow
+
+ -- dengzhongyuan <dengzhongyuan@uniontech.com>  Tue, 05 Aug 2025 20:25:28 +0800
+
 deepin-screen-recorder (6.5.31) unstable; urgency=medium
 
   * fix: Update save path handling and tooltip logic in screenshot tool
