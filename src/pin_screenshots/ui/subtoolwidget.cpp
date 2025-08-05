@@ -340,6 +340,7 @@ void SubToolWidget::initShotLable()
                     break;
                 }
             }
+            m_optionMenu->hide();
         }
         
         Settings::instance()->setSaveOption(m_SaveInfo);

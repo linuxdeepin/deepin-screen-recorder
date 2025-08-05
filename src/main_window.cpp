@@ -2858,7 +2858,7 @@ void MainWindow::updateSideBarPos()
         // 几何图形工具(包括矩形和椭圆)都使用 gioButton 的位置
         QString gioShape = "gio";
         if (m_toolBar->getFuncSubToolX(gioShape) > -1)
-            sidebarPoint.setX(m_toolBar->x() + m_toolBar->getFuncSubToolX(gioShape));
+            sidebarPoint.setX(m_toolBar->x());
     } else {
         if (m_toolBar->getFuncSubToolX(m_currentToolShape) > -1)
             sidebarPoint.setX(m_toolBar->x() + m_toolBar->getFuncSubToolX(m_currentToolShape));
