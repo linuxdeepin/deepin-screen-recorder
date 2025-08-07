@@ -1471,10 +1471,9 @@ void SubToolWidget::initScrollLabel()
     }
     case SaveToSpecificDir:
     default: {
-        // specifiedLocationMenu->menuAction()->setChecked(true);
         m_scrollSaveToSpecialPathMenu->menuAction()->setChecked(true);
         bool isChangeSpecificDir = ConfigSettings::instance()->getValue("shot", "save_dir_change").value<bool>();
-        if (specialPath.isEmpty() || isChangeSpecificDir || QFileInfo::exists(specialPath)) {
+        if (specialPath.isEmpty() || isChangeSpecificDir || !QFileInfo::exists(specialPath)) {
             m_scrollChangeSaveToSpecialPath->setChecked(true);
         } else if (!specialPath.isEmpty() && QFileInfo::exists(specialPath)) {
             m_scrollSaveToSpecialPathAction->setChecked(true);

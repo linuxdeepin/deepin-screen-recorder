@@ -19,6 +19,7 @@
 #include <QApplication>
 #include <QShortcut>
 #include <QTimer>
+#include <QMenu>
 
 DWIDGET_USE_NAMESPACE
 
@@ -72,7 +73,13 @@ public:
      * @brief 获取贴图窗口的显示位置
      */
     QPoint getShowPosition();
-
+    /**
+     * @brief 检查工具栏可见性
+     */
+    void checkToolbarVisibility(); 
+    /**
+     * @brief 启动隐藏工具栏定时器
+     */
 public slots:
     /**
      * @brief 贴图保存实现
@@ -88,6 +95,10 @@ public slots:
     void onOpenOCR();
 
     void saveToClipboard();
+    /**
+     * @brief 启动隐藏工具栏定时器
+     */
+    void startToolbarHideTimer(); 
 protected:
     /**
      * @brief 贴图主窗口的初始化函数
@@ -181,6 +192,8 @@ private:
      * @brief 保存贴图窗口的显示位置
      */
     QPoint m_showPosition;
+    QTimer *m_mouseMonitorTimer = nullptr;
+    QTimer *m_hideToolbarTimer = nullptr;
 };
 
 #endif // MAINWINDOW_H
