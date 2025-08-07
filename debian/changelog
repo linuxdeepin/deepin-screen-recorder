@@ -1,3 +1,9 @@
+deepin-screen-recorder (6.6.0) unstable; urgency=medium
+
+  * fix: Enhance toolbar visibility management in MainWindow
+
+ -- dengzhongyuan <dengzhongyuan@uniontech.com>  Thu, 07 Aug 2025 20:50:24 +0800
+
 deepin-screen-recorder (6.5.33) unstable; urgency=medium
 
   * chore: Add new Lao translation file for deepin-screen-recorder
