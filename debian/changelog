@@ -1,3 +1,9 @@
+deepin-screen-recorder (6.5.33) unstable; urgency=medium
+
+  * chore: Add new Lao translation file for deepin-screen-recorder
+
+ -- dengzhongyuan <dengzhongyuan@uniontech.com>  Thu, 07 Aug 2025 15:10:11 +0800
+
 deepin-screen-recorder (6.5.32) unstable; urgency=medium
 
   * fix: Correct sidebar position calculation in MainWindow
