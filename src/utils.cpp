@@ -234,6 +234,7 @@ void Utils::showCurrentSys()
     qInfo() << "ProductTypeName: " << DSysInfo::uosProductTypeName();
     qInfo() << "SystemVersion: " << DSysInfo::minorVersion();
     qInfo() << "uosEditionType: " << DSysInfo::uosEditionType();
+    qInfo() << "cpuArchitecture: " << QSysInfo::currentCpuArchitecture();
     //qDebug() << "spVersion: " << DSysInfo::spVersion();
     //qDebug() << "udpateVersion: " << DSysInfo::udpateVersion();
     //qDebug() << "majorVersion: " << DSysInfo::majorVersion();
