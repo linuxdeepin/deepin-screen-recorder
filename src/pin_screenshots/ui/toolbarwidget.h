@@ -16,7 +16,7 @@
 #include <DFloatingWidget>
 
 
-
+class MainWindow;
 DWIDGET_USE_NAMESPACE
 class ToolBarWidget : public DBlurEffectWidget
 {

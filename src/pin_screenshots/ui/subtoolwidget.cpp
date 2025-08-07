@@ -531,10 +531,26 @@ QPair<int, int> SubToolWidget::getSaveInfo()
 // 选项按钮被点击
 void SubToolWidget::onOptionButtonClicked()
 {
-    if (m_optionMenu->isHidden())
+    if (m_optionMenu->isHidden()) {
+        // 显示菜单前，确保工具栏保持显示状态
+        QWidget *toolbarWidget = qobject_cast<QWidget*>(parent());
+        if (toolbarWidget) {
+            toolbarWidget->show();
+            toolbarWidget->activateWindow();
+        }
+        
+        connect(m_optionMenu, &QMenu::aboutToHide, this, [this]() {
+            QWidget *toolbarWidget = qobject_cast<QWidget*>(parent());
+            if (toolbarWidget) {
+                toolbarWidget->show();
+                toolbarWidget->activateWindow();
+            }
+        }, Qt::SingleShotConnection);
+        
         m_pinOptionButton->showMenu();
-    else
+    } else {
         m_optionMenu->hide();
+    }
 }
 
 //根据配置文件更新当前选中的选项
