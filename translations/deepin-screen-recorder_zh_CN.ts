@@ -672,7 +672,7 @@ Press and hold Shift to draw a vertical or horizontal arrow</source>
         <source>Geometric Tools (R)
 Hold down Shift to draw squares or circles.</source>
         <translation>几何工具 (R)
-按住Shift可画正方形/圆形</translation>
+按住Shift可画正方形/正圆</translation>
     </message>
     <message>
         <source>Save to %1</source>

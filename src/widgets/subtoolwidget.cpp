@@ -826,7 +826,7 @@ void SubToolWidget::updateSaveButtonTip()
             break;
         }
         case SaveToSpecificDir: {
-            bool changeIsChecked = m_changeSaveToSpecialPath && m_changeSaveToSpecialPath->isChecked();
+            bool changeIsChecked = m_changeSaveToSpecialPath && ((m_changeSaveToSpecialPath &&m_changeSaveToSpecialPath->isChecked()) || (m_scrollChangeSaveToSpecialPath && m_scrollChangeSaveToSpecialPath->isChecked()));
             qWarning() << "changeIsChecked:"<<changeIsChecked;
             QString specificPath = ConfigSettings::instance()->getValue("shot", "save_dir").toString();
             bool specialPathExits = !specificPath.isEmpty() && QFileInfo::exists(specificPath);
@@ -1352,7 +1352,7 @@ void SubToolWidget::initScrollLabel()
     m_scrollSaveToSpecialPathAction->setCheckable(true);
     
     // 保存时更新位置
-    m_scrollChangeSaveToSpecialPath = new QAction(tr("Update location on save"), m_scrollSaveToSpecialPathMenu);
+    m_scrollChangeSaveToSpecialPath = new QAction(tr("Set a path on save"), m_scrollSaveToSpecialPathMenu);
     m_scrollChangeSaveToSpecialPath->setCheckable(true);
     
     // 如果有保存路径，显示上次保存位置
@@ -1476,6 +1476,7 @@ void SubToolWidget::initScrollLabel()
         if (specialPath.isEmpty() || isChangeSpecificDir || !QFileInfo::exists(specialPath)) {
             m_scrollChangeSaveToSpecialPath->setChecked(true);
         } else if (!specialPath.isEmpty() && QFileInfo::exists(specialPath)) {
+            m_scrollChangeSaveToSpecialPath->setText(tr("Update location on save"));
             m_scrollSaveToSpecialPathAction->setChecked(true);
         }
         break;
@@ -1560,7 +1561,7 @@ void SubToolWidget::initScrollLabel()
             m_scrollOptionMenu->hide(); // 关闭菜单
         }
     });
-    
+    updateSaveButtonTip();
     qCDebug(dsrApp) << "滚动截图工具栏UI已初始化";
 }
 
