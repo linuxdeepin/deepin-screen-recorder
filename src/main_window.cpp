@@ -1973,9 +1973,12 @@ bool MainWindow::saveImg(const QPixmap &pix, const QString &fileName, const char
             quality = 80;
         }
     }
+    if (QSysInfo::currentCpuArchitecture().startsWith("loongarch64")) {
+        quality = 60;
+    }
     if (status::pinscreenshots == m_functionType) return false;
     if (pix.save(fileName, format, quality)) {
-        qInfo() << __FUNCTION__ << __LINE__ << "保存图片成功！";
+        qInfo() << __FUNCTION__ << __LINE__ << "保存图片成功！保存质量: " << quality;
         return true;
     } else {
         qWarning() << __FUNCTION__ << __LINE__ << "保存图片失败！";
