@@ -2032,6 +2032,10 @@ void MainWindow::save2Clipboard(const QPixmap &pix)
         qWarning() << __FUNCTION__ << "Copy Null Pix To Clipboard!";
         return;
     }
+    int quality = -1;
+    if (QSysInfo::currentCpuArchitecture().startsWith("loongarch64")) {
+        quality = 60;
+    }
     if (Utils::is3rdInterfaceStart == false) {
         if (DSysInfo::minorVersion().toInt() >= 1070) {
             QDBusInterface clipboardInterface(ClipboardService,
@@ -2070,11 +2074,11 @@ void MainWindow::save2Clipboard(const QPixmap &pix)
             QByteArray bytes;
             QBuffer buffer(&bytes);
             buffer.open(QIODevice::WriteOnly);
-            pix.save(&buffer, "PNG");
+            pix.save(&buffer, "PNG", quality);
             //wayland下只传输一种图片数据到剪切板
             t_imageData->setData("image/png", bytes);
             QClipboard *cb = qApp->clipboard();
-            qInfo() << __FUNCTION__ << __LINE__ << "将数据传递到剪贴板！";
+            qInfo() << __FUNCTION__ << __LINE__ << "将数据传递到剪贴板！保存质量: " << quality;
             cb->setMimeData(t_imageData, QClipboard::Clipboard);
             //wayland下添加超时机制，1s后退出事件循环
             //DelayTime *tempTimer = new DelayTime(3000);
@@ -2107,11 +2111,11 @@ void MainWindow::save2Clipboard(const QPixmap &pix)
             QByteArray bytes;
             QBuffer buffer(&bytes);
             buffer.open(QIODevice::WriteOnly);
-            pix.save(&buffer, "PNG");
+            pix.save(&buffer, "PNG", quality);
             t_imageData->setData("image/png", bytes);
 
             QClipboard *cb = qApp->clipboard();
-            qInfo() << __FUNCTION__ << __LINE__ << "将数据传递到剪贴板！";
+            qInfo() << __FUNCTION__ << __LINE__ << "将数据传递到剪贴板！保存质量: " << quality;
             cb->setMimeData(t_imageData, QClipboard::Clipboard);
             qDebug() << "Whether the data passed to the clipboard is empty? " << t_imageData->imageData().isNull();
         }
