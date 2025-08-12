@@ -1,4 +1,6 @@
-<?xml version="1.0" ?><!DOCTYPE TS><TS version="2.1" language="uk">
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE TS>
+<TS version="2.1" language="uk">
 <context>
     <name>CountdownTooltip</name>
     <message>
@@ -21,17 +23,6 @@ or press the shortcut again to stop recording</source>
     <message>
         <source>Recording</source>
         <translation>Записування</translation>
-    </message>
-</context>
-<context>
-    <name>MainToolWidget</name>
-    <message>
-        <source>Record</source>
-        <translation>Записати</translation>
-    </message>
-    <message>
-        <source>Screenshot</source>
-        <translation>Знімок</translation>
     </message>
 </context>
 <context>
@@ -97,10 +88,6 @@ or press the shortcut again to stop recording</source>
         <translation>Знімок</translation>
     </message>
     <message>
-        <source>Screenshot failed.</source>
-        <translation>Не вдалося створити знімок.</translation>
-    </message>
-    <message>
         <source>Scrollshot</source>
         <translation>Знімок із гортанням</translation>
     </message>
@@ -110,7 +97,7 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>deepin-screen-recorder</source>
-        <translation type="unfinished"/>
+        <translation>Засіб запису екрана Deepin</translation>
     </message>
     <message>
         <source>Open Folder</source>
@@ -118,7 +105,7 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Screenshot finished and copy to clipboard</source>
-        <translation type="unfinished"/>
+        <translation>Знімок завершено і скопійовано до буфера обміну</translation>
     </message>
 </context>
 <context>
@@ -452,15 +439,6 @@ Press and hold Shift to draw a straight line</source>
     </message>
 </context>
 <context>
-    <name>StartTooltip</name>
-    <message>
-        <source>Click or drag to
-select the area to record</source>
-        <translation>Натисніть або перетяніть,
-щоб вибрати область для запису</translation>
-    </message>
-</context>
-<context>
     <name>SubToolWidget</name>
     <message>
         <source>Show keystroke (K)</source>
@@ -575,18 +553,6 @@ select the area to record</source>
         <translation>Відео</translation>
     </message>
     <message>
-        <source>Rectangle (R)
-Press and hold Shift to draw a square</source>
-        <translation>Прямокутник (R)
-Натисніть і утримуйте клавішу Shift, щоб намалювати квадрат</translation>
-    </message>
-    <message>
-        <source>Ellipse (O)
-Press and hold Shift to draw a circle</source>
-        <translation>Еліпс (O)
-Натисніть і утримуйте клавішу Shift, щоб намалювати коло</translation>
-    </message>
-    <message>
         <source>Line (L)
 Press and hold Shift to draw a vertical or horizontal line</source>
         <translation>Пряма (L)
@@ -631,16 +597,8 @@ Press and hold Shift to draw a vertical or horizontal arrow</source>
         <translation>Записати</translation>
     </message>
     <message>
-        <source>Clipboard</source>
-        <translation>Буфер обміну</translation>
-    </message>
-    <message>
         <source>Pictures</source>
         <translation>Зображення</translation>
-    </message>
-    <message>
-        <source>Folder</source>
-        <translation>Тека</translation>
     </message>
     <message>
         <source>Set a path on save</source>
@@ -690,6 +648,52 @@ Press and hold Shift to draw a vertical or horizontal arrow</source>
         <source>Extract Text</source>
         <translation>Видобути текст</translation>
     </message>
+    <message>
+        <source>Geometric Tools (R)
+Hold down Shift to draw squares or circles.</source>
+        <translation>Геометричні інструменти (R)
+Утримуйте Shift для малювання квадратів або кіл.</translation>
+    </message>
+    <message>
+        <source>Save to local</source>
+        <translation>Зберегти локально</translation>
+    </message>
+    <message>
+        <source>Save to Desktop</source>
+        <translation>Зберегти на стільниці</translation>
+    </message>
+    <message>
+        <source>Save to Pictures</source>
+        <translation>Зберегти в зображення</translation>
+    </message>
+    <message>
+        <source>Save to %1</source>
+        <translation>Зберегти до %1</translation>
+    </message>
+    <message>
+        <source>Specified Location</source>
+        <translation>Вказане місце</translation>
+    </message>
+    <message>
+        <source>Custom Location</source>
+        <translation>Власний шлях</translation>
+    </message>
+    <message>
+        <source>Each inquiry</source>
+        <translation>Кожне запитування</translation>
+    </message>
+    <message>
+        <source>Update location on save</source>
+        <translation>Оновлення місця збереження</translation>
+    </message>
+    <message>
+        <source>Save to desktop</source>
+        <translation>Зберегти на стільниці</translation>
+    </message>
+    <message>
+        <source>Save to pictures</source>
+        <translation>Зберегти в зображення</translation>
+    </message>
 </context>
 <context>
     <name>ToolBarWidget</name>
@@ -698,8 +702,8 @@ Press and hold Shift to draw a vertical or horizontal arrow</source>
         <translation>Закрити (Esc)</translation>
     </message>
     <message>
-        <source>OK (Enter)</source>
-        <translation>Гаразд (Enter)</translation>
+        <source>Copy to clipboard (Enter)</source>
+        <translation>Скопіювати до буфера обміну (Enter)</translation>
     </message>
 </context>
 <context>
@@ -718,13 +722,6 @@ Press and hold Shift to draw a vertical or horizontal arrow</source>
     <message>
         <source>Exit</source>
         <translation>Вийти</translation>
-    </message>
-</context>
-<context>
-    <name>VoiceRecordProcess</name>
-    <message>
-        <source>New recording</source>
-        <translation>Новий запис</translation>
     </message>
 </context>
 </TS>

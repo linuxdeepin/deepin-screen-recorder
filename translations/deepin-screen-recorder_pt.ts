@@ -1,4 +1,6 @@
-<?xml version="1.0" ?><!DOCTYPE TS><TS version="2.1" language="pt">
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE TS>
+<TS version="2.1" language="pt">
 <context>
     <name>CountdownTooltip</name>
     <message>
@@ -21,17 +23,6 @@ ou pressione novamente o atalho para parar de gravar</translation>
     <message>
         <source>Recording</source>
         <translation>Gravação</translation>
-    </message>
-</context>
-<context>
-    <name>MainToolWidget</name>
-    <message>
-        <source>Record</source>
-        <translation>Gravar</translation>
-    </message>
-    <message>
-        <source>Screenshot</source>
-        <translation>Captura de ecrã</translation>
     </message>
 </context>
 <context>
@@ -95,10 +86,6 @@ ou pressione novamente o atalho para parar de gravar</translation>
     <message>
         <source>Screenshot</source>
         <translation>Captura de ecrã</translation>
-    </message>
-    <message>
-        <source>Screenshot failed.</source>
-        <translation>A captura de ecrã falhou.</translation>
     </message>
     <message>
         <source>Scrollshot</source>
@@ -452,15 +439,6 @@ Pressionar e manter Shift para desenhar uma linha reta</translation>
     </message>
 </context>
 <context>
-    <name>StartTooltip</name>
-    <message>
-        <source>Click or drag to
-select the area to record</source>
-        <translation>Clique ou arraste para
-selecionar a área a gravar</translation>
-    </message>
-</context>
-<context>
     <name>SubToolWidget</name>
     <message>
         <source>Show keystroke (K)</source>
@@ -575,18 +553,6 @@ selecionar a área a gravar</translation>
         <translation>Vídeos</translation>
     </message>
     <message>
-        <source>Rectangle (R)
-Press and hold Shift to draw a square</source>
-        <translation>Rectângulo (R)
-Pressionar e manter Shift para desenhar um quadrado</translation>
-    </message>
-    <message>
-        <source>Ellipse (O)
-Press and hold Shift to draw a circle</source>
-        <translation>Elipse (O)
-Pressionar e manter Shift para desenhar um círculo</translation>
-    </message>
-    <message>
         <source>Line (L)
 Press and hold Shift to draw a vertical or horizontal line</source>
         <translation>Linha (L)
@@ -631,16 +597,8 @@ Pressionar e manter Shift para desenhar uma seta vertical ou horizontal</transla
         <translation>Gravar</translation>
     </message>
     <message>
-        <source>Clipboard</source>
-        <translation>Área de transferência</translation>
-    </message>
-    <message>
         <source>Pictures</source>
         <translation>Imagens</translation>
-    </message>
-    <message>
-        <source>Folder</source>
-        <translation>Pasta</translation>
     </message>
     <message>
         <source>Set a path on save</source>
@@ -690,6 +648,52 @@ Pressionar e manter Shift para desenhar uma seta vertical ou horizontal</transla
         <source>Extract Text</source>
         <translation>Extrair texto</translation>
     </message>
+    <message>
+        <source>Geometric Tools (R)
+Hold down Shift to draw squares or circles.</source>
+        <translation>Ferramentas geométricas (R)
+Mantenha pressionada a tecla Shift para desenhar quadrados ou círculos.</translation>
+    </message>
+    <message>
+        <source>Save to local</source>
+        <translation>Salvar localmente</translation>
+    </message>
+    <message>
+        <source>Save to Desktop</source>
+        <translation>Salvar no ambiente de trabalho</translation>
+    </message>
+    <message>
+        <source>Save to Pictures</source>
+        <translation>Salvar em imagens</translation>
+    </message>
+    <message>
+        <source>Save to %1</source>
+        <translation>Salvar em %1</translation>
+    </message>
+    <message>
+        <source>Specified Location</source>
+        <translation>Localização especificada</translation>
+    </message>
+    <message>
+        <source>Custom Location</source>
+        <translation>Localização personalizada</translation>
+    </message>
+    <message>
+        <source>Each inquiry</source>
+        <translation>Cada consulta</translation>
+    </message>
+    <message>
+        <source>Update location on save</source>
+        <translation>Atualizar localização ao salvar</translation>
+    </message>
+    <message>
+        <source>Save to desktop</source>
+        <translation>Salvar no ambiente de trabalho</translation>
+    </message>
+    <message>
+        <source>Save to pictures</source>
+        <translation>Salvar em imagens</translation>
+    </message>
 </context>
 <context>
     <name>ToolBarWidget</name>
@@ -698,8 +702,8 @@ Pressionar e manter Shift para desenhar uma seta vertical ou horizontal</transla
         <translation>Fechar (Esc)</translation>
     </message>
     <message>
-        <source>OK (Enter)</source>
-        <translation>Aceitar (Enter)</translation>
+        <source>Copy to clipboard (Enter)</source>
+        <translation>Copiar para a área de transferência (Enter)</translation>
     </message>
 </context>
 <context>
@@ -718,13 +722,6 @@ Pressionar e manter Shift para desenhar uma seta vertical ou horizontal</transla
     <message>
         <source>Exit</source>
         <translation>Sair</translation>
-    </message>
-</context>
-<context>
-    <name>VoiceRecordProcess</name>
-    <message>
-        <source>New recording</source>
-        <translation>Nova gravação</translation>
     </message>
 </context>
 </TS>

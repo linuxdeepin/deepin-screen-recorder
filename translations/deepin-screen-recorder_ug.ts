@@ -1,4 +1,6 @@
-<?xml version="1.0" ?><!DOCTYPE TS><TS version="2.1" language="ug">
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE TS>
+<TS version="2.1" language="ug">
 <context>
     <name>CountdownTooltip</name>
     <message>
@@ -20,17 +22,6 @@ or press the shortcut again to stop recording</source>
     <message>
         <source>Recording</source>
         <translation>ئېكراننى سىنغا ئېلىش</translation>
-    </message>
-</context>
-<context>
-    <name>MainToolWidget</name>
-    <message>
-        <source>Record</source>
-        <translation>سىنغا ئېلىش</translation>
-    </message>
-    <message>
-        <source>Screenshot</source>
-        <translation>رەسىم تۇتۇش</translation>
     </message>
 </context>
 <context>
@@ -94,10 +85,6 @@ or press the shortcut again to stop recording</source>
     <message>
         <source>Screenshot</source>
         <translation>رەسىم تۇتۇش</translation>
-    </message>
-    <message>
-        <source>Screenshot failed.</source>
-        <translation>رەسىم تۇتۇلمىدى</translation>
     </message>
     <message>
         <source>Scrollshot</source>
@@ -451,14 +438,6 @@ Shift نى بېسىپ تۇرسىڭىز تۈز سىزىق سىزغىلى بولى
     </message>
 </context>
 <context>
-    <name>StartTooltip</name>
-    <message>
-        <source>Click or drag to
-select the area to record</source>
-        <translation>چېكىپ ياكى سۈرۈش ئارقىلىق سىنغا ئېلىش رايونىنى تاللاڭ</translation>
-    </message>
-</context>
-<context>
     <name>SubToolWidget</name>
     <message>
         <source>Show keystroke (K)</source>
@@ -573,18 +552,6 @@ select the area to record</source>
         <translation>ۋىدېئو</translation>
     </message>
     <message>
-        <source>Rectangle (R)
-Press and hold Shift to draw a square</source>
-        <translation>تىك تۆت بۇلۇڭ  (R)
-Shift نى بېسىپ تۇرسىڭىز كۋادرات سىزغىلى بولىدۇ</translation>
-    </message>
-    <message>
-        <source>Ellipse (O)
-Press and hold Shift to draw a circle</source>
-        <translation>ئېللىپىس (O)
-Shift نى بېسىپ تۇرسىڭىز چەمبەر سىزغىلى بولىدۇ</translation>
-    </message>
-    <message>
         <source>Line (L)
 Press and hold Shift to draw a vertical or horizontal line</source>
         <translation>تۈز سىزىق (L)
@@ -629,16 +596,8 @@ Shift نى بېسىپ تۇرسىڭىز تىك ۋە توغرىسىغا تۈز ك�
         <translation>سىنغا ئېلىش</translation>
     </message>
     <message>
-        <source>Clipboard</source>
-        <translation>چاپلاش تاختىسى</translation>
-    </message>
-    <message>
         <source>Pictures</source>
         <translation>رەسىم</translation>
-    </message>
-    <message>
-        <source>Folder</source>
-        <translation>بەلگىلەنگەن ئورۇن</translation>
     </message>
     <message>
         <source>Set a path on save</source>
@@ -688,6 +647,52 @@ Shift نى بېسىپ تۇرسىڭىز تىك ۋە توغرىسىغا تۈز ك�
         <source>Extract Text</source>
         <translation>تېكىستنى تونۇتۇش</translation>
     </message>
+    <message>
+        <source>Geometric Tools (R)
+Hold down Shift to draw squares or circles.</source>
+        <translation>گېئومېتىرىيىلىك قورال (R)
+تۆت تەرەپ تەڭ تىك تۆت بۇلۇڭ ياكى چەمبەر سىزىش ئۈچۈن Shift كۇنۇپكىسىنى بېسىپ تۇرۇڭ.</translation>
+    </message>
+    <message>
+        <source>Save to local</source>
+        <translation>لوكال ساقلاش</translation>
+    </message>
+    <message>
+        <source>Save to Desktop</source>
+        <translation>ئۈستەليۈز ساقلاش</translation>
+    </message>
+    <message>
+        <source>Save to Pictures</source>
+        <translation>رەسىم ساقلاش</translation>
+    </message>
+    <message>
+        <source>Save to %1</source>
+        <translation>%1 ساقلاش</translation>
+    </message>
+    <message>
+        <source>Specified Location</source>
+        <translation>بىرلىك ھەرپ</translation>
+    </message>
+    <message>
+        <source>Custom Location</source>
+        <translation>ئاددىيەتلىك ھەرپ</translation>
+    </message>
+    <message>
+        <source>Each inquiry</source>
+        <translation>ھەر قورال</translation>
+    </message>
+    <message>
+        <source>Update location on save</source>
+        <translation>ساقلىغاندا ھەرپنى ئەڭگە قىلىش</translation>
+    </message>
+    <message>
+        <source>Save to desktop</source>
+        <translation>ئۈستەليۈز ساقلاش</translation>
+    </message>
+    <message>
+        <source>Save to pictures</source>
+        <translation>رەسىم ساقلاش</translation>
+    </message>
 </context>
 <context>
     <name>ToolBarWidget</name>
@@ -696,8 +701,8 @@ Shift نى بېسىپ تۇرسىڭىز تىك ۋە توغرىسىغا تۈز ك�
         <translation>تاقاش (Esc)</translation>
     </message>
     <message>
-        <source>OK (Enter)</source>
-        <translation>جەزملەش (Enter)</translation>
+        <source>Copy to clipboard (Enter)</source>
+        <translation>پاستەر ساقلاش (Enter)</translation>
     </message>
 </context>
 <context>
@@ -716,13 +721,6 @@ Shift نى بېسىپ تۇرسىڭىز تىك ۋە توغرىسىغا تۈز ك�
     <message>
         <source>Exit</source>
         <translation>چېكىنىش</translation>
-    </message>
-</context>
-<context>
-    <name>VoiceRecordProcess</name>
-    <message>
-        <source>New recording</source>
-        <translation>يېڭى ھەجىم قىلىش</translation>
     </message>
 </context>
 </TS>

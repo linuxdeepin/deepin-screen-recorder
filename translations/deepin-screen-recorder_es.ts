@@ -1,4 +1,6 @@
-<?xml version="1.0" ?><!DOCTYPE TS><TS version="2.1" language="es">
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE TS>
+<TS version="2.1" language="es">
 <context>
     <name>CountdownTooltip</name>
     <message>
@@ -21,17 +23,6 @@ o haga clic en el icono de la bandeja</translation>
     <message>
         <source>Recording</source>
         <translation>Grabaciones</translation>
-    </message>
-</context>
-<context>
-    <name>MainToolWidget</name>
-    <message>
-        <source>Record</source>
-        <translation>Grabación</translation>
-    </message>
-    <message>
-        <source>Screenshot</source>
-        <translation>Captura de pantalla</translation>
     </message>
 </context>
 <context>
@@ -97,10 +88,6 @@ o haga clic en el icono de la bandeja</translation>
         <translation>Captura de pantalla</translation>
     </message>
     <message>
-        <source>Screenshot failed.</source>
-        <translation>Captura de pantalla fallida</translation>
-    </message>
-    <message>
         <source>Scrollshot</source>
         <translation>Capturar desplazamiento</translation>
     </message>
@@ -110,7 +97,7 @@ o haga clic en el icono de la bandeja</translation>
     </message>
     <message>
         <source>deepin-screen-recorder</source>
-        <translation type="unfinished"/>
+        <translation>deepin-screen-recorder</translation>
     </message>
     <message>
         <source>Open Folder</source>
@@ -118,7 +105,7 @@ o haga clic en el icono de la bandeja</translation>
     </message>
     <message>
         <source>Screenshot finished and copy to clipboard</source>
-        <translation type="unfinished"/>
+        <translation>Captura de pantalla finalizada y copiada al portapapeles</translation>
     </message>
 </context>
 <context>
@@ -452,15 +439,6 @@ Mantenga presionada la tecla Mayús para dibujar una línea recta</translation>
     </message>
 </context>
 <context>
-    <name>StartTooltip</name>
-    <message>
-        <source>Click or drag to
-select the area to record</source>
-        <translation>Haz clic o arrástrala
-para seleccionar el área a grabar.</translation>
-    </message>
-</context>
-<context>
     <name>SubToolWidget</name>
     <message>
         <source>Show keystroke (K)</source>
@@ -575,18 +553,6 @@ para seleccionar el área a grabar.</translation>
         <translation>Videos</translation>
     </message>
     <message>
-        <source>Rectangle (R)
-Press and hold Shift to draw a square</source>
-        <translation>Rectángulo (R)
-Mantenga presionada la tecla Mayús para dibujar un cuadrado</translation>
-    </message>
-    <message>
-        <source>Ellipse (O)
-Press and hold Shift to draw a circle</source>
-        <translation>Ellipse (O)
-Mantenga presionada la tecla Mayús para dibujar un círculo</translation>
-    </message>
-    <message>
         <source>Line (L)
 Press and hold Shift to draw a vertical or horizontal line</source>
         <translation>Línea (L)
@@ -631,16 +597,8 @@ Mantenga presionada la tecla Mayús para dibujar una flecha vertical u horizonta
         <translation>Grabación</translation>
     </message>
     <message>
-        <source>Clipboard</source>
-        <translation>Portapapeles</translation>
-    </message>
-    <message>
         <source>Pictures</source>
         <translation>Imágenes</translation>
-    </message>
-    <message>
-        <source>Folder</source>
-        <translation>Carpeta</translation>
     </message>
     <message>
         <source>Set a path on save</source>
@@ -690,6 +648,52 @@ Mantenga presionada la tecla Mayús para dibujar una flecha vertical u horizonta
         <source>Extract Text</source>
         <translation>Extraer texto</translation>
     </message>
+    <message>
+        <source>Geometric Tools (R)
+Hold down Shift to draw squares or circles.</source>
+        <translation>Herramientas geométricas (R)
+Mantenga presionada la tecla Shift para dibujar cuadrados o círculos.</translation>
+    </message>
+    <message>
+        <source>Save to local</source>
+        <translation>Guardar en local</translation>
+    </message>
+    <message>
+        <source>Save to Desktop</source>
+        <translation>Guardar en escritorio</translation>
+    </message>
+    <message>
+        <source>Save to Pictures</source>
+        <translation>Guardar en imágenes</translation>
+    </message>
+    <message>
+        <source>Save to %1</source>
+        <translation>Guardar en %1</translation>
+    </message>
+    <message>
+        <source>Specified Location</source>
+        <translation>Ubicación especificada</translation>
+    </message>
+    <message>
+        <source>Custom Location</source>
+        <translation>Ubicación personalizada</translation>
+    </message>
+    <message>
+        <source>Each inquiry</source>
+        <translation>Cada consulta</translation>
+    </message>
+    <message>
+        <source>Update location on save</source>
+        <translation>Actualizar ubicación al guardar</translation>
+    </message>
+    <message>
+        <source>Save to desktop</source>
+        <translation>Guardar en escritorio</translation>
+    </message>
+    <message>
+        <source>Save to pictures</source>
+        <translation>Guardar en imágenes</translation>
+    </message>
 </context>
 <context>
     <name>ToolBarWidget</name>
@@ -698,8 +702,8 @@ Mantenga presionada la tecla Mayús para dibujar una flecha vertical u horizonta
         <translation>Cerrar (Esc)</translation>
     </message>
     <message>
-        <source>OK (Enter)</source>
-        <translation>Aceptar (Entrar)</translation>
+        <source>Copy to clipboard (Enter)</source>
+        <translation>Copiar al portapapeles (Enter)</translation>
     </message>
 </context>
 <context>
@@ -718,13 +722,6 @@ Mantenga presionada la tecla Mayús para dibujar una flecha vertical u horizonta
     <message>
         <source>Exit</source>
         <translation>Salir</translation>
-    </message>
-</context>
-<context>
-    <name>VoiceRecordProcess</name>
-    <message>
-        <source>New recording</source>
-        <translation>Nueva grabación</translation>
     </message>
 </context>
 </TS>

@@ -1,4 +1,6 @@
-<?xml version="1.0" ?><!DOCTYPE TS><TS version="2.1" language="hu">
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE TS>
+<TS version="2.1" language="hu">
 <context>
     <name>CountdownTooltip</name>
     <message>
@@ -21,17 +23,6 @@ vagy nyomja le a gyorsbillentyűt ismét a felvétel megállításához</transla
     <message>
         <source>Recording</source>
         <translation>Rögzítés</translation>
-    </message>
-</context>
-<context>
-    <name>MainToolWidget</name>
-    <message>
-        <source>Record</source>
-        <translation>Felvétel</translation>
-    </message>
-    <message>
-        <source>Screenshot</source>
-        <translation>Képernyőkép</translation>
     </message>
 </context>
 <context>
@@ -95,10 +86,6 @@ vagy nyomja le a gyorsbillentyűt ismét a felvétel megállításához</transla
     <message>
         <source>Screenshot</source>
         <translation>Képernyőkép</translation>
-    </message>
-    <message>
-        <source>Screenshot failed.</source>
-        <translation>A képernyőkép készítése sikertelen</translation>
     </message>
     <message>
         <source>Scrollshot</source>
@@ -452,15 +439,6 @@ Egyenes vonal rajzolásához tartsa lenyomva a Shift billentyűt</translation>
     </message>
 </context>
 <context>
-    <name>StartTooltip</name>
-    <message>
-        <source>Click or drag to
-select the area to record</source>
-        <translation>Terület felvételéhez
-használjuk az egeret</translation>
-    </message>
-</context>
-<context>
     <name>SubToolWidget</name>
     <message>
         <source>Show keystroke (K)</source>
@@ -575,18 +553,6 @@ használjuk az egeret</translation>
         <translation>Videók</translation>
     </message>
     <message>
-        <source>Rectangle (R)
-Press and hold Shift to draw a square</source>
-        <translation>Téglalap (R)
-Négyzet rajzolásához tartsa lenyomva a Shift billentyűt</translation>
-    </message>
-    <message>
-        <source>Ellipse (O)
-Press and hold Shift to draw a circle</source>
-        <translation>Ellipszis (O)
-Kör rajzolásához tartsa lenyomva a Shift billentyűt</translation>
-    </message>
-    <message>
         <source>Line (L)
 Press and hold Shift to draw a vertical or horizontal line</source>
         <translation>Vonal (L)
@@ -631,16 +597,8 @@ Függőleges vagy vízszintes nyíl rajzolásához tartsa lenyomva a Shift bille
         <translation>Felvétel</translation>
     </message>
     <message>
-        <source>Clipboard</source>
-        <translation>Vágólap</translation>
-    </message>
-    <message>
         <source>Pictures</source>
         <translation>Képek</translation>
-    </message>
-    <message>
-        <source>Folder</source>
-        <translation>Mappa</translation>
     </message>
     <message>
         <source>Set a path on save</source>
@@ -690,6 +648,52 @@ Függőleges vagy vízszintes nyíl rajzolásához tartsa lenyomva a Shift bille
         <source>Extract Text</source>
         <translation>Szöveg kivonat</translation>
     </message>
+    <message>
+        <source>Geometric Tools (R)
+Hold down Shift to draw squares or circles.</source>
+        <translation>Geometriai eszközök (R)
+Tartsa lenyomva a Shift billentyűt négyzetek vagy körök rajzolásához.</translation>
+    </message>
+    <message>
+        <source>Save to local</source>
+        <translation>Mentés helyi könyvtárba</translation>
+    </message>
+    <message>
+        <source>Save to Desktop</source>
+        <translation>Mentés asztalra</translation>
+    </message>
+    <message>
+        <source>Save to Pictures</source>
+        <translation>Mentés képekhez</translation>
+    </message>
+    <message>
+        <source>Save to %1</source>
+        <translation>Mentés ide: %1</translation>
+    </message>
+    <message>
+        <source>Specified Location</source>
+        <translation>Megadott hely</translation>
+    </message>
+    <message>
+        <source>Custom Location</source>
+        <translation>Egyedi hely</translation>
+    </message>
+    <message>
+        <source>Each inquiry</source>
+        <translation>Minden kérés</translation>
+    </message>
+    <message>
+        <source>Update location on save</source>
+        <translation>Mentéskor frissítse a helyet</translation>
+    </message>
+    <message>
+        <source>Save to desktop</source>
+        <translation>Mentés asztalra</translation>
+    </message>
+    <message>
+        <source>Save to pictures</source>
+        <translation>Mentés képekhez</translation>
+    </message>
 </context>
 <context>
     <name>ToolBarWidget</name>
@@ -698,8 +702,8 @@ Függőleges vagy vízszintes nyíl rajzolásához tartsa lenyomva a Shift bille
         <translation>Bezárás (Esc)</translation>
     </message>
     <message>
-        <source>OK (Enter)</source>
-        <translation>OK (Enter)</translation>
+        <source>Copy to clipboard (Enter)</source>
+        <translation>Másolás a vágólapra (Enter)</translation>
     </message>
 </context>
 <context>
@@ -718,13 +722,6 @@ Függőleges vagy vízszintes nyíl rajzolásához tartsa lenyomva a Shift bille
     <message>
         <source>Exit</source>
         <translation>Kilépés</translation>
-    </message>
-</context>
-<context>
-    <name>VoiceRecordProcess</name>
-    <message>
-        <source>New recording</source>
-        <translation>Új felvétel</translation>
     </message>
 </context>
 </TS>

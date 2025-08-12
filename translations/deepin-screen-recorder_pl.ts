@@ -1,4 +1,6 @@
-<?xml version="1.0" ?><!DOCTYPE TS><TS version="2.1" language="pl">
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE TS>
+<TS version="2.1" language="pl">
 <context>
     <name>CountdownTooltip</name>
     <message>
@@ -21,17 +23,6 @@ lub naciśnij ponownie skrót, aby zatrzymać nagrywanie</translation>
     <message>
         <source>Recording</source>
         <translation>Nagrywanie</translation>
-    </message>
-</context>
-<context>
-    <name>MainToolWidget</name>
-    <message>
-        <source>Record</source>
-        <translation>Nagrywanie</translation>
-    </message>
-    <message>
-        <source>Screenshot</source>
-        <translation>Zrzut ekranu</translation>
     </message>
 </context>
 <context>
@@ -95,10 +86,6 @@ lub naciśnij ponownie skrót, aby zatrzymać nagrywanie</translation>
     <message>
         <source>Screenshot</source>
         <translation>Zrzut ekranu</translation>
-    </message>
-    <message>
-        <source>Screenshot failed.</source>
-        <translation>Zrzut ekranu nie powiódł się.</translation>
     </message>
     <message>
         <source>Scrollshot</source>
@@ -452,15 +439,6 @@ Przytrzymaj Shift, aby rysować prostą linię</translation>
     </message>
 </context>
 <context>
-    <name>StartTooltip</name>
-    <message>
-        <source>Click or drag to
-select the area to record</source>
-        <translation>Kliknij lub przeciągnij do zaznaczonego
-obszaru, aby zacząć nagrywać</translation>
-    </message>
-</context>
-<context>
     <name>SubToolWidget</name>
     <message>
         <source>Show keystroke (K)</source>
@@ -575,18 +553,6 @@ obszaru, aby zacząć nagrywać</translation>
         <translation>Filmy</translation>
     </message>
     <message>
-        <source>Rectangle (R)
-Press and hold Shift to draw a square</source>
-        <translation>Prostokąt (R)
-Przytrzymaj Shift, aby rysować kwadrat</translation>
-    </message>
-    <message>
-        <source>Ellipse (O)
-Press and hold Shift to draw a circle</source>
-        <translation>Elipsa (O)
-Przytrzymaj Shift, aby rysować koło</translation>
-    </message>
-    <message>
         <source>Line (L)
 Press and hold Shift to draw a vertical or horizontal line</source>
         <translation>Linia (L)
@@ -631,16 +597,8 @@ Przytrzymaj Shift, aby rysować pionową lub poziomą strzałkę</translation>
         <translation>Nagrywanie</translation>
     </message>
     <message>
-        <source>Clipboard</source>
-        <translation>Schowek</translation>
-    </message>
-    <message>
         <source>Pictures</source>
         <translation>Zdjęcia</translation>
-    </message>
-    <message>
-        <source>Folder</source>
-        <translation>Folder</translation>
     </message>
     <message>
         <source>Set a path on save</source>
@@ -690,6 +648,52 @@ Przytrzymaj Shift, aby rysować pionową lub poziomą strzałkę</translation>
         <source>Extract Text</source>
         <translation>Wydobądź tekst</translation>
     </message>
+    <message>
+        <source>Geometric Tools (R)
+Hold down Shift to draw squares or circles.</source>
+        <translation>Narzędzia geometryczne (R)
+Przytrzymaj Shift, aby narysować kwadraty lub koła.</translation>
+    </message>
+    <message>
+        <source>Save to local</source>
+        <translation>Zapisz lokalnie</translation>
+    </message>
+    <message>
+        <source>Save to Desktop</source>
+        <translation>Zapisz na pulpicie</translation>
+    </message>
+    <message>
+        <source>Save to Pictures</source>
+        <translation>Zapisz na zdjęcia</translation>
+    </message>
+    <message>
+        <source>Save to %1</source>
+        <translation>Zapisz w %1</translation>
+    </message>
+    <message>
+        <source>Specified Location</source>
+        <translation>Określone miejsce</translation>
+    </message>
+    <message>
+        <source>Custom Location</source>
+        <translation>Niestandardowe miejsce</translation>
+    </message>
+    <message>
+        <source>Each inquiry</source>
+        <translation>Każde zapytanie</translation>
+    </message>
+    <message>
+        <source>Update location on save</source>
+        <translation>Zaktualizuj lokalizację przy zapisie</translation>
+    </message>
+    <message>
+        <source>Save to desktop</source>
+        <translation>Zapisz na pulpicie</translation>
+    </message>
+    <message>
+        <source>Save to pictures</source>
+        <translation>Zapisz na zdjęcia</translation>
+    </message>
 </context>
 <context>
     <name>ToolBarWidget</name>
@@ -698,8 +702,8 @@ Przytrzymaj Shift, aby rysować pionową lub poziomą strzałkę</translation>
         <translation>Zamknij (Esc)</translation>
     </message>
     <message>
-        <source>OK (Enter)</source>
-        <translation>OK (Enter)</translation>
+        <source>Copy to clipboard (Enter)</source>
+        <translation>Skopiuj do schowka (Enter)</translation>
     </message>
 </context>
 <context>
@@ -718,13 +722,6 @@ Przytrzymaj Shift, aby rysować pionową lub poziomą strzałkę</translation>
     <message>
         <source>Exit</source>
         <translation>Wyjdź</translation>
-    </message>
-</context>
-<context>
-    <name>VoiceRecordProcess</name>
-    <message>
-        <source>New recording</source>
-        <translation>Nowe nagranie</translation>
     </message>
 </context>
 </TS>

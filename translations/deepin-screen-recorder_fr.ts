@@ -1,4 +1,6 @@
-<?xml version="1.0" ?><!DOCTYPE TS><TS version="2.1" language="fr">
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE TS>
+<TS version="2.1" language="fr">
 <context>
     <name>CountdownTooltip</name>
     <message>
@@ -21,17 +23,6 @@ ou appuyer à nouveau sur le raccourci pour arrêter l&apos;enregistrement</tran
     <message>
         <source>Recording</source>
         <translation>Enregistrement</translation>
-    </message>
-</context>
-<context>
-    <name>MainToolWidget</name>
-    <message>
-        <source>Record</source>
-        <translation>Enregistrer</translation>
-    </message>
-    <message>
-        <source>Screenshot</source>
-        <translation>Capture d&apos;écran</translation>
     </message>
 </context>
 <context>
@@ -95,10 +86,6 @@ ou appuyer à nouveau sur le raccourci pour arrêter l&apos;enregistrement</tran
     <message>
         <source>Screenshot</source>
         <translation>Capture d&apos;écran</translation>
-    </message>
-    <message>
-        <source>Screenshot failed.</source>
-        <translation>Échec de la capture d&apos;écran.</translation>
     </message>
     <message>
         <source>Scrollshot</source>
@@ -452,15 +439,6 @@ Maintenir la touche Maj enfoncée pour dessiner une ligne</translation>
     </message>
 </context>
 <context>
-    <name>StartTooltip</name>
-    <message>
-        <source>Click or drag to
-select the area to record</source>
-        <translation>Cliquer ou maintenir le bouton de la souris
-afin de sélectionner la zone à enregistrer</translation>
-    </message>
-</context>
-<context>
     <name>SubToolWidget</name>
     <message>
         <source>Show keystroke (K)</source>
@@ -575,18 +553,6 @@ afin de sélectionner la zone à enregistrer</translation>
         <translation>Vidéos</translation>
     </message>
     <message>
-        <source>Rectangle (R)
-Press and hold Shift to draw a square</source>
-        <translation>Rectangle (R)
-Maintenir la touche Maj enfoncée pour dessiner un carré</translation>
-    </message>
-    <message>
-        <source>Ellipse (O)
-Press and hold Shift to draw a circle</source>
-        <translation>Ellipse (O)
-Maintenir la touche Maj enfoncée pour dessiner un cercle</translation>
-    </message>
-    <message>
         <source>Line (L)
 Press and hold Shift to draw a vertical or horizontal line</source>
         <translation>Ligne (L)
@@ -631,16 +597,8 @@ Maintenir la touche Maj enfoncée pour dessiner une flèche verticale ou horizon
         <translation>Enregistrer</translation>
     </message>
     <message>
-        <source>Clipboard</source>
-        <translation>Presse-papiers</translation>
-    </message>
-    <message>
         <source>Pictures</source>
         <translation>Images</translation>
-    </message>
-    <message>
-        <source>Folder</source>
-        <translation>Dossier</translation>
     </message>
     <message>
         <source>Set a path on save</source>
@@ -690,6 +648,52 @@ Maintenir la touche Maj enfoncée pour dessiner une flèche verticale ou horizon
         <source>Extract Text</source>
         <translation>Extraire le texte</translation>
     </message>
+    <message>
+        <source>Geometric Tools (R)
+Hold down Shift to draw squares or circles.</source>
+        <translation>Outils géométriques (R)
+Maintenir la touche Maj enfoncée pour dessiner des carrés ou des cercles.</translation>
+    </message>
+    <message>
+        <source>Save to local</source>
+        <translation>Enregistrer localement</translation>
+    </message>
+    <message>
+        <source>Save to Desktop</source>
+        <translation>Enregistrer sur le bureau</translation>
+    </message>
+    <message>
+        <source>Save to Pictures</source>
+        <translation>Enregistrer dans les images</translation>
+    </message>
+    <message>
+        <source>Save to %1</source>
+        <translation>Enregistrer dans %1</translation>
+    </message>
+    <message>
+        <source>Specified Location</source>
+        <translation>Emplacement spécifié</translation>
+    </message>
+    <message>
+        <source>Custom Location</source>
+        <translation>Emplacement personnalisé</translation>
+    </message>
+    <message>
+        <source>Each inquiry</source>
+        <translation>Chaque demande</translation>
+    </message>
+    <message>
+        <source>Update location on save</source>
+        <translation>Mettre à jour l&apos;emplacement lors de l&apos;enregistrement</translation>
+    </message>
+    <message>
+        <source>Save to desktop</source>
+        <translation>Enregistrer sur le bureau</translation>
+    </message>
+    <message>
+        <source>Save to pictures</source>
+        <translation>Enregistrer dans les images</translation>
+    </message>
 </context>
 <context>
     <name>ToolBarWidget</name>
@@ -698,8 +702,8 @@ Maintenir la touche Maj enfoncée pour dessiner une flèche verticale ou horizon
         <translation>Fermer (Esc)</translation>
     </message>
     <message>
-        <source>OK (Enter)</source>
-        <translation>OK (Entrée)</translation>
+        <source>Copy to clipboard (Enter)</source>
+        <translation>Copier dans le presse-papiers (Entrée)</translation>
     </message>
 </context>
 <context>
@@ -718,13 +722,6 @@ Maintenir la touche Maj enfoncée pour dessiner une flèche verticale ou horizon
     <message>
         <source>Exit</source>
         <translation>Quitter</translation>
-    </message>
-</context>
-<context>
-    <name>VoiceRecordProcess</name>
-    <message>
-        <source>New recording</source>
-        <translation>Nouveau enregistrement</translation>
     </message>
 </context>
 </TS>

@@ -1,4 +1,6 @@
-<?xml version="1.0" ?><!DOCTYPE TS><TS version="2.1" language="ar">
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE TS>
+<TS version="2.1" language="ar">
 <context>
     <name>CountdownTooltip</name>
     <message>
@@ -21,17 +23,6 @@ or press the shortcut again to stop recording</source>
     <message>
         <source>Recording</source>
         <translation>جاري التسجيل</translation>
-    </message>
-</context>
-<context>
-    <name>MainToolWidget</name>
-    <message>
-        <source>Record</source>
-        <translation>تسجيل</translation>
-    </message>
-    <message>
-        <source>Screenshot</source>
-        <translation>لقطة شاشة</translation>
     </message>
 </context>
 <context>
@@ -95,10 +86,6 @@ or press the shortcut again to stop recording</source>
     <message>
         <source>Screenshot</source>
         <translation>لقطة شاشة</translation>
-    </message>
-    <message>
-        <source>Screenshot failed.</source>
-        <translation>فشلت عملية التقاط الشاشة</translation>
     </message>
     <message>
         <source>Scrollshot</source>
@@ -452,15 +439,6 @@ Press and hold Shift to draw a straight line</source>
     </message>
 </context>
 <context>
-    <name>StartTooltip</name>
-    <message>
-        <source>Click or drag to
-select the area to record</source>
-        <translation>انقر أو اسحب ل
-اختيار المنطقة للتسجيل</translation>
-    </message>
-</context>
-<context>
     <name>SubToolWidget</name>
     <message>
         <source>Show keystroke (K)</source>
@@ -575,18 +553,6 @@ select the area to record</source>
         <translation>مقاطع</translation>
     </message>
     <message>
-        <source>Rectangle (R)
-Press and hold Shift to draw a square</source>
-        <translation>مستطيل (R)
-اضغط واسمح للصيغة لرسم مربع</translation>
-    </message>
-    <message>
-        <source>Ellipse (O)
-Press and hold Shift to draw a circle</source>
-        <translation>овал (O)
-اضغط واسمح للصيغة لرسم دائرة</translation>
-    </message>
-    <message>
         <source>Line (L)
 Press and hold Shift to draw a vertical or horizontal line</source>
         <translation>خط (L)
@@ -631,16 +597,8 @@ Press and hold Shift to draw a vertical or horizontal arrow</source>
         <translation>تسجيل</translation>
     </message>
     <message>
-        <source>Clipboard</source>
-        <translation>حافظة</translation>
-    </message>
-    <message>
         <source>Pictures</source>
         <translation>صور</translation>
-    </message>
-    <message>
-        <source>Folder</source>
-        <translation>مجلد</translation>
     </message>
     <message>
         <source>Set a path on save</source>
@@ -690,6 +648,51 @@ Press and hold Shift to draw a vertical or horizontal arrow</source>
         <source>Extract Text</source>
         <translation>استخراج النص</translation>
     </message>
+    <message>
+        <source>Geometric Tools (R)
+Hold down Shift to draw squares or circles.</source>
+        <translation>اضغط واسمح للصيغة لرسم مربعات أو دوائر</translation>
+    </message>
+    <message>
+        <source>Save to local</source>
+        <translation>حفظ إلى الموقع المحلي</translation>
+    </message>
+    <message>
+        <source>Save to Desktop</source>
+        <translation>حفظ إلى المكتب</translation>
+    </message>
+    <message>
+        <source>Save to Pictures</source>
+        <translation>حفظ إلى الصور</translation>
+    </message>
+    <message>
+        <source>Save to %1</source>
+        <translation>حفظ إلى %1</translation>
+    </message>
+    <message>
+        <source>Specified Location</source>
+        <translation>موقع محدد</translation>
+    </message>
+    <message>
+        <source>Custom Location</source>
+        <translation>موقع مخصص</translation>
+    </message>
+    <message>
+        <source>Each inquiry</source>
+        <translation>كل سؤال</translation>
+    </message>
+    <message>
+        <source>Update location on save</source>
+        <translation>تحديث الموقع عند الحفظ</translation>
+    </message>
+    <message>
+        <source>Save to desktop</source>
+        <translation>حفظ إلى المكتب</translation>
+    </message>
+    <message>
+        <source>Save to pictures</source>
+        <translation>حفظ إلى الصور</translation>
+    </message>
 </context>
 <context>
     <name>ToolBarWidget</name>
@@ -698,8 +701,8 @@ Press and hold Shift to draw a vertical or horizontal arrow</source>
         <translation>إغلاق</translation>
     </message>
     <message>
-        <source>OK (Enter)</source>
-        <translation>موافق</translation>
+        <source>Copy to clipboard (Enter)</source>
+        <translation>نسخ إلى الحافظة</translation>
     </message>
 </context>
 <context>
@@ -718,13 +721,6 @@ Press and hold Shift to draw a vertical or horizontal arrow</source>
     <message>
         <source>Exit</source>
         <translation>خروج</translation>
-    </message>
-</context>
-<context>
-    <name>VoiceRecordProcess</name>
-    <message>
-        <source>New recording</source>
-        <translation>تسجيل جديد</translation>
     </message>
 </context>
 </TS>

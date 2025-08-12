@@ -1,10 +1,12 @@
-<?xml version="1.0" ?><!DOCTYPE TS><TS version="2.1" language="ko">
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE TS>
+<TS version="2.1" language="ko">
 <context>
     <name>CountdownTooltip</name>
     <message>
         <source>Click the tray icon 
 or press the shortcut again to stop recording</source>
-        <translation>트레이 아이콘 클릭 
+        <translation>트레이 아이콘 클릭&#xa0;
 또는 단축키를 다시 눌러 녹화를 중지하십시오</translation>
     </message>
     <message>
@@ -21,17 +23,6 @@ or press the shortcut again to stop recording</source>
     <message>
         <source>Recording</source>
         <translation>녹화</translation>
-    </message>
-</context>
-<context>
-    <name>MainToolWidget</name>
-    <message>
-        <source>Record</source>
-        <translation>녹화하기</translation>
-    </message>
-    <message>
-        <source>Screenshot</source>
-        <translation>스크린샷</translation>
     </message>
 </context>
 <context>
@@ -95,10 +86,6 @@ or press the shortcut again to stop recording</source>
     <message>
         <source>Screenshot</source>
         <translation>스크린샷</translation>
-    </message>
-    <message>
-        <source>Screenshot failed.</source>
-        <translation>화면 캡처 실패</translation>
     </message>
     <message>
         <source>Scrollshot</source>
@@ -455,15 +442,6 @@ Press and hold Shift to draw a straight line</source>
     </message>
 </context>
 <context>
-    <name>StartTooltip</name>
-    <message>
-        <source>Click or drag to
-select the area to record</source>
-        <translation>클릭하거나 드래그하여
-녹화할 영역 선택</translation>
-    </message>
-</context>
-<context>
     <name>SubToolWidget</name>
     <message>
         <source>Show keystroke (K)</source>
@@ -578,20 +556,6 @@ select the area to record</source>
         <translation>비디오</translation>
     </message>
     <message>
-        <source>Rectangle (R)
-Press and hold Shift to draw a square</source>
-        <translation>|-
- 사각형 (R)
- Shift를 누르고 놓아 정사각형을 그립니다</translation>
-    </message>
-    <message>
-        <source>Ellipse (O)
-Press and hold Shift to draw a circle</source>
-        <translation>|-
- 타원 (O)
- Shift를 누르고 놓아 원을 그립니다</translation>
-    </message>
-    <message>
         <source>Line (L)
 Press and hold Shift to draw a vertical or horizontal line</source>
         <translation>|-
@@ -637,16 +601,8 @@ Shift를 누르고 놓아 수직 또는 수평 화살표를 그립니다</transl
         <translation>녹화하기</translation>
     </message>
     <message>
-        <source>Clipboard</source>
-        <translation>클립보드</translation>
-    </message>
-    <message>
         <source>Pictures</source>
         <translation>사진</translation>
-    </message>
-    <message>
-        <source>Folder</source>
-        <translation>폴더</translation>
     </message>
     <message>
         <source>Set a path on save</source>
@@ -696,6 +652,52 @@ Shift를 누르고 놓아 수직 또는 수평 화살표를 그립니다</transl
         <source>Extract Text</source>
         <translation>텍스트 추출</translation>
     </message>
+    <message>
+        <source>Geometric Tools (R)
+Hold down Shift to draw squares or circles.</source>
+        <translation>도형 도구 (R)
+Shift 키를 누른 채로 정사각형이나 원을 그립니다.</translation>
+    </message>
+    <message>
+        <source>Save to local</source>
+        <translation>로컬에 저장</translation>
+    </message>
+    <message>
+        <source>Save to Desktop</source>
+        <translation>바탕화면에 저장</translation>
+    </message>
+    <message>
+        <source>Save to Pictures</source>
+        <translation>사진에 저장</translation>
+    </message>
+    <message>
+        <source>Save to %1</source>
+        <translation>%1에 저장</translation>
+    </message>
+    <message>
+        <source>Specified Location</source>
+        <translation>지정된 위치</translation>
+    </message>
+    <message>
+        <source>Custom Location</source>
+        <translation>사용자 지정 위치</translation>
+    </message>
+    <message>
+        <source>Each inquiry</source>
+        <translation>각 조회</translation>
+    </message>
+    <message>
+        <source>Update location on save</source>
+        <translation>저장 시 위치 업데이트</translation>
+    </message>
+    <message>
+        <source>Save to desktop</source>
+        <translation>바탕화면에 저장</translation>
+    </message>
+    <message>
+        <source>Save to pictures</source>
+        <translation>사진에 저장</translation>
+    </message>
 </context>
 <context>
     <name>ToolBarWidget</name>
@@ -704,8 +706,8 @@ Shift를 누르고 놓아 수직 또는 수평 화살표를 그립니다</transl
         <translation>닫기 (Esc)</translation>
     </message>
     <message>
-        <source>OK (Enter)</source>
-        <translation>확인 (Enter)</translation>
+        <source>Copy to clipboard (Enter)</source>
+        <translation>클립보드에 복사 (Enter)</translation>
     </message>
 </context>
 <context>
@@ -724,13 +726,6 @@ Shift를 누르고 놓아 수직 또는 수평 화살표를 그립니다</transl
     <message>
         <source>Exit</source>
         <translation>종료</translation>
-    </message>
-</context>
-<context>
-    <name>VoiceRecordProcess</name>
-    <message>
-        <source>New recording</source>
-        <translation>새 녹화</translation>
     </message>
 </context>
 </TS>

@@ -26,17 +26,6 @@ or press the shortcut again to stop recording</translation>
     </message>
 </context>
 <context>
-    <name>MainToolWidget</name>
-    <message>
-        <source>Record</source>
-        <translation>Record</translation>
-    </message>
-    <message>
-        <source>Screenshot</source>
-        <translation>Screenshot</translation>
-    </message>
-</context>
-<context>
     <name>MainWindow</name>
     <message>
         <source>Screen Capture</source>
@@ -99,10 +88,6 @@ or press the shortcut again to stop recording</translation>
         <translation>Screenshot</translation>
     </message>
     <message>
-        <source>Screenshot failed.</source>
-        <translation>Screenshot failed.</translation>
-    </message>
-    <message>
         <source>Scrollshot</source>
         <translation>Scrollshot</translation>
     </message>
@@ -112,15 +97,15 @@ or press the shortcut again to stop recording</translation>
     </message>
     <message>
         <source>deepin-screen-recorder</source>
-        <translation type="unfinished"></translation>
+        <translation>deepin-screen-recorder</translation>
     </message>
     <message>
         <source>Open Folder</source>
-        <translation type="unfinished">Open Folder</translation>
+        <translation>Open Folder</translation>
     </message>
     <message>
         <source>Screenshot finished and copy to clipboard</source>
-        <translation type="unfinished"></translation>
+        <translation>Screenshot finished and copy to clipboard</translation>
     </message>
 </context>
 <context>
@@ -149,22 +134,22 @@ or press the shortcut again to stop recording</translation>
     <name>QuickPanelWidget</name>
     <message>
         <source>Screenshot</source>
-        <translation type="unfinished">Screenshot</translation>
+        <translation>Screenshot</translation>
     </message>
     <message>
         <source>Record</source>
-        <translation type="unfinished">Record</translation>
+        <translation>Record</translation>
     </message>
 </context>
 <context>
     <name>RecordIconWidget</name>
     <message>
         <source>Screenshot</source>
-        <translation type="unfinished">Screenshot</translation>
+        <translation>Screenshot</translation>
     </message>
     <message>
         <source>Recording</source>
-        <translation type="unfinished">Recording</translation>
+        <translation>Recording</translation>
     </message>
 </context>
 <context>
@@ -403,7 +388,7 @@ or press the shortcut again to stop recording</translation>
     </message>
     <message>
         <source>Arrow</source>
-        <translation type="unfinished">Arrow</translation>
+        <translation>Arrow</translation>
     </message>
 </context>
 <context>
@@ -417,7 +402,7 @@ or press the shortcut again to stop recording</translation>
     <name>ShotStartRecordPlugin</name>
     <message>
         <source>Record</source>
-        <translation type="unfinished">Record</translation>
+        <translation>Record</translation>
     </message>
 </context>
 <context>
@@ -425,275 +410,300 @@ or press the shortcut again to stop recording</translation>
     <message>
         <source>Rectangle
 Press and hold Shift to draw a square</source>
-        <translation type="unfinished"></translation>
+        <translation>Rectangle
+Press and hold Shift to draw a square</translation>
     </message>
     <message>
         <source>Ellipse
 Press and hold Shift to draw a circle</source>
-        <translation type="unfinished"></translation>
+        <translation>Ellipse
+Press and hold Shift to draw a circle</translation>
     </message>
     <message>
         <source>Brush
 Press and hold Shift to draw a straight line</source>
-        <translation type="unfinished"></translation>
+        <translation>Brush
+Press and hold Shift to draw a straight line</translation>
     </message>
     <message>
         <source>Adjust blur strength (Scroll to adjust it)</source>
-        <translation type="unfinished"></translation>
+        <translation>Adjust blur strength (Scroll to adjust it)</translation>
     </message>
     <message>
         <source>Adjust brush size (Scroll to adjust it)</source>
-        <translation type="unfinished"></translation>
+        <translation>Adjust brush size (Scroll to adjust it)</translation>
     </message>
     <message>
         <source>Adjust text size (Scroll to adjust it)</source>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
-    <name>StartTooltip</name>
-    <message>
-        <source>Click or drag to
-select the area to record</source>
-        <translation type="unfinished"></translation>
+        <translation>Adjust text size (Scroll to adjust it)</translation>
     </message>
 </context>
 <context>
     <name>SubToolWidget</name>
     <message>
         <source>Extract Text</source>
-        <translation type="unfinished">Extract Text</translation>
+        <translation>Extract Text</translation>
     </message>
     <message>
         <source>Options</source>
-        <translation type="unfinished">Options</translation>
-    </message>
-    <message>
-        <source>Folder</source>
-        <translation type="unfinished">Folder</translation>
+        <translation>Options</translation>
     </message>
     <message>
         <source>Set a path on save</source>
-        <translation type="unfinished">Set a path on save</translation>
+        <translation>Set a path on save</translation>
     </message>
     <message>
         <source>Save to</source>
-        <translation type="unfinished">Save to</translation>
+        <translation>Save to</translation>
     </message>
     <message>
         <source>Desktop</source>
-        <translation type="unfinished">Desktop</translation>
+        <translation>Desktop</translation>
     </message>
     <message>
         <source>Pictures</source>
-        <translation type="unfinished">Pictures</translation>
-    </message>
-    <message>
-        <source>Clipboard</source>
-        <translation type="unfinished">Clipboard</translation>
+        <translation>Pictures</translation>
     </message>
     <message>
         <source>Format</source>
-        <translation type="unfinished">Format</translation>
+        <translation>Format</translation>
     </message>
     <message>
         <source>PNG</source>
-        <translation type="unfinished">PNG</translation>
+        <translation>PNG</translation>
     </message>
     <message>
         <source>JPG</source>
-        <translation type="unfinished">JPG</translation>
+        <translation>JPG</translation>
     </message>
     <message>
         <source>BMP</source>
-        <translation type="unfinished">BMP</translation>
+        <translation>BMP</translation>
     </message>
     <message>
         <source>Change the path on save</source>
-        <translation type="unfinished">Change the path on save</translation>
+        <translation>Change the path on save</translation>
     </message>
     <message>
         <source>Show keystroke (K)</source>
-        <translation type="unfinished"></translation>
+        <translation>Show keystroke (K)</translation>
     </message>
     <message>
         <source>Hide Keystroke (K)</source>
-        <translation type="unfinished"></translation>
+        <translation>Hide Keystroke (K)</translation>
     </message>
     <message>
         <source>Show Keystroke (K)</source>
-        <translation type="unfinished"></translation>
+        <translation>Show Keystroke (K)</translation>
     </message>
     <message>
         <source>Turn on camera (C)</source>
-        <translation type="unfinished"></translation>
+        <translation>Turn on camera (C)</translation>
     </message>
     <message>
         <source>Turn off camera (C)</source>
-        <translation type="unfinished"></translation>
+        <translation>Turn off camera (C)</translation>
     </message>
     <message>
         <source>Screenshot</source>
-        <translation type="unfinished">Screenshot</translation>
+        <translation>Screenshot</translation>
     </message>
     <message>
         <source>Settings</source>
-        <translation type="unfinished">Settings</translation>
+        <translation>Settings</translation>
     </message>
     <message>
         <source>Settings (F3)</source>
-        <translation type="unfinished"></translation>
+        <translation>Settings (F3)</translation>
     </message>
     <message>
         <source>Format:</source>
-        <translation type="unfinished">Format:</translation>
+        <translation>Format:</translation>
     </message>
     <message>
         <source>GIF</source>
-        <translation type="unfinished">GIF</translation>
+        <translation>GIF</translation>
     </message>
     <message>
         <source>MP4</source>
-        <translation type="unfinished">MP4</translation>
+        <translation>MP4</translation>
     </message>
     <message>
         <source>MKV</source>
-        <translation type="unfinished">MKV</translation>
+        <translation>MKV</translation>
     </message>
     <message>
         <source>webm</source>
-        <translation type="unfinished">webm</translation>
+        <translation>webm</translation>
     </message>
     <message>
         <source>FPS:</source>
-        <translation type="unfinished">FPS:</translation>
+        <translation>FPS:</translation>
     </message>
     <message>
         <source>5 fps</source>
-        <translation type="unfinished">5 fps</translation>
+        <translation>5 fps</translation>
     </message>
     <message>
         <source>10 fps</source>
-        <translation type="unfinished">10 fps</translation>
+        <translation>10 fps</translation>
     </message>
     <message>
         <source>20 fps</source>
-        <translation type="unfinished">20 fps</translation>
+        <translation>20 fps</translation>
     </message>
     <message>
         <source>24 fps</source>
-        <translation type="unfinished">24 fps</translation>
+        <translation>24 fps</translation>
     </message>
     <message>
         <source>30 fps</source>
-        <translation type="unfinished">30 fps</translation>
+        <translation>30 fps</translation>
     </message>
     <message>
         <source>Sound</source>
-        <translation type="unfinished">Sound</translation>
+        <translation>Sound</translation>
     </message>
     <message>
         <source>Microphone</source>
-        <translation type="unfinished">Microphone</translation>
+        <translation>Microphone</translation>
     </message>
     <message>
         <source>System audio</source>
-        <translation type="unfinished"></translation>
+        <translation>System audio</translation>
     </message>
     <message>
         <source>Show pointer</source>
-        <translation type="unfinished">Show pointer</translation>
+        <translation>Show pointer</translation>
     </message>
     <message>
         <source>Show click</source>
-        <translation type="unfinished"></translation>
+        <translation>Show click</translation>
     </message>
     <message>
         <source>Videos</source>
-        <translation type="unfinished">Videos</translation>
-    </message>
-    <message>
-        <source>Rectangle (R)
-Press and hold Shift to draw a square</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Ellipse (O)
-Press and hold Shift to draw a circle</source>
-        <translation type="unfinished"></translation>
+        <translation>Videos</translation>
     </message>
     <message>
         <source>Line (L)
 Press and hold Shift to draw a vertical or horizontal line</source>
-        <translation type="unfinished"></translation>
+        <translation>Line (L)
+Press and hold Shift to draw a vertical or horizontal line</translation>
     </message>
     <message>
         <source>Arrow (X)
 Press and hold Shift to draw a vertical or horizontal arrow</source>
-        <translation type="unfinished"></translation>
+        <translation>Arrow (X)
+Press and hold Shift to draw a vertical or horizontal arrow</translation>
     </message>
     <message>
         <source>Pencil (P)</source>
-        <translation type="unfinished"></translation>
+        <translation>Pencil (P)</translation>
     </message>
     <message>
         <source>Blur (B)</source>
-        <translation type="unfinished"></translation>
+        <translation>Blur (B)</translation>
     </message>
     <message>
         <source>Text (T)</source>
-        <translation type="unfinished"></translation>
+        <translation>Text (T)</translation>
     </message>
     <message>
         <source>Scrollshot (Alt+I）</source>
-        <translation type="unfinished"></translation>
+        <translation>Scrollshot (Alt+I）</translation>
     </message>
     <message>
         <source>Extract text (Alt+O）</source>
-        <translation type="unfinished"></translation>
+        <translation>Extract text (Alt+O）</translation>
     </message>
     <message>
         <source>Pin screenshots (Alt+P）</source>
-        <translation type="unfinished"></translation>
+        <translation>Pin screenshots (Alt+P）</translation>
     </message>
     <message>
         <source>Undo (Ctrl+Z)</source>
-        <translation type="unfinished"></translation>
+        <translation>Undo (Ctrl+Z)</translation>
     </message>
     <message>
         <source>Record</source>
-        <translation type="unfinished">Record</translation>
+        <translation>Record</translation>
     </message>
     <message>
         <source>Border Effects</source>
-        <translation type="unfinished"></translation>
+        <translation>Border Effects</translation>
     </message>
     <message>
         <source>None</source>
-        <translation type="unfinished"></translation>
+        <translation>None</translation>
     </message>
     <message>
         <source>Shadow</source>
-        <translation type="unfinished"></translation>
+        <translation>Shadow</translation>
     </message>
     <message>
         <source>Border</source>
-        <translation type="unfinished"></translation>
+        <translation>Border</translation>
     </message>
     <message>
         <source>Device</source>
-        <translation type="unfinished"></translation>
+        <translation>Device</translation>
+    </message>
+    <message>
+        <source>Geometric Tools (R)
+Hold down Shift to draw squares or circles.</source>
+        <translation>Geometric Tools (R)
+Hold down Shift to draw squares or circles.</translation>
+    </message>
+    <message>
+        <source>Save to local</source>
+        <translation>Save to local</translation>
+    </message>
+    <message>
+        <source>Save to Desktop</source>
+        <translation>Save to Desktop</translation>
+    </message>
+    <message>
+        <source>Save to Pictures</source>
+        <translation>Save to Pictures</translation>
+    </message>
+    <message>
+        <source>Save to %1</source>
+        <translation>Save to %1</translation>
+    </message>
+    <message>
+        <source>Specified Location</source>
+        <translation>Specified Location</translation>
+    </message>
+    <message>
+        <source>Custom Location</source>
+        <translation>Custom Location</translation>
+    </message>
+    <message>
+        <source>Each inquiry</source>
+        <translation>Each inquiry</translation>
+    </message>
+    <message>
+        <source>Update location on save</source>
+        <translation>Update location on save</translation>
+    </message>
+    <message>
+        <source>Save to desktop</source>
+        <translation>Save to desktop</translation>
+    </message>
+    <message>
+        <source>Save to pictures</source>
+        <translation>Save to pictures</translation>
     </message>
 </context>
 <context>
     <name>ToolBarWidget</name>
     <message>
         <source>Close (Esc)</source>
-        <translation type="unfinished"></translation>
+        <translation>Close (Esc)</translation>
     </message>
     <message>
-        <source>OK (Enter)</source>
-        <translation type="unfinished"></translation>
+        <source>Copy to clipboard (Enter)</source>
+        <translation>Copy to clipboard (Enter)</translation>
     </message>
 </context>
 <context>
@@ -712,13 +722,6 @@ Press and hold Shift to draw a vertical or horizontal arrow</source>
     <message>
         <source>Exit</source>
         <translation>Exit</translation>
-    </message>
-</context>
-<context>
-    <name>VoiceRecordProcess</name>
-    <message>
-        <source>New recording</source>
-        <translation type="unfinished"></translation>
     </message>
 </context>
 </TS>

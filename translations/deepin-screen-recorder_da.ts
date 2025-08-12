@@ -1,4 +1,6 @@
-<?xml version="1.0" ?><!DOCTYPE TS><TS version="2.1" language="da">
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE TS>
+<TS version="2.1" language="da">
 <context>
     <name>CountdownTooltip</name>
     <message>
@@ -21,17 +23,6 @@ eller tryk på genvejen igen, for at stoppe optagelse</translation>
     <message>
         <source>Recording</source>
         <translation>Optagelse</translation>
-    </message>
-</context>
-<context>
-    <name>MainToolWidget</name>
-    <message>
-        <source>Record</source>
-        <translation>Optag</translation>
-    </message>
-    <message>
-        <source>Screenshot</source>
-        <translation>Skærmbillede</translation>
     </message>
 </context>
 <context>
@@ -95,10 +86,6 @@ eller tryk på genvejen igen, for at stoppe optagelse</translation>
     <message>
         <source>Screenshot</source>
         <translation>Skærmbillede</translation>
-    </message>
-    <message>
-        <source>Screenshot failed.</source>
-        <translation>Skærmbilledet fejler.</translation>
     </message>
     <message>
         <source>Scrollshot</source>
@@ -452,15 +439,6 @@ Hold Shift nede for at tegne en ret linje</translation>
     </message>
 </context>
 <context>
-    <name>StartTooltip</name>
-    <message>
-        <source>Click or drag to
-select the area to record</source>
-        <translation>Klik eller træk for at
-vælge område som skal optages</translation>
-    </message>
-</context>
-<context>
     <name>SubToolWidget</name>
     <message>
         <source>Show keystroke (K)</source>
@@ -575,18 +553,6 @@ vælge område som skal optages</translation>
         <translation>Videos</translation>
     </message>
     <message>
-        <source>Rectangle (R)
-Press and hold Shift to draw a square</source>
-        <translation>Rektangel (R)
-Hold Shift nede for at tegne et kvadrat</translation>
-    </message>
-    <message>
-        <source>Ellipse (O)
-Press and hold Shift to draw a circle</source>
-        <translation>Ellipse (O)
-Hold Shift nede for at tegne en cirkel</translation>
-    </message>
-    <message>
         <source>Line (L)
 Press and hold Shift to draw a vertical or horizontal line</source>
         <translation>Linje (L)
@@ -631,16 +597,8 @@ Tryk og hold Shift for at tegne en vertikal eller horisontal pil</translation>
         <translation>Optag</translation>
     </message>
     <message>
-        <source>Clipboard</source>
-        <translation>Udskærsplade</translation>
-    </message>
-    <message>
         <source>Pictures</source>
         <translation>Billeder</translation>
-    </message>
-    <message>
-        <source>Folder</source>
-        <translation>Mappe</translation>
     </message>
     <message>
         <source>Set a path on save</source>
@@ -690,6 +648,52 @@ Tryk og hold Shift for at tegne en vertikal eller horisontal pil</translation>
         <source>Extract Text</source>
         <translation>Udtræk tekst</translation>
     </message>
+    <message>
+        <source>Geometric Tools (R)
+Hold down Shift to draw squares or circles.</source>
+        <translation>Geometriske værktøjer (R)
+Hold Shift nede for at tegne kvadrater eller cirkler.</translation>
+    </message>
+    <message>
+        <source>Save to local</source>
+        <translation>Gem til lokal</translation>
+    </message>
+    <message>
+        <source>Save to Desktop</source>
+        <translation>Gem til skrivebord</translation>
+    </message>
+    <message>
+        <source>Save to Pictures</source>
+        <translation>Gem til billeder</translation>
+    </message>
+    <message>
+        <source>Save to %1</source>
+        <translation>Gem til %1</translation>
+    </message>
+    <message>
+        <source>Specified Location</source>
+        <translation>Angivet sted</translation>
+    </message>
+    <message>
+        <source>Custom Location</source>
+        <translation>Tilpasset sted</translation>
+    </message>
+    <message>
+        <source>Each inquiry</source>
+        <translation>Hver spørgsmål</translation>
+    </message>
+    <message>
+        <source>Update location on save</source>
+        <translation>Opdater sted ved gemning</translation>
+    </message>
+    <message>
+        <source>Save to desktop</source>
+        <translation>Gem til skrivebord</translation>
+    </message>
+    <message>
+        <source>Save to pictures</source>
+        <translation>Gem til billeder</translation>
+    </message>
 </context>
 <context>
     <name>ToolBarWidget</name>
@@ -698,8 +702,8 @@ Tryk og hold Shift for at tegne en vertikal eller horisontal pil</translation>
         <translation>Luk (Esc)</translation>
     </message>
     <message>
-        <source>OK (Enter)</source>
-        <translation>OK (Enter)</translation>
+        <source>Copy to clipboard (Enter)</source>
+        <translation>Kopier til udklipsholder (Enter)</translation>
     </message>
 </context>
 <context>
@@ -718,13 +722,6 @@ Tryk og hold Shift for at tegne en vertikal eller horisontal pil</translation>
     <message>
         <source>Exit</source>
         <translation>Afslut</translation>
-    </message>
-</context>
-<context>
-    <name>VoiceRecordProcess</name>
-    <message>
-        <source>New recording</source>
-        <translation>Ny optagelse</translation>
     </message>
 </context>
 </TS>

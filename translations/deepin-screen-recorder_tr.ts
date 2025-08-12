@@ -1,4 +1,6 @@
-<?xml version="1.0" ?><!DOCTYPE TS><TS version="2.1" language="tr">
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE TS>
+<TS version="2.1" language="tr">
 <context>
     <name>CountdownTooltip</name>
     <message>
@@ -21,17 +23,6 @@ tepsi simgesine tıklayın ya da kısayola yeniden basın</translation>
     <message>
         <source>Recording</source>
         <translation>Kaydediyor</translation>
-    </message>
-</context>
-<context>
-    <name>MainToolWidget</name>
-    <message>
-        <source>Record</source>
-        <translation>Kayıt</translation>
-    </message>
-    <message>
-        <source>Screenshot</source>
-        <translation>Ekran Görüntüsü</translation>
     </message>
 </context>
 <context>
@@ -95,10 +86,6 @@ tepsi simgesine tıklayın ya da kısayola yeniden basın</translation>
     <message>
         <source>Screenshot</source>
         <translation>Ekran Görüntüsü</translation>
-    </message>
-    <message>
-        <source>Screenshot failed.</source>
-        <translation>Ekran görüntüsü başarısız oldu.</translation>
     </message>
     <message>
         <source>Scrollshot</source>
@@ -452,15 +439,6 @@ Düz bir çizgi çizmek için Shift tuşunu basılı tutun</translation>
     </message>
 </context>
 <context>
-    <name>StartTooltip</name>
-    <message>
-        <source>Click or drag to
-select the area to record</source>
-        <translation>Kaydedilecek alanı
-seçmek için tıklayın ya da sürükleyin</translation>
-    </message>
-</context>
-<context>
     <name>SubToolWidget</name>
     <message>
         <source>Show keystroke (K)</source>
@@ -575,18 +553,6 @@ seçmek için tıklayın ya da sürükleyin</translation>
         <translation>Videoalar</translation>
     </message>
     <message>
-        <source>Rectangle (R)
-Press and hold Shift to draw a square</source>
-        <translation>Dikdörtgen (R)
-Kare çizmek için Shift tuşunu basılı tutun</translation>
-    </message>
-    <message>
-        <source>Ellipse (O)
-Press and hold Shift to draw a circle</source>
-        <translation>Elips (O)
-Bir daire çizmek için Shift tuşunu basılı tutun</translation>
-    </message>
-    <message>
         <source>Line (L)
 Press and hold Shift to draw a vertical or horizontal line</source>
         <translation>Çizgi (L)
@@ -631,16 +597,8 @@ Dikey veya yatay ok çizmek için Shift tuşunu basılı tutun</translation>
         <translation>Kayıt</translation>
     </message>
     <message>
-        <source>Clipboard</source>
-        <translation>Pano</translation>
-    </message>
-    <message>
         <source>Pictures</source>
         <translation>Resimler</translation>
-    </message>
-    <message>
-        <source>Folder</source>
-        <translation>Klasör</translation>
     </message>
     <message>
         <source>Set a path on save</source>
@@ -690,6 +648,52 @@ Dikey veya yatay ok çizmek için Shift tuşunu basılı tutun</translation>
         <source>Extract Text</source>
         <translation>Metni Çıkar</translation>
     </message>
+    <message>
+        <source>Geometric Tools (R)
+Hold down Shift to draw squares or circles.</source>
+        <translation>Geometrik Araçlar (R)
+Kare veya daire çizmek için Shift tuşunu basılı tutun.</translation>
+    </message>
+    <message>
+        <source>Save to local</source>
+        <translation>Yerel olarak kaydet</translation>
+    </message>
+    <message>
+        <source>Save to Desktop</source>
+        <translation>Masaüstüne kaydet</translation>
+    </message>
+    <message>
+        <source>Save to Pictures</source>
+        <translation>Resimlere kaydet</translation>
+    </message>
+    <message>
+        <source>Save to %1</source>
+        <translation>%1&apos;e kaydet</translation>
+    </message>
+    <message>
+        <source>Specified Location</source>
+        <translation>Belirtilen Konum</translation>
+    </message>
+    <message>
+        <source>Custom Location</source>
+        <translation>Özel Konum</translation>
+    </message>
+    <message>
+        <source>Each inquiry</source>
+        <translation>Her sorgulama</translation>
+    </message>
+    <message>
+        <source>Update location on save</source>
+        <translation>Kaydet sırasında konumu güncelle</translation>
+    </message>
+    <message>
+        <source>Save to desktop</source>
+        <translation>Masaüstüne kaydet</translation>
+    </message>
+    <message>
+        <source>Save to pictures</source>
+        <translation>Resimlere kaydet</translation>
+    </message>
 </context>
 <context>
     <name>ToolBarWidget</name>
@@ -698,8 +702,8 @@ Dikey veya yatay ok çizmek için Shift tuşunu basılı tutun</translation>
         <translation>Kapat (Esc)</translation>
     </message>
     <message>
-        <source>OK (Enter)</source>
-        <translation>Tamam (Enter)</translation>
+        <source>Copy to clipboard (Enter)</source>
+        <translation>Panoya kopyala (Enter)</translation>
     </message>
 </context>
 <context>
@@ -718,13 +722,6 @@ Dikey veya yatay ok çizmek için Shift tuşunu basılı tutun</translation>
     <message>
         <source>Exit</source>
         <translation>Çıkış</translation>
-    </message>
-</context>
-<context>
-    <name>VoiceRecordProcess</name>
-    <message>
-        <source>New recording</source>
-        <translation>Yeni kayıt</translation>
     </message>
 </context>
 </TS>

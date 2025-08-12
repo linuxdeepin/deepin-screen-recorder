@@ -1,4 +1,6 @@
-<?xml version="1.0" ?><!DOCTYPE TS><TS version="2.1" language="ms">
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE TS>
+<TS version="2.1" language="ms">
 <context>
     <name>CountdownTooltip</name>
     <message>
@@ -21,17 +23,6 @@ atau klik pintasan sekali lagi untuk hentikan rakaman</translation>
     <message>
         <source>Recording</source>
         <translation>Rakaman</translation>
-    </message>
-</context>
-<context>
-    <name>MainToolWidget</name>
-    <message>
-        <source>Record</source>
-        <translation>Rakam</translation>
-    </message>
-    <message>
-        <source>Screenshot</source>
-        <translation>Tangkap Layar</translation>
     </message>
 </context>
 <context>
@@ -95,10 +86,6 @@ atau klik pintasan sekali lagi untuk hentikan rakaman</translation>
     <message>
         <source>Screenshot</source>
         <translation>Tangkap Layar</translation>
-    </message>
-    <message>
-        <source>Screenshot failed.</source>
-        <translation>Gagal ditangkap layar.</translation>
     </message>
     <message>
         <source>Scrollshot</source>
@@ -452,15 +439,6 @@ Tekan dan tahan kekunci Shift untuk membentuk satu garisan lurus</translation>
     </message>
 </context>
 <context>
-    <name>StartTooltip</name>
-    <message>
-        <source>Click or drag to
-select the area to record</source>
-        <translation>Klik atau seret untuk
-pilih kawasan rakaman</translation>
-    </message>
-</context>
-<context>
     <name>SubToolWidget</name>
     <message>
         <source>Show keystroke (K)</source>
@@ -575,18 +553,6 @@ pilih kawasan rakaman</translation>
         <translation>Video</translation>
     </message>
     <message>
-        <source>Rectangle (R)
-Press and hold Shift to draw a square</source>
-        <translation>Segiempat (R)
-Tekan dan tahan kekunci Shift untuk melukis sebuah segiempat</translation>
-    </message>
-    <message>
-        <source>Ellipse (O)
-Press and hold Shift to draw a circle</source>
-        <translation>Elips (O)
-Tekan dan tahan kekunci Shift untuk melukis sebuah bulatan</translation>
-    </message>
-    <message>
         <source>Line (L)
 Press and hold Shift to draw a vertical or horizontal line</source>
         <translation>Garisan (L)
@@ -631,16 +597,8 @@ Tekan dan tahan kekunci Shift untuk melukis anak panah menegak atau mengufuk</tr
         <translation>Rakam</translation>
     </message>
     <message>
-        <source>Clipboard</source>
-        <translation>Papan keratan</translation>
-    </message>
-    <message>
         <source>Pictures</source>
         <translation>Gambar</translation>
-    </message>
-    <message>
-        <source>Folder</source>
-        <translation>Folder</translation>
     </message>
     <message>
         <source>Set a path on save</source>
@@ -690,6 +648,52 @@ Tekan dan tahan kekunci Shift untuk melukis anak panah menegak atau mengufuk</tr
         <source>Extract Text</source>
         <translation>Ekstrak Teks</translation>
     </message>
+    <message>
+        <source>Geometric Tools (R)
+Hold down Shift to draw squares or circles.</source>
+        <translation>Alat Geometri (R)
+Tahan Shift untuk melukis segi empat sama atau bulatan.</translation>
+    </message>
+    <message>
+        <source>Save to local</source>
+        <translation>Simpan ke lokal</translation>
+    </message>
+    <message>
+        <source>Save to Desktop</source>
+        <translation>Simpan ke Desktop</translation>
+    </message>
+    <message>
+        <source>Save to Pictures</source>
+        <translation>Simpan ke Gambar</translation>
+    </message>
+    <message>
+        <source>Save to %1</source>
+        <translation>Simpan ke %1</translation>
+    </message>
+    <message>
+        <source>Specified Location</source>
+        <translation>Lokasi Tertentu</translation>
+    </message>
+    <message>
+        <source>Custom Location</source>
+        <translation>Lokasi Pilihan</translation>
+    </message>
+    <message>
+        <source>Each inquiry</source>
+        <translation>Setiap pertanyaan</translation>
+    </message>
+    <message>
+        <source>Update location on save</source>
+        <translation>Kemaskini lokasi semasa simpan</translation>
+    </message>
+    <message>
+        <source>Save to desktop</source>
+        <translation>Simpan ke Desktop</translation>
+    </message>
+    <message>
+        <source>Save to pictures</source>
+        <translation>Simpan ke Gambar</translation>
+    </message>
 </context>
 <context>
     <name>ToolBarWidget</name>
@@ -698,8 +702,8 @@ Tekan dan tahan kekunci Shift untuk melukis anak panah menegak atau mengufuk</tr
         <translation>Tutup (Esc)</translation>
     </message>
     <message>
-        <source>OK (Enter)</source>
-        <translation>OK (Enter)</translation>
+        <source>Copy to clipboard (Enter)</source>
+        <translation>Salin ke papan klip (Enter)</translation>
     </message>
 </context>
 <context>
@@ -718,13 +722,6 @@ Tekan dan tahan kekunci Shift untuk melukis anak panah menegak atau mengufuk</tr
     <message>
         <source>Exit</source>
         <translation>Keluar</translation>
-    </message>
-</context>
-<context>
-    <name>VoiceRecordProcess</name>
-    <message>
-        <source>New recording</source>
-        <translation>Rakaman baharu</translation>
     </message>
 </context>
 </TS>
