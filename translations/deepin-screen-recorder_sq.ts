@@ -1,4 +1,6 @@
-<?xml version="1.0" ?><!DOCTYPE TS><TS version="2.1" language="sq">
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE TS>
+<TS version="2.1" language="sq">
 <context>
     <name>CountdownTooltip</name>
     <message>
@@ -21,17 +23,6 @@ klikoni ikonën e panelit, ose rishtypni shkurtoren</translation>
     <message>
         <source>Recording</source>
         <translation>Regjistrim</translation>
-    </message>
-</context>
-<context>
-    <name>MainToolWidget</name>
-    <message>
-        <source>Record</source>
-        <translation>Regjistroje</translation>
-    </message>
-    <message>
-        <source>Screenshot</source>
-        <translation>Foto ekrani</translation>
     </message>
 </context>
 <context>
@@ -97,12 +88,8 @@ klikoni ikonën e panelit, ose rishtypni shkurtoren</translation>
         <translation>Foto ekrani</translation>
     </message>
     <message>
-        <source>Screenshot failed.</source>
-        <translation>Fotografimi i ekranit dështoi.</translation>
-    </message>
-    <message>
         <source>Scrollshot</source>
-        <translation type="unfinished"/>
+        <translation>Foto ekrani me rrëshqitje</translation>
     </message>
     <message>
         <source>Pin Screenshots</source>
@@ -110,7 +97,7 @@ klikoni ikonën e panelit, ose rishtypni shkurtoren</translation>
     </message>
     <message>
         <source>deepin-screen-recorder</source>
-        <translation type="unfinished"/>
+        <translation>deepin-screen-recorder</translation>
     </message>
     <message>
         <source>Open Folder</source>
@@ -118,7 +105,7 @@ klikoni ikonën e panelit, ose rishtypni shkurtoren</translation>
     </message>
     <message>
         <source>Screenshot finished and copy to clipboard</source>
-        <translation type="unfinished"/>
+        <translation>Fotoja e ekranit u bë dhe u kopjua te papastër</translation>
     </message>
 </context>
 <context>
@@ -385,7 +372,7 @@ klikoni ikonën e panelit, ose rishtypni shkurtoren</translation>
     </message>
     <message>
         <source>Scrollshot</source>
-        <translation type="unfinished"/>
+        <translation>Foto ekrani me rrëshqitje</translation>
     </message>
     <message>
         <source>Pin screenshots</source>
@@ -397,7 +384,7 @@ klikoni ikonën e panelit, ose rishtypni shkurtoren</translation>
     </message>
     <message>
         <source>Start scrollshot</source>
-        <translation type="unfinished"/>
+        <translation>Fillo foto ekrani me rrëshqitje</translation>
     </message>
     <message>
         <source>Arrow</source>
@@ -449,15 +436,6 @@ Shtypni dhe mbani të shtypur tastin Shift që të vizatohet një vijë e drejt�
     <message>
         <source>Adjust text size (Scroll to adjust it)</source>
         <translation>Rregulloni madhësi teksti (Për ta rregulluar, rrëshqitni)</translation>
-    </message>
-</context>
-<context>
-    <name>StartTooltip</name>
-    <message>
-        <source>Click or drag to
-select the area to record</source>
-        <translation>Që të përzgjidhet zona për
-regjistrim, klikoni, ose tërhiqeni</translation>
     </message>
 </context>
 <context>
@@ -575,18 +553,6 @@ regjistrim, klikoni, ose tërhiqeni</translation>
         <translation>Video</translation>
     </message>
     <message>
-        <source>Rectangle (R)
-Press and hold Shift to draw a square</source>
-        <translation>Drejtkëndësh (R)
-Shtypni dhe mbani të shtypur tastin Shift që të vizatohet një katror</translation>
-    </message>
-    <message>
-        <source>Ellipse (O)
-Press and hold Shift to draw a circle</source>
-        <translation>Elips (O)
-Shtypni dhe mbani të shtypur tastin Shift që të vizatohet një rreth</translation>
-    </message>
-    <message>
         <source>Line (L)
 Press and hold Shift to draw a vertical or horizontal line</source>
         <translation>Vijë (L)
@@ -612,7 +578,7 @@ Shtypni dhe mbani të shtypur tastin Shift, që të vizatohet një shigjetë ver
     </message>
     <message>
         <source>Scrollshot (Alt+I）</source>
-        <translation type="unfinished"/>
+        <translation>Foto ekrani me rrëshqitje (Alt+I）</translation>
     </message>
     <message>
         <source>Extract text (Alt+O）</source>
@@ -631,16 +597,8 @@ Shtypni dhe mbani të shtypur tastin Shift, që të vizatohet një shigjetë ver
         <translation>Regjistro</translation>
     </message>
     <message>
-        <source>Clipboard</source>
-        <translation>E papastër</translation>
-    </message>
-    <message>
         <source>Pictures</source>
         <translation>Foto</translation>
-    </message>
-    <message>
-        <source>Folder</source>
-        <translation>Dosje</translation>
     </message>
     <message>
         <source>Set a path on save</source>
@@ -690,6 +648,52 @@ Shtypni dhe mbani të shtypur tastin Shift, që të vizatohet një shigjetë ver
         <source>Extract Text</source>
         <translation>Përfto Tekst</translation>
     </message>
+    <message>
+        <source>Geometric Tools (R)
+Hold down Shift to draw squares or circles.</source>
+        <translation>Mjete Geometrike (R)
+Mbani të shtypur tastin Shift që të vizatohet një drejtkëndësh ose një rreth.</translation>
+    </message>
+    <message>
+        <source>Save to local</source>
+        <translation>Ruaje te lokali</translation>
+    </message>
+    <message>
+        <source>Save to Desktop</source>
+        <translation>Ruaje te Desktop</translation>
+    </message>
+    <message>
+        <source>Save to Pictures</source>
+        <translation>Ruaje te Foto</translation>
+    </message>
+    <message>
+        <source>Save to %1</source>
+        <translation>Ruaje te %1</translation>
+    </message>
+    <message>
+        <source>Specified Location</source>
+        <translation>Vendndodhje Specifikuar</translation>
+    </message>
+    <message>
+        <source>Custom Location</source>
+        <translation>Vendndodhje Përzgjedhje</translation>
+    </message>
+    <message>
+        <source>Each inquiry</source>
+        <translation>Cdo pyetje</translation>
+    </message>
+    <message>
+        <source>Update location on save</source>
+        <translation>Përditëso vendndodhjen gjatë ruajtjes</translation>
+    </message>
+    <message>
+        <source>Save to desktop</source>
+        <translation>Ruaje te Desktop</translation>
+    </message>
+    <message>
+        <source>Save to pictures</source>
+        <translation>Ruaje te Foto</translation>
+    </message>
 </context>
 <context>
     <name>ToolBarWidget</name>
@@ -698,8 +702,8 @@ Shtypni dhe mbani të shtypur tastin Shift, që të vizatohet një shigjetë ver
         <translation>Mbylle (Esc)</translation>
     </message>
     <message>
-        <source>OK (Enter)</source>
-        <translation>OK (Enter)</translation>
+        <source>Copy to clipboard (Enter)</source>
+        <translation>Kopjo te papastër (Enter)</translation>
     </message>
 </context>
 <context>
@@ -718,13 +722,6 @@ Shtypni dhe mbani të shtypur tastin Shift, që të vizatohet një shigjetë ver
     <message>
         <source>Exit</source>
         <translation>Dil</translation>
-    </message>
-</context>
-<context>
-    <name>VoiceRecordProcess</name>
-    <message>
-        <source>New recording</source>
-        <translation>Regjistrim i ri</translation>
     </message>
 </context>
 </TS>

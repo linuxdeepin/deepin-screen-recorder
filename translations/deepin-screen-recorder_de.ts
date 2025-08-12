@@ -1,4 +1,6 @@
-<?xml version="1.0" ?><!DOCTYPE TS><TS version="2.1" language="de">
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE TS>
+<TS version="2.1" language="de">
 <context>
     <name>CountdownTooltip</name>
     <message>
@@ -21,17 +23,6 @@ oder drücken Sie die Tastenkombination erneut, um die Aufnahme zu stoppen</tran
     <message>
         <source>Recording</source>
         <translation>Wird aufgenommen</translation>
-    </message>
-</context>
-<context>
-    <name>MainToolWidget</name>
-    <message>
-        <source>Record</source>
-        <translation>Aufnehmen</translation>
-    </message>
-    <message>
-        <source>Screenshot</source>
-        <translation>Bildschirmaufnahme</translation>
     </message>
 </context>
 <context>
@@ -97,10 +88,6 @@ oder drücken Sie die Tastenkombination erneut, um die Aufnahme zu stoppen</tran
         <translation>Bildschirmaufnahme</translation>
     </message>
     <message>
-        <source>Screenshot failed.</source>
-        <translation>Bildschirmaufnahme fehlgeschlagen.</translation>
-    </message>
-    <message>
         <source>Scrollshot</source>
         <translation>Bildlaufaufnahme</translation>
     </message>
@@ -110,7 +97,7 @@ oder drücken Sie die Tastenkombination erneut, um die Aufnahme zu stoppen</tran
     </message>
     <message>
         <source>deepin-screen-recorder</source>
-        <translation type="unfinished"/>
+        <translation>Deepin Bildschirmaufnahme</translation>
     </message>
     <message>
         <source>Open Folder</source>
@@ -118,7 +105,7 @@ oder drücken Sie die Tastenkombination erneut, um die Aufnahme zu stoppen</tran
     </message>
     <message>
         <source>Screenshot finished and copy to clipboard</source>
-        <translation type="unfinished"/>
+        <translation>Bildschirmaufnahme beendet und in die Zwischenablage kopiert</translation>
     </message>
 </context>
 <context>
@@ -452,14 +439,6 @@ Umschalttaste gedrückt halten, um eine gerade Linie zu zeichnen</translation>
     </message>
 </context>
 <context>
-    <name>StartTooltip</name>
-    <message>
-        <source>Click or drag to
-select the area to record</source>
-        <translation>Klicken oder ziehen, um den Bildschirmbereich auszuwählen, der aufgenommen wird.</translation>
-    </message>
-</context>
-<context>
     <name>SubToolWidget</name>
     <message>
         <source>Show keystroke (K)</source>
@@ -574,18 +553,6 @@ select the area to record</source>
         <translation>Videos</translation>
     </message>
     <message>
-        <source>Rectangle (R)
-Press and hold Shift to draw a square</source>
-        <translation>Rechteck (R)
-Umschalttaste gedrückt halten, um ein Rechteck zu zeichnen</translation>
-    </message>
-    <message>
-        <source>Ellipse (O)
-Press and hold Shift to draw a circle</source>
-        <translation>Ellipse (O)
-Umschalttaste gedrückt halten, um einen Kreis zu zeichnen</translation>
-    </message>
-    <message>
         <source>Line (L)
 Press and hold Shift to draw a vertical or horizontal line</source>
         <translation>Linie (L)
@@ -630,16 +597,8 @@ Umschalttaste gedrückt halten, um einen vertikalen oder horizontalen Pfeil zu z
         <translation>Aufnehmen</translation>
     </message>
     <message>
-        <source>Clipboard</source>
-        <translation>Zwischenablage</translation>
-    </message>
-    <message>
         <source>Pictures</source>
         <translation>Bilder</translation>
-    </message>
-    <message>
-        <source>Folder</source>
-        <translation>Ordner</translation>
     </message>
     <message>
         <source>Set a path on save</source>
@@ -689,6 +648,52 @@ Umschalttaste gedrückt halten, um einen vertikalen oder horizontalen Pfeil zu z
         <source>Extract Text</source>
         <translation>Text extrahieren</translation>
     </message>
+    <message>
+        <source>Geometric Tools (R)
+Hold down Shift to draw squares or circles.</source>
+        <translation>Geometrische Werkzeuge (R)
+Halten Sie die Umschalttaste gedrückt, um Quadrate oder Kreise zu zeichnen.</translation>
+    </message>
+    <message>
+        <source>Save to local</source>
+        <translation>Lokal speichern</translation>
+    </message>
+    <message>
+        <source>Save to Desktop</source>
+        <translation>Auf das Desktop-Verzeichnis speichern</translation>
+    </message>
+    <message>
+        <source>Save to Pictures</source>
+        <translation>Auf das Bildverzeichnis speichern</translation>
+    </message>
+    <message>
+        <source>Save to %1</source>
+        <translation>Auf %1 speichern</translation>
+    </message>
+    <message>
+        <source>Specified Location</source>
+        <translation>Ange Ort</translation>
+    </message>
+    <message>
+        <source>Custom Location</source>
+        <translation>Benutzerdefiniertes Ort</translation>
+    </message>
+    <message>
+        <source>Each inquiry</source>
+        <translation>Jede Frage</translation>
+    </message>
+    <message>
+        <source>Update location on save</source>
+        <translation>Ort beim Speichern aktualisieren</translation>
+    </message>
+    <message>
+        <source>Save to desktop</source>
+        <translation>Auf das Desktop-Verzeichnis speichern</translation>
+    </message>
+    <message>
+        <source>Save to pictures</source>
+        <translation>Auf das Bildverzeichnis speichern</translation>
+    </message>
 </context>
 <context>
     <name>ToolBarWidget</name>
@@ -697,8 +702,8 @@ Umschalttaste gedrückt halten, um einen vertikalen oder horizontalen Pfeil zu z
         <translation>Schließen (Esc)</translation>
     </message>
     <message>
-        <source>OK (Enter)</source>
-        <translation>OK (Enter)</translation>
+        <source>Copy to clipboard (Enter)</source>
+        <translation>In die Zwischenablage kopieren (Enter)</translation>
     </message>
 </context>
 <context>
@@ -717,13 +722,6 @@ Umschalttaste gedrückt halten, um einen vertikalen oder horizontalen Pfeil zu z
     <message>
         <source>Exit</source>
         <translation>Beenden</translation>
-    </message>
-</context>
-<context>
-    <name>VoiceRecordProcess</name>
-    <message>
-        <source>New recording</source>
-        <translation>Neue Aufnahme</translation>
     </message>
 </context>
 </TS>

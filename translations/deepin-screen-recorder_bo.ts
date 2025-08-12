@@ -1,4 +1,6 @@
-<?xml version="1.0" ?><!DOCTYPE TS><TS version="2.1" language="bo">
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE TS>
+<TS version="2.1" language="bo">
 <context>
     <name>CountdownTooltip</name>
     <message>
@@ -21,17 +23,6 @@ or press the shortcut again to stop recording</source>
     <message>
         <source>Recording</source>
         <translation>བརྙན་ཕབ།</translation>
-    </message>
-</context>
-<context>
-    <name>MainToolWidget</name>
-    <message>
-        <source>Record</source>
-        <translation>བརྙན་ཕབ།</translation>
-    </message>
-    <message>
-        <source>Screenshot</source>
-        <translation>བརྙན་བཤུས།</translation>
     </message>
 </context>
 <context>
@@ -95,10 +86,6 @@ or press the shortcut again to stop recording</source>
     <message>
         <source>Screenshot</source>
         <translation>བརྙན་བཤུས།</translation>
-    </message>
-    <message>
-        <source>Screenshot failed.</source>
-        <translation>པར་དྲས་མ་ཐུབ།</translation>
     </message>
     <message>
         <source>Scrollshot</source>
@@ -452,14 +439,6 @@ Shiftམནན་ནས་དྲང་ཐིག་འབྲི་ཐུབ།</t
     </message>
 </context>
 <context>
-    <name>StartTooltip</name>
-    <message>
-        <source>Click or drag to
-select the area to record</source>
-        <translation>གྲླབས་བྱེད་པ་དང་པོ་སྐྱེད་ཞིང་གི་རླབས་བྱེད་པ་རེད་འདུག</translation>
-    </message>
-</context>
-<context>
     <name>SubToolWidget</name>
     <message>
         <source>Show keystroke (K)</source>
@@ -574,18 +553,6 @@ select the area to record</source>
         <translation>བཪྙན་ཟློས།</translation>
     </message>
     <message>
-        <source>Rectangle (R)
-Press and hold Shift to draw a square</source>
-        <translation>གྲུ་བཞི་ནར་མོ། (R)
-Shiftམནན་ནས་གྲུ་བཞི་ཁ་གང་འབྲི་ཐུབ།</translation>
-    </message>
-    <message>
-        <source>Ellipse (O)
-Press and hold Shift to draw a circle</source>
-        <translation>འཇོང་དབྱིབས་ (O)
-Shiftམནན་ནས་སྒོར་དབྱིབས་འབྲི་ཐུབ། </translation>
-    </message>
-    <message>
         <source>Line (L)
 Press and hold Shift to draw a vertical or horizontal line</source>
         <translation>ཕག་ཏོ་ (L)
@@ -630,16 +597,8 @@ Shiftམནན་ནས་ཐད་དཔྱང་དང་ཆུ་སྙོམ
         <translation>བརྙན་ཕབ།</translation>
     </message>
     <message>
-        <source>Clipboard</source>
-        <translation>དྲས་སྦྱར་པང་།</translation>
-    </message>
-    <message>
         <source>Pictures</source>
         <translation>པར་རིས།</translation>
-    </message>
-    <message>
-        <source>Folder</source>
-        <translation>དམིགས་བཙུགས་ས་གནས།</translation>
     </message>
     <message>
         <source>Set a path on save</source>
@@ -689,6 +648,52 @@ Shiftམནན་ནས་ཐད་དཔྱང་དང་ཆུ་སྙོམ
         <source>Extract Text</source>
         <translation>ཡི་གེ་ངོས་འཛིན།</translation>
     </message>
+    <message>
+        <source>Geometric Tools (R)
+Hold down Shift to draw squares or circles.</source>
+        <translation>གྲུ་བཞི་ནར་མོ།
+Shiftམནན་ནས་གྲུ་བཞི་ཁ་གང་འབྲི་ཐུབ།</translation>
+    </message>
+    <message>
+        <source>Save to local</source>
+        <translation>དུ་ཉར་བ།</translation>
+    </message>
+    <message>
+        <source>Save to Desktop</source>
+        <translation>ཅོག་ངོས།</translation>
+    </message>
+    <message>
+        <source>Save to Pictures</source>
+        <translation>པར་རིས།</translation>
+    </message>
+    <message>
+        <source>Save to %1</source>
+        <translation>དུ་ཉར་བ།</translation>
+    </message>
+    <message>
+        <source>Specified Location</source>
+        <translation>དུ་ཉར་བ།</translation>
+    </message>
+    <message>
+        <source>Custom Location</source>
+        <translation>དུ་ཉར་བ།</translation>
+    </message>
+    <message>
+        <source>Each inquiry</source>
+        <translation>དུ་ཉར་བ།</translation>
+    </message>
+    <message>
+        <source>Update location on save</source>
+        <translation>དུ་ཉར་བ།</translation>
+    </message>
+    <message>
+        <source>Save to desktop</source>
+        <translation>ཅོག་ངོས།</translation>
+    </message>
+    <message>
+        <source>Save to pictures</source>
+        <translation>པར་རིས།</translation>
+    </message>
 </context>
 <context>
     <name>ToolBarWidget</name>
@@ -697,8 +702,8 @@ Shiftམནན་ནས་ཐད་དཔྱང་དང་ཆུ་སྙོམ
         <translation>ཁ་རྒྱག་(Esc)</translation>
     </message>
     <message>
-        <source>OK (Enter)</source>
-        <translation>གཏན་འཁེལ་ (Enter)</translation>
+        <source>Copy to clipboard (Enter)</source>
+        <translation>ཁ་རྒྱག་(Enter)</translation>
     </message>
 </context>
 <context>
@@ -717,13 +722,6 @@ Shiftམནན་ནས་ཐད་དཔྱང་དང་ཆུ་སྙོམ
     <message>
         <source>Exit</source>
         <translation>ཕྱིར་འཐེན།</translation>
-    </message>
-</context>
-<context>
-    <name>VoiceRecordProcess</name>
-    <message>
-        <source>New recording</source>
-        <translation>གསར་གྱི་རླབས་བྱེད་པ་ཡིན།</translation>
     </message>
 </context>
 </TS>

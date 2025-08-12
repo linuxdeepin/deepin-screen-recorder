@@ -1,4 +1,6 @@
-<?xml version="1.0" ?><!DOCTYPE TS><TS version="2.1" language="ru">
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE TS>
+<TS version="2.1" language="ru">
 <context>
     <name>CountdownTooltip</name>
     <message>
@@ -21,17 +23,6 @@ or press the shortcut again to stop recording</source>
     <message>
         <source>Recording</source>
         <translation>Запись</translation>
-    </message>
-</context>
-<context>
-    <name>MainToolWidget</name>
-    <message>
-        <source>Record</source>
-        <translation>Запись</translation>
-    </message>
-    <message>
-        <source>Screenshot</source>
-        <translation>Скриншот</translation>
     </message>
 </context>
 <context>
@@ -95,10 +86,6 @@ or press the shortcut again to stop recording</source>
     <message>
         <source>Screenshot</source>
         <translation>Скриншот</translation>
-    </message>
-    <message>
-        <source>Screenshot failed.</source>
-        <translation>Не удалось создать Снимок экрана</translation>
     </message>
     <message>
         <source>Scrollshot</source>
@@ -452,15 +439,6 @@ Press and hold Shift to draw a straight line</source>
     </message>
 </context>
 <context>
-    <name>StartTooltip</name>
-    <message>
-        <source>Click or drag to
-select the area to record</source>
-        <translation>Щелкните или тащите
-выбранную область записи</translation>
-    </message>
-</context>
-<context>
     <name>SubToolWidget</name>
     <message>
         <source>Show keystroke (K)</source>
@@ -575,18 +553,6 @@ select the area to record</source>
         <translation>Видео</translation>
     </message>
     <message>
-        <source>Rectangle (R)
-Press and hold Shift to draw a square</source>
-        <translation>Прямоугольник (R)
-Нажмите и удерживайте Shift, чтобы нарисовать квадрат</translation>
-    </message>
-    <message>
-        <source>Ellipse (O)
-Press and hold Shift to draw a circle</source>
-        <translation>Эллипс (O)
-Нажмите и удерживайте Shift, чтобы нарисовать окружность</translation>
-    </message>
-    <message>
         <source>Line (L)
 Press and hold Shift to draw a vertical or horizontal line</source>
         <translation>Линия (L)
@@ -631,16 +597,8 @@ Press and hold Shift to draw a vertical or horizontal arrow</source>
         <translation>Запись</translation>
     </message>
     <message>
-        <source>Clipboard</source>
-        <translation>Буфер обмена</translation>
-    </message>
-    <message>
         <source>Pictures</source>
         <translation>Изображения</translation>
-    </message>
-    <message>
-        <source>Folder</source>
-        <translation>Папка</translation>
     </message>
     <message>
         <source>Set a path on save</source>
@@ -690,6 +648,52 @@ Press and hold Shift to draw a vertical or horizontal arrow</source>
         <source>Extract Text</source>
         <translation>Извлечь Текст</translation>
     </message>
+    <message>
+        <source>Geometric Tools (R)
+Hold down Shift to draw squares or circles.</source>
+        <translation>Геометрические инструменты (R)
+Удерживайте Shift для рисования квадратов или кругов.</translation>
+    </message>
+    <message>
+        <source>Save to local</source>
+        <translation>Сохранить локально</translation>
+    </message>
+    <message>
+        <source>Save to Desktop</source>
+        <translation>Сохранить на рабочий стол</translation>
+    </message>
+    <message>
+        <source>Save to Pictures</source>
+        <translation>Сохранить в изображения</translation>
+    </message>
+    <message>
+        <source>Save to %1</source>
+        <translation>Сохранить в %1</translation>
+    </message>
+    <message>
+        <source>Specified Location</source>
+        <translation>Указанное место</translation>
+    </message>
+    <message>
+        <source>Custom Location</source>
+        <translation>Пользовательское место</translation>
+    </message>
+    <message>
+        <source>Each inquiry</source>
+        <translation>Каждый запрос</translation>
+    </message>
+    <message>
+        <source>Update location on save</source>
+        <translation>Обновить место при сохранении</translation>
+    </message>
+    <message>
+        <source>Save to desktop</source>
+        <translation>Сохранить на рабочий стол</translation>
+    </message>
+    <message>
+        <source>Save to pictures</source>
+        <translation>Сохранить в изображения</translation>
+    </message>
 </context>
 <context>
     <name>ToolBarWidget</name>
@@ -698,8 +702,8 @@ Press and hold Shift to draw a vertical or horizontal arrow</source>
         <translation>Закрыть (Esc)</translation>
     </message>
     <message>
-        <source>OK (Enter)</source>
-        <translation>ОК (Enter)</translation>
+        <source>Copy to clipboard (Enter)</source>
+        <translation>Скопировать в буфер обмена (Enter)</translation>
     </message>
 </context>
 <context>
@@ -718,13 +722,6 @@ Press and hold Shift to draw a vertical or horizontal arrow</source>
     <message>
         <source>Exit</source>
         <translation>Выход</translation>
-    </message>
-</context>
-<context>
-    <name>VoiceRecordProcess</name>
-    <message>
-        <source>New recording</source>
-        <translation>Новая запись</translation>
     </message>
 </context>
 </TS>

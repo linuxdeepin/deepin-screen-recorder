@@ -1,4 +1,6 @@
-<?xml version="1.0" ?><!DOCTYPE TS><TS version="2.1" language="sr">
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE TS>
+<TS version="2.1" language="sr">
 <context>
     <name>CountdownTooltip</name>
     <message>
@@ -21,17 +23,6 @@ or press the shortcut again to stop recording</source>
     <message>
         <source>Recording</source>
         <translation>Запис</translation>
-    </message>
-</context>
-<context>
-    <name>MainToolWidget</name>
-    <message>
-        <source>Record</source>
-        <translation>Снимање</translation>
-    </message>
-    <message>
-        <source>Screenshot</source>
-        <translation>Усликавање</translation>
     </message>
 </context>
 <context>
@@ -95,10 +86,6 @@ or press the shortcut again to stop recording</source>
     <message>
         <source>Screenshot</source>
         <translation>Усликавање</translation>
-    </message>
-    <message>
-        <source>Screenshot failed.</source>
-        <translation>Неуспешно усликавање.</translation>
     </message>
     <message>
         <source>Scrollshot</source>
@@ -452,15 +439,6 @@ Press and hold Shift to draw a straight line</source>
     </message>
 </context>
 <context>
-    <name>StartTooltip</name>
-    <message>
-        <source>Click or drag to
-select the area to record</source>
-        <translation>Кликни или превуци да
-обележиш површину снимања</translation>
-    </message>
-</context>
-<context>
     <name>SubToolWidget</name>
     <message>
         <source>Show keystroke (K)</source>
@@ -575,18 +553,6 @@ select the area to record</source>
         <translation>Видео</translation>
     </message>
     <message>
-        <source>Rectangle (R)
-Press and hold Shift to draw a square</source>
-        <translation>Прavоугаоник (R)
-Притисните и задржите Shift да бисте цртали квадрат</translation>
-    </message>
-    <message>
-        <source>Ellipse (O)
-Press and hold Shift to draw a circle</source>
-        <translation>Елипса (O)
-Притисните и задржите Shift да бисте цртали кружић</translation>
-    </message>
-    <message>
         <source>Line (L)
 Press and hold Shift to draw a vertical or horizontal line</source>
         <translation>Линија (L)
@@ -631,16 +597,8 @@ Press and hold Shift to draw a vertical or horizontal arrow</source>
         <translation>Снимање</translation>
     </message>
     <message>
-        <source>Clipboard</source>
-        <translation>Остава</translation>
-    </message>
-    <message>
         <source>Pictures</source>
         <translation>Слике</translation>
-    </message>
-    <message>
-        <source>Folder</source>
-        <translation>Фасцикла</translation>
     </message>
     <message>
         <source>Set a path on save</source>
@@ -690,6 +648,52 @@ Press and hold Shift to draw a vertical or horizontal arrow</source>
         <source>Extract Text</source>
         <translation>Издвоји текст</translation>
     </message>
+    <message>
+        <source>Geometric Tools (R)
+Hold down Shift to draw squares or circles.</source>
+        <translation>Геометријски алати (R)
+Држите Shift да нацртате квадрате или кругове.</translation>
+    </message>
+    <message>
+        <source>Save to local</source>
+        <translation>Сачувај на локалном</translation>
+    </message>
+    <message>
+        <source>Save to Desktop</source>
+        <translation>Сачувај на радној површини</translation>
+    </message>
+    <message>
+        <source>Save to Pictures</source>
+        <translation>Сачувај на слике</translation>
+    </message>
+    <message>
+        <source>Save to %1</source>
+        <translation>Сачувај у %1</translation>
+    </message>
+    <message>
+        <source>Specified Location</source>
+        <translation>Одређено место</translation>
+    </message>
+    <message>
+        <source>Custom Location</source>
+        <translation>Прилагођено место</translation>
+    </message>
+    <message>
+        <source>Each inquiry</source>
+        <translation>Сваки захтев</translation>
+    </message>
+    <message>
+        <source>Update location on save</source>
+        <translation>Ажурирај место при сачувању</translation>
+    </message>
+    <message>
+        <source>Save to desktop</source>
+        <translation>Сачувај на радној површини</translation>
+    </message>
+    <message>
+        <source>Save to pictures</source>
+        <translation>Сачувај на слике</translation>
+    </message>
 </context>
 <context>
     <name>ToolBarWidget</name>
@@ -698,8 +702,8 @@ Press and hold Shift to draw a vertical or horizontal arrow</source>
         <translation>Затвори (Esc)</translation>
     </message>
     <message>
-        <source>OK (Enter)</source>
-        <translation>Да (Enter)</translation>
+        <source>Copy to clipboard (Enter)</source>
+        <translation>Копирај у клипборд (Enter)</translation>
     </message>
 </context>
 <context>
@@ -718,13 +722,6 @@ Press and hold Shift to draw a vertical or horizontal arrow</source>
     <message>
         <source>Exit</source>
         <translation>Изађи</translation>
-    </message>
-</context>
-<context>
-    <name>VoiceRecordProcess</name>
-    <message>
-        <source>New recording</source>
-        <translation>Нови снимци</translation>
     </message>
 </context>
 </TS>

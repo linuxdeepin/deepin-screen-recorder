@@ -6,7 +6,8 @@
     <message>
         <source>Click the tray icon 
 or press the shortcut again to stop recording</source>
-        <translation type="unfinished"></translation>
+        <translation>ກົດທີ່ລູກຕີນກີບຂອງທ່ານ
+ຫຼືກົດລະຫັດທີ່ສະແດງອີກຄັ້ງເພື່ອຢຸດການບັນທຶກ</translation>
     </message>
     <message>
         <source>Do not rotate your screen during recording</source>
@@ -251,11 +252,11 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Delay screenshot</source>
-        <translation type="unfinished"></translation>
+        <translation>ພາບສັນຍານຫ້ອຍ</translation>
     </message>
     <message>
         <source>Full screenshot</source>
-        <translation type="unfinished"></translation>
+        <translation>ພາບສັນຍານທັງຫມົດ</translation>
     </message>
     <message>
         <source>Exit</source>
@@ -267,7 +268,7 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Rectangle</source>
-        <translation type="unfinished"></translation>
+        <translation>ລົມສີ່ຕັ້ງແຕ້ມ</translation>
     </message>
     <message>
         <source>Ellipse</source>
@@ -279,11 +280,11 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Pencil</source>
-        <translation type="unfinished"></translation>
+        <translation>ລົມສີ່ຕັ້ງແຕ້ມ</translation>
     </message>
     <message>
         <source>Text</source>
-        <translation type="unfinished"></translation>
+        <translation>ຂໍ້ຄວາມ</translation>
     </message>
     <message>
         <source>Delete</source>
@@ -295,11 +296,11 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Increase height up</source>
-        <translation type="unfinished"></translation>
+        <translation>ເພີ່ມຄວາມຍາວຂຶ້ນ</translation>
     </message>
     <message>
         <source>Increase height down</source>
-        <translation type="unfinished"></translation>
+        <translation>ເພີ່ມຄວາມຍາວລຸ່ມ</translation>
     </message>
     <message>
         <source>Increase width left</source>
@@ -311,11 +312,11 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Decrease height up</source>
-        <translation type="unfinished"></translation>
+        <translation>ລົດຄວາມຍາວຂຶ້ນ</translation>
     </message>
     <message>
         <source>Decrease height down</source>
-        <translation type="unfinished"></translation>
+        <translation>ລົດຄວາມຍາວລຸ່ມ</translation>
     </message>
     <message>
         <source>Decrease width left</source>
@@ -359,7 +360,7 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Mouse</source>
-        <translation type="unfinished"></translation>
+        <translation>ຕີນກີບ</translation>
     </message>
     <message>
         <source>Tools</source>
@@ -383,7 +384,7 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Start scrollshot</source>
-        <translation type="unfinished"></translation>
+        <translation>ເລີ່ມສະກີນສໍາເນົາ</translation>
     </message>
     <message>
         <source>Arrow</source>

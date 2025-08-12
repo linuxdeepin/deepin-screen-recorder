@@ -1,4 +1,6 @@
-<?xml version="1.0" ?><!DOCTYPE TS><TS version="2.1" language="fi">
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE TS>
+<TS version="2.1" language="fi">
 <context>
     <name>CountdownTooltip</name>
     <message>
@@ -21,17 +23,6 @@ tai lopeta tallennus painamalla pikakuvaketta uudelleen</translation>
     <message>
         <source>Recording</source>
         <translation>Tallennus</translation>
-    </message>
-</context>
-<context>
-    <name>MainToolWidget</name>
-    <message>
-        <source>Record</source>
-        <translation>Tallenna</translation>
-    </message>
-    <message>
-        <source>Screenshot</source>
-        <translation>Kaappaus</translation>
     </message>
 </context>
 <context>
@@ -95,10 +86,6 @@ tai lopeta tallennus painamalla pikakuvaketta uudelleen</translation>
     <message>
         <source>Screenshot</source>
         <translation>Kaappaus</translation>
-    </message>
-    <message>
-        <source>Screenshot failed.</source>
-        <translation>Kaappaus epäonnistui.</translation>
     </message>
     <message>
         <source>Scrollshot</source>
@@ -452,15 +439,6 @@ Vedä suora viiva pitämällä Shift-painettuna</translation>
     </message>
 </context>
 <context>
-    <name>StartTooltip</name>
-    <message>
-        <source>Click or drag to
-select the area to record</source>
-        <translation>Napsauta tai vedä
-valitse tallennettava alue</translation>
-    </message>
-</context>
-<context>
     <name>SubToolWidget</name>
     <message>
         <source>Show keystroke (K)</source>
@@ -575,18 +553,6 @@ valitse tallennettava alue</translation>
         <translation>Videot</translation>
     </message>
     <message>
-        <source>Rectangle (R)
-Press and hold Shift to draw a square</source>
-        <translation>Suorakulmio (R)
-Piirrä neliö pitämällä Shift-painettuna</translation>
-    </message>
-    <message>
-        <source>Ellipse (O)
-Press and hold Shift to draw a circle</source>
-        <translation>Ellipsi (O).
-Piirrä ympyrä pitämällä Shift-painettuna</translation>
-    </message>
-    <message>
         <source>Line (L)
 Press and hold Shift to draw a vertical or horizontal line</source>
         <translation>Viiva (L)
@@ -631,16 +597,8 @@ Vedä suora pysty- tai vaakanuoli pitämällä Shift-painettuna</translation>
         <translation>Tallenna</translation>
     </message>
     <message>
-        <source>Clipboard</source>
-        <translation>Leikepöydälle</translation>
-    </message>
-    <message>
         <source>Pictures</source>
         <translation>Kuvat</translation>
-    </message>
-    <message>
-        <source>Folder</source>
-        <translation>Kansio</translation>
     </message>
     <message>
         <source>Set a path on save</source>
@@ -690,6 +648,52 @@ Vedä suora pysty- tai vaakanuoli pitämällä Shift-painettuna</translation>
         <source>Extract Text</source>
         <translation>Poimi tekstiä</translation>
     </message>
+    <message>
+        <source>Geometric Tools (R)
+Hold down Shift to draw squares or circles.</source>
+        <translation>Geometriset työkalut (R)
+Pidä Shift-näppäintä painettuna piirtääksesi neliöitä tai ympyröitä.</translation>
+    </message>
+    <message>
+        <source>Save to local</source>
+        <translation>Tallenna paikallisesti</translation>
+    </message>
+    <message>
+        <source>Save to Desktop</source>
+        <translation>Tallenna työpöydälle</translation>
+    </message>
+    <message>
+        <source>Save to Pictures</source>
+        <translation>Tallenna kuvakkeisiin</translation>
+    </message>
+    <message>
+        <source>Save to %1</source>
+        <translation>Tallenna nimellä %1</translation>
+    </message>
+    <message>
+        <source>Specified Location</source>
+        <translation>Määritetty sijainti</translation>
+    </message>
+    <message>
+        <source>Custom Location</source>
+        <translation>Mukautettu sijainti</translation>
+    </message>
+    <message>
+        <source>Each inquiry</source>
+        <translation>Jokainen kysely</translation>
+    </message>
+    <message>
+        <source>Update location on save</source>
+        <translation>Päivitä sijainti tallessa</translation>
+    </message>
+    <message>
+        <source>Save to desktop</source>
+        <translation>Tallenna työpöydälle</translation>
+    </message>
+    <message>
+        <source>Save to pictures</source>
+        <translation>Tallenna kuvakkeisiin</translation>
+    </message>
 </context>
 <context>
     <name>ToolBarWidget</name>
@@ -698,8 +702,8 @@ Vedä suora pysty- tai vaakanuoli pitämällä Shift-painettuna</translation>
         <translation>Sulje (Esc)</translation>
     </message>
     <message>
-        <source>OK (Enter)</source>
-        <translation>OK (Enter)</translation>
+        <source>Copy to clipboard (Enter)</source>
+        <translation>Kopioi leikepöydälle (Enter)</translation>
     </message>
 </context>
 <context>
@@ -718,13 +722,6 @@ Vedä suora pysty- tai vaakanuoli pitämällä Shift-painettuna</translation>
     <message>
         <source>Exit</source>
         <translation>Poistu</translation>
-    </message>
-</context>
-<context>
-    <name>VoiceRecordProcess</name>
-    <message>
-        <source>New recording</source>
-        <translation>Uusi äänitys</translation>
     </message>
 </context>
 </TS>

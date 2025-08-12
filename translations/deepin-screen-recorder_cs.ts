@@ -1,4 +1,6 @@
-<?xml version="1.0" ?><!DOCTYPE TS><TS version="2.1" language="cs">
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE TS>
+<TS version="2.1" language="cs">
 <context>
     <name>CountdownTooltip</name>
     <message>
@@ -21,17 +23,6 @@ v oznamovací oblasti panelu nebo stiskněte klávesovou zkratku</translation>
     <message>
         <source>Recording</source>
         <translation>Nahrávání</translation>
-    </message>
-</context>
-<context>
-    <name>MainToolWidget</name>
-    <message>
-        <source>Record</source>
-        <translation>Pořídit záznam</translation>
-    </message>
-    <message>
-        <source>Screenshot</source>
-        <translation>Pořídit snímek obrazovky</translation>
     </message>
 </context>
 <context>
@@ -95,10 +86,6 @@ v oznamovací oblasti panelu nebo stiskněte klávesovou zkratku</translation>
     <message>
         <source>Screenshot</source>
         <translation>Snímek obrazovky</translation>
-    </message>
-    <message>
-        <source>Screenshot failed.</source>
-        <translation>Pořízení snímku obrazovky se nezdařilo.</translation>
     </message>
     <message>
         <source>Scrollshot</source>
@@ -452,15 +439,6 @@ Stiskněte a podržte klávesu Shift pro kreslení přímky</translation>
     </message>
 </context>
 <context>
-    <name>StartTooltip</name>
-    <message>
-        <source>Click or drag to
-select the area to record</source>
-        <translation>Klepněte nebo táhněte
-pro vybrání oblasti k nahrávání</translation>
-    </message>
-</context>
-<context>
     <name>SubToolWidget</name>
     <message>
         <source>Show keystroke (K)</source>
@@ -575,18 +553,6 @@ pro vybrání oblasti k nahrávání</translation>
         <translation>Videa</translation>
     </message>
     <message>
-        <source>Rectangle (R)
-Press and hold Shift to draw a square</source>
-        <translation>Obdélník (R)
-Stiskněte a podržte klávesu Shift pro kreslení čtverce</translation>
-    </message>
-    <message>
-        <source>Ellipse (O)
-Press and hold Shift to draw a circle</source>
-        <translation>Elipsa (O)
-Stiskněte a podržte klávesu Shift pro kreslení kruhu</translation>
-    </message>
-    <message>
         <source>Line (L)
 Press and hold Shift to draw a vertical or horizontal line</source>
         <translation>Čára (L)
@@ -631,16 +597,8 @@ Stiskněte a podržte klávesu Shift pro kreslení svislé nebo vodorovné šipk
         <translation>Pořídit záznam</translation>
     </message>
     <message>
-        <source>Clipboard</source>
-        <translation>Schránka</translation>
-    </message>
-    <message>
         <source>Pictures</source>
         <translation>Obrázky</translation>
-    </message>
-    <message>
-        <source>Folder</source>
-        <translation>Složka</translation>
     </message>
     <message>
         <source>Set a path on save</source>
@@ -690,6 +648,51 @@ Stiskněte a podržte klávesu Shift pro kreslení svislé nebo vodorovné šipk
         <source>Extract Text</source>
         <translation>Rozpoznat text</translation>
     </message>
+    <message>
+        <source>Geometric Tools (R)
+Hold down Shift to draw squares or circles.</source>
+        <translation>Držte stisknutou klávesu Shift pro kreslení čtverců nebo kruhů.</translation>
+    </message>
+    <message>
+        <source>Save to local</source>
+        <translation>Uložit do místního</translation>
+    </message>
+    <message>
+        <source>Save to Desktop</source>
+        <translation>Uložit do plochy</translation>
+    </message>
+    <message>
+        <source>Save to Pictures</source>
+        <translation>Uložit do obrázků</translation>
+    </message>
+    <message>
+        <source>Save to %1</source>
+        <translation>Uložit do %1</translation>
+    </message>
+    <message>
+        <source>Specified Location</source>
+        <translation>Určené umístění</translation>
+    </message>
+    <message>
+        <source>Custom Location</source>
+        <translation>Vlastní umístění</translation>
+    </message>
+    <message>
+        <source>Each inquiry</source>
+        <translation>Každá otázka</translation>
+    </message>
+    <message>
+        <source>Update location on save</source>
+        <translation>Aktualizovat umístění při ukládání</translation>
+    </message>
+    <message>
+        <source>Save to desktop</source>
+        <translation>Uložit do plochy</translation>
+    </message>
+    <message>
+        <source>Save to pictures</source>
+        <translation>Uložit do obrázků</translation>
+    </message>
 </context>
 <context>
     <name>ToolBarWidget</name>
@@ -698,8 +701,8 @@ Stiskněte a podržte klávesu Shift pro kreslení svislé nebo vodorovné šipk
         <translation>Zavřít (Esc)</translation>
     </message>
     <message>
-        <source>OK (Enter)</source>
-        <translation>OK (Enter)</translation>
+        <source>Copy to clipboard (Enter)</source>
+        <translation>Vložit do schránky (Enter)</translation>
     </message>
 </context>
 <context>
@@ -718,13 +721,6 @@ Stiskněte a podržte klávesu Shift pro kreslení svislé nebo vodorovné šipk
     <message>
         <source>Exit</source>
         <translation>Ukončit</translation>
-    </message>
-</context>
-<context>
-    <name>VoiceRecordProcess</name>
-    <message>
-        <source>New recording</source>
-        <translation>Nová nahrávka</translation>
     </message>
 </context>
 </TS>

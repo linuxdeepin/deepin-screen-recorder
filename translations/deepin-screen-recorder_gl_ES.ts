@@ -1,4 +1,6 @@
-<?xml version="1.0" ?><!DOCTYPE TS><TS version="2.1" language="gl_ES">
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE TS>
+<TS version="2.1" language="gl_ES">
 <context>
     <name>CountdownTooltip</name>
     <message>
@@ -21,17 +23,6 @@ ou prema de novo o atallo para deixar de gravar</translation>
     <message>
         <source>Recording</source>
         <translation>Gravando</translation>
-    </message>
-</context>
-<context>
-    <name>MainToolWidget</name>
-    <message>
-        <source>Record</source>
-        <translation>Gravar</translation>
-    </message>
-    <message>
-        <source>Screenshot</source>
-        <translation>Captura de pantalla</translation>
     </message>
 </context>
 <context>
@@ -95,10 +86,6 @@ ou prema de novo o atallo para deixar de gravar</translation>
     <message>
         <source>Screenshot</source>
         <translation>Captura de pantalla</translation>
-    </message>
-    <message>
-        <source>Screenshot failed.</source>
-        <translation>Produciuse un erro na captura de pantalla.</translation>
     </message>
     <message>
         <source>Scrollshot</source>
@@ -452,15 +439,6 @@ Manteña premida a tecla Maiúsculas para debuxar unha liña recta</translation>
     </message>
 </context>
 <context>
-    <name>StartTooltip</name>
-    <message>
-        <source>Click or drag to
-select the area to record</source>
-        <translation>Fai clic ou arrastra
-para seleccionar a área a gravar</translation>
-    </message>
-</context>
-<context>
     <name>SubToolWidget</name>
     <message>
         <source>Show keystroke (K)</source>
@@ -575,18 +553,6 @@ para seleccionar a área a gravar</translation>
         <translation>Vídeos</translation>
     </message>
     <message>
-        <source>Rectangle (R)
-Press and hold Shift to draw a square</source>
-        <translation>Rectángulo (R)
-Manteña premida a tecla Maiúsculas para debuxar un cadrado</translation>
-    </message>
-    <message>
-        <source>Ellipse (O)
-Press and hold Shift to draw a circle</source>
-        <translation>Elipse (O)
-Manteña premida a tecla Maiúsculas para debuxar un círculo</translation>
-    </message>
-    <message>
         <source>Line (L)
 Press and hold Shift to draw a vertical or horizontal line</source>
         <translation>Liña (L)
@@ -631,16 +597,8 @@ Manteña premida a tecla Maiúsculas para debuxar unha frecha vertical ou horizo
         <translation>Gravar</translation>
     </message>
     <message>
-        <source>Clipboard</source>
-        <translation>Portapapeis</translation>
-    </message>
-    <message>
         <source>Pictures</source>
         <translation>Imaxes</translation>
-    </message>
-    <message>
-        <source>Folder</source>
-        <translation>Cartafol</translation>
     </message>
     <message>
         <source>Set a path on save</source>
@@ -690,6 +648,52 @@ Manteña premida a tecla Maiúsculas para debuxar unha frecha vertical ou horizo
         <source>Extract Text</source>
         <translation>Extraer texto</translation>
     </message>
+    <message>
+        <source>Geometric Tools (R)
+Hold down Shift to draw squares or circles.</source>
+        <translation>Ferramentas xeométricas (R)
+Mantén premida a tecla Maiús para debuxar cadrados ou círculos.</translation>
+    </message>
+    <message>
+        <source>Save to local</source>
+        <translation>Gardar no local</translation>
+    </message>
+    <message>
+        <source>Save to Desktop</source>
+        <translation>Gardar no escritorio</translation>
+    </message>
+    <message>
+        <source>Save to Pictures</source>
+        <translation>Gardar en imaxes</translation>
+    </message>
+    <message>
+        <source>Save to %1</source>
+        <translation>Gardar en %1</translation>
+    </message>
+    <message>
+        <source>Specified Location</source>
+        <translation>Localización especificada</translation>
+    </message>
+    <message>
+        <source>Custom Location</source>
+        <translation>Localización personalizada</translation>
+    </message>
+    <message>
+        <source>Each inquiry</source>
+        <translation>Cada consulta</translation>
+    </message>
+    <message>
+        <source>Update location on save</source>
+        <translation>Actualizar a localización ao gardar</translation>
+    </message>
+    <message>
+        <source>Save to desktop</source>
+        <translation>Gardar no escritorio</translation>
+    </message>
+    <message>
+        <source>Save to pictures</source>
+        <translation>Gardar en imaxes</translation>
+    </message>
 </context>
 <context>
     <name>ToolBarWidget</name>
@@ -698,8 +702,8 @@ Manteña premida a tecla Maiúsculas para debuxar unha frecha vertical ou horizo
         <translation>Pechar (Esc)</translation>
     </message>
     <message>
-        <source>OK (Enter)</source>
-        <translation>Aceptar (Enter)</translation>
+        <source>Copy to clipboard (Enter)</source>
+        <translation>Copiar ao portapapeis (Enter)</translation>
     </message>
 </context>
 <context>
@@ -718,13 +722,6 @@ Manteña premida a tecla Maiúsculas para debuxar unha frecha vertical ou horizo
     <message>
         <source>Exit</source>
         <translation>Saír</translation>
-    </message>
-</context>
-<context>
-    <name>VoiceRecordProcess</name>
-    <message>
-        <source>New recording</source>
-        <translation>Nova gravación</translation>
     </message>
 </context>
 </TS>

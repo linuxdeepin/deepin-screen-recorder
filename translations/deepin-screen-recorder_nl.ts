@@ -1,4 +1,6 @@
-<?xml version="1.0" ?><!DOCTYPE TS><TS version="2.1" language="nl">
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE TS>
+<TS version="2.1" language="nl">
 <context>
     <name>CountdownTooltip</name>
     <message>
@@ -21,17 +23,6 @@ of druk nogmaals op de sneltoets om te stoppen</translation>
     <message>
         <source>Recording</source>
         <translation>Opname</translation>
-    </message>
-</context>
-<context>
-    <name>MainToolWidget</name>
-    <message>
-        <source>Record</source>
-        <translation>Opnemen</translation>
-    </message>
-    <message>
-        <source>Screenshot</source>
-        <translation>Schermfoto</translation>
     </message>
 </context>
 <context>
@@ -95,10 +86,6 @@ of druk nogmaals op de sneltoets om te stoppen</translation>
     <message>
         <source>Screenshot</source>
         <translation>Schermfoto</translation>
-    </message>
-    <message>
-        <source>Screenshot failed.</source>
-        <translation>De schermfoto kan niet worden gemaakt.</translation>
     </message>
     <message>
         <source>Scrollshot</source>
@@ -452,15 +439,6 @@ Houd Shift ingedrukt om een rechte lijn te trekken</translation>
     </message>
 </context>
 <context>
-    <name>StartTooltip</name>
-    <message>
-        <source>Click or drag to
-select the area to record</source>
-        <translation>Klik of sleep om
-het opnamegebied te kiezen</translation>
-    </message>
-</context>
-<context>
     <name>SubToolWidget</name>
     <message>
         <source>Show keystroke (K)</source>
@@ -575,18 +553,6 @@ het opnamegebied te kiezen</translation>
         <translation>Video&apos;s</translation>
     </message>
     <message>
-        <source>Rectangle (R)
-Press and hold Shift to draw a square</source>
-        <translation>Rechthoek (R)
-Houd Shift ingedrukt om een vierkant te trekken</translation>
-    </message>
-    <message>
-        <source>Ellipse (O)
-Press and hold Shift to draw a circle</source>
-        <translation>Ovaal (O)
-Houd Shift ingedrukt om een cirkel te trekken</translation>
-    </message>
-    <message>
         <source>Line (L)
 Press and hold Shift to draw a vertical or horizontal line</source>
         <translation>Lijn (L)
@@ -631,16 +597,8 @@ Houd Shift ingedrukt om een verticale of horizontale pijl te tekenen</translatio
         <translation>Opnemen</translation>
     </message>
     <message>
-        <source>Clipboard</source>
-        <translation>Klembord</translation>
-    </message>
-    <message>
         <source>Pictures</source>
         <translation>Afbeeldingen</translation>
-    </message>
-    <message>
-        <source>Folder</source>
-        <translation>Andere map</translation>
     </message>
     <message>
         <source>Set a path on save</source>
@@ -690,6 +648,52 @@ Houd Shift ingedrukt om een verticale of horizontale pijl te tekenen</translatio
         <source>Extract Text</source>
         <translation>Tekst extraheren</translation>
     </message>
+    <message>
+        <source>Geometric Tools (R)
+Hold down Shift to draw squares or circles.</source>
+        <translation>Geometrische hulpmiddelen (R)
+Houd Shift ingedrukt om vierkanten of cirkels te tekenen.</translation>
+    </message>
+    <message>
+        <source>Save to local</source>
+        <translation>Opslaan naar lokale map</translation>
+    </message>
+    <message>
+        <source>Save to Desktop</source>
+        <translation>Opslaan naar bureaublad</translation>
+    </message>
+    <message>
+        <source>Save to Pictures</source>
+        <translation>Opslaan naar afbeeldingen</translation>
+    </message>
+    <message>
+        <source>Save to %1</source>
+        <translation>Opslaan naar %1</translation>
+    </message>
+    <message>
+        <source>Specified Location</source>
+        <translation>Specifieke locatie</translation>
+    </message>
+    <message>
+        <source>Custom Location</source>
+        <translation>Aangepaste locatie</translation>
+    </message>
+    <message>
+        <source>Each inquiry</source>
+        <translation>Elke vraag</translation>
+    </message>
+    <message>
+        <source>Update location on save</source>
+        <translation>Locatie bijwerken bij opslaan</translation>
+    </message>
+    <message>
+        <source>Save to desktop</source>
+        <translation>Opslaan naar bureaublad</translation>
+    </message>
+    <message>
+        <source>Save to pictures</source>
+        <translation>Opslaan naar afbeeldingen</translation>
+    </message>
 </context>
 <context>
     <name>ToolBarWidget</name>
@@ -698,8 +702,8 @@ Houd Shift ingedrukt om een verticale of horizontale pijl te tekenen</translatio
         <translation>Sluiten (Esc)</translation>
     </message>
     <message>
-        <source>OK (Enter)</source>
-        <translation>Oké (Enter)</translation>
+        <source>Copy to clipboard (Enter)</source>
+        <translation>Kopiëren naar klembord (Enter)</translation>
     </message>
 </context>
 <context>
@@ -718,13 +722,6 @@ Houd Shift ingedrukt om een verticale of horizontale pijl te tekenen</translatio
     <message>
         <source>Exit</source>
         <translation>Afsluiten</translation>
-    </message>
-</context>
-<context>
-    <name>VoiceRecordProcess</name>
-    <message>
-        <source>New recording</source>
-        <translation>Opname maken</translation>
     </message>
 </context>
 </TS>

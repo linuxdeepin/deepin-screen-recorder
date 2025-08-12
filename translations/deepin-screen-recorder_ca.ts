@@ -1,4 +1,6 @@
-<?xml version="1.0" ?><!DOCTYPE TS><TS version="2.1" language="ca">
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE TS>
+<TS version="2.1" language="ca">
 <context>
     <name>CountdownTooltip</name>
     <message>
@@ -21,17 +23,6 @@ o premeu la drecera de nou per aturar la gravació.</translation>
     <message>
         <source>Recording</source>
         <translation>Gavació</translation>
-    </message>
-</context>
-<context>
-    <name>MainToolWidget</name>
-    <message>
-        <source>Record</source>
-        <translation>Grava</translation>
-    </message>
-    <message>
-        <source>Screenshot</source>
-        <translation>Captura de pantalla</translation>
     </message>
 </context>
 <context>
@@ -95,10 +86,6 @@ o premeu la drecera de nou per aturar la gravació.</translation>
     <message>
         <source>Screenshot</source>
         <translation>Captura de pantalla</translation>
-    </message>
-    <message>
-        <source>Screenshot failed.</source>
-        <translation>Ha fallat la captura</translation>
     </message>
     <message>
         <source>Scrollshot</source>
@@ -452,15 +439,6 @@ Manteniu premuda la tecla Maj per dibuixar una línia recta.</translation>
     </message>
 </context>
 <context>
-    <name>StartTooltip</name>
-    <message>
-        <source>Click or drag to
-select the area to record</source>
-        <translation>Cliqueu o arrossegueu
-per seleccionar l&apos;àrea a gravar</translation>
-    </message>
-</context>
-<context>
     <name>SubToolWidget</name>
     <message>
         <source>Show keystroke (K)</source>
@@ -575,18 +553,6 @@ per seleccionar l&apos;àrea a gravar</translation>
         <translation>Vídeos</translation>
     </message>
     <message>
-        <source>Rectangle (R)
-Press and hold Shift to draw a square</source>
-        <translation>Rectangle (R) 
-Manteniu premuda la tecla Maj per dibuixar un quadrat.</translation>
-    </message>
-    <message>
-        <source>Ellipse (O)
-Press and hold Shift to draw a circle</source>
-        <translation>El·lipse (O)
-Manteniu premuda la tecla Maj per dibuixar un cercle.</translation>
-    </message>
-    <message>
         <source>Line (L)
 Press and hold Shift to draw a vertical or horizontal line</source>
         <translation>Línia (L)
@@ -631,16 +597,8 @@ Manteniu premuda la tecla Maj per dibuixar una fletxa vertical o horitzontal.</t
         <translation>Grava</translation>
     </message>
     <message>
-        <source>Clipboard</source>
-        <translation>Porta-retalls</translation>
-    </message>
-    <message>
         <source>Pictures</source>
         <translation>Fotos</translation>
-    </message>
-    <message>
-        <source>Folder</source>
-        <translation>Carpeta</translation>
     </message>
     <message>
         <source>Set a path on save</source>
@@ -690,6 +648,51 @@ Manteniu premuda la tecla Maj per dibuixar una fletxa vertical o horitzontal.</t
         <source>Extract Text</source>
         <translation>Extreu-ne el text</translation>
     </message>
+    <message>
+        <source>Geometric Tools (R)
+Hold down Shift to draw squares or circles.</source>
+        <translation>Manteniu premuda la tecla Maj per dibuixar quadrats o cercles.</translation>
+    </message>
+    <message>
+        <source>Save to local</source>
+        <translation>Desa a local</translation>
+    </message>
+    <message>
+        <source>Save to Desktop</source>
+        <translation>Desa a l&apos;escriptori</translation>
+    </message>
+    <message>
+        <source>Save to Pictures</source>
+        <translation>Desa a fotos</translation>
+    </message>
+    <message>
+        <source>Save to %1</source>
+        <translation>Desa a %1</translation>
+    </message>
+    <message>
+        <source>Specified Location</source>
+        <translation>Ubicació especificada</translation>
+    </message>
+    <message>
+        <source>Custom Location</source>
+        <translation>Ubicació personalitzada</translation>
+    </message>
+    <message>
+        <source>Each inquiry</source>
+        <translation>Cada pregunta</translation>
+    </message>
+    <message>
+        <source>Update location on save</source>
+        <translation>Actualitza la ubicació al desar</translation>
+    </message>
+    <message>
+        <source>Save to desktop</source>
+        <translation>Desa a l&apos;escriptori</translation>
+    </message>
+    <message>
+        <source>Save to pictures</source>
+        <translation>Desa a fotos</translation>
+    </message>
 </context>
 <context>
     <name>ToolBarWidget</name>
@@ -698,8 +701,8 @@ Manteniu premuda la tecla Maj per dibuixar una fletxa vertical o horitzontal.</t
         <translation>Tanca (Esc)</translation>
     </message>
     <message>
-        <source>OK (Enter)</source>
-        <translation>D&apos;acord (Retorn)</translation>
+        <source>Copy to clipboard (Enter)</source>
+        <translation>Copia a la porta-retalls (Enter)</translation>
     </message>
 </context>
 <context>
@@ -718,13 +721,6 @@ Manteniu premuda la tecla Maj per dibuixar una fletxa vertical o horitzontal.</t
     <message>
         <source>Exit</source>
         <translation>Surt</translation>
-    </message>
-</context>
-<context>
-    <name>VoiceRecordProcess</name>
-    <message>
-        <source>New recording</source>
-        <translation>Gravació nova</translation>
     </message>
 </context>
 </TS>

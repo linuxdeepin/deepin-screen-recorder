@@ -1,4 +1,6 @@
-<?xml version="1.0" ?><!DOCTYPE TS><TS version="2.1" language="it">
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE TS>
+<TS version="2.1" language="it">
 <context>
     <name>CountdownTooltip</name>
     <message>
@@ -21,17 +23,6 @@ o utilizza nuovamente la scorciatoia da tastiera per terminare la registrazione<
     <message>
         <source>Recording</source>
         <translation>Registrazione in corso</translation>
-    </message>
-</context>
-<context>
-    <name>MainToolWidget</name>
-    <message>
-        <source>Record</source>
-        <translation>Registrazione</translation>
-    </message>
-    <message>
-        <source>Screenshot</source>
-        <translation>Screenshot</translation>
     </message>
 </context>
 <context>
@@ -97,10 +88,6 @@ o utilizza nuovamente la scorciatoia da tastiera per terminare la registrazione<
         <translation>Screenshot</translation>
     </message>
     <message>
-        <source>Screenshot failed.</source>
-        <translation>Screenshot fallito.</translation>
-    </message>
-    <message>
         <source>Scrollshot</source>
         <translation>Screenshot a scorrimento</translation>
     </message>
@@ -110,7 +97,7 @@ o utilizza nuovamente la scorciatoia da tastiera per terminare la registrazione<
     </message>
     <message>
         <source>deepin-screen-recorder</source>
-        <translation type="unfinished"/>
+        <translation>Deepin Screen Recorder</translation>
     </message>
     <message>
         <source>Open Folder</source>
@@ -118,7 +105,7 @@ o utilizza nuovamente la scorciatoia da tastiera per terminare la registrazione<
     </message>
     <message>
         <source>Screenshot finished and copy to clipboard</source>
-        <translation type="unfinished"/>
+        <translation>Screenshot completato e copiato negli appunti</translation>
     </message>
 </context>
 <context>
@@ -147,22 +134,22 @@ o utilizza nuovamente la scorciatoia da tastiera per terminare la registrazione<
     <name>QuickPanelWidget</name>
     <message>
         <source>Screenshot</source>
-        <translation type="unfinished"/>
+        <translation>Screenshot</translation>
     </message>
     <message>
         <source>Record</source>
-        <translation type="unfinished"/>
+        <translation>Registrazione</translation>
     </message>
 </context>
 <context>
     <name>RecordIconWidget</name>
     <message>
         <source>Screenshot</source>
-        <translation type="unfinished"/>
+        <translation>Screenshot</translation>
     </message>
     <message>
         <source>Recording</source>
-        <translation type="unfinished"/>
+        <translation>Registrazione in corso</translation>
     </message>
 </context>
 <context>
@@ -415,7 +402,7 @@ o utilizza nuovamente la scorciatoia da tastiera per terminare la registrazione<
     <name>ShotStartRecordPlugin</name>
     <message>
         <source>Record</source>
-        <translation type="unfinished"/>
+            <translation>Registrazione</translation>
     </message>
 </context>
 <context>
@@ -449,15 +436,6 @@ Tieni premuto Maiusc per tracciare una linea retta</translation>
     <message>
         <source>Adjust text size (Scroll to adjust it)</source>
         <translation>Regola la dimensione testo (scorri per regolarla)</translation>
-    </message>
-</context>
-<context>
-    <name>StartTooltip</name>
-    <message>
-        <source>Click or drag to
-select the area to record</source>
-        <translation>Clicca o trascina
-seleziona l&apos;area da registrare</translation>
     </message>
 </context>
 <context>
@@ -575,18 +553,6 @@ seleziona l&apos;area da registrare</translation>
         <translation>Video</translation>
     </message>
     <message>
-        <source>Rectangle (R)
-Press and hold Shift to draw a square</source>
-        <translation>Rettangolo (R)
-Tieni premuto Maiusc per disegnare un quadrato</translation>
-    </message>
-    <message>
-        <source>Ellipse (O)
-Press and hold Shift to draw a circle</source>
-        <translation>Ellisse (O)
-Tieni premuto Maiusc per disegnare un cerchio</translation>
-    </message>
-    <message>
         <source>Line (L)
 Press and hold Shift to draw a vertical or horizontal line</source>
         <translation>Linea (L)
@@ -631,16 +597,8 @@ Tieni premuto Maiusc per disegnare una freccia verticale o orizzontale</translat
         <translation>Registrazione</translation>
     </message>
     <message>
-        <source>Clipboard</source>
-        <translation>Appunti</translation>
-    </message>
-    <message>
         <source>Pictures</source>
         <translation>Immagini</translation>
-    </message>
-    <message>
-        <source>Folder</source>
-        <translation>Cartella</translation>
     </message>
     <message>
         <source>Set a path on save</source>
@@ -690,6 +648,52 @@ Tieni premuto Maiusc per disegnare una freccia verticale o orizzontale</translat
         <source>Extract Text</source>
         <translation>Estrai testo</translation>
     </message>
+    <message>
+        <source>Geometric Tools (R)
+Hold down Shift to draw squares or circles.</source>
+        <translation>Strumenti geometrici (R)
+Tieni premuto Maiusc per disegnare quadrati o cerchi.</translation>
+    </message>
+    <message>
+        <source>Save to local</source>
+        <translation>Salva nella cartella locale</translation>
+    </message>
+    <message>
+        <source>Save to Desktop</source>
+        <translation>Salva sul desktop</translation>
+    </message>
+    <message>
+        <source>Save to Pictures</source>
+        <translation>Salva nelle immagini</translation>
+    </message>
+    <message>
+        <source>Save to %1</source>
+        <translation>Salva in %1</translation>
+    </message>
+    <message>
+        <source>Specified Location</source>
+        <translation>Posizione specificata</translation>
+    </message>
+    <message>
+        <source>Custom Location</source>
+        <translation>Posizione personalizzata</translation>
+    </message>
+    <message>
+        <source>Each inquiry</source>
+        <translation>Ogni richiesta</translation>
+    </message>
+    <message>
+        <source>Update location on save</source>
+        <translation>Aggiorna la posizione al salvataggio</translation>
+    </message>
+    <message>
+        <source>Save to desktop</source>
+        <translation>Salva sul desktop</translation>
+    </message>
+    <message>
+        <source>Save to pictures</source>
+        <translation>Salva nelle immagini</translation>
+    </message>
 </context>
 <context>
     <name>ToolBarWidget</name>
@@ -698,8 +702,8 @@ Tieni premuto Maiusc per disegnare una freccia verticale o orizzontale</translat
         <translation>Chiudi (Esc)</translation>
     </message>
     <message>
-        <source>OK (Enter)</source>
-        <translation>OK (Invio)</translation>
+        <source>Copy to clipboard (Enter)</source>
+        <translation>Copia negli appunti (Enter)</translation>
     </message>
 </context>
 <context>
@@ -718,13 +722,6 @@ Tieni premuto Maiusc per disegnare una freccia verticale o orizzontale</translat
     <message>
         <source>Exit</source>
         <translation>Esci</translation>
-    </message>
-</context>
-<context>
-    <name>VoiceRecordProcess</name>
-    <message>
-        <source>New recording</source>
-        <translation>Nuova registrazione</translation>
     </message>
 </context>
 </TS>
