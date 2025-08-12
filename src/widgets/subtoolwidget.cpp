@@ -278,8 +278,9 @@ void SubToolWidget::initRecordLabel()
     }
 
 
-
-    m_cursorMenu->addAction(m_recorderMouse);
+    if (!Utils::isWaylandMode) {
+        m_cursorMenu->addAction(m_recorderMouse);
+    }
     m_cursorMenu->addAction(m_recorderCheck);
 
 
