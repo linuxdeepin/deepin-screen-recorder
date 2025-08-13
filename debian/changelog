@@ -1,3 +1,9 @@
+deepin-screen-recorder (6.6.2) unstable; urgency=medium
+
+  * fix: Update translations for various languages in deepin-screen-recorder
+
+ -- dengzhongyuan <dengzhongyuan@uniontech.com>  Wed, 13 Aug 2025 10:45:26 +0800
+
 deepin-screen-recorder (6.6.1) unstable; urgency=medium
 
   * fix: Update action text for save path in SubToolWidget
