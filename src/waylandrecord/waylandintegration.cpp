@@ -202,10 +202,17 @@ WaylandIntegration::WaylandIntegrationPrivate::~WaylandIntegrationPrivate()
         delete m_freeList.takeFirst();
     }
     m_freeList.clear();
+    
+    // 释放waylandList中的AVFrame资源
     while (!m_waylandList.isEmpty()) {
-        delete m_freeList.takeFirst();
+        waylandFrame frame = m_waylandList.takeFirst();
+        if (frame._avframe) {
+            avlibInterface::m_av_frame_free(&frame._avframe);
+        }
+        // 注意：frame._frame的内存已经在freeList中处理了，这里不需要重复删除
     }
     m_waylandList.clear();
+    
     if (nullptr != m_ffmFrame) {
         delete []m_ffmFrame;
         m_ffmFrame = nullptr;
@@ -955,7 +962,17 @@ void WaylandIntegration::WaylandIntegrationPrivate::gstWriteVideoFrame()
     while (isWriteVideo()) {
         if (getFrame(frame)) {
             if (m_gstRecordX) {
-                m_gstRecordX->waylandWriteVideoFrame(frame._frame, frame._width, frame._height);
+                // 优先使用RGB数据，因为GStreamer需要RGB格式
+                if (frame._frame) {
+                    m_gstRecordX->waylandWriteVideoFrame(frame._frame, frame._width, frame._height);
+                } else {
+                    qWarning() << "No RGB data available for GStreamer";
+                }
+                // 释放AVFrame（如果存在）
+                if (frame._avframe) {
+                    avlibInterface::m_av_frame_free(&frame._avframe);
+                    frame._avframe = nullptr;
+                }
             } else {
                 qWarning() << "m_gstRecordX is nullptr!";
             }
@@ -1256,6 +1273,63 @@ void WaylandIntegration::WaylandIntegrationPrivate::initEgl()
     qDebug() << "EGL已初始化";
 
 }
+AVFrame* WaylandIntegration::WaylandIntegrationPrivate::convertARGB2YUV420ToAVFrame(unsigned int w, unsigned int h, const uint8_t *in_data, int in_stride)
+{
+    // 创建AVFrame
+    AVFrame *avFrame = avlibInterface::m_av_frame_alloc();
+    if (!avFrame) {
+        qWarning() << "Failed to allocate AVFrame";
+        return nullptr;
+    }
+    
+    // 设置AVFrame参数
+    avFrame->format = AV_PIX_FMT_YUV420P;
+    avFrame->width = w;
+    avFrame->height = h;
+    
+    // 分配缓冲区
+    int ret = avlibInterface::m_av_frame_get_buffer(avFrame, 32);
+    if (ret < 0) {
+        qWarning() << "Failed to allocate AVFrame buffer";
+        avlibInterface::m_av_frame_free(&avFrame);
+        return nullptr;
+    }
+    
+    // 使用原有的convertARGB2YUV420逻辑进行转换
+    const int offset_y = 128 + (16 << 8), offset_uv = (128 + (128 << 8)) << 2;
+    
+    for(unsigned int j = 0; j < h / 2; ++j) {
+        const uint32_t *rgb1 = (const uint32_t*) (in_data + in_stride * (int) j * 2);
+        const uint32_t *rgb2 = (const uint32_t*) (in_data + in_stride * ((int) j * 2 + 1));
+        uint8_t *yuv_y1 = avFrame->data[0] + avFrame->linesize[0] * (int) j * 2;
+        uint8_t *yuv_y2 = avFrame->data[0] + avFrame->linesize[0] * ((int) j * 2 + 1);
+        uint8_t *yuv_u = avFrame->data[1] + avFrame->linesize[1] * (int) j;
+        uint8_t *yuv_v = avFrame->data[2] + avFrame->linesize[2] * (int) j;
+        
+        for(unsigned int i = 0; i < w / 2; ++i) {
+            uint32_t c1 = rgb1[0], c2 = rgb1[1], c3 = rgb2[0], c4 = rgb2[1];
+            rgb1 += 2; rgb2 += 2;
+            int b1 = (int) ((c1 >>  0) & 0xff), b2 = (int) ((c2 >>  0) & 0xff), b3 = (int) ((c3 >>  0) & 0xff), b4 = (int) ((c4 >>  0) & 0xff);
+            int g1 = (int) ((c1 >>  8) & 0xff), g2 = (int) ((c2 >>  8) & 0xff), g3 = (int) ((c3 >>  8) & 0xff), g4 = (int) ((c4 >>  8) & 0xff);
+            int r1 = (int) ((c1 >> 16) & 0xff), r2 = (int) ((c2 >> 16) & 0xff), r3 = (int) ((c3 >> 16) & 0xff), r4 = (int) ((c4 >> 16) & 0xff);
+
+            // BT.601 转换
+            yuv_y1[0] = (66 * r1 + 129 * g1 + 25 * b1 + offset_y) >> 8;
+            yuv_y1[1] = (66 * r2 + 129 * g2 + 25 * b2 + offset_y) >> 8;
+            yuv_y2[0] = (66 * r3 + 129 * g3 + 25 * b3 + offset_y) >> 8;
+            yuv_y2[1] = (66 * r4 + 129 * g4 + 25 * b4 + offset_y) >> 8;
+            yuv_y1 += 2; yuv_y2 += 2;
+            int sr = r1 + r2 + r3 + r4;
+            int sg = g1 + g2 + g3 + g4;
+            int sb = b1 + b2 + b3 + b4;
+            *(yuv_u++) = (-38 * sr +  -74 * sg + 112 * sb + offset_uv) >> 10;
+            *(yuv_v++) = (112 * sr + -94 * sg + -18 * sb + offset_uv) >> 10;
+        }
+    }
+    
+    return avFrame;
+}
+
 void WaylandIntegration::WaylandIntegrationPrivate::appendBuffer(unsigned char *frame, int width, int height, int stride, int64_t time)
 {
     static int f_count = 0;
@@ -1265,6 +1339,14 @@ void WaylandIntegration::WaylandIntegrationPrivate::appendBuffer(unsigned char *
         return;
     }
     qDebug() << "append frame index:" << ++f_count;
+    
+    // 在appendBuffer中就进行RGB到YUV的转换，减少后续编码时的开销
+    AVFrame *avFrame = convertARGB2YUV420ToAVFrame(width, height, frame, stride);
+    if (!avFrame) {
+        qWarning() << "Failed to convert RGB to YUV AVFrame";
+        return;
+    }
+    
     int size = height * stride;
     unsigned char *ch = nullptr;
     if (m_bInit) {
@@ -1279,20 +1361,27 @@ void WaylandIntegration::WaylandIntegrationPrivate::appendBuffer(unsigned char *
             //qDebug() << "创建内存空间";
         }
     }
+    
     QMutexLocker locker(&m_mutex);
     if (m_waylandList.size() >= m_bufferSize) {
-        //先进先出
-        //取队首
+        //先进先出 - 释放旧的AVFrame
         waylandFrame wFrame = m_waylandList.first();
-        memset(wFrame._frame, 0, static_cast<size_t>(size));
-        //拷贝当前帧
-        memcpy(wFrame._frame, frame, static_cast<size_t>(size));
+        if (wFrame._avframe) {
+            avlibInterface::m_av_frame_free(&wFrame._avframe);
+        }
+        
+        // 重用waylandFrame结构，设置新的AVFrame
+        wFrame._avframe = avFrame;
         wFrame._time = time;
         wFrame._width = width;
         wFrame._height = height;
         wFrame._stride = stride;
         wFrame._index = 0;
-        m_waylandList.first()._frame = nullptr;
+        // 保留原始frame指针用于兼容性
+        if (wFrame._frame && m_freeList.size() > 0) {
+            memcpy(wFrame._frame, frame, static_cast<size_t>(size));
+        }
+        
         //删队首
         m_waylandList.removeFirst();
         //存队尾
@@ -1301,21 +1390,30 @@ void WaylandIntegration::WaylandIntegrationPrivate::appendBuffer(unsigned char *
     } else if (0 <= m_waylandList.size() &&  m_waylandList.size() < m_bufferSize) {
         if (m_freeList.size() > 0) {
             waylandFrame wFrame;
+            wFrame._avframe = avFrame;
             wFrame._time = time;
             wFrame._width = width;
             wFrame._height = height;
             wFrame._stride = stride;
             wFrame._index = 0;
-            //分配空闲内存
+            
+            //分配空闲内存用于兼容性
             wFrame._frame = m_freeList.first();
             memset(wFrame._frame, 0, static_cast<size_t>(size));
-            //拷贝wayland推送的视频帧
+            //拷贝wayland推送的视频帧（保持兼容性）
             memcpy(wFrame._frame, frame, static_cast<size_t>(size));
+            
             m_waylandList.append(wFrame);
             //qDebug() << "环形缓冲区未满，存队尾"
             //空闲内存占用，仅删除索引，不删除空间
             m_freeList.removeFirst();
+        } else {
+            // 如果没有空闲内存，释放AVFrame
+            avlibInterface::m_av_frame_free(&avFrame);
         }
+    } else {
+        // 释放AVFrame
+        avlibInterface::m_av_frame_free(&avFrame);
     }
     //qDebug() << "存视频帧 m_waylandList.size(): " << m_waylandList.size() << " , m_freeList.size(): " << m_freeList.size();
 }
@@ -1382,37 +1480,40 @@ bool WaylandIntegration::WaylandIntegrationPrivate::getFrame(waylandFrame &frame
         frame._width = 0;
         frame._height = 0;
         frame._frame = nullptr;
+        frame._avframe = nullptr;
         return false;
     } else {
         int size = m_height * m_stride;
         //取队首，先进先出
-//        qint64 time1 = QDateTime::currentMSecsSinceEpoch();
         waylandFrame wFrame = m_waylandList.first();
         frame._width = wFrame._width;
         frame._height = wFrame._height;
         frame._stride = wFrame._stride;
         frame._time = wFrame._time;
-        //m_ffmFrame 视频帧缓存
-        frame._frame = m_ffmFrame;
         frame._index = frameIndex++;
-        //拷贝到 m_ffmFrame 视频帧缓存
-//        qint64 time2 = QDateTime::currentMSecsSinceEpoch();
-//        frame._frame = std::move(wFrame._frame);
-        memcpy(frame._frame, wFrame._frame, static_cast<size_t>(size));
+        
+        // 复制AVFrame - 这是我们主要要使用的数据
+        frame._avframe = wFrame._avframe;
+        
+        // 保持兼容性 - 如果需要RGB数据
+        frame._frame = m_ffmFrame;
+        if (wFrame._frame) {
+            memcpy(frame._frame, wFrame._frame, static_cast<size_t>(size));
+        }
+        
+        // 清理队列中的引用，避免重复释放
         m_waylandList.first()._frame = nullptr;
-        //删队首视频帧 waylandFrame，未删空闲内存 waylandFrame::_frame，只删索引，不删内存空间
-//        qint64 time3 = QDateTime::currentMSecsSinceEpoch();
+        m_waylandList.first()._avframe = nullptr;
+        
+        //删队首视频帧 waylandFrame，AVFrame的所有权已转移给frame
         m_waylandList.removeFirst();
-//        qint64 time4 = QDateTime::currentMSecsSinceEpoch();
+        
         //回收空闲内存，重复使用
-        m_freeList.append(wFrame._frame);
-        //qDebug() << "获取视频帧";
-//        qint64 time5 = QDateTime::currentMSecsSinceEpoch();
-//        qDebug() << "value get time : " << time2-time1;
-//        qDebug() << "memcpy : " << time3-time2;
-//        qDebug() << "removeFirst : " << time4-time3;
-//        qDebug() << "append : " << time5-time4;
-//        qDebug() << "获取视频帧 m_waylandList.size(): " << m_waylandList.size() << " , m_freeList.size(): " << m_freeList.size();
+        if (wFrame._frame) {
+            m_freeList.append(wFrame._frame);
+        }
+        
+        //qDebug() << "获取视频帧 m_waylandList.size(): " << m_waylandList.size() << " , m_freeList.size(): " << m_freeList.size();
         return true;
     }
 }

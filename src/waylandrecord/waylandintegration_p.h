@@ -16,6 +16,7 @@
 #include <epoxy/gl.h>
 #include <QMutex>
 #include <EGL/egl.h>
+#include "avlibinterface.h"
 
 enum audioType {
     //麦克风
@@ -60,7 +61,7 @@ public:
         EGLContext ctx;
         EGLConfig conf;
     };
-    //缓存帧
+    //缓存帧 - 改为AVFrame格式以减少内存使用
     struct waylandFrame {
         //时间戳
         int64_t _time;
@@ -69,6 +70,9 @@ public:
         int _width;
         int _height;
         int _stride;
+        // 改为AVFrame指针，直接存储YUV数据
+        AVFrame *_avframe;
+        // 保留原始指针用于内存管理
         unsigned char *_frame;
     };
 
@@ -198,14 +202,24 @@ protected Q_SLOTS:
 
 private:
     /**
-     * @brief appendBuffer:存视频帧
-     * @param frame:视频帧
+     * @brief appendBuffer:存视频帧 - 改造为直接创建AVFrame并转换为YUV格式
+     * @param frame:视频帧RGB数据
      * @param width:视频帧宽
      * @param height:视频帧高
      * @param stride:通道数
      * @param time:时间戳
      */
     void appendBuffer(unsigned char *frame, int width, int height, int stride, int64_t time);
+    
+    /**
+     * @brief convertARGB2YUV420ToAVFrame:将ARGB数据转换为YUV420格式的AVFrame
+     * @param w:图像宽度
+     * @param h:图像高度
+     * @param in_data:输入ARGB数据
+     * @param in_stride:输入ARGB一行宽度
+     * @return:包含YUV数据的AVFrame指针
+     */
+    AVFrame* convertARGB2YUV420ToAVFrame(unsigned int w, unsigned int h, const uint8_t *in_data, int in_stride);
     /**
      * @brief initScreenFrameBuffer 初始化屏幕数据数组
      */

@@ -254,6 +254,7 @@ private:
     bool m_bMix;
     AVFrame *mMic_frame;
     AVFrame *mSpeaker_frame;
+public:
     int m_width, m_height;
     int m_framerate;
     int m_video_bitrate;
