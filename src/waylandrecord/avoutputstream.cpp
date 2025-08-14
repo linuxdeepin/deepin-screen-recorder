@@ -690,10 +690,55 @@ bool CAVOutputStream::open(QString path)
 
 int CAVOutputStream::writeVideoFrame(WaylandIntegration::WaylandIntegrationPrivate::waylandFrame &frame)
 {
+    // 优先使用预转换的AVFrame，如果没有则回退到原有逻辑
+    if (frame._avframe) {
+        // 使用预转换的AVFrame，跳过RGB到YUV的转换步骤
+        qDebug() << "Using pre-converted AVFrame for encoding";
+        
+        AVFrame *sourceFrame = frame._avframe;
+        sourceFrame->pts = pFrameYUV->pts++;  // 设置PTS
+        
+        AVPacket packet;
+        packet.data = nullptr;
+        packet.size = 0;
+        avlibInterface::m_av_init_packet(&packet);
+        int enc_got_frame = 0;
+        
+        // 直接编码AVFrame
+        avlibInterface::m_avcodec_encode_video2(pCodecCtx, &packet, sourceFrame, &enc_got_frame);
+        
+        if (1 == enc_got_frame) {
+            packet.stream_index = m_videoStream->index;
+            m_videoFrameCount++;
+            if (m_videoFrameCount == 1) {
+                m_fristVideoFramePts = frame._time;
+            }
+            packet.pts = static_cast<int64_t>(m_videoStream->time_base.den) * (frame._time - m_fristVideoFramePts) / AV_TIME_BASE;
+            packet.dts = packet.pts;
+            int ret = writeFrame(m_videoFormatContext, &packet);
+            if (ret < 0) {
+                avlibInterface::m_av_packet_unref(&packet);
+                return ret;
+            }
+        }
+        
+        avlibInterface::m_av_free_packet(&packet);
+        
+        // 释放使用完的AVFrame
+        avlibInterface::m_av_frame_free(&frame._avframe);
+        frame._avframe = nullptr;
+        
+        fflush(stdout);
+        return 0;
+    }
+    
+    // 回退到原有逻辑 - 当_avframe为空时使用RGB数据
     if (nullptr == frame._frame || frame._width <= 0 || frame._height <= 0) {
         return -1;
     }
-//    qint64 time1 = QDateTime::currentMSecsSinceEpoch();
+    
+    qDebug() << "Fallback to RGB conversion (AVFrame not available)";
+    
     if (m_useScaleConvert) {
         AVFrame *pRgbFrame = avlibInterface::m_av_frame_alloc();
         pRgbFrame->width = frame._width;
@@ -702,7 +747,6 @@ int CAVOutputStream::writeVideoFrame(WaylandIntegration::WaylandIntegrationPriva
         if (0 == avlibInterface::m_av_frame_get_buffer(pRgbFrame, 32)) {
             pRgbFrame->width  = frame._width;
             pRgbFrame->height = frame._height;
-            //pRgbFrame->format = AV_PIX_FMT_RGB32;
             pRgbFrame->crop_left   = static_cast<size_t>(m_left);
             pRgbFrame->crop_top    = static_cast<size_t>(m_top);
             pRgbFrame->crop_right  = static_cast<size_t>(m_right);
@@ -710,7 +754,7 @@ int CAVOutputStream::writeVideoFrame(WaylandIntegration::WaylandIntegrationPriva
             pRgbFrame->linesize[0] = frame._stride;
             pRgbFrame->data[0]     = frame._frame;
         }
-        //qDebug() << "pRgbFrame -w h" << pRgbFrame->width << pRgbFrame->height << "corp :" << pRgbFrame->crop_left << pRgbFrame->crop_top << pRgbFrame->crop_right << pRgbFrame->crop_bottom;
+        
         if (nullptr == m_pVideoSwsContext) {
             AVPixelFormat fmt = AV_PIX_FMT_RGBA;
             if (m_boardVendorType) {
@@ -730,20 +774,12 @@ int CAVOutputStream::writeVideoFrame(WaylandIntegration::WaylandIntegrationPriva
             AVERROR(ERANGE);
             return 2;
         }
-        //qDebug() << "pRgbFrame after cropping -w h" << pRgbFrame->width << pRgbFrame->height ;
-        //qDebug() << "stride-src: " << pRgbFrame->linesize[0] << pRgbFrame->width*4 << pRgbFrame->linesize[2] <<
-        //            "stride-dst: " << pFrameYUV->linesize[0] << pFrameYUV->linesize[1] << pFrameYUV->linesize[2];
-        //qDebug() << "pYUVFrame -w h" << pFrameYUV->width << pFrameYUV->height ;
-        qint64 time2 = QDateTime::currentMSecsSinceEpoch();
+        
         avlibInterface::m_sws_scale(m_pVideoSwsContext, pRgbFrame->data, pRgbFrame->linesize, 0, pCodecCtx->height, pFrameYUV->data, pFrameYUV->linesize);
 
-
-        qint64 time3 = QDateTime::currentMSecsSinceEpoch();
-        qDebug() << "time3 - time2: sws_scale : " << time3-time2;
         if (pRgbFrame->height != pCodecCtx->height && pRgbFrame->width != pCodecCtx->width) {
             pFrameYUV->width  = pCodecCtx->width;
             pFrameYUV->height = pCodecCtx->height;
-            qDebug() << "the frame maybe cropped. the frame mybe not be encode. use the codectx as encode frame size";
         } else {
             pFrameYUV->width  = pRgbFrame->width;
             pFrameYUV->height = pRgbFrame->height;
@@ -753,16 +789,12 @@ int CAVOutputStream::writeVideoFrame(WaylandIntegration::WaylandIntegrationPriva
         pFrameYUV->width  = pCodecCtx->width;
         pFrameYUV->height = pCodecCtx->height;
 
-        qint64 time2 = QDateTime::currentMSecsSinceEpoch();
-
         convertARGB2YUV420(pCodecCtx->width,
                            pCodecCtx->height,
                            frame._frame + (m_top * frame._stride + m_left * 4),
                            frame._stride,
                            pFrameYUV->data,
                            pFrameYUV->linesize);
-//        qint64 time3 = QDateTime::currentMSecsSinceEpoch();
-//        qDebug() << "time3 - time2: qucik convert : " << time3-time2;
     }
 
     pFrameYUV->format = AV_PIX_FMT_YUV420P;
@@ -775,24 +807,19 @@ int CAVOutputStream::writeVideoFrame(WaylandIntegration::WaylandIntegrationPriva
     pFrameYUV->pts++;
     if (1 == enc_got_frame) {
         packet.stream_index = m_videoStream->index;
-        //packet.pts = static_cast<int64_t>(m_videoStream->time_base.den) * frame._time / AV_TIME_BASE;
         m_videoFrameCount++;
         if (m_videoFrameCount == 1) {
             m_fristVideoFramePts = frame._time;
         }
         packet.pts = static_cast<int64_t>(m_videoStream->time_base.den) * (frame._time - m_fristVideoFramePts) / AV_TIME_BASE;
-        //qDebug() << "video packet.pts: " << packet.pts << " , " << static_cast<int64_t>(m_videoStream->time_base.den) << " * " << frame._time - m_fristVideoFramePts << " / " << AV_TIME_BASE;
         packet.dts =  packet.pts;
         int ret = writeFrame(m_videoFormatContext, &packet);
         if (ret < 0) {
-            //char tmpErrString[128] = {0};
-            //printf("Could not write video frame, error: %s\n", av_make_error_string(tmpErrString, AV_ERROR_MAX_STRING_SIZE, ret));
             avlibInterface::m_av_packet_unref(&packet);
             return ret;
         }
     }
-    qint64 time4 = QDateTime::currentMSecsSinceEpoch();
-//    qDebug() << "time4 - time1: writeVideoFrame : " << time4-time1;
+    
     avlibInterface::m_av_free_packet(&packet);
     fflush(stdout);
     return 0;
