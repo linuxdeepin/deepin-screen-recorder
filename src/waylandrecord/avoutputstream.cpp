@@ -693,10 +693,16 @@ int CAVOutputStream::writeVideoFrame(WaylandIntegration::WaylandIntegrationPriva
     // 优先使用预转换的AVFrame，如果没有则回退到原有逻辑
     if (frame._avframe) {
         // 使用预转换的AVFrame，跳过RGB到YUV的转换步骤
-        qDebug() << "Using pre-converted AVFrame for encoding";
+        qDebug() << "Using pre-converted AVFrame for encoding, size:" << frame._width << "x" << frame._height;
         
         AVFrame *sourceFrame = frame._avframe;
         sourceFrame->pts = pFrameYUV->pts++;  // 设置PTS
+        
+        // 确保AVFrame的尺寸与编码器设置一致
+        if (sourceFrame->width != pCodecCtx->width || sourceFrame->height != pCodecCtx->height) {
+            qDebug() << "AVFrame size mismatch: frame" << sourceFrame->width << "x" << sourceFrame->height 
+                     << "vs codec" << pCodecCtx->width << "x" << pCodecCtx->height;
+        }
         
         AVPacket packet;
         packet.data = nullptr;

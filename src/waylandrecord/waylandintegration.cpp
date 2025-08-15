@@ -1339,14 +1339,89 @@ void WaylandIntegration::WaylandIntegrationPrivate::appendBuffer(unsigned char *
         return;
     }
     qDebug() << "append frame index:" << ++f_count;
-    
-    // 在appendBuffer中就进行RGB到YUV的转换，减少后续编码时的开销
-    AVFrame *avFrame = convertARGB2YUV420ToAVFrame(width, height, frame, stride);
-    if (!avFrame) {
-        qWarning() << "Failed to convert RGB to YUV AVFrame";
+
+    // FFmpeg 环境：仅缓存YUV AVFrame，节省内存
+    if (Utils::isFFmpegEnv) {
+        // 获取裁剪参数，确保宽高为偶数（YUV420P要求）
+        int cropLeft = 0, cropTop = 0, cropRight = 0, cropBottom = 0;
+        int cropWidth = width, cropHeight = height;
+        
+        if (m_recordAdmin && m_recordAdmin->m_pOutputStream) {
+            cropLeft = m_recordAdmin->m_pOutputStream->m_left;
+            cropTop = m_recordAdmin->m_pOutputStream->m_top;
+            cropRight = m_recordAdmin->m_pOutputStream->m_right;
+            cropBottom = m_recordAdmin->m_pOutputStream->m_bottom;
+            
+            qDebug() << "Crop parameters from RecordAdmin:" << cropLeft << cropTop << cropRight << cropBottom;
+            
+            // 计算裁剪后的宽高
+            cropWidth = width - cropLeft - cropRight;
+            cropHeight = height - cropTop - cropBottom;
+            
+            // 确保宽高为偶数（YUV420P要求）
+            if (cropWidth % 2 == 1) cropWidth--;
+            if (cropHeight % 2 == 1) cropHeight--;
+            
+            // 调整裁剪边界，确保不超出图像范围
+            if (cropLeft + cropWidth > width) cropWidth = width - cropLeft;
+            if (cropTop + cropHeight > height) cropHeight = height - cropTop;
+            if (cropWidth <= 0 || cropHeight <= 0) {
+                qWarning() << "Invalid crop dimensions:" << cropWidth << "x" << cropHeight;
+                return;
+            }
+        } else {
+            qDebug() << "No RecordAdmin available, using full screen dimensions";
+        }
+        
+        // 使用裁剪后的尺寸进行YUV转换
+        qDebug() << "Converting cropped region:" << cropLeft << cropTop << cropWidth << "x" << cropHeight 
+                 << "from full image:" << width << "x" << height;
+        
+        AVFrame *avFrame = convertARGB2YUV420ToAVFrame(static_cast<unsigned int>(cropWidth), 
+                                                       static_cast<unsigned int>(cropHeight), 
+                                                       frame + (cropTop * stride + cropLeft * 4), 
+                                                       stride);
+        if (!avFrame) {
+            qWarning() << "Failed to convert RGB to YUV AVFrame";
+            return;
+        }
+
+        if (m_bInit) {
+            m_bInit = false;
+            m_width = cropWidth;  // 使用裁剪后的尺寸
+            m_height = cropHeight;
+            m_stride = stride;
+            // FFmpeg 模式不分配RGB缓存，避免额外内存
+            if (m_ffmFrame) {
+                delete [] m_ffmFrame;
+                m_ffmFrame = nullptr;
+            }
+            // 清空并释放已有的兼容性freeList
+            while (!m_freeList.isEmpty()) {
+                delete m_freeList.takeFirst();
+            }
+        }
+
+        QMutexLocker locker(&m_mutex);
+        if (m_waylandList.size() >= m_bufferSize) {
+            waylandFrame old = m_waylandList.takeFirst();
+            if (old._avframe) {
+                avlibInterface::m_av_frame_free(&old._avframe);
+            }
+        }
+        waylandFrame wFrame;
+        wFrame._avframe = avFrame;
+        wFrame._time = time;
+        wFrame._width = cropWidth;   // 保存裁剪后的尺寸
+        wFrame._height = cropHeight;
+        wFrame._stride = stride;
+        wFrame._index = 0;
+        wFrame._frame = nullptr; // 不保留RGB
+        m_waylandList.append(wFrame);
         return;
     }
-    
+
+    // 非FFmpeg环境：保持原有RGB缓存逻辑（用于GStreamer等）
     int size = height * stride;
     unsigned char *ch = nullptr;
     if (m_bInit) {
@@ -1358,64 +1433,41 @@ void WaylandIntegration::WaylandIntegrationPrivate::appendBuffer(unsigned char *
         for (int i = 0; i < m_bufferSize; i++) {
             ch = new unsigned char[static_cast<unsigned long>(size)];
             m_freeList.append(ch);
-            //qDebug() << "创建内存空间";
         }
     }
-    
+
     QMutexLocker locker(&m_mutex);
     if (m_waylandList.size() >= m_bufferSize) {
-        //先进先出 - 释放旧的AVFrame
         waylandFrame wFrame = m_waylandList.first();
-        if (wFrame._avframe) {
-            avlibInterface::m_av_frame_free(&wFrame._avframe);
+        //删队首
+        m_waylandList.removeFirst();
+        //存队尾（复用结构体）
+        if (wFrame._frame) {
+            memcpy(wFrame._frame, frame, static_cast<size_t>(size));
         }
-        
-        // 重用waylandFrame结构，设置新的AVFrame
-        wFrame._avframe = avFrame;
+        wFrame._avframe = nullptr; // 非FFmpeg环境不使用
         wFrame._time = time;
         wFrame._width = width;
         wFrame._height = height;
         wFrame._stride = stride;
         wFrame._index = 0;
-        // 保留原始frame指针用于兼容性
-        if (wFrame._frame && m_freeList.size() > 0) {
-            memcpy(wFrame._frame, frame, static_cast<size_t>(size));
-        }
-        
-        //删队首
-        m_waylandList.removeFirst();
-        //存队尾
         m_waylandList.append(wFrame);
-        //qDebug() << "环形缓冲区已满，删队首，存队尾";
     } else if (0 <= m_waylandList.size() &&  m_waylandList.size() < m_bufferSize) {
         if (m_freeList.size() > 0) {
             waylandFrame wFrame;
-            wFrame._avframe = avFrame;
+            wFrame._avframe = nullptr;
             wFrame._time = time;
             wFrame._width = width;
             wFrame._height = height;
             wFrame._stride = stride;
             wFrame._index = 0;
-            
-            //分配空闲内存用于兼容性
+            // 分配空闲内存
             wFrame._frame = m_freeList.first();
-            memset(wFrame._frame, 0, static_cast<size_t>(size));
-            //拷贝wayland推送的视频帧（保持兼容性）
             memcpy(wFrame._frame, frame, static_cast<size_t>(size));
-            
             m_waylandList.append(wFrame);
-            //qDebug() << "环形缓冲区未满，存队尾"
-            //空闲内存占用，仅删除索引，不删除空间
             m_freeList.removeFirst();
-        } else {
-            // 如果没有空闲内存，释放AVFrame
-            avlibInterface::m_av_frame_free(&avFrame);
         }
-    } else {
-        // 释放AVFrame
-        avlibInterface::m_av_frame_free(&avFrame);
     }
-    //qDebug() << "存视频帧 m_waylandList.size(): " << m_waylandList.size() << " , m_freeList.size(): " << m_freeList.size();
 }
 
 void WaylandIntegration::WaylandIntegrationPrivate::initScreenFrameBuffer()
@@ -1476,46 +1528,53 @@ int WaylandIntegration::WaylandIntegrationPrivate::frameIndex = 0;
 bool WaylandIntegration::WaylandIntegrationPrivate::getFrame(waylandFrame &frame)
 {
     QMutexLocker locker(&m_mutex);
-    if (m_waylandList.size() <= 0 || nullptr == m_ffmFrame) {
+    if (m_waylandList.isEmpty()) {
         frame._width = 0;
         frame._height = 0;
+        frame._stride = 0;
+        frame._time = 0;
+        frame._index = 0;
         frame._frame = nullptr;
         frame._avframe = nullptr;
         return false;
-    } else {
-        int size = m_height * m_stride;
-        //取队首，先进先出
-        waylandFrame wFrame = m_waylandList.first();
-        frame._width = wFrame._width;
-        frame._height = wFrame._height;
-        frame._stride = wFrame._stride;
-        frame._time = wFrame._time;
-        frame._index = frameIndex++;
-        
-        // 复制AVFrame - 这是我们主要要使用的数据
+    }
+
+    // 取队首，先进先出
+    waylandFrame wFrame = m_waylandList.first();
+    frame._width = wFrame._width;
+    frame._height = wFrame._height;
+    frame._stride = wFrame._stride;
+    frame._time = wFrame._time;
+    frame._index = frameIndex++;
+
+    if (Utils::isFFmpegEnv) {
+        // FFmpeg：仅返回AVFrame，转移所有权
         frame._avframe = wFrame._avframe;
-        
-        // 保持兼容性 - 如果需要RGB数据
-        frame._frame = m_ffmFrame;
-        if (wFrame._frame) {
-            memcpy(frame._frame, wFrame._frame, static_cast<size_t>(size));
-        }
-        
-        // 清理队列中的引用，避免重复释放
-        m_waylandList.first()._frame = nullptr;
+        frame._frame = nullptr;
         m_waylandList.first()._avframe = nullptr;
-        
-        //删队首视频帧 waylandFrame，AVFrame的所有权已转移给frame
         m_waylandList.removeFirst();
-        
-        //回收空闲内存，重复使用
-        if (wFrame._frame) {
-            m_freeList.append(wFrame._frame);
-        }
-        
-        //qDebug() << "获取视频帧 m_waylandList.size(): " << m_waylandList.size() << " , m_freeList.size(): " << m_freeList.size();
         return true;
     }
+
+    // 非FFmpeg：仅返回RGB缓冲
+    if (nullptr == m_ffmFrame) {
+        frame._frame = nullptr;
+        frame._avframe = nullptr;
+        return false;
+    }
+
+    int size = m_height * m_stride;
+    frame._avframe = nullptr;
+    frame._frame = m_ffmFrame;
+    if (wFrame._frame) {
+        memcpy(frame._frame, wFrame._frame, static_cast<size_t>(size));
+    }
+    m_waylandList.first()._frame = nullptr;
+    m_waylandList.removeFirst();
+    if (wFrame._frame) {
+        m_freeList.append(wFrame._frame);
+    }
+    return true;
 }
 
 bool WaylandIntegration::WaylandIntegrationPrivate::isWriteVideo()

@@ -149,7 +149,14 @@ int RecordAdmin::startStream()
     if (m_pInputStream->GetVideoInputInfo(cx, cy, fps, pixel_fmt)) { //获取视频采集源的信息
         //cx:width cy:height  //CBR（固定码率控制）, VBR是动态码率,  平均码率ABR,
         //视频编码器常用的码率控制方式: abr(平均码率)，crf（限制码率），cqp（固定质量）
-        m_pOutputStream->SetVideoCodecProp(AV_CODEC_ID_H264, fps, 500000/*bps*/, 10/*GOP*/, cx, cy); //设置视频编码器属性
+        
+        // 使用裁剪后的尺寸设置编码器，确保宽高为偶数
+        int encodeWidth = m_selectWidth;
+        int encodeHeight = m_selectHeight;
+        if (encodeWidth % 2 == 1) encodeWidth--;        // 适应YUV编码要求图像宽高偶数
+        if (encodeHeight % 2 == 1) encodeHeight--;      // 适应YUV编码要求图像宽高偶数
+        
+        m_pOutputStream->SetVideoCodecProp(AV_CODEC_ID_H264, fps, 500000/*bps*/, 10/*GOP*/, encodeWidth, encodeHeight); //设置视频编码器属性
     }
     int sample_rate = 0, channels = 0, layout;
     AVSampleFormat  sample_fmt;
