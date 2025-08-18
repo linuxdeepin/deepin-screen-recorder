@@ -14,6 +14,12 @@ class ScreenGrabber : public QObject
 public:
     explicit ScreenGrabber(QObject *parent = nullptr);
     QPixmap grabEntireDesktop(bool &ok, const QRect &rect, const qreal devicePixelRatio);
+    
+    /**
+     * @brief 快速全屏截图，绕过MainWindow初始化，避免S3/S4问题
+     * @return 截图成功返回true，失败返回false
+     */
+    static bool quickFullScreenshot();
 };
 
 #endif // SCREENGRABBER_H
