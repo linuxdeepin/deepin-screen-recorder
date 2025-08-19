@@ -928,6 +928,13 @@ void MainWindow::forciblySavingNotify()
 
 void MainWindow::onExit()
 {
+    static bool hasBeenCalled = false;
+    if (hasBeenCalled) {
+        qCInfo(dsrApp) << "onExit已被调用，忽略重复调用";
+        return;
+    }
+    hasBeenCalled = true;
+
     qCInfo(dsrApp) << "exit screenshot app";
     if (RECORD_BUTTON_RECORDING == recordButtonStatus) {
         stopRecord();
