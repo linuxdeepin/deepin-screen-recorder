@@ -456,7 +456,7 @@ int main(int argc, char *argv[])
         Dtk::Core::DLogManager::registerConsoleAppender();
         Dtk::Core::DLogManager::registerFileAppender();
 
-        QCommandLineOption  delayOption(QStringList() << "d" << "delay", "Take a screenshot after NUM seconds.", "NUM");
+        QCommandLineOption delayOption(QStringList() << "d" << "delay", "Take a screenshot after NUM seconds.", "NUM");
         QCommandLineOption fullscreenOption(QStringList() << "f" << "fullscreen", "Take a screenshot the whole screen.");
         QCommandLineOption topWindowOption(QStringList() << "w" << "top-window", "Take a screenshot of the most top window.");
         QCommandLineOption savePathOption(QStringList() << "s" << "save-path", "Specify a path to save the screenshot.", "PATH");
