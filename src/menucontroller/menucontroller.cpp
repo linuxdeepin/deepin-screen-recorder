@@ -110,6 +110,9 @@ MenuController::MenuController(QObject *parent)
 
     m_unDoAct->setEnabled(false);
     qCDebug(dsrApp) << "Menu actions initialized";
+    
+    // 设置菜单鼠标样式处理
+    setupMenuCursorHandling();
 
 //    QIcon saveIcon;
 //    saveIcon.addFile(":/image/menu_icons/save-menu-norml.svg", MENU_ICON_SIZE, QIcon::Normal);
@@ -154,15 +157,14 @@ MenuController::MenuController(QObject *parent)
 //        emit shapePressed("close");
 //    });
 
-    connect(m_menu, &DMenu::aboutToHide, this, [ = ] {
-        qCDebug(dsrApp) << "Menu about to hide";
-        emit menuNoFocus();
-    });
+    // 菜单显示和隐藏事件现在在setupMenuCursorHandling()中处理
 }
 
 void MenuController::showMenu(QPoint pos)
 {
     qCDebug(dsrApp) << "Showing menu at position:" << pos;
+    // 立即设置鼠标样式为箭头光标
+    qApp->setOverrideCursor(Qt::ArrowCursor);
     m_menu->popup(pos);
 }
 
@@ -172,11 +174,42 @@ void MenuController::setUndoEnable(bool status)
     m_unDoAct->setEnabled(status);
 }
 
-void MenuController::enterEvent(QEnterEvent *e)
+void MenuController::setupMenuCursorHandling()
 {
-    Q_UNUSED(e);
-    qCDebug(dsrApp) << "Enter event received, setting override cursor.";
-    qApp->setOverrideCursor(Qt::ArrowCursor);
+    // 安装事件过滤器来监听菜单的鼠标事件
+    m_menu->installEventFilter(this);
+    qCDebug(dsrApp) << "Menu event filter installed for cursor handling";
+    
+    // 连接菜单显示和隐藏事件
+    connect(m_menu, &DMenu::aboutToShow, this, [=] {
+        qCDebug(dsrApp) << "Menu about to show, setting arrow cursor";
+        qApp->setOverrideCursor(Qt::ArrowCursor);
+    });
+    
+    connect(m_menu, &DMenu::aboutToHide, this, [=] {
+        qCDebug(dsrApp) << "Menu about to hide, restoring cursor";
+        qApp->restoreOverrideCursor();
+        emit menuNoFocus();
+    });
+}
+
+bool MenuController::eventFilter(QObject *watched, QEvent *event)
+{
+    if (watched == m_menu) {
+        switch (event->type()) {
+        case QEvent::Enter:
+            qCDebug(dsrApp) << "Mouse entered menu, ensuring arrow cursor";
+            qApp->setOverrideCursor(Qt::ArrowCursor);
+            break;
+        case QEvent::Leave:
+            qCDebug(dsrApp) << "Mouse left menu, restoring cursor";
+            qApp->restoreOverrideCursor();
+            break;
+        default:
+            break;
+        }
+    }
+    return QObject::eventFilter(watched, event);
 }
 
 MenuController::~MenuController()

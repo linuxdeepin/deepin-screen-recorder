@@ -29,12 +29,14 @@ public slots:
     void setUndoEnable(bool status);
 
 protected:
-    void enterEvent(QEnterEvent *e);
+    bool eventFilter(QObject *watched, QEvent *event) override;
 private:
     DMenu *m_menu;
     QAction *m_unDoAct;
     QAction *m_saveAct;
     QAction *m_closeAct;
     qreal m_ration;
+    
+    void setupMenuCursorHandling();
 };
 #endif // MENUCONTROLLER_H

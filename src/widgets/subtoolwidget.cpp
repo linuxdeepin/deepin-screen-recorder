@@ -58,6 +58,7 @@ SubToolWidget::SubToolWidget(MainWindow *pmainwindow, DWidget *parent) : DStacke
 
 void SubToolWidget::initWidget()
 {
+    titleActionFont = DFontSizeManager::instance()->get(DFontSizeManager::T8);
     qCDebug(dsrApp) << "SubToolWidget::initWidget called.";
     hintFilter = new HintFilter(this);
     initRecordLabel();
@@ -199,9 +200,11 @@ void SubToolWidget::initRecordOption()
     t_saveGroup->setExclusive(true);
     m_recordOptionMenu = new DMenu(this);
     m_recordOptionMenu->installEventFilter(this);
-    DFontSizeManager::instance()->bind(m_recordOptionMenu, DFontSizeManager::T8);
+    DFontSizeManager::instance()->bind(m_recordOptionMenu, DFontSizeManager::T6);
     // 保存格式
     QAction *formatTitleAction = new QAction(tr("Format:"), m_recordOptionMenu);
+    formatTitleAction->setFont(titleActionFont);
+
     QAction *gifAction = new QAction(tr("GIF"));
     QAction *mp4Action = new QAction(tr("MP4"), m_recordOptionMenu);
     QAction *mkvAction = new QAction(tr("MKV"), m_recordOptionMenu);
@@ -211,6 +214,7 @@ void SubToolWidget::initRecordOption()
     }
     // 帧数
     QAction *fpsTitleAction = new QAction(tr("FPS:"), m_recordOptionMenu);
+    fpsTitleAction->setFont(titleActionFont);
     QAction *fps5Action = new QAction(tr("5 fps"), m_recordOptionMenu);
     QAction *fps10Action = new QAction(tr("10 fps"), m_recordOptionMenu);
     QAction *fps20Action = new QAction(tr("20 fps"), m_recordOptionMenu);
@@ -218,16 +222,19 @@ void SubToolWidget::initRecordOption()
     QAction *fps30Action = new QAction(tr("30 fps"), m_recordOptionMenu);
     // 声音
     QAction *audio = new QAction(tr("Sound"), m_recordOptionMenu);
+    audio->setFont(titleActionFont);
     //QAction *notAudio = new QAction(tr("Not Audio"), m_recordOptionMenu);
     m_microphoneAction = new QAction(tr("Microphone"), m_recordOptionMenu);
     QAction *sysAudio = new QAction(tr("System audio"), m_recordOptionMenu);
     // 选项
     QAction *mouseInfo = new QAction(tr("Options"), m_recordOptionMenu);
+    mouseInfo->setFont(titleActionFont);
     //QAction *notMouse = new QAction(tr("Not Mouse"), m_recordOptionMenu);
     QAction *showPointer = new QAction(tr("Show pointer"), m_recordOptionMenu);
     QAction *showClick = new QAction(tr("Show click"), m_recordOptionMenu);
     //保存位置
     QAction *saveTitleAction = new QAction(m_recordOptionMenu);
+    saveTitleAction->setFont(titleActionFont);
     QAction *saveToDesktopAction = new QAction(m_recordOptionMenu);
     QAction *saveToVideoAction = new QAction(m_recordOptionMenu);
 
@@ -882,15 +889,14 @@ void SubToolWidget::initShotOption()
 
     // 保存位置
     QAction *saveTitleAction = new QAction(tr("Save to"), m_optionMenu);
-    // QAction *saveToClipAction = new QAction(tr("Clipboard"), m_optionMenu);
-    
+    saveTitleAction->setFont(titleActionFont);
     // 创建指定位置子菜单
     DMenu *specifiedLocationMenu = new DMenu(m_optionMenu);
     specifiedLocationMenu->installEventFilter(this);
     specifiedLocationMenu->setTitle(tr("Specified Location"));
     specifiedLocationMenu->setToolTipsVisible(true);
     specifiedLocationMenu->menuAction()->setCheckable(true);
-    DFontSizeManager::instance()->bind(specifiedLocationMenu, DFontSizeManager::T8);
+    DFontSizeManager::instance()->bind(specifiedLocationMenu, DFontSizeManager::T6);
     
     // 指定位置子菜单项
     QAction *saveToDesktopAction = new QAction(tr("Desktop"), specifiedLocationMenu);
@@ -902,7 +908,7 @@ void SubToolWidget::initShotOption()
     m_saveToSpecialPathMenu->setTitle(tr("Custom Location"));
     m_saveToSpecialPathMenu->setToolTipsVisible(true);
     m_saveToSpecialPathMenu->menuAction()->setCheckable(true);
-    DFontSizeManager::instance()->bind(m_saveToSpecialPathMenu, DFontSizeManager::T8);
+    DFontSizeManager::instance()->bind(m_saveToSpecialPathMenu, DFontSizeManager::T6);
     
     // 每次询问选项
     QAction *askEveryTimeAction = new QAction(tr("Each inquiry"), m_optionMenu);
@@ -954,10 +960,12 @@ void SubToolWidget::initShotOption()
 
     // 显示鼠标光标
     QAction *m_clipTitleAction = new QAction(tr("Options"), m_optionMenu);
+    m_clipTitleAction->setFont(titleActionFont);
     QAction *m_saveCursorAction = new QAction(tr("Show pointer"), m_optionMenu);
 
     // 边框样式
     QAction *borderTitleAction = new QAction(tr("Border Effects"), m_optionMenu);
+    borderTitleAction->setFont(titleActionFont);
     QAction *noBorderAction = new QAction(tr("None"), m_optionMenu);
     ImageMenu *borderProjectionMenu = ImageBorderHelper::instance()->getBorderMenu(ImageBorderHelper::BorderType::Projection, tr("Shadow"), m_optionMenu);
     ImageMenu *externalBorderMenu = ImageBorderHelper::instance()->getBorderMenu(ImageBorderHelper::BorderType::External, tr("Border"), m_optionMenu);
@@ -1000,6 +1008,7 @@ void SubToolWidget::initShotOption()
     customLocationGroup->addAction(m_changeSaveToSpecialPath);
 
     formatTitleAction->setDisabled(true);
+    formatTitleAction->setFont(titleActionFont);
     pngAction->setCheckable(true);
     jpgAction->setCheckable(true);
     bmpAction->setCheckable(true);
@@ -1341,7 +1350,7 @@ void SubToolWidget::initScrollLabel()
     m_saveLocalDirButton->setIconSize(TOOL_ICON_SIZE);
     // 根据当前设置获取保存路径，并在悬浮提示中显示
     updateSaveButtonTip();
-    m_saveLocalDirButton->setIcon(QIcon(":/icons/deepin/builtin/toolbar/save.svg"));
+    m_saveLocalDirButton->setIcon(QIcon::fromTheme("save"));
     Utils::setAccessibility(m_saveLocalDirButton, AC_SUBTOOLWIDGET_SAVETOLOCAL_BUTTON);
     m_shotBtnGroup->addButton(m_saveLocalDirButton);
     m_saveLocalDirButton->setFixedSize(TOOL_BUTTON_SIZE);
@@ -1388,6 +1397,7 @@ void SubToolWidget::initScrollLabel()
 
     // 保存位置
     QAction *saveTitleAction = new QAction(tr("Save to"), m_scrollOptionMenu);
+    saveTitleAction->setFont(titleActionFont);
     // QAction *saveToClipAction = new QAction(tr("Clipboard"), m_scrollOptionMenu);
     
     // 创建指定位置子菜单
@@ -1396,7 +1406,7 @@ void SubToolWidget::initScrollLabel()
     specifiedLocationMenu->setTitle(tr("Specified Location"));
     specifiedLocationMenu->setToolTipsVisible(true);
     specifiedLocationMenu->menuAction()->setCheckable(true);
-    DFontSizeManager::instance()->bind(specifiedLocationMenu, DFontSizeManager::T8);
+    DFontSizeManager::instance()->bind(specifiedLocationMenu, DFontSizeManager::T6);
     
     // 指定位置子菜单项
     QAction *saveToDesktopAction = new QAction(tr("Desktop"), specifiedLocationMenu);
@@ -1408,7 +1418,7 @@ void SubToolWidget::initScrollLabel()
     m_scrollSaveToSpecialPathMenu->setTitle(tr("Custom Location"));
     m_scrollSaveToSpecialPathMenu->setToolTipsVisible(true);
     m_scrollSaveToSpecialPathMenu->menuAction()->setCheckable(true);
-    DFontSizeManager::instance()->bind(m_scrollSaveToSpecialPathMenu, DFontSizeManager::T8);
+    DFontSizeManager::instance()->bind(m_scrollSaveToSpecialPathMenu, DFontSizeManager::T6);
     
     // 每次询问选项
     QAction *askEveryTimeAction = new QAction(tr("Each inquiry"), m_scrollOptionMenu);
@@ -1450,6 +1460,7 @@ void SubToolWidget::initScrollLabel()
 
     // 保存格式
     QAction *formatTitleAction = new QAction(tr("Format"), m_scrollOptionMenu);
+    formatTitleAction->setFont(titleActionFont);
     QAction *pngAction = new QAction(tr("PNG"), m_scrollOptionMenu);
     QAction *jpgAction = new QAction(tr("JPG"), m_scrollOptionMenu);
     QAction *bmpAction = new QAction(tr("BMP"), m_scrollOptionMenu);
