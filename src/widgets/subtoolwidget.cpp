@@ -542,7 +542,7 @@ void SubToolWidget::initShotLabel()
     //添加几何图形按钮
     m_gioButton = new ToolButton();
     m_gioButton->setIconSize(TOOL_ICON_SIZE);
-    m_gioButton->setIcon(QIcon(":/icons/deepin/builtin/toolbar/gioshape.svg"));
+    m_gioButton->setIcon(QIcon::fromTheme("gioshape"));
     Utils::setAccessibility(m_gioButton, AC_SUBTOOLWIDGET_GIO_BUTTON);
     m_shotBtnGroup->addButton(m_gioButton);
     m_gioButton->setFixedSize(TOOL_BUTTON_SIZE);
@@ -713,7 +713,7 @@ void SubToolWidget::initShotLabel()
     m_saveLocalDirButton->setIconSize(TOOL_ICON_SIZE);
     // 根据当前设置获取保存路径，并在悬浮提示中显示
     updateSaveButtonTip();
-    m_saveLocalDirButton->setIcon(QIcon(":/icons/deepin/builtin/toolbar/save.svg"));
+    m_saveLocalDirButton->setIcon(QIcon::fromTheme("save"));
     Utils::setAccessibility(m_saveLocalDirButton, AC_SUBTOOLWIDGET_SAVETOLOCAL_BUTTON);
     m_shotBtnGroup->addButton(m_saveLocalDirButton);
     m_saveLocalDirButton->setFixedSize(TOOL_BUTTON_SIZE);
