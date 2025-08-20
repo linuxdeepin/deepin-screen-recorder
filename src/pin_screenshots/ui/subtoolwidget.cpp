@@ -118,7 +118,7 @@ void SubToolWidget::initShotLable()
     specifiedLocationMenu->setTitle(tr("Specified Location"));
     specifiedLocationMenu->setToolTipsVisible(true);
     specifiedLocationMenu->menuAction()->setCheckable(true);
-    DFontSizeManager::instance()->bind(specifiedLocationMenu, DFontSizeManager::T8);
+    DFontSizeManager::instance()->bind(specifiedLocationMenu, DFontSizeManager::T6);
     
     // 指定位置子菜单项
     QAction *saveToDesktopAction = new QAction(tr("Desktop"), specifiedLocationMenu);
@@ -132,7 +132,7 @@ void SubToolWidget::initShotLable()
     m_saveToSpecialPathMenu->setTitle(tr("Custom Location"));
     m_saveToSpecialPathMenu->setToolTipsVisible(true);
     m_saveToSpecialPathMenu->menuAction()->setCheckable(true);
-    DFontSizeManager::instance()->bind(m_saveToSpecialPathMenu, DFontSizeManager::T8);
+    DFontSizeManager::instance()->bind(m_saveToSpecialPathMenu, DFontSizeManager::T6);
     
     QString specialPath = Settings::instance()->getSavePath();
     qCDebug(dsrApp) << "Special save path menu created";

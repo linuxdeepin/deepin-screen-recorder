@@ -221,6 +221,7 @@ private:
     MainWindow *m_pMainWindow = nullptr;
     DVerticalLine* m_saveSeperatorBeg= nullptr;
     DVerticalLine* m_saveSeperatorEnd= nullptr;
+    QFont titleActionFont;
 };
 
 #endif // SUBTOOLWIDGET_H
