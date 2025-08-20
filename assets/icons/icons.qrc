@@ -29,7 +29,7 @@
         <file>texts/effect_pen1_32px.svg</file>
         <file>texts/effect_pen2_32px.svg</file>
 	    <file>texts/effect_pen_w_32px.svg</file>
-        <file>toolbar/gioshape.svg</file>
-        <file>toolbar/save.svg</file>
+        <file>texts/gioshape_32px.svg</file>
+        <file>texts/save_32px.svg</file>
     </qresource>
 </RCC>
