@@ -245,95 +245,60 @@ void SubToolWidget::initShotLable()
     // 保存选项组的信号连接
     connect(m_saveGroup, QOverload<QAction *>::of(&QActionGroup::triggered), [ = ](QAction * t_act) {
         if (t_act == specifiedLocationMenu->menuAction()) {
-            // 当点击指定位置菜单时，确保该菜单被选中
-            specifiedLocationMenu->menuAction()->setChecked(true);
+            // 检查是否有子菜单项被选中
+            bool hasSubItemSelected = false;
             
-            // 取消"每次询问"选项的选中状态
-            if (m_askEveryTimeAction && m_askEveryTimeAction->isChecked()) {
-                m_askEveryTimeAction->setChecked(false);
-            }
-            
-            // 检查子菜单中是否有选中项
-            bool hasCheckedChild = false;
-            
-            // 检查桌面选项
             if (m_SavePathActions.contains(DESKTOP) && m_SavePathActions.value(DESKTOP) && 
                 m_SavePathActions.value(DESKTOP)->isChecked()) {
                 m_SaveInfo.first = DESKTOP;
-                hasCheckedChild = true;
-            } 
-            // 检查图片选项
-            else if (m_SavePathActions.contains(PICTURES) && m_SavePathActions.value(PICTURES) && 
+                hasSubItemSelected = true;
+            } else if (m_SavePathActions.contains(PICTURES) && m_SavePathActions.value(PICTURES) && 
                      m_SavePathActions.value(PICTURES)->isChecked()) {
                 m_SaveInfo.first = PICTURES;
-                hasCheckedChild = true;
-            } 
-            // 检查自定义位置选项
-            else if (m_saveToSpecialPathMenu && m_saveToSpecialPathMenu->menuAction()->isChecked()) {
+                hasSubItemSelected = true;
+            } else if (m_saveToSpecialPathMenu && m_saveToSpecialPathMenu->menuAction()->isChecked()) {
                 if (m_saveToSpecialPathAction && m_saveToSpecialPathAction->isChecked()) {
                     m_SaveInfo.first = FOLDER;
-                    hasCheckedChild = true;
+                    Settings::instance()->setIsChangeSavePath(false);
+                    hasSubItemSelected = true;
                 } else if (m_changeSaveToSpecialPath && m_changeSaveToSpecialPath->isChecked()) {
                     m_SaveInfo.first = FOLDER_CHANGE;
                     Settings::instance()->setIsChangeSavePath(true);
-                    hasCheckedChild = true;
+                    hasSubItemSelected = true;
                 }
             }
             
-            // 如果没有子菜单项被选中，则从配置文件中读取上次的选择
-            if (!hasCheckedChild) {
-                // 从配置文件中读取上次的选择
-                QPair<int, int> saveInfo = Settings::instance()->getSaveOption();
-                
-                // 如果上次选择不是"每次询问"，则恢复上次的选择
-                if (saveInfo.first != ASK && 
-                    (saveInfo.first == DESKTOP || saveInfo.first == PICTURES || 
-                     saveInfo.first == FOLDER || saveInfo.first == FOLDER_CHANGE)) {
-                    // 恢复上次的选择
-                    m_SaveInfo.first = saveInfo.first;
-                    
-                    // 根据保存类型设置相应的选中状态
-                    if (m_SavePathActions.contains(m_SaveInfo.first) && 
-                        m_SavePathActions.value(m_SaveInfo.first) != nullptr) {
-                        m_SavePathActions.value(m_SaveInfo.first)->setChecked(true);
-                        
-                        // 如果是自定义位置，还需要选中自定义位置菜单
-                        if (m_SaveInfo.first == FOLDER || m_SaveInfo.first == FOLDER_CHANGE) {
-                            m_saveToSpecialPathMenu->menuAction()->setChecked(true);
-                        }
-                    }
-                    
-                    // 设置是否更改保存路径的标志
-                    if (m_SaveInfo.first == FOLDER_CHANGE) {
-                        Settings::instance()->setIsChangeSavePath(true);
-                    } else {
-                        Settings::instance()->setIsChangeSavePath(false);
-                    }
-                } else {
-                    // 如果配置文件中没有有效的选择，则使用默认选项
-                    // 优先选择之前用户保存过的路径
-                    QString specialPath = Settings::instance()->getSavePath();
-                    if (!specialPath.isEmpty() && QFileInfo::exists(specialPath) && m_saveToSpecialPathAction) {
-                        // 选中自定义位置菜单
-                        m_saveToSpecialPathMenu->menuAction()->setChecked(true);
-                        // 选中历史路径选项
-                        m_saveToSpecialPathAction->setChecked(true);
-                        m_SaveInfo.first = FOLDER;
-                        Settings::instance()->setIsChangeSavePath(false);
-                    } else {
-                        // 如果没有历史路径，则选中自定义位置菜单下的"保存时选择位置"选项
-                        m_saveToSpecialPathMenu->menuAction()->setChecked(true);
-                        m_changeSaveToSpecialPath->setChecked(true);
-                        m_SaveInfo.first = FOLDER_CHANGE;
-                        Settings::instance()->setIsChangeSavePath(true);
-                    }
-                }
+            // 只有当有子项被选中时，才取消"每次询问"
+            if (hasSubItemSelected) {
+                m_askEveryTimeAction->setChecked(false);
+            } else {
+                // 如果没有子项被选中，恢复"每次询问"的选中状态
+                specifiedLocationMenu->menuAction()->setChecked(false);
+                m_askEveryTimeAction->setChecked(true);
+                return; // 不保存设置，保持原状态
             }
         } else if (t_act == m_askEveryTimeAction) {
             qCDebug(dsrApp) << "Selected: Ask every time.";
             m_SaveInfo.first = ASK;
             
-            // 取消"指定位置"菜单的选中状态，但保留子菜单的选中状态
+            // 选择"每次询问"时，清空所有指定位置的子选项
+            if (m_SavePathActions.contains(DESKTOP) && m_SavePathActions.value(DESKTOP)) {
+                m_SavePathActions.value(DESKTOP)->setChecked(false);
+            }
+            if (m_SavePathActions.contains(PICTURES) && m_SavePathActions.value(PICTURES)) {
+                m_SavePathActions.value(PICTURES)->setChecked(false);
+            }
+            if (m_saveToSpecialPathMenu) {
+                m_saveToSpecialPathMenu->menuAction()->setChecked(false);
+            }
+            if (m_saveToSpecialPathAction) {
+                m_saveToSpecialPathAction->setChecked(false);
+            }
+            if (m_changeSaveToSpecialPath) {
+                m_changeSaveToSpecialPath->setChecked(false);
+            }
+            
+            // 取消"指定位置"菜单的选中状态
             for (auto action : m_optionMenu->actions()) {
                 if (action->menu() && action->menu()->title() == tr("Specified Location")) {
                     action->setChecked(false);
@@ -354,21 +319,42 @@ void SubToolWidget::initShotLable()
         specifiedLocationMenu->menuAction()->setChecked(true);
         
         // 取消"每次询问"选项的选中状态
-        if (m_askEveryTimeAction && m_askEveryTimeAction->isChecked()) {
-            m_askEveryTimeAction->setChecked(false);
-        }
+        m_askEveryTimeAction->setChecked(false);
         
         if (t_act == saveToDesktopAction) {
             qCDebug(dsrApp) << "Selected: Save to Desktop.";
             m_SaveInfo.first = DESKTOP;
             Settings::instance()->setIsChangeSavePath(false);
+            
+            // 清空自定义位置的所有选项
+            if (m_saveToSpecialPathMenu) {
+                m_saveToSpecialPathMenu->menuAction()->setChecked(false);
+            }
+            if (m_saveToSpecialPathAction) {
+                m_saveToSpecialPathAction->setChecked(false);
+            }
+            if (m_changeSaveToSpecialPath) {
+                m_changeSaveToSpecialPath->setChecked(false);
+            }
         } else if (t_act == saveToPictureAction) {
             qCDebug(dsrApp) << "Selected: Save to Pictures.";
             m_SaveInfo.first = PICTURES;
             Settings::instance()->setIsChangeSavePath(false);
+            
+            // 清空自定义位置的所有选项
+            if (m_saveToSpecialPathMenu) {
+                m_saveToSpecialPathMenu->menuAction()->setChecked(false);
+            }
+            if (m_saveToSpecialPathAction) {
+                m_saveToSpecialPathAction->setChecked(false);
+            }
+            if (m_changeSaveToSpecialPath) {
+                m_changeSaveToSpecialPath->setChecked(false);
+            }
         } else if (t_act == m_saveToSpecialPathMenu->menuAction()) {
-            // 当点击自定义位置菜单时，确保该菜单被选中
-            m_saveToSpecialPathMenu->menuAction()->setChecked(true);
+            // 选择自定义位置菜单时，清空桌面和图片选项
+            saveToDesktopAction->setChecked(false);
+            saveToPictureAction->setChecked(false);
             
             // 根据子菜单选中项设置保存位置
             if (m_saveToSpecialPathAction && m_saveToSpecialPathAction->isChecked()) {
@@ -377,11 +363,6 @@ void SubToolWidget::initShotLable()
             } else if (m_changeSaveToSpecialPath && m_changeSaveToSpecialPath->isChecked()) {
                 m_SaveInfo.first = FOLDER_CHANGE;
                 Settings::instance()->setIsChangeSavePath(true);
-            } else {
-                // 如果没有子项被选中，则默认选中"保存时选择位置"
-                m_SaveInfo.first = FOLDER_CHANGE;
-                Settings::instance()->setIsChangeSavePath(true);
-                m_changeSaveToSpecialPath->setChecked(true);
             }
         }
         
@@ -396,9 +377,11 @@ void SubToolWidget::initShotLable()
         m_saveToSpecialPathMenu->menuAction()->setChecked(true);
         
         // 取消"每次询问"选项的选中状态
-        if (m_askEveryTimeAction && m_askEveryTimeAction->isChecked()) {
-            m_askEveryTimeAction->setChecked(false);
-        }
+        m_askEveryTimeAction->setChecked(false);
+        
+        // 清空桌面和图片选项
+        saveToDesktopAction->setChecked(false);
+        saveToPictureAction->setChecked(false);
         
         if (t_act == m_changeSaveToSpecialPath) {
             qCDebug(dsrApp) << "Selected: Set or change specified save location.";
@@ -696,14 +679,6 @@ bool SubToolWidget::eventFilter(QObject *watched, QEvent *event)
             if (action) {
                 // 特别处理"指定位置"菜单项
                 if (action->menu() && action->menu()->title() == tr("Specified Location")) {
-                    // 首先确保该菜单项被选中
-                    action->setChecked(true);
-                    
-                    // 取消"每次询问"选项的选中状态
-                    if (m_askEveryTimeAction && m_askEveryTimeAction->isChecked()) {
-                        m_askEveryTimeAction->setChecked(false);
-                    }
-                    
                     // 检查子菜单中是否有选中项
                     bool hasCheckedChild = false;
                     
@@ -731,65 +706,20 @@ bool SubToolWidget::eventFilter(QObject *watched, QEvent *event)
                         }
                     }
                     
-                    // 如果没有子菜单项被选中，则从配置文件中读取上次的选择
-                    if (!hasCheckedChild) {
-                        // 从配置文件中读取上次的选择
-                        QPair<int, int> saveInfo = Settings::instance()->getSaveOption();
+                    // 只有当有子项被选中时，才能选中指定位置
+                    if (hasCheckedChild) {
+                        action->setChecked(true);
+                        m_askEveryTimeAction->setChecked(false);
                         
-                        // 如果上次选择不是"每次询问"，则恢复上次的选择
-                        if (saveInfo.first != ASK && 
-                            (saveInfo.first == DESKTOP || saveInfo.first == PICTURES || 
-                             saveInfo.first == FOLDER || saveInfo.first == FOLDER_CHANGE)) {
-                            // 恢复上次的选择
-                            m_SaveInfo.first = saveInfo.first;
-                            
-                            // 根据保存类型设置相应的选中状态
-                            if (m_SavePathActions.contains(m_SaveInfo.first) && 
-                                m_SavePathActions.value(m_SaveInfo.first) != nullptr) {
-                                m_SavePathActions.value(m_SaveInfo.first)->setChecked(true);
-                                
-                                // 如果是自定义位置，还需要选中自定义位置菜单
-                                if (m_SaveInfo.first == FOLDER || m_SaveInfo.first == FOLDER_CHANGE) {
-                                    m_saveToSpecialPathMenu->menuAction()->setChecked(true);
-                                }
-                            }
-                            
-                            // 设置是否更改保存路径的标志
-                            if (m_SaveInfo.first == FOLDER_CHANGE) {
-                                Settings::instance()->setIsChangeSavePath(true);
-                            } else {
-                                Settings::instance()->setIsChangeSavePath(false);
-                            }
-                        } else {
-                            // 如果配置文件中没有有效的选择，则使用默认选项
-                            // 优先选择之前用户保存过的路径
-                            QString specialPath = Settings::instance()->getSavePath();
-                            if (!specialPath.isEmpty() && QFileInfo::exists(specialPath)) {
-                                m_SaveInfo.first = FOLDER;
-                                Settings::instance()->setIsChangeSavePath(false);
-                                
-                                // 选中自定义位置菜单
-                                m_saveToSpecialPathMenu->menuAction()->setChecked(true);
-                                // 选中历史路径选项
-                                if (m_saveToSpecialPathAction) {
-                                    m_saveToSpecialPathAction->setChecked(true);
-                                }
-                            } else {
-                                m_SaveInfo.first = FOLDER_CHANGE;
-                                Settings::instance()->setIsChangeSavePath(true);
-                                
-                                // 选中自定义位置菜单下的"保存时选择位置"选项
-                                m_saveToSpecialPathMenu->menuAction()->setChecked(true);
-                                if (m_changeSaveToSpecialPath) {
-                                    m_changeSaveToSpecialPath->setChecked(true);
-                                }
-                            }
-                        }
+                        // 更新保存设置
+                        Settings::instance()->setSaveOption(m_SaveInfo);
+                        updateSaveButtonTip();
+                    } else {
+                        // 如果没有子项被选中，不允许选中指定位置，保持当前状态
+                        action->setChecked(false);
+                        // 不改变当前的选中状态
+                        return true; // 阻止事件传播
                     }
-                    
-                    // 更新保存设置
-                    Settings::instance()->setSaveOption(m_SaveInfo);
-                    updateSaveButtonTip();
                     
                     // 允许事件继续传播，以便菜单能够正常展开
                     return false;
