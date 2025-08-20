@@ -1068,58 +1068,87 @@ void SubToolWidget::initShotOption()
         break;
     case SpecifyLocation: {
         specifiedLocationMenu->menuAction()->setChecked(true);
+        // 根据配置，初始化Action状态
+        qWarning() << "SpecifyLocation: "<<SpecifyLocation;
+        SaveAction t_saveIndex = ConfigSettings::instance()->getValue("shot", "save_op").value<SaveAction>();
+
+        // 恢复指定位置的保存位置
+        switch (t_saveIndex) {
+        case SaveToDesktop: {
+            saveToDesktopAction->setChecked(true);
+            break;
+        }
+        case SaveToImage: {
+            saveToPictureAction->setChecked(true);
+            break;
+        }
+        case SaveToSpecificDir:
+        default:{
+            m_saveToSpecialPathMenu->menuAction()->setChecked(true);
+            bool isChangeSpecificDir = ConfigSettings::instance()->getValue("shot", "save_dir_change").value<bool>();
+            if (specialPath.isEmpty() || isChangeSpecificDir || !QFileInfo::exists(specialPath)) {
+                m_changeSaveToSpecialPath->setChecked(true);
+                ConfigSettings::instance()->setValue("shot", "save_dir_change", true);
+            } else if (!specialPath.isEmpty() && QFileInfo::exists(specialPath)) {
+                m_saveToSpecialPathAction->setChecked(true);
+                ConfigSettings::instance()->setValue("shot", "save_dir_change", false);
+            }
+            break;
+        }
+        }
     }
         break;
     default:
         break;
     }
 
-    // 根据配置，初始化Action状态
-    qWarning() << "SpecifyLocation: "<<SpecifyLocation;
-    SaveAction t_saveIndex = ConfigSettings::instance()->getValue("shot", "save_op").value<SaveAction>();
 
-    // 恢复指定位置的保存位置
-    switch (t_saveIndex) {
-    case SaveToDesktop: {
-        saveToDesktopAction->setChecked(true);
-        break;
-    }
-    case SaveToImage: {
-        saveToPictureAction->setChecked(true);
-        break;
-    }
-    case SaveToSpecificDir:
-    default:{
-        m_saveToSpecialPathMenu->menuAction()->setChecked(true);
-        bool isChangeSpecificDir = ConfigSettings::instance()->getValue("shot", "save_dir_change").value<bool>();
-        if (specialPath.isEmpty() || isChangeSpecificDir || !QFileInfo::exists(specialPath)) {
-            m_changeSaveToSpecialPath->setChecked(true);
-            ConfigSettings::instance()->setValue("shot", "save_dir_change", true);
-        } else if (!specialPath.isEmpty() && QFileInfo::exists(specialPath)) {
-            m_saveToSpecialPathAction->setChecked(true);
-            ConfigSettings::instance()->setValue("shot", "save_dir_change", false);
-        }
-        break;
-    }
-    }
     // 保存选项组的信号连接
     connect(t_saveGroup, QOverload<QAction *>::of(&QActionGroup::triggered),
     [ = ](QAction * t_act) {
         if (t_act == specifiedLocationMenu->menuAction()) {
-             qWarning()<<"save to memue triggered";
-            // 当选择指定位置时，根据子菜单选中项设置保存位置
-            ConfigSettings::instance()->setValue("shot", "save_ways", SaveWays::SpecifyLocation);
-            if (saveToDesktopAction->isChecked()) {
-                ConfigSettings::instance()->setValue("shot", "save_op", SaveAction::SaveToDesktop);
-            } else if (saveToPictureAction->isChecked()) {
-                ConfigSettings::instance()->setValue("shot", "save_op", SaveAction::SaveToImage);
-                qWarning() << "save_op SaveToImage";
-            } else if (m_saveToSpecialPathMenu->menuAction()->isChecked()) {
-                ConfigSettings::instance()->setValue("shot", "save_op", SaveAction::SaveToSpecificDir);
-                qWarning() << "save_op SaveAction::SaveToSpecificDir";
+            qWarning()<<"save to memue triggered";
+            
+            // 检查是否有子菜单项被选中
+            bool hasSubItemChecked = saveToDesktopAction->isChecked() || 
+                                   saveToPictureAction->isChecked() || 
+                                   m_saveToSpecialPathMenu->menuAction()->isChecked();
+            
+            // 只有当有子项被选中时，才能选中指定位置
+            if (hasSubItemChecked) {
+                ConfigSettings::instance()->setValue("shot", "save_ways", SaveWays::SpecifyLocation);
+                askEveryTimeAction->setChecked(false);
+                
+                // 根据已选中的子菜单项设置保存位置
+                if (saveToDesktopAction->isChecked()) {
+                    ConfigSettings::instance()->setValue("shot", "save_op", SaveAction::SaveToDesktop);
+                } else if (saveToPictureAction->isChecked()) {
+                    ConfigSettings::instance()->setValue("shot", "save_op", SaveAction::SaveToImage);
+                    qWarning() << "save_op SaveToImage";
+                } else if (m_saveToSpecialPathMenu->menuAction()->isChecked()) {
+                    ConfigSettings::instance()->setValue("shot", "save_op", SaveAction::SaveToSpecificDir);
+                    qWarning() << "save_op SaveAction::SaveToSpecificDir";
+                }
+            } else {
+                // 如果没有子项被选中，恢复"每次询问"的选中状态
+                specifiedLocationMenu->menuAction()->setChecked(false);
+                askEveryTimeAction->setChecked(true);
+                return; // 不保存设置，保持原状态
             }
         } else if (t_act == askEveryTimeAction) {
             ConfigSettings::instance()->setValue("shot", "save_ways", SaveWays::Ask);
+            
+            // 选择"每次询问"时，清空所有指定位置的子选项
+            saveToDesktopAction->setChecked(false);
+            saveToPictureAction->setChecked(false);
+            m_saveToSpecialPathMenu->menuAction()->setChecked(false);
+            // 清空自定义位置的子选项
+            if (m_saveToSpecialPathAction) {
+                m_saveToSpecialPathAction->setChecked(false);
+            }
+            m_changeSaveToSpecialPath->setChecked(false);
+            qCDebug(dsrApp) << "已清空所有指定位置子选项";
+            
             m_optionMenu->hide();
         }
         
@@ -1133,13 +1162,48 @@ void SubToolWidget::initShotOption()
         specifiedLocationMenu->menuAction()->setChecked(true);
         qWarning()<<"save to memue triggered";
         ConfigSettings::instance()->setValue("shot", "save_ways", SaveWays::SpecifyLocation);
+        
         if (t_act == saveToDesktopAction) {
             ConfigSettings::instance()->setValue("shot", "save_op", SaveAction::SaveToDesktop);
+            
+            // 选择桌面时，清空自定义位置的所有子选项
+            m_saveToSpecialPathMenu->menuAction()->setChecked(false);
+            if (m_saveToSpecialPathAction) {
+                m_saveToSpecialPathAction->setChecked(false);
+            }
+            m_changeSaveToSpecialPath->setChecked(false);
+            qCDebug(dsrApp) << "选择桌面，已清空自定义位置选项";
+            
         } else if (t_act == saveToPictureAction) {
             ConfigSettings::instance()->setValue("shot", "save_op", SaveAction::SaveToImage);
             qWarning() << "save_op SaveToImage";
+            
+            // 选择图片时，清空自定义位置的所有子选项
+            m_saveToSpecialPathMenu->menuAction()->setChecked(false);
+            if (m_saveToSpecialPathAction) {
+                m_saveToSpecialPathAction->setChecked(false);
+            }
+            m_changeSaveToSpecialPath->setChecked(false);
+            qCDebug(dsrApp) << "选择图片文件夹，已清空自定义位置选项";
+            
         } else if (t_act == m_saveToSpecialPathMenu->menuAction()) {
             ConfigSettings::instance()->setValue("shot", "save_op", SaveAction::SaveToSpecificDir);
+            
+            // 选择自定义位置菜单时，清空桌面和图片选项
+            saveToDesktopAction->setChecked(false);
+            saveToPictureAction->setChecked(false);
+            qCDebug(dsrApp) << "选择自定义位置，已清空桌面和图片选项";
+            
+            // 检查自定义位置菜单是否有子项选中，如果没有则自动选中默认项
+            bool hasCustomSubItemChecked = (m_saveToSpecialPathAction && m_saveToSpecialPathAction->isChecked()) ||
+                                         m_changeSaveToSpecialPath->isChecked();
+            
+            if (!hasCustomSubItemChecked) {
+                // 没有子项被选中，自动选中"保存时更新位置"作为默认项
+                m_changeSaveToSpecialPath->setChecked(true);
+                ConfigSettings::instance()->setValue("shot", "save_dir_change", true);
+                qCDebug(dsrApp) << "自动选中'保存时更新位置'作为默认项";
+            }
         }
         
         // 更新保存按钮提示
@@ -1153,6 +1217,11 @@ void SubToolWidget::initShotOption()
         specifiedLocationMenu->menuAction()->setChecked(true);
         m_saveToSpecialPathMenu->menuAction()->setChecked(true);
         ConfigSettings::instance()->setValue("shot", "save_op", SaveAction::SaveToSpecificDir);
+        
+        // 选择自定义位置的子项时，清空同级的桌面和图片选项
+        saveToDesktopAction->setChecked(false);
+        saveToPictureAction->setChecked(false);
+        qCDebug(dsrApp) << "选择自定义位置子项，已清空桌面和图片选项";
         
         if (t_act == m_changeSaveToSpecialPath) {
             qCDebug(dsrApp) << ">>>>>>>>>>> 保存时更新位置";
@@ -1499,6 +1568,18 @@ void SubToolWidget::initScrollLabel()
             }
         } else if (t_act == askEveryTimeAction) {
             ConfigSettings::instance()->setValue("shot", "save_ways", SaveWays::Ask);
+            
+            // 选择"每次询问"时，清空所有指定位置的子选项
+            saveToDesktopAction->setChecked(false);
+            saveToPictureAction->setChecked(false);
+            m_scrollSaveToSpecialPathMenu->menuAction()->setChecked(false);
+            // 清空自定义位置的子选项
+            if (m_scrollSaveToSpecialPathAction) {
+                m_scrollSaveToSpecialPathAction->setChecked(false);
+            }
+            m_scrollChangeSaveToSpecialPath->setChecked(false);
+            qCDebug(dsrApp) << "滚动截图：已清空所有指定位置子选项";
+            
             m_scrollOptionMenu->hide();
         }
         updateSaveButtonTip();
@@ -1509,15 +1590,42 @@ void SubToolWidget::initScrollLabel()
     [ = ](QAction * t_act) {
         specifiedLocationMenu->menuAction()->setChecked(true);
         ConfigSettings::instance()->setValue("shot", "save_ways", SaveWays::SpecifyLocation);
+        
         if (t_act == saveToDesktopAction) {
             ConfigSettings::instance()->setValue("shot", "save_op", SaveAction::SaveToDesktop);
+            
+            // 选择桌面时，清空自定义位置的所有子选项
+            m_scrollSaveToSpecialPathMenu->menuAction()->setChecked(false);
+            if (m_scrollSaveToSpecialPathAction) {
+                m_scrollSaveToSpecialPathAction->setChecked(false);
+            }
+            m_scrollChangeSaveToSpecialPath->setChecked(false);
+            qCDebug(dsrApp) << "滚动截图：选择桌面，已清空自定义位置选项";
+            
             m_scrollOptionMenu->hide(); // 关闭菜单
         } else if (t_act == saveToPictureAction) {
             ConfigSettings::instance()->setValue("shot", "save_op", SaveAction::SaveToImage);
             qWarning() << "save_op SaveToImage";
+            
+            // 选择图片时，清空自定义位置的所有子选项
+            m_scrollSaveToSpecialPathMenu->menuAction()->setChecked(false);
+            if (m_scrollSaveToSpecialPathAction) {
+                m_scrollSaveToSpecialPathAction->setChecked(false);
+            }
+            m_scrollChangeSaveToSpecialPath->setChecked(false);
+            qCDebug(dsrApp) << "滚动截图：选择图片文件夹，已清空自定义位置选项";
+            
             m_scrollOptionMenu->hide(); // 关闭菜单
         } else if (t_act == m_scrollSaveToSpecialPathMenu->menuAction()) {
             ConfigSettings::instance()->setValue("shot", "save_op", SaveAction::SaveToSpecificDir);
+            
+            // 选择自定义位置菜单时，清空桌面和图片选项
+            saveToDesktopAction->setChecked(false);
+            saveToPictureAction->setChecked(false);
+            qCDebug(dsrApp) << "滚动截图：选择自定义位置，已清空桌面和图片选项";
+            
+
+            
             // 不立即关闭菜单，因为用户可能需要在子菜单中继续选择
         }
         
@@ -1532,6 +1640,11 @@ void SubToolWidget::initScrollLabel()
         ConfigSettings::instance()->setValue("shot", "save_ways", SaveWays::SpecifyLocation);
         m_scrollSaveToSpecialPathMenu->menuAction()->setChecked(true);
         ConfigSettings::instance()->setValue("shot", "save_op", SaveAction::SaveToSpecificDir);
+        
+        // 选择自定义位置的子项时，清空同级的桌面和图片选项
+        saveToDesktopAction->setChecked(false);
+        saveToPictureAction->setChecked(false);
+        qCDebug(dsrApp) << "滚动截图：选择自定义位置子项，已清空桌面和图片选项";
         
         if (t_act == m_scrollChangeSaveToSpecialPath) {
             qCDebug(dsrApp) << ">>>>>>>>>>> 保存时更新位置";
