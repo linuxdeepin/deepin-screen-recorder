@@ -1,21 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<svg width="36px" height="36px" viewBox="0 0 36 36" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-    <!-- Generator: Sketch 56.2 (81672) - https://sketch.com -->
-    <title>Aa small_normal</title>
-    <desc>Created with Sketch.</desc>
-    <g id="页面-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" font-family="SourceHanSansSC-Normal, Source Han Sans SC" font-size="12" font-weight="normal">
-        <g id="按钮规范" transform="translate(-1225.000000, -602.000000)" fill="#000000">
-            <g id="二级工具栏备份-2" transform="translate(1213.000000, 378.000000)">
-                <g id="主工具栏" transform="translate(9.000000, 10.000000)">
-                    <g id="Group">
-                        <g id="Aa-small_normal" transform="translate(2.500000, 214.000000)">
-                            <text id="Aa">
-                                <tspan x="11.04" y="23">Aa</tspan>
-                            </text>
-                        </g>
-                    </g>
-                </g>
-            </g>
-        </g>
-    </g>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="36" height="36" viewBox="0 0 36 36">
+<path fill-rule="nonzero" fill="rgb(0%, 0%, 0%)" fill-opacity="1" d="M 13.046875 22 L 14.15625 22 L 15.015625 19.3125 L 18.234375 19.3125 L 19.078125 22 L 20.25 22 L 17.265625 13.203125 L 16.03125 13.203125 Z M 15.296875 18.4375 L 15.71875 17.078125 C 16.03125 16.078125 16.328125 15.140625 16.59375 14.109375 L 16.640625 14.109375 C 16.9375 15.125 17.21875 16.078125 17.53125 17.078125 L 17.953125 18.4375 Z M 23.21875 22.15625 C 24.015625 22.15625 24.75 21.734375 25.375 21.21875 L 25.40625 21.21875 L 25.5 22 L 26.40625 22 L 26.40625 17.984375 C 26.40625 16.375 25.75 15.3125 24.15625 15.3125 C 23.09375 15.3125 22.1875 15.78125 21.59375 16.171875 L 22.015625 16.921875 C 22.53125 16.578125 23.21875 16.234375 23.96875 16.234375 C 25.03125 16.234375 25.3125 17.03125 25.3125 17.875 C 22.546875 18.1875 21.3125 18.890625 21.3125 20.3125 C 21.3125 21.484375 22.125 22.15625 23.21875 22.15625 Z M 23.53125 21.265625 C 22.875 21.265625 22.375 20.984375 22.375 20.234375 C 22.375 19.390625 23.125 18.859375 25.3125 18.609375 L 25.3125 20.421875 C 24.671875 20.984375 24.15625 21.265625 23.53125 21.265625 Z M 13 8.078125 "/>
 </svg>
