@@ -705,6 +705,10 @@ Mantenga presionada la tecla Shift para dibujar cuadrados o círculos.</translat
         <source>Copy to clipboard (Enter)</source>
         <translation>Copiar al portapapeles (Enter)</translation>
     </message>
+    <message>
+        <source>OK (Enter)</source>
+        <translation>OK (Enter)</translation>
+    </message>
 </context>
 <context>
     <name>TopTips</name>

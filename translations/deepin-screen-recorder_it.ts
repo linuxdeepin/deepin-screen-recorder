@@ -402,7 +402,7 @@ o utilizza nuovamente la scorciatoia da tastiera per terminare la registrazione<
     <name>ShotStartRecordPlugin</name>
     <message>
         <source>Record</source>
-            <translation>Registrazione</translation>
+        <translation>Registrazione</translation>
     </message>
 </context>
 <context>
@@ -704,6 +704,10 @@ Tieni premuto Maiusc per disegnare quadrati o cerchi.</translation>
     <message>
         <source>Copy to clipboard (Enter)</source>
         <translation>Copia negli appunti (Enter)</translation>
+    </message>
+    <message>
+        <source>OK (Enter)</source>
+        <translation>OK (Enter)</translation>
     </message>
 </context>
 <context>

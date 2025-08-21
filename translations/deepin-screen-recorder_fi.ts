@@ -705,6 +705,10 @@ Pidä Shift-näppäintä painettuna piirtääksesi neliöitä tai ympyröitä.</
         <source>Copy to clipboard (Enter)</source>
         <translation>Kopioi leikepöydälle (Enter)</translation>
     </message>
+    <message>
+        <source>OK (Enter)</source>
+        <translation>OK (Enter)</translation>
+    </message>
 </context>
 <context>
     <name>TopTips</name>

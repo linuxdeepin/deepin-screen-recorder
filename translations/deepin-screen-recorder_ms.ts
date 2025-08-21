@@ -705,6 +705,10 @@ Tahan Shift untuk melukis segi empat sama atau bulatan.</translation>
         <source>Copy to clipboard (Enter)</source>
         <translation>Salin ke papan klip (Enter)</translation>
     </message>
+    <message>
+        <source>OK (Enter)</source>
+        <translation>OK (Enter)</translation>
+    </message>
 </context>
 <context>
     <name>TopTips</name>

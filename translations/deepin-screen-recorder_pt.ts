@@ -705,6 +705,10 @@ Mantenha pressionada a tecla Shift para desenhar quadrados ou círculos.</transl
         <source>Copy to clipboard (Enter)</source>
         <translation>Copiar para a área de transferência (Enter)</translation>
     </message>
+    <message>
+        <source>OK (Enter)</source>
+        <translation>OK (Enter)</translation>
+    </message>
 </context>
 <context>
     <name>TopTips</name>

@@ -705,6 +705,10 @@ Kare veya daire çizmek için Shift tuşunu basılı tutun.</translation>
         <source>Copy to clipboard (Enter)</source>
         <translation>Panoya kopyala (Enter)</translation>
     </message>
+    <message>
+        <source>OK (Enter)</source>
+        <translation>Tamam Enter</translation>
+    </message>
 </context>
 <context>
     <name>TopTips</name>

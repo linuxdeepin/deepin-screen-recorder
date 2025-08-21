@@ -705,6 +705,10 @@ Przytrzymaj Shift, aby narysować kwadraty lub koła.</translation>
         <source>Copy to clipboard (Enter)</source>
         <translation>Skopiuj do schowka (Enter)</translation>
     </message>
+    <message>
+        <source>OK (Enter)</source>
+        <translation>OK (Enter)</translation>
+    </message>
 </context>
 <context>
     <name>TopTips</name>

@@ -705,6 +705,10 @@ Mantén premida a tecla Maiús para debuxar cadrados ou círculos.</translation>
         <source>Copy to clipboard (Enter)</source>
         <translation>Copiar ao portapapeis (Enter)</translation>
     </message>
+    <message>
+        <source>OK (Enter)</source>
+        <translation>OK (Enter)</translation>
+    </message>
 </context>
 <context>
     <name>TopTips</name>

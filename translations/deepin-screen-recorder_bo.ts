@@ -705,6 +705,10 @@ Shiftམནན་ནས་གྲུ་བཞི་ཁ་གང་འབྲི་
         <source>Copy to clipboard (Enter)</source>
         <translation>ཁ་རྒྱག་(Enter)</translation>
     </message>
+    <message>
+        <source>OK (Enter)</source>
+        <translation>ཁ་རྒྱག་(Enter)</translation>
+    </message>
 </context>
 <context>
     <name>TopTips</name>

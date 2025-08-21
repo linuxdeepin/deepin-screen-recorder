@@ -1023,6 +1023,19 @@ void SubToolWidget::initShotOption()
     noBorderAction->setCheckable(true);
     noBorderAction->setChecked(true);
 
+    // 创建边框顶级菜单的互斥ActionGroup
+    QActionGroup *borderMenuGroup = new QActionGroup(this);
+    borderMenuGroup->setExclusive(true);
+    borderMenuGroup->addAction(noBorderAction);
+    borderMenuGroup->addAction(borderProjectionMenu->menuAction());
+    borderMenuGroup->addAction(externalBorderMenu->menuAction());
+    borderMenuGroup->addAction(borderPrototypeMenu->menuAction());
+    
+    // 设置边框菜单项为可选中状态
+    borderProjectionMenu->menuAction()->setCheckable(true);
+    externalBorderMenu->menuAction()->setCheckable(true);
+    borderPrototypeMenu->menuAction()->setCheckable(true);
+
     // 添加到指定位置子菜单
     specifiedLocationMenu->addAction(saveToDesktopAction);
     specifiedLocationMenu->addAction(saveToPictureAction);
@@ -1290,6 +1303,60 @@ void SubToolWidget::initShotOption()
 
     connect(ImageBorderHelper::instance(), &ImageBorderHelper::updateBorderState, [ = ](bool hasBorderChecked) {
         noBorderAction->setChecked(!hasBorderChecked);
+        
+        // 当有边框被选中时，选中对应的顶级菜单
+        if (hasBorderChecked) {
+            int border_index = ImageBorderHelper::instance()->getBorderTypeDetail();
+            ImageBorderHelper::BorderType borderType = static_cast<ImageBorderHelper::BorderType>(border_index >> 8);
+            
+            switch (borderType) {
+            case ImageBorderHelper::BorderType::External:
+                externalBorderMenu->menuAction()->setChecked(true);
+                break;
+            case ImageBorderHelper::BorderType::Prototype:
+                borderPrototypeMenu->menuAction()->setChecked(true);
+                break;
+            case ImageBorderHelper::BorderType::Projection:
+                borderProjectionMenu->menuAction()->setChecked(true);
+                break;
+            default:
+                break;
+            }
+        }
+    });
+    
+    // 拦截顶级边框菜单的点击事件，只允许通过子项选中来联动
+    connect(borderMenuGroup, QOverload<QAction *>::of(&QActionGroup::triggered), [ = ](QAction * action) {
+        if (action == noBorderAction) {
+            // "无边框"可以直接点击选中
+            ConfigSettings::instance()->setValue("shot", "border_index", 0);
+            ImageBorderHelper::instance()->setActionState(ImageBorderHelper::BorderType::Nothing, false);
+        } else {
+            // 其他边框顶级菜单不能直接被选中，恢复之前的状态
+            qCDebug(dsrApp) << "Border top-level menu clicked, but should only be selected via sub-items";
+            
+            // 恢复到当前实际的状态
+            int current_border_index = ConfigSettings::instance()->getValue("shot", "border_index").toInt();
+            if (current_border_index == 0) {
+                noBorderAction->setChecked(true);
+            } else {
+                ImageBorderHelper::BorderType currentType = static_cast<ImageBorderHelper::BorderType>(current_border_index >> 8);
+                switch (currentType) {
+                case ImageBorderHelper::BorderType::External:
+                    externalBorderMenu->menuAction()->setChecked(true);
+                    break;
+                case ImageBorderHelper::BorderType::Prototype:
+                    borderPrototypeMenu->menuAction()->setChecked(true);
+                    break;
+                case ImageBorderHelper::BorderType::Projection:
+                    borderProjectionMenu->menuAction()->setChecked(true);
+                    break;
+                default:
+                    noBorderAction->setChecked(true);
+                    break;
+                }
+            }
+        }
     });
 
     connect(noBorderAction, &QAction::triggered, [ = ] {

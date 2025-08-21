@@ -705,6 +705,10 @@ Tartsa lenyomva a Shift billentyűt négyzetek vagy körök rajzolásához.</tra
         <source>Copy to clipboard (Enter)</source>
         <translation>Másolás a vágólapra (Enter)</translation>
     </message>
+    <message>
+        <source>OK (Enter)</source>
+        <translation>OK (Enter)</translation>
+    </message>
 </context>
 <context>
     <name>TopTips</name>

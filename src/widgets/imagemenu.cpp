@@ -277,10 +277,8 @@ void ImageBorderHelper::setActionState(const BorderType type, const bool isCheck
         }
     }
 
-    if (type != Nothing) {
-        qCDebug(dsrApp) << "Updating border state for type:" << type;
-        updateBorderState(isChecked);
-    }
+    qCDebug(dsrApp) << "Updating border state, has border checked:" << (type != Nothing && isChecked);
+    emit updateBorderState(type != Nothing && isChecked);
 }
 
 int ImageBorderHelper::getBorderTypeDetail()

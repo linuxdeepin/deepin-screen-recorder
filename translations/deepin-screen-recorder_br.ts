@@ -704,6 +704,10 @@ Hold down Shift to draw squares or circles.</source>
         <source>Copy to clipboard (Enter)</source>
         <translation>نسخ إلى الحافظة (Enter)</translation>
     </message>
+    <message>
+        <source>OK (Enter)</source>
+        <translation>موافق (Enter)</translation>
+    </message>
 </context>
 <context>
     <name>TopTips</name>

@@ -705,6 +705,10 @@ Maintenir la touche Maj enfoncée pour dessiner des carrés ou des cercles.</tra
         <source>Copy to clipboard (Enter)</source>
         <translation>Copier dans le presse-papiers (Entrée)</translation>
     </message>
+    <message>
+        <source>OK (Enter)</source>
+        <translation>OK (Enter)</translation>
+    </message>
 </context>
 <context>
     <name>TopTips</name>

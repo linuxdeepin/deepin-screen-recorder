@@ -709,6 +709,10 @@ Shift 키를 누른 채로 정사각형이나 원을 그립니다.</translation>
         <source>Copy to clipboard (Enter)</source>
         <translation>클립보드에 복사 (Enter)</translation>
     </message>
+    <message>
+        <source>OK (Enter)</source>
+        <translation>확인 (Enter)</translation>
+    </message>
 </context>
 <context>
     <name>TopTips</name>
