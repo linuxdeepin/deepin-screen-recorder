@@ -219,7 +219,7 @@ bool ScreenGrabber::quickFullScreenshot()
         hints["x-deepin-action-_open"] = command;
         hints["x-deepin-action-_open1"] = savepathcommand;
     }
-    
+    qDebug() << "saveFilePath:" << saveFileName;
     QList<QVariant> arg;
     arg << QCoreApplication::applicationName()
         << (unsigned int) 0
