@@ -707,7 +707,7 @@ Hold down Shift to draw squares or circles.</source>
     </message>
     <message>
         <source>OK (Enter)</source>
-        <translation>确定 Enter</translation>
+        <translation>确认 Enter</translation>
     </message>
 </context>
 <context>
