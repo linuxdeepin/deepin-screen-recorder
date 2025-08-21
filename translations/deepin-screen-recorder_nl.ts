@@ -705,6 +705,10 @@ Houd Shift ingedrukt om vierkanten of cirkels te tekenen.</translation>
         <source>Copy to clipboard (Enter)</source>
         <translation>Kopiëren naar klembord (Enter)</translation>
     </message>
+    <message>
+        <source>OK (Enter)</source>
+        <translation>OK (Enter)</translation>
+    </message>
 </context>
 <context>
     <name>TopTips</name>

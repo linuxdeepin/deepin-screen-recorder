@@ -189,6 +189,14 @@ void ToolBarWidget::setCameraDeviceEnable(bool status)
 
 void ToolBarWidget::changeShotToolEvent(const QString &func)
 {
+    if(func.isEmpty() || !m_confirmButton || !m_subTool)
+        return;
+
+    qCWarning(dsrApp) << "===============func============================="<< func;
+    if (func == "record")
+        m_subTool->installTipHint(m_confirmButton, tr("OK (Enter)"));
+    else if (func == "shot")
+        m_subTool->installTipHint(m_confirmButton, tr("Copy to clipboard (Enter)"));
 }
 /*
 void ToolBarWidget::setExpand(bool expand, QString shapeType)
@@ -338,7 +346,7 @@ void ToolBar::showAt(QPoint pos)
 
 
 void ToolBar::currentFunctionMode(QString shapeType)
-{
+{       
     qCDebug(dsrApp) << "Setting current function mode:" << shapeType;
     DPalette pa;
     update();

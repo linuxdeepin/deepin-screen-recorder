@@ -705,6 +705,10 @@ Hold down Shift to draw squares or circles.</source>
         <source>Copy to clipboard (Enter)</source>
         <translation>复制到剪贴板</translation>
     </message>
+    <message>
+        <source>OK (Enter)</source>
+        <translation>确定 Enter</translation>
+    </message>
 </context>
 <context>
     <name>TopTips</name>

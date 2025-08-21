@@ -705,6 +705,10 @@ Mbani të shtypur tastin Shift që të vizatohet një drejtkëndësh ose një rr
         <source>Copy to clipboard (Enter)</source>
         <translation>Kopjo te papastër (Enter)</translation>
     </message>
+    <message>
+        <source>OK (Enter)</source>
+        <translation>OK (Enter)</translation>
+    </message>
 </context>
 <context>
     <name>TopTips</name>

@@ -705,6 +705,10 @@ Hold down Shift to draw squares or circles.</source>
         <source>Copy to clipboard (Enter)</source>
         <translation>Копирај у клипборд (Enter)</translation>
     </message>
+    <message>
+        <source>OK (Enter)</source>
+        <translation>ОК Enter</translation>
+    </message>
 </context>
 <context>
     <name>TopTips</name>
