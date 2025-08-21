@@ -2727,12 +2727,14 @@ void MainWindow::updateToolBarPos()
     // 多屏情况下， 右下角有可能在屏幕外面。
     if (m_isVertical == false) {
         for (int i = 0; i < m_screenInfo.size(); ++i) {
-            // 定位一级工具栏右边的坐标具体在哪块屏幕上
-            toolIsInScreen =
-                toolbarPoint.x() >= m_screenInfo[i].x && toolbarPoint.x() < (m_screenInfo[i].x + m_screenInfo[i].width) &&
-                (toolbarPoint.y() - m_screenInfo[i].height) * m_pixelRatio + m_screenInfo[i].height >= m_screenInfo[i].y &&
-                (toolbarPoint.y() - m_screenInfo[i].height) * m_pixelRatio + m_screenInfo[i].height <
-                    (m_screenInfo[i].y + m_screenInfo[i].height);
+            // 通用的屏幕范围检查：统一处理X/Y坐标，考虑像素比例
+            bool xInRange = toolbarPoint.x() >= m_screenInfo[i].x && 
+                           toolbarPoint.x() < (m_screenInfo[i].x + m_screenInfo[i].width / m_pixelRatio);
+            bool yInRange = toolbarPoint.y() >= m_screenInfo[i].y && 
+                           toolbarPoint.y() < (m_screenInfo[i].y + m_screenInfo[i].height / m_pixelRatio);
+            
+            toolIsInScreen = xInRange && yInRange;
+            qCWarning(dsrApp) << "  toolIsInScreen:" << toolIsInScreen;
             bool recordIsInScreen = recordX >= m_screenInfo[i].x && recordX < (m_screenInfo[i].x + m_screenInfo[i].width) &&
                                     recordY >= m_screenInfo[i].y && recordY < (m_screenInfo[i].y + m_screenInfo[i].height);
             // 取出捕捉区域所在的屏幕
@@ -2789,6 +2791,63 @@ void MainWindow::updateToolBarPos()
                     toolbarPoint.setX(recordX);
                 }
                 // qCDebug(dsrApp) << "工具栏位置未在任一屏幕内，已矫正 >>> toolbarPoint: " << toolbarPoint;
+            } else {
+                toolbarPoint.setX(m_toolbarLastPoint.x());
+                toolbarPoint.setY(m_toolbarLastPoint.y());
+            }
+        }
+    } else {
+        // 垂直多屏：使用相同的通用逻辑
+        for (int i = 0; i < m_screenInfo.size(); ++i) {
+            qCWarning(dsrApp) << "Checking vertical screen" << i << "for toolbar position:";
+            
+            // 通用的屏幕范围检查：统一处理X/Y坐标，考虑像素比例
+            bool xInRange = toolbarPoint.x() >= m_screenInfo[i].x && 
+                           toolbarPoint.x() < (m_screenInfo[i].x + m_screenInfo[i].width / m_pixelRatio);
+            bool yInRange = toolbarPoint.y() >= m_screenInfo[i].y && 
+                           toolbarPoint.y() < (m_screenInfo[i].y + m_screenInfo[i].height / m_pixelRatio);
+            
+            toolIsInScreen = xInRange && yInRange;
+            qCWarning(dsrApp) << "  toolIsInScreen:" << toolIsInScreen;
+            
+            bool recordIsInScreen = recordX >= m_screenInfo[i].x && recordX < (m_screenInfo[i].x + m_screenInfo[i].width / m_pixelRatio) &&
+                                   recordY >= m_screenInfo[i].y && recordY < (m_screenInfo[i].y + m_screenInfo[i].height / m_pixelRatio);
+            // 取出捕捉区域所在的屏幕
+            if (recordIsInScreen) {
+                tempScreen.setX(m_screenInfo[i].x);
+                tempScreen.setY(m_screenInfo[i].y);
+                tempScreen.setWidth(m_screenInfo[i].width);
+                tempScreen.setHeight(m_screenInfo[i].height);
+            }
+            
+            // 使用相同的边界检查逻辑
+            if (toolIsInScreen) {
+                if (toolbarPoint.y() < m_screenInfo[i].y + TOOLBAR_Y_SPACING) {
+                    toolbarPoint.setY(recordY + TOOLBAR_Y_SPACING);
+                }
+                else if (toolbarPoint.y() > m_screenInfo[i].y + m_screenInfo[i].height / m_pixelRatio - m_toolBar->height() - TOOLBAR_Y_SPACING) {
+                    int y = std::max(recordY - m_toolBar->height() - TOOLBAR_Y_SPACING, 0);
+                    if (y > m_screenInfo[i].y + m_screenInfo[i].height / m_pixelRatio - m_toolBar->height() - TOOLBAR_Y_SPACING)
+                        y = m_screenInfo[i].y + static_cast<int>(m_screenInfo[i].height / m_pixelRatio) - m_toolBar->height() - TOOLBAR_Y_SPACING;
+                    
+                    if (y < m_screenInfo[i].y) {
+                        y = recordY + TOOLBAR_Y_SPACING;
+                    }
+                    toolbarPoint.setY(y);
+                }
+                break;
+            }
+        }
+        if (!toolIsInScreen) {
+            if (!tempScreen.isNull()) {
+                if (recordY - tempScreen.y() > m_toolBar->height() + 28) {
+                    toolbarPoint.setY(recordY - m_toolBar->height() - TOOLBAR_Y_SPACING);
+                } else {
+                    toolbarPoint.setY(recordY + TOOLBAR_Y_SPACING);
+                }
+                if (recordX + recordWidth - m_toolBar->width() < tempScreen.x()) {
+                    toolbarPoint.setX(recordX);
+                }
             } else {
                 toolbarPoint.setX(m_toolbarLastPoint.x());
                 toolbarPoint.setY(m_toolbarLastPoint.y());
