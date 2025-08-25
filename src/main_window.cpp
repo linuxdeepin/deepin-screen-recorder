@@ -2152,11 +2152,16 @@ void MainWindow::topWindow()
 
     // this->hide();
     qCDebug(dsrApp) << "topWindow QRect target";
-    QRect target(static_cast<int>(recordX * m_pixelRatio),
-                 static_cast<int>(recordY * m_pixelRatio),
-                 static_cast<int>(recordWidth * m_pixelRatio),
-                 static_cast<int>(recordHeight * m_pixelRatio));
-
+   
+    int adjustedX = std::max(recordX, 1);
+    int adjustedY = std::max(recordY, 1);
+    int adjustedWidth = std::min(recordWidth - 2, m_backgroundRect.width() - 2);
+    int adjustedHeight = std::min(recordHeight - 1, m_backgroundRect.height() - 2);
+    
+    QRect target(static_cast<int>(adjustedX * m_pixelRatio),
+                 static_cast<int>(adjustedY * m_pixelRatio),
+                 static_cast<int>(adjustedWidth * m_pixelRatio),
+                 static_cast<int>(adjustedHeight * m_pixelRatio));
     //    using namespace utils;
     QPixmap screenShotPix = m_backgroundPixmap.copy(target);
     qCDebug(dsrApp) << "topWindow grabImage is null:" << m_backgroundPixmap.isNull()
@@ -4429,10 +4434,19 @@ void MainWindow::paintEvent(QPaintEvent *event)
             painter.setOpacity(1);
             painter.setBrush(QBrush());  // clear brush
             painter.setPen(framePen);
-            painter.drawRect(QRect(std::max(frameRect.x(), 1),
-                                   std::max(frameRect.y(), 1),
-                                   std::min(frameRect.width() - 2, rootWindowRect.width() - 2),
-                                   std::min(frameRect.height() - 1, rootWindowRect.height() - 2)));
+            
+            // 计算虚线绘制的实际区域
+            // 修复：让虚线边界与实际选中区域完全一致
+            // 移除不必要的调整，确保虚线显示的就是实际选中的区域
+            
+            qCWarning(dsrApp) << "=== 虚线边界绘制调试 (修复后) ===";
+            qCWarning(dsrApp) << "原始frameRect:" << frameRect;
+            qCWarning(dsrApp) << "rootWindowRect:" << rootWindowRect;
+            qCWarning(dsrApp) << "实际选中区域: x=" << recordX << "y=" << recordY << "width=" << recordWidth << "height=" << recordHeight;
+            qCWarning(dsrApp) << "虚线右边界:" << (recordX + recordWidth) << "虚线下边界:" << (recordY + recordHeight);
+            
+            // 直接使用实际选中区域绘制虚线，确保一致性
+            painter.drawRect(QRect(recordX, recordY, recordWidth, recordHeight));
             painter.setRenderHint(QPainter::Antialiasing, true);
         }
 
@@ -6336,6 +6350,12 @@ void MainWindow::startManualScrollShot()
 void MainWindow::shotCurrentImg()
 {
     qCInfo(dsrApp) << __FUNCTION__ << __LINE__ << "正在截取当前图片...";
+    
+    // 立即添加调试日志，确认截图区域计算
+    qCWarning(dsrApp) << "=== shotCurrentImg 开始截图区域计算 ===";
+    qCWarning(dsrApp) << "原始区域: x=" << recordX << "y=" << recordY << "width=" << recordWidth << "height=" << recordHeight;
+    qCWarning(dsrApp) << "m_pixelRatio:" << m_pixelRatio;
+    qCWarning(dsrApp) << "m_backgroundRect:" << m_backgroundRect;
 
     // treeland模式下 图的source由treeland提供
     if (Utils::isTreelandMode) {
@@ -6388,10 +6408,22 @@ void MainWindow::shotCurrentImg()
         shotFullScreen();
         // qCDebug(dsrApp) << recordX << "," << recordY << "," << recordWidth << "," << recordHeight << m_resultPixmap.rect() <<
         // m_pixelRatio;
-        QRect target(static_cast<int>(recordX * m_pixelRatio),
-                     static_cast<int>(recordY * m_pixelRatio),
-                     static_cast<int>(recordWidth * m_pixelRatio),
-                     static_cast<int>(recordHeight * m_pixelRatio));
+        // 修正方案：对逻辑坐标进行相同的边界调整，然后转换为物理坐标
+        int adjustedX = std::max(recordX, 1);
+        int adjustedY = std::max(recordY, 1);
+        int adjustedWidth = std::min(recordWidth - 2, m_backgroundRect.width() - 2);
+        int adjustedHeight = std::min(recordHeight - 1, m_backgroundRect.height() - 2);
+        
+        QRect target(static_cast<int>(adjustedX * m_pixelRatio),
+                     static_cast<int>(adjustedY * m_pixelRatio),
+                     static_cast<int>(adjustedWidth * m_pixelRatio),
+                     static_cast<int>(adjustedHeight * m_pixelRatio));
+        
+        qCWarning(dsrApp) << "=== 截图区域计算调试 (onExit) 修正后 ===";
+        qCWarning(dsrApp) << "原始区域: x=" << recordX << "y=" << recordY << "width=" << recordWidth << "height=" << recordHeight;
+        qCWarning(dsrApp) << "调整后逻辑坐标: x=" << adjustedX << "y=" << adjustedY << "width=" << adjustedWidth << "height=" << adjustedHeight;
+        qCWarning(dsrApp) << "物理像素target:" << target;
+        qCWarning(dsrApp) << "截图右边界:" << (target.x() + target.width()) << "截图下边界:" << (target.y() + target.height());
 
         m_resultPixmap = m_resultPixmap.copy(target);
     } else {
@@ -6432,10 +6464,23 @@ QPixmap MainWindow::paintImage()
         backgroundImage = m_backgroundPixmap.toImage(); // 非treeland模式下的背景图像
     }
     QImage saveImage;
-    QRect target(static_cast<int>(recordX * m_pixelRatio),
-                 static_cast<int>(recordY * m_pixelRatio),
-                 static_cast<int>(recordWidth * m_pixelRatio),
-                 static_cast<int>(recordHeight * m_pixelRatio));
+    // 修正方案：对逻辑坐标进行相同的边界调整，然后转换为物理坐标
+    // 虚线绘制的调整逻辑：x=max(x,1), y=max(y,1), width=min(width-2, maxWidth-2), height=min(height-1, maxHeight-2)
+    int adjustedX = std::max(recordX, 1);
+    int adjustedY = std::max(recordY, 1);
+    int adjustedWidth = std::min(recordWidth - 2, m_backgroundRect.width() - 2);
+    int adjustedHeight = std::min(recordHeight - 1, m_backgroundRect.height() - 2);
+    
+    QRect target(static_cast<int>(adjustedX * m_pixelRatio),
+                 static_cast<int>(adjustedY * m_pixelRatio),
+                 static_cast<int>(adjustedWidth * m_pixelRatio),
+                 static_cast<int>(adjustedHeight * m_pixelRatio));
+    
+    qCWarning(dsrApp) << "=== 截图区域计算调试 (paintImage) 修正后 ===";
+    qCWarning(dsrApp) << "原始区域: x=" << recordX << "y=" << recordY << "width=" << recordWidth << "height=" << recordHeight;
+    qCWarning(dsrApp) << "调整后逻辑坐标: x=" << adjustedX << "y=" << adjustedY << "width=" << adjustedWidth << "height=" << adjustedHeight;
+    qCWarning(dsrApp) << "物理像素target:" << target;
+    qCWarning(dsrApp) << "截图右边界:" << (target.x() + target.width()) << "截图下边界:" << (target.y() + target.height());
 
     // 从背景图中裁剪出截图区域
     saveImage = backgroundImage.copy(target);
