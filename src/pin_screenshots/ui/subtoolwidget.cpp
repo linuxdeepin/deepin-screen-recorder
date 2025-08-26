@@ -79,7 +79,7 @@ void SubToolWidget::initShotLable()
     m_saveLocalDirButton->setCheckable(false);
     m_saveLocalDirButton->setIconSize(QSize(32, 32));
     // 初始化时调用 updateSaveButtonTip 设置初始的 tooltip
-    m_saveLocalDirButton->setIcon(QIcon(":/icons/deepin/builtin/texts/save.svg"));
+    m_saveLocalDirButton->setIcon(QIcon::fromTheme("save"));
     m_pinOptionButton->setObjectName(AC_TOOLBARWIDGET_SAVE_LOACL_PIN_BUT);
     m_saveLocalDirButton->setAccessibleName(AC_TOOLBARWIDGET_SAVE_LOACL_PIN_BUT);
     m_saveLocalDirButton->setFixedSize(QSize(32, 32));
