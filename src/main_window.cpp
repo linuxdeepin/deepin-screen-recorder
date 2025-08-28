@@ -3431,13 +3431,13 @@ void MainWindow::changeShotToolEvent(const QString &func)
         // TODO: 在treeland里暂时是走handleCapture去执行保存图片，后续会和原逻辑统一
         if (Utils::isTreelandMode) {
             QTimer::singleShot(delayTime, this, [=] {
-                onFinishClicked();
                 m_functionType = status::ocr;
+                onFinishClicked();
             });
         } else {
             QTimer::singleShot(delayTime, this, [=] {
-                saveScreenShot();
                 m_functionType = status::ocr;
+                saveScreenShot();
             });
         }
     } else if (func == "pinScreenshots") {
@@ -3856,6 +3856,10 @@ bool MainWindow::saveAction(const QPixmap &pix)
 
     if (isHideToolBar){
         m_saveIndex = SaveAction::CustomScreenSave;
+        saveWays = SaveWays::SpecifyLocation;
+    }
+    else if(m_functionType == status::ocr) {
+        m_saveIndex = SaveAction::SaveToClipboard;
         saveWays = SaveWays::SpecifyLocation;
     }
     else {
@@ -4301,11 +4305,7 @@ bool MainWindow::saveAction(const QPixmap &pix)
     }
 
     if (m_ocrInterface != nullptr) {
-        if (m_saveIndex == SaveToClipboard) {
-            m_ocrInterface->openImageAndName(pix.toImage(), tempFileName);
-        } else {
-            m_ocrInterface->openImageAndName(pix.toImage(), m_saveFileName);
-        }
+        m_ocrInterface->openImageAndName(pix.toImage(), tempFileName);
         // m_ocrInterface->openFile(m_saveFileName);
     }
     return true;
