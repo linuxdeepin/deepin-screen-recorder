@@ -345,7 +345,7 @@ void ShotToolWidget::initTextLabel()
     });
 
     QHBoxLayout *rectLayout = new QHBoxLayout(this);
-    rectLayout->setContentsMargins(0, 0, 0, 0);
+    rectLayout->setContentsMargins(0, 0, 5, 0);
 
     rectLayout->addWidget(t_blurArea);
 
