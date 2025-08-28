@@ -1,3 +1,9 @@
+deepin-screen-recorder (6.6.5) unstable; urgency=medium
+
+  * fix: Update screenshot handling logic in MainWindow for OCR mode
+
+ -- dengzhongyuan <dengzhongyuan@uniontech.com>  Thu, 28 Aug 2025 19:34:29 +0800
+
 deepin-screen-recorder (6.6.4) unstable; urgency=medium
 
   * fix: Simplify SVG files and update translations for improved clarity
