@@ -1824,8 +1824,57 @@ void ShapesWidget::keyPressEvent(QKeyEvent *keyEvent)
     if (m_isPressed) {
         Utils::cursorMove(m_currentCursor, keyEvent);
     }
+    
+    // 处理删除键
     if (keyEvent->key() == Qt::Key_Delete || keyEvent->key() == Qt::Key_Backspace) {
         deleteCurrentShape();
+        return;
+    }
+    
+    // 处理选中图形后的键盘调整
+    if (m_selectedIndex == -1 || m_selectedOrder >= m_shapes.length()) {
+        qDebug() << "ShapeWidget Exist keyEvent:" << keyEvent->text();
+        return;
+    }
+    
+
+    static const QHash<int, QString> modifierMap = {
+        {Qt::ShiftModifier | Qt::ControlModifier, "Ctrl+Shift"},
+        {Qt::ControlModifier, "Ctrl"},
+        {Qt::NoModifier, ""}
+    };
+    
+    QString direction;
+    int modifiers = keyEvent->modifiers();
+    
+    if (modifierMap.contains(modifiers)) {
+        QString prefix = modifierMap[modifiers];
+        
+        switch (keyEvent->key()) {
+            case Qt::Key_Left:
+            case Qt::Key_A:
+                direction = prefix.isEmpty() ? Direction::LEFT : prefix + "+" + Direction::LEFT;
+                break;
+            case Qt::Key_Right:
+            case Qt::Key_D:
+                direction = prefix.isEmpty() ? Direction::RIGHT : prefix + "+" + Direction::RIGHT;
+                break;
+            case Qt::Key_Up:
+            case Qt::Key_W:
+                direction = prefix.isEmpty() ? Direction::UP : prefix + "+" + Direction::UP;
+                break;
+            case Qt::Key_Down:
+            case Qt::Key_S:
+                direction = prefix.isEmpty() ? Direction::DOWN : prefix + "+" + Direction::DOWN;
+                break;
+            default:
+                break;
+        }
+    }
+    
+    // 如果找到了有效的方向，调用microAdjust
+    if (!direction.isEmpty()) {
+        microAdjust(direction);
     } else {
         qDebug() << "ShapeWidget Exist keyEvent:" << keyEvent->text();
     }
@@ -2422,38 +2471,87 @@ void ShapesWidget::isInUndoBtn(bool isUndo)
 
 void ShapesWidget::microAdjust(QString direction)
 {
-    if (m_selectedIndex != -1 && m_selectedOrder < m_shapes.length()) {
-        if (m_shapes[m_selectedOrder].type  == "text") {
-            return;
-        }
-
-        if (direction == "Left" || direction == "Right" || direction == "Up" || direction == "Down") {
-            m_shapes[m_selectedOrder].mainPoints = pointMoveMicro(m_shapes[m_selectedOrder].mainPoints, direction);
-        } else if (direction == "Ctrl+Shift+Left" || direction == "Ctrl+Shift+Right" || direction == "Ctrl+Shift+Up"
-                   || direction == "Ctrl+Shift+Down") {
-            m_shapes[m_selectedOrder].mainPoints = pointResizeMicro(m_shapes[m_selectedOrder].mainPoints, direction, false);
-        } else {
-            m_shapes[m_selectedOrder].mainPoints = pointResizeMicro(m_shapes[m_selectedOrder].mainPoints, direction, true);
-        }
-
-        if (m_shapes[m_selectedOrder].type == "line" || m_shapes[m_selectedOrder].type == "arrow") {
-            if (m_shapes[m_selectedOrder].portion.length() == 0) {
-                for (int k = 0; k < m_shapes[m_selectedOrder].points.length(); k++) {
-                    m_shapes[m_selectedOrder].portion.append(relativePosition(m_shapes[m_selectedOrder].mainPoints,
-                                                                              m_shapes[m_selectedOrder].points[k]));
-                }
-            }
-            for (int j = 0; j < m_shapes[m_selectedOrder].points.length(); j++) {
-                m_shapes[m_selectedOrder].points[j] = getNewPosition(
-                                                          m_shapes[m_selectedOrder].mainPoints, m_shapes[m_selectedOrder].portion[j]);
-            }
-        }
-
-        m_selectedShape.mainPoints = m_shapes[m_selectedOrder].mainPoints;
-        m_selectedShape.points = m_shapes[m_selectedOrder].points;
-        m_hoveredShape.type = "";
-        update();
+    if (m_selectedIndex == -1 || m_selectedOrder >= m_shapes.length()) {
+        return;
     }
+    
+    Toolshape &currentShape = m_shapes[m_selectedOrder];
+    
+    if (currentShape.type == "text") {
+        return;
+    }
+
+    // 保存原始的mainPoints，用于计算偏移量
+    FourPoints oldMainPoints = currentShape.mainPoints;
+
+    // 根据方向调整mainPoints
+    bool isSimpleMove = direction == Direction::LEFT || direction == Direction::RIGHT || 
+                        direction == Direction::UP || direction == Direction::DOWN;
+                        
+    bool isReduceResize = direction == Direction::CTRL_SHIFT_LEFT || direction == Direction::CTRL_SHIFT_RIGHT || 
+                          direction == Direction::CTRL_SHIFT_UP || direction == Direction::CTRL_SHIFT_DOWN;
+
+    // 调整mainPoints
+    if (isSimpleMove) {
+        currentShape.mainPoints = pointMoveMicro(currentShape.mainPoints, direction);
+    } else if (isReduceResize) {
+        currentShape.mainPoints = pointResizeMicro(currentShape.mainPoints, direction, false);
+    } else {
+        currentShape.mainPoints = pointResizeMicro(currentShape.mainPoints, direction, true);
+    }
+
+    if (currentShape.type == "line" || currentShape.type == "arrow") {
+        if (currentShape.portion.length() == 0) {
+            for (int k = 0; k < currentShape.points.length(); k++) {
+                currentShape.portion.append(relativePosition(currentShape.mainPoints,
+                                                                          currentShape.points[k]));
+            }
+        }
+        for (int j = 0; j < currentShape.points.length(); j++) {
+            currentShape.points[j] = getNewPosition(
+                                                      currentShape.mainPoints, currentShape.portion[j]);
+        }
+    } 
+    // 处理画笔类型的points
+    else if (currentShape.type == "pen" || 
+            (currentShape.type == "effect" && currentShape.isOval == 2)) {
+        
+        QPointF offset;
+        if (isSimpleMove) {
+            // 移动操作，计算偏移量
+            offset = currentShape.mainPoints[0] - oldMainPoints[0];
+            
+            // 对所有点应用相同的偏移量
+            for (int j = 0; j < currentShape.points.length(); j++) {
+                currentShape.points[j] += offset;
+            }
+        } else {
+            // 缩放操作
+            QPointF oldCenter = (oldMainPoints[0] + oldMainPoints[3]) / 2;
+            QPointF newCenter = (currentShape.mainPoints[0] + currentShape.mainPoints[3]) / 2;
+            
+            // 计算缩放比例
+            QRectF oldRect = QRectF(oldMainPoints[0], oldMainPoints[3]);
+            QRectF newRect = QRectF(currentShape.mainPoints[0], currentShape.mainPoints[3]);
+            qreal scaleX = newRect.width() / oldRect.width();
+            qreal scaleY = newRect.height() / oldRect.height();
+            
+            // 对每个点应用缩放和偏移
+            for (int j = 0; j < currentShape.points.length(); j++) {
+                QPointF point = currentShape.points[j];
+                QPointF relativePos = point - oldCenter;
+                relativePos.setX(relativePos.x() * scaleX);
+                relativePos.setY(relativePos.y() * scaleY);
+                currentShape.points[j] = newCenter + relativePos;
+            }
+        }
+    }
+
+    // 更新选中的形状
+    m_selectedShape.mainPoints = currentShape.mainPoints;
+    m_selectedShape.points = currentShape.points;
+    m_hoveredShape.type = "";
+    update();
 }
 
 void ShapesWidget::setShiftKeyPressed(bool isShift)
