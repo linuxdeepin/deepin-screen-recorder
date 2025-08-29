@@ -15,6 +15,22 @@
 #include <DFrame>
 #include <QGestureEvent>
 #include <QMouseEvent>
+#include <QHash>
+
+namespace Direction {
+    const QString LEFT = "Left";
+    const QString RIGHT = "Right";
+    const QString UP = "Up";
+    const QString DOWN = "Down";
+    const QString CTRL_LEFT = "Ctrl+Left";
+    const QString CTRL_RIGHT = "Ctrl+Right";
+    const QString CTRL_UP = "Ctrl+Up";
+    const QString CTRL_DOWN = "Ctrl+Down";
+    const QString CTRL_SHIFT_LEFT = "Ctrl+Shift+Left";
+    const QString CTRL_SHIFT_RIGHT = "Ctrl+Shift+Right";
+    const QString CTRL_SHIFT_UP = "Ctrl+Shift+Up";
+    const QString CTRL_SHIFT_DOWN = "Ctrl+Shift+Down";
+}
 
 class ShapesWidget : public DFrame
 {
