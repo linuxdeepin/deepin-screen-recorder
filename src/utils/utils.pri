@@ -5,7 +5,8 @@ HEADERS += \
     $$PWD/configsettings.h \
     $$PWD/shortcut.h \
     $$PWD/screenutils.h \
-    $$PWD/tempfile.h
+    $$PWD/tempfile.h \
+    $$PWD/timeutils.h
 
 SOURCES += \
     $$PWD/baseutils.cpp \
@@ -14,4 +15,5 @@ SOURCES += \
     $$PWD/configsettings.cpp \
     $$PWD/shortcut.cpp \
     $$PWD/screenutils.cpp \
-    $$PWD/tempfile.cpp
+    $$PWD/tempfile.cpp \
+    $$PWD/timeutils.h
