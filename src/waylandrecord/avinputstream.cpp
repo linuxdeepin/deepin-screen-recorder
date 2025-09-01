@@ -12,6 +12,7 @@
 #include <QThread>
 #include <QMutexLocker>
 #include "recordadmin.h"
+#include "../utils/timeutils.h"
 
 CAVInputStream::CAVInputStream(WaylandIntegration::WaylandIntegrationPrivate *context):
     m_context(context)
@@ -178,7 +179,7 @@ bool CAVInputStream::openSysStream()
 }
 bool CAVInputStream::audioCapture()
 {
-    m_start_time = avlibInterface::m_av_gettime();
+    m_start_time = TimeUtils::getMonotonicTime(); // 使用微秒级时间戳，与av_gettime()兼容
     if (m_bMix) {
         pthread_create(&m_hMicAudioThread, nullptr, captureMicToMixAudioThreadFunc, static_cast<void *>(this));
         pthread_create(&m_hSysAudioThread, nullptr, captureSysToMixAudioThreadFunc, static_cast<void *>(this));
@@ -389,7 +390,7 @@ int CAVInputStream::readMicAudioPacket()
         avlibInterface::m_av_packet_unref(&inputPacket);
         /** If there is decoded data, convert and store it */
         if (got_frame_ptr) {
-            m_context->m_recordAdmin->m_pOutputStream->writeMicAudioFrame(m_pMicAudioFormatContext->streams[m_micAudioindex], inputFrame, avlibInterface::m_av_gettime() - m_start_time);
+            m_context->m_recordAdmin->m_pOutputStream->writeMicAudioFrame(m_pMicAudioFormatContext->streams[m_micAudioindex], inputFrame, TimeUtils::getMonotonicTime() - m_start_time);
         }
         avlibInterface::m_av_frame_free(&inputFrame);
         fflush(stdout);
@@ -441,7 +442,7 @@ int CAVInputStream::readMicToMixAudioPacket()
         avlibInterface::m_av_packet_unref(&inputPacket);
         /** If there is decoded data, convert and store it 如果有解码的数据，转换并存储它*/
         if (got_frame_ptr) {
-            m_context->m_recordAdmin->m_pOutputStream->writeMicToMixAudioFrame(m_pMicAudioFormatContext->streams[m_micAudioindex], inputFrame, avlibInterface::m_av_gettime() - m_start_time);
+            m_context->m_recordAdmin->m_pOutputStream->writeMicToMixAudioFrame(m_pMicAudioFormatContext->streams[m_micAudioindex], inputFrame, TimeUtils::getMonotonicTime() - m_start_time);
         }
         avlibInterface::m_av_frame_free(&inputFrame);
         fflush(stdout);
@@ -508,7 +509,7 @@ int CAVInputStream::readSysAudioPacket()
         avlibInterface::m_av_packet_unref(&inputPacket);
         /** If there is decoded data, convert and store it */
         if (got_frame_ptr) {
-            m_context->m_recordAdmin->m_pOutputStream->writeSysAudioFrame(m_pSysAudioFormatContext->streams[m_sysAudioindex], input_frame, avlibInterface::m_av_gettime() - m_start_time);
+            m_context->m_recordAdmin->m_pOutputStream->writeSysAudioFrame(m_pSysAudioFormatContext->streams[m_sysAudioindex], input_frame, TimeUtils::getMonotonicTime() - m_start_time);
         }
         avlibInterface::m_av_frame_free(&input_frame);
     }// -- while end
@@ -555,7 +556,7 @@ int CAVInputStream::readSysToMixAudioPacket()
         }
         avlibInterface::m_av_packet_unref(&inputPacket);
         if (got_frame_ptr) {
-            m_context->m_recordAdmin->m_pOutputStream->writeSysToMixAudioFrame(m_pSysAudioFormatContext->streams[m_sysAudioindex], inputFrame, avlibInterface::m_av_gettime() - m_start_time);
+            m_context->m_recordAdmin->m_pOutputStream->writeSysToMixAudioFrame(m_pSysAudioFormatContext->streams[m_sysAudioindex], inputFrame, TimeUtils::getMonotonicTime() - m_start_time);
         }
         avlibInterface::m_av_frame_free(&inputFrame);
     }// -- while end

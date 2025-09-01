@@ -22,6 +22,7 @@ DTS是AVPacket里的一个成员，表示这个压缩包应该什么时候被解
 #include <QTime>
 #include <QDebug>
 #include <QThread>
+#include "../utils/timeutils.h"
 
 CAVOutputStream::CAVOutputStream(WaylandIntegration::WaylandIntegrationPrivate *context):
     m_context(context),
@@ -1196,9 +1197,9 @@ void CAVOutputStream::writeMixAudio()
         int nFifoSamples = pFrame_sys->nb_samples;
         if (m_start_mix_time == -1) {
             //printf("First Audio timestamp: %ld \n", av_gettime());
-            m_start_mix_time = avlibInterface::m_av_gettime();
+            m_start_mix_time = TimeUtils::getMonotonicTime(); // 使用微秒级时间戳，与av_gettime()兼容
         }
-        int64_t lTimeStamp = avlibInterface::m_av_gettime() - m_start_mix_time;
+        int64_t lTimeStamp = TimeUtils::getMonotonicTime() - m_start_mix_time;
         int64_t timeshift = (int64_t)nFifoSamples * AV_TIME_BASE / (int64_t)(audio_amix_st->codec->sample_rate);
         if (lTimeStamp - timeshift > m_nLastAudioMixPresentationTime) {
             m_nLastAudioMixPresentationTime = lTimeStamp - timeshift;
