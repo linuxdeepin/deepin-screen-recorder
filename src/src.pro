@@ -168,7 +168,8 @@ HEADERS += main_window.h \
     camera/majorimageprocessingthread.h \
     camera/LPF_V4L2.h \
     camera/devnummonitor.h \
-    utils/delaytime.h
+    utils/delaytime.h \
+    utils/timeutils.h
 contains(DEFINES , OCR_SCROLL_FLAGE_ON) {
     HEADERS += widgets/scrollshottip.h \
     utils/pixmergethread.h \
@@ -235,7 +236,8 @@ SOURCES += main.cpp \
     camera/majorimageprocessingthread.cpp \
     camera/LPF_V4L2.c \
     camera/devnummonitor.cpp \
-    utils/delaytime.cpp
+    utils/delaytime.cpp \
+    utils/timeutils.cpp
 
 contains(DEFINES , OCR_SCROLL_FLAGE_ON) {
     SOURCES += widgets/scrollshottip.cpp \
