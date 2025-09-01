@@ -46,6 +46,7 @@
 
 #include <string.h>
 #include <QMutexLocker>
+#include "../utils/timeutils.h"
 
 
 Q_LOGGING_CATEGORY(XdgDesktopPortalKdeWaylandIntegration, "xdp-kde-wayland-integration")
@@ -525,9 +526,9 @@ void WaylandIntegration::WaylandIntegrationPrivate::processBuffer(const KWayland
         m_bInitRecordAdmin = false;
         if (Utils::isFFmpegEnv) {
             m_recordAdmin->init(static_cast<int>(m_screenSize.width()), static_cast<int>(m_screenSize.height()));
-            frameStartTime = avlibInterface::m_av_gettime();
+            frameStartTime = TimeUtils::getMonotonicTimeMs();
         } else {
-            frameStartTime = QDateTime::currentMSecsSinceEpoch();
+            frameStartTime = TimeUtils::getMonotonicTimeMs();
             isGstWriteVideoFrame = true;
             if (m_gstRecordX) {
                 m_gstRecordX->waylandGstStartRecord();
@@ -580,9 +581,9 @@ void WaylandIntegration::WaylandIntegrationPrivate::processBufferHw(const KWayla
         m_bInitRecordAdmin = false;
         if (Utils::isFFmpegEnv) {
             m_recordAdmin->init(static_cast<int>(m_screenSize.width()), static_cast<int>(m_screenSize.height()));
-            frameStartTime = avlibInterface::m_av_gettime();
+            frameStartTime = TimeUtils::getMonotonicTimeMs();
         } else {
-            frameStartTime = QDateTime::currentMSecsSinceEpoch();
+            frameStartTime = TimeUtils::getMonotonicTimeMs();
             isGstWriteVideoFrame = true;
             if (m_gstRecordX) {
                 m_gstRecordX->waylandGstStartRecord();
@@ -814,9 +815,9 @@ void WaylandIntegration::WaylandIntegrationPrivate::processBufferX86(const KWayl
         m_bInitRecordAdmin = false;
         if (Utils::isFFmpegEnv) {
             m_recordAdmin->init(static_cast<int>(m_screenSize.width()), static_cast<int>(m_screenSize.height()));
-            frameStartTime = avlibInterface::m_av_gettime();
+            frameStartTime = TimeUtils::getMonotonicTimeMs();
         } else {
-            frameStartTime = QDateTime::currentMSecsSinceEpoch();
+            frameStartTime = TimeUtils::getMonotonicTimeMs();
             isGstWriteVideoFrame = true;
             if (m_gstRecordX) {
                 m_gstRecordX->waylandGstStartRecord();
@@ -873,13 +874,7 @@ void WaylandIntegration::WaylandIntegrationPrivate::appendFrameToList()
             if (!tempImage.isNull()) {
                 //qDebug() << "用来编码的帧索引glovbalImageCount: " << globalImageCount;
                 int64_t temptime = 0;
-                if (Utils::isFFmpegEnv) {
-                    temptime = avlibInterface::m_av_gettime();
-
-                } else {
-                    temptime = QDateTime::currentMSecsSinceEpoch();
-
-                }
+                temptime = TimeUtils::getMonotonicTime(); // 使用微秒级时间戳，与av_gettime()兼容
                 appendBuffer(tempImage.bits(), static_cast<int>(tempImage.width()), static_cast<int>(tempImage.height()),
                              static_cast<int>(tempImage.width() * 4), temptime/*- frameStartTime*/);
             }
@@ -887,13 +882,7 @@ void WaylandIntegration::WaylandIntegrationPrivate::appendFrameToList()
         } else {
             //多屏录制
             int64_t curFramTime = 0;
-            if (Utils::isFFmpegEnv) {
-                curFramTime = avlibInterface::m_av_gettime();
-
-            } else {
-                curFramTime = QDateTime::currentMSecsSinceEpoch();
-
-            }
+            curFramTime = TimeUtils::getMonotonicTime(); // 使用微秒级时间戳，与av_gettime()兼容
 #if 0
             cv::Mat res;
             res.create(cv::Size(m_screenSize.width(), m_screenSize.height()), CV_8UC4);
@@ -941,13 +930,7 @@ void WaylandIntegration::WaylandIntegrationPrivate::appendFrameToList()
             appendBuffer(img.bits(), img.width(), img.height(), img.width() * 4, curFramTime /*- frameStartTime*/);
             // 计算拼接的时的耗时
             int64_t t = 0;
-            if (Utils::isFFmpegEnv) {
-                t = (avlibInterface::m_av_gettime() - curFramTime) / 1000;
-
-            } else {
-                t = (QDateTime::currentMSecsSinceEpoch() - curFramTime) / 1000;
-
-            }
+            t = (TimeUtils::getMonotonicTime() - curFramTime) / 1000000LL; // 转换为毫秒用于sleep
             //qDebug() << delayTime - t;
             if (t < delayTime) {
                 QThread::msleep(static_cast<unsigned long>(delayTime - t));
