@@ -195,7 +195,7 @@ oder drücken Sie die Tastenkombination erneut, um die Aufnahme zu stoppen</tran
     <name>ScrollShotTip</name>
     <message>
         <source>Get help.</source>
-        <translation>Hilfe holen.</translation>
+        <translation>Hilfe bekommen.</translation>
     </message>
     <message>
         <source>Failed to take a continuous screenshot.</source>
