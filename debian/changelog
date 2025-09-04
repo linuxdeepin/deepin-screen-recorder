@@ -1,3 +1,9 @@
+deepin-screen-recorder (6.6.6) unstable; urgency=medium
+
+  * fix: Enhance keyboard interaction for shape adjustments in ShapesWidget
+
+ -- dengzhongyuan <dengzhongyuan@uniontech.com>  Thu, 04 Sep 2025 17:04:03 +0800
+
 deepin-screen-recorder (6.6.5) unstable; urgency=medium
 
   * fix: Update screenshot handling logic in MainWindow for OCR mode
