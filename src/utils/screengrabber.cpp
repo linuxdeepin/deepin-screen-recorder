@@ -76,7 +76,7 @@ QPixmap ScreenGrabber::grabEntireDesktop(bool &ok, const QRect &rect, const qrea
 
 bool ScreenGrabber::quickFullScreenshot()
 {
-    qInfo() << "开始执行快速全屏截图...";
+    qInfo() << "Starting quick fullscreen screenshot...";
 
     int count = 0;
 
@@ -99,7 +99,7 @@ bool ScreenGrabber::quickFullScreenshot()
     }
 
     if (!reply.isValid() || reply.value().isEmpty()) {
-        qWarning() << "获取全屏截图失败:" << reply.error().message();
+        qWarning() << "Failed to get fullscreen screenshot:" << reply.error().message();
         qDebug() << __FUNCTION__ << __LINE__ << "Get Pixmap:" << screenshot.size() << "try failed at " << count << "times";
         return false;
     }
@@ -107,7 +107,7 @@ bool ScreenGrabber::quickFullScreenshot()
     QString tempImagePath = reply.value();
     
     if (screenshot.isNull()) {
-        qWarning() << "无法加载截图文件:" << tempImagePath;
+        qWarning() << "Unable to load screenshot file:" << tempImagePath;
         QFile::remove(tempImagePath);
         return false;
     }
@@ -172,7 +172,7 @@ bool ScreenGrabber::quickFullScreenshot()
     saveFileName = QString("%1/%2_%3.%4").arg(savePath, functionTypeStr, currentTime, formatSuffix);
 
     if (!screenshot.save(saveFileName, formatStr.toLatin1().data())) {
-        qWarning() << "保存截图失败:" << saveFileName;
+        qWarning() << "Failed to save screenshot:" << saveFileName;
         QFile::remove(tempImagePath);
         return false;
     }
@@ -190,12 +190,12 @@ bool ScreenGrabber::quickFullScreenshot()
 
     // Wayland 模式下添加等待机制，确保剪贴板数据传输完成
     if (Utils::isWaylandMode) {
-        qInfo() << "Wayland 模式下等待剪贴板数据传输完成...";
+        qInfo() << "Waiting for clipboard data transfer to complete in Wayland mode...";
         time_t endTime = time(nullptr) + 1;  // 等待 1 秒
         while (time(nullptr) < endTime) {
             QCoreApplication::processEvents(QEventLoop::AllEvents, 100);
         }
-        qInfo() << "剪贴板等待完成";
+        qInfo() << "Clipboard wait completed";
     }
 
     // 发送系统通知
@@ -240,6 +240,6 @@ bool ScreenGrabber::quickFullScreenshot()
     // 清理临时文件
     QFile::remove(tempImagePath);
     
-    qInfo() << "快速全屏截图完成！";
+    qInfo() << "Quick fullscreen screenshot completed!";
     return true;
 }
