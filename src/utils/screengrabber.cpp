@@ -163,7 +163,12 @@ bool ScreenGrabber::quickFullScreenshot()
     if (!saveDir.exists()) {
         saveDir.mkpath(savePath);
     }
-
+    QFileInfo dirInfo(savePath);
+    if (dirInfo.isDir() && dirInfo.exists()) {
+        if (!dirInfo.isWritable()) {
+            qWarning() << "Check the write permissions, the file cannot be written to: " << savePath;
+        }
+    }
     saveFileName = QString("%1/%2_%3.%4").arg(savePath, functionTypeStr, currentTime, formatSuffix);
 
     if (!screenshot.save(saveFileName, formatStr.toLatin1().data())) {
