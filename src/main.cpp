@@ -501,7 +501,7 @@ int main(int argc, char *argv[])
         Utils::showCurrentSys();
 
         //qInfo() << "截图录屏日志路径: " << Dtk::Core::DLogManager::getlogFilePath().right(Dtk::Core::DLogManager::getlogFilePath().length() - Dtk::Core::DLogManager::getlogFilePath().indexOf(".cache"));
-        qInfo() << "截图录屏版本: " << DApplication::buildVersion(APP_VERSION);
+        qInfo() << "App Version: " << DApplication::buildVersion(APP_VERSION);
 #ifdef KF5_WAYLAND_FLAGE_ON
         qInfo() << "KF5_WAYLAND_FLAGE_ON is open!!";
 #else
@@ -517,12 +517,12 @@ int main(int argc, char *argv[])
 
         // 在 Wayland 环境下，如果是全屏截图，使用快速方式，避免创建 Screenshot 对象
         if (Utils::isWaylandMode && cmdParser.isSet(fullscreenOption)) {
-            qInfo() << "检测到 Wayland 环境下的全屏截图，使用快速方式";
+            qInfo() << "Wayland fullscreen screenshot detected, using quick fullscreen screenshot";
             if (ScreenGrabber::quickFullScreenshot()) {
-                qInfo() << "快速全屏截图成功完成";
+                qInfo() << "Quick fullscreen screenshot completed successfully";
                 return 0;
             } else {
-                qWarning() << "快速全屏截图失败，退出应用";
+                qWarning() << "Quick fullscreen screenshot failed, exiting application";
                 return 1;
             }
         }
