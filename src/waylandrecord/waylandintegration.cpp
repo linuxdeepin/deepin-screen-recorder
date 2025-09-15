@@ -705,7 +705,7 @@ void WaylandIntegration::WaylandIntegrationPrivate::setupRegistry()
     [this](quint32 name, quint32 version) {
         Q_UNUSED(name);
         Q_UNUSED(version);
-        m_remoteAccessManager = m_registry->createRemoteAccessManager(m_registry->interface(KWayland::Client::Registry::Interface::RemoteAccessManager).name, m_registry->interface(KWayland::Client::Registry::Interface::RemoteAccessManager).version);
+        m_remoteAccessManager = m_registry->createRemoteAccessManager(name, version);
         connect(m_remoteAccessManager, &KWayland::Client::RemoteAccessManager::bufferReady, this, [this](const void *output, const KWayland::Client::RemoteBuffer * rbuf) {
             QRect screenGeometry = (KWayland::Client::Output::get(reinterpret_cast<wl_output *>(const_cast<void *>(output))))->geometry();
             connect(rbuf, &KWayland::Client::RemoteBuffer::parametersObtained, this, [this, rbuf, screenGeometry] {
