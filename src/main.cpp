@@ -301,7 +301,7 @@ int main(int argc, char *argv[])
         // Register debus service.
         dbus.registerObject("/com/deepin/ScreenRecorder",
                             &window,
-                            QDBusConnection::ExportScriptableSignals | QDBusConnection::ExportScriptableSlots);
+                            QDBusConnection::ExportScriptableSignals | QDBusConnection::ExportScriptableSlots | QDBusConnection::ExportScriptableProperties);
         qCDebug(dsrApp) << "DBus object /com/deepin/ScreenRecorder registered.";
         QDBusConnection conn = QDBusConnection::sessionBus();
 

@@ -26,6 +26,13 @@ Screenshot::Screenshot(QObject *parent)
             m_isCustomScreenshot = false; // 重置标记
         }
     });
+    
+    // 设置录屏状态变化回调
+    m_window.setRecordingStateCallback([this](bool isRecording) {
+        m_isRecording = isRecording;
+        emit RecordingModeChanged(isRecording);
+        qCDebug(dsrApp) << "Recording state updated via callback:" << isRecording;
+    });
 }
 
 void Screenshot::startScreenshot()
@@ -186,7 +193,7 @@ void Screenshot::initLaunchMode(const QString &launchmode)
 void Screenshot::fullScreenRecord(QString fileName)
 {
     qCDebug(dsrApp) << "Start Full Screen Record! File name:" << fileName << ".";
-     m_window.fullScreenRecord(fileName);
+    m_window.fullScreenRecord(fileName);
 }
 
 void Screenshot::stopRecord()
@@ -205,6 +212,12 @@ QString Screenshot::getRecorderNormalIcon()
 {
     qCDebug(dsrApp) << "getRecorderNormalIcon() called.";
     return RecorderTablet::getRecorderNormalIcon();
+}
+
+bool Screenshot::isRecording() const
+{
+    qCDebug(dsrApp) << "isRecording() called, returning:" << m_isRecording;
+    return m_isRecording;
 }
 
 Screenshot::~Screenshot()

@@ -741,6 +741,11 @@ void RecordProcess::startRecord()
 
     qCDebug(dsrApp) << "已通知录屏插件开始录屏! currentTime: " << QTime::currentTime();
     m_recordingFlag = true;
+    
+    // 发送录屏开始信号
+    emit recordingStarted();
+    qCDebug(dsrApp) << "Recording started signal emitted";
+    
     QtConcurrent::run([this]() {
         this->emitRecording();
     });
@@ -871,6 +876,10 @@ void RecordProcess::exitRecord(QString newSavePath)
         callTrayRecorderIcon(DBUS_FUNC_ON_STOP);
         qCInfo(dsrApp) << __LINE__ << __func__ << "录屏计时图标已退出";
     }
+    
+    // 发送录屏的信号
+    emit recordingStopped();
+    qCDebug(dsrApp) << "Recording stopped signal emitted";
 
     //保存到剪切板
     save2Clipboard(newSavePath);
