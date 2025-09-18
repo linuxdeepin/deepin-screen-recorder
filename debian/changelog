@@ -1,3 +1,9 @@
+deepin-screen-recorder (6.6.7) unstable; urgency=medium
+
+  * fix: Integrate recording state management in Screenshot and MainWindow
+
+ -- dengzhongyuan <dengzhongyuan@uniontech.com>  Thu, 18 Sep 2025 19:25:04 +0800
+
 deepin-screen-recorder (6.6.6) unstable; urgency=medium
 
   * fix: Enhance keyboard interaction for shape adjustments in ShapesWidget
