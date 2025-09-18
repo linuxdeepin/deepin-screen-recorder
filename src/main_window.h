@@ -18,6 +18,7 @@
 #include "show_buttons.h"
 #include "widgets/shapeswidget.h"
 #include "widgets/toptips.h"
+#include <functional>
 #include "widgets/toolbar.h"
 #include "widgets/sidebar.h"
 #include "widgets/keybuttonwidget.h"
@@ -441,6 +442,9 @@ public slots:
 
     Q_SCRIPTABLE void stopRecord();
     Q_SCRIPTABLE void stopApp();
+    
+    // 设置录屏状态变化通知回调
+    void setRecordingStateCallback(std::function<void(bool)> callback) { m_recordingStateCallback = callback; }
 
     /**
      * @brief 启动录屏倒计时
@@ -452,6 +456,8 @@ public slots:
     void responseEsc();
     void compositeChanged();
     void updateToolBarPos();
+    void onRecordingStarted(); // 录屏开始
+    void onRecordingStopped(); // 录屏停止
     /**
      * @brief 更新二级工具栏的位置信息
      */
@@ -1396,6 +1402,9 @@ private:
     bool isWayland = false;
     // Note: m_toolBar already exists as ShowButtons *m_showButtons
     bool isHideToolBar = false;
+    
+    // 录屏状态变化回调函数
+    std::function<void(bool)> m_recordingStateCallback;
 };
 
 #endif //MAINWINDOW_H

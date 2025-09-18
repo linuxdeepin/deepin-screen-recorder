@@ -16,6 +16,7 @@ class Screenshot : public QObject
     Q_OBJECT
 
     Q_CLASSINFO("D-Bus Interface", "com.deepin.ScreenRecorder")
+    Q_PROPERTY(bool IsRecording READ isRecording)
 public:
     explicit Screenshot(QObject *parent = nullptr);
     ~Screenshot();
@@ -40,9 +41,14 @@ public slots:
     Q_SCRIPTABLE void stopRecord();
     Q_SCRIPTABLE void stopApp();
     Q_SCRIPTABLE QString getRecorderNormalIcon();
+    
 signals:
     Q_SCRIPTABLE void RecorderState(const bool isStart); // true begin recorder; false stop recorder;
+    Q_SCRIPTABLE void RecordingModeChanged(const bool isRecording); // 录屏模式变化
     void screenshotSaved(const QString &savePath); // 截图保存完成信号，返回保存路径
+
+private:
+    bool isRecording() const;
 
 private:
     //void initUI();
@@ -51,6 +57,7 @@ private:
     QString m_launchMode;
     MainWindow m_window;
     bool m_isCustomScreenshot = false; // 标记是否是自定义截图
+    bool m_isRecording = false; // 实际录屏状态
 
 };
 

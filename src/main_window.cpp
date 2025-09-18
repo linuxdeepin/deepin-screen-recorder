@@ -308,6 +308,10 @@ void MainWindow::initMainWindow()
 
     qCInfo(dsrApp) << __LINE__ << __FUNCTION__ << "截图录屏主窗口已初始化";
     m_isSaveScrollShot = false;
+    
+    // 连接录屏进程的开始和停止信号
+    connect(&recordProcess, &RecordProcess::recordingStarted, this, &MainWindow::onRecordingStarted);
+    connect(&recordProcess, &RecordProcess::recordingStopped, this, &MainWindow::onRecordingStopped);
 }
 
 void MainWindow::initTreelandtAttributes() //initTreelandtAttributes
@@ -7253,6 +7257,24 @@ void MainWindow::updateCaptureRegion()
             m_toolBar->hide();
             m_toolBar->show();
         }
+    }
+}
+
+void MainWindow::onRecordingStarted()
+{
+    qCDebug(dsrApp) << "onRecordingStarted: Recording actually started";
+    // 调用回调函数通知录屏状态变化
+    if (m_recordingStateCallback) {
+        m_recordingStateCallback(true);
+    }
+}
+
+void MainWindow::onRecordingStopped()
+{
+    qCDebug(dsrApp) << "onRecordingStopped: Recording actually stopped";
+    // 调用回调函数通知录屏状态变化
+    if (m_recordingStateCallback) {
+        m_recordingStateCallback(false);
     }
 }
 

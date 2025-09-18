@@ -190,6 +190,10 @@ private:
      */
     bool m_isFullScreenRecord = false;
 
+signals:
+    void recordingStopped();
+    void recordingStarted(); // 录屏开始信号 
+
 };
 
 #endif //RECORDPROCESS_H
