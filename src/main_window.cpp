@@ -2743,7 +2743,6 @@ void MainWindow::updateToolBarPos()
                            toolbarPoint.y() < (m_screenInfo[i].y + m_screenInfo[i].height / m_pixelRatio);
             
             toolIsInScreen = xInRange && yInRange;
-            qCWarning(dsrApp) << "  toolIsInScreen:" << toolIsInScreen;
             bool recordIsInScreen = recordX >= m_screenInfo[i].x && recordX < (m_screenInfo[i].x + m_screenInfo[i].width) &&
                                     recordY >= m_screenInfo[i].y && recordY < (m_screenInfo[i].y + m_screenInfo[i].height);
             // 取出捕捉区域所在的屏幕
@@ -2763,7 +2762,6 @@ void MainWindow::updateToolBarPos()
                     // 屏幕上超出
                     toolbarPoint.setY(recordY + TOOLBAR_Y_SPACING);
                     // toolbarPoint.setY(m_screenInfo[i].y + TOOLBAR_Y_SPACING);
-                    qCDebug(dsrApp) << "工具栏位置超出屏幕上边缘，已矫正 >>> toolbarPoint: " << toolbarPoint;
                 } else if (toolbarPoint.y() >
                            m_screenInfo[i].y + m_screenInfo[i].height / m_pixelRatio - m_toolBar->height() - TOOLBAR_Y_SPACING) {
                     // 屏幕下超出
@@ -2808,7 +2806,6 @@ void MainWindow::updateToolBarPos()
     } else {
         // 垂直多屏：使用相同的通用逻辑
         for (int i = 0; i < m_screenInfo.size(); ++i) {
-            qCWarning(dsrApp) << "Checking vertical screen" << i << "for toolbar position:";
             
             // 通用的屏幕范围检查：统一处理X/Y坐标，考虑像素比例
             bool xInRange = toolbarPoint.x() >= m_screenInfo[i].x && 
@@ -2817,7 +2814,6 @@ void MainWindow::updateToolBarPos()
                            toolbarPoint.y() < (m_screenInfo[i].y + m_screenInfo[i].height / m_pixelRatio);
             
             toolIsInScreen = xInRange && yInRange;
-            qCWarning(dsrApp) << "  toolIsInScreen:" << toolIsInScreen;
             
             bool recordIsInScreen = recordX >= m_screenInfo[i].x && recordX < (m_screenInfo[i].x + m_screenInfo[i].width / m_pixelRatio) &&
                                    recordY >= m_screenInfo[i].y && recordY < (m_screenInfo[i].y + m_screenInfo[i].height / m_pixelRatio);
@@ -4442,12 +4438,6 @@ void MainWindow::paintEvent(QPaintEvent *event)
             // 计算虚线绘制的实际区域
             // 修复：让虚线边界与实际选中区域完全一致
             // 移除不必要的调整，确保虚线显示的就是实际选中的区域
-            
-            qCWarning(dsrApp) << "=== 虚线边界绘制调试 (修复后) ===";
-            qCWarning(dsrApp) << "原始frameRect:" << frameRect;
-            qCWarning(dsrApp) << "rootWindowRect:" << rootWindowRect;
-            qCWarning(dsrApp) << "实际选中区域: x=" << recordX << "y=" << recordY << "width=" << recordWidth << "height=" << recordHeight;
-            qCWarning(dsrApp) << "虚线右边界:" << (recordX + recordWidth) << "虚线下边界:" << (recordY + recordHeight);
             
             // 直接使用实际选中区域绘制虚线，确保一致性
             painter.drawRect(QRect(recordX, recordY, recordWidth, recordHeight));
@@ -6480,12 +6470,6 @@ QPixmap MainWindow::paintImage()
                  static_cast<int>(adjustedWidth * m_pixelRatio),
                  static_cast<int>(adjustedHeight * m_pixelRatio));
     
-    qCWarning(dsrApp) << "=== 截图区域计算调试 (paintImage) 修正后 ===";
-    qCWarning(dsrApp) << "原始区域: x=" << recordX << "y=" << recordY << "width=" << recordWidth << "height=" << recordHeight;
-    qCWarning(dsrApp) << "调整后逻辑坐标: x=" << adjustedX << "y=" << adjustedY << "width=" << adjustedWidth << "height=" << adjustedHeight;
-    qCWarning(dsrApp) << "物理像素target:" << target;
-    qCWarning(dsrApp) << "截图右边界:" << (target.x() + target.width()) << "截图下边界:" << (target.y() + target.height());
-
     // 从背景图中裁剪出截图区域
     saveImage = backgroundImage.copy(target);
     if (m_shapesWidget)

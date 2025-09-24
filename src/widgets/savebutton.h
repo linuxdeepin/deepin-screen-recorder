@@ -11,6 +11,7 @@
 #include <QHBoxLayout>
 
 class QMenu;
+class SaveMenuManager;
 
 class SaveButton : public ToolButton
 {
@@ -19,7 +20,7 @@ public:
     explicit SaveButton(DWidget *parent = nullptr);
     ~SaveButton();
 
-    void setOptionsMenu(QMenu *menu);
+    // 移除旧的setOptionsMenu，使用内置的SaveMenuManager
     void setSaveIcon(const QIcon &icon);
     void setListIcon(const QIcon &icon);
 
@@ -44,7 +45,7 @@ private slots:
     void onMenuAboutToHide();
 
 private:
-    QMenu *m_menu = nullptr;
+    SaveMenuManager *m_saveMenuManager = nullptr;
     QIcon m_saveIcon;
     QIcon m_listIcon;
     

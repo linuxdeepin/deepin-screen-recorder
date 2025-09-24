@@ -200,6 +200,7 @@ HEADERS += main_window.h \
     widgets/colortoolwidget.h \
     widgets/shapetoolwidget.h \
     widgets/savebutton.h \
+    widgets/savemenumanager.h \
     dbusinterface/dbusnotify.h \
     dbusservice/dbusscreenshotservice.h \
     widgets/camerawidget.h \
@@ -273,6 +274,7 @@ SOURCES += main.cpp \
     widgets/colortoolwidget.cpp \
     widgets/shapetoolwidget.cpp \
     widgets/savebutton.cpp \
+    widgets/savemenumanager.cpp \
     widgets/toolbutton.cpp \
     dbusinterface/dbusnotify.cpp \
     dbusservice/dbusscreenshotservice.cpp \
