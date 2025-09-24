@@ -43,7 +43,7 @@ DWIDGET_USE_NAMESPACE
 
 namespace {
 const QSize TOOL_ICON_SIZE = QSize(36, 36);
-const QSize TOOL_BUTTON_SIZE = QSize(36, 36);
+const QSize TOOL_BUTTON_SIZE = QSize(46, 36);
 const QSize MEDIUM_TOOL_BUTTON_SIZE = QSize(56, 36);
 const QSize MIN_TOOL_BUTTON_SIZE = QSize(42, 40);
 }
@@ -715,17 +715,17 @@ void SubToolWidget::initShotLabel()
     m_shotBtnGroup->addButton(m_shotOptionButton);
     btnList.append(m_shotOptionButton);
 
-    m_saveLocalDirButton = new ToolButton();
+    m_saveLocalDirButton = new SaveButton();
     m_saveLocalDirButton->setCheckable(false);
-    m_saveLocalDirButton->setIconSize(TOOL_ICON_SIZE);
+    // m_saveLocalDirButton->setIconSize(TOOL_ICON_SIZE);
     // 根据当前设置获取保存路径，并在悬浮提示中显示
     updateSaveButtonTip();
-    m_saveLocalDirButton->setIcon(QIcon::fromTheme("save"));
+    // m_saveLocalDirButton->setIcon(QIcon::fromTheme("save"));
     Utils::setAccessibility(m_saveLocalDirButton, AC_SUBTOOLWIDGET_SAVETOLOCAL_BUTTON);
     m_shotBtnGroup->addButton(m_saveLocalDirButton);
     m_saveLocalDirButton->setFixedSize(TOOL_BUTTON_SIZE);
     btnList.append(m_saveLocalDirButton);
-    connect(m_saveLocalDirButton, &ToolButton::clicked, m_pMainWindow, &MainWindow::saveScreenShotToFile);
+    connect(m_saveLocalDirButton, &SaveButton::clicked, m_pMainWindow, &MainWindow::saveScreenShotToFile);
 
     if (Utils::is3rdInterfaceStart) {
         m_shotOptionButton->hide();
@@ -1412,7 +1412,7 @@ void SubToolWidget::initScrollLabel()
     
     btnList.append(m_scrollOptionButton);
 
-    m_saveLocalDirButton = new ToolButton();
+    m_saveLocalDirButton = new SaveButton();
     m_saveLocalDirButton->setCheckable(false);
     m_saveLocalDirButton->setIconSize(TOOL_ICON_SIZE);
     // 根据当前设置获取保存路径，并在悬浮提示中显示

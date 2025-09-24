@@ -7,21 +7,59 @@
 #define SAVEBUTTON_H
 
 #include "toolbutton.h"
+#include <QIcon>
+#include <QHBoxLayout>
 
-class SaveButton : public DPushButton
+class QMenu;
+
+// 组合保存按钮
+class SaveButton : public ToolButton
 {
     Q_OBJECT
 public:
-    explicit SaveButton(DWidget *parent = 0);
+    explicit SaveButton(DWidget *parent = nullptr);
     ~SaveButton();
+
+    void setOptionsMenu(QMenu *menu);
+    void setSaveIcon(const QIcon &icon);
+    void setListIcon(const QIcon &icon);
 
 signals:
     void saveAction();
     void expandSaveOption(bool expand);
+    void clicked(); // 兼容原有连接
+
+protected:
+    void paintEvent(QPaintEvent *event) override;
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+    void enterEvent(QEnterEvent *event) override;
+#else
+    void enterEvent(QEvent *event) override;
+#endif
+    void leaveEvent(QEvent *event) override;
+    void mousePressEvent(QMouseEvent *event) override;
+    void mouseReleaseEvent(QMouseEvent *event) override;
+    void mouseMoveEvent(QMouseEvent *event) override;
+
+private slots:
+    void onMenuAboutToHide();
 
 private:
-    ToolButton *m_saveBtn;
-    ToolButton *m_listBtn;
+    QMenu *m_menu = nullptr;
+    QIcon m_saveIcon;
+    QIcon m_listIcon;
+    
+    bool m_hoverFlag = false;
+    bool m_saveClicked = false;
+    bool m_listClicked = false;
+    int currentMouseX = 0;  // 当前鼠标X位置，用于判断悬停区域
+    
+    // 参考你的SVG尺寸
+    static constexpr int kSaveButtonWidth = 46;
+    static constexpr int kSaveButtonHeight = 36;
+    static constexpr int kSaveAreaWidth = 30;  // 左侧保存区域宽度
+    static constexpr int kListAreaWidth = 16;  // 右侧下拉区域宽度
+    static constexpr int kCornerRadius = 8;    // 圆角半径
 };
 
 #endif // SAVEBUTTON_H

@@ -6,6 +6,7 @@
 #define SUBTOOLWIDGET_H
 
 #include "toolbutton.h"
+#include "savebutton.h"
 #include "../utils/saveutils.h"
 #include "filter.h"
 
@@ -183,7 +184,7 @@ private:
      */
     ToolButton *m_shotOptionButton = nullptr;
     HintFilter *hintFilter = nullptr;
-    ToolButton *m_saveLocalDirButton = nullptr;
+    SaveButton *m_saveLocalDirButton = nullptr;
     /**
      * @brief m_optionMenu 截图的选项菜单
      */
