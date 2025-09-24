@@ -43,7 +43,7 @@ DWIDGET_USE_NAMESPACE
 
 namespace {
 const QSize TOOL_ICON_SIZE = QSize(36, 36);
-const QSize TOOL_BUTTON_SIZE = QSize(46, 36);
+const QSize TOOL_BUTTON_SIZE = QSize(36, 36);
 const QSize MEDIUM_TOOL_BUTTON_SIZE = QSize(56, 36);
 const QSize MIN_TOOL_BUTTON_SIZE = QSize(42, 40);
 }
@@ -689,27 +689,12 @@ void SubToolWidget::initShotLabel()
         });
     }
 
-    //截图选项按钮
     m_shotOptionButton = new ToolButton();
-    DPalette pa = m_shotOptionButton->palette();
-    m_shotOptionButton->setOptionButtonFlag(true);
-    if (Utils::themeType == 1) {
-        pa.setColor(DPalette::ButtonText, QColor(28, 28, 28, 255));
-        pa.setColor(DPalette::Dark, QColor(192, 192, 192, 255));
-        pa.setColor(DPalette::Light, QColor(192, 192, 192, 255));
-    } else {
-        pa.setColor(DPalette::ButtonText, QColor(228, 228, 228, 255));
-        pa.setColor(DPalette::Dark, QColor(64, 64, 64, 255));
-        pa.setColor(DPalette::Light, QColor(64, 64, 64, 255));
-    }
-    m_shotOptionButton->setPalette(pa);
     m_shotOptionButton->setCheckable(false);
-    m_shotOptionButton->setFlat(false);
-    m_shotOptionButton->setHoverState(false);
-    DFontSizeManager::instance()->bind(m_shotOptionButton, DFontSizeManager::T6);
-    m_shotOptionButton->setText(tr("Settings"));
+    m_shotOptionButton->setIconSize(QSize(24,24));
+     m_shotOptionButton->setFixedSize(TOOL_BUTTON_SIZE);
+    m_shotOptionButton->setIcon(QIcon::fromTheme("setting"));
     Utils::setAccessibility(m_shotOptionButton, AC_SUBTOOLWIDGET_SHOT_OPTION_BUT);
-    m_shotOptionButton->setMinimumSize(MEDIUM_TOOL_BUTTON_SIZE);
     installTipHint(m_shotOptionButton, tr("Settings (F3)"));
     
     m_shotBtnGroup->addButton(m_shotOptionButton);
@@ -723,7 +708,7 @@ void SubToolWidget::initShotLabel()
     // m_saveLocalDirButton->setIcon(QIcon::fromTheme("save"));
     Utils::setAccessibility(m_saveLocalDirButton, AC_SUBTOOLWIDGET_SAVETOLOCAL_BUTTON);
     m_shotBtnGroup->addButton(m_saveLocalDirButton);
-    m_saveLocalDirButton->setFixedSize(TOOL_BUTTON_SIZE);
+    // m_saveLocalDirButton->setFixedSize(TOOL_BUTTON_SIZE);
     btnList.append(m_saveLocalDirButton);
     connect(m_saveLocalDirButton, &SaveButton::clicked, m_pMainWindow, &MainWindow::saveScreenShotToFile);
 
@@ -1068,6 +1053,7 @@ void SubToolWidget::initShotOption()
     m_optionMenu->hide();
 
     m_shotOptionButton->setMenu(m_optionMenu);
+    
 
     if (Utils::isTreelandMode) {
 

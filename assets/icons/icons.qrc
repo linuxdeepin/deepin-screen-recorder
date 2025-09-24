@@ -32,5 +32,6 @@
         <file>texts/gioshape_32px.svg</file>
         <file>texts/save_32px.svg</file>
         <file>texts/dropdown_32px.svg</file>
+        <file>texts/setting_32px.svg</file>
     </qresource>
 </RCC>

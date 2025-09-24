@@ -40,6 +40,7 @@ public:
     }
     ~ToolButton() {}
 protected:
+    void paintEvent(QPaintEvent *event) override;
     void enterEvent(QEnterEvent *e) override
     {
         m_lastCursorShape = qApp->overrideCursor();

@@ -12,7 +12,6 @@
 
 class QMenu;
 
-// 组合保存按钮
 class SaveButton : public ToolButton
 {
     Q_OBJECT
@@ -27,7 +26,7 @@ public:
 signals:
     void saveAction();
     void expandSaveOption(bool expand);
-    void clicked(); // 兼容原有连接
+    void clicked();
 
 protected:
     void paintEvent(QPaintEvent *event) override;
@@ -52,14 +51,13 @@ private:
     bool m_hoverFlag = false;
     bool m_saveClicked = false;
     bool m_listClicked = false;
-    int currentMouseX = 0;  // 当前鼠标X位置，用于判断悬停区域
+    int currentMouseX = 0;  
     
-    // 参考你的SVG尺寸
     static constexpr int kSaveButtonWidth = 46;
     static constexpr int kSaveButtonHeight = 36;
-    static constexpr int kSaveAreaWidth = 30;  // 左侧保存区域宽度
-    static constexpr int kListAreaWidth = 16;  // 右侧下拉区域宽度
-    static constexpr int kCornerRadius = 8;    // 圆角半径
+    static constexpr int kSaveAreaWidth = 30;  
+    static constexpr int kListAreaWidth = 16;  
+    static constexpr int kCornerRadius = 8;    
 };
 
 #endif // SAVEBUTTON_H

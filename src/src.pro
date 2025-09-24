@@ -273,6 +273,7 @@ SOURCES += main.cpp \
     widgets/colortoolwidget.cpp \
     widgets/shapetoolwidget.cpp \
     widgets/savebutton.cpp \
+    widgets/toolbutton.cpp \
     dbusinterface/dbusnotify.cpp \
     dbusservice/dbusscreenshotservice.cpp \
     widgets/camerawidget.cpp \
