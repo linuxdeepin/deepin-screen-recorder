@@ -124,6 +124,25 @@ vagy nyomja le a gyorsbillentyűt ismét a felvétel megállításához</transla
     </message>
 </context>
 <context>
+    <name>PinSaveMenuManager</name>
+    <message>
+        <source>Each inquiry</source>
+        <translation>Minden kérés</translation>
+    </message>
+    <message>
+        <source>Specified Location</source>
+        <translation>Megadott hely</translation>
+    </message>
+    <message>
+        <source>Set a path on save</source>
+        <translation>Állítson be egy elérési utat a mentéshez</translation>
+    </message>
+    <message>
+        <source>Change the path on save</source>
+        <translation>Mentéskor módosítsa az elérési utat</translation>
+    </message>
+</context>
+<context>
     <name>QObject</name>
     <message>
         <source>Pin Screenshots</source>
@@ -173,6 +192,25 @@ vagy nyomja le a gyorsbillentyűt ismét a felvétel megállításához</transla
     <message>
         <source>Open Folder</source>
         <translation>Mappa megnyitása</translation>
+    </message>
+</context>
+<context>
+    <name>SaveMenuManager</name>
+    <message>
+        <source>Each inquiry</source>
+        <translation>Minden kérés</translation>
+    </message>
+    <message>
+        <source>Specified location</source>
+        <translation>Megadott hely</translation>
+    </message>
+    <message>
+        <source>Select a location when saving</source>
+        <translation>Állítson be egy elérési utat a mentéshez</translation>
+    </message>
+    <message>
+        <source>Update the location when saving</source>
+        <translation>Mentéskor módosítsa az elérési utat</translation>
     </message>
 </context>
 <context>
@@ -597,14 +635,6 @@ Függőleges vagy vízszintes nyíl rajzolásához tartsa lenyomva a Shift bille
         <translation>Felvétel</translation>
     </message>
     <message>
-        <source>Pictures</source>
-        <translation>Képek</translation>
-    </message>
-    <message>
-        <source>Set a path on save</source>
-        <translation>Állítson be egy elérési utat a mentéshez</translation>
-    </message>
-    <message>
         <source>Change the path on save</source>
         <translation>Mentéskor módosítsa az elérési utat</translation>
     </message>
@@ -659,14 +689,6 @@ Tartsa lenyomva a Shift billentyűt négyzetek vagy körök rajzolásához.</tra
         <translation>Mentés helyi könyvtárba</translation>
     </message>
     <message>
-        <source>Save to Desktop</source>
-        <translation>Mentés asztalra</translation>
-    </message>
-    <message>
-        <source>Save to Pictures</source>
-        <translation>Mentés képekhez</translation>
-    </message>
-    <message>
         <source>Save to %1</source>
         <translation>Mentés ide: %1</translation>
     </message>
@@ -675,24 +697,12 @@ Tartsa lenyomva a Shift billentyűt négyzetek vagy körök rajzolásához.</tra
         <translation>Megadott hely</translation>
     </message>
     <message>
-        <source>Custom Location</source>
-        <translation>Egyedi hely</translation>
+        <source>Update the location when saving</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Each inquiry</source>
-        <translation>Minden kérés</translation>
-    </message>
-    <message>
-        <source>Update location on save</source>
-        <translation>Mentéskor frissítse a helyet</translation>
-    </message>
-    <message>
-        <source>Save to desktop</source>
-        <translation>Mentés asztalra</translation>
-    </message>
-    <message>
-        <source>Save to pictures</source>
-        <translation>Mentés képekhez</translation>
+        <source>Select a location when saving</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

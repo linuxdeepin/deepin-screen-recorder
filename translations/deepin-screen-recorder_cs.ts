@@ -124,6 +124,25 @@ v oznamovací oblasti panelu nebo stiskněte klávesovou zkratku</translation>
     </message>
 </context>
 <context>
+    <name>PinSaveMenuManager</name>
+    <message>
+        <source>Each inquiry</source>
+        <translation>Každá otázka</translation>
+    </message>
+    <message>
+        <source>Specified Location</source>
+        <translation>Určené umístění</translation>
+    </message>
+    <message>
+        <source>Set a path on save</source>
+        <translation>Nastavit popis umístění při ukládání</translation>
+    </message>
+    <message>
+        <source>Change the path on save</source>
+        <translation>Změnit popis umístění pro ukládání</translation>
+    </message>
+</context>
+<context>
     <name>QObject</name>
     <message>
         <source>Pin Screenshots</source>
@@ -173,6 +192,25 @@ v oznamovací oblasti panelu nebo stiskněte klávesovou zkratku</translation>
     <message>
         <source>Open Folder</source>
         <translation>Otevřít složku</translation>
+    </message>
+</context>
+<context>
+    <name>SaveMenuManager</name>
+    <message>
+        <source>Each inquiry</source>
+        <translation>Každá otázka</translation>
+    </message>
+    <message>
+        <source>Specified location</source>
+        <translation>Určené umístění</translation>
+    </message>
+    <message>
+        <source>Select a location when saving</source>
+        <translation>Vybrat umístění při ukládání</translation>
+    </message>
+    <message>
+        <source>Update the location when saving</source>
+        <translation>Aktualizovat umístění při ukládání</translation>
     </message>
 </context>
 <context>
@@ -597,14 +635,6 @@ Stiskněte a podržte klávesu Shift pro kreslení svislé nebo vodorovné šipk
         <translation>Pořídit záznam</translation>
     </message>
     <message>
-        <source>Pictures</source>
-        <translation>Obrázky</translation>
-    </message>
-    <message>
-        <source>Set a path on save</source>
-        <translation>Nastavit popis umístění při ukládání</translation>
-    </message>
-    <message>
         <source>Change the path on save</source>
         <translation>Změnit popis umístění pro ukládání</translation>
     </message>
@@ -658,14 +688,6 @@ Hold down Shift to draw squares or circles.</source>
         <translation>Uložit do místního</translation>
     </message>
     <message>
-        <source>Save to Desktop</source>
-        <translation>Uložit do plochy</translation>
-    </message>
-    <message>
-        <source>Save to Pictures</source>
-        <translation>Uložit do obrázků</translation>
-    </message>
-    <message>
         <source>Save to %1</source>
         <translation>Uložit do %1</translation>
     </message>
@@ -674,24 +696,12 @@ Hold down Shift to draw squares or circles.</source>
         <translation>Určené umístění</translation>
     </message>
     <message>
-        <source>Custom Location</source>
-        <translation>Vlastní umístění</translation>
+        <source>Update the location when saving</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Each inquiry</source>
-        <translation>Každá otázka</translation>
-    </message>
-    <message>
-        <source>Update location on save</source>
-        <translation>Aktualizovat umístění při ukládání</translation>
-    </message>
-    <message>
-        <source>Save to desktop</source>
-        <translation>Uložit do plochy</translation>
-    </message>
-    <message>
-        <source>Save to pictures</source>
-        <translation>Uložit do obrázků</translation>
+        <source>Select a location when saving</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

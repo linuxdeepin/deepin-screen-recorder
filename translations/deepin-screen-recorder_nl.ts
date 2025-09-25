@@ -124,6 +124,25 @@ of druk nogmaals op de sneltoets om te stoppen</translation>
     </message>
 </context>
 <context>
+    <name>PinSaveMenuManager</name>
+    <message>
+        <source>Each inquiry</source>
+        <translation>Elke vraag</translation>
+    </message>
+    <message>
+        <source>Specified Location</source>
+        <translation>Specifieke locatie</translation>
+    </message>
+    <message>
+        <source>Set a path on save</source>
+        <translation>Locatie kiezen na klikken op opslaan</translation>
+    </message>
+    <message>
+        <source>Change the path on save</source>
+        <translation>Locatie wijzigen na klikken op opslaan</translation>
+    </message>
+</context>
+<context>
     <name>QObject</name>
     <message>
         <source>Pin Screenshots</source>
@@ -173,6 +192,25 @@ of druk nogmaals op de sneltoets om te stoppen</translation>
     <message>
         <source>Open Folder</source>
         <translation>Map openen</translation>
+    </message>
+</context>
+<context>
+    <name>SaveMenuManager</name>
+    <message>
+        <source>Each inquiry</source>
+        <translation>Elke vraag</translation>
+    </message>
+    <message>
+        <source>Specified location</source>
+        <translation>Specifieke locatie</translation>
+    </message>
+    <message>
+        <source>Select a location when saving</source>
+        <translation>Locatie kiezen na klikken op opslaan</translation>
+    </message>
+    <message>
+        <source>Update the location when saving</source>
+        <translation>Locatie wijzigen na klikken op opslaan</translation>
     </message>
 </context>
 <context>
@@ -597,14 +635,6 @@ Houd Shift ingedrukt om een verticale of horizontale pijl te tekenen</translatio
         <translation>Opnemen</translation>
     </message>
     <message>
-        <source>Pictures</source>
-        <translation>Afbeeldingen</translation>
-    </message>
-    <message>
-        <source>Set a path on save</source>
-        <translation>Locatie kiezen na klikken op opslaan</translation>
-    </message>
-    <message>
         <source>Change the path on save</source>
         <translation>Locatie wijzigen na klikken op opslaan</translation>
     </message>
@@ -659,14 +689,6 @@ Houd Shift ingedrukt om vierkanten of cirkels te tekenen.</translation>
         <translation>Opslaan naar lokale map</translation>
     </message>
     <message>
-        <source>Save to Desktop</source>
-        <translation>Opslaan naar bureaublad</translation>
-    </message>
-    <message>
-        <source>Save to Pictures</source>
-        <translation>Opslaan naar afbeeldingen</translation>
-    </message>
-    <message>
         <source>Save to %1</source>
         <translation>Opslaan naar %1</translation>
     </message>
@@ -675,24 +697,12 @@ Houd Shift ingedrukt om vierkanten of cirkels te tekenen.</translation>
         <translation>Specifieke locatie</translation>
     </message>
     <message>
-        <source>Custom Location</source>
-        <translation>Aangepaste locatie</translation>
+        <source>Update the location when saving</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Each inquiry</source>
-        <translation>Elke vraag</translation>
-    </message>
-    <message>
-        <source>Update location on save</source>
-        <translation>Locatie bijwerken bij opslaan</translation>
-    </message>
-    <message>
-        <source>Save to desktop</source>
-        <translation>Opslaan naar bureaublad</translation>
-    </message>
-    <message>
-        <source>Save to pictures</source>
-        <translation>Opslaan naar afbeeldingen</translation>
+        <source>Select a location when saving</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

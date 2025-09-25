@@ -124,6 +124,25 @@ or press the shortcut again to stop recording</source>
     </message>
 </context>
 <context>
+    <name>PinSaveMenuManager</name>
+    <message>
+        <source>Each inquiry</source>
+        <translation>每次询问</translation>
+    </message>
+    <message>
+        <source>Specified Location</source>
+        <translation>指定位置</translation>
+    </message>
+    <message>
+        <source>Set a path on save</source>
+        <translation>保存时设置位置</translation>
+    </message>
+    <message>
+        <source>Change the path on save</source>
+        <translation>保存时更新位置</translation>
+    </message>
+</context>
+<context>
     <name>QObject</name>
     <message>
         <source>Pin Screenshots</source>
@@ -173,6 +192,25 @@ or press the shortcut again to stop recording</source>
     <message>
         <source>Open Folder</source>
         <translation>打开文件夹</translation>
+    </message>
+</context>
+<context>
+    <name>SaveMenuManager</name>
+    <message>
+        <source>Each inquiry</source>
+        <translation>每次询问</translation>
+    </message>
+    <message>
+        <source>Specified location</source>
+        <translation>指定位置</translation>
+    </message>
+    <message>
+        <source>Select a location when saving</source>
+        <translation>保存时选择位置</translation>
+    </message>
+    <message>
+        <source>Update the location when saving</source>
+        <translation>保存时更新位置</translation>
     </message>
 </context>
 <context>
@@ -597,14 +635,6 @@ Press and hold Shift to draw a vertical or horizontal arrow</source>
         <translation>录屏</translation>
     </message>
     <message>
-        <source>Pictures</source>
-        <translation>图片</translation>
-    </message>
-    <message>
-        <source>Set a path on save</source>
-        <translation>保存时设置位置</translation>
-    </message>
-    <message>
         <source>Change the path on save</source>
         <translation>保存时更新位置</translation>
     </message>
@@ -657,18 +687,6 @@ Press and hold Shift to draw a vertical or horizontal arrow</source>
         <translation>指定位置</translation>
     </message>
     <message>
-        <source>Custom Location</source>
-        <translation>自定义位置</translation>
-    </message>
-    <message>
-        <source>Each inquiry</source>
-        <translation>每次询问</translation>
-    </message>
-    <message>
-        <source>Update location on save</source>
-        <translation>保存时更新位置</translation>
-    </message>
-    <message>
         <source>Geometric Tools (R)
 Hold down Shift to draw squares or circles.</source>
         <translation>几何工具 (R)
@@ -679,20 +697,12 @@ Hold down Shift to draw squares or circles.</source>
         <translation>保存到%1</translation>
     </message>
     <message>
-        <source>Save to desktop</source>
-        <translation>保存到桌面</translation>
+        <source>Update the location when saving</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Save to pictures</source>
-        <translation>保存到图片</translation>
-    </message>
-    <message>
-        <source>Save to Desktop</source>
-        <translation>保存到桌面</translation>
-    </message>
-    <message>
-        <source>Save to Pictures</source>
-        <translation>保存到图片</translation>
+        <source>Select a location when saving</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

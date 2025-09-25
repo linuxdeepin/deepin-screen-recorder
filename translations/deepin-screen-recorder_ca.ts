@@ -124,6 +124,25 @@ o premeu la drecera de nou per aturar la gravació.</translation>
     </message>
 </context>
 <context>
+    <name>PinSaveMenuManager</name>
+    <message>
+        <source>Each inquiry</source>
+        <translation>Cada pregunta</translation>
+    </message>
+    <message>
+        <source>Specified Location</source>
+        <translation>Ubicació especificada</translation>
+    </message>
+    <message>
+        <source>Set a path on save</source>
+        <translation>Estableix un camí per desar</translation>
+    </message>
+    <message>
+        <source>Change the path on save</source>
+        <translation>Canvia el camí per desar</translation>
+    </message>
+</context>
+<context>
     <name>QObject</name>
     <message>
         <source>Pin Screenshots</source>
@@ -173,6 +192,25 @@ o premeu la drecera de nou per aturar la gravació.</translation>
     <message>
         <source>Open Folder</source>
         <translation>Obre la carpeta</translation>
+    </message>
+</context>
+<context>
+    <name>SaveMenuManager</name>
+    <message>
+        <source>Each inquiry</source>
+        <translation>Cada pregunta</translation>
+    </message>
+    <message>
+        <source>Specified location</source>
+        <translation>Ubicació especificada</translation>
+    </message>
+    <message>
+        <source>Select a location when saving</source>
+        <translation>Selecciona una ubicació quan es desa</translation>
+    </message>
+    <message>
+        <source>Update the location when saving</source>
+        <translation>Actualitza la ubicació quan es desa</translation>
     </message>
 </context>
 <context>
@@ -597,14 +635,6 @@ Manteniu premuda la tecla Maj per dibuixar una fletxa vertical o horitzontal.</t
         <translation>Grava</translation>
     </message>
     <message>
-        <source>Pictures</source>
-        <translation>Fotos</translation>
-    </message>
-    <message>
-        <source>Set a path on save</source>
-        <translation>Estableix un camí per desar</translation>
-    </message>
-    <message>
         <source>Change the path on save</source>
         <translation>Canvia el camí per desar</translation>
     </message>
@@ -658,14 +688,6 @@ Hold down Shift to draw squares or circles.</source>
         <translation>Desa a local</translation>
     </message>
     <message>
-        <source>Save to Desktop</source>
-        <translation>Desa a l&apos;escriptori</translation>
-    </message>
-    <message>
-        <source>Save to Pictures</source>
-        <translation>Desa a fotos</translation>
-    </message>
-    <message>
         <source>Save to %1</source>
         <translation>Desa a %1</translation>
     </message>
@@ -674,24 +696,12 @@ Hold down Shift to draw squares or circles.</source>
         <translation>Ubicació especificada</translation>
     </message>
     <message>
-        <source>Custom Location</source>
-        <translation>Ubicació personalitzada</translation>
+        <source>Update the location when saving</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Each inquiry</source>
-        <translation>Cada pregunta</translation>
-    </message>
-    <message>
-        <source>Update location on save</source>
-        <translation>Actualitza la ubicació al desar</translation>
-    </message>
-    <message>
-        <source>Save to desktop</source>
-        <translation>Desa a l&apos;escriptori</translation>
-    </message>
-    <message>
-        <source>Save to pictures</source>
-        <translation>Desa a fotos</translation>
+        <source>Select a location when saving</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

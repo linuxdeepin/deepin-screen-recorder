@@ -4,7 +4,6 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 
 #include "savebutton.h"
-#include "savemenumanager.h"
 #include "../utils/log.h"
 #include <QMenu>
 #include <QPainter>
@@ -26,9 +25,6 @@ SaveButton::SaveButton(DWidget *parent)
     setFocusPolicy(Qt::NoFocus);
     setMouseTracking(true);  // 启用鼠标跟踪以获取精确的悬停区域
     
-    // 创建保存菜单管理器
-    m_saveMenuManager = new SaveMenuManager(this);
-    
     // 设置默认图标
     setSaveIcon(QIcon::fromTheme("save"));
     setListIcon(QIcon::fromTheme("dropdown"));
@@ -39,7 +35,18 @@ SaveButton::~SaveButton()
     qCDebug(dsrApp) << "SaveButton destructor entered";
 }
 
-// 移除旧的setOptionsMenu方法，现在使用内置的SaveMenuManager
+void SaveButton::setOptionsMenu(QMenu *menu)
+{
+    if (m_optionsMenu) {
+        disconnect(m_optionsMenu, &QMenu::aboutToHide, this, &SaveButton::onMenuAboutToHide);
+    }
+    
+    m_optionsMenu = menu;
+    
+    if (m_optionsMenu) {
+        connect(m_optionsMenu, &QMenu::aboutToHide, this, &SaveButton::onMenuAboutToHide);
+    }
+}
 
 void SaveButton::setSaveIcon(const QIcon &icon)
 {
@@ -57,7 +64,7 @@ void SaveButton::paintEvent(QPaintEvent *event)
 {
     Q_UNUSED(event);
     
-    if (m_hoverFlag || (m_saveMenuManager && m_saveMenuManager->getMenu() && m_saveMenuManager->getMenu()->isVisible())) {
+    if (m_hoverFlag || (m_optionsMenu && m_optionsMenu->isVisible())) {
         QPainter painter(this);
         painter.setRenderHint(QPainter::Antialiasing);
         QRect rect = this->rect();
@@ -114,7 +121,7 @@ void SaveButton::paintEvent(QPaintEvent *event)
         QRect iconRect(iconX, iconY, iconSize, iconSize);
         
         painter.save();
-        if (m_listClicked || (m_saveMenuManager && m_saveMenuManager->getMenu() && m_saveMenuManager->getMenu()->isVisible())) {
+        if (m_listClicked || (m_optionsMenu && m_optionsMenu->isVisible())) {
             painter.setPen(palette().highlight().color());
         }
         m_listIcon.paint(&painter, iconRect);
@@ -131,17 +138,22 @@ void SaveButton::mousePressEvent(QMouseEvent *event)
     }
     
     if (event->button() == Qt::LeftButton) {
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+        m_saveClicked = event->position().x() <= kSaveAreaWidth;
+        m_listClicked = event->position().x() > kSaveAreaWidth;
+#else
         m_saveClicked = event->x() <= kSaveAreaWidth;
         m_listClicked = event->x() > kSaveAreaWidth;
+#endif
         
         if (m_saveClicked) {
             emit saveAction();
             emit clicked(); 
-        } else if (m_listClicked && m_saveMenuManager) {
+        } else if (m_listClicked && m_optionsMenu) {
             emit expandSaveOption(true);
             // 显示保存菜单
             QPoint menuPos = mapToGlobal(rect().bottomLeft());
-            m_saveMenuManager->getMenu()->exec(menuPos);
+            m_optionsMenu->exec(menuPos);
         }
         update();
     }
@@ -193,7 +205,11 @@ void SaveButton::mouseMoveEvent(QMouseEvent *event)
 {
     ToolButton::mouseMoveEvent(event);
     int oldMouseX = currentMouseX;
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+    currentMouseX = event->position().x();
+#else
     currentMouseX = event->x();
+#endif
     
     if (!m_hoverFlag) {
         m_hoverFlag = true;

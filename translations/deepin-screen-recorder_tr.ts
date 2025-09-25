@@ -124,6 +124,25 @@ tepsi simgesine tıklayın ya da kısayola yeniden basın</translation>
     </message>
 </context>
 <context>
+    <name>PinSaveMenuManager</name>
+    <message>
+        <source>Each inquiry</source>
+        <translation>Her sorgulama</translation>
+    </message>
+    <message>
+        <source>Specified Location</source>
+        <translation>Belirtilen Konum</translation>
+    </message>
+    <message>
+        <source>Set a path on save</source>
+        <translation>Kaydet sırasında bir yol ayarla</translation>
+    </message>
+    <message>
+        <source>Change the path on save</source>
+        <translation>Kaydet sırasında yolu değiştir</translation>
+    </message>
+</context>
+<context>
     <name>QObject</name>
     <message>
         <source>Pin Screenshots</source>
@@ -173,6 +192,25 @@ tepsi simgesine tıklayın ya da kısayola yeniden basın</translation>
     <message>
         <source>Open Folder</source>
         <translation>Klasör Aç</translation>
+    </message>
+</context>
+<context>
+    <name>SaveMenuManager</name>
+    <message>
+        <source>Each inquiry</source>
+        <translation type="unfinished">Her sorgulama</translation>
+    </message>
+    <message>
+        <source>Specified location</source>
+        <translation>Belirtilen Konum</translation>
+    </message>
+    <message>
+        <source>Select a location when saving</source>
+        <translation>Kaydet sırasında bir yol ayarla</translation>
+    </message>
+    <message>
+        <source>Update the location when saving</source>
+        <translation>Kaydet sırasında yolu değiştir</translation>
     </message>
 </context>
 <context>
@@ -597,14 +635,6 @@ Dikey veya yatay ok çizmek için Shift tuşunu basılı tutun</translation>
         <translation>Kayıt</translation>
     </message>
     <message>
-        <source>Pictures</source>
-        <translation>Resimler</translation>
-    </message>
-    <message>
-        <source>Set a path on save</source>
-        <translation>Kaydet sırasında bir yol ayarla</translation>
-    </message>
-    <message>
         <source>Change the path on save</source>
         <translation>Kaydet sırasında yolu değiştir</translation>
     </message>
@@ -659,14 +689,6 @@ Kare veya daire çizmek için Shift tuşunu basılı tutun.</translation>
         <translation>Yerel olarak kaydet</translation>
     </message>
     <message>
-        <source>Save to Desktop</source>
-        <translation>Masaüstüne kaydet</translation>
-    </message>
-    <message>
-        <source>Save to Pictures</source>
-        <translation>Resimlere kaydet</translation>
-    </message>
-    <message>
         <source>Save to %1</source>
         <translation>%1&apos;e kaydet</translation>
     </message>
@@ -675,24 +697,12 @@ Kare veya daire çizmek için Shift tuşunu basılı tutun.</translation>
         <translation>Belirtilen Konum</translation>
     </message>
     <message>
-        <source>Custom Location</source>
-        <translation>Özel Konum</translation>
+        <source>Update the location when saving</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Each inquiry</source>
-        <translation>Her sorgulama</translation>
-    </message>
-    <message>
-        <source>Update location on save</source>
-        <translation>Kaydet sırasında konumu güncelle</translation>
-    </message>
-    <message>
-        <source>Save to desktop</source>
-        <translation>Masaüstüne kaydet</translation>
-    </message>
-    <message>
-        <source>Save to pictures</source>
-        <translation>Resimlere kaydet</translation>
+        <source>Select a location when saving</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

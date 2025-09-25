@@ -10,6 +10,7 @@
 #include "../utils.h"
 #include "../utils/log.h"
 #include "../accessibility/acTextDefine.h"
+#include "savemenumanager.h"
 
 #include <QActionGroup>
 #include "../main_window.h"
@@ -702,11 +703,15 @@ void SubToolWidget::initShotLabel()
 
     m_saveLocalDirButton = new SaveButton();
     m_saveLocalDirButton->setCheckable(false);
-    // m_saveLocalDirButton->setIconSize(TOOL_ICON_SIZE);
-    // 根据当前设置获取保存路径，并在悬浮提示中显示
     updateSaveButtonTip();
+    m_saveLocalDirButton->installEventFilter(this);
     // m_saveLocalDirButton->setIcon(QIcon::fromTheme("save"));
     Utils::setAccessibility(m_saveLocalDirButton, AC_SUBTOOLWIDGET_SAVETOLOCAL_BUTTON);
+    
+    // 创建并设置保存菜单管理器
+    SaveMenuManager *saveMenuManager = new SaveMenuManager(this);
+    m_saveLocalDirButton->setOptionsMenu(saveMenuManager->getMenu());
+    
     m_shotBtnGroup->addButton(m_saveLocalDirButton);
     // m_saveLocalDirButton->setFixedSize(TOOL_BUTTON_SIZE);
     btnList.append(m_saveLocalDirButton);
@@ -1392,12 +1397,19 @@ void SubToolWidget::initScrollLabel()
     // m_saveLocalDirButton->setIconSize(TOOL_ICON_SIZE);
     // 根据当前设置获取保存路径，并在悬浮提示中显示
     updateSaveButtonTip();
+    // 动态悬停提示：根据当前保存选项与鼠标区域显示不同文案（滚动截图）
+    m_saveLocalDirButton->installEventFilter(this);
     m_saveLocalDirButton->setIcon(QIcon::fromTheme("save"));
     Utils::setAccessibility(m_saveLocalDirButton, AC_SUBTOOLWIDGET_SAVETOLOCAL_BUTTON);
+    
+    // 创建并设置保存菜单管理器
+    SaveMenuManager *scrollSaveMenuManager = new SaveMenuManager(this);
+    m_saveLocalDirButton->setOptionsMenu(scrollSaveMenuManager->getMenu());
+    
     m_shotBtnGroup->addButton(m_saveLocalDirButton);
     // m_saveLocalDirButton->setFixedSize(TOOL_BUTTON_SIZE);
     btnList.append(m_saveLocalDirButton);
-    connect(m_saveLocalDirButton, &ToolButton::clicked, m_pMainWindow, &MainWindow::saveScreenShotToFile);
+    connect(m_saveLocalDirButton, &SaveButton::clicked, m_pMainWindow, &MainWindow::saveScreenShotToFile);
 
     m_saveSeperatorBeg = new DVerticalLine(this);
     m_saveSeperatorEnd = new DVerticalLine(this);
@@ -1801,6 +1813,44 @@ int SubToolWidget::getFuncSubToolX(QString &shape)
 // 屏蔽DMenu，触发QAction Trigger时，收回菜单
 bool SubToolWidget::eventFilter(QObject *watched, QEvent *event)
 {
+    // 为保存按钮提供动态 ToolTip 文案
+    if (watched == m_saveLocalDirButton) {
+        if (event->type() == QEvent::ToolTip) {
+            const int kSaveAreaWidth = 30; // 与 SaveButton 左侧保存区域宽度一致
+            QHelpEvent *he = static_cast<QHelpEvent *>(event);
+            const bool hoverLeftArea = he->pos().x() <= kSaveAreaWidth;
+
+            int saveWays = ConfigSettings::instance()->getValue("shot", "save_ways").toInt(); // 0: Ask, 1: Specify
+            bool isChangeOnSave = ConfigSettings::instance()->getValue("shot", "save_dir_change").toBool();
+            QString savedPath = ConfigSettings::instance()->getValue("shot", "save_dir").toString();
+            const bool hasHistoryPath = !savedPath.isEmpty() && QFileInfo::exists(savedPath);
+
+            QString tipText;
+            if (saveWays == 0) { // 每次询问
+                if (hoverLeftArea) {
+                    tipText = tr("Save to local");
+                } else {
+                    tipText = hasHistoryPath ? tr("Update the location when saving")
+                                             : tr("Select a location when saving");
+                }
+            } else { // 指定位置
+                if (isChangeOnSave) {
+                    tipText = tr("Select a location when saving");
+                } else {
+                    if (hoverLeftArea) {
+                        tipText = hasHistoryPath ? tr("Save to %1").arg(savedPath)
+                                                 : tr("Save to local");
+                    } else {
+                        tipText = tr("Update the location when saving");
+                    }
+                }
+            }
+
+            QToolTip::showText(he->globalPos(), tipText, m_saveLocalDirButton);
+            return true;
+        }
+    }
+
     if (watched == m_recordOptionMenu || watched == m_optionMenu || watched == m_scrollOptionMenu || watched == m_saveToSpecialPathMenu || watched == m_scrollSaveToSpecialPathMenu) {
         if (event->type() == QEvent::MouseButtonPress) {
             QAction *action = static_cast<DMenu *>(watched)->actionAt(static_cast<QMouseEvent *>(event)->pos());

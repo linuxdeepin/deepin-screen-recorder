@@ -124,6 +124,25 @@ o haga clic en el icono de la bandeja</translation>
     </message>
 </context>
 <context>
+    <name>PinSaveMenuManager</name>
+    <message>
+        <source>Each inquiry</source>
+        <translation>Cada consulta</translation>
+    </message>
+    <message>
+        <source>Specified Location</source>
+        <translation>Ubicación especificada</translation>
+    </message>
+    <message>
+        <source>Set a path on save</source>
+        <translation>Establecer ruta para guardar</translation>
+    </message>
+    <message>
+        <source>Change the path on save</source>
+        <translation>Cambiar ruta de guardado</translation>
+    </message>
+</context>
+<context>
     <name>QObject</name>
     <message>
         <source>Pin Screenshots</source>
@@ -173,6 +192,25 @@ o haga clic en el icono de la bandeja</translation>
     <message>
         <source>Open Folder</source>
         <translation>Abrir carpeta</translation>
+    </message>
+</context>
+<context>
+    <name>SaveMenuManager</name>
+    <message>
+        <source>Each inquiry</source>
+        <translation>Cada consulta</translation>
+    </message>
+    <message>
+        <source>Specified location</source>
+        <translation>Ubicación especificada</translation>
+    </message>
+    <message>
+        <source>Select a location when saving</source>
+        <translation>Seleccionar una ubicación al guardar</translation>
+    </message>
+    <message>
+        <source>Update the location when saving</source>
+        <translation>Actualizar la ubicación al guardar</translation>
     </message>
 </context>
 <context>
@@ -597,14 +635,6 @@ Mantenga presionada la tecla Mayús para dibujar una flecha vertical u horizonta
         <translation>Grabación</translation>
     </message>
     <message>
-        <source>Pictures</source>
-        <translation>Imágenes</translation>
-    </message>
-    <message>
-        <source>Set a path on save</source>
-        <translation>Establecer ruta para guardar</translation>
-    </message>
-    <message>
         <source>Change the path on save</source>
         <translation>Cambiar ruta de guardado</translation>
     </message>
@@ -659,14 +689,6 @@ Mantenga presionada la tecla Shift para dibujar cuadrados o círculos.</translat
         <translation>Guardar en local</translation>
     </message>
     <message>
-        <source>Save to Desktop</source>
-        <translation>Guardar en escritorio</translation>
-    </message>
-    <message>
-        <source>Save to Pictures</source>
-        <translation>Guardar en imágenes</translation>
-    </message>
-    <message>
         <source>Save to %1</source>
         <translation>Guardar en %1</translation>
     </message>
@@ -675,24 +697,12 @@ Mantenga presionada la tecla Shift para dibujar cuadrados o círculos.</translat
         <translation>Ubicación especificada</translation>
     </message>
     <message>
-        <source>Custom Location</source>
-        <translation>Ubicación personalizada</translation>
+        <source>Update the location when saving</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Each inquiry</source>
-        <translation>Cada consulta</translation>
-    </message>
-    <message>
-        <source>Update location on save</source>
-        <translation>Actualizar ubicación al guardar</translation>
-    </message>
-    <message>
-        <source>Save to desktop</source>
-        <translation>Guardar en escritorio</translation>
-    </message>
-    <message>
-        <source>Save to pictures</source>
-        <translation>Guardar en imágenes</translation>
+        <source>Select a location when saving</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

@@ -124,6 +124,25 @@ tai lopeta tallennus painamalla pikakuvaketta uudelleen</translation>
     </message>
 </context>
 <context>
+    <name>PinSaveMenuManager</name>
+    <message>
+        <source>Each inquiry</source>
+        <translation>Jokainen kysely</translation>
+    </message>
+    <message>
+        <source>Specified Location</source>
+        <translation>Määritetty sijainti</translation>
+    </message>
+    <message>
+        <source>Set a path on save</source>
+        <translation>Aseta tallennuspolku</translation>
+    </message>
+    <message>
+        <source>Change the path on save</source>
+        <translation>Muuta polkua tallentaessa</translation>
+    </message>
+</context>
+<context>
     <name>QObject</name>
     <message>
         <source>Pin Screenshots</source>
@@ -173,6 +192,25 @@ tai lopeta tallennus painamalla pikakuvaketta uudelleen</translation>
     <message>
         <source>Open Folder</source>
         <translation>Avaa kansio</translation>
+    </message>
+</context>
+<context>
+    <name>SaveMenuManager</name>
+    <message>
+        <source>Each inquiry</source>
+        <translation>Jokainen kysely</translation>
+    </message>
+    <message>
+        <source>Specified location</source>
+        <translation>Määritetty sijainti</translation>
+    </message>
+    <message>
+        <source>Select a location when saving</source>
+        <translation>Valitse sijainti tallentaessa</translation>
+    </message>
+    <message>
+        <source>Update the location when saving</source>
+        <translation>Päivitä sijainti tallentaessa</translation>
     </message>
 </context>
 <context>
@@ -597,14 +635,6 @@ Vedä suora pysty- tai vaakanuoli pitämällä Shift-painettuna</translation>
         <translation>Tallenna</translation>
     </message>
     <message>
-        <source>Pictures</source>
-        <translation>Kuvat</translation>
-    </message>
-    <message>
-        <source>Set a path on save</source>
-        <translation>Aseta tallennuspolku</translation>
-    </message>
-    <message>
         <source>Change the path on save</source>
         <translation>Muuta polkua tallentaessa</translation>
     </message>
@@ -659,14 +689,6 @@ Pidä Shift-näppäintä painettuna piirtääksesi neliöitä tai ympyröitä.</
         <translation>Tallenna paikallisesti</translation>
     </message>
     <message>
-        <source>Save to Desktop</source>
-        <translation>Tallenna työpöydälle</translation>
-    </message>
-    <message>
-        <source>Save to Pictures</source>
-        <translation>Tallenna kuvakkeisiin</translation>
-    </message>
-    <message>
         <source>Save to %1</source>
         <translation>Tallenna nimellä %1</translation>
     </message>
@@ -675,24 +697,12 @@ Pidä Shift-näppäintä painettuna piirtääksesi neliöitä tai ympyröitä.</
         <translation>Määritetty sijainti</translation>
     </message>
     <message>
-        <source>Custom Location</source>
-        <translation>Mukautettu sijainti</translation>
+        <source>Update the location when saving</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Each inquiry</source>
-        <translation>Jokainen kysely</translation>
-    </message>
-    <message>
-        <source>Update location on save</source>
-        <translation>Päivitä sijainti tallessa</translation>
-    </message>
-    <message>
-        <source>Save to desktop</source>
-        <translation>Tallenna työpöydälle</translation>
-    </message>
-    <message>
-        <source>Save to pictures</source>
-        <translation>Tallenna kuvakkeisiin</translation>
+        <source>Select a location when saving</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

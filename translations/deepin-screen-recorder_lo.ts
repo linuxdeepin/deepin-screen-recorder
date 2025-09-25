@@ -124,6 +124,25 @@ or press the shortcut again to stop recording</source>
     </message>
 </context>
 <context>
+    <name>PinSaveMenuManager</name>
+    <message>
+        <source>Each inquiry</source>
+        <translation type="unfinished">ການສອບສວນທຸກຄັ້ງ</translation>
+    </message>
+    <message>
+        <source>Specified Location</source>
+        <translation type="unfinished">ສະຖານທີ່ທີ່ກຳນົດ</translation>
+    </message>
+    <message>
+        <source>Set a path on save</source>
+        <translation type="unfinished">ຕັ້ງທິດທາງເມື່ອບັນທຶກ</translation>
+    </message>
+    <message>
+        <source>Change the path on save</source>
+        <translation type="unfinished">ປ່ຽນທິດທາງເມື່ອບັນທຶກ</translation>
+    </message>
+</context>
+<context>
     <name>QObject</name>
     <message>
         <source>Pin Screenshots</source>
@@ -173,6 +192,25 @@ or press the shortcut again to stop recording</source>
     <message>
         <source>Open Folder</source>
         <translation>ເປີດຟ້ອນ</translation>
+    </message>
+</context>
+<context>
+    <name>SaveMenuManager</name>
+    <message>
+        <source>Each inquiry</source>
+        <translation type="unfinished">ການສອບສວນທຸກຄັ້ງ</translation>
+    </message>
+    <message>
+        <source>Specified location</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Select a location when saving</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Update the location when saving</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -446,19 +484,11 @@ Press and hold Shift to draw a straight line</source>
         <translation>ຕົວເລືອກ</translation>
     </message>
     <message>
-        <source>Set a path on save</source>
-        <translation>ຕັ້ງທິດທາງເມື່ອບັນທຶກ</translation>
-    </message>
-    <message>
         <source>Save to</source>
         <translation>ບັນທຶກໄປທີ່</translation>
     </message>
     <message>
         <source>Desktop</source>
-        <translation>ພາບຫນ້າທີ່ສະແດງ</translation>
-    </message>
-    <message>
-        <source>Pictures</source>
         <translation>ພາບຫນ້າທີ່ສະແດງ</translation>
     </message>
     <message>
@@ -656,14 +686,6 @@ Hold down Shift to draw squares or circles.</source>
         <translation>ບັນທຶກໃນທ້ອງຖິ່ນ</translation>
     </message>
     <message>
-        <source>Save to Desktop</source>
-        <translation>ບັນທຶກໃສ່ເດີກັບ</translation>
-    </message>
-    <message>
-        <source>Save to Pictures</source>
-        <translation>ບັນທຶກໃສ່ຮູບຖ່າຍ</translation>
-    </message>
-    <message>
         <source>Save to %1</source>
         <translation>ບັນທຶກໃສ່ %1</translation>
     </message>
@@ -672,24 +694,12 @@ Hold down Shift to draw squares or circles.</source>
         <translation>ສະຖານທີ່ທີ່ກຳນົດ</translation>
     </message>
     <message>
-        <source>Custom Location</source>
-        <translation>ສະຖານທີ່ທີ່ກຳນົດເອົາ</translation>
+        <source>Update the location when saving</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Each inquiry</source>
-        <translation>ການສອບສວນທຸກຄັ້ງ</translation>
-    </message>
-    <message>
-        <source>Update location on save</source>
-        <translation>ອັບເດດບ້ານທີ່ບັນທຶກ</translation>
-    </message>
-    <message>
-        <source>Save to desktop</source>
-        <translation>ບັນທຶກໃສ່ເດີກັດ</translation>
-    </message>
-    <message>
-        <source>Save to pictures</source>
-        <translation>ບັນທຶກໃສ່ຮູບຖ່າຍ</translation>
+        <source>Select a location when saving</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

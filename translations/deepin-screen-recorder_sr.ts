@@ -124,6 +124,25 @@ or press the shortcut again to stop recording</source>
     </message>
 </context>
 <context>
+    <name>PinSaveMenuManager</name>
+    <message>
+        <source>Each inquiry</source>
+        <translation>Сваки захтев</translation>
+    </message>
+    <message>
+        <source>Specified Location</source>
+        <translation>Одређено место</translation>
+    </message>
+    <message>
+        <source>Set a path on save</source>
+        <translation>Постави путању приликом сачувања</translation>
+    </message>
+    <message>
+        <source>Change the path on save</source>
+        <translation>Промени путању приликом сачувања</translation>
+    </message>
+</context>
+<context>
     <name>QObject</name>
     <message>
         <source>Pin Screenshots</source>
@@ -173,6 +192,25 @@ or press the shortcut again to stop recording</source>
     <message>
         <source>Open Folder</source>
         <translation>Отвори фолдер</translation>
+    </message>
+</context>
+<context>
+    <name>SaveMenuManager</name>
+    <message>
+        <source>Each inquiry</source>
+        <translation type="unfinished">Сваки захтев</translation>
+    </message>
+    <message>
+        <source>Specified location</source>
+        <translation>Одређено место</translation>
+    </message>
+    <message>
+        <source>Select a location when saving</source>
+        <translation>Постави путању приликом сачувања</translation>
+    </message>
+    <message>
+        <source>Update the location when saving</source>
+        <translation>Промени путању приликом сачувања</translation>
     </message>
 </context>
 <context>
@@ -597,14 +635,6 @@ Press and hold Shift to draw a vertical or horizontal arrow</source>
         <translation>Снимање</translation>
     </message>
     <message>
-        <source>Pictures</source>
-        <translation>Слике</translation>
-    </message>
-    <message>
-        <source>Set a path on save</source>
-        <translation>Постави путању приликом сачувања</translation>
-    </message>
-    <message>
         <source>Change the path on save</source>
         <translation>Промени путању приликом сачувања</translation>
     </message>
@@ -659,14 +689,6 @@ Hold down Shift to draw squares or circles.</source>
         <translation>Сачувај на локалном</translation>
     </message>
     <message>
-        <source>Save to Desktop</source>
-        <translation>Сачувај на радној површини</translation>
-    </message>
-    <message>
-        <source>Save to Pictures</source>
-        <translation>Сачувај на слике</translation>
-    </message>
-    <message>
         <source>Save to %1</source>
         <translation>Сачувај у %1</translation>
     </message>
@@ -675,24 +697,12 @@ Hold down Shift to draw squares or circles.</source>
         <translation>Одређено место</translation>
     </message>
     <message>
-        <source>Custom Location</source>
-        <translation>Прилагођено место</translation>
+        <source>Update the location when saving</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Each inquiry</source>
-        <translation>Сваки захтев</translation>
-    </message>
-    <message>
-        <source>Update location on save</source>
-        <translation>Ажурирај место при сачувању</translation>
-    </message>
-    <message>
-        <source>Save to desktop</source>
-        <translation>Сачувај на радној површини</translation>
-    </message>
-    <message>
-        <source>Save to pictures</source>
-        <translation>Сачувај на слике</translation>
+        <source>Select a location when saving</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

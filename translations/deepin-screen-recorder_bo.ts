@@ -124,6 +124,25 @@ or press the shortcut again to stop recording</source>
     </message>
 </context>
 <context>
+    <name>PinSaveMenuManager</name>
+    <message>
+        <source>Each inquiry</source>
+        <translation>དུ་ཉར་བ།</translation>
+    </message>
+    <message>
+        <source>Specified Location</source>
+        <translation>དུ་ཉར་བ།</translation>
+    </message>
+    <message>
+        <source>Set a path on save</source>
+        <translation>ཉར་སྐབས་གནས་ས་སྒྲིག་འགོད་བྱེད་པ། </translation>
+    </message>
+    <message>
+        <source>Change the path on save</source>
+        <translation>ཉར་སྐབས་གནས་ས་གསར་སྒྱུར་བྱེད་པ།</translation>
+    </message>
+</context>
+<context>
     <name>QObject</name>
     <message>
         <source>Pin Screenshots</source>
@@ -173,6 +192,25 @@ or press the shortcut again to stop recording</source>
     <message>
         <source>Open Folder</source>
         <translation>ཡིག་ཁུག་ཁ་ཕྱེ།</translation>
+    </message>
+</context>
+<context>
+    <name>SaveMenuManager</name>
+    <message>
+        <source>Each inquiry</source>
+        <translation>དུ་ཉར་བ།</translation>
+    </message>
+    <message>
+        <source>Specified location</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Select a location when saving</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Update the location when saving</source>
+        <translation></translation>
     </message>
 </context>
 <context>
@@ -597,14 +635,6 @@ Shiftམནན་ནས་ཐད་དཔྱང་དང་ཆུ་སྙོམ
         <translation>བརྙན་ཕབ།</translation>
     </message>
     <message>
-        <source>Pictures</source>
-        <translation>པར་རིས།</translation>
-    </message>
-    <message>
-        <source>Set a path on save</source>
-        <translation>ཉར་སྐབས་གནས་ས་སྒྲིག་འགོད་བྱེད་པ། </translation>
-    </message>
-    <message>
         <source>Change the path on save</source>
         <translation>ཉར་སྐབས་གནས་ས་གསར་སྒྱུར་བྱེད་པ།</translation>
     </message>
@@ -659,14 +689,6 @@ Shiftམནན་ནས་གྲུ་བཞི་ཁ་གང་འབྲི་
         <translation>དུ་ཉར་བ།</translation>
     </message>
     <message>
-        <source>Save to Desktop</source>
-        <translation>ཅོག་ངོས།</translation>
-    </message>
-    <message>
-        <source>Save to Pictures</source>
-        <translation>པར་རིས།</translation>
-    </message>
-    <message>
         <source>Save to %1</source>
         <translation>དུ་ཉར་བ།</translation>
     </message>
@@ -675,24 +697,12 @@ Shiftམནན་ནས་གྲུ་བཞི་ཁ་གང་འབྲི་
         <translation>དུ་ཉར་བ།</translation>
     </message>
     <message>
-        <source>Custom Location</source>
-        <translation>དུ་ཉར་བ།</translation>
+        <source>Update the location when saving</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Each inquiry</source>
-        <translation>དུ་ཉར་བ།</translation>
-    </message>
-    <message>
-        <source>Update location on save</source>
-        <translation>དུ་ཉར་བ།</translation>
-    </message>
-    <message>
-        <source>Save to desktop</source>
-        <translation>ཅོག་ངོས།</translation>
-    </message>
-    <message>
-        <source>Save to pictures</source>
-        <translation>པར་རིས།</translation>
+        <source>Select a location when saving</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

@@ -18,77 +18,17 @@ class ToolButton : public DPushButton
 {
     Q_OBJECT
 public:
-    explicit ToolButton(DWidget *parent = 0)
-    {
-        Q_UNUSED(parent);
-        m_hasHoverState = true;
-        setCheckable(true);
-        setFlat(true);
-        this->setFocusPolicy(Qt::NoFocus);
-    }
-    void setHoverState(const bool hasHover)
-    {
-        m_hasHoverState = hasHover;
-    }
-    void setOptionButtonFlag(const bool flag)
-    {
-        m_isOptionButton = flag;
-    }
-    void setUndoButtonFlag(const bool flag)
-    {
-        m_isUndoButton = flag;
-    }
-    ~ToolButton() {}
+    explicit ToolButton(DWidget *parent = nullptr);
+    ~ToolButton();
+    
+    void setHoverState(const bool hasHover);
+    void setOptionButtonFlag(const bool flag);
+    void setUndoButtonFlag(const bool flag);
 protected:
     void paintEvent(QPaintEvent *event) override;
-    void enterEvent(QEnterEvent *e) override
-    {
-        m_lastCursorShape = qApp->overrideCursor();
-        qApp->setOverrideCursor(Qt::ArrowCursor);
-        if (this->isEnabled() && m_hasHoverState) {
-            setFlat(false);
-        }
-        if (m_isUndoButton) {
-            //qDebug() << ">>>>>>>>>>>>>>>>>enterEvent";
-            emit isInUndoBtn(true);
-        }
-        DPushButton::enterEvent(e);
-    }
-
-    void leaveEvent(QEvent *e) override
-    {
-        if (m_hasHoverState) {
-            setFlat(true);
-        }
-        // if (m_lastCursorShape) {
-        //     qWarning() << "m_lastCursorShape is !" <<m_lastCursorShape;
-        //     qWarning() << "m_lastCursorShape is !!!" <<m_lastCursorShape->shape();
-        //     qApp->setOverrideCursor(m_lastCursorShape->shape());
-        // } else {
-        //     qApp->setOverrideCursor(Qt::ArrowCursor);
-
-        //     qWarning() << "m_lastCursorShape is null!" <<m_lastCursorShape;
-        // }
-        DPushButton::leaveEvent(e);
-
-        if (m_isMousePress) {
-            qApp->setOverrideCursor(Qt::ArrowCursor);
-            m_isMousePress = false;
-        }
-
-        if (m_isUndoButton) {
-            //qDebug() << ">>>>>>>>>>>>>>>>>leaveEvent";
-            emit isInUndoBtn(false);
-        }
-    }
-
-    void mousePressEvent(QMouseEvent *e) override
-    {
-        if (m_isOptionButton) {
-            m_isMousePress = true;
-        }
-        DPushButton::mousePressEvent(e);
-    }
+    void enterEvent(QEnterEvent *e) override;
+    void leaveEvent(QEvent *e) override;
+    void mousePressEvent(QMouseEvent *e) override;
 signals:
     /**
      * @brief isInButton 是否在button内部？

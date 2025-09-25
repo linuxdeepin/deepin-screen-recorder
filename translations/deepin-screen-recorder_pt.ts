@@ -124,6 +124,25 @@ ou pressione novamente o atalho para parar de gravar</translation>
     </message>
 </context>
 <context>
+    <name>PinSaveMenuManager</name>
+    <message>
+        <source>Each inquiry</source>
+        <translation>Cada consulta</translation>
+    </message>
+    <message>
+        <source>Specified Location</source>
+        <translation>Localização especificada</translation>
+    </message>
+    <message>
+        <source>Set a path on save</source>
+        <translation>Definir um caminho para salvar</translation>
+    </message>
+    <message>
+        <source>Change the path on save</source>
+        <translation>Alterar o caminho para salvar</translation>
+    </message>
+</context>
+<context>
     <name>QObject</name>
     <message>
         <source>Pin Screenshots</source>
@@ -173,6 +192,25 @@ ou pressione novamente o atalho para parar de gravar</translation>
     <message>
         <source>Open Folder</source>
         <translation>Abrir pasta</translation>
+    </message>
+</context>
+<context>
+    <name>SaveMenuManager</name>
+    <message>
+        <source>Each inquiry</source>
+        <translation>Cada consulta</translation>
+    </message>
+    <message>
+        <source>Specified location</source>
+        <translation>Localização especificada</translation>
+    </message>
+    <message>
+        <source>Select a location when saving</source>
+        <translation>Selecionar uma localização ao guardar</translation>
+    </message>
+    <message>
+        <source>Update the location when saving</source>
+        <translation>Atualizar a localização ao guardar</translation>
     </message>
 </context>
 <context>
@@ -597,14 +635,6 @@ Pressionar e manter Shift para desenhar uma seta vertical ou horizontal</transla
         <translation>Gravar</translation>
     </message>
     <message>
-        <source>Pictures</source>
-        <translation>Imagens</translation>
-    </message>
-    <message>
-        <source>Set a path on save</source>
-        <translation>Definir um caminho para salvar</translation>
-    </message>
-    <message>
         <source>Change the path on save</source>
         <translation>Alterar o caminho para salvar</translation>
     </message>
@@ -659,14 +689,6 @@ Mantenha pressionada a tecla Shift para desenhar quadrados ou círculos.</transl
         <translation>Salvar localmente</translation>
     </message>
     <message>
-        <source>Save to Desktop</source>
-        <translation>Salvar no ambiente de trabalho</translation>
-    </message>
-    <message>
-        <source>Save to Pictures</source>
-        <translation>Salvar em imagens</translation>
-    </message>
-    <message>
         <source>Save to %1</source>
         <translation>Salvar em %1</translation>
     </message>
@@ -675,24 +697,12 @@ Mantenha pressionada a tecla Shift para desenhar quadrados ou círculos.</transl
         <translation>Localização especificada</translation>
     </message>
     <message>
-        <source>Custom Location</source>
-        <translation>Localização personalizada</translation>
+        <source>Update the location when saving</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Each inquiry</source>
-        <translation>Cada consulta</translation>
-    </message>
-    <message>
-        <source>Update location on save</source>
-        <translation>Atualizar localização ao salvar</translation>
-    </message>
-    <message>
-        <source>Save to desktop</source>
-        <translation>Salvar no ambiente de trabalho</translation>
-    </message>
-    <message>
-        <source>Save to pictures</source>
-        <translation>Salvar em imagens</translation>
+        <source>Select a location when saving</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

@@ -6,6 +6,7 @@
 #ifndef SUBTOOLWIDGET_H
 #define SUBTOOLWIDGET_H
 #include "toolbutton.h"
+#include "savebutton.h"
 
 #include <QObject>
 #include <QHBoxLayout>
@@ -106,7 +107,7 @@ private:
      */
     QActionGroup *m_saveGroup = nullptr;
     QAction *m_askEveryTimeAction = nullptr;
-    ToolButton *m_saveLocalDirButton = nullptr;
+    SaveButton *m_saveLocalDirButton = nullptr;
     
     /**
      * @brief 分隔线

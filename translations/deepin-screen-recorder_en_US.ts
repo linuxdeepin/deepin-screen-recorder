@@ -124,6 +124,25 @@ or press the shortcut again to stop recording</translation>
     </message>
 </context>
 <context>
+    <name>PinSaveMenuManager</name>
+    <message>
+        <source>Each inquiry</source>
+        <translation>Each inquiry</translation>
+    </message>
+    <message>
+        <source>Specified Location</source>
+        <translation>Specified Location</translation>
+    </message>
+    <message>
+        <source>Set a path on save</source>
+        <translation>Set a path on save</translation>
+    </message>
+    <message>
+        <source>Change the path on save</source>
+        <translation>Change the path on save</translation>
+    </message>
+</context>
+<context>
     <name>QObject</name>
     <message>
         <source>Pin Screenshots</source>
@@ -173,6 +192,25 @@ or press the shortcut again to stop recording</translation>
     <message>
         <source>Open Folder</source>
         <translation>Open Folder</translation>
+    </message>
+</context>
+<context>
+    <name>SaveMenuManager</name>
+    <message>
+        <source>Each inquiry</source>
+        <translation>Each inquiry</translation>
+    </message>
+    <message>
+        <source>Specified location</source>
+        <translation>Specified location</translation>
+    </message>
+    <message>
+        <source>Select a location when saving</source>
+        <translation>Select a location when saving</translation>
+    </message>
+    <message>
+        <source>Update the location when saving</source>
+        <translation>Update the location when saving</translation>
     </message>
 </context>
 <context>
@@ -449,20 +487,12 @@ Press and hold Shift to draw a straight line</translation>
         <translation>Options</translation>
     </message>
     <message>
-        <source>Set a path on save</source>
-        <translation>Set a path on save</translation>
-    </message>
-    <message>
         <source>Save to</source>
         <translation>Save to</translation>
     </message>
     <message>
         <source>Desktop</source>
         <translation>Desktop</translation>
-    </message>
-    <message>
-        <source>Pictures</source>
-        <translation>Pictures</translation>
     </message>
     <message>
         <source>Format</source>
@@ -659,14 +689,6 @@ Hold down Shift to draw squares or circles.</translation>
         <translation>Save to local</translation>
     </message>
     <message>
-        <source>Save to Desktop</source>
-        <translation>Save to Desktop</translation>
-    </message>
-    <message>
-        <source>Save to Pictures</source>
-        <translation>Save to Pictures</translation>
-    </message>
-    <message>
         <source>Save to %1</source>
         <translation>Save to %1</translation>
     </message>
@@ -675,24 +697,12 @@ Hold down Shift to draw squares or circles.</translation>
         <translation>Specified Location</translation>
     </message>
     <message>
-        <source>Custom Location</source>
-        <translation>Custom Location</translation>
+        <source>Update the location when saving</source>
+        <translation>Update the location when saving</translation>
     </message>
     <message>
-        <source>Each inquiry</source>
-        <translation>Each inquiry</translation>
-    </message>
-    <message>
-        <source>Update location on save</source>
-        <translation>Update location on save</translation>
-    </message>
-    <message>
-        <source>Save to desktop</source>
-        <translation>Save to desktop</translation>
-    </message>
-    <message>
-        <source>Save to pictures</source>
-        <translation>Save to pictures</translation>
+        <source>Select a location when saving</source>
+        <translation>Select a location when saving</translation>
     </message>
 </context>
 <context>

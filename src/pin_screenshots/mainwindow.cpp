@@ -177,7 +177,10 @@ void MainWindow::saveImg()
     m_saveInfo = m_toolBar->getSaveInfo(); // 获取保存信息
     qCDebug(dsrApp) << "Save info retrieved. Type:" << m_saveInfo.first << ", Format:" << m_saveInfo.second;
 
-    if (m_saveInfo.first == SubToolWidget::DESKTOP) {
+    QPair<int, int> live = Settings::instance()->getSaveOption();
+    int pathType = live.first;
+
+    if (pathType == SubToolWidget::DESKTOP) {
         qCDebug(dsrApp) << "保存到桌面";
         QString savePath = QStandardPaths::standardLocations(QStandardPaths::DesktopLocation).first();
         QString formatStr;
@@ -193,7 +196,7 @@ void MainWindow::saveImg()
         }
         m_lastImagePath = QString("%1/%2.%3").arg(savePath).arg(m_imageName).arg(formatStr);
         qCDebug(dsrApp) << "Image will be saved to:" << m_lastImagePath;
-    } else if (m_saveInfo.first == SubToolWidget::PICTURES) {
+    } else if (pathType == SubToolWidget::PICTURES) {
         qCDebug(dsrApp) << "保存到图片";
         QString savePath = QStandardPaths::standardLocations(QStandardPaths::PicturesLocation).first() + QDir::separator() + "Screenshots";
         if ((!QDir(savePath).exists() && QDir().mkdir(savePath) == false) ||  // 文件不存在，且创建失败
@@ -214,7 +217,7 @@ void MainWindow::saveImg()
         }
         m_lastImagePath = QString("%1/%2.%3").arg(savePath).arg(m_imageName).arg(formatStr);
         qCDebug(dsrApp) << "Image will be saved to:" << m_lastImagePath;
-    } else if (m_saveInfo.first == SubToolWidget::ASK) {
+    } else if (pathType == SubToolWidget::ASK) {
         // 每次询问保存位置
         qCDebug(dsrApp) << "每次询问保存位置";
         m_toolBar->hide();
@@ -260,7 +263,7 @@ void MainWindow::saveImg()
         
         this->show();
         m_toolBar->show();
-    } else if (m_saveInfo.first == SubToolWidget::FOLDER) {
+    } else if (pathType == SubToolWidget::FOLDER) {
         // 使用指定位置保存
         QString savePath = Settings::instance()->getSavePath();
         qCDebug(dsrApp) << "保存到指定路径" << savePath;
@@ -268,7 +271,7 @@ void MainWindow::saveImg()
         // 如果指定路径不存在或无法访问，则切换到 FOLDER_CHANGE 模式
         if (savePath.isEmpty() || !QDir(savePath).exists() || !QFileInfo(savePath).isWritable()) {
             qCDebug(dsrApp) << "Specified path does not exist or is not writable, switching to folder change mode";
-            m_saveInfo.first = SubToolWidget::FOLDER_CHANGE;
+            pathType = SubToolWidget::FOLDER_CHANGE;
         } else {
             QString formatStr;
             if (m_saveInfo.second == static_cast<SubToolWidget::SAVEFORMAT>(SubToolWidget::PNG)) {
@@ -285,7 +288,7 @@ void MainWindow::saveImg()
         }
     }
     
-    if (m_saveInfo.first == SubToolWidget::FOLDER_CHANGE) {
+    if (pathType == SubToolWidget::FOLDER_CHANGE) {
         // 需要设置或更新指定位置
         qCDebug(dsrApp) << "设置或更新指定位置";
         m_toolBar->hide();
@@ -330,10 +333,13 @@ void MainWindow::saveImg()
         qCWarning(dsrApp) << "FOLDER_CHANGE: Set isChangeSavePath to false";
         
         // 将保存选项更新为 FOLDER，表示下次直接使用指定路径
-        m_saveInfo.first = SubToolWidget::FOLDER;
+        pathType = SubToolWidget::FOLDER;
         qCWarning(dsrApp) << "FOLDER_CHANGE: Updating save option from FOLDER_CHANGE to FOLDER";
-        Settings::instance()->setSaveOption(m_saveInfo);
-        qCWarning(dsrApp) << "FOLDER_CHANGE: Save option updated, new config:" << m_saveInfo;
+        {
+            QPair<int,int> newSave(pathType, m_saveInfo.second);
+            Settings::instance()->setSaveOption(newSave);
+            qCWarning(dsrApp) << "FOLDER_CHANGE: Save option updated, new config:" << newSave;
+        }
         
         // 处理文件扩展名
         QString fileSuffix = QFileInfo(m_lastImagePath).completeSuffix();
@@ -345,16 +351,15 @@ void MainWindow::saveImg()
         m_toolBar->show();
     }
     
-    //每次保存时重设isChangeSavePath
-    Settings::instance()->setIsChangeSavePath(false);
+    // 不在此处重置 isChangeSavePath，遵循实时配置
 
     bool isSaveState = true;
-    if (m_saveInfo.first != SubToolWidget::CLIPBOARD) {
+    if (pathType != SubToolWidget::CLIPBOARD) {
         qCWarning(dsrApp) << "SAVE: Attempting to save image to:" << m_lastImagePath;
         QDir saveDir = QFileInfo(m_lastImagePath).dir();
         qCWarning(dsrApp) << "SAVE: File directory exists:" << saveDir.exists();
         qCWarning(dsrApp) << "SAVE: Directory writable:" << QFileInfo(saveDir.absolutePath()).isWritable();
-        qCWarning(dsrApp) << "SAVE: Current save config:" << m_saveInfo;
+        qCWarning(dsrApp) << "SAVE: Current save type:" << pathType << ", format:" << m_saveInfo.second;
         
         isSaveState = m_image.save(m_lastImagePath);
         qCWarning(dsrApp) << "SAVE: Save result:" << isSaveState;

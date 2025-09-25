@@ -124,6 +124,25 @@ lub naciśnij ponownie skrót, aby zatrzymać nagrywanie</translation>
     </message>
 </context>
 <context>
+    <name>PinSaveMenuManager</name>
+    <message>
+        <source>Each inquiry</source>
+        <translation>Każde zapytanie</translation>
+    </message>
+    <message>
+        <source>Specified Location</source>
+        <translation>Określone miejsce</translation>
+    </message>
+    <message>
+        <source>Set a path on save</source>
+        <translation>Ustaw ścieżkę zapisu</translation>
+    </message>
+    <message>
+        <source>Change the path on save</source>
+        <translation>Zmień ścieżkę zapisu</translation>
+    </message>
+</context>
+<context>
     <name>QObject</name>
     <message>
         <source>Pin Screenshots</source>
@@ -173,6 +192,25 @@ lub naciśnij ponownie skrót, aby zatrzymać nagrywanie</translation>
     <message>
         <source>Open Folder</source>
         <translation>Otwórz folder</translation>
+    </message>
+</context>
+<context>
+    <name>SaveMenuManager</name>
+    <message>
+        <source>Each inquiry</source>
+        <translation>Każde zapytanie</translation>
+    </message>
+    <message>
+        <source>Specified location</source>
+        <translation>Określone miejsce</translation>
+    </message>
+    <message>
+        <source>Select a location when saving</source>
+        <translation>Ustaw ścieżkę zapisu</translation>
+    </message>
+    <message>
+        <source>Update the location when saving</source>
+        <translation>Zmień ścieżkę zapisu</translation>
     </message>
 </context>
 <context>
@@ -597,14 +635,6 @@ Przytrzymaj Shift, aby rysować pionową lub poziomą strzałkę</translation>
         <translation>Nagrywanie</translation>
     </message>
     <message>
-        <source>Pictures</source>
-        <translation>Zdjęcia</translation>
-    </message>
-    <message>
-        <source>Set a path on save</source>
-        <translation>Ustaw ścieżkę zapisu</translation>
-    </message>
-    <message>
         <source>Change the path on save</source>
         <translation>Zmień ścieżkę zapisu</translation>
     </message>
@@ -659,14 +689,6 @@ Przytrzymaj Shift, aby narysować kwadraty lub koła.</translation>
         <translation>Zapisz lokalnie</translation>
     </message>
     <message>
-        <source>Save to Desktop</source>
-        <translation>Zapisz na pulpicie</translation>
-    </message>
-    <message>
-        <source>Save to Pictures</source>
-        <translation>Zapisz na zdjęcia</translation>
-    </message>
-    <message>
         <source>Save to %1</source>
         <translation>Zapisz w %1</translation>
     </message>
@@ -675,24 +697,12 @@ Przytrzymaj Shift, aby narysować kwadraty lub koła.</translation>
         <translation>Określone miejsce</translation>
     </message>
     <message>
-        <source>Custom Location</source>
-        <translation>Niestandardowe miejsce</translation>
+        <source>Update the location when saving</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Each inquiry</source>
-        <translation>Każde zapytanie</translation>
-    </message>
-    <message>
-        <source>Update location on save</source>
-        <translation>Zaktualizuj lokalizację przy zapisie</translation>
-    </message>
-    <message>
-        <source>Save to desktop</source>
-        <translation>Zapisz na pulpicie</translation>
-    </message>
-    <message>
-        <source>Save to pictures</source>
-        <translation>Zapisz na zdjęcia</translation>
+        <source>Select a location when saving</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

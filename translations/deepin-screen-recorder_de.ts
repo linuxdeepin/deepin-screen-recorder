@@ -124,6 +124,25 @@ oder drücken Sie die Tastenkombination erneut, um die Aufnahme zu stoppen</tran
     </message>
 </context>
 <context>
+    <name>PinSaveMenuManager</name>
+    <message>
+        <source>Each inquiry</source>
+        <translation type="unfinished">Jede Frage</translation>
+    </message>
+    <message>
+        <source>Specified Location</source>
+        <translation type="unfinished">Ange Ort</translation>
+    </message>
+    <message>
+        <source>Set a path on save</source>
+        <translation type="unfinished">Beim Speichern einen Pfad festlegen</translation>
+    </message>
+    <message>
+        <source>Change the path on save</source>
+        <translation type="unfinished">Beim Speichern den Pfad ändern</translation>
+    </message>
+</context>
+<context>
     <name>QObject</name>
     <message>
         <source>Pin Screenshots</source>
@@ -173,6 +192,25 @@ oder drücken Sie die Tastenkombination erneut, um die Aufnahme zu stoppen</tran
     <message>
         <source>Open Folder</source>
         <translation>Ordner öffnen</translation>
+    </message>
+</context>
+<context>
+    <name>SaveMenuManager</name>
+    <message>
+        <source>Each inquiry</source>
+        <translation type="unfinished">Jede Frage</translation>
+    </message>
+    <message>
+        <source>Specified location</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Select a location when saving</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Update the location when saving</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -597,14 +635,6 @@ Umschalttaste gedrückt halten, um einen vertikalen oder horizontalen Pfeil zu z
         <translation>Aufnehmen</translation>
     </message>
     <message>
-        <source>Pictures</source>
-        <translation>Bilder</translation>
-    </message>
-    <message>
-        <source>Set a path on save</source>
-        <translation>Beim Speichern einen Pfad festlegen</translation>
-    </message>
-    <message>
         <source>Change the path on save</source>
         <translation>Beim Speichern den Pfad ändern</translation>
     </message>
@@ -659,14 +689,6 @@ Halten Sie die Umschalttaste gedrückt, um Quadrate oder Kreise zu zeichnen.</tr
         <translation>Lokal speichern</translation>
     </message>
     <message>
-        <source>Save to Desktop</source>
-        <translation>Auf das Desktop-Verzeichnis speichern</translation>
-    </message>
-    <message>
-        <source>Save to Pictures</source>
-        <translation>Auf das Bildverzeichnis speichern</translation>
-    </message>
-    <message>
         <source>Save to %1</source>
         <translation>Auf %1 speichern</translation>
     </message>
@@ -675,24 +697,12 @@ Halten Sie die Umschalttaste gedrückt, um Quadrate oder Kreise zu zeichnen.</tr
         <translation>Ange Ort</translation>
     </message>
     <message>
-        <source>Custom Location</source>
-        <translation>Benutzerdefiniertes Ort</translation>
+        <source>Update the location when saving</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Each inquiry</source>
-        <translation>Jede Frage</translation>
-    </message>
-    <message>
-        <source>Update location on save</source>
-        <translation>Ort beim Speichern aktualisieren</translation>
-    </message>
-    <message>
-        <source>Save to desktop</source>
-        <translation>Auf das Desktop-Verzeichnis speichern</translation>
-    </message>
-    <message>
-        <source>Save to pictures</source>
-        <translation>Auf das Bildverzeichnis speichern</translation>
+        <source>Select a location when saving</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

@@ -124,6 +124,25 @@ or press the shortcut again to stop recording</source>
     </message>
 </context>
 <context>
+    <name>PinSaveMenuManager</name>
+    <message>
+        <source>Each inquiry</source>
+        <translation>각 조회</translation>
+    </message>
+    <message>
+        <source>Specified Location</source>
+        <translation>지정된 위치</translation>
+    </message>
+    <message>
+        <source>Set a path on save</source>
+        <translation>저장 시 경로 설정</translation>
+    </message>
+    <message>
+        <source>Change the path on save</source>
+        <translation>저장 시 경로 변경</translation>
+    </message>
+</context>
+<context>
     <name>QObject</name>
     <message>
         <source>Pin Screenshots</source>
@@ -173,6 +192,25 @@ or press the shortcut again to stop recording</source>
     <message>
         <source>Open Folder</source>
         <translation>폴더 열기</translation>
+    </message>
+</context>
+<context>
+    <name>SaveMenuManager</name>
+    <message>
+        <source>Each inquiry</source>
+        <translation>각 조회</translation>
+    </message>
+    <message>
+        <source>Specified location</source>
+        <translation>지정된 위치</translation>
+    </message>
+    <message>
+        <source>Select a location when saving</source>
+        <translation>저장 시 위치 선택</translation>
+    </message>
+    <message>
+        <source>Update the location when saving</source>
+        <translation>저장 시 위치 업데이트</translation>
     </message>
 </context>
 <context>
@@ -601,14 +639,6 @@ Shift를 누르고 놓아 수직 또는 수평 화살표를 그립니다</transl
         <translation>녹화하기</translation>
     </message>
     <message>
-        <source>Pictures</source>
-        <translation>사진</translation>
-    </message>
-    <message>
-        <source>Set a path on save</source>
-        <translation>저장 시 경로 설정</translation>
-    </message>
-    <message>
         <source>Change the path on save</source>
         <translation>저장 시 경로 변경</translation>
     </message>
@@ -663,14 +693,6 @@ Shift 키를 누른 채로 정사각형이나 원을 그립니다.</translation>
         <translation>로컬에 저장</translation>
     </message>
     <message>
-        <source>Save to Desktop</source>
-        <translation>바탕화면에 저장</translation>
-    </message>
-    <message>
-        <source>Save to Pictures</source>
-        <translation>사진에 저장</translation>
-    </message>
-    <message>
         <source>Save to %1</source>
         <translation>%1에 저장</translation>
     </message>
@@ -679,24 +701,12 @@ Shift 키를 누른 채로 정사각형이나 원을 그립니다.</translation>
         <translation>지정된 위치</translation>
     </message>
     <message>
-        <source>Custom Location</source>
-        <translation>사용자 지정 위치</translation>
+        <source>Update the location when saving</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Each inquiry</source>
-        <translation>각 조회</translation>
-    </message>
-    <message>
-        <source>Update location on save</source>
-        <translation>저장 시 위치 업데이트</translation>
-    </message>
-    <message>
-        <source>Save to desktop</source>
-        <translation>바탕화면에 저장</translation>
-    </message>
-    <message>
-        <source>Save to pictures</source>
-        <translation>사진에 저장</translation>
+        <source>Select a location when saving</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

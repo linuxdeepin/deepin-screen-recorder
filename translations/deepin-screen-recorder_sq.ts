@@ -124,6 +124,25 @@ klikoni ikonën e panelit, ose rishtypni shkurtoren</translation>
     </message>
 </context>
 <context>
+    <name>PinSaveMenuManager</name>
+    <message>
+        <source>Each inquiry</source>
+        <translation>Cdo pyetje</translation>
+    </message>
+    <message>
+        <source>Specified Location</source>
+        <translation>Vendndodhje Specifikuar</translation>
+    </message>
+    <message>
+        <source>Set a path on save</source>
+        <translation>Caktoni shteg gjatë ruajtjes</translation>
+    </message>
+    <message>
+        <source>Change the path on save</source>
+        <translation>Ndryshoni shtegun gjatë ruajtjes</translation>
+    </message>
+</context>
+<context>
     <name>QObject</name>
     <message>
         <source>Pin Screenshots</source>
@@ -173,6 +192,25 @@ klikoni ikonën e panelit, ose rishtypni shkurtoren</translation>
     <message>
         <source>Open Folder</source>
         <translation>Hapni Dosje</translation>
+    </message>
+</context>
+<context>
+    <name>SaveMenuManager</name>
+    <message>
+        <source>Each inquiry</source>
+        <translation>Cdo pyetje</translation>
+    </message>
+    <message>
+        <source>Specified location</source>
+        <translation>Vendndodhje Specifikuar</translation>
+    </message>
+    <message>
+        <source>Select a location when saving</source>
+        <translation>Zgjidhni vendndodhjen gjatë ruajtjes</translation>
+    </message>
+    <message>
+        <source>Update the location when saving</source>
+        <translation>Përditësoni vendndodhjen gjatë ruajtjes</translation>
     </message>
 </context>
 <context>
@@ -597,14 +635,6 @@ Shtypni dhe mbani të shtypur tastin Shift, që të vizatohet një shigjetë ver
         <translation>Regjistro</translation>
     </message>
     <message>
-        <source>Pictures</source>
-        <translation>Foto</translation>
-    </message>
-    <message>
-        <source>Set a path on save</source>
-        <translation>Caktoni shteg gjatë ruajtjes</translation>
-    </message>
-    <message>
         <source>Change the path on save</source>
         <translation>Ndryshoni shtegun gjatë ruajtjes</translation>
     </message>
@@ -659,14 +689,6 @@ Mbani të shtypur tastin Shift që të vizatohet një drejtkëndësh ose një rr
         <translation>Ruaje te lokali</translation>
     </message>
     <message>
-        <source>Save to Desktop</source>
-        <translation>Ruaje te Desktop</translation>
-    </message>
-    <message>
-        <source>Save to Pictures</source>
-        <translation>Ruaje te Foto</translation>
-    </message>
-    <message>
         <source>Save to %1</source>
         <translation>Ruaje te %1</translation>
     </message>
@@ -675,24 +697,12 @@ Mbani të shtypur tastin Shift që të vizatohet një drejtkëndësh ose një rr
         <translation>Vendndodhje Specifikuar</translation>
     </message>
     <message>
-        <source>Custom Location</source>
-        <translation>Vendndodhje Përzgjedhje</translation>
+        <source>Update the location when saving</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Each inquiry</source>
-        <translation>Cdo pyetje</translation>
-    </message>
-    <message>
-        <source>Update location on save</source>
-        <translation>Përditëso vendndodhjen gjatë ruajtjes</translation>
-    </message>
-    <message>
-        <source>Save to desktop</source>
-        <translation>Ruaje te Desktop</translation>
-    </message>
-    <message>
-        <source>Save to pictures</source>
-        <translation>Ruaje te Foto</translation>
+        <source>Select a location when saving</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

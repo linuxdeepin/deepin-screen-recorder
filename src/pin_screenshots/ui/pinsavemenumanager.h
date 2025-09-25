@@ -13,11 +13,13 @@
 
 DWIDGET_USE_NAMESPACE
 
-// 保存选项枚举
+// 保存选项枚举（与 SubToolWidget::SAVEPATH 数值严格对齐）
+// SubToolWidget::SAVEPATH 定义顺序：
+// CLIPBOARD=0, DESKTOP=1, PICTURES=2, FOLDER=3, FOLDER_CHANGE=4, ASK=5
 enum SavePathType {
-    ASK = 1,           // 每次询问
-    FOLDER = 4,        // 指定文件夹
-    FOLDER_CHANGE = 5  // 保存时选择文件夹
+    ASK = 5,           // 每次询问
+    FOLDER = 3,        // 指定文件夹（历史路径）
+    FOLDER_CHANGE = 4  // 保存时选择文件夹
 };
 
 /**

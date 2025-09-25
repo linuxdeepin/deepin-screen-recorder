@@ -46,10 +46,13 @@ SOURCES += \
     ui/menucontroller.cpp \
     ui/toolbarwidget.cpp \
     ui/subtoolwidget.cpp \
+    ui/pinsavemenumanager.cpp \
     putils.cpp \
     settings.cpp \
     ui/mainToolWidget.cpp \
-    ../utils/log.cpp
+    ../utils/log.cpp \
+    ../widgets/toolbutton.cpp \
+    ../widgets/savebutton.cpp
 
 HEADERS += \
     service/dbuspinscreenshotsadaptor.h \
@@ -60,11 +63,13 @@ HEADERS += \
     ui/menucontroller.h \
     ui/toolbarwidget.h \
     ui/subtoolwidget.h \
+    ui/pinsavemenumanager.h \
     putils.h \
     settings.h \
-    ui/toolbutton.h \
     ui/mainToolWidget.h \
-    ../utils/log.h
+    ../utils/log.h \
+    ../widgets/toolbutton.h \
+    ../widgets/savebutton.h
 
 equals(QT_MAJOR_VERSION, 6) {
     # Qt6 特定的编译选项
@@ -92,5 +97,6 @@ RESOURCES += \
     ./icons/icons.qrc
 
 INCLUDEPATH += ../utils
+INCLUDEPATH += ../widgets
 
 

@@ -124,6 +124,25 @@ or press the shortcut again to stop recording</source>
     </message>
 </context>
 <context>
+    <name>PinSaveMenuManager</name>
+    <message>
+        <source>Each inquiry</source>
+        <translation>كل سؤال</translation>
+    </message>
+    <message>
+        <source>Specified Location</source>
+        <translation>موقع محدد</translation>
+    </message>
+    <message>
+        <source>Set a path on save</source>
+        <translation>تعيين مسار عند الحفظ</translation>
+    </message>
+    <message>
+        <source>Change the path on save</source>
+        <translation>تغيير المسار عند الحفظ</translation>
+    </message>
+</context>
+<context>
     <name>QObject</name>
     <message>
         <source>Pin Screenshots</source>
@@ -173,6 +192,25 @@ or press the shortcut again to stop recording</source>
     <message>
         <source>Open Folder</source>
         <translation>فتح المجلد</translation>
+    </message>
+</context>
+<context>
+    <name>SaveMenuManager</name>
+    <message>
+        <source>Each inquiry</source>
+        <translation>كل سؤال</translation>
+    </message>
+    <message>
+        <source>Specified location</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Select a location when saving</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Update the location when saving</source>
+        <translation></translation>
     </message>
 </context>
 <context>
@@ -597,14 +635,6 @@ Press and hold Shift to draw a vertical or horizontal arrow</source>
         <translation>تسجيل</translation>
     </message>
     <message>
-        <source>Pictures</source>
-        <translation>صور</translation>
-    </message>
-    <message>
-        <source>Set a path on save</source>
-        <translation>تعيين مسار عند الحفظ</translation>
-    </message>
-    <message>
         <source>Change the path on save</source>
         <translation>تغيير المسار عند الحفظ</translation>
     </message>
@@ -658,14 +688,6 @@ Hold down Shift to draw squares or circles.</source>
         <translation>حفظ إلى الموقع المحلي</translation>
     </message>
     <message>
-        <source>Save to Desktop</source>
-        <translation>حفظ إلى المكتب</translation>
-    </message>
-    <message>
-        <source>Save to Pictures</source>
-        <translation>حفظ إلى الصور</translation>
-    </message>
-    <message>
         <source>Save to %1</source>
         <translation>حفظ إلى %1</translation>
     </message>
@@ -674,24 +696,12 @@ Hold down Shift to draw squares or circles.</source>
         <translation>موقع محدد</translation>
     </message>
     <message>
-        <source>Custom Location</source>
-        <translation>موقع مخصص</translation>
+        <source>Update the location when saving</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Each inquiry</source>
-        <translation>كل سؤال</translation>
-    </message>
-    <message>
-        <source>Update location on save</source>
-        <translation>تحديث الموقع عند الحفظ</translation>
-    </message>
-    <message>
-        <source>Save to desktop</source>
-        <translation>حفظ إلى المكتب</translation>
-    </message>
-    <message>
-        <source>Save to pictures</source>
-        <translation>حفظ إلى الصور</translation>
+        <source>Select a location when saving</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

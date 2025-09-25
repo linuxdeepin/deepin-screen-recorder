@@ -124,6 +124,25 @@ ou appuyer à nouveau sur le raccourci pour arrêter l&apos;enregistrement</tran
     </message>
 </context>
 <context>
+    <name>PinSaveMenuManager</name>
+    <message>
+        <source>Each inquiry</source>
+        <translation>Chaque demande</translation>
+    </message>
+    <message>
+        <source>Specified Location</source>
+        <translation>Emplacement spécifié</translation>
+    </message>
+    <message>
+        <source>Set a path on save</source>
+        <translation>Définir un chemin d&apos;enregistrement</translation>
+    </message>
+    <message>
+        <source>Change the path on save</source>
+        <translation>Changer le chemin d&apos;enregistrement</translation>
+    </message>
+</context>
+<context>
     <name>QObject</name>
     <message>
         <source>Pin Screenshots</source>
@@ -173,6 +192,25 @@ ou appuyer à nouveau sur le raccourci pour arrêter l&apos;enregistrement</tran
     <message>
         <source>Open Folder</source>
         <translation>Ouvrir un dossier</translation>
+    </message>
+</context>
+<context>
+    <name>SaveMenuManager</name>
+    <message>
+        <source>Each inquiry</source>
+        <translation>Chaque demande</translation>
+    </message>
+    <message>
+        <source>Specified location</source>
+        <translation>Emplacement spécifié</translation>
+    </message>
+    <message>
+        <source>Select a location when saving</source>
+        <translation>Sélectionner un emplacement lors de l&apos;enregistrement</translation>
+    </message>
+    <message>
+        <source>Update the location when saving</source>
+        <translation>Mettre à jour l&apos;emplacement lors de l&apos;enregistrement</translation>
     </message>
 </context>
 <context>
@@ -597,14 +635,6 @@ Maintenir la touche Maj enfoncée pour dessiner une flèche verticale ou horizon
         <translation>Enregistrer</translation>
     </message>
     <message>
-        <source>Pictures</source>
-        <translation>Images</translation>
-    </message>
-    <message>
-        <source>Set a path on save</source>
-        <translation>Définir un chemin d&apos;enregistrement</translation>
-    </message>
-    <message>
         <source>Change the path on save</source>
         <translation>Changer le chemin d&apos;enregistrement</translation>
     </message>
@@ -659,14 +689,6 @@ Maintenir la touche Maj enfoncée pour dessiner des carrés ou des cercles.</tra
         <translation>Enregistrer localement</translation>
     </message>
     <message>
-        <source>Save to Desktop</source>
-        <translation>Enregistrer sur le bureau</translation>
-    </message>
-    <message>
-        <source>Save to Pictures</source>
-        <translation>Enregistrer dans les images</translation>
-    </message>
-    <message>
         <source>Save to %1</source>
         <translation>Enregistrer dans %1</translation>
     </message>
@@ -675,24 +697,12 @@ Maintenir la touche Maj enfoncée pour dessiner des carrés ou des cercles.</tra
         <translation>Emplacement spécifié</translation>
     </message>
     <message>
-        <source>Custom Location</source>
-        <translation>Emplacement personnalisé</translation>
+        <source>Update the location when saving</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Each inquiry</source>
-        <translation>Chaque demande</translation>
-    </message>
-    <message>
-        <source>Update location on save</source>
-        <translation>Mettre à jour l&apos;emplacement lors de l&apos;enregistrement</translation>
-    </message>
-    <message>
-        <source>Save to desktop</source>
-        <translation>Enregistrer sur le bureau</translation>
-    </message>
-    <message>
-        <source>Save to pictures</source>
-        <translation>Enregistrer dans les images</translation>
+        <source>Select a location when saving</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

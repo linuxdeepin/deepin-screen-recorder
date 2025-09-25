@@ -124,6 +124,25 @@ or press the shortcut again to stop recording</source>
     </message>
 </context>
 <context>
+    <name>PinSaveMenuManager</name>
+    <message>
+        <source>Each inquiry</source>
+        <translation>Кожне запитування</translation>
+    </message>
+    <message>
+        <source>Specified Location</source>
+        <translation>Вказане місце</translation>
+    </message>
+    <message>
+        <source>Set a path on save</source>
+        <translation>Встановити шлях для збереження</translation>
+    </message>
+    <message>
+        <source>Change the path on save</source>
+        <translation>Змінити шлях для збереження</translation>
+    </message>
+</context>
+<context>
     <name>QObject</name>
     <message>
         <source>Pin Screenshots</source>
@@ -173,6 +192,25 @@ or press the shortcut again to stop recording</source>
     <message>
         <source>Open Folder</source>
         <translation>Відкрити теку</translation>
+    </message>
+</context>
+<context>
+    <name>SaveMenuManager</name>
+    <message>
+        <source>Each inquiry</source>
+        <translation>Кожне запитування</translation>
+    </message>
+    <message>
+        <source>Specified location</source>
+        <translation>Вказане місце</translation>
+    </message>
+    <message>
+        <source>Select a location when saving</source>
+        <translation>Виберіть місце для збереження</translation>
+    </message>
+    <message>
+        <source>Update the location when saving</source>
+        <translation>Оновити місце для збереження</translation>
     </message>
 </context>
 <context>
@@ -597,14 +635,6 @@ Press and hold Shift to draw a vertical or horizontal arrow</source>
         <translation>Записати</translation>
     </message>
     <message>
-        <source>Pictures</source>
-        <translation>Зображення</translation>
-    </message>
-    <message>
-        <source>Set a path on save</source>
-        <translation>Встановити шлях для збереження</translation>
-    </message>
-    <message>
         <source>Change the path on save</source>
         <translation>Змінити шлях для збереження</translation>
     </message>
@@ -659,14 +689,6 @@ Hold down Shift to draw squares or circles.</source>
         <translation>Зберегти локально</translation>
     </message>
     <message>
-        <source>Save to Desktop</source>
-        <translation>Зберегти на стільниці</translation>
-    </message>
-    <message>
-        <source>Save to Pictures</source>
-        <translation>Зберегти в зображення</translation>
-    </message>
-    <message>
         <source>Save to %1</source>
         <translation>Зберегти до %1</translation>
     </message>
@@ -675,24 +697,12 @@ Hold down Shift to draw squares or circles.</source>
         <translation>Вказане місце</translation>
     </message>
     <message>
-        <source>Custom Location</source>
-        <translation>Власний шлях</translation>
+        <source>Update the location when saving</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Each inquiry</source>
-        <translation>Кожне запитування</translation>
-    </message>
-    <message>
-        <source>Update location on save</source>
-        <translation>Оновлення місця збереження</translation>
-    </message>
-    <message>
-        <source>Save to desktop</source>
-        <translation>Зберегти на стільниці</translation>
-    </message>
-    <message>
-        <source>Save to pictures</source>
-        <translation>Зберегти в зображення</translation>
+        <source>Select a location when saving</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

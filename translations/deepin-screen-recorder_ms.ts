@@ -124,6 +124,25 @@ atau klik pintasan sekali lagi untuk hentikan rakaman</translation>
     </message>
 </context>
 <context>
+    <name>PinSaveMenuManager</name>
+    <message>
+        <source>Each inquiry</source>
+        <translation>Setiap pertanyaan</translation>
+    </message>
+    <message>
+        <source>Specified Location</source>
+        <translation>Lokasi Tertentu</translation>
+    </message>
+    <message>
+        <source>Set a path on save</source>
+        <translation>Tetapkan laluan ketika simpan</translation>
+    </message>
+    <message>
+        <source>Change the path on save</source>
+        <translation>Ubah laluan ketika simpan</translation>
+    </message>
+</context>
+<context>
     <name>QObject</name>
     <message>
         <source>Pin Screenshots</source>
@@ -173,6 +192,25 @@ atau klik pintasan sekali lagi untuk hentikan rakaman</translation>
     <message>
         <source>Open Folder</source>
         <translation>Buka Folder</translation>
+    </message>
+</context>
+<context>
+    <name>SaveMenuManager</name>
+    <message>
+        <source>Each inquiry</source>
+        <translation>Setiap pertanyaan</translation>
+    </message>
+    <message>
+        <source>Specified location</source>
+        <translation>Lokasi Tertentu</translation>
+    </message>
+    <message>
+        <source>Select a location when saving</source>
+        <translation>Tetapkan laluan ketika simpan</translation>
+    </message>
+    <message>
+        <source>Update the location when saving</source>
+        <translation>Ubah laluan ketika simpan</translation>
     </message>
 </context>
 <context>
@@ -597,14 +635,6 @@ Tekan dan tahan kekunci Shift untuk melukis anak panah menegak atau mengufuk</tr
         <translation>Rakam</translation>
     </message>
     <message>
-        <source>Pictures</source>
-        <translation>Gambar</translation>
-    </message>
-    <message>
-        <source>Set a path on save</source>
-        <translation>Tetapkan laluan ketika simpan</translation>
-    </message>
-    <message>
         <source>Change the path on save</source>
         <translation>Ubah laluan ketika simpan</translation>
     </message>
@@ -659,14 +689,6 @@ Tahan Shift untuk melukis segi empat sama atau bulatan.</translation>
         <translation>Simpan ke lokal</translation>
     </message>
     <message>
-        <source>Save to Desktop</source>
-        <translation>Simpan ke Desktop</translation>
-    </message>
-    <message>
-        <source>Save to Pictures</source>
-        <translation>Simpan ke Gambar</translation>
-    </message>
-    <message>
         <source>Save to %1</source>
         <translation>Simpan ke %1</translation>
     </message>
@@ -675,24 +697,12 @@ Tahan Shift untuk melukis segi empat sama atau bulatan.</translation>
         <translation>Lokasi Tertentu</translation>
     </message>
     <message>
-        <source>Custom Location</source>
-        <translation>Lokasi Pilihan</translation>
+        <source>Update the location when saving</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Each inquiry</source>
-        <translation>Setiap pertanyaan</translation>
-    </message>
-    <message>
-        <source>Update location on save</source>
-        <translation>Kemaskini lokasi semasa simpan</translation>
-    </message>
-    <message>
-        <source>Save to desktop</source>
-        <translation>Simpan ke Desktop</translation>
-    </message>
-    <message>
-        <source>Save to pictures</source>
-        <translation>Simpan ke Gambar</translation>
+        <source>Select a location when saving</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

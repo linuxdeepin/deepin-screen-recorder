@@ -124,6 +124,25 @@ o utilizza nuovamente la scorciatoia da tastiera per terminare la registrazione<
     </message>
 </context>
 <context>
+    <name>PinSaveMenuManager</name>
+    <message>
+        <source>Each inquiry</source>
+        <translation>Ogni richiesta</translation>
+    </message>
+    <message>
+        <source>Specified Location</source>
+        <translation>Posizione specificata</translation>
+    </message>
+    <message>
+        <source>Set a path on save</source>
+        <translation>Seleziona un percorso di salvataggio</translation>
+    </message>
+    <message>
+        <source>Change the path on save</source>
+        <translation>Cambia il percorso di salvataggio</translation>
+    </message>
+</context>
+<context>
     <name>QObject</name>
     <message>
         <source>Pin Screenshots</source>
@@ -173,6 +192,25 @@ o utilizza nuovamente la scorciatoia da tastiera per terminare la registrazione<
     <message>
         <source>Open Folder</source>
         <translation>Apri cartella</translation>
+    </message>
+</context>
+<context>
+    <name>SaveMenuManager</name>
+    <message>
+        <source>Each inquiry</source>
+        <translation>Ogni richiesta</translation>
+    </message>
+    <message>
+        <source>Specified location</source>
+        <translation>Posizione specificata</translation>
+    </message>
+    <message>
+        <source>Select a location when saving</source>
+        <translation>Seleziona una posizione di salvataggio</translation>
+    </message>
+    <message>
+        <source>Update the location when saving</source>
+        <translation>Aggiorna la posizione di salvataggio</translation>
     </message>
 </context>
 <context>
@@ -597,14 +635,6 @@ Tieni premuto Maiusc per disegnare una freccia verticale o orizzontale</translat
         <translation>Registrazione</translation>
     </message>
     <message>
-        <source>Pictures</source>
-        <translation>Immagini</translation>
-    </message>
-    <message>
-        <source>Set a path on save</source>
-        <translation>Seleziona un percorso di salvataggio</translation>
-    </message>
-    <message>
         <source>Change the path on save</source>
         <translation>Cambia il percorso di salvataggio</translation>
     </message>
@@ -659,14 +689,6 @@ Tieni premuto Maiusc per disegnare quadrati o cerchi.</translation>
         <translation>Salva nella cartella locale</translation>
     </message>
     <message>
-        <source>Save to Desktop</source>
-        <translation>Salva sul desktop</translation>
-    </message>
-    <message>
-        <source>Save to Pictures</source>
-        <translation>Salva nelle immagini</translation>
-    </message>
-    <message>
         <source>Save to %1</source>
         <translation>Salva in %1</translation>
     </message>
@@ -675,24 +697,12 @@ Tieni premuto Maiusc per disegnare quadrati o cerchi.</translation>
         <translation>Posizione specificata</translation>
     </message>
     <message>
-        <source>Custom Location</source>
-        <translation>Posizione personalizzata</translation>
+        <source>Update the location when saving</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Each inquiry</source>
-        <translation>Ogni richiesta</translation>
-    </message>
-    <message>
-        <source>Update location on save</source>
-        <translation>Aggiorna la posizione al salvataggio</translation>
-    </message>
-    <message>
-        <source>Save to desktop</source>
-        <translation>Salva sul desktop</translation>
-    </message>
-    <message>
-        <source>Save to pictures</source>
-        <translation>Salva nelle immagini</translation>
+        <source>Select a location when saving</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

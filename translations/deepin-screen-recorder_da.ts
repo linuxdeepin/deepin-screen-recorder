@@ -124,6 +124,25 @@ eller tryk på genvejen igen, for at stoppe optagelse</translation>
     </message>
 </context>
 <context>
+    <name>PinSaveMenuManager</name>
+    <message>
+        <source>Each inquiry</source>
+        <translation>Hver spørgsmål</translation>
+    </message>
+    <message>
+        <source>Specified Location</source>
+        <translation type="unfinished">Angivet sted</translation>
+    </message>
+    <message>
+        <source>Set a path on save</source>
+        <translation type="unfinished">Angiv en mappe ved opbevaring</translation>
+    </message>
+    <message>
+        <source>Change the path on save</source>
+        <translation type="unfinished">Ændr stien ved opbevaring</translation>
+    </message>
+</context>
+<context>
     <name>QObject</name>
     <message>
         <source>Pin Screenshots</source>
@@ -173,6 +192,25 @@ eller tryk på genvejen igen, for at stoppe optagelse</translation>
     <message>
         <source>Open Folder</source>
         <translation>Åbn mappe</translation>
+    </message>
+</context>
+<context>
+    <name>SaveMenuManager</name>
+    <message>
+        <source>Each inquiry</source>
+        <translation type="unfinished">Hver spørgsmål</translation>
+    </message>
+    <message>
+        <source>Specified location</source>
+        <translation>Angivet sted</translation>
+    </message>
+    <message>
+        <source>Select a location when saving</source>
+        <translation>Vælg et sted ved opbevaring</translation>
+    </message>
+    <message>
+        <source>Update the location when saving</source>
+        <translation>Opdateret sted ved opbevaring</translation>
     </message>
 </context>
 <context>
@@ -597,14 +635,6 @@ Tryk og hold Shift for at tegne en vertikal eller horisontal pil</translation>
         <translation>Optag</translation>
     </message>
     <message>
-        <source>Pictures</source>
-        <translation>Billeder</translation>
-    </message>
-    <message>
-        <source>Set a path on save</source>
-        <translation>Angiv en mappe ved opbevaring</translation>
-    </message>
-    <message>
         <source>Change the path on save</source>
         <translation>Ændr stien ved opbevaring</translation>
     </message>
@@ -659,14 +689,6 @@ Hold Shift nede for at tegne kvadrater eller cirkler.</translation>
         <translation>Gem til lokal</translation>
     </message>
     <message>
-        <source>Save to Desktop</source>
-        <translation>Gem til skrivebord</translation>
-    </message>
-    <message>
-        <source>Save to Pictures</source>
-        <translation>Gem til billeder</translation>
-    </message>
-    <message>
         <source>Save to %1</source>
         <translation>Gem til %1</translation>
     </message>
@@ -675,24 +697,12 @@ Hold Shift nede for at tegne kvadrater eller cirkler.</translation>
         <translation>Angivet sted</translation>
     </message>
     <message>
-        <source>Custom Location</source>
-        <translation>Tilpasset sted</translation>
+        <source>Update the location when saving</source>
+        <translation>Opdateret sted ved opbevaring</translation>
     </message>
     <message>
-        <source>Each inquiry</source>
-        <translation>Hver spørgsmål</translation>
-    </message>
-    <message>
-        <source>Update location on save</source>
-        <translation>Opdater sted ved gemning</translation>
-    </message>
-    <message>
-        <source>Save to desktop</source>
-        <translation>Gem til skrivebord</translation>
-    </message>
-    <message>
-        <source>Save to pictures</source>
-        <translation>Gem til billeder</translation>
+        <source>Select a location when saving</source>
+        <translation>Vælg et sted ved opbevaring</translation>
     </message>
 </context>
 <context>

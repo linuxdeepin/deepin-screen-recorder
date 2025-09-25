@@ -124,6 +124,25 @@ ou prema de novo o atallo para deixar de gravar</translation>
     </message>
 </context>
 <context>
+    <name>PinSaveMenuManager</name>
+    <message>
+        <source>Each inquiry</source>
+        <translation>Cada consulta</translation>
+    </message>
+    <message>
+        <source>Specified Location</source>
+        <translation>Localización especificada</translation>
+    </message>
+    <message>
+        <source>Set a path on save</source>
+        <translation>Establece un camiño ao gardar</translation>
+    </message>
+    <message>
+        <source>Change the path on save</source>
+        <translation>Cambia o camiño ao gardar</translation>
+    </message>
+</context>
+<context>
     <name>QObject</name>
     <message>
         <source>Pin Screenshots</source>
@@ -173,6 +192,25 @@ ou prema de novo o atallo para deixar de gravar</translation>
     <message>
         <source>Open Folder</source>
         <translation>Abrir cartafol</translation>
+    </message>
+</context>
+<context>
+    <name>SaveMenuManager</name>
+    <message>
+        <source>Each inquiry</source>
+        <translation>Cada consulta</translation>
+    </message>
+    <message>
+        <source>Specified location</source>
+        <translation>Localización especificada</translation>
+    </message>
+    <message>
+        <source>Select a location when saving</source>
+        <translation>Selecciona unha localización ao gardar</translation>
+    </message>
+    <message>
+        <source>Update the location when saving</source>
+        <translation>Actualiza a localización ao gardar</translation>
     </message>
 </context>
 <context>
@@ -597,14 +635,6 @@ Manteña premida a tecla Maiúsculas para debuxar unha frecha vertical ou horizo
         <translation>Gravar</translation>
     </message>
     <message>
-        <source>Pictures</source>
-        <translation>Imaxes</translation>
-    </message>
-    <message>
-        <source>Set a path on save</source>
-        <translation>Establece un camiño ao gardar</translation>
-    </message>
-    <message>
         <source>Change the path on save</source>
         <translation>Cambia o camiño ao gardar</translation>
     </message>
@@ -659,14 +689,6 @@ Mantén premida a tecla Maiús para debuxar cadrados ou círculos.</translation>
         <translation>Gardar no local</translation>
     </message>
     <message>
-        <source>Save to Desktop</source>
-        <translation>Gardar no escritorio</translation>
-    </message>
-    <message>
-        <source>Save to Pictures</source>
-        <translation>Gardar en imaxes</translation>
-    </message>
-    <message>
         <source>Save to %1</source>
         <translation>Gardar en %1</translation>
     </message>
@@ -675,24 +697,12 @@ Mantén premida a tecla Maiús para debuxar cadrados ou círculos.</translation>
         <translation>Localización especificada</translation>
     </message>
     <message>
-        <source>Custom Location</source>
-        <translation>Localización personalizada</translation>
+        <source>Update the location when saving</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Each inquiry</source>
-        <translation>Cada consulta</translation>
-    </message>
-    <message>
-        <source>Update location on save</source>
-        <translation>Actualizar a localización ao gardar</translation>
-    </message>
-    <message>
-        <source>Save to desktop</source>
-        <translation>Gardar no escritorio</translation>
-    </message>
-    <message>
-        <source>Save to pictures</source>
-        <translation>Gardar en imaxes</translation>
+        <source>Select a location when saving</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

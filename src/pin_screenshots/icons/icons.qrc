@@ -4,5 +4,7 @@
         <file>texts/ocr-normal_32px.svg</file>
         <file>texts/close_32px.svg</file>
         <file>texts/save_32px.svg</file>
+        <file>texts/dropdown_32px.svg</file>
+        <file>texts/setting_32px.svg</file>
     </qresource>
 </RCC>

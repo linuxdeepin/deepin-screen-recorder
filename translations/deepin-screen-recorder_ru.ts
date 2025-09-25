@@ -124,6 +124,25 @@ or press the shortcut again to stop recording</source>
     </message>
 </context>
 <context>
+    <name>PinSaveMenuManager</name>
+    <message>
+        <source>Each inquiry</source>
+        <translation>Каждый запрос</translation>
+    </message>
+    <message>
+        <source>Specified Location</source>
+        <translation>Указанное место</translation>
+    </message>
+    <message>
+        <source>Set a path on save</source>
+        <translation>Установить путь при сохранении</translation>
+    </message>
+    <message>
+        <source>Change the path on save</source>
+        <translation>Изменить путь при сохранении</translation>
+    </message>
+</context>
+<context>
     <name>QObject</name>
     <message>
         <source>Pin Screenshots</source>
@@ -173,6 +192,25 @@ or press the shortcut again to stop recording</source>
     <message>
         <source>Open Folder</source>
         <translation>Открыть папку</translation>
+    </message>
+</context>
+<context>
+    <name>SaveMenuManager</name>
+    <message>
+        <source>Each inquiry</source>
+        <translation>Каждый запрос</translation>
+    </message>
+    <message>
+        <source>Specified location</source>
+        <translation>Указанное место</translation>
+    </message>
+    <message>
+        <source>Select a location when saving</source>
+        <translation>Установить путь при сохранении</translation>
+    </message>
+    <message>
+        <source>Update the location when saving</source>
+        <translation>Изменить путь при сохранении</translation>
     </message>
 </context>
 <context>
@@ -597,14 +635,6 @@ Press and hold Shift to draw a vertical or horizontal arrow</source>
         <translation>Запись</translation>
     </message>
     <message>
-        <source>Pictures</source>
-        <translation>Изображения</translation>
-    </message>
-    <message>
-        <source>Set a path on save</source>
-        <translation>Установить путь при сохранении</translation>
-    </message>
-    <message>
         <source>Change the path on save</source>
         <translation>Изменить путь при сохранении</translation>
     </message>
@@ -659,14 +689,6 @@ Hold down Shift to draw squares or circles.</source>
         <translation>Сохранить локально</translation>
     </message>
     <message>
-        <source>Save to Desktop</source>
-        <translation>Сохранить на рабочий стол</translation>
-    </message>
-    <message>
-        <source>Save to Pictures</source>
-        <translation>Сохранить в изображения</translation>
-    </message>
-    <message>
         <source>Save to %1</source>
         <translation>Сохранить в %1</translation>
     </message>
@@ -675,24 +697,12 @@ Hold down Shift to draw squares or circles.</source>
         <translation>Указанное место</translation>
     </message>
     <message>
-        <source>Custom Location</source>
-        <translation>Пользовательское место</translation>
+        <source>Update the location when saving</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Each inquiry</source>
-        <translation>Каждый запрос</translation>
-    </message>
-    <message>
-        <source>Update location on save</source>
-        <translation>Обновить место при сохранении</translation>
-    </message>
-    <message>
-        <source>Save to desktop</source>
-        <translation>Сохранить на рабочий стол</translation>
-    </message>
-    <message>
-        <source>Save to pictures</source>
-        <translation>Сохранить в изображения</translation>
+        <source>Select a location when saving</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
