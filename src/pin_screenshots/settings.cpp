@@ -40,10 +40,11 @@ void Settings::release()
 
 bool Settings::setSaveOption(const QPair<int, int> &value)
 {
-    qCDebug(dsrApp) << "Setting save options - path type:" << value.first << "format:" << value.second;
+    qCWarning(dsrApp) << "Settings::setSaveOption - path type:" << value.first << "format:" << value.second;
     m_settings->setValue("savePath", value.first);
     m_settings->setValue("saveFormat", value.second);
-    qCDebug(dsrApp) << "Save options set.";
+    m_settings->sync(); // 强制同步到磁盘
+    qCWarning(dsrApp) << "Settings::setSaveOption - Save options set and synced";
     return true;
 }
 
@@ -58,9 +59,10 @@ QPair<int, int> Settings::getSaveOption()
 
 void Settings::setSavePath(const QString& savePathDir)
 {
-    qCDebug(dsrApp) << "Setting save path directory:" << savePathDir;
+    qCWarning(dsrApp) << "Settings::setSavePath - Setting save path directory:" << savePathDir;
     m_settings->setValue("savePathDir", savePathDir);
-    qCDebug(dsrApp) << "Save path directory set.";
+    m_settings->sync(); // 强制同步到磁盘
+    qCWarning(dsrApp) << "Settings::setSavePath - Save path directory set and synced";
 }
 
 QString Settings::getSavePath()

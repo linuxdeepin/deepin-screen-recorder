@@ -322,14 +322,18 @@ void MainWindow::saveImg()
         
         // 保存用户选择的路径作为指定路径
         QString selectedPath = QFileInfo(m_lastImagePath).dir().absolutePath();
+        qCWarning(dsrApp) << "FOLDER_CHANGE: Saving selected path:" << selectedPath;
         Settings::instance()->setSavePath(selectedPath);
         
         // 将 FOLDER_CHANGE 标记设置为 false，表示已经设置了指定路径
         Settings::instance()->setIsChangeSavePath(false);
+        qCWarning(dsrApp) << "FOLDER_CHANGE: Set isChangeSavePath to false";
         
         // 将保存选项更新为 FOLDER，表示下次直接使用指定路径
         m_saveInfo.first = SubToolWidget::FOLDER;
+        qCWarning(dsrApp) << "FOLDER_CHANGE: Updating save option from FOLDER_CHANGE to FOLDER";
         Settings::instance()->setSaveOption(m_saveInfo);
+        qCWarning(dsrApp) << "FOLDER_CHANGE: Save option updated, new config:" << m_saveInfo;
         
         // 处理文件扩展名
         QString fileSuffix = QFileInfo(m_lastImagePath).completeSuffix();
@@ -346,7 +350,20 @@ void MainWindow::saveImg()
 
     bool isSaveState = true;
     if (m_saveInfo.first != SubToolWidget::CLIPBOARD) {
+        qCWarning(dsrApp) << "SAVE: Attempting to save image to:" << m_lastImagePath;
+        QDir saveDir = QFileInfo(m_lastImagePath).dir();
+        qCWarning(dsrApp) << "SAVE: File directory exists:" << saveDir.exists();
+        qCWarning(dsrApp) << "SAVE: Directory writable:" << QFileInfo(saveDir.absolutePath()).isWritable();
+        qCWarning(dsrApp) << "SAVE: Current save config:" << m_saveInfo;
+        
         isSaveState = m_image.save(m_lastImagePath);
+        qCWarning(dsrApp) << "SAVE: Save result:" << isSaveState;
+        
+        if (isSaveState) {
+            qCWarning(dsrApp) << "SAVE SUCCESS: File saved successfully";
+        } else {
+            qCWarning(dsrApp) << "SAVE FAILED: Failed to save file";
+        }
     }
 
     // 发送通知
@@ -799,8 +816,9 @@ void MainWindow::sendNotify(QString savePath, bool bSaveState)
                                 QDBusConnection::sessionBus());
 
     if (!bSaveState) {
-        qCDebug(dsrApp) << __FUNCTION__;
+        qCWarning(dsrApp) << "SAVE FAILED: Save operation failed!";
         QString tips = QString(tr("Save failed. Please save it in your home directory."));
+        qCWarning(dsrApp) << "SAVE FAILED: Clearing save path";
         Settings::instance()->setSavePath("");
         QList<QVariant> arg;
         unsigned int id = 0;
