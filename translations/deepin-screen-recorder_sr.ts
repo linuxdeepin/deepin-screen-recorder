@@ -698,11 +698,11 @@ Hold down Shift to draw squares or circles.</source>
     </message>
     <message>
         <source>Update the location when saving</source>
-        <translation type="unfinished"></translation>
+        <translation>Промени путању приликом сачувања</translation>
     </message>
     <message>
         <source>Select a location when saving</source>
-        <translation type="unfinished"></translation>
+        <translation>Постави путању приликом сачувања</translation>
     </message>
 </context>
 <context>

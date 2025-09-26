@@ -698,11 +698,11 @@ Hold down Shift to draw squares or circles.</source>
     </message>
     <message>
         <source>Update the location when saving</source>
-        <translation type="unfinished"></translation>
+        <translation>Оновити місце для збереження</translation>
     </message>
     <message>
         <source>Select a location when saving</source>
-        <translation type="unfinished"></translation>
+        <translation>Виберіть місце для збереження</translation>
     </message>
 </context>
 <context>

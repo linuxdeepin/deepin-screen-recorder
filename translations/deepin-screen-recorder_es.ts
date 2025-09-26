@@ -698,11 +698,11 @@ Mantenga presionada la tecla Shift para dibujar cuadrados o círculos.</translat
     </message>
     <message>
         <source>Update the location when saving</source>
-        <translation type="unfinished"></translation>
+        <translation>Actualizar la ubicación al guardar</translation>
     </message>
     <message>
         <source>Select a location when saving</source>
-        <translation type="unfinished"></translation>
+        <translation>Seleccionar una ubicación al guardar</translation>
     </message>
 </context>
 <context>

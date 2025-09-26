@@ -698,11 +698,11 @@ Przytrzymaj Shift, aby narysować kwadraty lub koła.</translation>
     </message>
     <message>
         <source>Update the location when saving</source>
-        <translation type="unfinished"></translation>
+        <translation>Zmień ścieżkę zapisu</translation>
     </message>
     <message>
         <source>Select a location when saving</source>
-        <translation type="unfinished"></translation>
+        <translation>Ustaw ścieżkę zapisu</translation>
     </message>
 </context>
 <context>

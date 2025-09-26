@@ -10,6 +10,7 @@
 // #include <dwindowmanager.h>
 #include <DPushButton>
 #include <DIconButton>
+#include <DToolButton>
 
 #include <QObject>
 #include <QPainter>
@@ -68,6 +69,7 @@ public:
     static void passInputEvent(int wid);
     static void setFontSize(QPainter &painter, int textSize);
     static void setAccessibility(DPushButton *button, const QString name);
+    static void setAccessibility(DToolButton *button, const QString name);
 #if (QT_VERSION_MAJOR == 5)
     static void setAccessibility(DImageButton *button, const QString name);
 #elif (QT_VERSION_MAJOR == 6)

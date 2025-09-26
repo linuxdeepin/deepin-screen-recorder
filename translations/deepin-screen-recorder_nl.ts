@@ -698,11 +698,11 @@ Houd Shift ingedrukt om vierkanten of cirkels te tekenen.</translation>
     </message>
     <message>
         <source>Update the location when saving</source>
-        <translation type="unfinished"></translation>
+        <translation>Locatie wijzigen na klikken op opslaan</translation>
     </message>
     <message>
         <source>Select a location when saving</source>
-        <translation type="unfinished"></translation>
+        <translation>Locatie kiezen na klikken op opslaan</translation>
     </message>
 </context>
 <context>

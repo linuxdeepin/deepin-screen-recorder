@@ -142,37 +142,23 @@ void SubToolWidget::initRecordLabel()
 
     //添加录屏选项按钮
     m_optionButton = new ToolButton();
-    m_optionButton->setOptionButtonFlag(true);
-    DPalette pa = m_optionButton->palette();
-    if (Utils::themeType == 1) {
-        qCDebug(dsrApp) << "Setting option button palette for light theme.";
-        pa.setColor(DPalette::ButtonText, QColor(28, 28, 28, 255));
-        pa.setColor(DPalette::Dark, QColor(192, 192, 192, 255));
-        pa.setColor(DPalette::Light, QColor(192, 192, 192, 255));
-    } else {
-        qCDebug(dsrApp) << "Setting option button palette for dark theme.";
-        pa.setColor(DPalette::ButtonText, QColor(228, 228, 228, 255));
-        pa.setColor(DPalette::Dark, QColor(64, 64, 64, 255));
-        pa.setColor(DPalette::Light, QColor(64, 64, 64, 255));
-    }
-    m_optionButton->setPalette(pa);
     m_optionButton->setCheckable(false);
-    m_optionButton->setFlat(false);
-    m_optionButton->setHoverState(false);
-    DFontSizeManager::instance()->bind(m_optionButton, DFontSizeManager::T6);
+    m_optionButton->setIconSize(QSize(24,24));
+    m_optionButton->setFixedSize(TOOL_BUTTON_SIZE);
+    m_optionButton->setIcon(QIcon::fromTheme("setting"));
     Utils::setAccessibility(m_optionButton, AC_SUBTOOLWIDGET_RECORD_OPTION_BUT);
-    m_optionButton->setText(tr("Settings"));
-    m_optionButton->setMinimumSize(MEDIUM_TOOL_BUTTON_SIZE);
     installTipHint(m_optionButton, tr("Settings (F3)"));
     btnList.append(m_optionButton);
 
     QHBoxLayout *rectLayout = new QHBoxLayout();
-    rectLayout->setSizeConstraint(QLayout::SetFixedSize);
+    rectLayout->setSizeConstraint(QLayout::SetMinimumSize);
     rectLayout->setContentsMargins(0, 0, 0, 0);
     rectLayout->setSpacing(0);
+    rectLayout->setAlignment(Qt::AlignVCenter);
     rectLayout->addSpacing(10);
     for (int i = 0; i < btnList.length(); i++) {
         rectLayout->addWidget(btnList[i]);
+        rectLayout->setAlignment(btnList[i], Qt::AlignVCenter);
         if (btnList[i] == m_shotButton) {
             qCDebug(dsrApp) << "Adding spacing after shot button.";
             rectLayout->addSpacing(10);
@@ -332,7 +318,7 @@ void SubToolWidget::initRecordOption()
 
     m_recordOptionMenu->hide();
     m_optionButton->setMenu(m_recordOptionMenu);
-
+    m_optionButton->setPopupMode(QToolButton::InstantPopup);
     ConfigSettings *t_settings = ConfigSettings::instance();
     int save_format = t_settings->getValue("recorder", "format").toInt();
     int frame_rate = t_settings->getValue("recorder", "frame_rate").toInt();
@@ -726,27 +712,31 @@ void SubToolWidget::initShotLabel()
 
     m_saveSeperatorBeg = new DVerticalLine(this);
     m_saveSeperatorEnd = new DVerticalLine(this);
-    m_saveSeperatorBeg->setFixedSize(QSize(3, 30));
-    m_saveSeperatorEnd->setFixedSize(QSize(3, 30));
+    m_saveSeperatorBeg->setFixedSize(QSize(3, TOOL_BUTTON_SIZE.height()));
+    m_saveSeperatorEnd->setFixedSize(QSize(3, TOOL_BUTTON_SIZE.height()));
 
     QHBoxLayout *rectLayout = new QHBoxLayout();
-    rectLayout->setSizeConstraint(QLayout::SetFixedSize);
+    rectLayout->setSizeConstraint(QLayout::SetMinimumSize);
     rectLayout->setContentsMargins(0, 0, 0, 0);
     rectLayout->setSpacing(0);
+    rectLayout->setAlignment(Qt::AlignVCenter);
     rectLayout->addSpacing(10);
     for (int i = 0; i < btnList.length(); i++) {
         // 在m_shotOptionButton之前添加第一个分割线
         if (btnList[i] == m_shotOptionButton) {
             rectLayout->addWidget(m_saveSeperatorBeg);
+            rectLayout->setAlignment(m_saveSeperatorBeg, Qt::AlignVCenter);
             rectLayout->addSpacing(5); // 添加一些间距
         }
         
         rectLayout->addWidget(btnList[i]);
+        rectLayout->setAlignment(btnList[i], Qt::AlignVCenter);
         
         // 在m_saveLocalDirButton之后添加第二个分割线
         if (btnList[i] == m_saveLocalDirButton) {
             rectLayout->addSpacing(5); // 添加一些间距
             rectLayout->addWidget(m_saveSeperatorEnd);
+            rectLayout->setAlignment(m_saveSeperatorEnd, Qt::AlignVCenter);
         }
         
         // 原有的条件保持不变
@@ -1058,7 +1048,7 @@ void SubToolWidget::initShotOption()
     m_optionMenu->hide();
 
     m_shotOptionButton->setMenu(m_optionMenu);
-    
+    m_shotOptionButton->setPopupMode(QToolButton::InstantPopup);
 
     if (Utils::isTreelandMode) {
 
@@ -1413,27 +1403,31 @@ void SubToolWidget::initScrollLabel()
 
     m_saveSeperatorBeg = new DVerticalLine(this);
     m_saveSeperatorEnd = new DVerticalLine(this);
-    m_saveSeperatorBeg->setFixedSize(QSize(3, 30));
-    m_saveSeperatorEnd->setFixedSize(QSize(3, 30));
+    m_saveSeperatorBeg->setFixedSize(QSize(3, TOOL_BUTTON_SIZE.height()));
+    m_saveSeperatorEnd->setFixedSize(QSize(3, TOOL_BUTTON_SIZE.height()));
     
     QHBoxLayout *rectLayout = new QHBoxLayout();
-    rectLayout->setSizeConstraint(QLayout::SetFixedSize);
+    rectLayout->setSizeConstraint(QLayout::SetMinimumSize);
     rectLayout->setContentsMargins(0, 0, 0, 0);
     rectLayout->setSpacing(0);
+    rectLayout->setAlignment(Qt::AlignVCenter);
     rectLayout->addSpacing(10);
     for (int i = 0; i < btnList.length(); i++) {
           // 在m_shotOptionButton之前添加第一个分割线
         if (btnList[i] == m_scrollOptionButton) {
             rectLayout->addWidget(m_saveSeperatorBeg);
+            rectLayout->setAlignment(m_saveSeperatorBeg, Qt::AlignVCenter);
             rectLayout->addSpacing(5); // 添加一些间距
         }
         
         rectLayout->addWidget(btnList[i]);
+        rectLayout->setAlignment(btnList[i], Qt::AlignVCenter);
         
         // 在m_saveLocalDirButton之后添加第二个分割线
         if (btnList[i] == m_saveLocalDirButton) {
             rectLayout->addSpacing(5); // 添加一些间距
             rectLayout->addWidget(m_saveSeperatorEnd);
+            rectLayout->setAlignment(m_saveSeperatorEnd, Qt::AlignVCenter);
         }
     }
     m_scrollSubTool->setLayout(rectLayout);

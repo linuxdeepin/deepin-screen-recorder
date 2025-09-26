@@ -245,6 +245,13 @@ void Utils::setAccessibility(DPushButton *button, const QString name)
     button->setAccessibleName(name);
 }
 
+void Utils::setAccessibility(DToolButton *button, const QString name)
+{
+    qCDebug(dsrApp) << "setAccessibility(DPushButton*) called for button:" << name << ".";
+    button->setObjectName(name);
+    button->setAccessibleName(name);
+}
+
 #if (QT_VERSION_MAJOR == 5)
 void Utils::setAccessibility(DImageButton *button, const QString name)
 {

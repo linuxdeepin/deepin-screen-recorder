@@ -357,9 +357,6 @@ void MainWindow::saveImg()
     if (pathType != SubToolWidget::CLIPBOARD) {
         qCWarning(dsrApp) << "SAVE: Attempting to save image to:" << m_lastImagePath;
         QDir saveDir = QFileInfo(m_lastImagePath).dir();
-        qCWarning(dsrApp) << "SAVE: File directory exists:" << saveDir.exists();
-        qCWarning(dsrApp) << "SAVE: Directory writable:" << QFileInfo(saveDir.absolutePath()).isWritable();
-        qCWarning(dsrApp) << "SAVE: Current save type:" << pathType << ", format:" << m_saveInfo.second;
         
         isSaveState = m_image.save(m_lastImagePath);
         qCWarning(dsrApp) << "SAVE: Save result:" << isSaveState;

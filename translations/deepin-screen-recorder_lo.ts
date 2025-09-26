@@ -127,19 +127,19 @@ or press the shortcut again to stop recording</source>
     <name>PinSaveMenuManager</name>
     <message>
         <source>Each inquiry</source>
-        <translation type="unfinished">ການສອບສວນທຸກຄັ້ງ</translation>
+        <translation>ການສອບສວນທຸກຄັ້ງ</translation>
     </message>
     <message>
         <source>Specified Location</source>
-        <translation type="unfinished">ສະຖານທີ່ທີ່ກຳນົດ</translation>
+        <translation>ສະຖານທີ່ທີ່ກຳນົດ</translation>
     </message>
     <message>
         <source>Set a path on save</source>
-        <translation type="unfinished">ຕັ້ງທິດທາງເມື່ອບັນທຶກ</translation>
+        <translation>ຕັ້ງທິດທາງເມື່ອບັນທຶກ</translation>
     </message>
     <message>
         <source>Change the path on save</source>
-        <translation type="unfinished">ປ່ຽນທິດທາງເມື່ອບັນທຶກ</translation>
+        <translation>ປ່ຽນທິດທາງເມື່ອບັນທຶກ</translation>
     </message>
 </context>
 <context>
@@ -198,19 +198,19 @@ or press the shortcut again to stop recording</source>
     <name>SaveMenuManager</name>
     <message>
         <source>Each inquiry</source>
-        <translation type="unfinished">ການສອບສວນທຸກຄັ້ງ</translation>
+        <translation>ການສອບສວນທຸກຄັ້ງ</translation>
     </message>
     <message>
         <source>Specified location</source>
-        <translation type="unfinished"></translation>
+        <translation>ສະຖານທີ່ທີ່ກຳນົດ</translation>
     </message>
     <message>
         <source>Select a location when saving</source>
-        <translation type="unfinished"></translation>
+        <translation>ເລືອກສະຖານທີ່ເມື່ອບັນທຶກ</translation>
     </message>
     <message>
         <source>Update the location when saving</source>
-        <translation type="unfinished"></translation>
+        <translation>ປັບແຕ່ງສະຖານທີ່ເມື່ອບັນທຶກ</translation>
     </message>
 </context>
 <context>
@@ -695,11 +695,11 @@ Hold down Shift to draw squares or circles.</source>
     </message>
     <message>
         <source>Update the location when saving</source>
-        <translation type="unfinished"></translation>
+        <translation>ປັບແຕ່ງສະຖານທີ່ເມື່ອບັນທຶກ</translation>
     </message>
     <message>
         <source>Select a location when saving</source>
-        <translation type="unfinished"></translation>
+        <translation>ເລືອກສະຖານທີ່ເມື່ອບັນທຶກ</translation>
     </message>
 </context>
 <context>

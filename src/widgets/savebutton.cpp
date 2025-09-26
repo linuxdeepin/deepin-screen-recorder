@@ -17,7 +17,7 @@
 #include <QEnterEvent>
 #endif
 
-SaveButton::SaveButton(DWidget *parent)
+SaveButton::SaveButton(QWidget *parent)
     : ToolButton(parent)
 {
     qCDebug(dsrApp) << "SaveButton constructor entered";

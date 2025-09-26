@@ -698,11 +698,11 @@ Tahan Shift untuk melukis segi empat sama atau bulatan.</translation>
     </message>
     <message>
         <source>Update the location when saving</source>
-        <translation type="unfinished"></translation>
+        <translation>Ubah laluan ketika simpan</translation>
     </message>
     <message>
         <source>Select a location when saving</source>
-        <translation type="unfinished"></translation>
+        <translation>Tetapkan laluan ketika simpan</translation>
     </message>
 </context>
 <context>

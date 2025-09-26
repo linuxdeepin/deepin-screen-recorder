@@ -702,11 +702,11 @@ Shift 키를 누른 채로 정사각형이나 원을 그립니다.</translation>
     </message>
     <message>
         <source>Update the location when saving</source>
-        <translation type="unfinished"></translation>
+        <translation>저장 시 위치 업데이트</translation>
     </message>
     <message>
         <source>Select a location when saving</source>
-        <translation type="unfinished"></translation>
+        <translation>저장 시 위치 선택</translation>
     </message>
 </context>
 <context>

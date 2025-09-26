@@ -16,7 +16,7 @@ class SaveButton : public ToolButton
 {
     Q_OBJECT
 public:
-    explicit SaveButton(DWidget *parent = nullptr);
+    explicit SaveButton(QWidget *parent = nullptr);
     ~SaveButton();
 
     // 设置外部菜单

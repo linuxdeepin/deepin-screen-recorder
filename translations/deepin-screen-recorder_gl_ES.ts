@@ -698,11 +698,11 @@ Mantén premida a tecla Maiús para debuxar cadrados ou círculos.</translation>
     </message>
     <message>
         <source>Update the location when saving</source>
-        <translation type="unfinished"></translation>
+        <translation>Actualiza a localización ao gardar</translation>
     </message>
     <message>
         <source>Select a location when saving</source>
-        <translation type="unfinished"></translation>
+        <translation>Selecciona unha localización ao gardar</translation>
     </message>
 </context>
 <context>

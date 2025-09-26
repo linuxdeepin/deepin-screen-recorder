@@ -698,11 +698,11 @@ Pidä Shift-näppäintä painettuna piirtääksesi neliöitä tai ympyröitä.</
     </message>
     <message>
         <source>Update the location when saving</source>
-        <translation type="unfinished"></translation>
+        <translation>Päivitä sijainti tallentaessa</translation>
     </message>
     <message>
         <source>Select a location when saving</source>
-        <translation type="unfinished"></translation>
+        <translation>Valitse sijainti tallentaessa</translation>
     </message>
 </context>
 <context>

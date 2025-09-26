@@ -698,11 +698,11 @@ Mbani të shtypur tastin Shift që të vizatohet një drejtkëndësh ose një rr
     </message>
     <message>
         <source>Update the location when saving</source>
-        <translation type="unfinished"></translation>
+        <translation>Përditësoni vendndodhjen gjatë ruajtjes</translation>
     </message>
     <message>
         <source>Select a location when saving</source>
-        <translation type="unfinished"></translation>
+        <translation>Zgjidhni vendndodhjen gjatë ruajtjes</translation>
     </message>
 </context>
 <context>

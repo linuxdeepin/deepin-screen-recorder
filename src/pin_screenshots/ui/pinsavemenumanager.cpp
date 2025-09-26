@@ -100,11 +100,9 @@ void PinSaveMenuManager::createLocationActions()
 
 void PinSaveMenuManager::setupConnections()
 {
-    // 主要保存选项信号连接（互斥组）
     connect(m_saveOptionGroup, QOverload<QAction *>::of(&QActionGroup::triggered),
             this, &PinSaveMenuManager::onSaveOptionTriggered);
     
-    // 自定义位置选项信号连接
     connect(m_customLocationGroup, QOverload<QAction *>::of(&QActionGroup::triggered),
             this, &PinSaveMenuManager::onLocationActionTriggered);
     

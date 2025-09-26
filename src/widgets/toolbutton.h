@@ -6,7 +6,7 @@
 #ifndef TOOLBUTTON_H
 #define TOOLBUTTON_H
 
-#include <DPushButton>
+#include <DToolButton>
 #include <DPalette>
 
 #include <QApplication>
@@ -14,11 +14,11 @@
 DWIDGET_USE_NAMESPACE
 DGUI_USE_NAMESPACE
 
-class ToolButton : public DPushButton
+class ToolButton : public DToolButton
 {
     Q_OBJECT
 public:
-    explicit ToolButton(DWidget *parent = nullptr);
+    explicit ToolButton(QWidget *parent = nullptr);
     ~ToolButton();
     
     void setHoverState(const bool hasHover);

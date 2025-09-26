@@ -698,11 +698,11 @@ Tieni premuto Maiusc per disegnare quadrati o cerchi.</translation>
     </message>
     <message>
         <source>Update the location when saving</source>
-        <translation type="unfinished"></translation>
+        <translation>Aggiorna la posizione di salvataggio</translation>
     </message>
     <message>
         <source>Select a location when saving</source>
-        <translation type="unfinished"></translation>
+        <translation>Seleziona una posizione di salvataggio</translation>
     </message>
 </context>
 <context>

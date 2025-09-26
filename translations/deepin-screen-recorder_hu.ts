@@ -698,11 +698,11 @@ Tartsa lenyomva a Shift billentyűt négyzetek vagy körök rajzolásához.</tra
     </message>
     <message>
         <source>Update the location when saving</source>
-        <translation type="unfinished"></translation>
+        <translation>Mentéskor módosítsa az elérési utat</translation>
     </message>
     <message>
         <source>Select a location when saving</source>
-        <translation type="unfinished"></translation>
+        <translation>Állítson be egy elérési utat a mentéshez</translation>
     </message>
 </context>
 <context>

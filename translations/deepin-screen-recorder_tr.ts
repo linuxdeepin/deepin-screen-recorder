@@ -698,11 +698,11 @@ Kare veya daire çizmek için Shift tuşunu basılı tutun.</translation>
     </message>
     <message>
         <source>Update the location when saving</source>
-        <translation type="unfinished"></translation>
+        <translation>Kaydet sırasında yolu değiştir</translation>
     </message>
     <message>
         <source>Select a location when saving</source>
-        <translation type="unfinished"></translation>
+        <translation>Kaydet sırasında bir yol ayarla</translation>
     </message>
 </context>
 <context>

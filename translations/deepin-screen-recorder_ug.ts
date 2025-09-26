@@ -126,19 +126,19 @@ or press the shortcut again to stop recording</source>
     <name>PinSaveMenuManager</name>
     <message>
         <source>Each inquiry</source>
-        <translation type="unfinished">ھەر قورال</translation>
+        <translation>ھەر قورال</translation>
     </message>
     <message>
         <source>Specified Location</source>
-        <translation type="unfinished">بىرلىك ھەرپ</translation>
+        <translation>بىرلىك ھەرپ</translation>
     </message>
     <message>
         <source>Set a path on save</source>
-        <translation type="unfinished">ئورۇننى ساقلىغاندا يېڭىلاش</translation>
+        <translation>ئورۇننى ساقلىغاندا يېڭىلاش</translation>
     </message>
     <message>
         <source>Change the path on save</source>
-        <translation type="unfinished">ئورۇننى ساقلىغاندا تەڭشەش</translation>
+        <translation>ئورۇننى ساقلىغاندا تەڭشەش</translation>
     </message>
 </context>
 <context>
@@ -197,19 +197,19 @@ or press the shortcut again to stop recording</source>
     <name>SaveMenuManager</name>
     <message>
         <source>Each inquiry</source>
-        <translation type="unfinished">ھەر قورال</translation>
+        <translation>ھەر قورال</translation>
     </message>
     <message>
         <source>Specified location</source>
-        <translation type="unfinished"></translation>
+        <translation>بىرلىك ھەرپ</translation>
     </message>
     <message>
         <source>Select a location when saving</source>
-        <translation type="unfinished"></translation>
+        <translation>ئورۇننى ساقلىغاندا يېڭىلاش</translation>
     </message>
     <message>
         <source>Update the location when saving</source>
-        <translation type="unfinished"></translation>
+        <translation>ئورۇننى ساقلىغاندا تەڭشەش</translation>
     </message>
 </context>
 <context>
@@ -697,11 +697,11 @@ Hold down Shift to draw squares or circles.</source>
     </message>
     <message>
         <source>Update the location when saving</source>
-        <translation type="unfinished"></translation>
+        <translation>ئورۇننى ساقلىغاندا تەڭشەش</translation>
     </message>
     <message>
         <source>Select a location when saving</source>
-        <translation type="unfinished"></translation>
+        <translation>ئورۇننى ساقلىغاندا يېڭىلاش</translation>
     </message>
 </context>
 <context>

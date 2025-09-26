@@ -13,8 +13,6 @@
 
 DWIDGET_USE_NAMESPACE
 
-// 保存选项枚举（与 SubToolWidget::SAVEPATH 数值严格对齐）
-// SubToolWidget::SAVEPATH 定义顺序：
 // CLIPBOARD=0, DESKTOP=1, PICTURES=2, FOLDER=3, FOLDER_CHANGE=4, ASK=5
 enum SavePathType {
     ASK = 5,           // 每次询问
@@ -24,7 +22,7 @@ enum SavePathType {
 
 /**
  * @brief Pin程序的保存菜单管理器
- * 专门为pin程序提供保存选项菜单，与主程序的SaveMenuManager功能类似
+ * 专门为pin程序提供保存选项菜单
  * 但使用pin程序自己的Settings系统和枚举定义
  */
 class PinSaveMenuManager : public QObject
@@ -35,16 +33,12 @@ public:
     explicit PinSaveMenuManager(QWidget *parent = nullptr);
     ~PinSaveMenuManager();
 
-    // 获取菜单实例
     DMenu* getMenu() const { return m_saveMenu; }
     
-    // 初始化菜单状态（从Settings读取配置）
     void initializeFromConfig();
     
-    // 获取当前保存设置
     int getCurrentSaveOption() const;
     
-    // 更新自定义路径（当用户选择文件夹后调用）
     void updateCustomPath(const QString &path);
 
 signals:
@@ -66,15 +60,12 @@ private:
     void updateSubMenuForExistingPath();
     void initChangeSaveToSpecialAction(const QString &specialPath);
 
-    // UI 组件
     DMenu *m_saveMenu;
     
-    // 主要选项组
     QActionGroup *m_saveOptionGroup;
     QAction *m_askEveryTimeAction;
     QAction *m_specifiedLocationAction;
     
-    // 指定位置的子菜单（简化版）
     DMenu *m_specifiedLocationSubMenu;
     QActionGroup *m_customLocationGroup;
     QAction *m_saveToSpecialPathAction;     // 显示历史路径

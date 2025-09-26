@@ -697,11 +697,11 @@ Hold down Shift to draw squares or circles.</source>
     </message>
     <message>
         <source>Update the location when saving</source>
-        <translation type="unfinished"></translation>
+        <translation>Aktualizovat umístění při ukládání</translation>
     </message>
     <message>
         <source>Select a location when saving</source>
-        <translation type="unfinished"></translation>
+        <translation>Vybrat umístění při ukládání</translation>
     </message>
 </context>
 <context>

@@ -698,11 +698,11 @@ Maintenir la touche Maj enfoncée pour dessiner des carrés ou des cercles.</tra
     </message>
     <message>
         <source>Update the location when saving</source>
-        <translation type="unfinished"></translation>
+        <translation>Mettre à jour l&apos;emplacement lors de l&apos;enregistrement</translation>
     </message>
     <message>
         <source>Select a location when saving</source>
-        <translation type="unfinished"></translation>
+        <translation>Sélectionner un emplacement lors de l&apos;enregistrement</translation>
     </message>
 </context>
 <context>

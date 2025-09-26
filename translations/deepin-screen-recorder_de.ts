@@ -127,19 +127,19 @@ oder drücken Sie die Tastenkombination erneut, um die Aufnahme zu stoppen</tran
     <name>PinSaveMenuManager</name>
     <message>
         <source>Each inquiry</source>
-        <translation type="unfinished">Jede Frage</translation>
+        <translation>Jede Frage</translation>
     </message>
     <message>
         <source>Specified Location</source>
-        <translation type="unfinished">Ange Ort</translation>
+        <translation>Ange Ort</translation>
     </message>
     <message>
         <source>Set a path on save</source>
-        <translation type="unfinished">Beim Speichern einen Pfad festlegen</translation>
+        <translation>Beim Speichern einen Pfad festlegen</translation>
     </message>
     <message>
         <source>Change the path on save</source>
-        <translation type="unfinished">Beim Speichern den Pfad ändern</translation>
+        <translation>Beim Speichern den Pfad ändern</translation>
     </message>
 </context>
 <context>
@@ -198,19 +198,19 @@ oder drücken Sie die Tastenkombination erneut, um die Aufnahme zu stoppen</tran
     <name>SaveMenuManager</name>
     <message>
         <source>Each inquiry</source>
-        <translation type="unfinished">Jede Frage</translation>
+        <translation>Jede Frage</translation>
     </message>
     <message>
         <source>Specified location</source>
-        <translation type="unfinished"></translation>
+        <translation>Ange Ort</translation>
     </message>
     <message>
         <source>Select a location when saving</source>
-        <translation type="unfinished"></translation>
+        <translation>Beim Speichern einen Pfad festlegen</translation>
     </message>
     <message>
         <source>Update the location when saving</source>
-        <translation type="unfinished"></translation>
+        <translation>Beim Speichern den Pfad ändern</translation>
     </message>
 </context>
 <context>
@@ -698,11 +698,11 @@ Halten Sie die Umschalttaste gedrückt, um Quadrate oder Kreise zu zeichnen.</tr
     </message>
     <message>
         <source>Update the location when saving</source>
-        <translation type="unfinished"></translation>
+        <translation>Beim Speichern den Pfad ändern</translation>
     </message>
     <message>
         <source>Select a location when saving</source>
-        <translation type="unfinished"></translation>
+        <translation>Beim Speichern einen Pfad festlegen</translation>
     </message>
 </context>
 <context>

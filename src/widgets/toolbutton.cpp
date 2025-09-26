@@ -9,8 +9,8 @@
 #include <QPaintEvent>
 #include <QApplication>
 
-ToolButton::ToolButton(DWidget *parent)
-    : DPushButton(parent)
+ToolButton::ToolButton(QWidget *parent)
+    : DToolButton(parent)
     , m_hasHoverState(true)
     , m_isOptionButton(false)
     , m_isUndoButton(false)
@@ -18,7 +18,6 @@ ToolButton::ToolButton(DWidget *parent)
     , m_lastCursorShape(nullptr)
 {
     setCheckable(true);
-    setFlat(true);
     setFocusPolicy(Qt::NoFocus);
 }
 
@@ -44,13 +43,13 @@ void ToolButton::setUndoButtonFlag(const bool flag)
 void ToolButton::paintEvent(QPaintEvent *event)
 {
     if (menu()) {
-        QStyleOptionButton option;
-        initStyleOption(&option);
-        option.features &= ~QStyleOptionButton::HasMenu;
-        QPainter painter(this);
-        style()->drawControl(QStyle::CE_PushButton, &option, &painter, this);
+        QStyleOptionToolButton opt;
+        initStyleOption(&opt);
+        opt.features &= ~QStyleOptionToolButton::HasMenu; // 注意：用 ToolButton 的枚举
+        QPainter p(this);
+        style()->drawComplexControl(QStyle::CC_ToolButton, &opt, &p, this); // 按 ToolButton 画
     } else {
-        DPushButton::paintEvent(event);
+        DToolButton::paintEvent(event);
     }
 }
 
@@ -59,20 +58,20 @@ void ToolButton::enterEvent(QEnterEvent *e)
     m_lastCursorShape = qApp->overrideCursor();
     qApp->setOverrideCursor(Qt::ArrowCursor);
     if (this->isEnabled() && m_hasHoverState) {
-        setFlat(false);
+        // setFlat(false);
     }
     if (m_isUndoButton) {
         emit isInUndoBtn(true);
     }
-    DPushButton::enterEvent(e);
+    DToolButton::enterEvent(e);
 }
 
 void ToolButton::leaveEvent(QEvent *e)
 {
     if (m_hasHoverState) {
-        setFlat(true);
+        // setFlat(true);
     }
-    DPushButton::leaveEvent(e);
+    DToolButton::leaveEvent(e);
 
     if (m_isMousePress) {
         qApp->setOverrideCursor(Qt::ArrowCursor);
@@ -89,5 +88,5 @@ void ToolButton::mousePressEvent(QMouseEvent *e)
     if (m_isOptionButton) {
         m_isMousePress = true;
     }
-    DPushButton::mousePressEvent(e);
+    DToolButton::mousePressEvent(e);
 }
