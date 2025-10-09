@@ -26,6 +26,17 @@ tepsi simgesine tıklayın ya da kısayola yeniden basın</translation>
     </message>
 </context>
 <context>
+    <name>MainToolWidget</name>
+    <message>
+        <source>Close (Esc)</source>
+        <translation>Kapat (Esc)</translation>
+    </message>
+    <message>
+        <source>Copy to clipboard (Enter)</source>
+        <translation>Panoya kopyala (Enter)</translation>
+    </message>
+</context>
+<context>
     <name>MainWindow</name>
     <message>
         <source>Screen Capture</source>

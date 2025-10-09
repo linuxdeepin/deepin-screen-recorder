@@ -26,6 +26,17 @@ ou appuyer à nouveau sur le raccourci pour arrêter l&apos;enregistrement</tran
     </message>
 </context>
 <context>
+    <name>MainToolWidget</name>
+    <message>
+        <source>Close (Esc)</source>
+        <translation>Fermer (Esc)</translation>
+    </message>
+    <message>
+        <source>Copy to clipboard (Enter)</source>
+        <translation>Copier dans le presse-papiers (Entrée)</translation>
+    </message>
+</context>
+<context>
     <name>MainWindow</name>
     <message>
         <source>Screen Capture</source>

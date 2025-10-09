@@ -26,6 +26,17 @@ o premeu la drecera de nou per aturar la gravació.</translation>
     </message>
 </context>
 <context>
+    <name>MainToolWidget</name>
+    <message>
+        <source>Close (Esc)</source>
+        <translation>Tanca (Esc)</translation>
+    </message>
+    <message>
+        <source>Copy to clipboard (Enter)</source>
+        <translation>Copia a la porta-retalls (Enter)</translation>
+    </message>
+</context>
+<context>
     <name>MainWindow</name>
     <message>
         <source>Screen Capture</source>

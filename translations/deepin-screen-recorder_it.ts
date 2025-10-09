@@ -26,6 +26,17 @@ o utilizza nuovamente la scorciatoia da tastiera per terminare la registrazione<
     </message>
 </context>
 <context>
+    <name>MainToolWidget</name>
+    <message>
+        <source>Close (Esc)</source>
+        <translation>Chiudi (Esc)</translation>
+    </message>
+    <message>
+        <source>Copy to clipboard (Enter)</source>
+        <translation>Copia negli appunti (Enter)</translation>
+    </message>
+</context>
+<context>
     <name>MainWindow</name>
     <message>
         <source>Screen Capture</source>

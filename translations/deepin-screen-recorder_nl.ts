@@ -26,6 +26,17 @@ of druk nogmaals op de sneltoets om te stoppen</translation>
     </message>
 </context>
 <context>
+    <name>MainToolWidget</name>
+    <message>
+        <source>Close (Esc)</source>
+        <translation>Sluiten (Esc)</translation>
+    </message>
+    <message>
+        <source>Copy to clipboard (Enter)</source>
+        <translation>Kopiëren naar klembord (Enter)</translation>
+    </message>
+</context>
+<context>
     <name>MainWindow</name>
     <message>
         <source>Screen Capture</source>

@@ -23,16 +23,15 @@ SaveButton::SaveButton(QWidget *parent)
     qCDebug(dsrApp) << "SaveButton constructor entered";
     setFixedSize(kSaveButtonWidth, kSaveButtonHeight);
     setFocusPolicy(Qt::NoFocus);
-    setMouseTracking(true);  // 启用鼠标跟踪以获取精确的悬停区域
+    setMouseTracking(true);
     
-    // 设置默认图标
     setSaveIcon(QIcon::fromTheme("save"));
     setListIcon(QIcon::fromTheme("dropdown"));
 }
 
 SaveButton::~SaveButton()
 {
-    qCDebug(dsrApp) << "SaveButton destructor entered";
+
 }
 
 void SaveButton::setOptionsMenu(QMenu *menu)
@@ -78,21 +77,23 @@ void SaveButton::paintEvent(QPaintEvent *event)
         painter.setBrush(deepenColor);
         painter.setPen(Qt::NoPen);
         
-        if (currentMouseX <= kSaveAreaWidth) {
-            QRectF leftRect(0, 0, kSaveAreaWidth + kCornerRadius, rect.height());
-            QPainterPath leftPath;
-            leftPath.addRoundedRect(leftRect, kCornerRadius, kCornerRadius);
-            
-            painter.setClipRect(0, 0, kSaveAreaWidth, rect.height());
-            painter.fillPath(leftPath, deepenColor);
-            painter.setClipping(false);
-        } else {
+        bool highlightRightArea = (m_optionsMenu && m_optionsMenu->isVisible()) || (currentMouseX > kSaveAreaWidth);
+        
+        if (highlightRightArea) {
             QRectF rightRect(kSaveAreaWidth - kCornerRadius, 0, kListAreaWidth + kCornerRadius, rect.height());
             QPainterPath rightPath;
             rightPath.addRoundedRect(rightRect, kCornerRadius, kCornerRadius);
             
             painter.setClipRect(kSaveAreaWidth, 0, kListAreaWidth, rect.height());
             painter.fillPath(rightPath, deepenColor);
+            painter.setClipping(false);
+        } else {
+            QRectF leftRect(0, 0, kSaveAreaWidth + kCornerRadius, rect.height());
+            QPainterPath leftPath;
+            leftPath.addRoundedRect(leftRect, kCornerRadius, kCornerRadius);
+            
+            painter.setClipRect(0, 0, kSaveAreaWidth, rect.height());
+            painter.fillPath(leftPath, deepenColor);
             painter.setClipping(false);
         }
     }
@@ -101,7 +102,7 @@ void SaveButton::paintEvent(QPaintEvent *event)
     QRect rect = this->rect();
     
     if (!m_saveIcon.isNull()) {
-        int iconSize = 20;
+        int iconSize = 24;
         int iconX = (kSaveAreaWidth - iconSize) / 2;
         int iconY = (rect.height() - iconSize) / 2;
         QRect iconRect(iconX, iconY, iconSize, iconSize);
@@ -131,7 +132,6 @@ void SaveButton::paintEvent(QPaintEvent *event)
 
 void SaveButton::mousePressEvent(QMouseEvent *event)
 {
-    ToolButton::mousePressEvent(event);
     if (!m_hoverFlag) {
         m_hoverFlag = true;
         update();
@@ -139,28 +139,42 @@ void SaveButton::mousePressEvent(QMouseEvent *event)
     
     if (event->button() == Qt::LeftButton) {
 #if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
-        m_saveClicked = event->position().x() <= kSaveAreaWidth;
-        m_listClicked = event->position().x() > kSaveAreaWidth;
+        const bool clickOnList = event->position().x() > kSaveAreaWidth;
 #else
-        m_saveClicked = event->x() <= kSaveAreaWidth;
-        m_listClicked = event->x() > kSaveAreaWidth;
+        const bool clickOnList = event->x() > kSaveAreaWidth;
 #endif
-        
-        if (m_saveClicked) {
-            emit saveAction();
-            emit clicked(); 
-        } else if (m_listClicked && m_optionsMenu) {
-            emit expandSaveOption(true);
-            // 显示保存菜单
-            QPoint menuPos = mapToGlobal(rect().bottomLeft());
-            m_optionsMenu->exec(menuPos);
+        if (clickOnList) {
+            m_saveClicked = false;
+            m_listClicked = true;
+            update();
+            event->accept();
+            return;
         }
+        m_saveClicked = true;
+        m_listClicked = false;
         update();
     }
+    ToolButton::mousePressEvent(event);
 }
 
 void SaveButton::mouseReleaseEvent(QMouseEvent *event)
 {
+    if (event->button() == Qt::LeftButton) {
+        if (m_listClicked && m_optionsMenu) {
+            emit expandSaveOption(true);
+            QPoint menuPos = mapToGlobal(rect().bottomLeft());
+            m_optionsMenu->popup(menuPos);
+            m_saveClicked = false;
+            m_listClicked = false;
+            update();
+            event->accept();
+            return;
+        } else if (m_saveClicked) {
+            emit saveAction();
+            emit clicked(); 
+        }
+    }
+    
     ToolButton::mouseReleaseEvent(event);
     m_saveClicked = false;
     m_listClicked = false;

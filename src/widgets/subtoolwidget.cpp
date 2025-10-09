@@ -150,6 +150,10 @@ void SubToolWidget::initRecordLabel()
     installTipHint(m_optionButton, tr("Settings (F3)"));
     btnList.append(m_optionButton);
 
+    // 创建录屏分割线
+    m_recordSeperator = new DVerticalLine(this);
+    m_recordSeperator->setFixedSize(QSize(3, 26));
+
     QHBoxLayout *rectLayout = new QHBoxLayout();
     rectLayout->setSizeConstraint(QLayout::SetMinimumSize);
     rectLayout->setContentsMargins(0, 0, 0, 0);
@@ -159,9 +163,11 @@ void SubToolWidget::initRecordLabel()
     for (int i = 0; i < btnList.length(); i++) {
         rectLayout->addWidget(btnList[i]);
         rectLayout->setAlignment(btnList[i], Qt::AlignVCenter);
-        if (btnList[i] == m_shotButton) {
-            qCDebug(dsrApp) << "Adding spacing after shot button.";
-            rectLayout->addSpacing(10);
+        
+        if (btnList[i] == m_optionButton) {
+            rectLayout->addSpacing(6);
+            rectLayout->addWidget(m_recordSeperator);
+            rectLayout->setAlignment(m_recordSeperator, Qt::AlignVCenter);
         }
     }
     m_recordSubTool->setLayout(rectLayout);
@@ -712,8 +718,8 @@ void SubToolWidget::initShotLabel()
 
     m_saveSeperatorBeg = new DVerticalLine(this);
     m_saveSeperatorEnd = new DVerticalLine(this);
-    m_saveSeperatorBeg->setFixedSize(QSize(3, TOOL_BUTTON_SIZE.height()));
-    m_saveSeperatorEnd->setFixedSize(QSize(3, TOOL_BUTTON_SIZE.height()));
+    m_saveSeperatorBeg->setFixedSize(QSize(3, 26));
+    m_saveSeperatorEnd->setFixedSize(QSize(3, 26));
 
     QHBoxLayout *rectLayout = new QHBoxLayout();
     rectLayout->setSizeConstraint(QLayout::SetMinimumSize);
@@ -726,7 +732,7 @@ void SubToolWidget::initShotLabel()
         if (btnList[i] == m_shotOptionButton) {
             rectLayout->addWidget(m_saveSeperatorBeg);
             rectLayout->setAlignment(m_saveSeperatorBeg, Qt::AlignVCenter);
-            rectLayout->addSpacing(5); // 添加一些间距
+            rectLayout->addSpacing(6); // 添加一些间距
         }
         
         rectLayout->addWidget(btnList[i]);
@@ -734,14 +740,14 @@ void SubToolWidget::initShotLabel()
         
         // 在m_saveLocalDirButton之后添加第二个分割线
         if (btnList[i] == m_saveLocalDirButton) {
-            rectLayout->addSpacing(5); // 添加一些间距
+            rectLayout->addSpacing(6); // 添加一些间距
             rectLayout->addWidget(m_saveSeperatorEnd);
             rectLayout->setAlignment(m_saveSeperatorEnd, Qt::AlignVCenter);
         }
         
         // 原有的条件保持不变
         if (btnList[i] == m_recorderButton) {
-            rectLayout->addSpacing(10);
+            rectLayout->addSpacing(6);
         }
     }
     m_shotSubTool->setLayout(rectLayout);
@@ -1276,6 +1282,21 @@ void SubToolWidget::initShotOption()
     if (border_index != ImageBorderHelper::Nothing) {
         noBorderAction->setChecked(false);
         ImageBorderHelper::instance()->setBorderTypeDetail(border_index);
+        
+        ImageBorderHelper::BorderType borderType = static_cast<ImageBorderHelper::BorderType>(border_index >> 8);
+        switch (borderType) {
+        case ImageBorderHelper::BorderType::External:
+            externalBorderMenu->menuAction()->setChecked(true);
+            break;
+        case ImageBorderHelper::BorderType::Prototype:
+            borderPrototypeMenu->menuAction()->setChecked(true);
+            break;
+        case ImageBorderHelper::BorderType::Projection:
+            borderProjectionMenu->menuAction()->setChecked(true);
+            break;
+        default:
+            break;
+        }
     }
 
     connect(m_saveCursorAction, &QAction::triggered, [ = ] {
@@ -1384,10 +1405,7 @@ void SubToolWidget::initScrollLabel()
 
     m_saveLocalDirButton = new SaveButton();
     m_saveLocalDirButton->setCheckable(false);
-    // m_saveLocalDirButton->setIconSize(TOOL_ICON_SIZE);
-    // 根据当前设置获取保存路径，并在悬浮提示中显示
     updateSaveButtonTip();
-    // 动态悬停提示：根据当前保存选项与鼠标区域显示不同文案（滚动截图）
     m_saveLocalDirButton->installEventFilter(this);
     m_saveLocalDirButton->setIcon(QIcon::fromTheme("save"));
     Utils::setAccessibility(m_saveLocalDirButton, AC_SUBTOOLWIDGET_SAVETOLOCAL_BUTTON);
@@ -1403,8 +1421,8 @@ void SubToolWidget::initScrollLabel()
 
     m_saveSeperatorBeg = new DVerticalLine(this);
     m_saveSeperatorEnd = new DVerticalLine(this);
-    m_saveSeperatorBeg->setFixedSize(QSize(3, TOOL_BUTTON_SIZE.height()));
-    m_saveSeperatorEnd->setFixedSize(QSize(3, TOOL_BUTTON_SIZE.height()));
+    m_saveSeperatorBeg->setFixedSize(QSize(3, 26));
+    m_saveSeperatorEnd->setFixedSize(QSize(3, 26));
     
     QHBoxLayout *rectLayout = new QHBoxLayout();
     rectLayout->setSizeConstraint(QLayout::SetMinimumSize);
@@ -1413,19 +1431,18 @@ void SubToolWidget::initScrollLabel()
     rectLayout->setAlignment(Qt::AlignVCenter);
     rectLayout->addSpacing(10);
     for (int i = 0; i < btnList.length(); i++) {
-          // 在m_shotOptionButton之前添加第一个分割线
         if (btnList[i] == m_scrollOptionButton) {
+            rectLayout->addSpacing(6);
             rectLayout->addWidget(m_saveSeperatorBeg);
             rectLayout->setAlignment(m_saveSeperatorBeg, Qt::AlignVCenter);
-            rectLayout->addSpacing(5); // 添加一些间距
+            rectLayout->addSpacing(6);
         }
         
         rectLayout->addWidget(btnList[i]);
         rectLayout->setAlignment(btnList[i], Qt::AlignVCenter);
         
-        // 在m_saveLocalDirButton之后添加第二个分割线
         if (btnList[i] == m_saveLocalDirButton) {
-            rectLayout->addSpacing(5); // 添加一些间距
+            rectLayout->addSpacing(6);
             rectLayout->addWidget(m_saveSeperatorEnd);
             rectLayout->setAlignment(m_saveSeperatorEnd, Qt::AlignVCenter);
         }
@@ -1567,6 +1584,7 @@ void SubToolWidget::initScrollLabel()
     t_formatGroup->addAction(bmpAction);
 
     m_scrollOptionButton->setMenu(m_scrollOptionMenu);
+    m_scrollOptionButton->setPopupMode(QToolButton::InstantPopup);
     // // 判断上次是选中的指定位置还是每次都询问
     // SaveWays t_saveWays = ConfigSettings::instance()->getValue("shot", "save_ways").value<SaveWays>();
     // qWarning() << "t_saveWays: "<<t_saveWays;
@@ -1719,6 +1737,19 @@ void SubToolWidget::initScrollLabel()
     //     updateSaveButtonTip();
     // });
 
+    // 读取配置并设置默认选中的格式
+    int t_pictureFormat = ConfigSettings::instance()->getValue("shot", "format").toInt();
+    switch (t_pictureFormat) {
+    case 1:
+        jpgAction->setChecked(true);
+        break;
+    case 2:
+        bmpAction->setChecked(true);
+        break;
+    default:
+        pngAction->setChecked(true);
+    }
+
     // 格式选项的信号连接
     connect(t_formatGroup, QOverload<QAction *>::of(&QActionGroup::triggered),
     [ = ](QAction * t_act) {
@@ -1810,37 +1841,28 @@ bool SubToolWidget::eventFilter(QObject *watched, QEvent *event)
     // 为保存按钮提供动态 ToolTip 文案
     if (watched == m_saveLocalDirButton) {
         if (event->type() == QEvent::ToolTip) {
-            const int kSaveAreaWidth = 30; // 与 SaveButton 左侧保存区域宽度一致
-            QHelpEvent *he = static_cast<QHelpEvent *>(event);
-            const bool hoverLeftArea = he->pos().x() <= kSaveAreaWidth;
-
             int saveWays = ConfigSettings::instance()->getValue("shot", "save_ways").toInt(); // 0: Ask, 1: Specify
             bool isChangeOnSave = ConfigSettings::instance()->getValue("shot", "save_dir_change").toBool();
             QString savedPath = ConfigSettings::instance()->getValue("shot", "save_dir").toString();
             const bool hasHistoryPath = !savedPath.isEmpty() && QFileInfo::exists(savedPath);
 
             QString tipText;
-            if (saveWays == 0) { // 每次询问
-                if (hoverLeftArea) {
-                    tipText = tr("Save to local");
-                } else {
+            if (saveWays == 0) { 
+                tipText = tr("Save to local");
+            } else {
+                if (isChangeOnSave) {
                     tipText = hasHistoryPath ? tr("Update the location when saving")
                                              : tr("Select a location when saving");
-                }
-            } else { // 指定位置
-                if (isChangeOnSave) {
-                    tipText = tr("Select a location when saving");
                 } else {
-                    if (hoverLeftArea) {
-                        tipText = hasHistoryPath ? tr("Save to %1").arg(savedPath)
-                                                 : tr("Save to local");
-                    } else {
-                        tipText = tr("Update the location when saving");
-                    }
+                    // 菜单选中具体的自定义路径 → 显示"保存到[路径]"
+                    tipText = hasHistoryPath ? tr("Save to %1").arg(savedPath)
+                                             : tr("Save to local");
                 }
             }
 
-            QToolTip::showText(he->globalPos(), tipText, m_saveLocalDirButton);
+            if (m_saveLocalDirButton)
+                installTipHint(m_saveLocalDirButton, tipText);
+
             return true;
         }
     }
@@ -1856,6 +1878,7 @@ bool SubToolWidget::eventFilter(QObject *watched, QEvent *event)
                     return QStackedWidget::eventFilter(watched, event);
                 }
                 action->activate(QAction::Trigger);
+                static_cast<DMenu *>(watched)->hide();
                 return true;
             }
         }

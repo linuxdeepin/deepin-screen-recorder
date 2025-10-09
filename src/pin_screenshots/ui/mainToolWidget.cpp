@@ -37,6 +37,9 @@ void MainToolWidget::initMainToolWidget()
     connect(m_saveButton, SIGNAL(clicked()), this, SIGNAL(signalSaveButtonClicked()));
     qCDebug(dsrApp) << "Save button connected.";
 
+    m_closeButton->setToolTip(tr("Close (Esc)"));
+    m_saveButton->setToolTip(tr("Copy to clipboard (Enter)"));
+
     QHBoxLayout *hLayout = new QHBoxLayout(this);
     qCDebug(dsrApp) << "Horizontal layout created.";
     hLayout->setContentsMargins(0, 0, 0, 0);

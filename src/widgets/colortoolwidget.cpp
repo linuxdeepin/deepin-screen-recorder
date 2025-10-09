@@ -81,18 +81,17 @@ void ColorToolWidget::initColorLabel()
         //设置按钮图标
         QString iconPath = QString(":/color_pen/%1.svg").arg(m_buttonColors.key(i));
         QIcon icon(iconPath);
-        icon.actualSize(TOOL_ICON_SIZE);
-        if(Utils::pixelRatio != 1){
-            qCDebug(dsrApp) << "Applying stylesheet for scaled icon at index:" << i;
-            //缩放情况下需要通过此方式进行图标加载，否则出现图标被遮挡的情况
-            colorButton->setStyleSheet(QString("QPushButton{image:url(%1);"
-                                               "image-position:center;"
-                                               "padding-left:2.2px;padding-top:2.2px;padding-right:2.2px;padding-bottom:2.2px;}").arg(iconPath));
-        }else{
-            qCDebug(dsrApp) << "Applying icon directly for unscaled icon at index:" << i;
-            colorButton->setIcon(icon);
-            colorButton->setIconSize(TOOL_ICON_SIZE-QSize(2,2));
+        colorButton->setIcon(icon);
+        
+        QSize adjustedIconSize;
+        if (Utils::pixelRatio > 1.0) {
+            adjustedIconSize = QSize(static_cast<int>(TOOL_ICON_SIZE.width() * 0.8), 
+                                   static_cast<int>(TOOL_ICON_SIZE.height() * 0.8));
+        } else {
+            adjustedIconSize = TOOL_ICON_SIZE - QSize(2, 2);
         }
+        colorButton->setIconSize(adjustedIconSize);
+        qCWarning(dsrApp) << "Set icon size to:" << adjustedIconSize;
         m_colorButtonGroup->addButton(colorButton);
         m_colorButtonGroup->setId(colorButton, m_buttonColors.value(i));
         if (i < m_buttonColors.keyCount() / 2) {

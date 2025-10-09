@@ -222,6 +222,7 @@ private:
     MainWindow *m_pMainWindow = nullptr;
     DVerticalLine* m_saveSeperatorBeg= nullptr;
     DVerticalLine* m_saveSeperatorEnd= nullptr;
+    DVerticalLine* m_recordSeperator= nullptr;
     QFont titleActionFont;
 };
 

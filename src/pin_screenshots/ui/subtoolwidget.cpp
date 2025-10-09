@@ -119,6 +119,7 @@ void SubToolWidget::initShotLable()
     m_optionMenu->addAction(bmpAction);
     
     m_pinOptionButton->setMenu(m_optionMenu);
+    m_pinOptionButton->setPopupMode(QToolButton::InstantPopup);
     qCDebug(dsrApp) << "Option menu structure completed";
 
     connect(t_formatGroup, QOverload<QAction *>::of(&QActionGroup::triggered),
@@ -139,8 +140,8 @@ void SubToolWidget::initShotLable()
 
     m_saveSeperatorBeg = new DVerticalLine(this);
     m_saveSeperatorEnd = new DVerticalLine(this);
-    m_saveSeperatorBeg->setFixedSize(QSize(3, 30));
-    m_saveSeperatorEnd->setFixedSize(QSize(3, 30));
+    m_saveSeperatorBeg->setFixedSize(QSize(3, 26));
+    m_saveSeperatorEnd->setFixedSize(QSize(3, 26));
 
     //工具栏布局
     QHBoxLayout *hLayout = new QHBoxLayout();
@@ -282,13 +283,8 @@ void SubToolWidget::updateOptionChecked()
 
 bool SubToolWidget::eventFilter(QObject *watched, QEvent *event)
 {
-    // 根据保存按钮的不同区域与当前保存选项，动态显示不同的悬停提示
     if (watched == m_saveLocalDirButton) {
         if (event->type() == QEvent::ToolTip) {
-            const int kSaveAreaWidth = 30; // 与 SaveButton 左侧保存区域宽度一致
-            QHelpEvent *he = static_cast<QHelpEvent *>(event);
-            const bool hoverLeftArea = he->pos().x() <= kSaveAreaWidth;
-
             QPair<int, int> saveInfo = Settings::instance()->getSaveOption();
             const QString specialPath = Settings::instance()->getSavePath();
             const bool hasHistoryPath = !specialPath.isEmpty() && QFileInfo::exists(specialPath);
@@ -296,35 +292,28 @@ bool SubToolWidget::eventFilter(QObject *watched, QEvent *event)
             QString tipText;
             switch (saveInfo.first) {
             case ASK:
-                if (hoverLeftArea) {
-                    tipText = tr("Save to local");
-                } else {
-                    tipText = hasHistoryPath ? tr("Update the location when saving")
-                                             : tr("Select a location when saving");
-                }
+                tipText = tr("Save to local");
                 break;
             case FOLDER:
-                if (hoverLeftArea) {
-                    if (hasHistoryPath) {
-                        tipText = tr("Save to %1").arg(specialPath);
-                    } else {
-                        tipText = tr("Save to local");
-                    }
+                if (hasHistoryPath) {
+                    tipText = tr("Save to %1").arg(specialPath);
                 } else {
-                    tipText = tr("Update the location when saving");
+                    tipText = tr("Save to local");
                 }
                 break;
             case FOLDER_CHANGE:
-                // 未选择历史目录时，需要在保存时选择
-                tipText = tr("Select a location when saving");
+                // 菜单选中"保存时设置位置" → 根据是否有历史路径决定文案
+                tipText = hasHistoryPath ? tr("Update the location when saving")
+                                         : tr("Select a location when saving");
                 break;
             default:
                 tipText = tr("Save to local");
                 break;
             }
-
+            QHelpEvent *he = static_cast<QHelpEvent *>(event);
             QToolTip::showText(he->globalPos(), tipText, m_saveLocalDirButton);
-            return true; // 吃掉该事件，避免默认 tooltip 干扰
+
+            return true;
         }
     }
 
@@ -333,7 +322,6 @@ bool SubToolWidget::eventFilter(QObject *watched, QEvent *event)
             QMouseEvent *mouseEvent = static_cast<QMouseEvent *>(event);
             QAction *action = static_cast<DMenu *>(watched)->actionAt(mouseEvent->pos());
             if (action) {
-                // 特别处理"指定位置"菜单项
                 if (action->menu() && action->menu()->title() == tr("Specified Location")) {
                     // 检查子菜单中是否有选中项
                     bool hasCheckedChild = false;
@@ -362,27 +350,22 @@ bool SubToolWidget::eventFilter(QObject *watched, QEvent *event)
                         }
                     }
                     
-                    // 只有当有子项被选中时，才能选中指定位置
                     if (hasCheckedChild) {
                         action->setChecked(true);
                         m_askEveryTimeAction->setChecked(false);
                         
-                        // 更新保存设置
                         Settings::instance()->setSaveOption(m_SaveInfo);
                         updateSaveButtonTip();
                     } else {
-                        // 如果没有子项被选中，不允许选中指定位置，保持当前状态
                         action->setChecked(false);
-                        // 不改变当前的选中状态
-                        return true; // 阻止事件传播
+                        return true;
                     }
                     
-                    // 允许事件继续传播，以便菜单能够正常展开
                     return false;
                 }
                 
-                // 对其他菜单项，直接触发其 triggered 信号
                 action->activate(QAction::Trigger);
+                static_cast<DMenu *>(watched)->hide();
                 return true;
             }
         }

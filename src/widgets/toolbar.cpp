@@ -92,7 +92,7 @@ ToolBarWidget::ToolBarWidget(MainWindow *pMainwindow, DWidget *parent, bool hide
     hLayout->setContentsMargins(0, 0, 0, 0);
     hLayout->setSpacing(0);
     hLayout->addWidget(m_subTool, 0, Qt::AlignCenter);
-    hLayout->addSpacing(10);
+    hLayout->addSpacing(6);
     hLayout->addWidget(m_closeButton, 0,  Qt::AlignCenter);
     hLayout->addWidget(m_confirmButton, 0,  Qt::AlignCenter);
     hLayout->addSpacing(10);

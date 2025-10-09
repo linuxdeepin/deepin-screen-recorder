@@ -29,6 +29,7 @@ protected:
     void enterEvent(QEnterEvent *e) override;
     void leaveEvent(QEvent *e) override;
     void mousePressEvent(QMouseEvent *e) override;
+    void mouseReleaseEvent(QMouseEvent *e) override;
 signals:
     /**
      * @brief isInButton 是否在button内部？
@@ -41,5 +42,6 @@ private:
     bool m_isUndoButton = false;
     bool m_isMousePress = false;
     QCursor *m_lastCursorShape = nullptr;
+    bool m_menuActive = false;
 };
 #endif // TOOLBUTTON_H
