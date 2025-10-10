@@ -1027,14 +1027,14 @@ void *capture_loop(void *data)
         my_video_begin_time = v4l2core_time_get_timestamp(); /*timer count*/
         /*if are not saving video start it*/
         if(!get_encoder_status())
-            start_encoder_thread();
+            start_encoder_thread(data);
     }
 
     /*add a photo capture timer*/
     if(my_options->photo_timer > 0)
     {
         my_photo_timer = NSEC_PER_SEC * my_options->photo_timer;
-        my_last_photo_time = v4l2core_time_get_timestamp(my_vd); /*timer count*/
+        my_last_photo_time = v4l2core_time_get_timestamp(); /*timer count*/
     }
 
     if(my_options->photo_npics > 0)
