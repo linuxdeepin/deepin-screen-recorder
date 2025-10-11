@@ -36,6 +36,14 @@
 #include "encoder.h"
 #include "load_libs.h"
 
+#ifndef FF_PROFILE_UNKNOWN
+#define FF_PROFILE_UNKNOWN AV_PROFILE_UNKNOWN
+#define FF_PROFILE_AAC_MAIN AV_PROFILE_AAC_MAIN
+#define FF_PROFILE_AAC_LOW AV_PROFILE_AAC_LOW
+#define FF_PROFILE_AAC_SSR AV_PROFILE_AAC_SSR
+#define FF_PROFILE_AAC_LTP AV_PROFILE_AAC_LTP
+#endif
+
 extern int verbosity;
 
 /* AAC object types index: MAIN = 1; LOW = 2; SSR = 3; LTP = 4*/
