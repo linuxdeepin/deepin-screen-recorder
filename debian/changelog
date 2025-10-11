@@ -1,3 +1,9 @@
+deepin-screen-recorder (6.6.9) unstable; urgency=medium
+
+  * chore: Update deepin-screen-recorder to version 6.6.8 with improved button functionality
+
+ -- dengzhongyuan <dengzhongyuan@uniontech.com>  Sat, 11 Oct 2025 12:35:20 +0800
+
 deepin-screen-recorder (6.6.8) unstable; urgency=medium
 
   * feat: Improve SaveButton and ToolButton functionality and visual feedback

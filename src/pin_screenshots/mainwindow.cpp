@@ -159,7 +159,7 @@ bool MainWindow::openImageAndName(const QImage &image, const QString &name, cons
 void MainWindow::onOpenOCR()
 {
     qCDebug(dsrApp) << "onOpenOCR called.";
-    saveImg();
+    saveToClipboard();
     qCDebug(dsrApp) << "Image saved before OCR.";
     // 测试
     if (m_ocrInterface == nullptr) {
