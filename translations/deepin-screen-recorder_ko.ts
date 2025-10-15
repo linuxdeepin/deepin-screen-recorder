@@ -525,8 +525,8 @@ Press and hold Shift to draw a straight line</source>
         <translation>설정 (F3)</translation>
     </message>
     <message>
-        <source>Format:</source>
-        <translation>형식:</translation>
+        <source>Format</source>
+        <translation>형식</translation>
     </message>
     <message>
         <source>GIF</source>
@@ -545,8 +545,8 @@ Press and hold Shift to draw a straight line</source>
         <translation>webm</translation>
     </message>
     <message>
-        <source>FPS:</source>
-        <translation>FPS:</translation>
+        <source>FPS</source>
+        <translation>FPS</translation>
     </message>
     <message>
         <source>5 fps</source>

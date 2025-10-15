@@ -522,8 +522,8 @@ Stiskněte a podržte klávesu Shift pro kreslení přímky</translation>
         <translation>Nastavení (F3)</translation>
     </message>
     <message>
-        <source>Format:</source>
-        <translation>Formát:</translation>
+        <source>Format</source>
+        <translation>Formát</translation>
     </message>
     <message>
         <source>GIF</source>
@@ -542,8 +542,8 @@ Stiskněte a podržte klávesu Shift pro kreslení přímky</translation>
         <translation>webm</translation>
     </message>
     <message>
-        <source>FPS:</source>
-        <translation>SN/S:</translation>
+        <source>FPS</source>
+        <translation>SN/S</translation>
     </message>
     <message>
         <source>5 fps</source>

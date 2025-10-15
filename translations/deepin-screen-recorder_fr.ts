@@ -522,8 +522,8 @@ Maintenir la touche Maj enfoncée pour dessiner une ligne</translation>
         <translation>Paramètres (F3)</translation>
     </message>
     <message>
-        <source>Format:</source>
-        <translation>Format :</translation>
+        <source>Format</source>
+        <translation>Format</translation>
     </message>
     <message>
         <source>GIF</source>
@@ -543,7 +543,7 @@ Maintenir la touche Maj enfoncée pour dessiner une ligne</translation>
     </message>
     <message>
         <source>FPS:</source>
-        <translation>FPS :</translation>
+        <translation>FPS</translation>
     </message>
     <message>
         <source>5 fps</source>

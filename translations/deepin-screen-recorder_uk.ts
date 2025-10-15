@@ -522,8 +522,8 @@ Press and hold Shift to draw a straight line</source>
         <translation>Параметри (F3)</translation>
     </message>
     <message>
-        <source>Format:</source>
-        <translation>Формат:</translation>
+        <source>Format</source>
+        <translation>Формат</translation>
     </message>
     <message>
         <source>GIF</source>
@@ -542,8 +542,8 @@ Press and hold Shift to draw a straight line</source>
         <translation>webm</translation>
     </message>
     <message>
-        <source>FPS:</source>
-        <translation>Частота кадрів:</translation>
+        <source>FPS</source>
+        <translation>Частота кадрів</translation>
     </message>
     <message>
         <source>5 fps</source>

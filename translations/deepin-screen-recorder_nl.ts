@@ -522,8 +522,8 @@ Houd Shift ingedrukt om een rechte lijn te trekken</translation>
         <translation>Instellingen (F3)</translation>
     </message>
     <message>
-        <source>Format:</source>
-        <translation>Formaat:</translation>
+        <source>Format</source>
+        <translation>Formaat</translation>
     </message>
     <message>
         <source>GIF</source>
@@ -542,8 +542,8 @@ Houd Shift ingedrukt om een rechte lijn te trekken</translation>
         <translation>webm</translation>
     </message>
     <message>
-        <source>FPS:</source>
-        <translation>FPS:</translation>
+        <source>FPS</source>
+        <translation>FPS</translation>
     </message>
     <message>
         <source>5 fps</source>

@@ -522,7 +522,7 @@ Shiftམནན་ནས་དྲང་ཐིག་འབྲི་ཐུབ།</t
         <translation>སྒྲིག་བཀོད་(F3)</translation>
     </message>
     <message>
-        <source>Format:</source>
+        <source>Format</source>
         <translation>རྣམ་བཞག</translation>
     </message>
     <message>
@@ -542,7 +542,7 @@ Shiftམནན་ནས་དྲང་ཐིག་འབྲི་ཐུབ།</t
         <translation>webm</translation>
     </message>
     <message>
-        <source>FPS:</source>
+        <source>FPS</source>
         <translation>ལྡེབ་གྲངས།</translation>
     </message>
     <message>

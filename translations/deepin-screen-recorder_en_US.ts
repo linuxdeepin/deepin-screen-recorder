@@ -558,8 +558,8 @@ Press and hold Shift to draw a straight line</translation>
         <translation>Settings (F3)</translation>
     </message>
     <message>
-        <source>Format:</source>
-        <translation>Format:</translation>
+        <source>Format</source>
+        <translation>Format</translation>
     </message>
     <message>
         <source>GIF</source>
@@ -578,8 +578,8 @@ Press and hold Shift to draw a straight line</translation>
         <translation>webm</translation>
     </message>
     <message>
-        <source>FPS:</source>
-        <translation>FPS:</translation>
+        <source>FPS</source>
+        <translation>FPS</translation>
     </message>
     <message>
         <source>5 fps</source>

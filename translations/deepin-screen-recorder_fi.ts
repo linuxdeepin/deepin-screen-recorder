@@ -522,8 +522,8 @@ Vedä suora viiva pitämällä Shift-painettuna</translation>
         <translation>Asetukset (F3)</translation>
     </message>
     <message>
-        <source>Format:</source>
-        <translation>Muoto:</translation>
+        <source>Format</source>
+        <translation>Muoto</translation>
     </message>
     <message>
         <source>GIF</source>
@@ -542,8 +542,8 @@ Vedä suora viiva pitämällä Shift-painettuna</translation>
         <translation>webm</translation>
     </message>
     <message>
-        <source>FPS:</source>
-        <translation>FPS:</translation>
+        <source>FPS</source>
+        <translation>FPS</translation>
     </message>
     <message>
         <source>5 fps</source>

@@ -522,8 +522,8 @@ Umschalttaste gedrückt halten, um eine gerade Linie zu zeichnen</translation>
         <translation>Einstellungen (F3)</translation>
     </message>
     <message>
-        <source>Format:</source>
-        <translation>Format:</translation>
+        <source>Format</source>
+        <translation>Format</translation>
     </message>
     <message>
         <source>GIF</source>
@@ -542,8 +542,8 @@ Umschalttaste gedrückt halten, um eine gerade Linie zu zeichnen</translation>
         <translation>webm</translation>
     </message>
     <message>
-        <source>FPS:</source>
-        <translation>BpS:</translation>
+        <source>FPS</source>
+        <translation>BpS</translation>
     </message>
     <message>
         <source>5 fps</source>

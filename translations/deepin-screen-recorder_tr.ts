@@ -522,8 +522,8 @@ Düz bir çizgi çizmek için Shift tuşunu basılı tutun</translation>
         <translation>Ayarlar (F3)</translation>
     </message>
     <message>
-        <source>Format:</source>
-        <translation>Biçim:</translation>
+        <source>Format</source>
+        <translation>Biçim</translation>
     </message>
     <message>
         <source>GIF</source>
@@ -542,8 +542,8 @@ Düz bir çizgi çizmek için Shift tuşunu basılı tutun</translation>
         <translation>webm</translation>
     </message>
     <message>
-        <source>FPS:</source>
-        <translation>FPS:</translation>
+        <source>FPS</source>
+        <translation>FPS</translation>
     </message>
     <message>
         <source>5 fps</source>

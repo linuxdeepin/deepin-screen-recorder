@@ -522,8 +522,8 @@ Egyenes vonal rajzolásához tartsa lenyomva a Shift billentyűt</translation>
         <translation>Beállítások (F3)</translation>
     </message>
     <message>
-        <source>Format:</source>
-        <translation>Formátum:</translation>
+        <source>Format</source>
+        <translation>Formátum</translation>
     </message>
     <message>
         <source>GIF</source>
@@ -542,8 +542,8 @@ Egyenes vonal rajzolásához tartsa lenyomva a Shift billentyűt</translation>
         <translation>webm</translation>
     </message>
     <message>
-        <source>FPS:</source>
-        <translation>FPS:</translation>
+        <source>FPS</source>
+        <translation>FPS</translation>
     </message>
     <message>
         <source>5 fps</source>

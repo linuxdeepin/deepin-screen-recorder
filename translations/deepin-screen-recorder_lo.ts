@@ -555,8 +555,8 @@ Press and hold Shift to draw a straight line</source>
         <translation>ການຕັ້ງຄ່າ (F3)</translation>
     </message>
     <message>
-        <source>Format:</source>
-        <translation>ຮູບແບບ:</translation>
+        <source>Format</source>
+        <translation>ຮູບແບບ</translation>
     </message>
     <message>
         <source>GIF</source>
@@ -575,8 +575,8 @@ Press and hold Shift to draw a straight line</source>
         <translation>webm</translation>
     </message>
     <message>
-        <source>FPS:</source>
-        <translation>FPS:</translation>
+        <source>FPS</source>
+        <translation>FPS</translation>
     </message>
     <message>
         <source>5 fps</source>

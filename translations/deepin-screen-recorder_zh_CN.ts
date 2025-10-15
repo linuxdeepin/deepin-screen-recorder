@@ -522,8 +522,8 @@ Press and hold Shift to draw a straight line</source>
         <translation>设置 F3</translation>
     </message>
     <message>
-        <source>Format:</source>
-        <translation>格式：</translation>
+        <source>Format</source>
+        <translation>格式</translation>
     </message>
     <message>
         <source>GIF</source>
@@ -542,8 +542,8 @@ Press and hold Shift to draw a straight line</source>
         <translation>webm</translation>
     </message>
     <message>
-        <source>FPS:</source>
-        <translation>帧数：</translation>
+        <source>FPS</source>
+        <translation>帧数</translation>
     </message>
     <message>
         <source>5 fps</source>

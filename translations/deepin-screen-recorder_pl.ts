@@ -522,8 +522,8 @@ Przytrzymaj Shift, aby rysować prostą linię</translation>
         <translation>Ustawienia (F3)</translation>
     </message>
     <message>
-        <source>Format:</source>
-        <translation>Format:</translation>
+        <source>Format</source>
+        <translation>Format</translation>
     </message>
     <message>
         <source>GIF</source>
@@ -542,8 +542,8 @@ Przytrzymaj Shift, aby rysować prostą linię</translation>
         <translation>webm</translation>
     </message>
     <message>
-        <source>FPS:</source>
-        <translation>FPS:</translation>
+        <source>FPS</source>
+        <translation>FPS</translation>
     </message>
     <message>
         <source>5 fps</source>

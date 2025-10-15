@@ -522,8 +522,8 @@ Mantenga presionada la tecla Mayús para dibujar una línea recta</translation>
         <translation>Configuración (F3)</translation>
     </message>
     <message>
-        <source>Format:</source>
-        <translation>Formato:</translation>
+        <source>Format</source>
+        <translation>Formato</translation>
     </message>
     <message>
         <source>GIF</source>
@@ -542,8 +542,8 @@ Mantenga presionada la tecla Mayús para dibujar una línea recta</translation>
         <translation>webm</translation>
     </message>
     <message>
-        <source>FPS:</source>
-        <translation>FPS:</translation>
+        <source>FPS</source>
+        <translation>FPS</translation>
     </message>
     <message>
         <source>5 fps</source>

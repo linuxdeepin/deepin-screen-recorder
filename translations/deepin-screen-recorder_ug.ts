@@ -521,8 +521,8 @@ Shift نى بېسىپ تۇرسىڭىز تۈز سىزىق سىزغىلى بولى
         <translation>تەڭشەك (F3)</translation>
     </message>
     <message>
-        <source>Format:</source>
-        <translation>فورماتى:</translation>
+        <source>Format</source>
+        <translation>فورماتى</translation>
     </message>
     <message>
         <source>GIF</source>
@@ -541,8 +541,8 @@ Shift نى بېسىپ تۇرسىڭىز تۈز سىزىق سىزغىلى بولى
         <translation>webm</translation>
     </message>
     <message>
-        <source>FPS:</source>
-        <translation>كاندۇك سانى:</translation>
+        <source>FPS</source>
+        <translation>كاندۇك سانى</translation>
     </message>
     <message>
         <source>5 fps</source>

@@ -522,8 +522,8 @@ Shtypni dhe mbani të shtypur tastin Shift që të vizatohet një vijë e drejt�
         <translation>Rregullime (F3)</translation>
     </message>
     <message>
-        <source>Format:</source>
-        <translation>Format:</translation>
+        <source>Format</source>
+        <translation>Format</translation>
     </message>
     <message>
         <source>GIF</source>
@@ -542,8 +542,8 @@ Shtypni dhe mbani të shtypur tastin Shift që të vizatohet një vijë e drejt�
         <translation>webm</translation>
     </message>
     <message>
-        <source>FPS:</source>
-        <translation>KPS:</translation>
+        <source>FPS</source>
+        <translation>KPS</translation>
     </message>
     <message>
         <source>5 fps</source>

@@ -195,7 +195,7 @@ void SubToolWidget::initRecordOption()
     m_recordOptionMenu->installEventFilter(this);
     DFontSizeManager::instance()->bind(m_recordOptionMenu, DFontSizeManager::T6);
     // 保存格式
-    QAction *formatTitleAction = new QAction(tr("Format:"), m_recordOptionMenu);
+    QAction *formatTitleAction = new QAction(tr("Format"), m_recordOptionMenu);
     formatTitleAction->setFont(titleActionFont);
 
     QAction *gifAction = new QAction(tr("GIF"));
@@ -206,7 +206,7 @@ void SubToolWidget::initRecordOption()
         mp4Action->setText(tr("webm"));
     }
     // 帧数
-    QAction *fpsTitleAction = new QAction(tr("FPS:"), m_recordOptionMenu);
+    QAction *fpsTitleAction = new QAction(tr("FPS"), m_recordOptionMenu);
     fpsTitleAction->setFont(titleActionFont);
     QAction *fps5Action = new QAction(tr("5 fps"), m_recordOptionMenu);
     QAction *fps10Action = new QAction(tr("10 fps"), m_recordOptionMenu);

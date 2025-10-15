@@ -522,7 +522,7 @@ Press and hold Shift to draw a straight line</source>
         <translation>اعدادات</translation>
     </message>
     <message>
-        <source>Format:</source>
+        <source>Format</source>
         <translation>النوع</translation>
     </message>
     <message>
@@ -542,8 +542,8 @@ Press and hold Shift to draw a straight line</source>
         <translation>كاميرا الويب</translation>
     </message>
     <message>
-        <source>FPS:</source>
-        <translation>إطار في الثانية FPS:</translation>
+        <source>FPS</source>
+        <translation>إطار في الثانية FPS</translation>
     </message>
     <message>
         <source>5 fps</source>
