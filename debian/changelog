@@ -1,3 +1,9 @@
+deepin-screen-recorder (6.6.10) unstable; urgency=medium
+
+  * fix: Remove colons from Format and FPS menu labels
+
+ -- dengzhongyuan <dengzhongyuan@uniontech.com>  Thu, 16 Oct 2025 20:13:57 +0800
+
 deepin-screen-recorder (6.6.9) unstable; urgency=medium
 
   * chore: Update deepin-screen-recorder to version 6.6.8 with improved button functionality
