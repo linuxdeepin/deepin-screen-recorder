@@ -118,6 +118,11 @@ RecordProcess::~RecordProcess()
         m_gstRecordX = nullptr;
         delete m_gstRecordX;
     }
+
+    if (m_interpolationProcess) {
+        delete m_interpolationProcess;
+        m_interpolationProcess = nullptr;
+    }
 }
 //设置录屏的基础信息
 void RecordProcess::setRecordInfo(const QRect &recordRect, const QString &filename)
@@ -191,10 +196,155 @@ void RecordProcess::onRecordFinish()
         }
     }
 
+    // Wayland Frame Interpolation
+    if (Utils::waylandFrameInterpolation == 1) {
+        bool isLosslessRecording = settings->value("recordConfig", "lossless_recording").toBool();
+        QString fileExtension = isLosslessRecording ? "mkv" : "mp4";
+
+        if (savePath.endsWith(fileExtension)) {
+            processFrameInterpolation(savePath, m_framerate);
+            return;
+        }
+    }
+
     // Move file to save directory.
     QString newSavePath = QDir(saveDir).filePath(saveBaseName);
     QFile::remove(newSavePath);
     QFile::rename(savePath, newSavePath);
+
+    exitRecord(newSavePath);
+}
+
+void RecordProcess::processFrameInterpolation(const QString &inputPath, int targetFps)
+{
+    qInfo() << __LINE__ << __func__ << "Start frame interpolation";
+
+    if (!QFile::exists(inputPath)) {
+        qWarning() << "Input not:" << inputPath;
+        return;
+    }
+
+    m_interpolationProcess = new QProcess(this);
+
+    connect(m_interpolationProcess, &QProcess::readyReadStandardOutput, this, [this]() {
+        QByteArray output = m_interpolationProcess->readAllStandardOutput();
+        QString outputStr = QString::fromLocal8Bit(output).trimmed();
+        if (!outputStr.isEmpty()) {
+            qDebug() << "std:" << outputStr;
+        }
+    });
+
+    connect(m_interpolationProcess, &QProcess::readyReadStandardError, this, [this]() {
+        QByteArray errorOutput = m_interpolationProcess->readAllStandardError();
+        QString errorStr = QString::fromLocal8Bit(errorOutput).trimmed();
+        if (!errorStr.isEmpty()) {
+            qDebug() << "error:" << errorStr;
+        }
+    });
+
+    connect(m_interpolationProcess, QOverload<QProcess::ProcessError>::of(&QProcess::error),
+    [ = ](QProcess::ProcessError processError) {
+        qWarning() << "FFmpeg frame interpolation error:" << processError;
+        onFrameInterpolationFinish();
+    });
+
+    connect(m_interpolationProcess, QOverload<int, QProcess::ExitStatus>::of(&QProcess::finished),
+    [ = ](int exitCode, QProcess::ExitStatus exitStatus) {
+        qDebug() << "FFmpeg frame interpolation finished, exitCode:" << exitCode << "exitStatus:" << exitStatus;
+
+        QByteArray finalOutput = m_interpolationProcess->readAllStandardOutput();
+        QByteArray finalError = m_interpolationProcess->readAllStandardError();
+        
+        if (!finalOutput.isEmpty()) {
+            qDebug() << "FFmpeg frame interpolation stdout:" << QString::fromLocal8Bit(finalOutput).trimmed();
+        }
+        if (!finalError.isEmpty()) {
+            qDebug() << "FFmpeg frame interpolation stderror" << QString::fromLocal8Bit(finalError).trimmed();
+        }
+        
+        if (exitStatus == QProcess::ExitStatus::NormalExit && exitCode == 0) {
+            onFrameInterpolationFinish();
+        } else {
+            qWarning() << "FFmpeg frame interpolation failed, use sources file";
+            onFrameInterpolationFinish();
+        }
+    });
+
+    QFileInfo fileInfo(inputPath);
+    QString baseName = fileInfo.baseName();
+    QString suffix = fileInfo.suffix();
+
+    QString outputPath = QDir(saveTempDir).filePath(
+        QString("interpolated_%1_%2fps.%3")
+            .arg(baseName)
+            .arg(targetFps)
+            .arg(suffix)
+    );
+
+    QStringList arguments;
+    arguments << "-hide_banner";
+    arguments << "-y";
+    arguments << "-i" << inputPath;
+
+    arguments << "-filter:v" << QString(Utils::ffmpegFilterString).arg(targetFps);
+
+    arguments << "-c:v" << "libx264";
+    arguments << "-preset" << "ultrafast";
+    arguments << "-crf" << "23";    
+    arguments << "-c:a" << "copy";
+    arguments << outputPath;
+    
+    qDebug() << "FFmpeg interpolation cmd: " << "ffmpeg " + arguments.join(" ");
+
+    m_interpolationProcess->start("ffmpeg", arguments);
+    
+    qDebug() << "waiting interpolation finished...";
+    m_interpolationProcess->waitForFinished();
+}
+
+void RecordProcess::onFrameInterpolationFinish()
+{
+    qInfo() << __LINE__ << __func__ << "FFmpeg frame interpolation finish";
+
+    if (m_interpolationProcess) {
+        m_interpolationProcess->deleteLater();
+        m_interpolationProcess = nullptr;
+    }
+
+    QFileInfo originalFileInfo(savePath);
+    QString baseName = originalFileInfo.baseName();
+    QString suffix = originalFileInfo.suffix();
+
+    QString interpolatedTempPath = QDir(saveTempDir).filePath(
+        QString("interpolated_%1_%2fps.%3")
+            .arg(baseName)
+            .arg(m_framerate)
+            .arg(suffix)
+    );
+    
+    QString newSavePath = QDir(saveDir).filePath(saveBaseName);
+
+    if (QFile::exists(interpolatedTempPath)) {
+        qInfo() << "use interpolation file:" << interpolatedTempPath;
+
+        QFile::remove(newSavePath);
+
+        if (QFile::rename(interpolatedTempPath, newSavePath)) {
+            qInfo() << "interpolation file move to last file:" << newSavePath;
+                        QFile::remove(savePath);
+        } else {
+            qWarning() << "interpolation file move failed, use sources";
+            QFile::remove(newSavePath);
+            QFile::rename(savePath, newSavePath);
+
+            QFile::remove(interpolatedTempPath);
+        }
+    } else {
+        qWarning() << "interpolation file move failed, use sources";
+        QFile::remove(newSavePath);
+        QFile::rename(savePath, newSavePath);
+    }
+    
     exitRecord(newSavePath);
 }
 

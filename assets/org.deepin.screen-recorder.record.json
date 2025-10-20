@@ -11,6 +11,26 @@
           "description": "Screen recording for special models, like Huawei",
           "permissions": "readwrite",
           "visibility": "private"
+      },
+      "waylandFrameInterpolation": {
+          "value": 0,
+          "serial": 0,
+          "flags": ["global"],
+          "name": "Wayland frame interpolation",
+          "name[zh_CN]": "Wayland插帧",
+          "description": "Enable frame interpolation for low-fps Wayland recording",
+          "permissions": "readwrite",
+          "visibility": "private"
+      },
+      "ffmpegFilterString": {
+          "value": "fps=%1",
+          "serial": 0,
+          "flags": ["global"],
+          "name": "FFmpeg filter string",
+          "name[zh_CN]": "FFmpeg滤镜字符串",
+          "description": "Custom FFmpeg filter string for video processing, use %1 as placeholder for target FPS",
+          "permissions": "readwrite",
+          "visibility": "private"
       }
   }
 }

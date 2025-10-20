@@ -68,6 +68,17 @@ public:
      */
     static int specialRecordingScreenMode;
     /**
+     * @brief waylandFrameInterpolation
+     * 0:表示不启用Wayland插帧
+     * 1:表示启用Wayland插帧
+     */
+    static int waylandFrameInterpolation;
+    /**
+     * @brief ffmpegFilterString
+     * FFmpeg滤镜字符串，用于视频处理
+     */
+    static QString ffmpegFilterString;
+    /**
      * @brief 不支持截图录屏时的警告
      */
     static void notSupportWarn();

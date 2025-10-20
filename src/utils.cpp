@@ -36,6 +36,8 @@ bool Utils::isRootUser = false;
 bool Utils::isFFmpegEnv = true;
 int Utils::themeType = 0;
 int Utils::specialRecordingScreenMode = -1;
+int Utils::waylandFrameInterpolation = 0;
+QString Utils::ffmpegFilterString = "fps=%1";
 
 QString Utils::getQrcPath(QString imageName)
 {

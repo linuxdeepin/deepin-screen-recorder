@@ -286,8 +286,16 @@ void MainWindow::initAttributes()
 #ifdef DTKCORE_CLASS_DConfigFile
         //wayland下需要查询是否支持特殊录屏模式，例如hw机型
         DConfig *dconfig = DConfig::create("org.deepin.screen-recorder", "org.deepin.screen-recorder.record");
-        if (dconfig && dconfig->isValid() && dconfig->keyList().contains("specialRecordingScreenMode")) {
-            Utils::specialRecordingScreenMode = dconfig->value("specialRecordingScreenMode").toInt();
+        if (dconfig && dconfig->isValid()) {
+            if (dconfig->keyList().contains("specialRecordingScreenMode")) {
+                Utils::specialRecordingScreenMode = dconfig->value("specialRecordingScreenMode").toInt();
+            }
+            if (dconfig->keyList().contains("waylandFrameInterpolation")) {
+                Utils::waylandFrameInterpolation = dconfig->value("waylandFrameInterpolation").toInt();
+            }
+            if (dconfig->keyList().contains("ffmpegFilterString")) {
+                Utils::ffmpegFilterString = dconfig->value("ffmpegFilterString").toString();
+            }
         }
 #endif
         qInfo() << "current specialRecordingScreenMode value is :" << Utils::specialRecordingScreenMode;

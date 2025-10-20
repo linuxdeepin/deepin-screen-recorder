@@ -149,11 +149,28 @@ private slots:
      */
     void onTranscodeFinish();
 
+    /**
+     * @brief onFrameInterpolationFinish:插帧处理完成
+     */
+    void onFrameInterpolationFinish();
+
 private:
+    /**
+     * @brief 对录制的视频进行FFmpeg插帧处理
+     * @param inputPath 输入视频路径
+     * @param targetFps 目标帧率
+     */
+    void processFrameInterpolation(const QString &inputPath, int targetFps);
+
     /**
      * @brief x11录屏进程
      */
     QProcess *m_recorderProcess = nullptr;
+
+    /**
+     * @brief FFmpeg插帧处理进程
+     */
+    QProcess *m_interpolationProcess = nullptr;
 
     /**
      * @brief 录屏的类型：gif mkv mp4
