@@ -2,6 +2,25 @@
 <!DOCTYPE TS>
 <TS version="2.1" language="pl">
 <context>
+    <name>AIAssistantWidget</name>
+    <message>
+        <source>Explain</source>
+        <translation>Wyjaśnij</translation>
+    </message>
+    <message>
+        <source>Translate</source>
+        <translation>Przetłumacz</translation>
+    </message>
+    <message>
+        <source>Ask AI</source>
+        <translation>Zapytaj AI</translation>
+    </message>
+    <message>
+        <source>Summary</source>
+        <translation>Podsumowanie</translation>
+    </message>
+</context>
+<context>
     <name>CountdownTooltip</name>
     <message>
         <source>Click the tray icon 
@@ -650,10 +669,6 @@ Przytrzymaj Shift, aby rysować pionową lub poziomą strzałkę</translation>
         <translation>Zmień ścieżkę zapisu</translation>
     </message>
     <message>
-        <source>Format</source>
-        <translation>Format</translation>
-    </message>
-    <message>
         <source>PNG</source>
         <translation>PNG</translation>
     </message>
@@ -714,6 +729,10 @@ Przytrzymaj Shift, aby narysować kwadraty lub koła.</translation>
     <message>
         <source>Select a location when saving</source>
         <translation>Ustaw ścieżkę zapisu</translation>
+    </message>
+    <message>
+        <source>AI Screenshot (A)</source>
+        <translation>Zrzut ekranu AI (A)</translation>
     </message>
 </context>
 <context>

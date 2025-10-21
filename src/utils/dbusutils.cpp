@@ -3,6 +3,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 
 #include "dbusutils.h"
+#include "log.h"
 #include <QDBusConnection>
 #include <QDBusReply>
 #include <QDBusInterface>
@@ -10,6 +11,7 @@
 #include <QDBusError>
 #include <QDBusMessage>
 #include <QDBusObjectPath>
+#include <QDBusConnectionInterface>
 
 DBusUtils::DBusUtils()
 {
@@ -62,4 +64,36 @@ QVariant DBusUtils::redDBusMethod(const QString &service, const QString &path, c
         QVariant v(0) ;
         return  v;
     }
+}
+
+bool DBusUtils::isAiAssistantAvailable()
+{
+    QDBusConnection bus = QDBusConnection::sessionBus();
+    if (!bus.isConnected()) return false;
+
+
+    QDBusInterface copilot("com.deepin.copilot",
+                               "/com/deepin/copilot",
+                               "com.deepin.copilot",
+                               bus);
+    copilot.call("version");
+
+
+    auto hasMethods = [&](const QString &service) -> bool {
+        QDBusInterface intros(service,
+                              "/com/deepin/copilot",
+                              "org.freedesktop.DBus.Introspectable",
+                              bus);
+        if (!intros.isValid()) return false;
+        QDBusReply<QString> xml = intros.call("Introspect");
+        if (!xml.isValid()) return false;
+        const QString xmlStr = xml.value();
+        return xmlStr.contains("launchAiQuickOCR") && xmlStr.contains("launchChatUploadImage");
+    };
+
+    // 优先检测 deepin.copilot，再回退 iflytek
+    if (hasMethods("com.deepin.copilot")) return true;
+    if (hasMethods("com.iflytek.aiassistant")) return true;
+
+    return false;
 }

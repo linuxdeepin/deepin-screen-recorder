@@ -2,6 +2,25 @@
 <!DOCTYPE TS>
 <TS version="2.1" language="sr">
 <context>
+    <name>AIAssistantWidget</name>
+    <message>
+        <source>Explain</source>
+        <translation>Објасни</translation>
+    </message>
+    <message>
+        <source>Translate</source>
+        <translation>Преведи</translation>
+    </message>
+    <message>
+        <source>Ask AI</source>
+        <translation>Потражи ИИ</translation>
+    </message>
+    <message>
+        <source>Summary</source>
+        <translation>Сажетак</translation>
+    </message>
+</context>
+<context>
     <name>CountdownTooltip</name>
     <message>
         <source>Click the tray icon 
@@ -209,7 +228,7 @@ or press the shortcut again to stop recording</source>
     <name>SaveMenuManager</name>
     <message>
         <source>Each inquiry</source>
-        <translation type="unfinished">Сваки захтев</translation>
+        <translation>Сваки захтев</translation>
     </message>
     <message>
         <source>Specified location</source>
@@ -650,10 +669,6 @@ Press and hold Shift to draw a vertical or horizontal arrow</source>
         <translation>Промени путању приликом сачувања</translation>
     </message>
     <message>
-        <source>Format</source>
-        <translation>Формат</translation>
-    </message>
-    <message>
         <source>PNG</source>
         <translation>PNG</translation>
     </message>
@@ -714,6 +729,10 @@ Hold down Shift to draw squares or circles.</source>
     <message>
         <source>Select a location when saving</source>
         <translation>Постави путању приликом сачувања</translation>
+    </message>
+    <message>
+        <source>AI Screenshot (A)</source>
+        <translation>ИИ снимак (A)</translation>
     </message>
 </context>
 <context>

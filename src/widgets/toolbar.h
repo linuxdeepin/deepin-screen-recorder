@@ -52,6 +52,14 @@ public:
      * @return 当前按钮坐标的x值
      */
     int getFuncSubToolX(QString &func);
+    /**
+     * @brief 获取 AI 按钮的全局矩形
+     */
+    QRect getAiButtonGlobalRect() const;
+    /**
+     * @brief 获取 AI 按钮全局中心点
+     */
+    QPoint getAiButtonGlobalCenter() const;
 
     void setHideToolbar(bool hidetoolbar);
 signals:
@@ -128,6 +136,8 @@ public:
      * @return 当前按钮坐标的x值
      */
     int getFuncSubToolX(QString &func);
+   QRect getAiButtonGlobalRect() const;
+   QPoint getAiButtonGlobalCenter() const;
 
     /**
      * @brief isDraged 工具栏是否已经被拖动

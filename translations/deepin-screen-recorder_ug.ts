@@ -2,6 +2,25 @@
 <!DOCTYPE TS>
 <TS version="2.1" language="ug">
 <context>
+    <name>AIAssistantWidget</name>
+    <message>
+        <source>Explain</source>
+        <translation>تەڭشەش</translation>
+    </message>
+    <message>
+        <source>Translate</source>
+        <translation>تەڭشەش</translation>
+    </message>
+    <message>
+        <source>Ask AI</source>
+        <translation>تەڭشەش</translation>
+    </message>
+    <message>
+        <source>Summary</source>
+        <translation>تەڭشەش</translation>
+    </message>
+</context>
+<context>
     <name>CountdownTooltip</name>
     <message>
         <source>Click the tray icon 
@@ -649,10 +668,6 @@ Shift نى بېسىپ تۇرسىڭىز تىك ۋە توغرىسىغا تۈز ك�
         <translation>ئورۇننى ساقلىغاندا تەڭشەش</translation>
     </message>
     <message>
-        <source>Format</source>
-        <translation>فورماتى</translation>
-    </message>
-    <message>
         <source>PNG</source>
         <translation>PNG</translation>
     </message>
@@ -713,6 +728,10 @@ Hold down Shift to draw squares or circles.</source>
     <message>
         <source>Select a location when saving</source>
         <translation>ئورۇننى ساقلىغاندا يېڭىلاش</translation>
+    </message>
+    <message>
+        <source>AI Screenshot (A)</source>
+        <translation>AI تۇتۇش (A)</translation>
     </message>
 </context>
 <context>

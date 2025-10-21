@@ -2,6 +2,25 @@
 <!DOCTYPE TS>
 <TS version="2.1" language="de">
 <context>
+    <name>AIAssistantWidget</name>
+    <message>
+        <source>Explain</source>
+        <translation>Erklären</translation>
+    </message>
+    <message>
+        <source>Translate</source>
+        <translation>Übersetzen</translation>
+    </message>
+    <message>
+        <source>Ask AI</source>
+        <translation>AI fragen</translation>
+    </message>
+    <message>
+        <source>Summary</source>
+        <translation>Zusammenfassung</translation>
+    </message>
+</context>
+<context>
     <name>CountdownTooltip</name>
     <message>
         <source>Click the tray icon 
@@ -650,10 +669,6 @@ Umschalttaste gedrückt halten, um einen vertikalen oder horizontalen Pfeil zu z
         <translation>Beim Speichern den Pfad ändern</translation>
     </message>
     <message>
-        <source>Format</source>
-        <translation>Format</translation>
-    </message>
-    <message>
         <source>PNG</source>
         <translation>PNG</translation>
     </message>
@@ -714,6 +729,10 @@ Halten Sie die Umschalttaste gedrückt, um Quadrate oder Kreise zu zeichnen.</tr
     <message>
         <source>Select a location when saving</source>
         <translation>Beim Speichern einen Pfad festlegen</translation>
+    </message>
+    <message>
+        <source>AI Screenshot (A)</source>
+        <translation>AI-Bildschirmfoto (A)</translation>
     </message>
 </context>
 <context>

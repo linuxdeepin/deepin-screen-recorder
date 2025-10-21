@@ -151,6 +151,17 @@ int ToolBarWidget::getFuncSubToolX(QString &func)
     return m_subTool->getFuncSubToolX(func);
 }
 
+
+QRect ToolBarWidget::getAiButtonGlobalRect() const
+{
+    return m_subTool->getAiButtonGlobalRect();
+}
+
+QPoint ToolBarWidget::getAiButtonGlobalCenter() const
+{
+    return m_subTool->getAiButtonGlobalCenter();
+}
+
 void ToolBarWidget::setHideToolbar(bool hidetoolbar)
 {
     m_hideToolBar = hidetoolbar;
@@ -324,6 +335,17 @@ void ToolBar::setButEnableOnLockScreen(const bool &state)
 int ToolBar::getFuncSubToolX(QString &func)
 {
     return m_toolbarWidget->getFuncSubToolX(func);
+}
+
+
+QRect ToolBar::getAiButtonGlobalRect() const
+{
+    return m_toolbarWidget->getAiButtonGlobalRect();
+}
+
+QPoint ToolBar::getAiButtonGlobalCenter() const
+{
+    return m_toolbarWidget->getAiButtonGlobalCenter();
 }
 
 bool ToolBar::isDraged()

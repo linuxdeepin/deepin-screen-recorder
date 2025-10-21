@@ -2,6 +2,25 @@
 <!DOCTYPE TS>
 <TS version="2.1" language="hu">
 <context>
+    <name>AIAssistantWidget</name>
+    <message>
+        <source>Explain</source>
+        <translation>Magyarázat</translation>
+    </message>
+    <message>
+        <source>Translate</source>
+        <translation>Fordítás</translation>
+    </message>
+    <message>
+        <source>Ask AI</source>
+        <translation>Kérdezzen AI-t</translation>
+    </message>
+    <message>
+        <source>Summary</source>
+        <translation>Összefoglaló</translation>
+    </message>
+</context>
+<context>
     <name>CountdownTooltip</name>
     <message>
         <source>Click the tray icon 
@@ -650,10 +669,6 @@ Függőleges vagy vízszintes nyíl rajzolásához tartsa lenyomva a Shift bille
         <translation>Mentéskor módosítsa az elérési utat</translation>
     </message>
     <message>
-        <source>Format</source>
-        <translation>Formátum</translation>
-    </message>
-    <message>
         <source>PNG</source>
         <translation>PNG</translation>
     </message>
@@ -714,6 +729,10 @@ Tartsa lenyomva a Shift billentyűt négyzetek vagy körök rajzolásához.</tra
     <message>
         <source>Select a location when saving</source>
         <translation>Állítson be egy elérési utat a mentéshez</translation>
+    </message>
+    <message>
+        <source>AI Screenshot (A)</source>
+        <translation>AI képernyőkép (A)</translation>
     </message>
 </context>
 <context>

@@ -2,6 +2,25 @@
 <!DOCTYPE TS>
 <TS version="2.1" language="it">
 <context>
+    <name>AIAssistantWidget</name>
+    <message>
+        <source>Explain</source>
+        <translation>Spiega</translation>
+    </message>
+    <message>
+        <source>Translate</source>
+        <translation>Traduci</translation>
+    </message>
+    <message>
+        <source>Ask AI</source>
+        <translation>Chiedi a AI</translation>
+    </message>
+    <message>
+        <source>Summary</source>
+        <translation>Riassunto</translation>
+    </message>
+</context>
+<context>
     <name>CountdownTooltip</name>
     <message>
         <source>Click the tray icon 
@@ -650,10 +669,6 @@ Tieni premuto Maiusc per disegnare una freccia verticale o orizzontale</translat
         <translation>Cambia il percorso di salvataggio</translation>
     </message>
     <message>
-        <source>Format</source>
-        <translation>Formato</translation>
-    </message>
-    <message>
         <source>PNG</source>
         <translation>PNG</translation>
     </message>
@@ -714,6 +729,10 @@ Tieni premuto Maiusc per disegnare quadrati o cerchi.</translation>
     <message>
         <source>Select a location when saving</source>
         <translation>Seleziona una posizione di salvataggio</translation>
+    </message>
+    <message>
+        <source>AI Screenshot (A)</source>
+        <translation>Screenshot AI (A)</translation>
     </message>
 </context>
 <context>

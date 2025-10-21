@@ -2,6 +2,25 @@
 <!DOCTYPE TS>
 <TS version="2.1" language="ca">
 <context>
+    <name>AIAssistantWidget</name>
+    <message>
+        <source>Explain</source>
+        <translation>Explica</translation>
+    </message>
+    <message>
+        <source>Translate</source>
+        <translation>Traduï</translation>
+    </message>
+    <message>
+        <source>Ask AI</source>
+        <translation>Pregunta a l&apos;IA</translation>
+    </message>
+    <message>
+        <source>Summary</source>
+        <translation>Resum</translation>
+    </message>
+</context>
+<context>
     <name>CountdownTooltip</name>
     <message>
         <source>Click the tray icon 
@@ -650,10 +669,6 @@ Manteniu premuda la tecla Maj per dibuixar una fletxa vertical o horitzontal.</t
         <translation>Canvia el camí per desar</translation>
     </message>
     <message>
-        <source>Format</source>
-        <translation>Format</translation>
-    </message>
-    <message>
         <source>PNG</source>
         <translation>PNG</translation>
     </message>
@@ -713,6 +728,10 @@ Hold down Shift to draw squares or circles.</source>
     <message>
         <source>Select a location when saving</source>
         <translation>Selecciona una ubicació quan es desa</translation>
+    </message>
+    <message>
+        <source>AI Screenshot (A)</source>
+        <translation>Resum (A)</translation>
     </message>
 </context>
 <context>

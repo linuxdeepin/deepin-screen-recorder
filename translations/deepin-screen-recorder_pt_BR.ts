@@ -2,6 +2,25 @@
 <!DOCTYPE TS>
 <TS version="2.1" language="pt_BR">
 <context>
+    <name>AIAssistantWidget</name>
+    <message>
+        <source>Explain</source>
+        <translation>Explica</translation>
+    </message>
+    <message>
+        <source>Translate</source>
+        <translation>Traduzir</translation>
+    </message>
+    <message>
+        <source>Ask AI</source>
+        <translation>Perguntar AI</translation>
+    </message>
+    <message>
+        <source>Summary</source>
+        <translation>Resumo</translation>
+    </message>
+</context>
+<context>
     <name>CountdownTooltip</name>
     <message>
         <source>Click the tray icon 
@@ -650,10 +669,6 @@ Mantenha pressionada a tecla Shift para desenhar uma seta vertical ou horizontal
         <translation>Alterar caminho ao salvar</translation>
     </message>
     <message>
-        <source>Format</source>
-        <translation>Formato</translation>
-    </message>
-    <message>
         <source>PNG</source>
         <translation>PNG</translation>
     </message>
@@ -714,6 +729,10 @@ Mantenha pressionada a tecla Shift para desenhar quadrados ou círculos.</transl
     <message>
         <source>Select a location when saving</source>
         <translation>Selecionar uma localização ao salvar</translation>
+    </message>
+    <message>
+        <source>AI Screenshot (A)</source>
+        <translation>Captura de tela AI (A)</translation>
     </message>
 </context>
 <context>

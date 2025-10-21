@@ -11,6 +11,8 @@
 #include "../utils/log.h"
 #include "../accessibility/acTextDefine.h"
 #include "savemenumanager.h"
+#include "aiassistantwidget.h"
+#include "../utils/dbusutils.h"
 
 #include <QActionGroup>
 #include "../main_window.h"
@@ -44,6 +46,7 @@ DWIDGET_USE_NAMESPACE
 
 namespace {
 const QSize TOOL_ICON_SIZE = QSize(36, 36);
+const QSize SMALL_TOOL_ICON_SIZE = QSize(24, 24);
 const QSize TOOL_BUTTON_SIZE = QSize(36, 36);
 const QSize MEDIUM_TOOL_BUTTON_SIZE = QSize(56, 36);
 const QSize MIN_TOOL_BUTTON_SIZE = QSize(42, 40);
@@ -646,6 +649,25 @@ void SubToolWidget::initShotLabel()
     if (!(Utils::isTreelandMode))
          btnList.append(m_pinButton);
 
+    m_aiAssistantButton = new ToolButton();
+    m_aiAssistantButton->setIconSize(SMALL_TOOL_ICON_SIZE);
+    m_aiAssistantButton->setIcon(QIcon::fromTheme("ai_assistant"));
+    bool aiAssistantUsed = ConfigSettings::instance()->getValue("shot", "ai_assistant_used").toBool();
+    m_aiAssistantButton->setShowRedDot(!aiAssistantUsed);
+    Utils::setAccessibility(m_aiAssistantButton, AC_SUBTOOLWIDGET_AI_ASSISTANT_BUTTON);
+    m_shotBtnGroup->addButton(m_aiAssistantButton);
+    m_aiAssistantButton->setFixedSize(TOOL_BUTTON_SIZE);
+    installTipHint(m_aiAssistantButton, tr("AI Screenshot (A)"));
+    btnList.append(m_aiAssistantButton);
+    connect(m_aiAssistantButton, &ToolButton::clicked, this, [=] {
+        ConfigSettings::instance()->setValue("shot", "ai_assistant_used", true);
+        m_aiAssistantButton->setShowRedDot(false);
+        emit changeShotToolFunc("aiassistant");
+    });
+
+    if(!DBusUtils::isAiAssistantAvailable())
+        m_aiAssistantButton->hide();
+
     // 撤销按钮
     m_cancelButton = new ToolButton();
     m_cancelButton->setUndoButtonFlag(true);
@@ -714,6 +736,7 @@ void SubToolWidget::initShotLabel()
         m_scrollShotButton->hide(); //隐藏滚动截图按钮
         m_ocrButton->hide(); //隐藏ocr按钮
         m_pinButton->hide(); //隐藏pin按钮
+        m_aiAssistantButton->hide(); //隐藏AI助手按钮
     }
 
     m_saveSeperatorBeg = new DVerticalLine(this);
@@ -797,6 +820,15 @@ void SubToolWidget::initShotLabel()
     initShotOption();
     qCDebug(dsrApp) << "截图工具栏UI已初始化";
 }
+
+void SubToolWidget::showAIAssistantWidget()
+{
+    // 兼容旧接口：转发到菜单弹出逻辑
+    if (m_aiAssistantButton) {
+        QMetaObject::invokeMethod(m_aiAssistantButton, "click", Qt::QueuedConnection);
+    }
+}
+
 
 // 更新保存按钮的提示信息
 void SubToolWidget::updateSaveButtonTip()
@@ -1379,6 +1411,20 @@ void SubToolWidget::initScrollLabel()
     m_scrollSubTool = new DLabel(this);
     QList<ToolButton *> btnList;
 
+    // AI 助手（滚动截图工具栏首位）
+    m_aiAssistantScrollButton = new ToolButton();
+    m_aiAssistantScrollButton->setIconSize(SMALL_TOOL_ICON_SIZE);
+    m_aiAssistantScrollButton->setIcon(QIcon::fromTheme("ai_assistant"));
+    Utils::setAccessibility(m_aiAssistantScrollButton, AC_SUBTOOLWIDGET_AI_ASSISTANT_BUTTON);
+    m_aiAssistantScrollButton->setFixedSize(TOOL_BUTTON_SIZE);
+    installTipHint(m_aiAssistantScrollButton, tr("AI Screenshot (A)"));
+    btnList.append(m_aiAssistantScrollButton);
+    connect(m_aiAssistantScrollButton, &ToolButton::clicked, this, [=]{
+        emit changeShotToolFunc("aiassistant");
+    });
+    if (!DBusUtils::isAiAssistantAvailable())
+        m_aiAssistantScrollButton->hide();
+
     //文字识别按钮
     m_ocrScrollButton = new ToolButton();
     Utils::setAccessibility(m_ocrScrollButton, AC_SUBTOOLWIDGET_KEYBOARD_BUTTON);
@@ -1827,12 +1873,41 @@ int SubToolWidget::getFuncSubToolX(QString &shape)
             x = m_penButton->x();
         } else if (shape == "text") {
             x = m_textButton->x();
+        } else if (shape == "aiassistant") {
+            // 根据当前模式选择对应的 AI 按钮（普通/滚动）
+            if (currentWidget() == m_scrollSubTool && m_aiAssistantScrollButton) {
+                x = m_aiAssistantScrollButton->x();
+            } else {
+                x = m_aiAssistantButton ? m_aiAssistantButton->x() : -1;
+            }
         }  else  {
             x = -1;
         }
     }
 //    qCDebug(dsrApp) << __FUNCTION__ << "x : " << x;
     return x;
+}
+
+
+QRect SubToolWidget::getAiButtonGlobalRect() const
+{
+    const ToolButton *btn = nullptr;
+    if (currentWidget() == m_scrollSubTool && m_aiAssistantScrollButton) {
+        btn = m_aiAssistantScrollButton;
+    } else if (m_aiAssistantButton) {
+        btn = m_aiAssistantButton;
+    }
+    if (!btn) return QRect();
+    QPoint topLeft = btn->mapToGlobal(QPoint(0, 0));
+    QRect rect(topLeft, btn->size());
+    return rect;
+}
+
+QPoint SubToolWidget::getAiButtonGlobalCenter() const
+{
+    QRect r = getAiButtonGlobalRect();
+    QPoint center = r.center();
+    return center;
 }
 
 // 屏蔽DMenu，触发QAction Trigger时，收回菜单
@@ -1866,6 +1941,7 @@ bool SubToolWidget::eventFilter(QObject *watched, QEvent *event)
             return true;
         }
     }
+
 
     if (watched == m_recordOptionMenu || watched == m_optionMenu || watched == m_scrollOptionMenu || watched == m_saveToSpecialPathMenu || watched == m_scrollSaveToSpecialPathMenu) {
         if (event->type() == QEvent::MouseButtonPress) {
@@ -1963,7 +2039,7 @@ void SubToolWidget::setVideoButtonInitFromSub()
 
 void SubToolWidget::shapeClickedFromWidget(QString shape)
 {
-    qCDebug(dsrApp) << "SubToolWidget::shapeClickedFromWidget called with shape:" << shape;
+    qCWarning(dsrApp) << "SubToolWidget::shapeClickedFromWidget called with shape:" << shape;
 
     if (!shape.isEmpty()) {
         if (shape == "pinScreenshots") {
@@ -2006,7 +2082,13 @@ void SubToolWidget::shapeClickedFromWidget(QString shape)
                     m_scrollOptionMenu->hide();
                 }
             }
-
+        } else if (shape == "aiassistant") {
+            qCWarning(dsrApp) << "AI assistant mode: showing AI assistant tool.";
+            if (m_aiAssistantButton) {
+                m_aiAssistantButton->click();
+            } else {
+                emit changeShotToolFunc("aiassistant");
+            }
         } else if (shape == "keyBoard") {
             m_keyBoardButton->click();
         } else if (shape == "camera") {

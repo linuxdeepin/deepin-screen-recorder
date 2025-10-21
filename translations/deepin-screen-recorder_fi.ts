@@ -2,6 +2,25 @@
 <!DOCTYPE TS>
 <TS version="2.1" language="fi">
 <context>
+    <name>AIAssistantWidget</name>
+    <message>
+        <source>Explain</source>
+        <translation>Selitä</translation>
+    </message>
+    <message>
+        <source>Translate</source>
+        <translation>Käännä</translation>
+    </message>
+    <message>
+        <source>Ask AI</source>
+        <translation>Kysy AI:lle</translation>
+    </message>
+    <message>
+        <source>Summary</source>
+        <translation>Yhteenveto</translation>
+    </message>
+</context>
+<context>
     <name>CountdownTooltip</name>
     <message>
         <source>Click the tray icon 
@@ -650,10 +669,6 @@ Vedä suora pysty- tai vaakanuoli pitämällä Shift-painettuna</translation>
         <translation>Muuta polkua tallentaessa</translation>
     </message>
     <message>
-        <source>Format</source>
-        <translation>Muoto</translation>
-    </message>
-    <message>
         <source>PNG</source>
         <translation>PNG</translation>
     </message>
@@ -714,6 +729,10 @@ Pidä Shift-näppäintä painettuna piirtääksesi neliöitä tai ympyröitä.</
     <message>
         <source>Select a location when saving</source>
         <translation>Valitse sijainti tallentaessa</translation>
+    </message>
+    <message>
+        <source>AI Screenshot (A)</source>
+        <translation>AI-näyttökuva (A)</translation>
     </message>
 </context>
 <context>

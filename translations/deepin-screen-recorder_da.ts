@@ -2,6 +2,25 @@
 <!DOCTYPE TS>
 <TS version="2.1" language="da">
 <context>
+    <name>AIAssistantWidget</name>
+    <message>
+        <source>Explain</source>
+        <translation>Forklare</translation>
+    </message>
+    <message>
+        <source>Translate</source>
+        <translation>Oversæt</translation>
+    </message>
+    <message>
+        <source>Ask AI</source>
+        <translation>Spørg AI</translation>
+    </message>
+    <message>
+        <source>Summary</source>
+        <translation>Resumé</translation>
+    </message>
+</context>
+<context>
     <name>CountdownTooltip</name>
     <message>
         <source>Click the tray icon 
@@ -142,7 +161,7 @@ eller tryk på genvejen igen, for at stoppe optagelse</translation>
     </message>
     <message>
         <source>Specified Location</source>
-        <translation type="unfinished">Angivet sted</translation>
+        <translation>Angivet sted</translation>
     </message>
     <message>
         <source>Set a path on save</source>
@@ -650,10 +669,6 @@ Tryk og hold Shift for at tegne en vertikal eller horisontal pil</translation>
         <translation>Ændr stien ved opbevaring</translation>
     </message>
     <message>
-        <source>Format</source>
-        <translation>Format</translation>
-    </message>
-    <message>
         <source>PNG</source>
         <translation>PNG</translation>
     </message>
@@ -714,6 +729,10 @@ Hold Shift nede for at tegne kvadrater eller cirkler.</translation>
     <message>
         <source>Select a location when saving</source>
         <translation>Vælg et sted ved opbevaring</translation>
+    </message>
+    <message>
+        <source>AI Screenshot (A)</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

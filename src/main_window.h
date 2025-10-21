@@ -37,6 +37,7 @@
 #include "recordertablet.h"
 #include "dbusinterface/ocrinterface.h"
 #include "dbusinterface/pinscreenshotsinterface.h"
+#include "dbusinterface/aiassistantinterface.h"
 
 #include <DWindowManagerHelper>
 #include <DDialog>
@@ -491,6 +492,7 @@ public slots:
     void saveScreenShot();
     void saveScreenShotToClipboardOnly();
     void saveScreenShotToFile();
+    void onAiAssistantSelected(int func);
     void prepareScreenshot();
     void hideScreenshotTips();
     void captureScreenshotImage();
@@ -1306,6 +1308,8 @@ private:
     int m_cursorBound;
     //ocr接口
     OcrInterface *m_ocrInterface = nullptr;
+    //AI助手接口
+    AiAssistantInterface *m_aiAssistantInterface = nullptr;
     /**
      * @brief 贴图接口
      */

@@ -2,6 +2,25 @@
 <!DOCTYPE TS>
 <TS version="2.1" language="ms">
 <context>
+    <name>AIAssistantWidget</name>
+    <message>
+        <source>Explain</source>
+        <translation>Terangkan</translation>
+    </message>
+    <message>
+        <source>Translate</source>
+        <translation>Terjemahkan</translation>
+    </message>
+    <message>
+        <source>Ask AI</source>
+        <translation>Tanya AI</translation>
+    </message>
+    <message>
+        <source>Summary</source>
+        <translation>Ringkasan</translation>
+    </message>
+</context>
+<context>
     <name>CountdownTooltip</name>
     <message>
         <source>Click the tray icon 
@@ -650,10 +669,6 @@ Tekan dan tahan kekunci Shift untuk melukis anak panah menegak atau mengufuk</tr
         <translation>Ubah laluan ketika simpan</translation>
     </message>
     <message>
-        <source>Format</source>
-        <translation>Format</translation>
-    </message>
-    <message>
         <source>PNG</source>
         <translation>PNG</translation>
     </message>
@@ -714,6 +729,10 @@ Tahan Shift untuk melukis segi empat sama atau bulatan.</translation>
     <message>
         <source>Select a location when saving</source>
         <translation>Tetapkan laluan ketika simpan</translation>
+    </message>
+    <message>
+        <source>AI Screenshot (A)</source>
+        <translation>Tangkap Layar AI (A)</translation>
     </message>
 </context>
 <context>

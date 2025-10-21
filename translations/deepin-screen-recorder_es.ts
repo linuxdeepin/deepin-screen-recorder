@@ -2,6 +2,25 @@
 <!DOCTYPE TS>
 <TS version="2.1" language="es">
 <context>
+    <name>AIAssistantWidget</name>
+    <message>
+        <source>Explain</source>
+        <translation>Explicar</translation>
+    </message>
+    <message>
+        <source>Translate</source>
+        <translation>Traducir</translation>
+    </message>
+    <message>
+        <source>Ask AI</source>
+        <translation>Preguntar a AI</translation>
+    </message>
+    <message>
+        <source>Summary</source>
+        <translation>Resumen</translation>
+    </message>
+</context>
+<context>
     <name>CountdownTooltip</name>
     <message>
         <source>Click the tray icon 
@@ -650,10 +669,6 @@ Mantenga presionada la tecla Mayús para dibujar una flecha vertical u horizonta
         <translation>Cambiar ruta de guardado</translation>
     </message>
     <message>
-        <source>Format</source>
-        <translation>Formato</translation>
-    </message>
-    <message>
         <source>PNG</source>
         <translation>PNG</translation>
     </message>
@@ -714,6 +729,10 @@ Mantenga presionada la tecla Shift para dibujar cuadrados o círculos.</translat
     <message>
         <source>Select a location when saving</source>
         <translation>Seleccionar una ubicación al guardar</translation>
+    </message>
+    <message>
+        <source>AI Screenshot (A)</source>
+        <translation>Captura de pantalla AI (A)</translation>
     </message>
 </context>
 <context>

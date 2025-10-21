@@ -2,6 +2,25 @@
 <!DOCTYPE TS>
 <TS version="2.1" language="gl_ES">
 <context>
+    <name>AIAssistantWidget</name>
+    <message>
+        <source>Explain</source>
+        <translation>Explicar</translation>
+    </message>
+    <message>
+        <source>Translate</source>
+        <translation>Traducir</translation>
+    </message>
+    <message>
+        <source>Ask AI</source>
+        <translation>Preguntar a AI</translation>
+    </message>
+    <message>
+        <source>Summary</source>
+        <translation>Resumen</translation>
+    </message>
+</context>
+<context>
     <name>CountdownTooltip</name>
     <message>
         <source>Click the tray icon 
@@ -650,10 +669,6 @@ Manteña premida a tecla Maiúsculas para debuxar unha frecha vertical ou horizo
         <translation>Cambia o camiño ao gardar</translation>
     </message>
     <message>
-        <source>Format</source>
-        <translation>Formato</translation>
-    </message>
-    <message>
         <source>PNG</source>
         <translation>PNG</translation>
     </message>
@@ -714,6 +729,10 @@ Mantén premida a tecla Maiús para debuxar cadrados ou círculos.</translation>
     <message>
         <source>Select a location when saving</source>
         <translation>Selecciona unha localización ao gardar</translation>
+    </message>
+    <message>
+        <source>AI Screenshot (A)</source>
+        <translation>Captura de pantalla AI (A)</translation>
     </message>
 </context>
 <context>

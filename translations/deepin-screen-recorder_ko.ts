@@ -2,6 +2,25 @@
 <!DOCTYPE TS>
 <TS version="2.1" language="ko">
 <context>
+    <name>AIAssistantWidget</name>
+    <message>
+        <source>Explain</source>
+        <translation>설명</translation>
+    </message>
+    <message>
+        <source>Translate</source>
+        <translation>번역</translation>
+    </message>
+    <message>
+        <source>Ask AI</source>
+        <translation>AI 물어보기</translation>
+    </message>
+    <message>
+        <source>Summary</source>
+        <translation>요약</translation>
+    </message>
+</context>
+<context>
     <name>CountdownTooltip</name>
     <message>
         <source>Click the tray icon 
@@ -654,10 +673,6 @@ Shift를 누르고 놓아 수직 또는 수평 화살표를 그립니다</transl
         <translation>저장 시 경로 변경</translation>
     </message>
     <message>
-        <source>Format</source>
-        <translation>형식</translation>
-    </message>
-    <message>
         <source>PNG</source>
         <translation>PNG</translation>
     </message>
@@ -718,6 +733,10 @@ Shift 키를 누른 채로 정사각형이나 원을 그립니다.</translation>
     <message>
         <source>Select a location when saving</source>
         <translation>저장 시 위치 선택</translation>
+    </message>
+    <message>
+        <source>AI Screenshot (A)</source>
+        <translation>AI 스크린샷 (A)</translation>
     </message>
 </context>
 <context>

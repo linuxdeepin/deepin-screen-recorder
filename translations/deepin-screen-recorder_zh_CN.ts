@@ -2,6 +2,25 @@
 <!DOCTYPE TS>
 <TS version="2.1" language="zh_CN">
 <context>
+    <name>AIAssistantWidget</name>
+    <message>
+        <source>Explain</source>
+        <translation>解释</translation>
+    </message>
+    <message>
+        <source>Translate</source>
+        <translation>翻译</translation>
+    </message>
+    <message>
+        <source>Ask AI</source>
+        <translation>问问 AI</translation>
+    </message>
+    <message>
+        <source>Summary</source>
+        <translation>总结</translation>
+    </message>
+</context>
+<context>
     <name>CountdownTooltip</name>
     <message>
         <source>Click the tray icon 
@@ -650,10 +669,6 @@ Press and hold Shift to draw a vertical or horizontal arrow</source>
         <translation>保存时更新位置</translation>
     </message>
     <message>
-        <source>Format</source>
-        <translation>格式</translation>
-    </message>
-    <message>
         <source>PNG</source>
         <translation>PNG</translation>
     </message>
@@ -714,6 +729,10 @@ Hold down Shift to draw squares or circles.</source>
     <message>
         <source>Select a location when saving</source>
         <translation>保存时选择位置</translation>
+    </message>
+    <message>
+        <source>AI Screenshot (A)</source>
+        <translation>AI截图 (A)</translation>
     </message>
 </context>
 <context>

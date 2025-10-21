@@ -81,6 +81,15 @@ public:
      */
     int getFuncSubToolX(QString &func);
 
+    /**
+     * @brief 获取 AI 按钮的全局矩形
+     */
+    QRect getAiButtonGlobalRect() const;
+    /**
+     * @brief 获取 AI 按钮全局中心点
+     */
+    QPoint getAiButtonGlobalCenter() const;
+
     bool eventFilter(QObject *watched, QEvent *event) override;
 
 signals:
@@ -111,6 +120,7 @@ public slots:
     void setCameraDeviceEnable(bool status);
 
 private:
+    void showAIAssistantWidget();
     void initShotOption();
     void initRecordOption();
     /**
@@ -186,11 +196,21 @@ private:
     HintFilter *hintFilter = nullptr;
     SaveButton *m_saveLocalDirButton = nullptr;
     /**
+     * @brief AI助手按钮
+     */
+    ToolButton *m_aiAssistantButton = nullptr;
+     /**
+     * @brief AI助手滚动截图工具栏按钮
+     */
+     ToolButton *m_aiAssistantScrollButton = nullptr;
+    /**
      * @brief m_optionMenu 截图的选项菜单
      */
     DMenu *m_optionMenu = nullptr;
     DMenu *m_scrollOptionMenu = nullptr;
     DMenu *m_recordOptionMenu = nullptr;
+    // AI 助手弹出菜单
+    DMenu *m_aiAssistantMenu = nullptr;
     QAction *m_microphoneAction = nullptr;
     QButtonGroup *m_shotBtnGroup = nullptr;
 

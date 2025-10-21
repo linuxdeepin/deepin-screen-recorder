@@ -10,6 +10,7 @@
 #include "../accessibility/acTextDefine.h"
 #include "../main_window.h"
 #include "shapetoolwidget.h"
+#include "aiassistantwidget.h"
 
 #include <QPainter>
 #include <QDebug>
@@ -20,6 +21,8 @@
 #include <QSettings>
 #include <QVBoxLayout>
 #include <QBitmap>
+#include <DFontSizeManager>
+#include <DGuiApplicationHelper>
 
 #include <dgraphicsgloweffect.h>
 
@@ -34,10 +37,26 @@ const QSize TOOLBAR_WIDGET_SIZE1 = QSize(290, 68);
 const QSize TOOLBAR_WIDGET_SIZE2 = QSize(370, 68);
 const QSize TOOLBAR_WIDGET_SIZE3 = QSize(500, 68);
 const QSize TOOLBAR_WIDGET_SIZE4 = QSize(368, 68);
+// const QSize TOOLBAR_WIDGET_AIMODE = QSize(316, 68);
 
 //const int BUTTON_SPACING = 3;
 //const int BTN_RADIUS = 3;
 const QSize SPLITTER_SIZE = QSize(3, 30);
+
+const QSize TOOLBAR_WIDGET_AIMODE() {
+    quint16 t6PixelSize = DFontSizeManager::instance()->fontPixelSize(DFontSizeManager::T6);
+    
+    int width = 316;
+    
+    if (t6PixelSize >= 20) {
+        width = width + 45;
+    } else if (t6PixelSize >= 18) {
+        width = width + 28;
+    } else if (t6PixelSize >= 16) {
+        width = width + 10;
+    }
+    return QSize(width, 68);
+}
 
 }
 
@@ -86,6 +105,14 @@ void SideBarWidget::initSideBarWidget()
     m_shapeTool = new ShapeToolWidget(this);
     m_colorTool = new ColorToolWidget(this);
     m_shotTool = new ShotToolWidget(m_pMainWindow, this);
+    m_aiAssistantTool = new AIAssistantWidget(this);
+    m_aiAssistantTool->hide();
+    
+    // 连接 AI 面板信号到 MainWindow
+    connect(m_aiAssistantTool, &AIAssistantWidget::functionSelected, this,
+            [this](AIAssistantWidget::AIFunction func) {
+        m_pMainWindow->onAiAssistantSelected(static_cast<int>(func));
+    });
 
     // 默认隐藏ShapeToolWidget和对应的分割线
     m_shapeTool->hide();
@@ -97,6 +124,8 @@ void SideBarWidget::initSideBarWidget()
     hLayout->addWidget(m_shapeTool);
     hLayout->addWidget(m_seperator1);
     hLayout->addWidget(m_shotTool);
+    hLayout->addWidget(m_aiAssistantTool);
+    hLayout->setAlignment(m_aiAssistantTool, Qt::AlignCenter);
     hLayout->addWidget(m_seperator);
     hLayout->addWidget(m_colorTool);
     setLayout(hLayout);
@@ -107,6 +136,7 @@ void SideBarWidget::initSideBarWidget()
     connect(m_colorTool, &ColorToolWidget::colorChecked, m_shotTool, &ShotToolWidget::colorChecked);
     connect(m_shapeTool, &ShapeToolWidget::shapeSelected, m_shotTool, &ShotToolWidget::shapeSelected);
 }
+
 void SideBarWidget::changeShotToolWidget(const QString &func)
 {
     qCDebug(dsrApp) << "SideBarWidget::changeShotToolWidget called with func:" << func;
@@ -115,20 +145,24 @@ void SideBarWidget::changeShotToolWidget(const QString &func)
     m_shotTool->switchContent(func);
     m_colorTool->setFunction(func);
     
-    // 处理分隔符显示
-    if (func == "effect") {
-        qCDebug(dsrApp) << "Effect mode: hiding separator";
+    // 处理分隔符显示（AI 模式同样隐藏主分割线）
+    if (func == "effect" || func == "aiassistant") {
+        qCDebug(dsrApp) << "Effect/AI mode: hiding separator";
         m_seperator->hide();
     } else {
         qCDebug(dsrApp) << "Non-effect mode: showing separator";
         m_seperator->show();
     }
 
-    // 显示或隐藏ShapeToolWidget
+    // 显示或隐藏各面板
     if (func == "gio" || func == "rectangle" || func == "oval") {
         qDebug(dsrApp) << "Geometry mode: showing ShapeToolWidget";
         m_shapeTool->show();
         m_seperator1->show();
+        m_aiAssistantTool->hide();
+        m_shotTool->show();
+        m_colorTool->show();
+        
         
         // 无论是几何图形模式还是直接选择矩形/椭圆，都读取上次选中的形状
         QString currentShape = ConfigSettings::instance()->getValue("shape", "current").toString();
@@ -158,10 +192,27 @@ void SideBarWidget::changeShotToolWidget(const QString &func)
             qDebug(dsrApp) << "Selecting shape based on history:" << currentShape;
             m_shapeTool->selectShape(currentShape);
         }
+    } else if (func == "aiassistant") {
+        // AI 助手作为独立面板显示，隐藏其它
+        qCWarning(dsrApp) << "AI assistant mode: showing AI assistant tool.";
+        m_shapeTool->hide();
+        m_seperator1->hide();
+        m_shotTool->hide();
+        m_colorTool->hide();
+        m_seperator->hide();
+        m_aiAssistantTool->show();
+        resize(TOOLBAR_WIDGET_AIMODE());
+        m_currentFunc = func;
     } else {
         qCDebug(dsrApp) << "Non-geometry mode: hiding ShapeToolWidget";
         m_shapeTool->hide();
         m_seperator1->hide();
+        m_aiAssistantTool->hide();
+        m_shotTool->show();
+        m_colorTool->show();
+        setMinimumSize(TOOLBAR_WIDGET_SIZE1);
+        m_currentFunc = func;
+        
     }
 
     //不同图形下二级菜单的大小及长度不一样
@@ -181,6 +232,8 @@ void SideBarWidget::changeShotToolWidget(const QString &func)
     } else if (func == "effect") {
         qCDebug(dsrApp) << "Resizing sidebar for effect.";
         resize(TOOLBAR_WIDGET_SIZE3);
+    } else if(func == "aiassistant") {
+        resize(TOOLBAR_WIDGET_AIMODE());
     } else {
         resize(TOOLBAR_WIDGET_SIZE1);
     }
@@ -207,10 +260,17 @@ int SideBarWidget::getSideBarWidth(const QString &func)
         width = TOOLBAR_WIDGET_SIZE2.width();
     } else if (func == "effect") {
         width = TOOLBAR_WIDGET_SIZE3.width();
+    } else if (func == "aiassistant") {
+        width = TOOLBAR_WIDGET_AIMODE().width();
     }
     
     qCDebug(dsrApp) << "Sidebar width determined:" << width;
     return width;
+}
+
+bool SideBarWidget::isAIMode() const
+{
+    return m_currentFunc == "aiassistant";
 }
 
 void SideBarWidget::paintEvent(QPaintEvent *e)
@@ -310,16 +370,22 @@ void SideBar::paintEvent(QPaintEvent *e)
 void SideBar::enterEvent(QEvent *e)
 {
     qCDebug(dsrApp) << "SideBar::enterEvent (Qt5) called.";
-    //    qApp->setOverrideCursor(Qt::ArrowCursor);
-    QApplication::setOverrideCursor(Qt::OpenHandCursor);
+    if (m_sidebarWidget && m_sidebarWidget->isAIMode()) {
+        QApplication::setOverrideCursor(Qt::ArrowCursor);
+    } else {
+        QApplication::setOverrideCursor(Qt::OpenHandCursor);
+    }
     DLabel::enterEvent(e);
 }
 #elif (QT_VERSION_MAJOR == 6)
 void SideBar::enterEvent(QEnterEvent *e)
 {
     qCDebug(dsrApp) << "SideBar::enterEvent (Qt6) called.";
-    //    qApp->setOverrideCursor(Qt::ArrowCursor);
-    QApplication::setOverrideCursor(Qt::OpenHandCursor);
+    if (m_sidebarWidget && m_sidebarWidget->isAIMode()) {
+        QApplication::setOverrideCursor(Qt::ArrowCursor);
+    } else {
+        QApplication::setOverrideCursor(Qt::OpenHandCursor);
+    }
     DLabel::enterEvent(e);
 }
 #endif
@@ -335,7 +401,11 @@ void SideBar::mousePressEvent(QMouseEvent *event)
     qCDebug(dsrApp) << "SideBar::mousePressEvent called.";
     if (event->button() == Qt::LeftButton) {
         qCDebug(dsrApp) << "Mouse left button pressed.";
-        QApplication::setOverrideCursor(Qt::ClosedHandCursor);
+        if (m_sidebarWidget && m_sidebarWidget->isAIMode()) {
+            QApplication::setOverrideCursor(Qt::ArrowCursor);
+        } else {
+            QApplication::setOverrideCursor(Qt::ClosedHandCursor);
+        }
         m_isPress = true;
         //获得鼠标的初始位置
         m_mouseStartPoint = event->globalPos();
@@ -368,6 +438,10 @@ void SideBar::mouseReleaseEvent(QMouseEvent *event)
     if (event->button() == Qt::LeftButton) {
         qCDebug(dsrApp) << "Mouse left button released.";
         m_isPress = false;
-        QApplication::setOverrideCursor(Qt::OpenHandCursor);
+        if (m_sidebarWidget && m_sidebarWidget->isAIMode()) {
+            QApplication::setOverrideCursor(Qt::ArrowCursor);
+        } else {
+            QApplication::setOverrideCursor(Qt::OpenHandCursor);
+        }
     }
 }

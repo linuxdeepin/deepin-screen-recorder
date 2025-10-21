@@ -2,6 +2,25 @@
 <!DOCTYPE TS>
 <TS version="2.1" language="fr">
 <context>
+    <name>AIAssistantWidget</name>
+    <message>
+        <source>Explain</source>
+        <translation>Expliquer</translation>
+    </message>
+    <message>
+        <source>Translate</source>
+        <translation>Traduire</translation>
+    </message>
+    <message>
+        <source>Ask AI</source>
+        <translation>Demander à AI</translation>
+    </message>
+    <message>
+        <source>Summary</source>
+        <translation>Résumé</translation>
+    </message>
+</context>
+<context>
     <name>CountdownTooltip</name>
     <message>
         <source>Click the tray icon 
@@ -542,10 +561,6 @@ Maintenir la touche Maj enfoncée pour dessiner une ligne</translation>
         <translation>webm</translation>
     </message>
     <message>
-        <source>FPS:</source>
-        <translation>FPS</translation>
-    </message>
-    <message>
         <source>5 fps</source>
         <translation>5 fps</translation>
     </message>
@@ -650,10 +665,6 @@ Maintenir la touche Maj enfoncée pour dessiner une flèche verticale ou horizon
         <translation>Changer le chemin d&apos;enregistrement</translation>
     </message>
     <message>
-        <source>Format</source>
-        <translation>Format</translation>
-    </message>
-    <message>
         <source>PNG</source>
         <translation>PNG</translation>
     </message>
@@ -714,6 +725,14 @@ Maintenir la touche Maj enfoncée pour dessiner des carrés ou des cercles.</tra
     <message>
         <source>Select a location when saving</source>
         <translation>Sélectionner un emplacement lors de l&apos;enregistrement</translation>
+    </message>
+    <message>
+        <source>FPS</source>
+        <translation>FPS</translation>
+    </message>
+    <message>
+        <source>AI Screenshot (A)</source>
+        <translation>Capture d&apos;écran AI (A)</translation>
     </message>
 </context>
 <context>

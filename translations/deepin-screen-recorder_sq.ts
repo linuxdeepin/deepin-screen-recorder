@@ -2,6 +2,25 @@
 <!DOCTYPE TS>
 <TS version="2.1" language="sq">
 <context>
+    <name>AIAssistantWidget</name>
+    <message>
+        <source>Explain</source>
+        <translation>Shpjegoje</translation>
+    </message>
+    <message>
+        <source>Translate</source>
+        <translation>Përktheni</translation>
+    </message>
+    <message>
+        <source>Ask AI</source>
+        <translation>Pyetni AI</translation>
+    </message>
+    <message>
+        <source>Summary</source>
+        <translation>Përmbledhje</translation>
+    </message>
+</context>
+<context>
     <name>CountdownTooltip</name>
     <message>
         <source>Click the tray icon 
@@ -650,10 +669,6 @@ Shtypni dhe mbani të shtypur tastin Shift, që të vizatohet një shigjetë ver
         <translation>Ndryshoni shtegun gjatë ruajtjes</translation>
     </message>
     <message>
-        <source>Format</source>
-        <translation>Format</translation>
-    </message>
-    <message>
         <source>PNG</source>
         <translation>PNG</translation>
     </message>
@@ -714,6 +729,10 @@ Mbani të shtypur tastin Shift që të vizatohet një drejtkëndësh ose një rr
     <message>
         <source>Select a location when saving</source>
         <translation>Zgjidhni vendndodhjen gjatë ruajtjes</translation>
+    </message>
+    <message>
+        <source>AI Screenshot (A)</source>
+        <translation>Foto ekrani AI (A)</translation>
     </message>
 </context>
 <context>

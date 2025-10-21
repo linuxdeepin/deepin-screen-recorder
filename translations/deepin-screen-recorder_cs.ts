@@ -2,6 +2,25 @@
 <!DOCTYPE TS>
 <TS version="2.1" language="cs">
 <context>
+    <name>AIAssistantWidget</name>
+    <message>
+        <source>Explain</source>
+        <translation>Vysvětlit</translation>
+    </message>
+    <message>
+        <source>Translate</source>
+        <translation>Přeložit</translation>
+    </message>
+    <message>
+        <source>Ask AI</source>
+        <translation>Zeptejte se AI</translation>
+    </message>
+    <message>
+        <source>Summary</source>
+        <translation>Shrnutí</translation>
+    </message>
+</context>
+<context>
     <name>CountdownTooltip</name>
     <message>
         <source>Click the tray icon 
@@ -650,10 +669,6 @@ Stiskněte a podržte klávesu Shift pro kreslení svislé nebo vodorovné šipk
         <translation>Změnit popis umístění pro ukládání</translation>
     </message>
     <message>
-        <source>Format</source>
-        <translation>Formát</translation>
-    </message>
-    <message>
         <source>PNG</source>
         <translation>PNG</translation>
     </message>
@@ -713,6 +728,10 @@ Hold down Shift to draw squares or circles.</source>
     <message>
         <source>Select a location when saving</source>
         <translation>Vybrat umístění při ukládání</translation>
+    </message>
+    <message>
+        <source>AI Screenshot (A)</source>
+        <translation>Snímek AI (A)</translation>
     </message>
 </context>
 <context>

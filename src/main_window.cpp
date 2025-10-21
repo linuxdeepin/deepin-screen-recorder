@@ -59,6 +59,10 @@ extern "C" {
 #include <QClipboard>
 #include <QFileDialog>
 #include <QShortcut>
+#include <QDBusInterface>
+#include <QDBusConnection>
+#include <QDBusMessage>
+#include <QDBusPendingCallWatcher>
 
 #if (QT_VERSION_MAJOR == 5)
 #include <QDesktopWidget>
@@ -990,7 +994,8 @@ void MainWindow::initToolBarShortcut()
     QShortcut *keyBoardSC = new QShortcut(QKeySequence("K"), this);
     // 录屏模式（未做穿透） 摄像头
     QShortcut *cameraSC = new QShortcut(QKeySequence("C"), this);
-
+    // 截图模式 AI 助手（按键 A）
+    QShortcut *aiAssistantSC = new QShortcut(QKeySequence("A"), this);
 
     // 截图模式/录屏模式（未做穿透）/滚动模式 帮助快捷面板
 #if (QT_VERSION_MAJOR == 5)
@@ -1004,6 +1009,14 @@ void MainWindow::initToolBarShortcut()
         if (status::shot == m_functionType && Utils::is3rdInterfaceStart == false) {
             qCDebug(dsrApp) << "shortcut : pinScreenshotsSC (key: alt+p)";
             m_toolBar->shapeClickedFromMain("pinScreenshots");
+        }
+    });
+    // 截图模式 AI 助手应用内快捷键
+    connect(aiAssistantSC, &QShortcut::activated, this, [=] {
+        qCWarning(dsrApp) << "shortcut : aiAssistantSC (key: a)";
+        if (status::shot == m_functionType && Utils::is3rdInterfaceStart == false) {
+            qCWarning(dsrApp) << "shortcut : aiAssistantSC (key: a)";
+            m_toolBar->shapeClickedFromMain("aiassistant");
         }
     });
     // 截图模式 滚动截图应用内快捷键
@@ -1554,7 +1567,18 @@ void MainWindow::moveToolBars(QPoint startPoint, QPoint moveDistance)
         m_toolBar->move(movePoint);
         if (m_sideBar->isVisible()) {
             qCDebug(dsrApp) << "moveToolBars m_sideBar->isVisible()";
-            movePoint = limitToolbarScope(m_sideBarStartPressPoint + moveDistance, 1);
+            
+            if (m_currentToolShape == "aiassistant") {
+                QPoint aiBtnGlobalCenter = m_toolBar->getAiButtonGlobalCenter();
+                int aiPanelWidth = m_sideBar->width();
+                int finalLeft = aiBtnGlobalCenter.x() - (aiPanelWidth / 2);
+                int finalTop = m_toolBar->y() + SIDEBAR_Y_SPACING + m_toolBar->height();
+                QPoint aiSidebarPoint(finalLeft, finalTop);
+                movePoint = limitToolbarScope(aiSidebarPoint, 1);
+            } else {
+                movePoint = limitToolbarScope(m_sideBarStartPressPoint + moveDistance, 1);
+            }
+            
             m_sideBar->move(movePoint);
             m_isDragSideBar = true;
         }
@@ -1615,6 +1639,13 @@ QPoint MainWindow::limitToolbarScope(QPoint movePoint, int type)
             qCDebug(dsrApp) << "limitToolbarScope m_currentToolShape == rectangle";
             minX = m_toolBar->x();
             maxX = m_toolBar->width();
+        } else if (m_currentToolShape == "aiassistant") {
+            qCDebug(dsrApp) << "limitToolbarScope m_currentToolShape == aiassistant";
+            QPoint aiBtnGlobalCenter = m_toolBar->getAiButtonGlobalCenter();
+            const int sidebarWidth = m_sideBar->getSideBarWidth("aiassistant");
+            const int targetLeft = aiBtnGlobalCenter.x() - (sidebarWidth / 2);
+            minX = targetLeft;
+            maxX = sidebarWidth; 
         } else {
             qCDebug(dsrApp) << "limitToolbarScope m_currentToolShape == other";
             if (m_toolBar->getFuncSubToolX(m_currentToolShape) > -1) {
@@ -2930,6 +2961,12 @@ void MainWindow::updateSideBarPos()
         QString gioShape = "gio";
         if (m_toolBar->getFuncSubToolX(gioShape) > -1)
             sidebarPoint.setX(m_toolBar->x());
+    } else if (m_currentToolShape == "aiassistant") {
+        QPoint aiBtnGlobalCenter = m_toolBar->getAiButtonGlobalCenter();
+        int aiPanelWidth = m_sideBar->getSideBarWidth("aiassistant");
+        int finalLeft = aiBtnGlobalCenter.x() - (aiPanelWidth / 2);
+        finalLeft = std::max(0, std::min(finalLeft, m_backgroundRect.width() - aiPanelWidth));
+        sidebarPoint.setX(finalLeft);
     } else {
         if (m_toolBar->getFuncSubToolX(m_currentToolShape) > -1)
             sidebarPoint.setX(m_toolBar->x() + m_toolBar->getFuncSubToolX(m_currentToolShape));
@@ -3599,6 +3636,101 @@ void MainWindow::saveScreenShotToFile()
     
     // 调用公共函数完成截图
     finishScreenshot();
+}
+
+void MainWindow::onAiAssistantSelected(int func)
+{
+    qCWarning(dsrApp) << __FUNCTION__ << __LINE__ << "正在执行AI助手截图保存流程...";
+    
+    prepareScreenshot();
+    
+    SaveAction originalSaveIndex = m_saveIndex;
+    SaveWays originalSaveWays = ConfigSettings::instance()->getValue("shot", "save_ways").value<SaveWays>();
+    auto originalFunctionType = m_functionType;
+    bool originalHideToolBar = isHideToolBar;
+    
+    isHideToolBar = true;                 
+    m_functionType = status::shot;        
+    m_saveIndex = SaveAction::CustomScreenSave;
+    
+    ConfigSettings::instance()->setValue("shot", "save_ways", static_cast<int>(SaveWays::SpecifyLocation));
+    
+    bool saveResult = saveAction(m_resultPixmap);
+    
+    ConfigSettings::instance()->setValue("shot", "save_ways", static_cast<int>(originalSaveWays));
+    
+    if (!saveResult || m_saveFileName.isEmpty()) {
+        qCWarning(dsrApp) << "AI: failed to save screenshot";
+        isHideToolBar = originalHideToolBar;
+        m_functionType = originalFunctionType;
+        m_saveIndex = originalSaveIndex;
+        exitApp();
+        return;
+    }
+    
+    qCWarning(dsrApp) << "AI: screenshot saved to:" << m_saveFileName;
+
+
+    QDBusInterface copilot("com.deepin.copilot",
+                               "/com/deepin/copilot",
+                               "com.deepin.copilot",
+                               QDBusConnection::sessionBus());
+    copilot.call("version");
+
+    if (m_aiAssistantInterface) {
+        m_aiAssistantInterface->deleteLater();
+        m_aiAssistantInterface = nullptr;
+    }
+    m_aiAssistantInterface = new AiAssistantInterface("com.deepin.copilot",
+                                                      "/com/deepin/copilot",
+                                                      QDBusConnection::sessionBus(), this);
+
+    if (!m_aiAssistantInterface->isValid()) {
+        qCWarning(dsrApp) << "AI: AiAssistantInterface is invalid";
+        m_saveIndex = originalSaveIndex;
+        exitApp();
+        return;
+    }
+
+    int mode = 1;
+    switch (func) {
+    case 0: /*Explain*/ mode = 1; break;
+    case 1: /*Summarize*/ mode = 2; break;
+    case 2: /*Translate*/ mode = 3; break;
+    case 3: /*Ask AI*/ mode = 4; break;
+    default: mode = 1; break;
+    }
+    
+    QDBusPendingReply<> reply;
+    if (mode == 4) {
+        reply = m_aiAssistantInterface->launchChatUploadImage(m_saveFileName);
+    } else {
+        QPoint cursorPos = QCursor::pos();
+        QScreen *screen = QGuiApplication::screenAt(cursorPos);
+        if (!screen) {
+            screen = QGuiApplication::primaryScreen();
+        }
+        QRect screenGeom = screen ? screen->geometry() : QRect(0, 0, m_backgroundRect.width(), m_backgroundRect.height());
+        QPoint pos(screenGeom.center().x(), screenGeom.top() + screenGeom.height() / 3);
+        reply = m_aiAssistantInterface->launchAiQuickOCR(mode, "", pos, false, m_saveFileName);
+    }
+    
+    QDBusPendingCallWatcher *watcher = new QDBusPendingCallWatcher(reply, this);
+    connect(watcher, &QDBusPendingCallWatcher::finished, this, [this, originalSaveIndex, originalHideToolBar, originalFunctionType](QDBusPendingCallWatcher *watcher) {
+        QDBusPendingReply<> reply = *watcher;
+        if (reply.isError()) {
+            qCWarning(dsrApp) << "AI: DBus call failed:" << reply.error().name() << reply.error().message();
+        } else {
+            qCDebug(dsrApp) << "AI: DBus call successful";
+        }
+        
+        isHideToolBar = originalHideToolBar;
+        m_functionType = originalFunctionType;
+        m_saveIndex = originalSaveIndex;
+        exitApp();
+        
+        watcher->deleteLater();
+    });
 }
 
 // 公共函数：隐藏截图提示

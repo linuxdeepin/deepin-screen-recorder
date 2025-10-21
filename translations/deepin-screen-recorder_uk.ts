@@ -2,6 +2,25 @@
 <!DOCTYPE TS>
 <TS version="2.1" language="uk">
 <context>
+    <name>AIAssistantWidget</name>
+    <message>
+        <source>Explain</source>
+        <translation>Пояснити</translation>
+    </message>
+    <message>
+        <source>Translate</source>
+        <translation>Перекласти</translation>
+    </message>
+    <message>
+        <source>Ask AI</source>
+        <translation>Запитати AI</translation>
+    </message>
+    <message>
+        <source>Summary</source>
+        <translation>Підсумок</translation>
+    </message>
+</context>
+<context>
     <name>CountdownTooltip</name>
     <message>
         <source>Click the tray icon 
@@ -650,10 +669,6 @@ Press and hold Shift to draw a vertical or horizontal arrow</source>
         <translation>Змінити шлях для збереження</translation>
     </message>
     <message>
-        <source>Format</source>
-        <translation>Формат</translation>
-    </message>
-    <message>
         <source>PNG</source>
         <translation>PNG</translation>
     </message>
@@ -714,6 +729,10 @@ Hold down Shift to draw squares or circles.</source>
     <message>
         <source>Select a location when saving</source>
         <translation>Виберіть місце для збереження</translation>
+    </message>
+    <message>
+        <source>AI Screenshot (A)</source>
+        <translation>AI знімок (A)</translation>
     </message>
 </context>
 <context>

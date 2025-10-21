@@ -2,6 +2,25 @@
 <!DOCTYPE TS>
 <TS version="2.1" language="bo">
 <context>
+    <name>AIAssistantWidget</name>
+    <message>
+        <source>Explain</source>
+        <translation>སྤྱིར་བཤུས་བྱེད་པ།</translation>
+    </message>
+    <message>
+        <source>Translate</source>
+        <translation>སྒྲིག་བཀོད་བྱ་རྒྱུ།</translation>
+    </message>
+    <message>
+        <source>Ask AI</source>
+        <translation>སྒྲིག་བཀོད་བྱ་རྒྱུ།</translation>
+    </message>
+    <message>
+        <source>Summary</source>
+        <translation>སྒྲིག་བཀོད་བྱ་རྒྱུ།</translation>
+    </message>
+</context>
+<context>
     <name>CountdownTooltip</name>
     <message>
         <source>Click the tray icon 
@@ -650,10 +669,6 @@ Shiftམནན་ནས་ཐད་དཔྱང་དང་ཆུ་སྙོམ
         <translation>ཉར་སྐབས་གནས་ས་གསར་སྒྱུར་བྱེད་པ།</translation>
     </message>
     <message>
-        <source>Format</source>
-        <translation>རྣམ་བཞག་ </translation>
-    </message>
-    <message>
         <source>PNG</source>
         <translation>PNG</translation>
     </message>
@@ -714,6 +729,10 @@ Shiftམནན་ནས་གྲུ་བཞི་ཁ་གང་འབྲི་
     <message>
         <source>Select a location when saving</source>
         <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>AI Screenshot (A)</source>
+        <translation>སྒྲིག་བཀོད་བྱ་རྒྱུ་ (A)</translation>
     </message>
 </context>
 <context>

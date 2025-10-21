@@ -2,6 +2,25 @@
 <!DOCTYPE TS>
 <TS version="2.1" language="ar">
 <context>
+    <name>AIAssistantWidget</name>
+    <message>
+        <source>Explain</source>
+        <translation>شرح</translation>
+    </message>
+    <message>
+        <source>Translate</source>
+        <translation>ترجمة</translation>
+    </message>
+    <message>
+        <source>Ask AI</source>
+        <translation>اسأل AI</translation>
+    </message>
+    <message>
+        <source>Summary</source>
+        <translation>ملخص</translation>
+    </message>
+</context>
+<context>
     <name>CountdownTooltip</name>
     <message>
         <source>Click the tray icon 
@@ -650,10 +669,6 @@ Press and hold Shift to draw a vertical or horizontal arrow</source>
         <translation>تغيير المسار عند الحفظ</translation>
     </message>
     <message>
-        <source>Format</source>
-        <translation>النوع</translation>
-    </message>
-    <message>
         <source>PNG</source>
         <translation>PNG</translation>
     </message>
@@ -708,11 +723,15 @@ Hold down Shift to draw squares or circles.</source>
     </message>
     <message>
         <source>Update the location when saving</source>
-        <translation type="unfinished"></translation>
+        <translation>تحديث الموقع عند الحفظ</translation>
     </message>
     <message>
         <source>Select a location when saving</source>
-        <translation type="unfinished"></translation>
+        <translation>اختر موقع عند الحفظ</translation>
+    </message>
+    <message>
+        <source>AI Screenshot (A)</source>
+        <translation>ملخص (A)</translation>
     </message>
 </context>
 <context>

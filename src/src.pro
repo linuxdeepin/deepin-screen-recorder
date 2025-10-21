@@ -181,6 +181,7 @@ HEADERS += main_window.h \
     voicevolumewatcherext.h \
     utils/baseutils.h \
     utils/configsettings.h \
+    utils/dbusutils.h \
     utils/shortcut.h \
     utils/tempfile.h \
     utils/calculaterect.h \
@@ -194,6 +195,7 @@ HEADERS += main_window.h \
     widgets/shapeswidget.h \
     widgets/toolbutton.h \
     widgets/subtoolwidget.h \
+    widgets/aiassistantwidget.h \
     widgets/keybuttonwidget.h \
     widgets/sidebar.h \
     widgets/shottoolwidget.h \
@@ -214,6 +216,7 @@ HEADERS += main_window.h \
     recordertablet.h \
     dbusinterface/ocrinterface.h \
     dbusinterface/pinscreenshotsinterface.h \
+    dbusinterface/aiassistantinterface.h \
     widgets/imagemenu.h \
     utils/borderprocessinterface.h \
     widgets/zoomIndicatorGL.h \
@@ -257,6 +260,7 @@ SOURCES += main.cpp \
     utils/calculaterect.cpp \
     utils/shortcut.cpp \
     utils/configsettings.cpp \
+    utils/dbusutils.cpp \
     utils/baseutils.cpp \
     utils/voicevolumewatcher_interface.cpp \
     utils/x_multi_screen_info.cpp \
@@ -268,6 +272,7 @@ SOURCES += main.cpp \
     widgets/zoomIndicator.cpp \
     widgets/toolbar.cpp \
     widgets/subtoolwidget.cpp \
+    widgets/aiassistantwidget.cpp \
     widgets/keybuttonwidget.cpp \
     widgets/sidebar.cpp \
     widgets/shottoolwidget.cpp \
@@ -289,6 +294,7 @@ SOURCES += main.cpp \
     recordertablet.cpp \
     dbusinterface/ocrinterface.cpp \
     dbusinterface/pinscreenshotsinterface.cpp \
+    dbusinterface/aiassistantinterface.cpp \
     widgets/imagemenu.cpp \
     utils/borderprocessinterface.cpp \
     widgets/zoomIndicatorGL.cpp \

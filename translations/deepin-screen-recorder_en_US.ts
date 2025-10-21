@@ -2,6 +2,25 @@
 <!DOCTYPE TS>
 <TS version="2.1" language="en">
 <context>
+    <name>AIAssistantWidget</name>
+    <message>
+        <source>Explain</source>
+        <translation>Explain</translation>
+    </message>
+    <message>
+        <source>Translate</source>
+        <translation>Translate</translation>
+    </message>
+    <message>
+        <source>Ask AI</source>
+        <translation>Ask AI</translation>
+    </message>
+    <message>
+        <source>Summary</source>
+        <translation>Summary</translation>
+    </message>
+</context>
+<context>
     <name>CountdownTooltip</name>
     <message>
         <source>Click the tray icon 
@@ -558,10 +577,6 @@ Press and hold Shift to draw a straight line</translation>
         <translation>Settings (F3)</translation>
     </message>
     <message>
-        <source>Format</source>
-        <translation>Format</translation>
-    </message>
-    <message>
         <source>GIF</source>
         <translation>GIF</translation>
     </message>
@@ -714,6 +729,10 @@ Hold down Shift to draw squares or circles.</translation>
     <message>
         <source>Select a location when saving</source>
         <translation>Select a location when saving</translation>
+    </message>
+    <message>
+        <source>AI Screenshot (A)</source>
+        <translation>AI Screenshot (A)</translation>
     </message>
 </context>
 <context>

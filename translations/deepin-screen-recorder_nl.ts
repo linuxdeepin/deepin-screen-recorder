@@ -2,6 +2,25 @@
 <!DOCTYPE TS>
 <TS version="2.1" language="nl">
 <context>
+    <name>AIAssistantWidget</name>
+    <message>
+        <source>Explain</source>
+        <translation>Uitleggen</translation>
+    </message>
+    <message>
+        <source>Translate</source>
+        <translation>Vertalen</translation>
+    </message>
+    <message>
+        <source>Ask AI</source>
+        <translation>Vraag AI</translation>
+    </message>
+    <message>
+        <source>Summary</source>
+        <translation>Samenvatting</translation>
+    </message>
+</context>
+<context>
     <name>CountdownTooltip</name>
     <message>
         <source>Click the tray icon 
@@ -650,10 +669,6 @@ Houd Shift ingedrukt om een verticale of horizontale pijl te tekenen</translatio
         <translation>Locatie wijzigen na klikken op opslaan</translation>
     </message>
     <message>
-        <source>Format</source>
-        <translation>Formaat:</translation>
-    </message>
-    <message>
         <source>PNG</source>
         <translation>PNG</translation>
     </message>
@@ -714,6 +729,10 @@ Houd Shift ingedrukt om vierkanten of cirkels te tekenen.</translation>
     <message>
         <source>Select a location when saving</source>
         <translation>Locatie kiezen na klikken op opslaan</translation>
+    </message>
+    <message>
+        <source>AI Screenshot (A)</source>
+        <translation>AI Schermopname (A)</translation>
     </message>
 </context>
 <context>

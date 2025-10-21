@@ -24,6 +24,7 @@ public:
     void setHoverState(const bool hasHover);
     void setOptionButtonFlag(const bool flag);
     void setUndoButtonFlag(const bool flag);
+    void setShowRedDot(bool show) { m_showRedDot = show; update(); }
 protected:
     void paintEvent(QPaintEvent *event) override;
     void enterEvent(QEnterEvent *e) override;
@@ -43,5 +44,6 @@ private:
     bool m_isMousePress = false;
     QCursor *m_lastCursorShape = nullptr;
     bool m_menuActive = false;
+    bool m_showRedDot = false;
 };
 #endif // TOOLBUTTON_H

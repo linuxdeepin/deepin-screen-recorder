@@ -22,6 +22,7 @@
 DWIDGET_USE_NAMESPACE
 class MainWindow;
 class ShapeToolWidget;
+class AIAssistantWidget;
 class SideBarWidget : public DFloatingWidget
 {
     Q_OBJECT
@@ -36,6 +37,7 @@ public:
      * @return 二级工具栏宽度
      */
     int getSideBarWidth(const QString &func);
+    bool isAIMode() const;
 signals:
     void changeArrowAndLineEvent(int line);
     void closeSideBar();
@@ -54,6 +56,8 @@ private:
     DVerticalLine *m_seperator;
     ColorToolWidget *m_colorTool;
     ShotToolWidget *m_shotTool;
+    AIAssistantWidget *m_aiAssistantTool = nullptr;
+    QString m_currentFunc;
     bool  m_expanded;
     MainWindow *m_pMainWindow = nullptr;
     

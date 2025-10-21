@@ -13,6 +13,17 @@
 #include <QGuiApplication>
 #include <QScreen>
 
+namespace {
+// 红点常量定义（基于SVG设计）
+constexpr float SVG_WIDTH = 24.0f;
+constexpr float SVG_HEIGHT = 24.0f;
+constexpr float SVG_DOT_X = 21.0f;
+constexpr float SVG_DOT_Y = 3.0f;
+constexpr float SVG_DOT_RADIUS = 3.0f;
+constexpr int MIN_DOT_RADIUS = 2;
+const QColor RED_DOT_COLOR = QColor(0xFF, 0x40, 0x40);
+}
+
 ToolButton::ToolButton(QWidget *parent)
     : DToolButton(parent)
     , m_hasHoverState(true)
@@ -126,6 +137,30 @@ void ToolButton::paintEvent(QPaintEvent *event)
         style()->drawComplexControl(QStyle::CC_ToolButton, &opt, &p, this);
     } else {
         DToolButton::paintEvent(event);
+    }
+
+    if (m_showRedDot) {
+        QPainter p(this);
+        p.setRenderHint(QPainter::Antialiasing, true);
+        
+        QStyleOptionToolButton opt;
+        initStyleOption(&opt);
+        
+        QSize iconSize = opt.iconSize.isValid() ? opt.iconSize : QSize(24, 24);
+        
+        int iconX = (width() - iconSize.width()) / 2;
+        int iconY = (height() - iconSize.height()) / 2;
+        QRect iconRect(iconX, iconY, iconSize.width(), iconSize.height());
+        
+        const int actualDotX = iconRect.left() + (SVG_DOT_X / SVG_WIDTH) * iconRect.width();
+        const int actualDotY = iconRect.top() + (SVG_DOT_Y / SVG_HEIGHT) * iconRect.height();
+        const int actualDotRadius = qMax(MIN_DOT_RADIUS, (int)((SVG_DOT_RADIUS / SVG_WIDTH) * iconRect.width()));
+        
+        QPoint dotCenter(actualDotX, actualDotY);
+        
+        p.setPen(Qt::NoPen);
+        p.setBrush(RED_DOT_COLOR);
+        p.drawEllipse(dotCenter, actualDotRadius, actualDotRadius);
     }
 }
 

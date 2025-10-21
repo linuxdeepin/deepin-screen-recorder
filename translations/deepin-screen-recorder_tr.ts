@@ -2,6 +2,25 @@
 <!DOCTYPE TS>
 <TS version="2.1" language="tr">
 <context>
+    <name>AIAssistantWidget</name>
+    <message>
+        <source>Explain</source>
+        <translation>Açıklama</translation>
+    </message>
+    <message>
+        <source>Translate</source>
+        <translation>Çevir</translation>
+    </message>
+    <message>
+        <source>Ask AI</source>
+        <translation>AI&apos;ye sor</translation>
+    </message>
+    <message>
+        <source>Summary</source>
+        <translation>Özet</translation>
+    </message>
+</context>
+<context>
     <name>CountdownTooltip</name>
     <message>
         <source>Click the tray icon 
@@ -209,7 +228,7 @@ tepsi simgesine tıklayın ya da kısayola yeniden basın</translation>
     <name>SaveMenuManager</name>
     <message>
         <source>Each inquiry</source>
-        <translation type="unfinished">Her sorgulama</translation>
+        <translation>Her sorgulama</translation>
     </message>
     <message>
         <source>Specified location</source>
@@ -650,10 +669,6 @@ Dikey veya yatay ok çizmek için Shift tuşunu basılı tutun</translation>
         <translation>Kaydet sırasında yolu değiştir</translation>
     </message>
     <message>
-        <source>Format</source>
-        <translation>Biçim</translation>
-    </message>
-    <message>
         <source>PNG</source>
         <translation>PNG</translation>
     </message>
@@ -714,6 +729,10 @@ Kare veya daire çizmek için Shift tuşunu basılı tutun.</translation>
     <message>
         <source>Select a location when saving</source>
         <translation>Kaydet sırasında bir yol ayarla</translation>
+    </message>
+    <message>
+        <source>AI Screenshot (A)</source>
+        <translation>AI Ekran Görüntüsü (A)</translation>
     </message>
 </context>
 <context>

@@ -2,6 +2,25 @@
 <!DOCTYPE TS>
 <TS version="2.1" language="lo">
 <context>
+    <name>AIAssistantWidget</name>
+    <message>
+        <source>Explain</source>
+        <translation>ອຘິບັດ</translation>
+    </message>
+    <message>
+        <source>Translate</source>
+        <translation>ການການສະກຽງ</translation>
+    </message>
+    <message>
+        <source>Ask AI</source>
+        <translation>ຖາມ AI</translation>
+    </message>
+    <message>
+        <source>Summary</source>
+        <translation>ສະຖານທີ່ທີ່ກຳນົດ</translation>
+    </message>
+</context>
+<context>
     <name>CountdownTooltip</name>
     <message>
         <source>Click the tray icon 
@@ -555,10 +574,6 @@ Press and hold Shift to draw a straight line</source>
         <translation>ການຕັ້ງຄ່າ (F3)</translation>
     </message>
     <message>
-        <source>Format</source>
-        <translation>ຮູບແບບ</translation>
-    </message>
-    <message>
         <source>GIF</source>
         <translation>GIF</translation>
     </message>
@@ -711,6 +726,10 @@ Hold down Shift to draw squares or circles.</source>
     <message>
         <source>Select a location when saving</source>
         <translation>ເລືອກສະຖານທີ່ເມື່ອບັນທຶກ</translation>
+    </message>
+    <message>
+        <source>AI Screenshot (A)</source>
+        <translation>ສະກີນສໍາເນົາ AI (A)</translation>
     </message>
 </context>
 <context>
