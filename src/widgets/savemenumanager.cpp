@@ -184,7 +184,7 @@ void SaveMenuManager::initializeFromConfig()
             }
         }
     }
-    
+    m_updateOnSaveAction->setChecked(isChangeOnSave);
     qCDebug(dsrApp) << "SaveMenuManager initialized - SaveOption:" << static_cast<int>(m_currentSaveOption)
                     << "LocationState:" << static_cast<int>(m_currentLocationState)
                     << "CustomPath:" << m_currentCustomPath;
@@ -247,7 +247,6 @@ void SaveMenuManager::onSaveOptionTriggered(QAction *action)
                 qCWarning(dsrApp) << "SaveMenuManager::onSaveOptionTriggered - invalid save_dir, fallback to choose on save";
             }
         }
-        
         updateConfigSettings();
         emit saveOptionChanged(m_currentSaveOption, m_currentLocationState);
         
