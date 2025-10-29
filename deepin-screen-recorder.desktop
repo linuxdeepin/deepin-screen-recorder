@@ -1,4 +1,5 @@
 [Desktop Entry]
+Actions=FullScreenShot;DelayShot
 Categories=AudioVideo;Recorder;
 Keywords=screen;capture;recorder;screenshot;deepin;dde;
 Comment=Record screen
@@ -128,7 +129,7 @@ Name[zh_CN]=截图录屏
 Name[zh_HK]=Deepin 螢幕錄影
 Name[zh_TW]=Deepin 螢幕錄影
 
-[X-Full Shortcut Group]
+[Desktop Action FullScreenShot]
 Exec=dbus-send --print-reply --dest=com.deepin.Screenshot /com/deepin/Screenshot com.deepin.Screenshot.FullscreenScreenshot
 Name=Full Screenshot
 
@@ -165,7 +166,7 @@ Name[zh_CN]=全屏截图
 Name[zh_HK]=全屏截圖
 Name[zh_TW]=全屏截圖
 
-[X-Delay Shortcut Group]
+[Desktop Action DelayShot]
 Exec=dbus-send --print-reply --dest=com.deepin.Screenshot /com/deepin/Screenshot com.deepin.Screenshot.DelayScreenshot int64:5
 Name=Delay Screenshot
 
