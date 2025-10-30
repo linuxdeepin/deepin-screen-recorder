@@ -1,3 +1,9 @@
+deepin-screen-recorder (6.6.11) unstable; urgency=medium
+
+  * feat: Integrate AI Assistant functionality and enhance UI components
+
+ -- dengzhongyuan <dengzhongyuan@uniontech.com>  Thu, 30 Oct 2025 16:26:00 +0800
+
 deepin-screen-recorder (6.6.10) unstable; urgency=medium
 
   * fix: Remove colons from Format and FPS menu labels
