@@ -171,6 +171,14 @@ pe bouezit adarre war ar verradenn evit paouez an enrolladenn</translation>
         <source>Change the path on save</source>
         <translation>تغيير المسار عند الحفظ</translation>
     </message>
+    <message>
+        <source>Desktop</source>
+        <translation>Burev</translation>
+    </message>
+    <message>
+        <source>Pictures</source>
+        <translation>Skeudennioù</translation>
+    </message>
 </context>
 <context>
     <name>QObject</name>
@@ -241,6 +249,14 @@ pe bouezit adarre war ar verradenn evit paouez an enrolladenn</translation>
     <message>
         <source>Update the location when saving</source>
         <translation></translation>
+    </message>
+    <message>
+        <source>Desktop</source>
+        <translation>Burev</translation>
+    </message>
+    <message>
+        <source>Pictures</source>
+        <translation>Skeudennioù</translation>
     </message>
 </context>
 <context>

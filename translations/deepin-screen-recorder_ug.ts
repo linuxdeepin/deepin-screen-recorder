@@ -170,6 +170,14 @@ or press the shortcut again to stop recording</source>
         <source>Change the path on save</source>
         <translation>ئورۇننى ساقلىغاندا تەڭشەش</translation>
     </message>
+    <message>
+        <source>Desktop</source>
+        <translation>ئۈستەليۈزى</translation>
+    </message>
+    <message>
+        <source>Pictures</source>
+        <translation>رەسىم</translation>
+    </message>
 </context>
 <context>
     <name>QObject</name>
@@ -240,6 +248,14 @@ or press the shortcut again to stop recording</source>
     <message>
         <source>Update the location when saving</source>
         <translation>ئورۇننى ساقلىغاندا تەڭشەش</translation>
+    </message>
+    <message>
+        <source>Desktop</source>
+        <translation>ئۈستەليۈزى</translation>
+    </message>
+    <message>
+        <source>Pictures</source>
+        <translation>رەسىم</translation>
     </message>
 </context>
 <context>

@@ -171,6 +171,14 @@ o utilizza nuovamente la scorciatoia da tastiera per terminare la registrazione<
         <source>Change the path on save</source>
         <translation>Cambia il percorso di salvataggio</translation>
     </message>
+    <message>
+        <source>Desktop</source>
+        <translation>Desktop</translation>
+    </message>
+    <message>
+        <source>Pictures</source>
+        <translation>Immagini</translation>
+    </message>
 </context>
 <context>
     <name>QObject</name>
@@ -241,6 +249,14 @@ o utilizza nuovamente la scorciatoia da tastiera per terminare la registrazione<
     <message>
         <source>Update the location when saving</source>
         <translation>Aggiorna la posizione di salvataggio</translation>
+    </message>
+    <message>
+        <source>Desktop</source>
+        <translation>Desktop</translation>
+    </message>
+    <message>
+        <source>Pictures</source>
+        <translation>Immagini</translation>
     </message>
 </context>
 <context>

@@ -171,6 +171,14 @@ or press the shortcut again to stop recording</source>
         <source>Change the path on save</source>
         <translation>ປ່ຽນທິດທາງເມື່ອບັນທຶກ</translation>
     </message>
+    <message>
+        <source>Desktop</source>
+        <translation>ພາບຫນ້າທີ່ສະແດງ</translation>
+    </message>
+    <message>
+        <source>Pictures</source>
+        <translation>ພາບ</translation>
+    </message>
 </context>
 <context>
     <name>QObject</name>
@@ -241,6 +249,14 @@ or press the shortcut again to stop recording</source>
     <message>
         <source>Update the location when saving</source>
         <translation>ປັບແຕ່ງສະຖານທີ່ເມື່ອບັນທຶກ</translation>
+    </message>
+    <message>
+        <source>Desktop</source>
+        <translation>ພາບຫນ້າທີ່ສະແດງ</translation>
+    </message>
+    <message>
+        <source>Pictures</source>
+        <translation>ພາບ</translation>
     </message>
 </context>
 <context>

@@ -16,6 +16,8 @@ DWIDGET_USE_NAMESPACE
 // CLIPBOARD=0, DESKTOP=1, PICTURES=2, FOLDER=3, FOLDER_CHANGE=4, ASK=5
 enum SavePathType {
     ASK = 5,           // 每次询问
+    DESKTOP = 1,       // 保存到桌面
+    PICTURES = 2,      // 保存到图片文件夹
     FOLDER = 3,        // 指定文件夹（历史路径）
     FOLDER_CHANGE = 4  // 保存时选择文件夹
 };
@@ -68,6 +70,8 @@ private:
     
     DMenu *m_specifiedLocationSubMenu;
     QActionGroup *m_customLocationGroup;
+    QAction *m_desktopAction;               // "保存到桌面"
+    QAction *m_picturesAction;              // "保存到图片"
     QAction *m_saveToSpecialPathAction;     // 显示历史路径
     QAction *m_changeSaveToSpecialPath;     // "保存时选择位置"
     

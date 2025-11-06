@@ -171,6 +171,14 @@ or press the shortcut again to stop recording</source>
         <source>Change the path on save</source>
         <translation>تغيير المسار عند الحفظ</translation>
     </message>
+    <message>
+        <source>Desktop</source>
+        <translation>سطح المكتب</translation>
+    </message>
+    <message>
+        <source>Pictures</source>
+        <translation>الصور</translation>
+    </message>
 </context>
 <context>
     <name>QObject</name>
@@ -241,6 +249,14 @@ or press the shortcut again to stop recording</source>
     <message>
         <source>Update the location when saving</source>
         <translation></translation>
+    </message>
+    <message>
+        <source>Desktop</source>
+        <translation>سطح المكتب</translation>
+    </message>
+    <message>
+        <source>Pictures</source>
+        <translation>الصور</translation>
     </message>
 </context>
 <context>

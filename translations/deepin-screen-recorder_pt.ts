@@ -171,6 +171,14 @@ ou pressione novamente o atalho para parar de gravar</translation>
         <source>Change the path on save</source>
         <translation>Alterar o caminho para salvar</translation>
     </message>
+    <message>
+        <source>Desktop</source>
+        <translation>Ambiente de trabalho</translation>
+    </message>
+    <message>
+        <source>Pictures</source>
+        <translation>Imagens</translation>
+    </message>
 </context>
 <context>
     <name>QObject</name>
@@ -241,6 +249,14 @@ ou pressione novamente o atalho para parar de gravar</translation>
     <message>
         <source>Update the location when saving</source>
         <translation>Atualizar a localização ao guardar</translation>
+    </message>
+    <message>
+        <source>Desktop</source>
+        <translation>Ambiente de trabalho</translation>
+    </message>
+    <message>
+        <source>Pictures</source>
+        <translation>Imagens</translation>
     </message>
 </context>
 <context>

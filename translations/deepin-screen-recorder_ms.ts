@@ -171,6 +171,14 @@ atau klik pintasan sekali lagi untuk hentikan rakaman</translation>
         <source>Change the path on save</source>
         <translation>Ubah laluan ketika simpan</translation>
     </message>
+    <message>
+        <source>Desktop</source>
+        <translation>Atas Meja</translation>
+    </message>
+    <message>
+        <source>Pictures</source>
+        <translation>Gambar</translation>
+    </message>
 </context>
 <context>
     <name>QObject</name>
@@ -241,6 +249,14 @@ atau klik pintasan sekali lagi untuk hentikan rakaman</translation>
     <message>
         <source>Update the location when saving</source>
         <translation>Ubah laluan ketika simpan</translation>
+    </message>
+    <message>
+        <source>Desktop</source>
+        <translation>Atas Meja</translation>
+    </message>
+    <message>
+        <source>Pictures</source>
+        <translation>Gambar</translation>
     </message>
 </context>
 <context>

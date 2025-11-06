@@ -171,6 +171,14 @@ ou prema de novo o atallo para deixar de gravar</translation>
         <source>Change the path on save</source>
         <translation>Cambia o camiño ao gardar</translation>
     </message>
+    <message>
+        <source>Desktop</source>
+        <translation>Escritorio</translation>
+    </message>
+    <message>
+        <source>Pictures</source>
+        <translation>Imaxes</translation>
+    </message>
 </context>
 <context>
     <name>QObject</name>
@@ -241,6 +249,14 @@ ou prema de novo o atallo para deixar de gravar</translation>
     <message>
         <source>Update the location when saving</source>
         <translation>Actualiza a localización ao gardar</translation>
+    </message>
+    <message>
+        <source>Desktop</source>
+        <translation>Escritorio</translation>
+    </message>
+    <message>
+        <source>Pictures</source>
+        <translation>Imaxes</translation>
     </message>
 </context>
 <context>

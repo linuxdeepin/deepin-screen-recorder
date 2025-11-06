@@ -171,6 +171,14 @@ klikoni ikonën e panelit, ose rishtypni shkurtoren</translation>
         <source>Change the path on save</source>
         <translation>Ndryshoni shtegun gjatë ruajtjes</translation>
     </message>
+    <message>
+        <source>Desktop</source>
+        <translation>Desktop</translation>
+    </message>
+    <message>
+        <source>Pictures</source>
+        <translation>Foto</translation>
+    </message>
 </context>
 <context>
     <name>QObject</name>
@@ -241,6 +249,14 @@ klikoni ikonën e panelit, ose rishtypni shkurtoren</translation>
     <message>
         <source>Update the location when saving</source>
         <translation>Përditësoni vendndodhjen gjatë ruajtjes</translation>
+    </message>
+    <message>
+        <source>Desktop</source>
+        <translation>Desktop</translation>
+    </message>
+    <message>
+        <source>Pictures</source>
+        <translation>Foto</translation>
     </message>
 </context>
 <context>

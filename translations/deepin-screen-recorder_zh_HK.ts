@@ -171,6 +171,14 @@ or press the shortcut again to stop recording</source>
         <source>Change the path on save</source>
         <translation>保存時更新位置</translation>
     </message>
+    <message>
+        <source>Desktop</source>
+        <translation>桌面</translation>
+    </message>
+    <message>
+        <source>Pictures</source>
+        <translation>圖片</translation>
+    </message>
 </context>
 <context>
     <name>QObject</name>
@@ -241,6 +249,14 @@ or press the shortcut again to stop recording</source>
     <message>
         <source>Update the location when saving</source>
         <translation>保存時更新位置</translation>
+    </message>
+    <message>
+        <source>Desktop</source>
+        <translation>桌面</translation>
+    </message>
+    <message>
+        <source>Pictures</source>
+        <translation>圖片</translation>
     </message>
 </context>
 <context>

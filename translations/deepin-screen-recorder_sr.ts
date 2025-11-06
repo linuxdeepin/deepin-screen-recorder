@@ -171,6 +171,14 @@ or press the shortcut again to stop recording</source>
         <source>Change the path on save</source>
         <translation>Промени путању приликом сачувања</translation>
     </message>
+    <message>
+        <source>Desktop</source>
+        <translation>Радна површина</translation>
+    </message>
+    <message>
+        <source>Pictures</source>
+        <translation>Слике</translation>
+    </message>
 </context>
 <context>
     <name>QObject</name>
@@ -241,6 +249,14 @@ or press the shortcut again to stop recording</source>
     <message>
         <source>Update the location when saving</source>
         <translation>Промени путању приликом сачувања</translation>
+    </message>
+    <message>
+        <source>Desktop</source>
+        <translation>Радна површина</translation>
+    </message>
+    <message>
+        <source>Pictures</source>
+        <translation>Слике</translation>
     </message>
 </context>
 <context>

@@ -171,6 +171,14 @@ eller tryk på genvejen igen, for at stoppe optagelse</translation>
         <source>Change the path on save</source>
         <translation type="unfinished">Ændr stien ved opbevaring</translation>
     </message>
+    <message>
+        <source>Desktop</source>
+        <translation>Skrivebord</translation>
+    </message>
+    <message>
+        <source>Pictures</source>
+        <translation>Billeder</translation>
+    </message>
 </context>
 <context>
     <name>QObject</name>
@@ -241,6 +249,14 @@ eller tryk på genvejen igen, for at stoppe optagelse</translation>
     <message>
         <source>Update the location when saving</source>
         <translation>Opdateret sted ved opbevaring</translation>
+    </message>
+    <message>
+        <source>Desktop</source>
+        <translation>Skrivebord</translation>
+    </message>
+    <message>
+        <source>Pictures</source>
+        <translation>Billeder</translation>
     </message>
 </context>
 <context>

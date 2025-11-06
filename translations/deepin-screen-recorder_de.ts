@@ -171,6 +171,14 @@ oder drücken Sie die Tastenkombination erneut, um die Aufnahme zu stoppen</tran
         <source>Change the path on save</source>
         <translation>Beim Speichern den Pfad ändern</translation>
     </message>
+    <message>
+        <source>Desktop</source>
+        <translation>Schreibtisch</translation>
+    </message>
+    <message>
+        <source>Pictures</source>
+        <translation>Bilder</translation>
+    </message>
 </context>
 <context>
     <name>QObject</name>
@@ -241,6 +249,14 @@ oder drücken Sie die Tastenkombination erneut, um die Aufnahme zu stoppen</tran
     <message>
         <source>Update the location when saving</source>
         <translation>Beim Speichern den Pfad ändern</translation>
+    </message>
+    <message>
+        <source>Desktop</source>
+        <translation>Schreibtisch</translation>
+    </message>
+    <message>
+        <source>Pictures</source>
+        <translation>Bilder</translation>
     </message>
 </context>
 <context>

@@ -11,6 +11,7 @@
 #include <QActionGroup>
 #include <QFileInfo>
 #include <QDir>
+#include <QStandardPaths>
 #include <DFontSizeManager>
 
 DWIDGET_USE_NAMESPACE
@@ -23,6 +24,8 @@ PinSaveMenuManager::PinSaveMenuManager(QWidget *parent)
     , m_specifiedLocationAction(nullptr)
     , m_specifiedLocationSubMenu(nullptr)
     , m_customLocationGroup(nullptr)
+    , m_desktopAction(nullptr)
+    , m_picturesAction(nullptr)
     , m_saveToSpecialPathAction(nullptr)
     , m_changeSaveToSpecialPath(nullptr)
     , m_currentSavePathType(ASK)
@@ -78,21 +81,35 @@ void PinSaveMenuManager::createLocationActions()
     m_customLocationGroup = new QActionGroup(this);
     m_customLocationGroup->setExclusive(true);
     
-    // 历史路径选项 - 动态创建
-    m_saveToSpecialPathAction = new QAction(m_specifiedLocationSubMenu);
-    m_saveToSpecialPathAction->setCheckable(true);
-    m_customLocationGroup->addAction(m_saveToSpecialPathAction);
+    // 保存到桌面
+    m_desktopAction = new QAction(tr("Desktop"), m_specifiedLocationSubMenu);
+    m_desktopAction->setCheckable(true);
+    m_customLocationGroup->addAction(m_desktopAction);
+    m_specifiedLocationSubMenu->addAction(m_desktopAction);
     
-    // "保存时选择位置"选项
+    // 保存到图片
+    m_picturesAction = new QAction(tr("Pictures"), m_specifiedLocationSubMenu);
+    m_picturesAction->setCheckable(true);
+    m_customLocationGroup->addAction(m_picturesAction);
+    m_specifiedLocationSubMenu->addAction(m_picturesAction);
+    
+    // 保存时选择位置
     m_changeSaveToSpecialPath = new QAction(tr("Set a path on save"), m_specifiedLocationSubMenu);
     m_changeSaveToSpecialPath->setCheckable(true);
     m_customLocationGroup->addAction(m_changeSaveToSpecialPath);
     m_specifiedLocationSubMenu->addAction(m_changeSaveToSpecialPath);
     
+    // 历史路径选项
+    m_saveToSpecialPathAction = new QAction(m_specifiedLocationSubMenu);
+    m_saveToSpecialPathAction->setCheckable(true);
+    m_customLocationGroup->addAction(m_saveToSpecialPathAction);
+    
     // 添加子菜单到主菜单
     m_saveMenu->addMenu(m_specifiedLocationSubMenu);
     
     // 保存到映射
+    m_savePathActions.insert(DESKTOP, m_desktopAction);
+    m_savePathActions.insert(PICTURES, m_picturesAction);
     m_savePathActions.insert(FOLDER, m_saveToSpecialPathAction);
     m_savePathActions.insert(FOLDER_CHANGE, m_changeSaveToSpecialPath);
 }
@@ -160,6 +177,8 @@ void PinSaveMenuManager::onSaveOptionTriggered(QAction *action)
         
         // 清除指定位置的所有选项
         m_specifiedLocationSubMenu->menuAction()->setChecked(false);
+        if (m_desktopAction) m_desktopAction->setChecked(false);
+        if (m_picturesAction) m_picturesAction->setChecked(false);
         if (m_saveToSpecialPathAction) m_saveToSpecialPathAction->setChecked(false);
         if (m_changeSaveToSpecialPath) m_changeSaveToSpecialPath->setChecked(false);
         
@@ -169,7 +188,13 @@ void PinSaveMenuManager::onSaveOptionTriggered(QAction *action)
         // 检查子菜单中是否有选中项
         bool hasCheckedChild = false;
         
-        if (m_saveToSpecialPathAction && m_saveToSpecialPathAction->isChecked()) {
+        if (m_desktopAction && m_desktopAction->isChecked()) {
+            m_currentSavePathType = DESKTOP;
+            hasCheckedChild = true;
+        } else if (m_picturesAction && m_picturesAction->isChecked()) {
+            m_currentSavePathType = PICTURES;
+            hasCheckedChild = true;
+        } else if (m_saveToSpecialPathAction && m_saveToSpecialPathAction->isChecked()) {
             m_currentSavePathType = FOLDER;
             hasCheckedChild = true;
         } else if (m_changeSaveToSpecialPath && m_changeSaveToSpecialPath->isChecked()) {
@@ -197,7 +222,13 @@ void PinSaveMenuManager::onLocationActionTriggered(QAction *action)
     m_specifiedLocationSubMenu->menuAction()->setChecked(true);
     m_askEveryTimeAction->setChecked(false);
     
-    if (action == m_saveToSpecialPathAction) {
+    if (action == m_desktopAction) {
+        m_currentSavePathType = DESKTOP;
+        Settings::instance()->setIsChangeSavePath(false);
+    } else if (action == m_picturesAction) {
+        m_currentSavePathType = PICTURES;
+        Settings::instance()->setIsChangeSavePath(false);
+    } else if (action == m_saveToSpecialPathAction) {
         m_currentSavePathType = FOLDER;
         Settings::instance()->setIsChangeSavePath(false);
         

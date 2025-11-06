@@ -171,6 +171,14 @@ of druk nogmaals op de sneltoets om te stoppen</translation>
         <source>Change the path on save</source>
         <translation>Locatie wijzigen na klikken op opslaan</translation>
     </message>
+    <message>
+        <source>Desktop</source>
+        <translation>Bureaublad</translation>
+    </message>
+    <message>
+        <source>Pictures</source>
+        <translation>Afbeeldingen</translation>
+    </message>
 </context>
 <context>
     <name>QObject</name>
@@ -241,6 +249,14 @@ of druk nogmaals op de sneltoets om te stoppen</translation>
     <message>
         <source>Update the location when saving</source>
         <translation>Locatie wijzigen na klikken op opslaan</translation>
+    </message>
+    <message>
+        <source>Desktop</source>
+        <translation>Bureaublad</translation>
+    </message>
+    <message>
+        <source>Pictures</source>
+        <translation>Afbeeldingen</translation>
     </message>
 </context>
 <context>

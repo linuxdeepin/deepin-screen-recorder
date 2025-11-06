@@ -171,6 +171,14 @@ ou appuyer à nouveau sur le raccourci pour arrêter l&apos;enregistrement</tran
         <source>Change the path on save</source>
         <translation>Changer le chemin d&apos;enregistrement</translation>
     </message>
+    <message>
+        <source>Desktop</source>
+        <translation>Bureau</translation>
+    </message>
+    <message>
+        <source>Pictures</source>
+        <translation>Images</translation>
+    </message>
 </context>
 <context>
     <name>QObject</name>
@@ -241,6 +249,14 @@ ou appuyer à nouveau sur le raccourci pour arrêter l&apos;enregistrement</tran
     <message>
         <source>Update the location when saving</source>
         <translation>Mettre à jour l&apos;emplacement lors de l&apos;enregistrement</translation>
+    </message>
+    <message>
+        <source>Desktop</source>
+        <translation>Bureau</translation>
+    </message>
+    <message>
+        <source>Pictures</source>
+        <translation>Images</translation>
     </message>
 </context>
 <context>

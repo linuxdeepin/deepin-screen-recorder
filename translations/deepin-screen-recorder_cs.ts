@@ -171,6 +171,14 @@ v oznamovací oblasti panelu nebo stiskněte klávesovou zkratku</translation>
         <source>Change the path on save</source>
         <translation>Změnit popis umístění pro ukládání</translation>
     </message>
+    <message>
+        <source>Desktop</source>
+        <translation>Plocha</translation>
+    </message>
+    <message>
+        <source>Pictures</source>
+        <translation>Obrázky</translation>
+    </message>
 </context>
 <context>
     <name>QObject</name>
@@ -241,6 +249,14 @@ v oznamovací oblasti panelu nebo stiskněte klávesovou zkratku</translation>
     <message>
         <source>Update the location when saving</source>
         <translation>Aktualizovat umístění při ukládání</translation>
+    </message>
+    <message>
+        <source>Desktop</source>
+        <translation>Plocha</translation>
+    </message>
+    <message>
+        <source>Pictures</source>
+        <translation>Obrázky</translation>
     </message>
 </context>
 <context>

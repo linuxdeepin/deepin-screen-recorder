@@ -171,6 +171,14 @@ o premeu la drecera de nou per aturar la gravació.</translation>
         <source>Change the path on save</source>
         <translation>Canvia el camí per desar</translation>
     </message>
+    <message>
+        <source>Desktop</source>
+        <translation>Escriptori</translation>
+    </message>
+    <message>
+        <source>Pictures</source>
+        <translation>Imatges</translation>
+    </message>
 </context>
 <context>
     <name>QObject</name>
@@ -241,6 +249,14 @@ o premeu la drecera de nou per aturar la gravació.</translation>
     <message>
         <source>Update the location when saving</source>
         <translation>Actualitza la ubicació quan es desa</translation>
+    </message>
+    <message>
+        <source>Desktop</source>
+        <translation>Escriptori</translation>
+    </message>
+    <message>
+        <source>Pictures</source>
+        <translation>Imatges</translation>
     </message>
 </context>
 <context>

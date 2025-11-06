@@ -171,6 +171,14 @@ tepsi simgesine tıklayın ya da kısayola yeniden basın</translation>
         <source>Change the path on save</source>
         <translation>Kaydet sırasında yolu değiştir</translation>
     </message>
+    <message>
+        <source>Desktop</source>
+        <translation>Masaüstü</translation>
+    </message>
+    <message>
+        <source>Pictures</source>
+        <translation>Resimler</translation>
+    </message>
 </context>
 <context>
     <name>QObject</name>
@@ -241,6 +249,14 @@ tepsi simgesine tıklayın ya da kısayola yeniden basın</translation>
     <message>
         <source>Update the location when saving</source>
         <translation>Kaydet sırasında yolu değiştir</translation>
+    </message>
+    <message>
+        <source>Desktop</source>
+        <translation>Masaüstü</translation>
+    </message>
+    <message>
+        <source>Pictures</source>
+        <translation>Resimler</translation>
     </message>
 </context>
 <context>

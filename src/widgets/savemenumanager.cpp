@@ -25,6 +25,8 @@ SaveMenuManager::SaveMenuManager(QWidget *parent)
     , m_specifiedLocationSubMenu(nullptr)
     , m_locationGroup(nullptr)
     , m_chooseOnSaveAction(nullptr)
+    , m_desktopAction(nullptr)
+    , m_picturesAction(nullptr)
     , m_customPathAction(nullptr)
     , m_updateOnSaveAction(nullptr)
     , m_currentSaveOption(SaveOption::AskEachTime)
@@ -83,7 +85,19 @@ void SaveMenuManager::createLocationActions()
     m_locationGroup = new QActionGroup(this);
     m_locationGroup->setExclusive(true);
     
-    // "保存时选择位置" - 默认显示
+    // "保存到桌面"
+    m_desktopAction = new QAction(tr("Desktop"), m_specifiedLocationSubMenu);
+    m_desktopAction->setCheckable(true);
+    m_locationGroup->addAction(m_desktopAction);
+    m_specifiedLocationSubMenu->addAction(m_desktopAction);
+    
+    // "保存到图片" 
+    m_picturesAction = new QAction(tr("Pictures"), m_specifiedLocationSubMenu);
+    m_picturesAction->setCheckable(true);
+    m_locationGroup->addAction(m_picturesAction);
+    m_specifiedLocationSubMenu->addAction(m_picturesAction);
+    
+    // "保存时选择位置"
     m_chooseOnSaveAction = new QAction(tr("Select a location when saving"), m_specifiedLocationSubMenu);
     m_chooseOnSaveAction->setCheckable(true);
     m_chooseOnSaveAction->setChecked(true); // 默认选中
@@ -121,11 +135,14 @@ void SaveMenuManager::setupConnections()
 
 void SaveMenuManager::initializeFromConfig()
 {
-    // 按原始逻辑：只使用 save_dir 和 save_dir_change，没有 save_ask_dir
     int saveWay = ConfigSettings::instance()->getValue("shot", "save_ways").toInt();
+    int saveOp = ConfigSettings::instance()->getValue("shot", "save_op").toInt();
+    int locationState = ConfigSettings::instance()->getValue("shot", "location_state").toInt();
     QString savedPath = ConfigSettings::instance()->getValue("shot", "save_dir").toString();
     bool isChangeOnSave = ConfigSettings::instance()->getValue("shot", "save_dir_change").toBool();
-    qCWarning(dsrApp) << "SaveMenuManager::initializeFromConfig - save_dir:" << savedPath << "save_dir_change:" << isChangeOnSave;
+    qCWarning(dsrApp) << "SaveMenuManager::initializeFromConfig - save_ways:" << saveWay 
+                      << "save_op:" << saveOp << "location_state:" << locationState
+                      << "save_dir:" << savedPath << "save_dir_change:" << isChangeOnSave;
     
     if (saveWay == 0) { // Ask - 每次询问（默认）
         m_currentSaveOption = SaveOption::AskEachTime;
@@ -139,11 +156,12 @@ void SaveMenuManager::initializeFromConfig()
             qCWarning(dsrApp) << "SaveMenuManager::initializeFromConfig - AskEachTime mode, keeping save_dir as reference:" << savedPath;
             updateSubMenuForExistingPath();
         } else {
-            // 无有效路径则按照首次使用显示
             updateSubMenuForFirstTime();
         }
         
         m_chooseOnSaveAction->setChecked(false);
+        m_desktopAction->setChecked(false);
+        m_picturesAction->setChecked(false);
         m_customPathAction->setChecked(false);
         m_updateOnSaveAction->setChecked(false);
         
@@ -152,9 +170,76 @@ void SaveMenuManager::initializeFromConfig()
         m_askEachTimeAction->setChecked(false);
         m_specifiedLocationAction->setChecked(true);
         
-        // 按原始逻辑：save_dir_change=true 表示"保存时选择路径"，false 表示"使用上次路径"
-        if (isChangeOnSave) {
-            // save_dir_change=true：显示"保存时选择路径"
+        if (locationState == static_cast<int>(LocationState::Desktop)) {
+            // 保存到桌面
+            m_currentLocationState = LocationState::Desktop;
+            m_desktopAction->setChecked(true);
+            qCWarning(dsrApp) << "SaveMenuManager::initializeFromConfig - 保存到桌面";
+            
+            // 检查是否有历史自定义路径
+            if (!savedPath.isEmpty() && QFileInfo::exists(savedPath) &&
+                savedPath != getStandardPath(LocationState::Desktop) &&
+                savedPath != getStandardPath(LocationState::Pictures)) {
+                m_currentCustomPath = savedPath;
+                updateSubMenuForExistingPath();
+                qCWarning(dsrApp) << "SaveMenuManager::initializeFromConfig - 保留历史路径:" << savedPath;
+            } else {
+                updateSubMenuForFirstTime();
+                qCWarning(dsrApp) << "SaveMenuManager::initializeFromConfig - 无历史路径";
+            }
+            
+        } else if (locationState == static_cast<int>(LocationState::Pictures)) {
+            // 保存到图片
+            m_currentLocationState = LocationState::Pictures;
+            m_picturesAction->setChecked(true);
+            qCWarning(dsrApp) << "SaveMenuManager::initializeFromConfig - 保存到图片";
+            
+            // 检查是否有历史自定义路径
+            if (!savedPath.isEmpty() && QFileInfo::exists(savedPath) &&
+                savedPath != getStandardPath(LocationState::Desktop) &&
+                savedPath != getStandardPath(LocationState::Pictures)) {
+                m_currentCustomPath = savedPath;
+                updateSubMenuForExistingPath();
+                qCWarning(dsrApp) << "SaveMenuManager::initializeFromConfig - 保留历史路径:" << savedPath;
+            } else {
+                updateSubMenuForFirstTime();
+                qCWarning(dsrApp) << "SaveMenuManager::initializeFromConfig - 无历史路径";
+            }
+            
+        } else if (saveOp == 1) { // 兼容旧配置
+            m_currentLocationState = LocationState::Desktop;
+            m_desktopAction->setChecked(true);
+            ConfigSettings::instance()->setValue("shot", "location_state", static_cast<int>(LocationState::Desktop));
+            
+            // 检查历史路径
+            if (!savedPath.isEmpty() && QFileInfo::exists(savedPath) &&
+                savedPath != getStandardPath(LocationState::Desktop) &&
+                savedPath != getStandardPath(LocationState::Pictures)) {
+                m_currentCustomPath = savedPath;
+                updateSubMenuForExistingPath();
+            } else {
+                updateSubMenuForFirstTime();
+            }
+            qCWarning(dsrApp) << "SaveMenuManager::initializeFromConfig - 兼容旧配置，保存到桌面";
+            
+        } else if (saveOp == 2) { // 兼容旧配置
+            m_currentLocationState = LocationState::Pictures;
+            m_picturesAction->setChecked(true);
+            ConfigSettings::instance()->setValue("shot", "location_state", static_cast<int>(LocationState::Pictures));
+            
+            // 检查历史路径
+            if (!savedPath.isEmpty() && QFileInfo::exists(savedPath) &&
+                savedPath != getStandardPath(LocationState::Desktop) &&
+                savedPath != getStandardPath(LocationState::Pictures)) {
+                m_currentCustomPath = savedPath;
+                updateSubMenuForExistingPath();
+            } else {
+                updateSubMenuForFirstTime();
+            }
+            qCWarning(dsrApp) << "SaveMenuManager::initializeFromConfig - 兼容旧配置，保存到图片";
+            
+        } else if (isChangeOnSave) {
+            // save_dir_change=true
             m_currentLocationState = LocationState::ChooseOnSave;
             m_chooseOnSaveAction->setChecked(true);
             qCWarning(dsrApp) << "SaveMenuManager::initializeFromConfig - SpecifiedLocation mode, choose on save (save_dir_change=true)";
@@ -163,10 +248,10 @@ void SaveMenuManager::initializeFromConfig()
             if (!savedPath.isEmpty() && QFileInfo::exists(savedPath)) {
                 m_currentCustomPath = savedPath;
                 updateSubMenuForExistingPath();
-                // 保持 m_chooseOnSaveAction 选中，但显示路径选项
             } else {
                 updateSubMenuForFirstTime();
             }
+            
         } else {
             // save_dir_change=false：使用固定路径
             if (!savedPath.isEmpty() && QFileInfo::exists(savedPath)) {
@@ -213,14 +298,52 @@ void SaveMenuManager::onSaveOptionTriggered(QAction *action)
     } else if (action == m_specifiedLocationAction) {
         m_currentSaveOption = SaveOption::SpecifiedLocation;
         
-        // 切换到"指定位置"时，检查 save_dir 和 save_dir_change
+        // 切换到"指定位置"时，检查配置状态
+        int locationState = ConfigSettings::instance()->getValue("shot", "location_state").toInt();
+        int saveOp = ConfigSettings::instance()->getValue("shot", "save_op").toInt();
         QString savedPath = ConfigSettings::instance()->getValue("shot", "save_dir").toString();
         bool isChangeOnSave = ConfigSettings::instance()->getValue("shot", "save_dir_change").toBool();
-        qCWarning(dsrApp) << "SaveMenuManager::onSaveOptionTriggered - switching to SpecifiedLocation, save_dir:" << savedPath << "save_dir_change:" << isChangeOnSave;
+        qCWarning(dsrApp) << "SaveMenuManager::onSaveOptionTriggered - switching to SpecifiedLocation"
+                          << "location_state:" << locationState << "save_op:" << saveOp
+                          << "save_dir:" << savedPath << "save_dir_change:" << isChangeOnSave;
         
-        // 按原始逻辑决定子菜单状态
-        if (isChangeOnSave) {
-            // save_dir_change=true：显示"保存时选择路径"
+        // 根据配置恢复子菜单状态
+        if (locationState == static_cast<int>(LocationState::Desktop) || saveOp == 1) {
+            // 保存到桌面
+            m_currentLocationState = LocationState::Desktop;
+            m_desktopAction->setChecked(true);
+            
+            // 检查是否有历史自定义路径
+            if (!savedPath.isEmpty() && QFileInfo::exists(savedPath) &&
+                savedPath != getStandardPath(LocationState::Desktop) &&
+                savedPath != getStandardPath(LocationState::Pictures)) {
+                m_currentCustomPath = savedPath;
+                updateSubMenuForExistingPath();
+                qCWarning(dsrApp) << "SaveMenuManager::onSaveOptionTriggered - 恢复保存到桌面，保留历史路径";
+            } else {
+                updateSubMenuForFirstTime();
+                qCWarning(dsrApp) << "SaveMenuManager::onSaveOptionTriggered - 恢复保存到桌面，无历史路径";
+            }
+            
+        } else if (locationState == static_cast<int>(LocationState::Pictures) || saveOp == 2) {
+            // 保存到图片
+            m_currentLocationState = LocationState::Pictures;
+            m_picturesAction->setChecked(true);
+            
+            // 检查是否有历史自定义路径
+            if (!savedPath.isEmpty() && QFileInfo::exists(savedPath) &&
+                savedPath != getStandardPath(LocationState::Desktop) &&
+                savedPath != getStandardPath(LocationState::Pictures)) {
+                m_currentCustomPath = savedPath;
+                updateSubMenuForExistingPath();
+                qCWarning(dsrApp) << "SaveMenuManager::onSaveOptionTriggered - 恢复保存到图片，保留历史路径";
+            } else {
+                updateSubMenuForFirstTime();
+                qCWarning(dsrApp) << "SaveMenuManager::onSaveOptionTriggered - 恢复保存到图片，无历史路径";
+            }
+            
+        } else if (isChangeOnSave) {
+            // save_dir_change=true：保存时选择路径
             m_currentLocationState = LocationState::ChooseOnSave;
             m_chooseOnSaveAction->setChecked(true);
             qCWarning(dsrApp) << "SaveMenuManager::onSaveOptionTriggered - choose on save (save_dir_change=true)";
@@ -266,6 +389,14 @@ void SaveMenuManager::onLocationActionTriggered(QAction *action)
     if (action == m_chooseOnSaveAction) {
         m_currentLocationState = LocationState::ChooseOnSave;
         
+    } else if (action == m_desktopAction) {
+        m_currentLocationState = LocationState::Desktop;
+        qCWarning(dsrApp) << "SaveMenuManager::onLocationActionTriggered - 选择保存到桌面";
+        
+    } else if (action == m_picturesAction) {
+        m_currentLocationState = LocationState::Pictures;
+        qCWarning(dsrApp) << "SaveMenuManager::onLocationActionTriggered - 选择保存到图片";
+        
     } else if (action == m_customPathAction) {
         // 点击自定义路径，保持当前路径不变
         m_currentLocationState = LocationState::CustomPath;
@@ -286,40 +417,54 @@ void SaveMenuManager::updateConfigSettings()
 {
     qCWarning(dsrApp) << "SaveMenuManager::updateConfigSettings - current option:" << static_cast<int>(m_currentSaveOption) << "location state:" << static_cast<int>(m_currentLocationState) << "custom path:" << m_currentCustomPath;
     
-    // 严格按照原始代码逻辑：
+
+    ConfigSettings::instance()->setValue("shot", "location_state", static_cast<int>(m_currentLocationState));
+    
     if (m_currentSaveOption == SaveOption::AskEachTime) {
-        // 原始代码：ConfigSettings::instance()->setValue("shot", "save_ways", SaveWays::Ask);
-        // 原始代码中"每次询问"时 **不设置 save_op**
         ConfigSettings::instance()->setValue("shot", "save_ways", 0); // SaveWays::Ask
-        qCWarning(dsrApp) << "SaveMenuManager::updateConfigSettings - 每次询问: 只设置 save_ways=Ask(0)，不动 save_op";
+        qCWarning(dsrApp) << "SaveMenuManager::updateConfigSettings - 每次询问: 只设置 save_ways=Ask(0)";
         
     } else { // SpecifiedLocation
-        // 原始代码：
-        // ConfigSettings::instance()->setValue("shot", "save_ways", SaveWays::SpecifyLocation);
-        // ConfigSettings::instance()->setValue("shot", "save_op", SaveAction::SaveToSpecificDir);
         ConfigSettings::instance()->setValue("shot", "save_ways", 1); // SaveWays::SpecifyLocation
-        ConfigSettings::instance()->setValue("shot", "save_op", 3); // SaveAction::SaveToSpecificDir
         
-        // 原始代码的路径逻辑
-        if (m_currentLocationState == LocationState::ChooseOnSave) {
-            // 原始代码：m_changeSaveToSpecialPath->setChecked(true);
-            // ConfigSettings::instance()->setValue("shot", "save_dir_change", true);
-            ConfigSettings::instance()->setValue("shot", "save_dir_change", true);
-            qCWarning(dsrApp) << "SaveMenuManager::updateConfigSettings - 指定位置/保存时选择: save_dir_change=true";
-        } else {
-            // 原始代码：m_saveToSpecialPathAction->setChecked(true);
-            // ConfigSettings::instance()->setValue("shot", "save_dir_change", false);
+        switch (m_currentLocationState) {
+        case LocationState::Desktop:
+            // 保存到桌面
+            ConfigSettings::instance()->setValue("shot", "save_op", 1); // SaveAction::SaveToDesktop
+            ConfigSettings::instance()->setValue("shot", "save_dir_change", false);
+            qCWarning(dsrApp) << "SaveMenuManager::updateConfigSettings - 保存到桌面: save_op=1, 不更新save_dir";
+            break;
+            
+        case LocationState::Pictures:
+            // 保存到图片
+            ConfigSettings::instance()->setValue("shot", "save_op", 2); // SaveAction::SaveToImage
+            ConfigSettings::instance()->setValue("shot", "save_dir_change", false);
+            qCWarning(dsrApp) << "SaveMenuManager::updateConfigSettings - 保存到图片: save_op=2, 不更新save_dir";
+            break;
+            
+        case LocationState::CustomPath:
+            // 自定义固定路径
+            ConfigSettings::instance()->setValue("shot", "save_op", 3); // SaveAction::SaveToSpecificDir
             ConfigSettings::instance()->setValue("shot", "save_dir_change", false);
             if (!m_currentCustomPath.isEmpty()) {
                 ConfigSettings::instance()->setValue("shot", "save_dir", m_currentCustomPath);
-                qCWarning(dsrApp) << "SaveMenuManager::updateConfigSettings - 指定位置/固定路径: save_dir=" << m_currentCustomPath;
             }
+            qCWarning(dsrApp) << "SaveMenuManager::updateConfigSettings - 自定义固定路径: save_op=3, save_dir=" << m_currentCustomPath;
+            break;
+            
+        case LocationState::ChooseOnSave:
+            // 保存时选择路径
+            ConfigSettings::instance()->setValue("shot", "save_op", 3); // SaveAction::SaveToSpecificDir
+            ConfigSettings::instance()->setValue("shot", "save_dir_change", true);
+            qCWarning(dsrApp) << "SaveMenuManager::updateConfigSettings - 保存时选择: save_op=3, save_dir_change=true";
+            break;
         }
     }
     
     qCWarning(dsrApp) << "Config最终状态 - save_ways:" << 
         ConfigSettings::instance()->getValue("shot", "save_ways").toInt()
         << "save_op:" << ConfigSettings::instance()->getValue("shot", "save_op").toInt()
+        << "location_state:" << ConfigSettings::instance()->getValue("shot", "location_state").toInt()
         << "save_dir_change:" << ConfigSettings::instance()->getValue("shot", "save_dir_change").toBool()
         << "save_dir:" << ConfigSettings::instance()->getValue("shot", "save_dir").toString();
 }
@@ -401,4 +546,16 @@ QString SaveMenuManager::formatDisplayPath(const QString &fullPath) const
     
     // 格式：/上级文件夹/本文件夹
     return QString("/%1/%2").arg(parentDir).arg(folderName);
+}
+
+QString SaveMenuManager::getStandardPath(LocationState state) const
+{
+    switch (state) {
+    case LocationState::Desktop:
+        return QStandardPaths::writableLocation(QStandardPaths::DesktopLocation);
+    case LocationState::Pictures:
+        return QStandardPaths::writableLocation(QStandardPaths::PicturesLocation);
+    default:
+        return QString();
+    }
 }

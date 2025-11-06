@@ -171,6 +171,14 @@ or press the shortcut again to stop recording</translation>
         <source>Change the path on save</source>
         <translation>Change the path on save</translation>
     </message>
+    <message>
+        <source>Desktop</source>
+        <translation>Desktop</translation>
+    </message>
+    <message>
+        <source>Pictures</source>
+        <translation>Pictures</translation>
+    </message>
 </context>
 <context>
     <name>QObject</name>
@@ -241,6 +249,14 @@ or press the shortcut again to stop recording</translation>
     <message>
         <source>Update the location when saving</source>
         <translation>Update the location when saving</translation>
+    </message>
+    <message>
+        <source>Desktop</source>
+        <translation>Desktop</translation>
+    </message>
+    <message>
+        <source>Pictures</source>
+        <translation>Pictures</translation>
     </message>
 </context>
 <context>

@@ -171,6 +171,14 @@ tai lopeta tallennus painamalla pikakuvaketta uudelleen</translation>
         <source>Change the path on save</source>
         <translation>Muuta polkua tallentaessa</translation>
     </message>
+    <message>
+        <source>Desktop</source>
+        <translation>Työpöytä</translation>
+    </message>
+    <message>
+        <source>Pictures</source>
+        <translation>Kuvia</translation>
+    </message>
 </context>
 <context>
     <name>QObject</name>
@@ -241,6 +249,14 @@ tai lopeta tallennus painamalla pikakuvaketta uudelleen</translation>
     <message>
         <source>Update the location when saving</source>
         <translation>Päivitä sijainti tallentaessa</translation>
+    </message>
+    <message>
+        <source>Desktop</source>
+        <translation>Työpöytä</translation>
+    </message>
+    <message>
+        <source>Pictures</source>
+        <translation>Kuvia</translation>
     </message>
 </context>
 <context>

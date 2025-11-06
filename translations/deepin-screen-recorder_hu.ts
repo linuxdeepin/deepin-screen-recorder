@@ -171,6 +171,14 @@ vagy nyomja le a gyorsbillentyűt ismét a felvétel megállításához</transla
         <source>Change the path on save</source>
         <translation>Mentéskor módosítsa az elérési utat</translation>
     </message>
+    <message>
+        <source>Desktop</source>
+        <translation>Asztal</translation>
+    </message>
+    <message>
+        <source>Pictures</source>
+        <translation>Képek</translation>
+    </message>
 </context>
 <context>
     <name>QObject</name>
@@ -241,6 +249,14 @@ vagy nyomja le a gyorsbillentyűt ismét a felvétel megállításához</transla
     <message>
         <source>Update the location when saving</source>
         <translation>Mentéskor módosítsa az elérési utat</translation>
+    </message>
+    <message>
+        <source>Desktop</source>
+        <translation>Asztal</translation>
+    </message>
+    <message>
+        <source>Pictures</source>
+        <translation>Képek</translation>
     </message>
 </context>
 <context>

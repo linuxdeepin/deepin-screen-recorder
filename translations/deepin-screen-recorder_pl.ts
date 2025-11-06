@@ -171,6 +171,14 @@ lub naciśnij ponownie skrót, aby zatrzymać nagrywanie</translation>
         <source>Change the path on save</source>
         <translation>Zmień ścieżkę zapisu</translation>
     </message>
+    <message>
+        <source>Desktop</source>
+        <translation>Pulpit</translation>
+    </message>
+    <message>
+        <source>Pictures</source>
+        <translation>Obrazy</translation>
+    </message>
 </context>
 <context>
     <name>QObject</name>
@@ -241,6 +249,14 @@ lub naciśnij ponownie skrót, aby zatrzymać nagrywanie</translation>
     <message>
         <source>Update the location when saving</source>
         <translation>Zmień ścieżkę zapisu</translation>
+    </message>
+    <message>
+        <source>Desktop</source>
+        <translation>Pulpit</translation>
+    </message>
+    <message>
+        <source>Pictures</source>
+        <translation>Obrazy</translation>
     </message>
 </context>
 <context>

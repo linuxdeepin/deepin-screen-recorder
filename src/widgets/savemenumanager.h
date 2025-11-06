@@ -22,6 +22,8 @@ enum class SaveOption {
 // 指定位置的状态枚举
 enum class LocationState {
     ChooseOnSave,       // 保存时选择位置（首次使用默认状态）
+    Desktop,            // 保存到桌面
+    Pictures,           // 保存到图片文件夹
     CustomPath          // 已设置自定义路径
 };
 
@@ -69,6 +71,7 @@ private:
     QString formatDisplayPath(const QString &fullPath) const;
     void updateSubMenuForFirstTime();
     void updateSubMenuForExistingPath();
+    QString getStandardPath(LocationState state) const;
 
     // UI 组件
     DMenu *m_saveMenu;
@@ -82,6 +85,8 @@ private:
     DMenu *m_specifiedLocationSubMenu;
     QActionGroup *m_locationGroup;
     QAction *m_chooseOnSaveAction;       // "保存时选择位置"
+    QAction *m_desktopAction;            // "保存到桌面"
+    QAction *m_picturesAction;           // "保存到图片"
     QAction *m_customPathAction;         // 显示自定义路径（当有路径时）
     QAction *m_updateOnSaveAction;       // "保存时更新位置"（当有路径时）
     

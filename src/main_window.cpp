@@ -3656,6 +3656,7 @@ void MainWindow::onAiAssistantSelected(int func)
     ConfigSettings::instance()->setValue("shot", "save_ways", static_cast<int>(SaveWays::SpecifyLocation));
     
     bool saveResult = saveAction(m_resultPixmap);
+    save2Clipboard(m_resultPixmap);
     
     ConfigSettings::instance()->setValue("shot", "save_ways", static_cast<int>(originalSaveWays));
     

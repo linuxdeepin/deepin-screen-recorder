@@ -171,6 +171,14 @@ clique no ícone da bandeja ou use o atalho</translation>
         <source>Change the path on save</source>
         <translation>Alterar caminho ao salvar</translation>
     </message>
+    <message>
+        <source>Desktop</source>
+        <translation>Área de Trabalho</translation>
+    </message>
+    <message>
+        <source>Pictures</source>
+        <translation>Imagens</translation>
+    </message>
 </context>
 <context>
     <name>QObject</name>
@@ -241,6 +249,14 @@ clique no ícone da bandeja ou use o atalho</translation>
     <message>
         <source>Update the location when saving</source>
         <translation>Atualizar a localização ao salvar</translation>
+    </message>
+    <message>
+        <source>Desktop</source>
+        <translation>Área de Trabalho</translation>
+    </message>
+    <message>
+        <source>Pictures</source>
+        <translation>Imagens</translation>
     </message>
 </context>
 <context>
