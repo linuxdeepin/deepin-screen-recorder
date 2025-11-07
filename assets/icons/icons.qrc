@@ -35,5 +35,9 @@
         <file>texts/setting_32px.svg</file>
         <file>texts/ai_assistant_32px.svg</file>
         <file>texts/ai_assistant_unused_32px.svg</file>
+        <file>texts/askai_32px.svg</file>
+        <file>texts/explain_32px.svg</file>
+        <file>texts/summary_32px.svg</file>
+        <file>texts/translate_32px.svg</file>
     </qresource>
 </RCC>

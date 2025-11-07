@@ -2,7 +2,7 @@
 #define AIASSISTANTWIDGET_H
 
 #include <DWidget>
-#include <DRadioButton>
+#include <DToolButton>
 #include <DBlurEffectWidget>
 
 DWIDGET_USE_NAMESPACE
@@ -21,18 +21,20 @@ public:
 
     explicit AIAssistantWidget(QWidget *parent = nullptr);
     
+    QSize sizeHint() const override;
+    
 signals:
     void functionSelected(AIFunction function);
     void requestClose();
 
 private slots:
-    void onRadioButtonClicked();
+    void onToolButtonClicked();
 
 private:
-    DRadioButton *m_explainButton;
-    DRadioButton *m_summarizeButton;
-    DRadioButton *m_translateButton;
-    DRadioButton *m_askAIButton;
+    DToolButton *m_explainButton;
+    DToolButton *m_summarizeButton;
+    DToolButton *m_translateButton;
+    DToolButton *m_askAIButton;
     
     DBlurEffectWidget *m_blurArea;
 };

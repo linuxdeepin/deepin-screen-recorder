@@ -103,7 +103,7 @@ void SaveButton::paintEvent(QPaintEvent *event)
     
     if (!m_saveIcon.isNull()) {
         int iconSize = 24;
-        int iconX = (kSaveAreaWidth - iconSize) / 2;
+        int iconX = kLeftPadding + (kSaveAreaWidth - kLeftPadding - iconSize) / 2;
         int iconY = (rect.height() - iconSize) / 2;
         QRect iconRect(iconX, iconY, iconSize, iconSize);
         

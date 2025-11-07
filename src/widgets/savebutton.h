@@ -54,10 +54,11 @@ private:
     bool m_listClicked = false;
     int currentMouseX = 0;  
     
-    static constexpr int kSaveButtonWidth = 46;
+    static constexpr int kSaveButtonWidth = 50;
     static constexpr int kSaveButtonHeight = 36;
-    static constexpr int kSaveAreaWidth = 30;  
+    static constexpr int kSaveAreaWidth = 34;  
     static constexpr int kListAreaWidth = 16;  
+    static constexpr int kLeftPadding = 4; 
     static constexpr int kCornerRadius = 8;    
 };
 

@@ -8,8 +8,15 @@
 #include <QDBusInterface>
 #include <QDBusConnection>
 #include <QDBusMessage>
+#include <QIcon>
 
 DWIDGET_USE_NAMESPACE
+
+namespace {
+    const QSize iconSize(24, 24); 
+    const int AIAssistantWidgetHeight = 68;
+    const int extraMargin = 20;
+}
 
 AIAssistantWidget::AIAssistantWidget(QWidget *parent) : DWidget(parent)
 {
@@ -24,17 +31,46 @@ AIAssistantWidget::AIAssistantWidget(QWidget *parent) : DWidget(parent)
     
     QHBoxLayout *hLayout = new QHBoxLayout(m_blurArea);
     hLayout->setContentsMargins(0, 0, 0, 0);
-    hLayout->setSpacing(6); 
+    hLayout->setSpacing(0);
     
 
     QButtonGroup *buttonGroup = new QButtonGroup(this);
     buttonGroup->setExclusive(true);
     
-    m_explainButton = new DRadioButton(tr("Explain"));
-    m_summarizeButton = new DRadioButton(tr("Summary"));
-    m_translateButton = new DRadioButton(tr("Translate"));
-    m_askAIButton = new DRadioButton(tr("Ask AI"));
+    
+    m_explainButton = new DToolButton(this);
+    m_explainButton->setText(tr("Explain"));
+    m_explainButton->setIcon(QIcon::fromTheme("explain"));
+    m_explainButton->setIconSize(iconSize);
+    m_explainButton->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
+    m_explainButton->setCheckable(true);
+    m_explainButton->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Fixed);
+    
+    m_summarizeButton = new DToolButton(this);
+    m_summarizeButton->setText(tr("Summary"));
+    m_summarizeButton->setIcon(QIcon::fromTheme("summary"));
+    m_summarizeButton->setIconSize(iconSize);
+    m_summarizeButton->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
+    m_summarizeButton->setCheckable(true);
+    m_summarizeButton->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Fixed);
+    
+    m_translateButton = new DToolButton(this);
+    m_translateButton->setText(tr("Translate"));
+    m_translateButton->setIcon(QIcon::fromTheme("translate"));
+    m_translateButton->setIconSize(iconSize);
+    m_translateButton->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
+    m_translateButton->setCheckable(true);
+    m_translateButton->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Fixed);
+    
+    m_askAIButton = new DToolButton(this);
+    m_askAIButton->setText(tr("Ask AI"));
+    m_askAIButton->setIcon(QIcon::fromTheme("askai"));
+    m_askAIButton->setIconSize(iconSize);
+    m_askAIButton->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
+    m_askAIButton->setCheckable(true);
+    m_askAIButton->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Fixed);
 
+    // 绑定字体大小
     DFontSizeManager::instance()->bind(m_explainButton, DFontSizeManager::T6);
     DFontSizeManager::instance()->bind(m_summarizeButton, DFontSizeManager::T6);
     DFontSizeManager::instance()->bind(m_translateButton, DFontSizeManager::T6);
@@ -51,7 +87,7 @@ AIAssistantWidget::AIAssistantWidget(QWidget *parent) : DWidget(parent)
     hLayout->addWidget(m_askAIButton);
     
     connect(buttonGroup, QOverload<QAbstractButton *>::of(&QButtonGroup::buttonClicked), 
-            this, &AIAssistantWidget::onRadioButtonClicked);
+            this, &AIAssistantWidget::onToolButtonClicked);
     
     QHBoxLayout *mainLayout = new QHBoxLayout(this);
     mainLayout->setContentsMargins(0, 0, 0, 0);
@@ -59,7 +95,14 @@ AIAssistantWidget::AIAssistantWidget(QWidget *parent) : DWidget(parent)
     setLayout(mainLayout);
 }
 
-void AIAssistantWidget::onRadioButtonClicked()
+QSize AIAssistantWidget::sizeHint() const
+{
+    QSize blurAreaSize = m_blurArea->sizeHint();
+    int totalWidth = blurAreaSize.width() + extraMargin;  
+    return QSize(totalWidth, AIAssistantWidgetHeight);
+}
+
+void AIAssistantWidget::onToolButtonClicked()
 {
     QButtonGroup *buttonGroup = qobject_cast<QButtonGroup *>(sender());
     if (buttonGroup) {

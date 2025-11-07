@@ -43,19 +43,9 @@ const QSize TOOLBAR_WIDGET_SIZE4 = QSize(368, 68);
 //const int BTN_RADIUS = 3;
 const QSize SPLITTER_SIZE = QSize(3, 30);
 
+
 const QSize TOOLBAR_WIDGET_AIMODE() {
-    quint16 t6PixelSize = DFontSizeManager::instance()->fontPixelSize(DFontSizeManager::T6);
-    
-    int width = 316;
-    
-    if (t6PixelSize >= 20) {
-        width = width + 45;
-    } else if (t6PixelSize >= 18) {
-        width = width + 28;
-    } else if (t6PixelSize >= 16) {
-        width = width + 10;
-    }
-    return QSize(width, 68);
+    return QSize(350, 68);
 }
 
 }
@@ -201,7 +191,11 @@ void SideBarWidget::changeShotToolWidget(const QString &func)
         m_colorTool->hide();
         m_seperator->hide();
         m_aiAssistantTool->show();
-        resize(TOOLBAR_WIDGET_AIMODE());
+        
+        // 使用 AI 控件自己计算的推荐尺寸，自适应不同语言
+        QSize recommendedSize = m_aiAssistantTool->sizeHint();
+        qCDebug(dsrApp) << "Using AI assistant recommended size:" << recommendedSize;
+        resize(recommendedSize);
         m_currentFunc = func;
     } else {
         qCDebug(dsrApp) << "Non-geometry mode: hiding ShapeToolWidget";
@@ -233,7 +227,8 @@ void SideBarWidget::changeShotToolWidget(const QString &func)
         qCDebug(dsrApp) << "Resizing sidebar for effect.";
         resize(TOOLBAR_WIDGET_SIZE3);
     } else if(func == "aiassistant") {
-        resize(TOOLBAR_WIDGET_AIMODE());
+        // AI 模式的尺寸已经在上面通过 sizeHint() 设置了，这里不需要再次设置
+        qCDebug(dsrApp) << "AI assistant mode, size already set by sizeHint().";
     } else {
         resize(TOOLBAR_WIDGET_SIZE1);
     }
@@ -261,7 +256,9 @@ int SideBarWidget::getSideBarWidth(const QString &func)
     } else if (func == "effect") {
         width = TOOLBAR_WIDGET_SIZE3.width();
     } else if (func == "aiassistant") {
-        width = TOOLBAR_WIDGET_AIMODE().width();
+        // 使用 AI 控件的实际推荐宽度
+        width = m_aiAssistantTool->sizeHint().width();
+        qCDebug(dsrApp) << "AI assistant width from sizeHint():" << width;
     }
     
     qCDebug(dsrApp) << "Sidebar width determined:" << width;
