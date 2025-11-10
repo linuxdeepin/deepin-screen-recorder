@@ -1014,7 +1014,7 @@ void MainWindow::initToolBarShortcut()
     // 截图模式 AI 助手应用内快捷键
     connect(aiAssistantSC, &QShortcut::activated, this, [=] {
         qCWarning(dsrApp) << "shortcut : aiAssistantSC (key: a)";
-        if (status::shot == m_functionType && Utils::is3rdInterfaceStart == false) {
+        if ((status::shot == m_functionType || status::scrollshot == m_functionType)&& Utils::is3rdInterfaceStart == false) {
             qCWarning(dsrApp) << "shortcut : aiAssistantSC (key: a)";
             m_toolBar->shapeClickedFromMain("aiassistant");
         }

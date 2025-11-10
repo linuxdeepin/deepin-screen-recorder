@@ -748,7 +748,15 @@ Hold Shift nede for at tegne kvadrater eller cirkler.</translation>
     </message>
     <message>
         <source>AI Screenshot (A)</source>
-        <translation type="unfinished"></translation>
+        <translation>AI Skærmbillede (A)</translation>
+    </message>
+    <message>
+        <source>Save to Desktop</source>
+        <translation>Gem til Skrivebord</translation>
+    </message>
+    <message>
+        <source>Save to Pictures</source>
+        <translation>Gem til billeder</translation>
     </message>
 </context>
 <context>

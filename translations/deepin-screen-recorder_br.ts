@@ -749,6 +749,14 @@ Hold down Shift to draw squares or circles.</source>
         <source>AI Screenshot (A)</source>
         <translation>Tapadenn AI (A)</translation>
     </message>
+    <message>
+        <source>Save to Desktop</source>
+        <translation>Enrollañ e-barzh ar burev</translation>
+    </message>
+    <message>
+        <source>Save to Pictures</source>
+        <translation>Enrollañ e-barzh ar skeudenn</translation>
+    </message>
 </context>
 <context>
     <name>ToolBarWidget</name>

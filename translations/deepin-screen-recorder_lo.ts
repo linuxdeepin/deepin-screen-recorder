@@ -747,6 +747,14 @@ Hold down Shift to draw squares or circles.</source>
         <source>AI Screenshot (A)</source>
         <translation>ສະກີນສໍາເນົາ AI (A)</translation>
     </message>
+    <message>
+        <source>Save to Desktop</source>
+        <translation>ບັນທຶກໃສ່ພາບຫນ້າທີ່ສະແດງ</translation>
+    </message>
+    <message>
+        <source>Save to Pictures</source>
+        <translation>ບັນທຶກໃສ່ຮູບແບບ</translation>
+    </message>
 </context>
 <context>
     <name>ToolBarWidget</name>

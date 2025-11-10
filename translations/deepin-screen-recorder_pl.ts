@@ -750,6 +750,14 @@ Przytrzymaj Shift, aby narysować kwadraty lub koła.</translation>
         <source>AI Screenshot (A)</source>
         <translation>Zrzut ekranu AI (A)</translation>
     </message>
+    <message>
+        <source>Save to Desktop</source>
+        <translation>Zapisz na pulpicie</translation>
+    </message>
+    <message>
+        <source>Save to Pictures</source>
+        <translation>Zapisz na zdjęcia</translation>
+    </message>
 </context>
 <context>
     <name>ToolBarWidget</name>

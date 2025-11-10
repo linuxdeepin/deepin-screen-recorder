@@ -750,6 +750,14 @@ Tieni premuto Maiusc per disegnare quadrati o cerchi.</translation>
         <source>AI Screenshot (A)</source>
         <translation>Screenshot AI (A)</translation>
     </message>
+    <message>
+        <source>Save to Desktop</source>
+        <translation>Salva sul desktop</translation>
+    </message>
+    <message>
+        <source>Save to Pictures</source>
+        <translation>Salva nelle immagini</translation>
+    </message>
 </context>
 <context>
     <name>ToolBarWidget</name>

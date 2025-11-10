@@ -750,6 +750,14 @@ Hold down Shift to draw squares or circles.</source>
         <source>AI Screenshot (A)</source>
         <translation></translation>
     </message>
+    <message>
+        <source>Save to Desktop</source>
+        <translation>Сохранить на рабочий стол</translation>
+    </message>
+    <message>
+        <source>Save to Pictures</source>
+        <translation>Сохранить в изображения</translation>
+    </message>
 </context>
 <context>
     <name>ToolBarWidget</name>

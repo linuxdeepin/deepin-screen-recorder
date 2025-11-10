@@ -750,6 +750,14 @@ Pidä Shift-näppäintä painettuna piirtääksesi neliöitä tai ympyröitä.</
         <source>AI Screenshot (A)</source>
         <translation>AI-näyttökuva (A)</translation>
     </message>
+    <message>
+        <source>Save to Desktop</source>
+        <translation>Tallenna työpöydälle</translation>
+    </message>
+    <message>
+        <source>Save to Pictures</source>
+        <translation>Tallenna kuvakuvioihin</translation>
+    </message>
 </context>
 <context>
     <name>ToolBarWidget</name>

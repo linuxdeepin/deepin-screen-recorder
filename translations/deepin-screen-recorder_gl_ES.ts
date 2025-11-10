@@ -750,6 +750,14 @@ Mantén premida a tecla Maiús para debuxar cadrados ou círculos.</translation>
         <source>AI Screenshot (A)</source>
         <translation>Captura de pantalla AI (A)</translation>
     </message>
+    <message>
+        <source>Save to Desktop</source>
+        <translation>Gardar no escritorio</translation>
+    </message>
+    <message>
+        <source>Save to Pictures</source>
+        <translation>Gardar en imaxes</translation>
+    </message>
 </context>
 <context>
     <name>ToolBarWidget</name>

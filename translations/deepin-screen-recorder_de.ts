@@ -750,6 +750,14 @@ Halten Sie die Umschalttaste gedrückt, um Quadrate oder Kreise zu zeichnen.</tr
         <source>AI Screenshot (A)</source>
         <translation>AI-Bildschirmfoto (A)</translation>
     </message>
+    <message>
+        <source>Save to Desktop</source>
+        <translation>Auf den Schreibtisch speichern</translation>
+    </message>
+    <message>
+        <source>Save to Pictures</source>
+        <translation>Auf Bilder speichern</translation>
+    </message>
 </context>
 <context>
     <name>ToolBarWidget</name>

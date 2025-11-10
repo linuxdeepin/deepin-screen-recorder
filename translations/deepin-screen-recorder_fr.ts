@@ -750,6 +750,14 @@ Maintenir la touche Maj enfoncée pour dessiner des carrés ou des cercles.</tra
         <source>AI Screenshot (A)</source>
         <translation>Capture d&apos;écran AI (A)</translation>
     </message>
+    <message>
+        <source>Save to Desktop</source>
+        <translation>Enregistrer sur le bureau</translation>
+    </message>
+    <message>
+        <source>Save to Pictures</source>
+        <translation>Enregistrer dans les images</translation>
+    </message>
 </context>
 <context>
     <name>ToolBarWidget</name>

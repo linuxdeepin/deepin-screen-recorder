@@ -754,6 +754,14 @@ Shift 키를 누른 채로 정사각형이나 원을 그립니다.</translation>
         <source>AI Screenshot (A)</source>
         <translation>AI 스크린샷 (A)</translation>
     </message>
+    <message>
+        <source>Save to Desktop</source>
+        <translation>바탕화면에 저장</translation>
+    </message>
+    <message>
+        <source>Save to Pictures</source>
+        <translation>사진에 저장</translation>
+    </message>
 </context>
 <context>
     <name>ToolBarWidget</name>

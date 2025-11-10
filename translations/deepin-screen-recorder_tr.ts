@@ -750,6 +750,14 @@ Kare veya daire çizmek için Shift tuşunu basılı tutun.</translation>
         <source>AI Screenshot (A)</source>
         <translation>AI Ekran Görüntüsü (A)</translation>
     </message>
+    <message>
+        <source>Save to Desktop</source>
+        <translation>Masaüstüne kaydet</translation>
+    </message>
+    <message>
+        <source>Save to Pictures</source>
+        <translation>Resimlere kaydet</translation>
+    </message>
 </context>
 <context>
     <name>ToolBarWidget</name>

@@ -749,6 +749,14 @@ Hold down Shift to draw squares or circles.</source>
         <source>AI Screenshot (A)</source>
         <translation>AI تۇتۇش (A)</translation>
     </message>
+    <message>
+        <source>Save to Desktop</source>
+        <translation>ئۈستەليۈز ساقلاش</translation>
+    </message>
+    <message>
+        <source>Save to Pictures</source>
+        <translation>رەسىم ساقلاش</translation>
+    </message>
 </context>
 <context>
     <name>ToolBarWidget</name>

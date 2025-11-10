@@ -5,6 +5,7 @@
 #include "subtoolwidget.h"
 #include "../camera_process.h"
 #include "../utils/configsettings.h"
+#include "../utils/saveutils.h"
 #include "../settings.h"
 #include "tooltips.h"
 #include "../utils.h"
@@ -718,13 +719,14 @@ void SubToolWidget::initShotLabel()
     m_saveLocalDirButton = new SaveButton();
     m_saveLocalDirButton->setCheckable(false);
     updateSaveButtonTip();
-    m_saveLocalDirButton->installEventFilter(this);
     // m_saveLocalDirButton->setIcon(QIcon::fromTheme("save"));
     Utils::setAccessibility(m_saveLocalDirButton, AC_SUBTOOLWIDGET_SAVETOLOCAL_BUTTON);
     
     // 创建并设置保存菜单管理器
     SaveMenuManager *saveMenuManager = new SaveMenuManager(this);
     m_saveLocalDirButton->setOptionsMenu(saveMenuManager->getMenu());
+    // 连接保存选项改变信号，更新tooltip
+    connect(saveMenuManager, &SaveMenuManager::saveOptionChanged, this, &SubToolWidget::updateSaveButtonTip);
     
     m_shotBtnGroup->addButton(m_saveLocalDirButton);
     // m_saveLocalDirButton->setFixedSize(TOOL_BUTTON_SIZE);
@@ -833,63 +835,76 @@ void SubToolWidget::showAIAssistantWidget()
 // 更新保存按钮的提示信息
 void SubToolWidget::updateSaveButtonTip()
 {
-    // SaveWays t_saveWays = ConfigSettings::instance()->getValue("shot", "save_ways").value<SaveWays>();
-    //  QString tipText;
-    // if (t_saveWays == Ask) {
-    //     tipText = tr("Save to local");
-    // } else if (t_saveWays == SpecifyLocation) {
-    //     // 获取当前保存设置
-    //     SaveAction saveAction = ConfigSettings::instance()->getValue("shot", "save_op").value<SaveAction>();
+    qCWarning(dsrApp) << "========== updateSaveButtonTip 开始 ==========";
+    
+    if (!m_saveLocalDirButton) {
+        qCWarning(dsrApp) << "updateSaveButtonTip: m_saveLocalDirButton 为空，直接返回";
+        return;
+    }
+    
+    // 参考saveAction函数的读取方式
+    SaveWays saveWays = ConfigSettings::instance()->getValue("shot", "save_ways").value<SaveWays>();
+    SaveAction saveOp = ConfigSettings::instance()->getValue("shot", "save_op").value<SaveAction>();
+    bool isChangeOnSave = ConfigSettings::instance()->getValue("shot", "save_dir_change").toBool();
+    QString savedPath = ConfigSettings::instance()->getValue("shot", "save_dir").toString();
+    const bool hasHistoryPath = !savedPath.isEmpty() && QFileInfo::exists(savedPath);
 
-    //     switch (saveAction) {
-    //     case SaveToDesktop: {
-    //         tipText = tr("Save to Desktop");
-    //         break;
-    //     }
-    //     case SaveToImage: {
-    //         tipText = tr("Save to Pictures");
-    //         break;
-    //     }
-    //     case SaveToSpecificDir: {
-    //         bool changeIsChecked = m_changeSaveToSpecialPath && ((m_changeSaveToSpecialPath &&m_changeSaveToSpecialPath->isChecked()) || (m_scrollChangeSaveToSpecialPath && m_scrollChangeSaveToSpecialPath->isChecked()));
-    //         qWarning() << "changeIsChecked:"<<changeIsChecked;
-    //         QString specificPath = ConfigSettings::instance()->getValue("shot", "save_dir").toString();
-    //         bool specialPathExits = !specificPath.isEmpty() && QFileInfo::exists(specificPath);
-    //         qWarning() << "specialPathExits:"<<specialPathExits;
-    //         // 保存时更新
-    //         bool tipsUpdateSaved = specialPathExits && changeIsChecked;
-    //         qWarning() << "tipsUpdateSaved:"<<tipsUpdateSaved;
-    //         // 保存时设置(选中且目录为空不为空)
-    //         bool tipsSetSaved = changeIsChecked;
-    //         qWarning() << "tipsSetSaved:"<<tipsSetSaved;
-    //         // 保存到目录 (目录不为空且存在)
-    //         bool tipsSpecialSaved = m_saveToSpecialPathAction && m_saveToSpecialPathAction->isChecked() && specialPathExits;
-    //          qWarning() << "tipsSpecialSaved:"<<tipsSpecialSaved;
+    qCWarning(dsrApp) << "updateSaveButtonTip: saveWays=" << static_cast<int>(saveWays) 
+                      << "saveOp=" << static_cast<int>(saveOp)
+                      << "isChangeOnSave=" << isChangeOnSave
+                      << "savedPath=" << savedPath
+                      << "hasHistoryPath=" << hasHistoryPath;
 
-    //         if (tipsUpdateSaved) {
-    //             tipText = tr("Change the path on save");
-    //             qWarning() << "tipsUpdateSaved";
-
-    //         }
-    //         else if(tipsSetSaved) {
-    //             tipText = tr("Set a path on save");
-    //             qWarning() << "tipsSetSaved";
-    //         } else if(tipsSpecialSaved) {
-    //             tipText = tr("Save to %1").arg(specificPath);
-    //             qWarning() << "tipsSpecialSaved";
-    //         } else {
-    //              tipText = tr("Save to local");
-    //             qWarning() << "not set saved";
-    //         }
-    //         qWarning() << tipText;
-    //         break;
-    //     }
-    //     default:
-    //         tipText = tr("Save to local");
-    //         break;
-    //     }
-    // }
-    // installTipHint(m_saveLocalDirButton, tipText);
+    QString tipText;
+    if (saveWays == Ask) { 
+        // 每次询问模式
+        tipText = tr("Save to local");
+        qCWarning(dsrApp) << "updateSaveButtonTip: 进入每次询问模式，tipText=" << tipText;
+    } else if (saveWays == SpecifyLocation) {
+        // 指定位置模式，根据save_op显示具体保存位置
+        qCWarning(dsrApp) << "updateSaveButtonTip: 进入指定位置模式，saveOp=" << static_cast<int>(saveOp);
+        switch (saveOp) {
+            case SaveToDesktop:
+                tipText = tr("Save to Desktop");
+                qCWarning(dsrApp) << "updateSaveButtonTip: SaveToDesktop分支，tipText=" << tipText;
+                break;
+            case SaveToImage:
+                tipText = tr("Save to Pictures");
+                qCWarning(dsrApp) << "updateSaveButtonTip: SaveToImage分支，tipText=" << tipText;
+                break;
+            case SaveToSpecificDir:
+                qCWarning(dsrApp) << "updateSaveButtonTip: SaveToSpecificDir分支，isChangeOnSave=" << isChangeOnSave;
+                if (isChangeOnSave) {
+                    // 保存时选择/更新位置
+                    tipText = hasHistoryPath ? tr("Update the location when saving")
+                                             : tr("Select a location when saving");
+                    qCWarning(dsrApp) << "updateSaveButtonTip: isChangeOnSave=true，hasHistoryPath=" << hasHistoryPath 
+                                      << "tipText=" << tipText;
+                } else {
+                    // 保存到指定路径
+                    tipText = hasHistoryPath ? tr("Save to %1").arg(savedPath)
+                                             : tr("Save to local");
+                    qCWarning(dsrApp) << "updateSaveButtonTip: isChangeOnSave=false，hasHistoryPath=" << hasHistoryPath 
+                                      << "tipText=" << tipText;
+                }
+                break;
+            default:
+                // 其他情况（SaveToClipboard, AutoSave, CustomScreenSave等）
+                tipText = tr("Save to local");
+                qCWarning(dsrApp) << "updateSaveButtonTip: default分支，saveOp=" << static_cast<int>(saveOp) 
+                                  << "tipText=" << tipText;
+                break;
+        }
+    } else {
+        // 其他情况，保持原来的方式
+        tipText = tr("Save to local");
+        qCWarning(dsrApp) << "updateSaveButtonTip: 其他情况分支，saveWays=" << static_cast<int>(saveWays) 
+                          << "tipText=" << tipText;
+    }
+    
+    qCWarning(dsrApp) << "updateSaveButtonTip: 最终tipText=" << tipText;
+    installTipHint(m_saveLocalDirButton, tipText);
+    qCWarning(dsrApp) << "========== updateSaveButtonTip 结束 ==========";
 }
 
 void SubToolWidget::initShotOption()
@@ -1459,6 +1474,8 @@ void SubToolWidget::initScrollLabel()
     // 创建并设置保存菜单管理器
     SaveMenuManager *scrollSaveMenuManager = new SaveMenuManager(this);
     m_saveLocalDirButton->setOptionsMenu(scrollSaveMenuManager->getMenu());
+    // 连接保存选项改变信号，更新tooltip
+    connect(scrollSaveMenuManager, &SaveMenuManager::saveOptionChanged, this, &SubToolWidget::updateSaveButtonTip);
     
     m_shotBtnGroup->addButton(m_saveLocalDirButton);
     // m_saveLocalDirButton->setFixedSize(TOOL_BUTTON_SIZE);
@@ -1913,34 +1930,6 @@ QPoint SubToolWidget::getAiButtonGlobalCenter() const
 // 屏蔽DMenu，触发QAction Trigger时，收回菜单
 bool SubToolWidget::eventFilter(QObject *watched, QEvent *event)
 {
-    // 为保存按钮提供动态 ToolTip 文案
-    if (watched == m_saveLocalDirButton) {
-        if (event->type() == QEvent::ToolTip) {
-            int saveWays = ConfigSettings::instance()->getValue("shot", "save_ways").toInt(); // 0: Ask, 1: Specify
-            bool isChangeOnSave = ConfigSettings::instance()->getValue("shot", "save_dir_change").toBool();
-            QString savedPath = ConfigSettings::instance()->getValue("shot", "save_dir").toString();
-            const bool hasHistoryPath = !savedPath.isEmpty() && QFileInfo::exists(savedPath);
-
-            QString tipText;
-            if (saveWays == 0) { 
-                tipText = tr("Save to local");
-            } else {
-                if (isChangeOnSave) {
-                    tipText = hasHistoryPath ? tr("Update the location when saving")
-                                             : tr("Select a location when saving");
-                } else {
-                    // 菜单选中具体的自定义路径 → 显示"保存到[路径]"
-                    tipText = hasHistoryPath ? tr("Save to %1").arg(savedPath)
-                                             : tr("Save to local");
-                }
-            }
-
-            if (m_saveLocalDirButton)
-                installTipHint(m_saveLocalDirButton, tipText);
-
-            return true;
-        }
-    }
 
 
     if (watched == m_recordOptionMenu || watched == m_optionMenu || watched == m_scrollOptionMenu || watched == m_saveToSpecialPathMenu || watched == m_scrollSaveToSpecialPathMenu) {

@@ -750,6 +750,14 @@ Tartsa lenyomva a Shift billentyűt négyzetek vagy körök rajzolásához.</tra
         <source>AI Screenshot (A)</source>
         <translation>AI képernyőkép (A)</translation>
     </message>
+    <message>
+        <source>Save to Desktop</source>
+        <translation>Mentés a Asztalra</translation>
+    </message>
+    <message>
+        <source>Save to Pictures</source>
+        <translation>Mentés a Képekbe</translation>
+    </message>
 </context>
 <context>
     <name>ToolBarWidget</name>

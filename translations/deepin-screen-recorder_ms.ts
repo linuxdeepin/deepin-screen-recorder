@@ -750,6 +750,14 @@ Tahan Shift untuk melukis segi empat sama atau bulatan.</translation>
         <source>AI Screenshot (A)</source>
         <translation>Tangkap Layar AI (A)</translation>
     </message>
+    <message>
+        <source>Save to Desktop</source>
+        <translation>Simpan ke Atas Meja</translation>
+    </message>
+    <message>
+        <source>Save to Pictures</source>
+        <translation>Simpan ke Gambar</translation>
+    </message>
 </context>
 <context>
     <name>ToolBarWidget</name>

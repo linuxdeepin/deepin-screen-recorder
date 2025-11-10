@@ -63,14 +63,15 @@ void SubToolWidget::initShotLable()
     // 初始化时调用 updateSaveButtonTip 设置初始的 tooltip
     m_saveLocalDirButton->setSaveIcon(QIcon::fromTheme("save"));
     m_saveLocalDirButton->setListIcon(QIcon::fromTheme("dropdown"));
-    // 监听保存按钮的悬停提示事件
-    m_saveLocalDirButton->installEventFilter(this);
     m_pinOptionButton->setObjectName(AC_TOOLBARWIDGET_SAVE_LOACL_PIN_BUT);
     m_saveLocalDirButton->setAccessibleName(AC_TOOLBARWIDGET_SAVE_LOACL_PIN_BUT);
     
     // 创建并设置保存菜单管理器
     PinSaveMenuManager *pinSaveMenuManager = new PinSaveMenuManager(this);
     m_saveLocalDirButton->setOptionsMenu(pinSaveMenuManager->getMenu());
+    // 连接保存选项改变信号，更新tooltip
+    connect(pinSaveMenuManager, &PinSaveMenuManager::saveOptionChanged, this, &SubToolWidget::updateSaveButtonTip);
+    updateSaveButtonTip();
     
     connect(m_saveLocalDirButton, &SaveButton::clicked, this, &SubToolWidget::signalSaveToLocalButtonClicked);
 
@@ -195,22 +196,40 @@ void SubToolWidget::updateSaveButtonTip()
         return;
     }
     
-    // 使用实时配置生成安全的默认提示文案（事件过滤器会覆盖为更细粒度文案）
+
     QPair<int, int> saveInfo = Settings::instance()->getSaveOption();
     const int pathType = saveInfo.first;
     const QString specialPath = Settings::instance()->getSavePath();
     const bool hasHistoryPath = !specialPath.isEmpty() && QFileInfo::exists(specialPath);
 
     QString tipText;
-    if (pathType == ASK) {
-        tipText = tr("Save to local");
-    } else if (pathType == FOLDER_CHANGE) {
-        tipText = tr("Select a location when saving");
-    } else if (pathType == FOLDER) {
-        tipText = hasHistoryPath ? tr("Save to %1").arg(specialPath)
-                                 : tr("Save to local");
-    } else {
-        tipText = tr("Save to local");
+    switch (pathType) {
+        case ASK:
+            // 每次询问模式
+            tipText = tr("Save to local");
+            break;
+        case DESKTOP:
+            // 保存到桌面
+            tipText = tr("Save to Desktop");
+            break;
+        case PICTURES:
+            // 保存到图片
+            tipText = tr("Save to Pictures");
+            break;
+        case FOLDER:
+            // 保存到指定路径
+            tipText = hasHistoryPath ? tr("Save to %1").arg(specialPath)
+                                     : tr("Save to local");
+            break;
+        case FOLDER_CHANGE:
+            // 保存时选择/更新位置
+            tipText = hasHistoryPath ? tr("Update the location when saving")
+                                     : tr("Select a location when saving");
+            break;
+        default:
+            // 其他情况（CLIPBOARD等）
+            tipText = tr("Save to local");
+            break;
     }
 
     m_saveLocalDirButton->setToolTip(tipText);
@@ -283,40 +302,6 @@ void SubToolWidget::updateOptionChecked()
 
 bool SubToolWidget::eventFilter(QObject *watched, QEvent *event)
 {
-    if (watched == m_saveLocalDirButton) {
-        if (event->type() == QEvent::ToolTip) {
-            QPair<int, int> saveInfo = Settings::instance()->getSaveOption();
-            const QString specialPath = Settings::instance()->getSavePath();
-            const bool hasHistoryPath = !specialPath.isEmpty() && QFileInfo::exists(specialPath);
-
-            QString tipText;
-            switch (saveInfo.first) {
-            case ASK:
-                tipText = tr("Save to local");
-                break;
-            case FOLDER:
-                if (hasHistoryPath) {
-                    tipText = tr("Save to %1").arg(specialPath);
-                } else {
-                    tipText = tr("Save to local");
-                }
-                break;
-            case FOLDER_CHANGE:
-                // 菜单选中"保存时设置位置" → 根据是否有历史路径决定文案
-                tipText = hasHistoryPath ? tr("Update the location when saving")
-                                         : tr("Select a location when saving");
-                break;
-            default:
-                tipText = tr("Save to local");
-                break;
-            }
-            QHelpEvent *he = static_cast<QHelpEvent *>(event);
-            QToolTip::showText(he->globalPos(), tipText, m_saveLocalDirButton);
-
-            return true;
-        }
-    }
-
     if (watched == m_optionMenu) {
         if (event->type() == QEvent::MouseButtonPress) {
             QMouseEvent *mouseEvent = static_cast<QMouseEvent *>(event);

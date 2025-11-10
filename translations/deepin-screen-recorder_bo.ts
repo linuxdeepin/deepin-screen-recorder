@@ -750,6 +750,14 @@ Shiftམནན་ནས་གྲུ་བཞི་ཁ་གང་འབྲི་
         <source>AI Screenshot (A)</source>
         <translation>སྒྲིག་བཀོད་བྱ་རྒྱུ་ (A)</translation>
     </message>
+    <message>
+        <source>Save to Desktop</source>
+        <translation>ཅོག་ངོས་དུ་ཉར་བ།</translation>
+    </message>
+    <message>
+        <source>Save to Pictures</source>
+        <translation>བཤུས་འགོད་དུ་ཉར་བ།</translation>
+    </message>
 </context>
 <context>
     <name>ToolBarWidget</name>

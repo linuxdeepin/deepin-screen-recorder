@@ -750,6 +750,14 @@ Houd Shift ingedrukt om vierkanten of cirkels te tekenen.</translation>
         <source>AI Screenshot (A)</source>
         <translation>AI Schermopname (A)</translation>
     </message>
+    <message>
+        <source>Save to Desktop</source>
+        <translation>Opslaan na bureaublad</translation>
+    </message>
+    <message>
+        <source>Save to Pictures</source>
+        <translation>Opslaan na afbeeldingen</translation>
+    </message>
 </context>
 <context>
     <name>ToolBarWidget</name>

@@ -750,6 +750,14 @@ Mbani të shtypur tastin Shift që të vizatohet një drejtkëndësh ose një rr
         <source>AI Screenshot (A)</source>
         <translation>Foto ekrani AI (A)</translation>
     </message>
+    <message>
+        <source>Save to Desktop</source>
+        <translation>Ruaje te Desktop</translation>
+    </message>
+    <message>
+        <source>Save to Pictures</source>
+        <translation>Ruaje te Foto</translation>
+    </message>
 </context>
 <context>
     <name>ToolBarWidget</name>

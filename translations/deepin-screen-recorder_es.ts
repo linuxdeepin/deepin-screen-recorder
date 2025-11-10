@@ -750,6 +750,14 @@ Mantenga presionada la tecla Shift para dibujar cuadrados o círculos.</translat
         <source>AI Screenshot (A)</source>
         <translation>Captura de pantalla AI (A)</translation>
     </message>
+    <message>
+        <source>Save to Desktop</source>
+        <translation>Guardar en el escritorio</translation>
+    </message>
+    <message>
+        <source>Save to Pictures</source>
+        <translation>Guardar en imágenes</translation>
+    </message>
 </context>
 <context>
     <name>ToolBarWidget</name>

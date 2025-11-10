@@ -749,6 +749,14 @@ Hold down Shift to draw squares or circles.</source>
         <source>AI Screenshot (A)</source>
         <translation>ملخص (A)</translation>
     </message>
+    <message>
+        <source>Save to Desktop</source>
+        <translation>حفظ إلى سطح المكتب</translation>
+    </message>
+    <message>
+        <source>Save to Pictures</source>
+        <translation>حفظ إلى الصور</translation>
+    </message>
 </context>
 <context>
     <name>ToolBarWidget</name>
