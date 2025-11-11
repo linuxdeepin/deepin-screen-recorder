@@ -13,6 +13,7 @@
 #include <QDebug>
 #include <QGuiApplication>
 #include <qpa/qplatformnativeinterface.h>
+#include <QPointer>
 #include "../utils/log.h"
 
 // Wayland 相关
@@ -220,27 +221,46 @@ ExtCaptureFrame* ExtCaptureSession::createFrame()
         connect(d->currentFrame, &ExtCaptureFrame::ready,
                 this, [this]() {
                     qCWarning(dsrApp) << "ExtCaptureSession: Frame ready, emitting frameReady and resetting to Ready state";
-                    
-                    // 发射通用frameReady信号
-                    emit frameReady(d->currentFrame);
-                    
-                    // 如果是DMA Buffer，同时发射dmaFrameReady信号
-                    if (d->currentFrame->isDmaBuffer()) {
-                        qCWarning(dsrApp) << "ExtCaptureSession: *** DMA BUFFER FRAME *** fd:" << d->currentFrame->getDmaBufferFd();
-                        
-                        const FrameData& frameData = d->currentFrame->frameData();
-                        emit dmaFrameReady(d->currentFrame->getDmaBufferFd(), 
-                                         d->currentFrame->getGbmBufferObject(),
-                                         frameData.size, 
-                                         frameData.dimensions.width(), 
-                                         frameData.dimensions.height(),
-                                         frameData.stride, 
-                                         frameData.timestamp);
+                    // 使用QPointer防止在信号处理过程中对象被外部删除导致悬空指针
+                    QPointer<ExtCaptureFrame> frameGuard = d->currentFrame;
+
+                    // 在发射任何信号前缓存DMA相关数据，避免在emit后解引用悬空对象
+                    int dmaFd = -1;
+                    void *gbmBo = nullptr;
+                    size_t dataSize = 0;
+                    int width = 0;
+                    int height = 0;
+                    int stride = 0;
+                    uint64_t ts = 0;
+                    bool isDma = false;
+                    if (frameGuard) {
+                        isDma = frameGuard->isDmaBuffer();
+                        if (isDma) {
+                            const FrameData &frameData = frameGuard->frameData();
+                            dmaFd = frameGuard->getDmaBufferFd();
+                            gbmBo = frameGuard->getGbmBufferObject();
+                            dataSize = frameData.size;
+                            width = frameData.dimensions.width();
+                            height = frameData.dimensions.height();
+                            stride = frameData.stride;
+                            ts = frameData.timestamp;
+                        }
                     }
-                    
-                    // 立即清理帧，不依赖于接收方的状态
+
+                    // 若是DMA帧，先发射dmaFrameReady，避免frameReady的接收方同步删除对象后再访问
+                    if (isDma) {
+                        qCWarning(dsrApp) << "ExtCaptureSession: *** DMA BUFFER FRAME *** fd:" << dmaFd;
+                        emit dmaFrameReady(dmaFd, gbmBo, dataSize, width, height, stride, ts);
+                    }
+
+                    // 发射通用frameReady信号（最后发射，且不再在其后解引用frame）
+                    if (frameGuard) {
+                        emit frameReady(frameGuard);
+                    }
+
+                    // 安全地释放当前帧：异步删除，清空指针，避免重入期间悬空
                     if (d->currentFrame) {
-                        delete d->currentFrame;  // 同步删除，避免时序问题
+                        d->currentFrame->deleteLater();
                         d->currentFrame = nullptr;
                     }
                     setState(Ready);
