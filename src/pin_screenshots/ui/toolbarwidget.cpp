@@ -38,6 +38,7 @@ ToolBarWidget::ToolBarWidget(DWidget *parent): DBlurEffectWidget(parent)
         setWindowFlags(Qt::FramelessWindowHint | Qt::WindowStaysOnTopHint | Qt::Tool);
         qCDebug(dsrApp) << "Window flags set for default mode.";
     }
+    this->setWindowFlags(windowFlags() | Qt::BypassWindowManagerHint);
 
     this->setRadius(30);
     this->setBlurEnabled(true);
