@@ -1,3 +1,9 @@
+deepin-screen-recorder (6.6.12) unstable; urgency=medium
+
+  * fix: Add BypassWindowManagerHint to toolbar window flags
+
+ -- dengzhongyuan <dengzhongyuan@uniontech.com>  Wed, 12 Nov 2025 13:30:47 +0800
+
 deepin-screen-recorder (6.6.11) unstable; urgency=medium
 
   * feat: Integrate AI Assistant functionality and enhance UI components
