@@ -29,9 +29,7 @@
 class ExtCaptureFrame::Private : public QtWayland::ext_image_copy_capture_frame_v1
 {
 public:
-    Private(ExtCaptureFrame *q, ExtCaptureSession *session) : q_ptr(q), session(session) {
-        qCWarning(dsrApp) << "ExtCaptureFrame::Private: Constructor called, this=" << this;
-    }
+    Private(ExtCaptureFrame *q, ExtCaptureSession *session) : q_ptr(q), session(session) {}
 
     ExtCaptureFrame *q_ptr;
     ExtCaptureSession *session;
@@ -65,20 +63,20 @@ protected:
     }
 
     void ext_image_copy_capture_frame_v1_ready() override final {
-        qCWarning(dsrApp) << "Private::ext_image_copy_capture_frame_v1_ready: *** VIRTUAL FUNCTION CALLED *** this=" << this << "q_ptr=" << q_ptr;
+        // qCWarning(dsrApp) << "Private::ext_image_copy_capture_frame_v1_ready: *** VIRTUAL FUNCTION CALLED *** this=" << this << "q_ptr=" << q_ptr;
         if (q_ptr) {
             q_ptr->handleReady();
         } else {
-            qCCritical(dsrApp) << "Private::ext_image_copy_capture_frame_v1_ready: q_ptr is NULL!";
+            // qCCritical(dsrApp) << "Private::ext_image_copy_capture_frame_v1_ready: q_ptr is NULL!";
         }
     }
 
     void ext_image_copy_capture_frame_v1_failed(uint32_t reason) override final {
-        qCWarning(dsrApp) << "Private::ext_image_copy_capture_frame_v1_failed: *** VIRTUAL FUNCTION CALLED *** reason:" << reason << "this=" << this << "q_ptr=" << q_ptr;
+        // qCWarning(dsrApp) << "Private::ext_image_copy_capture_frame_v1_failed: *** VIRTUAL FUNCTION CALLED *** reason:" << reason << "this=" << this << "q_ptr=" << q_ptr;
         if (q_ptr) {
             q_ptr->handleFailed(reason);
         } else {
-            qCCritical(dsrApp) << "Private::ext_image_copy_capture_frame_v1_failed: q_ptr is NULL!";
+            // qCCritical(dsrApp) << "Private::ext_image_copy_capture_frame_v1_failed: q_ptr is NULL!";
         }
     }
 };
@@ -134,9 +132,9 @@ bool ExtCaptureFrame::initialize(void *frame, const CaptureConfig &config)
     
     // 初始化协议绑定
     d->init(frameObj);
-    qCWarning(dsrApp) << "ExtCaptureFrame::initialize: Protocol binding initialized, listener registered for frame:" << frameObj;
+    // qCWarning(dsrApp) << "ExtCaptureFrame::initialize: Protocol binding initialized, listener registered for frame:" << frameObj;
     
-    qCWarning(dsrApp) << "ExtCaptureFrame::initialize: Qt Wayland listener already registered";
+    // qCWarning(dsrApp) << "ExtCaptureFrame::initialize: Qt Wayland listener already registered";
     
     // 创建缓冲区
     if (!createBuffer()) {
@@ -145,7 +143,7 @@ bool ExtCaptureFrame::initialize(void *frame, const CaptureConfig &config)
     }
     
     setState(Attached);
-    qDebug() << "Frame initialized with size:" << config.bufferSize;
+    // qDebug() << "Frame initialized with size:" << config.bufferSize;
     return true;
 }
 
@@ -156,16 +154,16 @@ ExtCaptureFrame::FrameState ExtCaptureFrame::state() const
 
 bool ExtCaptureFrame::capture(bool fullDamage)
 {
-    qCWarning(dsrApp) << "ExtCaptureFrame::capture: Starting capture, current state:" << d->state;
+    // qCWarning(dsrApp) << "ExtCaptureFrame::capture: Starting capture, current state:" << d->state;
     
     if (d->state < Attached) {
-        qCWarning(dsrApp) << "ExtCaptureFrame::capture: Frame not ready for capture, state:" << d->state;
+        // qCWarning(dsrApp) << "ExtCaptureFrame::capture: Frame not ready for capture, state:" << d->state;
         return false;
     }
 
     try {
         // 附加缓冲区
-        qCWarning(dsrApp) << "ExtCaptureFrame::capture: Attaching buffer:" << d->buffer;
+        // qCWarning(dsrApp) << "ExtCaptureFrame::capture: Attaching buffer:" << d->buffer;
         d->attach_buffer(d->buffer);
         
         // 设置损坏区域
@@ -178,7 +176,7 @@ bool ExtCaptureFrame::capture(bool fullDamage)
         }
         
         setState(Damaged);
-        qCWarning(dsrApp) << "ExtCaptureFrame::capture: State set to Damaged, starting capture...";
+        // qCWarning(dsrApp) << "ExtCaptureFrame::capture: State set to Damaged, starting capture...";
         
         // 开始捕获
         d->capture();
@@ -190,21 +188,21 @@ bool ExtCaptureFrame::capture(bool fullDamage)
         struct wl_display *display = static_cast<struct wl_display *>(
             native->nativeResourceForWindow("display", nullptr));
         if (display) {
-            qCWarning(dsrApp) << "ExtCaptureFrame::capture: Flushing Wayland display...";
+            // qCWarning(dsrApp) << "ExtCaptureFrame::capture: Flushing Wayland display...";
             wl_display_flush(display);
             
         // 强制处理待处理的事件
-        qCWarning(dsrApp) << "ExtCaptureFrame::capture: Dispatching pending events...";
+        // qCWarning(dsrApp) << "ExtCaptureFrame::capture: Dispatching pending events...";
         // 直接处理待处理的事件，不阻塞
         wl_display_dispatch_pending(display);
         }
     }
         
-        qCWarning(dsrApp) << "ExtCaptureFrame::capture: Frame capture started successfully, state set to Capturing";
+        // qCWarning(dsrApp) << "ExtCaptureFrame::capture: Frame capture started successfully, state set to Capturing";
         return true;
         
     } catch (const std::exception &e) {
-        qCWarning(dsrApp) << "ExtCaptureFrame::capture: Exception during capture:" << e.what();
+        // qCWarning(dsrApp) << "ExtCaptureFrame::capture: Exception during capture:" << e.what();
         setState(Failed);
         emit failed(QString("Capture failed: %1").arg(e.what()));
         return false;
@@ -301,22 +299,22 @@ void ExtCaptureFrame::handlePresentationTime(uint32_t tv_sec_hi, uint32_t tv_sec
 
 void ExtCaptureFrame::handleReady()
 {
-    qCWarning(dsrApp) << "ExtCaptureFrame::handleReady: *** FRAME READY EVENT RECEIVED ***";
+    // qCWarning(dsrApp) << "ExtCaptureFrame::handleReady: *** FRAME READY EVENT RECEIVED ***";
     setState(Ready);
     
     // 映射缓冲区数据
     mapBuffer();
     
-    qCWarning(dsrApp) << "ExtCaptureFrame::handleReady: Frame ready, size:" << d->bufferSize << ", emitting ready signal";
+    // qCWarning(dsrApp) << "ExtCaptureFrame::handleReady: Frame ready, size:" << d->bufferSize << ", emitting ready signal";
     emit ready();
 }
 
 void ExtCaptureFrame::handleFailed(uint32_t reason)
 {
-    qCWarning(dsrApp) << "ExtCaptureFrame::handleFailed: *** FRAME FAILED EVENT RECEIVED *** reason:" << reason;
+    // qCWarning(dsrApp) << "ExtCaptureFrame::handleFailed: *** FRAME FAILED EVENT RECEIVED *** reason:" << reason;
     setState(Failed);
     QString errorMsg = failureReasonToString(reason);
-    qCWarning(dsrApp) << "ExtCaptureFrame::handleFailed: Frame capture failed:" << errorMsg;
+    // qCWarning(dsrApp) << "ExtCaptureFrame::handleFailed: Frame capture failed:" << errorMsg;
     emit failed(errorMsg);
 }
 
@@ -324,10 +322,10 @@ bool ExtCaptureFrame::createBuffer()
 {
     // 根据配置选择缓冲区类型
     if (d->config.useDmaBuffer) {
-        qCWarning(dsrApp) << "ExtCaptureFrame: Creating DMA Buffer";
+        // qCWarning(dsrApp) << "ExtCaptureFrame: Creating DMA Buffer";
         return createDmaBuffer();
     } else {
-        qCWarning(dsrApp) << "ExtCaptureFrame: Creating SHM Buffer";
+        // qCWarning(dsrApp) << "ExtCaptureFrame: Creating SHM Buffer";
         return createShmBuffer();
     }
 }
@@ -419,22 +417,22 @@ bool ExtCaptureFrame::createDmaBuffer()
     uint32_t height = d->config.bufferSize.height();
     uint32_t format = DRM_FORMAT_XBGR8888; // 使用XBGR8888格式
     
-    qCWarning(dsrApp) << "Creating DMA Buffer:" << width << "x" << height 
-                      << "format:" << format;
+    // qCWarning(dsrApp) << "Creating DMA Buffer:" << width << "x" << height 
+    //                   << "format:" << format;
     
     // 1. 打开DRM设备创建GBM设备
     int drmFd = open("/dev/dri/renderD128", O_RDWR);
     if (drmFd < 0) {
         drmFd = open("/dev/dri/card0", O_RDWR);
         if (drmFd < 0) {
-            qCWarning(dsrApp) << "Failed to open DRM device, falling back to SHM";
+            // qCWarning(dsrApp) << "Failed to open DRM device, falling back to SHM";
             return createShmBuffer();
         }
     }
     
     d->gbmDevice = gbm_create_device(drmFd);
     if (!d->gbmDevice) {
-        qCWarning(dsrApp) << "Failed to create GBM device, falling back to SHM";
+        // qCWarning(dsrApp) << "Failed to create GBM device, falling back to SHM";
         close(drmFd);
         return createShmBuffer();
     }
@@ -444,7 +442,7 @@ bool ExtCaptureFrame::createDmaBuffer()
     d->bo = gbm_bo_create(d->gbmDevice, width, height, format, flags);
     
     if (!d->bo) {
-        qCWarning(dsrApp) << "Failed to create GBM BO, falling back to SHM";
+        // qCWarning(dsrApp) << "Failed to create GBM BO, falling back to SHM";
         gbm_device_destroy(d->gbmDevice);
         d->gbmDevice = nullptr;
         close(drmFd);
@@ -458,7 +456,7 @@ bool ExtCaptureFrame::createDmaBuffer()
     int planeFd = gbm_bo_get_fd_for_plane(d->bo, 0);
     
     if (planeFd < 0) {
-        qCWarning(dsrApp) << "Failed to get FD from GBM BO, falling back to SHM";
+        // qCWarning(dsrApp) << "Failed to get FD from GBM BO, falling back to SHM";
         gbm_bo_destroy(d->bo);
         d->bo = nullptr;
         gbm_device_destroy(d->gbmDevice);
@@ -466,9 +464,9 @@ bool ExtCaptureFrame::createDmaBuffer()
         close(drmFd);
         return createShmBuffer();
     }
-    
-    qCWarning(dsrApp) << "GBM BO created - stride:" << stride << "offset:" << offset 
-                      << "modifier:" << modifier << "fd:" << planeFd;
+        
+        // qCWarning(dsrApp) << "GBM BO created - stride:" << stride << "offset:" << offset 
+        //                 << "modifier:" << modifier << "fd:" << planeFd;
     
     d->frameData.stride = stride;
     d->bufferSize = stride * height;
@@ -478,13 +476,13 @@ bool ExtCaptureFrame::createDmaBuffer()
     d->mappedData = mmap(nullptr, d->bufferSize, PROT_READ | PROT_WRITE, MAP_SHARED, planeFd, 0);
     if (d->mappedData == MAP_FAILED) {
         // 某些驱动可能不支持CPU映射DMA-BUF，这是正常的
-        qCWarning(dsrApp) << "Cannot mmap DMA-BUF (this is normal for some drivers)";
+        // qCWarning(dsrApp) << "Cannot mmap DMA-BUF (this is normal for some drivers)";
         d->mappedData = nullptr;
     }
     
     // 5. 获取linux-dmabuf对象
     if (!d->session) {
-        qCWarning(dsrApp) << "Session is null";
+        // qCWarning(dsrApp) << "Session is null";
         cleanupDmaBuffer();
         close(drmFd);
         return false;
@@ -492,7 +490,7 @@ bool ExtCaptureFrame::createDmaBuffer()
     
     auto *linuxDmabuf = static_cast<struct zwp_linux_dmabuf_v1*>(d->session->getLinuxDmabuf());
     if (!linuxDmabuf) {
-        qCWarning(dsrApp) << "Linux DMA-BUF not available, falling back to SHM";
+        // qCWarning(dsrApp) << "Linux DMA-BUF not available, falling back to SHM";
         cleanupDmaBuffer();
         close(drmFd);
         return createShmBuffer();
@@ -501,7 +499,7 @@ bool ExtCaptureFrame::createDmaBuffer()
     // 6. 使用linux-dmabuf协议创建wl_buffer
     auto *params = zwp_linux_dmabuf_v1_create_params(linuxDmabuf);
     if (!params) {
-        qCWarning(dsrApp) << "Failed to create linux_buffer_params";
+        // qCWarning(dsrApp) << "Failed to create linux_buffer_params";
         cleanupDmaBuffer();
         close(drmFd);
         return false;
@@ -516,13 +514,13 @@ bool ExtCaptureFrame::createDmaBuffer()
     zwp_linux_buffer_params_v1_destroy(params);
     
     if (!d->buffer) {
-        qCWarning(dsrApp) << "Failed to create wl_buffer from DMA-BUF";
+        // qCWarning(dsrApp) << "Failed to create wl_buffer from DMA-BUF";
         cleanupDmaBuffer();
         close(drmFd);
         return false;
     }
     
-    qCWarning(dsrApp) << "DMA Buffer created successfully using linux-dmabuf protocol!";
+    // qCWarning(dsrApp) << "DMA Buffer created successfully using linux-dmabuf protocol!";
     close(drmFd); // 可以关闭设备fd，GBM已经获得了所有需要的信息
     
     return true;

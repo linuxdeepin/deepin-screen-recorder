@@ -54,7 +54,7 @@ bool ExtCaptureIntegration::isAvailable() const
 
 bool ExtCaptureIntegration::startScreenRecording(QScreen *screen, bool includeCursor)
 {
-    qCWarning(dsrApp) << "ExtCaptureIntegration::startScreenRecording: *** STARTING *** includeCursor =" << includeCursor;
+    // qCWarning(dsrApp) << "ExtCaptureIntegration::startScreenRecording: *** STARTING *** includeCursor =" << includeCursor;
     
     if (m_recording) {
         qWarning() << "Already recording";
@@ -74,7 +74,7 @@ bool ExtCaptureIntegration::startScreenRecording(QScreen *screen, bool includeCu
     }
 
     // 创建捕获会话
-    qCWarning(dsrApp) << "ExtCaptureIntegration: Creating capture session with includeCursor =" << includeCursor;
+    // qCWarning(dsrApp) << "ExtCaptureIntegration: Creating capture session with includeCursor =" << includeCursor;
     m_session = m_manager->createScreenCaptureSession(screen, includeCursor);
     if (!m_session) {
         qWarning() << "Failed to create capture session";
@@ -92,7 +92,7 @@ bool ExtCaptureIntegration::startScreenRecording(QScreen *screen, bool includeCu
     connect(m_session, &ExtCaptureSession::frameReady,
             this, &ExtCaptureIntegration::onFrameReady);
     
-    qCWarning(dsrApp) << "ExtCaptureIntegration: Session signals connected, session state:" << m_session->state();
+    // qCWarning(dsrApp) << "ExtCaptureIntegration: Session signals connected, session state:" << m_session->state();
 
     // 检查 session 是否已经准备就绪（信号可能在连接前就发出了）
     if (m_session->state() == ExtCaptureSession::Ready) {
@@ -102,7 +102,7 @@ bool ExtCaptureIntegration::startScreenRecording(QScreen *screen, bool includeCu
     }
 
     m_recording = true;
-    qDebug() << "Screen recording started for screen:" << screen->name();
+    // qDebug() << "Screen recording started for screen:" << screen->name();
     return true;
 }
 
@@ -154,14 +154,14 @@ bool ExtCaptureIntegration::captureFrame()
         return false;
     }
 
-    qCWarning(dsrApp) << "ExtCaptureIntegration::captureFrame: Frame created successfully:" << frame;
+    // qCWarning(dsrApp) << "ExtCaptureIntegration::captureFrame: Frame created successfully:" << frame;
 
     // 连接帧信号
     connect(frame, &ExtCaptureFrame::failed,
             this, &ExtCaptureIntegration::onFrameFailed);
 
     // 开始捕获
-    qCWarning(dsrApp) << "ExtCaptureIntegration::captureFrame: Starting frame capture...";
+    // qCWarning(dsrApp) << "ExtCaptureIntegration::captureFrame: Starting frame capture...";
     if (!frame->capture()) {
         qCWarning(dsrApp) << "ExtCaptureIntegration::captureFrame: Failed to start frame capture";
         frame->deleteLater();
@@ -169,7 +169,7 @@ bool ExtCaptureIntegration::captureFrame()
         return false;
     }
 
-    qCWarning(dsrApp) << "ExtCaptureIntegration::captureFrame: Frame capture started successfully";
+    // qCWarning(dsrApp) << "ExtCaptureIntegration::captureFrame: Frame capture started successfully";
     return true;
 }
 
@@ -198,7 +198,7 @@ void ExtCaptureIntegration::onProtocolUnavailable()
 
 void ExtCaptureIntegration::onSessionReady()
 {
-    qCWarning(dsrApp) << "ExtCaptureIntegration::onSessionReady: Capture session ready";
+    // qCWarning(dsrApp) << "ExtCaptureIntegration::onSessionReady: Capture session ready";
     emit recordingStarted();
 }
 
@@ -232,7 +232,7 @@ void ExtCaptureIntegration::onFrameReady(ExtCaptureFrame *frame)
     
     if (frame->isDmaBuffer()) {
         // DMA Buffer模式：发射DMA Buffer专用信号
-        qCWarning(dsrApp) << "ExtCaptureIntegration::onFrameReady: *** DMA BUFFER FRAME *** fd:" << frame->getDmaBufferFd();
+        // qCWarning(dsrApp) << "ExtCaptureIntegration::onFrameReady: *** DMA BUFFER FRAME *** fd:" << frame->getDmaBufferFd();
         emit dmaFrameReady(frame->getDmaBufferFd(), frame->getGbmBufferObject(),
                           frameData.size, frameData.dimensions.width(), frameData.dimensions.height(),
                           frameData.stride, frameData.timestamp);
@@ -271,8 +271,8 @@ void ExtCaptureIntegration::onFrameFailed(const QString &reason)
 
 bool ExtCaptureIntegration::startMultiScreenRecording(const QList<QScreen*>& screens, bool includeCursor)
 {
-    qCWarning(dsrApp) << "ExtCaptureIntegration::startMultiScreenRecording: Starting with" 
-                      << screens.size() << "screens, includeCursor:" << includeCursor;
+    // qCWarning(dsrApp) << "ExtCaptureIntegration::startMultiScreenRecording: Starting with" 
+    //                   << screens.size() << "screens, includeCursor:" << includeCursor;
 
     if (m_recording || m_multiScreenRecording) {
         qCWarning(dsrApp) << "ExtCaptureIntegration: Already recording";

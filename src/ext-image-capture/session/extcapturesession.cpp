@@ -117,7 +117,7 @@ ExtCaptureSession::~ExtCaptureSession()
 
 bool ExtCaptureSession::initialize(void *manager, void *imageSource, bool paintCursors)
 {
-    qCWarning(dsrApp) << "ExtCaptureSession::initialize: *** INITIALIZING SESSION *** paintCursors =" << paintCursors;
+    // qCWarning(dsrApp) << "ExtCaptureSession::initialize: *** INITIALIZING SESSION *** paintCursors =" << paintCursors;
     
     if (d->state != Uninitialized) {
         qWarning() << "Session already initialized";
@@ -140,7 +140,7 @@ bool ExtCaptureSession::initialize(void *manager, void *imageSource, bool paintC
         // 创建捕获会话
         // uint32_t options = paintCursors ? EXT_IMAGE_COPY_CAPTURE_MANAGER_V1_OPTIONS_PAINT_CURSORS : 0;
         uint32_t options = 0;
-        qCWarning(dsrApp) << "ExtCaptureSession: paintCursors =" << paintCursors << "-> options =" << options << "(C enum value:" << EXT_IMAGE_COPY_CAPTURE_MANAGER_V1_OPTIONS_PAINT_CURSORS << "Qt enum:" << QtWayland::ext_image_copy_capture_manager_v1::options_paint_cursors << ")";
+        // qCWarning(dsrApp) << "ExtCaptureSession: paintCursors =" << paintCursors << "-> options =" << options << "(C enum value:" << EXT_IMAGE_COPY_CAPTURE_MANAGER_V1_OPTIONS_PAINT_CURSORS << "Qt enum:" << QtWayland::ext_image_copy_capture_manager_v1::options_paint_cursors << ")";
         
         if (!paintCursors) {
             qCWarning(dsrApp) << "ExtCaptureSession: TESTING TreeLand options handling - using 0 (no cursors)";
@@ -154,7 +154,7 @@ bool ExtCaptureSession::initialize(void *manager, void *imageSource, bool paintC
             return false;
         }
         
-        qCWarning(dsrApp) << "ExtCaptureSession: Creating capture session with source:" << source << "options:" << options;
+        // qCWarning(dsrApp) << "ExtCaptureSession: Creating capture session with source:" << source << "options:" << options;
         auto *session = managerPrivate->create_session(source, options);
         
         if (!session) {
@@ -167,8 +167,8 @@ bool ExtCaptureSession::initialize(void *manager, void *imageSource, bool paintC
         d->init(session);
         d->config.paintCursors = paintCursors;
 
-        qCWarning(dsrApp) << "ExtCaptureSession: Capture session initialized, waiting for constraints...";
-        qCWarning(dsrApp) << "ExtCaptureSession: Current state:" << d->state;
+        // qCWarning(dsrApp) << "ExtCaptureSession: Capture session initialized, waiting for constraints...";
+        // qCWarning(dsrApp) << "ExtCaptureSession: Current state:" << d->state;
         return true;
 
     } catch (const std::exception &e) {
@@ -215,12 +215,12 @@ ExtCaptureFrame* ExtCaptureSession::createFrame()
         }
 
         setState(Capturing);
-        qCWarning(dsrApp) << "ExtCaptureSession::createFrame: State set to Capturing, currentFrame:" << d->currentFrame;
+        // qCWarning(dsrApp) << "ExtCaptureSession::createFrame: State set to Capturing, currentFrame:" << d->currentFrame;
         
         // 连接帧信号
         connect(d->currentFrame, &ExtCaptureFrame::ready,
                 this, [this]() {
-                    qCWarning(dsrApp) << "ExtCaptureSession: Frame ready, emitting frameReady and resetting to Ready state";
+                    // qCWarning(dsrApp) << "ExtCaptureSession: Frame ready, emitting frameReady and resetting to Ready state";
                     // 使用QPointer防止在信号处理过程中对象被外部删除导致悬空指针
                     QPointer<ExtCaptureFrame> frameGuard = d->currentFrame;
 
@@ -249,7 +249,7 @@ ExtCaptureFrame* ExtCaptureSession::createFrame()
 
                     // 若是DMA帧，先发射dmaFrameReady，避免frameReady的接收方同步删除对象后再访问
                     if (isDma) {
-                        qCWarning(dsrApp) << "ExtCaptureSession: *** DMA BUFFER FRAME *** fd:" << dmaFd;
+                        // qCWarning(dsrApp) << "ExtCaptureSession: *** DMA BUFFER FRAME *** fd:" << dmaFd;
                         emit dmaFrameReady(dmaFd, gbmBo, dataSize, width, height, stride, ts);
                     }
 
@@ -268,7 +268,7 @@ ExtCaptureFrame* ExtCaptureSession::createFrame()
                 
         connect(d->currentFrame, &ExtCaptureFrame::failed,
                 this, [this](const QString &error) {
-                    qCWarning(dsrApp) << "ExtCaptureSession: Frame failed:" << error << ", resetting to Ready state";
+                    // qCWarning(dsrApp) << "ExtCaptureSession: Frame failed:" << error << ", resetting to Ready state";
                     emit this->error(error);
                     if (d->currentFrame) {
                         delete d->currentFrame;  // 同步删除，避免时序问题
@@ -280,7 +280,7 @@ ExtCaptureFrame* ExtCaptureSession::createFrame()
         return d->currentFrame;
 
     } catch (const std::exception &e) {
-        qWarning() << "Exception during frame creation:" << e.what();
+        // qWarning() << "Exception during frame creation:" << e.what();
         emit error(QString("Frame creation failed: %1").arg(e.what()));
         return nullptr;
     }
@@ -316,14 +316,14 @@ QList<uint32_t> ExtCaptureSession::supportedFormats() const
 void ExtCaptureSession::handleBufferSize(uint32_t width, uint32_t height)
 {
     d->config.bufferSize = QSize(width, height);
-    qCWarning(dsrApp) << "ExtCaptureSession: Buffer size received:" << width << "x" << height;
+    // qCWarning(dsrApp) << "ExtCaptureSession: Buffer size received:" << width << "x" << height;
 }
 
 void ExtCaptureSession::handleShmFormat(uint32_t format)
 {
     if (!d->shmFormats.contains(format)) {
         d->shmFormats.append(format);
-        qCWarning(dsrApp) << "ExtCaptureSession: SHM format supported:" << format;
+        // qCWarning(dsrApp) << "ExtCaptureSession: SHM format supported:" << format;
     }
 }
 
@@ -347,7 +347,7 @@ void ExtCaptureSession::handleDone()
     selectOptimalFormat();
     setState(Ready);
     emit ready();
-    qCWarning(dsrApp) << "ExtCaptureSession: Session constraints received, ready for capture";
+    // qCWarning(dsrApp) << "ExtCaptureSession: Session constraints received, ready for capture";
 }
 
 void ExtCaptureSession::handleStopped()
@@ -371,15 +371,15 @@ void ExtCaptureSession::selectOptimalFormat()
     if (!d->dmabufFormats.isEmpty()) {
         d->config.format = d->dmabufFormats.first();
         d->config.useDmaBuffer = true;
-        qCWarning(dsrApp) << "*** DMA-BUF FORMAT SELECTED ***";
-        qCWarning(dsrApp) << "Selected DMA-BUF format:" << d->config.format;
-        qCWarning(dsrApp) << "Available DMA-BUF formats count:" << d->dmabufFormats.size();
+        // qCWarning(dsrApp) << "*** DMA-BUF FORMAT SELECTED ***";
+        // qCWarning(dsrApp) << "Selected DMA-BUF format:" << d->config.format;
+        // qCWarning(dsrApp) << "Available DMA-BUF formats count:" << d->dmabufFormats.size();
     } else if (!d->shmFormats.isEmpty()) {
         d->config.format = d->shmFormats.first();
         d->config.useDmaBuffer = false;
-        qCWarning(dsrApp) << "*** SHM FORMAT SELECTED (DMA-BUF not available) ***";
-        qCWarning(dsrApp) << "Selected SHM format:" << d->config.format;
-        qCWarning(dsrApp) << "Available SHM formats count:" << d->shmFormats.size();
+        // qCWarning(dsrApp) << "*** SHM FORMAT SELECTED (DMA-BUF not available) ***";
+        // qCWarning(dsrApp) << "Selected SHM format:" << d->config.format;
+        // qCWarning(dsrApp) << "Available SHM formats count:" << d->shmFormats.size();
     } else {
         qCWarning(dsrApp) << "*** NO SUPPORTED FORMATS FOUND ***";
         setState(Error);

@@ -679,7 +679,7 @@ bool ExtCaptureRecorder::processDmaBufferFrame(int dmaBufferFd, void *gbmBo, int
         return false;
     }
     
-    qCWarning(dsrApp) << "ExtCaptureRecorder::processDmaBufferFrame: Processing DMA Buffer fd:" << dmaBufferFd << "size:" << width << "x" << height;
+    // qCWarning(dsrApp) << "ExtCaptureRecorder::processDmaBufferFrame: Processing DMA Buffer fd:" << dmaBufferFd << "size:" << width << "x" << height;
     
     gbm_bo *bo = static_cast<gbm_bo *>(gbmBo);
     if (!bo) {
@@ -692,9 +692,9 @@ bool ExtCaptureRecorder::processDmaBufferFrame(int dmaBufferFd, void *gbmBo, int
     uint32_t bo_stride = gbm_bo_get_stride(bo);
     uint32_t bo_format = gbm_bo_get_format(bo);
     
-    qCWarning(dsrApp) << "ExtCaptureRecorder::processDmaBufferFrame: GBM BO info:"
-                      << "width:" << bo_width << "height:" << bo_height 
-                      << "stride:" << bo_stride << "format:" << bo_format;
+    // qCWarning(dsrApp) << "ExtCaptureRecorder::processDmaBufferFrame: GBM BO info:"
+    //                   << "width:" << bo_width << "height:" << bo_height 
+    //                   << "stride:" << bo_stride << "format:" << bo_format;
     
     if (!m_ffmpegProcess || m_ffmpegProcess->state() != QProcess::Running) {
         qCWarning(dsrApp) << "ExtCaptureRecorder::processDmaBufferFrame: FFmpeg process not running";
@@ -706,26 +706,22 @@ bool ExtCaptureRecorder::processDmaBufferFrame(int dmaBufferFd, void *gbmBo, int
     // 然后直接传递DMA Buffer FD给支持硬件访问的消费者
     
     size_t frame_size = static_cast<size_t>(bo_stride) * bo_height;
-    qCWarning(dsrApp) << "ExtCaptureRecorder::processDmaBufferFrame: Processing DMA Buffer with hardware pipeline, size:" << frame_size;
-    
-    // **正确的DMA-BUF CPU映射方法**
-    // 你说得对，DMA-BUF设计就是为了让CPU和GPU共享访问
-    // 问题在于我们的映射方法
+    // qCWarning(dsrApp) << "ExtCaptureRecorder::processDmaBufferFrame: Processing DMA Buffer with hardware pipeline, size:" << frame_size;
     
     QByteArray frame_data;
     void *mapped_data = nullptr;
     
     // 方法1：首先尝试直接mmap DMA Buffer FD（这是标准方法）
-    qCWarning(dsrApp) << "ExtCaptureRecorder::processDmaBufferFrame: Attempting standard DMA-BUF mmap, fd:" << dmaBufferFd;
+    // qCWarning(dsrApp) << "ExtCaptureRecorder::processDmaBufferFrame: Attempting standard DMA-BUF mmap, fd:" << dmaBufferFd;
     mapped_data = mmap(nullptr, frame_size, PROT_READ, MAP_SHARED, dmaBufferFd, 0);
     
     if (mapped_data != MAP_FAILED) {
-        qCWarning(dsrApp) << "ExtCaptureRecorder::processDmaBufferFrame: *** SUCCESS! *** DMA-BUF mmap worked, copying real screen data";
+        // qCWarning(dsrApp) << "ExtCaptureRecorder::processDmaBufferFrame: *** SUCCESS! *** DMA-BUF mmap worked, copying real screen data";
         frame_data = QByteArray(static_cast<const char*>(mapped_data), frame_size);
         munmap(mapped_data, frame_size);
     } else {
         int error_code = errno;
-        qCWarning(dsrApp) << "ExtCaptureRecorder::processDmaBufferFrame: DMA-BUF mmap failed with errno:" << error_code << strerror(error_code);
+        // qCWarning(dsrApp) << "ExtCaptureRecorder::processDmaBufferFrame: DMA-BUF mmap failed with errno:" << error_code << strerror(error_code);
         
         // 方法2：尝试GBM映射
         void *map_handle = nullptr;
@@ -734,11 +730,11 @@ bool ExtCaptureRecorder::processDmaBufferFrame(int dmaBufferFd, void *gbmBo, int
         
         if (gbmBo) {
             struct gbm_bo *bo = static_cast<struct gbm_bo*>(gbmBo);
-            qCWarning(dsrApp) << "ExtCaptureRecorder::processDmaBufferFrame: Trying GBM BO mapping as fallback";
+            // qCWarning(dsrApp) << "ExtCaptureRecorder::processDmaBufferFrame: Trying GBM BO mapping as fallback";
             gbm_map_data = gbm_bo_map(bo, 0, 0, bo_width, bo_height, GBM_BO_TRANSFER_READ, &map_stride, &map_handle);
             
             if (gbm_map_data) {
-                qCWarning(dsrApp) << "ExtCaptureRecorder::processDmaBufferFrame: *** GBM MAPPING SUCCESS! *** stride:" << map_stride;
+                // qCWarning(dsrApp) << "ExtCaptureRecorder::processDmaBufferFrame: *** GBM MAPPING SUCCESS! *** stride:" << map_stride;
                 
                 // 复制真实屏幕数据
                 if (map_stride == bo_stride) {
@@ -791,7 +787,7 @@ bool ExtCaptureRecorder::processDmaBufferFrame(int dmaBufferFd, void *gbmBo, int
         return false;
     }
     
-    qCWarning(dsrApp) << "ExtCaptureRecorder::processDmaBufferFrame: Successfully wrote" << bytes_written << "bytes of frame data to FFmpeg";
+    // qCWarning(dsrApp) << "ExtCaptureRecorder::processDmaBufferFrame: Successfully wrote" << bytes_written << "bytes of frame data to FFmpeg";
     return true;
 }
 
