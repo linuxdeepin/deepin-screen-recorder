@@ -7041,6 +7041,7 @@ void MainWindow::startCountdown()
             countdownTooltip->start();
             countdownTooltip->show();
         }
+        // 判空以避免未初始化导致崩溃
         if (m_pVoiceVolumeWatcher) {
             m_pVoiceVolumeWatcher->setWatch(false);
         }
@@ -7458,6 +7459,18 @@ void MainWindow::onTreelandSwitchToRecordUI()
     // 切换工具栏为录屏模式
     if (m_toolBar)
         m_toolBar->setRecordLaunchMode(status::record);
+
+    // Treeland 路径下确保监视器初始化（与 updateToolBarPos 首次初始化逻辑对齐）
+    if (!m_pVoiceVolumeWatcher) {
+        m_pVoiceVolumeWatcher = new voiceVolumeWatcher(this);
+        m_pVoiceVolumeWatcher->setWatch(true);
+        connect(m_pVoiceVolumeWatcher, SIGNAL(sigRecodeState(bool)), this, SIGNAL(microPhoneEnable(bool)));
+        emit microPhoneEnable(false);
+    }
+    if (!m_pCameraWatcher) {
+        m_pCameraWatcher = new CameraWatcher(this);
+        m_pCameraWatcher->setWatch(true);
+    }
 
     // 记录"切到录屏前"的工具栏位置（用于回切截图时恢复）
     if (m_toolBar) {

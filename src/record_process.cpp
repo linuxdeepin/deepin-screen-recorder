@@ -901,29 +901,45 @@ void RecordProcess::stopRecord()
     if (Utils::isFFmpegEnv) {
         //停止treeland录屏
         if (Utils::isTreelandMode) {
-            qCInfo(dsrApp) << "停止TreeLand录屏...";
-            
             // 获取存储的组件实例
             ExtCaptureRecorder *extRecorder = property("extCaptureRecorder").value<ExtCaptureRecorder*>();
             
-            // 停止录制
+            // 改为"等待停止完成"的异步流程，确保底层完全停止后再收尾，避免残留帧
             if (extRecorder) {
+                // 断开可能的重复连接，确保只触发一次
+                disconnect(extRecorder, nullptr, this, nullptr);
+                
+                // 连接停止完成信号后再调用stopRecording
+#if (QT_VERSION_MAJOR == 5)
+                connect(extRecorder, &ExtCaptureRecorder::recordingStopped, this, [this, extRecorder]() {
+#elif (QT_VERSION_MAJOR == 6)
+                connect(extRecorder, &ExtCaptureRecorder::recordingStopped, this, [this, extRecorder]() {
+#endif
+                    qCInfo(dsrApp) << "TreeLand录屏已停止";
+                    
+                    // 清理对象引用
+                    setProperty("extCaptureRecorder", QVariant());
+                    if (extRecorder) extRecorder->deleteLater();
+                    
+                    // 停止完成后再执行收尾流程（转码/完成）
+                    if (Utils::kGIF == m_recordType) {
+                        onStartTranscode();
+                    } else {
+                        onRecordFinish();
+                    }
+                });
+                
+                // 执行停止
                 extRecorder->stopRecording();
-            }
-            
-            // 清理property中的引用
-            setProperty("extCaptureRecorder", QVariant());
-            
-            // 清理对象
-            if (extRecorder) extRecorder->deleteLater();
-            
-            qCInfo(dsrApp) << "TreeLand录屏已停止";
-            
-            // 处理录制完成
-            if (Utils::kGIF == m_recordType) {
-                onStartTranscode();
+                
+                // 等待异步回调，不要立刻继续后续逻辑
+                return;
             } else {
-                onRecordFinish();
+                if (Utils::kGIF == m_recordType) {
+                    onStartTranscode();
+                } else {
+                    onRecordFinish();
+                }
             }
         }
         //停止wayland录屏
@@ -986,9 +1002,11 @@ void RecordProcess::exitRecord(QString newSavePath)
         notification.callWithArgumentList(QDBus::AutoDetect, "Notify", arg);
         qCInfo(dsrApp) << __LINE__ << __func__ << "已弹出通知消息";
     }
+    
     if (m_recordType == Utils::kGIF) {
         QFile::remove(savePath);
     }
+    
     if (Utils::isWaylandMode) {
 #ifdef KF5_WAYLAND_FLAGE_ON
         avlibInterface::unloadFunctions();
@@ -996,6 +1014,7 @@ void RecordProcess::exitRecord(QString newSavePath)
     }
 
     m_recordingFlag = false;
+    
     if (Utils::isSysHighVersion1040() == true) {
         qCInfo(dsrApp) << __LINE__ << __func__ << "正在退出录屏计时图标...";
         qCDebug(dsrApp) << __LINE__ << ": Stop the screen recording timer!";
@@ -1012,10 +1031,16 @@ void RecordProcess::exitRecord(QString newSavePath)
 
     //保存到剪切板
     save2Clipboard(newSavePath);
+    
     qCInfo(dsrApp) << __LINE__ << __func__ <<"录屏已退出";
     QApplication::quit();
-    if (Utils::isWaylandMode) {
-        qCInfo(dsrApp) << "wayland record exit! (_Exit(0))";
-        _Exit(0);
+    
+    // Treeland 和 Wayland 模式下都强制退出，避免残留事件循环导致进程无法退出
+    if (Utils::isWaylandMode || Utils::isTreelandMode) {
+        qCInfo(dsrApp) << (Utils::isTreelandMode ? "treeland" : "wayland") << "record exit! (_Exit(0))";
+        // 使用 QTimer::singleShot 延迟一小段时间，确保 QApplication::quit() 有机会处理
+        QTimer::singleShot(100, []() {
+            _Exit(0);
+        });
     }
 }

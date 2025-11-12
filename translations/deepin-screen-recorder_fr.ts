@@ -748,7 +748,7 @@ Maintenir la touche Maj enfoncée pour dessiner des carrés ou des cercles.</tra
     </message>
     <message>
         <source>AI Screenshot (A)</source>
-        <translation>Capture d&apos;écran AI (A)</translation>
+        <translation>Capture d&apos;écran IA (A)</translation>
     </message>
     <message>
         <source>Save to Desktop</source>
@@ -756,7 +756,7 @@ Maintenir la touche Maj enfoncée pour dessiner des carrés ou des cercles.</tra
     </message>
     <message>
         <source>Save to Pictures</source>
-        <translation>Enregistrer dans les images</translation>
+        <translation>Enregistrer dans Images</translation>
     </message>
 </context>
 <context>

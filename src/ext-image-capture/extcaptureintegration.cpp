@@ -108,9 +108,6 @@ bool ExtCaptureIntegration::startScreenRecording(QScreen *screen, bool includeCu
 
 void ExtCaptureIntegration::stopRecording()
 {
-    qCDebug(dsrApp) << "ExtCaptureIntegration::stopRecording: Stopping recording"
-                    << "single screen:" << m_recording << "multi screen:" << m_multiScreenRecording;
-
     if (!m_recording && !m_multiScreenRecording) {
         return;
     }
@@ -120,20 +117,21 @@ void ExtCaptureIntegration::stopRecording()
         m_recording = false;
 
         if (m_session) {
+            // 立即断开所有会话信号连接，避免停止后仍有残留事件触发处理
+            disconnect(m_session, nullptr, this, nullptr);
+            
             m_session->stop();
             m_session->deleteLater();
             m_session = nullptr;
         }
 
         emit recordingStopped();
-        qCDebug(dsrApp) << "Single screen recording stopped";
     }
 
     // 停止多屏录制
     if (m_multiScreenRecording) {
         m_multiScreenCoordinator->stopMultiScreenCapture();
         // m_multiScreenRecording 将在 onMultiScreenCaptureStopped 中设置为 false
-        qCDebug(dsrApp) << "Multi-screen recording stop requested";
     }
 }
 

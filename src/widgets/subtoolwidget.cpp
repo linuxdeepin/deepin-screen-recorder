@@ -715,6 +715,10 @@ void SubToolWidget::initShotLabel()
         connect(m_recorderButton, &ToolButton::clicked, this, [ = ] {
             m_pMainWindow->getToolBarPoint();
             switchContent("record");
+            // Treeland 环境下点击“切换到录屏”，进行前端UI切换与后端选择器退出
+            if (Utils::isTreelandMode) {
+                m_pMainWindow->onTreelandSwitchToRecordUI();
+            }
             emit changeShotToolFunc("record");
         });
 

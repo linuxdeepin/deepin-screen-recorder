@@ -141,14 +141,23 @@ bool ExtCaptureRecorder::startRecording(QScreen *screen, bool includeCursor,
 
 void ExtCaptureRecorder::stopRecording()
 {
-    if (m_state != Recording) {
+    if (m_state != Recording && m_state != Starting && m_state != Stopping) {
         return;
     }
 
     setState(Stopping);
     
+    // 立即断开所有帧事件信号连接，避免停止后仍有残留事件触发处理
+    if (m_extCapture) {
+        disconnect(m_extCapture, &ExtCaptureIntegration::frameReady, this, &ExtCaptureRecorder::onFrameReady);
+        disconnect(m_extCapture, &ExtCaptureIntegration::dmaFrameReady, this, &ExtCaptureRecorder::onDmaFrameReady);
+    }
+    
     // 停止定时器
     m_captureTimer->stop();
+    // 确保移除可能的挂起触发
+    m_captureTimer->disconnect(this);
+    connect(m_captureTimer, &QTimer::timeout, this, &ExtCaptureRecorder::onCaptureTimer);
     
     // 停止ext-capture
     if (m_extCapture) {
@@ -159,11 +168,6 @@ void ExtCaptureRecorder::stopRecording()
     if (m_frameBuffer) {
         m_frameBuffer->setGetFrame(false);
     }
-    
-    // 完成录制
-    finalizeRecording();
-
-    qDebug() << "ExtCaptureRecorder: Recording stopped, captured" << m_frameCount << "frames";
 }
 
 ExtCaptureRecorder::RecordState ExtCaptureRecorder::state() const
@@ -247,27 +251,24 @@ void ExtCaptureRecorder::onRecordingStarted()
 
 void ExtCaptureRecorder::onRecordingStopped()
 {
+    // 底层已停止，进行收尾
     setState(Stopped);
+    
+    // 先完成编码资源的收尾
+    finalizeRecording();
+    
+    // 再对外发出停止信号，保证上层收到时已经真正完成
     emit recordingStopped();
 }
 
 void ExtCaptureRecorder::onFrameReady(const void *data, size_t size, int width, int height, int stride, uint64_t timestamp)
 {
-    qCWarning(dsrApp) << "ExtCaptureRecorder::onFrameReady: *** FRAME DATA RECEIVED *** size:" << size << "width:" << width << "height:" << height << "stride:" << stride;
-    
     if (!data || !m_frameBuffer) {
-        qCWarning(dsrApp) << "ExtCaptureRecorder::onFrameReady: Rejected - data:" << (data ? "valid" : "null") << "frameBuffer:" << (m_frameBuffer ? "valid" : "null");
         return;
     }
     
-    // 如果之前是错误状态，现在有帧数据了，重置为录制状态
-    if (m_state == Error) {
-        qCWarning(dsrApp) << "ExtCaptureRecorder::onFrameReady: Recovering from error state, setting to Recording";
-        setState(Recording);
-    }
-    
+    // 停止或非录制状态下一律丢弃
     if (m_state != Recording) {
-        qCWarning(dsrApp) << "ExtCaptureRecorder::onFrameReady: Rejected - state:" << m_state;
         return;
     }
 
@@ -288,8 +289,6 @@ void ExtCaptureRecorder::onFrameReady(const void *data, size_t size, int width, 
 
     if (m_streamingMode && !m_ffmpegStarted) {
         // 首帧：设置帧尺寸信息并启动FFmpeg进程
-        qCWarning(dsrApp) << "ExtCaptureRecorder::onFrameReady: *** FIRST FRAME RECEIVED *** - starting FFmpeg";
-        
         m_frameWidth = width;
         m_frameHeight = height;
         m_frameStride = stride;
@@ -302,54 +301,34 @@ void ExtCaptureRecorder::onFrameReady(const void *data, size_t size, int width, 
         }
         
         m_ffmpegStarted = true;
-        qCWarning(dsrApp) << "ExtCaptureRecorder::onFrameReady: FFmpeg process started, writing first frame";
     }
     
     if (m_streamingMode && m_ffmpegProcess && m_ffmpegProcess->state() == QProcess::Running) {
         // 流式编码模式：直接写入FFmpeg
-        qCWarning(dsrApp) << "ExtCaptureRecorder::onFrameReady: *** STREAMING FRAME *** to FFmpeg";
-        
         qint64 bytesWritten = m_ffmpegProcess->write(static_cast<const char*>(data), static_cast<qint64>(size));
         if (bytesWritten != static_cast<qint64>(size)) {
             qCWarning(dsrApp) << "ExtCaptureRecorder::onFrameReady: Failed to write complete frame, expected:" << size << "written:" << bytesWritten;
-        } else {
-            qCWarning(dsrApp) << "ExtCaptureRecorder::onFrameReady: *** FRAME STREAMED SUCCESSFULLY *** count:" << m_frameCount + 1;
         }
     } else if (!m_streamingMode) {
         // 缓冲模式：添加帧到缓冲区
         int64_t frameTimestamp = (timestamp > 0) ? static_cast<int64_t>(timestamp) : QDateTime::currentMSecsSinceEpoch() * 1000000LL;
-        
-        qCWarning(dsrApp) << "ExtCaptureRecorder::onFrameReady: *** ENQUEUEING FRAME *** to buffer";
         m_frameBuffer->appendBuffer(static_cast<const unsigned char*>(data), size, width, height, stride, frameTimestamp);
-        
-        qCWarning(dsrApp) << "ExtCaptureRecorder::onFrameReady: *** FRAME ENQUEUED SUCCESSFULLY *** count:" << m_frameCount + 1 << "buffer frames:" << m_frameBuffer->frameCount();
     }
     
     m_frameCount++;
     
     // 发送进度更新
     emit progressUpdated(m_frameCount, recordingDuration());
-    
-    qCWarning(dsrApp) << "ExtCaptureRecorder::onFrameReady: Frame" << m_frameCount << "captured, size:" << size;
 }
 
 void ExtCaptureRecorder::onDmaFrameReady(int dmaBufferFd, void *gbmBo, size_t size, int width, int height, int stride, uint64_t timestamp)
 {
-    qCWarning(dsrApp) << "ExtCaptureRecorder::onDmaFrameReady: *** DMA BUFFER FRAME RECEIVED *** fd:" << dmaBufferFd << "size:" << size << "width:" << width << "height:" << height << "stride:" << stride;
-    
     if (dmaBufferFd < 0 || !gbmBo) {
-        qCWarning(dsrApp) << "ExtCaptureRecorder::onDmaFrameReady: Rejected - invalid DMA buffer fd:" << dmaBufferFd << "gbmBo:" << (gbmBo ? "valid" : "null");
         return;
     }
     
-    // 如果之前是错误状态，现在有帧数据了，重置为录制状态
-    if (m_state == Error) {
-        qCWarning(dsrApp) << "ExtCaptureRecorder::onDmaFrameReady: Recovering from error state, setting to Recording";
-        setState(Recording);
-    }
-    
+    // 停止或非录制状态下一律丢弃
     if (m_state != Recording) {
-        qCWarning(dsrApp) << "ExtCaptureRecorder::onDmaFrameReady: Rejected - state:" << m_state;
         return;
     }
 
@@ -364,8 +343,6 @@ void ExtCaptureRecorder::onDmaFrameReady(int dmaBufferFd, void *gbmBo, size_t si
 
     if (m_streamingMode && !m_ffmpegStarted) {
         // 首帧：设置帧尺寸信息并启动支持DMA Buffer的FFmpeg进程
-        qCWarning(dsrApp) << "ExtCaptureRecorder::onDmaFrameReady: *** FIRST DMA FRAME RECEIVED *** - starting FFmpeg with DMA Buffer support";
-        
         m_frameWidth = width;
         m_frameHeight = height;
         m_frameStride = stride;
@@ -378,34 +355,24 @@ void ExtCaptureRecorder::onDmaFrameReady(int dmaBufferFd, void *gbmBo, size_t si
         }
         
         m_ffmpegStarted = true;
-        qCWarning(dsrApp) << "ExtCaptureRecorder::onDmaFrameReady: DMA Buffer FFmpeg process started";
     }
     
     if (m_streamingMode && m_ffmpegProcess && m_ffmpegProcess->state() == QProcess::Running) {
         // DMA Buffer流式编码：使用硬件编码器处理DMA Buffer
-        qCWarning(dsrApp) << "ExtCaptureRecorder::onDmaFrameReady: *** PROCESSING DMA FRAME *** with hardware encoder fd:" << dmaBufferFd;
-        
-        // 实现真正的DMA Buffer处理：
-        // 方法1: 使用libdrm导入DMA-BUF到VAAPI
         if (!processDmaBufferFrame(dmaBufferFd, gbmBo, width, height, stride)) {
             qCWarning(dsrApp) << "ExtCaptureRecorder::onDmaFrameReady: Failed to process DMA Buffer frame";
             return;
         }
-        
-        qCWarning(dsrApp) << "ExtCaptureRecorder::onDmaFrameReady: DMA Frame processed successfully via hardware encoder";
     }
     
     m_frameCount++;
     
     // 发送进度更新
     emit progressUpdated(m_frameCount, recordingDuration());
-    
-    qCWarning(dsrApp) << "ExtCaptureRecorder::onDmaFrameReady: DMA Frame" << m_frameCount << "processed, fd:" << dmaBufferFd;
 }
 
 void ExtCaptureRecorder::onExtCaptureError(const QString &message)
 {
-    qCWarning(dsrApp) << "ExtCaptureRecorder::onExtCaptureError: *** EXT-CAPTURE ERROR ***" << message;
     setState(Error);
     emit error(message);
 }
@@ -413,26 +380,17 @@ void ExtCaptureRecorder::onExtCaptureError(const QString &message)
 void ExtCaptureRecorder::onCaptureTimer()
 {
     if (m_state != Recording || !m_extCapture) {
-        qCWarning(dsrApp) << "ExtCaptureRecorder::onCaptureTimer: Timer fired but not recording - state:" << m_state << "extCapture:" << (m_extCapture ? "valid" : "null");
         return;
     }
 
-    qCWarning(dsrApp) << "ExtCaptureRecorder::onCaptureTimer: *** REQUESTING FRAME CAPTURE *** frame:" << m_frameCount;
-    
     // 触发帧捕获
-    if (!m_extCapture->captureFrame()) {
-        qCWarning(dsrApp) << "ExtCaptureRecorder::onCaptureTimer: *** FAILED TO CAPTURE FRAME ***" << m_frameCount;
-    } else {
-        qCWarning(dsrApp) << "ExtCaptureRecorder::onCaptureTimer: Frame capture request sent successfully for frame" << m_frameCount;
-    }
+    m_extCapture->captureFrame();
 }
 
 void ExtCaptureRecorder::setState(RecordState newState)
 {
     if (m_state != newState) {
-        RecordState oldState = m_state;
         m_state = newState;
-        qCWarning(dsrApp) << "ExtCaptureRecorder::setState: *** STATE CHANGE *** from" << oldState << "to" << newState;
     }
 }
 
@@ -445,35 +403,23 @@ void ExtCaptureRecorder::initializeCapture()
 
 void ExtCaptureRecorder::finalizeRecording()
 {
-    qCWarning(dsrApp) << "ExtCaptureRecorder: Finalize recording";
-    qCWarning(dsrApp) << "  - Total frames:" << m_frameCount;
-    qCWarning(dsrApp) << "  - Duration:" << recordingDuration() << "ms";
-    qCWarning(dsrApp) << "  - Frame rate:" << (m_frameCount * 1000.0 / recordingDuration()) << "fps";
-    qCWarning(dsrApp) << "  - Output path:" << m_outputPath;
-    
     if (m_streamingMode && m_ffmpegStarted && m_ffmpegProcess) {
         // 流式编码模式：完成FFmpeg进程
-        qCWarning(dsrApp) << "  - Finishing FFmpeg streaming process";
-        
         m_ffmpegProcess->closeWriteChannel();
         
         if (m_ffmpegProcess->waitForFinished(5000)) {
             int exitCode = m_ffmpegProcess->exitCode();
             if (exitCode == 0) {
-                qCWarning(dsrApp) << "  - FFmpeg process finished successfully";
-                
                 // 验证文件是否创建成功
-                if (QFile::exists(m_outputPath) && QFileInfo(m_outputPath).size() > 0) {
-                    qCWarning(dsrApp) << "  - Video file created successfully:" << m_outputPath << "size:" << QFileInfo(m_outputPath).size() << "bytes";
-                } else {
-                    qCCritical(dsrApp) << "  - Video file was not created or is empty";
+                if (!QFile::exists(m_outputPath) || QFileInfo(m_outputPath).size() == 0) {
+                    qCCritical(dsrApp) << "ExtCaptureRecorder::finalizeRecording: Video file was not created or is empty";
                 }
             } else {
-                qCCritical(dsrApp) << "  - FFmpeg process failed with exit code:" << exitCode;
-                qCCritical(dsrApp) << "  - FFmpeg stderr:" << m_ffmpegProcess->readAllStandardError();
+                qCCritical(dsrApp) << "ExtCaptureRecorder::finalizeRecording: FFmpeg process failed with exit code:" << exitCode;
+                qCCritical(dsrApp) << "ExtCaptureRecorder::finalizeRecording: FFmpeg stderr:" << m_ffmpegProcess->readAllStandardError();
             }
         } else {
-            qCCritical(dsrApp) << "  - FFmpeg process timeout";
+            qCCritical(dsrApp) << "ExtCaptureRecorder::finalizeRecording: FFmpeg process did not finish in 5 seconds";
             m_ffmpegProcess->kill();
         }
         
@@ -483,21 +429,14 @@ void ExtCaptureRecorder::finalizeRecording()
         
     } else if (m_frameBuffer && m_frameBuffer->hasFrames()) {
         // 缓冲模式：创建视频文件
-        qCWarning(dsrApp) << "  - Frame buffer has remaining frames:" << m_frameBuffer->frameCount();
-        
-        if (createVideoFile()) {
-            qCWarning(dsrApp) << "  - Video file created successfully:" << m_outputPath;
-        } else {
-            qCCritical(dsrApp) << "  - Failed to create video file";
+        if (!createVideoFile()) {
+            qCCritical(dsrApp) << "ExtCaptureRecorder::finalizeRecording: Failed to create video file";
         }
-    } else {
-        qCWarning(dsrApp) << "  - No frames available for encoding";
     }
     
     // 重置frame buffer以便下次录制
     if (m_frameBuffer) {
         m_frameBuffer->reset();
-        qCWarning(dsrApp) << "  - Frame buffer reset for next recording";
     }
     
     // 重置录制状态和计数器，为下次录制做准备
@@ -506,8 +445,6 @@ void ExtCaptureRecorder::finalizeRecording()
     m_frameWidth = 0;
     m_frameHeight = 0;
     m_frameStride = 0;
-    // 注意：m_ffmpegStarted 在上面的流式编码部分已经被重置
-    qCWarning(dsrApp) << "  - Recording state reset for next session";
     
     setState(Stopped);
 }

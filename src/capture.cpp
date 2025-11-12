@@ -115,9 +115,15 @@ void TreelandCaptureContext::treeland_capture_context_v1_source_failed(uint32_t 
 
 void TreelandCaptureManager::cancelCapture() {
     qCDebug(dsrApp) << "Entry: TreelandCaptureManager::cancelCapture";
-    // 不再主动 destroy Wayland 扩展，避免在销毁阶段触碰无效 proxy 导致崩溃
-    // 此处保留占位，进程退出由 Wayland 连接清理资源
-    qCDebug(dsrApp) << "Exit: TreelandCaptureManager::cancelCapture (noop)";
+    // 安全地结束当前选择会话：销毁 session，而不是销毁整个 Wayland 扩展
+    // 目的：通知合成器退出选择器，避免 destroy() manager/context 引发无效 proxy 崩溃
+    if (m_context && m_context->session()) {
+        qCDebug(dsrApp) << "Cancel: destroy current treeland_capture_session_v1";
+        m_context->session()->destroy();
+    } else {
+        qCDebug(dsrApp) << "Cancel: no active session to destroy";
+    }
+    qCDebug(dsrApp) << "Exit: TreelandCaptureManager::cancelCapture";
 }
 
 TreelandCaptureFrame *TreelandCaptureContext::ensureFrame()

@@ -161,6 +161,7 @@ private:
     ExtCaptureSession *m_session;
     MultiScreenCaptureCoordinator *m_multiScreenCoordinator;
     bool m_recording;
+    bool m_stopping{false};
     bool m_multiScreenRecording;
 };
 
