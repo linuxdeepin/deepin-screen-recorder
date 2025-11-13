@@ -31,7 +31,6 @@ protected:
     void paintEvent(QPaintEvent *event);
     void updateMultiKeyBoardPos();
 
-
 private:
     QPainter *m_painter;
     CameraWidget *m_cameraWidget;

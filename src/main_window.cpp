@@ -6434,11 +6434,14 @@ void MainWindow::startRecord()
     qCDebug(dsrApp) << "录屏！";
     recordProcess.startRecord();
     // 录屏开始后，隐藏窗口。（2D窗管下支持录屏, 但是会导致摄像头录制不到）
-    if (m_hasComposite == false) {
+    // 在 Treeland 模式下也需要隐藏主窗口，避免主窗口遮挡事件穿透
+    if (m_hasComposite == false || Utils::isTreelandMode) {
         hide();
         // 显示录屏框区域 和 摄像头。
-        m_pRecorderRegion->setCameraShow();
-        m_pRecorderRegion->show();
+        if (m_pRecorderRegion) {
+            m_pRecorderRegion->setCameraShow();
+            m_pRecorderRegion->show();
+        }
     }
 }
 
@@ -6528,12 +6531,14 @@ void MainWindow::shotCurrentImg()
     qCWarning(dsrApp) << "m_backgroundRect:" << m_backgroundRect;
 
     // treeland模式下 图的source由treeland提供
-    if (Utils::isTreelandMode) {
+    // 录屏模式下使用全屏，不使用 captureRegion
+    if (Utils::isTreelandMode && m_functionType != status::record) {
         auto context = TreelandCaptureManager::instance()->context();
         QRect region = context->captureRegion().toRect();
         recordWidth = region.width();
         recordHeight = region.height();
     }
+    // Treeland 录屏模式下，recordX/recordY/recordWidth/recordHeight 已经在 onTreelandSwitchToRecordUI 中设置为全屏
 
     if (recordWidth == 0 || recordHeight == 0)
         return;
@@ -7486,28 +7491,51 @@ void MainWindow::onTreelandSwitchToRecordUI()
         m_sideBar->hide();
 
     // 工具栏居中到屏幕
+    // Treeland 录屏模式下使用屏幕完整几何区域（geometry），确保包含 dock 栏
+    QRect scr;
 #if (QT_VERSION_MAJOR == 5)
-    const QRect scr = QApplication::desktop()->screenGeometry();
+    QScreen *primaryScreen = QGuiApplication::primaryScreen();
+    if (primaryScreen) {
+        scr = primaryScreen->geometry();
+    } else {
+        scr = QApplication::desktop()->screenGeometry();
+    }
 #elif (QT_VERSION_MAJOR == 6)
-    const QRect scr = QGuiApplication::primaryScreen() ? QGuiApplication::primaryScreen()->geometry() : this->geometry();
+    QScreen *primaryScreen = QGuiApplication::primaryScreen();
+    if (primaryScreen) {
+        scr = primaryScreen->geometry();
+    } else {
+        scr = this->geometry();
+    }
 #endif
-
     // 应用侧绘制全屏选区（非模态），并缓存当前截图选区以便回切
     if (recordWidth > 0 && recordHeight > 0) {
         m_lastTreelandShotRegion = QRect(recordX, recordY, recordWidth, recordHeight);
         m_hasLastTreelandShotRegion = true;
     }
-    recordX = 0;
-    recordY = 0;
+    // Treeland 录屏模式下使用全屏区域（虚拟桌面，包含 dock 栏）
+    recordX = scr.x();
+    recordY = scr.y();
     recordWidth = scr.width();
     recordHeight = scr.height();
     if (!m_pRecorderRegion) {
         m_pRecorderRegion = new RecorderRegionShow();
         m_pRecorderRegion->setDevcieName(m_devnumMonitor ? m_devnumMonitor->availableCamera() : QString());
     }
-    m_pRecorderRegion->resize(recordWidth + 2, recordHeight + 2);
-    m_pRecorderRegion->move(std::max(recordX - 1, 0), std::max(recordY - 1, 0));
+    // 在 Treeland 模式下，设置区域框选窗口为全透明无边框窗口
+    // 保留原有标志（WindowDoesNotAcceptFocus, BypassWindowManagerHint），并添加置顶、无边框和输入穿透标志
+    Qt::WindowFlags flags = m_pRecorderRegion->windowFlags();
+    flags |= Qt::WindowStaysOnTopHint | Qt::FramelessWindowHint | Qt::WindowTransparentForInput;
+    m_pRecorderRegion->setWindowFlags(flags);
+    // TreeLand模式下使用全屏大小，不需要边框偏移
+    QSize windowSize(recordWidth, recordHeight);
+    QPoint windowPos(scr.x(), scr.y());
+    m_pRecorderRegion->setFixedSize(windowSize);
+    m_pRecorderRegion->move(windowPos);
     m_pRecorderRegion->show();
+    m_pRecorderRegion->raise();
+
+    // 在 Treeland 模式下，事件穿透由 RecorderRegionShow 的 showEvent 和 resizeEvent 处理
     qCWarning(dsrApp) << "[treeland] region show geom:" << m_pRecorderRegion->geometry();
     const int centerX = scr.x() + scr.width() / 2 - m_toolBar->width() / 2;
     const int centerY = scr.y() + scr.height() / 2 - m_toolBar->height() / 2;
@@ -7534,6 +7562,10 @@ void MainWindow::onTreelandSwitchToRecordUI()
         m_toolBar->showAt(QPoint(centerX, centerY));
         m_toolBar->raise();
         m_toolBar->show();
+        // 确保区域框选窗口也在最上层
+        if (m_pRecorderRegion) {
+            m_pRecorderRegion->raise();
+        }
     });
     qCWarning(dsrApp) << "[treeland] onTreelandSwitchToRecordUI leave";
 }

@@ -11,6 +11,9 @@
 
 #include <QBitmap>
 #include <QVector>
+#include <QTimer>
+#include <QShowEvent>
+#include <QResizeEvent>
 
 const int INDICATOR_WIDTH = 110;
 const int CAMERA_Y_OFFSET = 0;
@@ -27,8 +30,11 @@ RecorderRegionShow::RecorderRegionShow():
     */
     installEventFilter(this);  // add event filter
     setAttribute(Qt::WA_ShowWithoutActivating);
-    setWindowFlags(Qt::WindowDoesNotAcceptFocus | Qt::BypassWindowManagerHint);
     setAttribute(Qt::WA_TranslucentBackground, true);
+    if (Utils::isTreelandMode) {
+        setAttribute(Qt::WA_TransparentForMouseEvents, true);
+    }
+    setWindowFlags(Qt::WindowDoesNotAcceptFocus | Qt::BypassWindowManagerHint);
 
     m_painter =  new QPainter();
     qCDebug(dsrApp) << "RecorderRegionShow constructor end.";
@@ -156,6 +162,13 @@ void RecorderRegionShow::paintEvent(QPaintEvent *event)
 {
     if (nullptr == m_painter)
         return;
+    
+    // TreeLand模式下不绘制边框，使用全透明窗口
+    if (Utils::isTreelandMode) {
+        event->accept();
+        return;
+    }
+    
     QPixmap pixmap(width(), height());
     pixmap.fill(Qt::transparent);
     m_painter->begin(&pixmap);
@@ -179,6 +192,7 @@ void RecorderRegionShow::paintEvent(QPaintEvent *event)
     setMask(pixmap.mask());
     event->accept();
 }
+
 void RecorderRegionShow::updateMultiKeyBoardPos()
 {
     qCDebug(dsrApp) << "updateMultiKeyBoardPos.";

@@ -143,7 +143,7 @@ bool ExtCaptureIntegration::captureFrame()
     }
 
     if (m_session->state() != ExtCaptureSession::Ready) {
-        qCWarning(dsrApp) << "ExtCaptureIntegration::captureFrame: Session not ready for frame capture, current state:" << m_session->state();
+        // qCWarning(dsrApp) << "ExtCaptureIntegration::captureFrame: Session not ready for frame capture, current state:" << m_session->state();
         return false;
     }
 
