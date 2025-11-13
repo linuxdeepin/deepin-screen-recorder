@@ -13,6 +13,7 @@
 #include <QMutex>
 #include <QThread>
 #include <QProcess>
+#include <QElapsedTimer>
 
 // DMA Buffer相关头文件
 #include <gbm.h>
@@ -153,7 +154,8 @@ private:
     bool startFFmpegProcess();
     bool startDmaFFmpegProcess();
     bool processDmaBufferFrame(int dmaBufferFd, void *gbmBo, int width, int height, int stride);
-
+    void updateFrameTimestamps(int64_t timestamp);
+    bool adjustVideoDurationIfNeeded();
     ExtCaptureIntegration *m_extCapture;
     ExtCaptureFrameBuffer *m_frameBuffer;  // 保留用于兼容性
     QTimer *m_captureTimer;
@@ -180,6 +182,11 @@ private:
     int m_firstFrameWidth;
     int m_firstFrameHeight;
     int m_firstFrameStride;
+
+    // 帧时间戳跟踪
+    qint64 m_firstFrameTimestampNs;
+    qint64 m_lastFrameTimestampNs;
+    QElapsedTimer m_wallClockTimer;
 };
 
 #endif // EXTCAPTURERECORDER_H

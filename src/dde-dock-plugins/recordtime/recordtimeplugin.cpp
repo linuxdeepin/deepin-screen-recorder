@@ -124,13 +124,17 @@ void RecordTimePlugin::onStart(bool resetTime)
     m_timer->start(600);
     connect(m_timer, &QTimer::timeout, this, &RecordTimePlugin::refresh);
 
-    if (m_timeWidget->enabled()) {
+    bool widgetEnabled = m_timeWidget->enabled();
+    qCInfo(dsrApp) << "RecordTimePlugin::onStart() - m_timeWidget->enabled() returns:" << widgetEnabled;
+    if (widgetEnabled) {
         qInfo() << "load plugin";
         qCDebug(dsrApp) << "Time widget enabled, loading plugin.";
         m_proxyInter->itemRemoved(this, pluginName());
         m_proxyInter->itemAdded(this, pluginName());
         m_bshow = true;
         m_timeWidget->start();
+    } else {
+        qCWarning(dsrApp) << "Time widget is NOT enabled, plugin will NOT be loaded!";
     }
     qCDebug(dsrApp) << "onStart method finished.";
 }

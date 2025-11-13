@@ -139,7 +139,12 @@ TimeWidget::~TimeWidget()
 bool TimeWidget::enabled()
 {
     qCDebug(dsrApp) << "enabled method called.";
-    return isEnabled();
+    bool enabled = isEnabled();
+    qCInfo(dsrApp) << "TimeWidget::enabled() - isEnabled() returns:" << enabled 
+                   << ", parent:" << (parent() ? "exists" : "nullptr")
+                   << ", isVisible:" << isVisible()
+                   << ", isWindow:" << isWindow();
+    return enabled;
 }
 
 void TimeWidget::onTimeout()

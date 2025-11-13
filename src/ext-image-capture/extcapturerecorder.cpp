@@ -15,6 +15,7 @@
 #include <QGuiApplication>
 #include <QProcess>
 #include <QFileInfo>
+#include <cmath>
 
 ExtCaptureRecorder::ExtCaptureRecorder(QObject *parent)
     : QObject(parent)
@@ -35,6 +36,8 @@ ExtCaptureRecorder::ExtCaptureRecorder(QObject *parent)
     , m_firstFrameWidth(0)
     , m_firstFrameHeight(0)
     , m_firstFrameStride(0)
+    , m_firstFrameTimestampNs(-1)
+    , m_lastFrameTimestampNs(-1)
 {
     // 连接ext-capture信号
     connect(m_extCapture, &ExtCaptureIntegration::available,
@@ -225,6 +228,9 @@ void ExtCaptureRecorder::onRecordingStarted()
     qCWarning(dsrApp) << "ExtCaptureRecorder::onRecordingStarted: *** RECORDING ACTUALLY STARTED ***";
     setState(Recording);
     m_startTime = QDateTime::currentMSecsSinceEpoch();
+    m_firstFrameTimestampNs = -1;
+    m_lastFrameTimestampNs = -1;
+    m_wallClockTimer.start();
     
     if (m_streamingMode) {
         // 流式编码模式：等待第一帧到达时启动FFmpeg进程
@@ -299,6 +305,8 @@ void ExtCaptureRecorder::onFrameReady(const void *data, size_t size, int width, 
         m_ffmpegStarted = true;
     }
     
+    updateFrameTimestamps(static_cast<int64_t>(timestamp));
+
     if (m_streamingMode && m_ffmpegProcess && m_ffmpegProcess->state() == QProcess::Running) {
         // 流式编码模式：直接写入FFmpeg
         qint64 bytesWritten = m_ffmpegProcess->write(static_cast<const char*>(data), static_cast<qint64>(size));
@@ -353,6 +361,8 @@ void ExtCaptureRecorder::onDmaFrameReady(int dmaBufferFd, void *gbmBo, size_t si
         m_ffmpegStarted = true;
     }
     
+    updateFrameTimestamps(static_cast<int64_t>(timestamp));
+
     if (m_streamingMode && m_ffmpegProcess && m_ffmpegProcess->state() == QProcess::Running) {
         // DMA Buffer流式编码：使用硬件编码器处理DMA Buffer
         if (!processDmaBufferFrame(dmaBufferFd, gbmBo, width, height, stride)) {
@@ -422,6 +432,10 @@ void ExtCaptureRecorder::finalizeRecording()
         m_ffmpegProcess->deleteLater();
         m_ffmpegProcess = nullptr;
         m_ffmpegStarted = false;
+
+        if (!adjustVideoDurationIfNeeded()) {
+            qCWarning(dsrApp) << "ExtCaptureRecorder::finalizeRecording: duration correction failed";
+        }
         
     } else if (m_frameBuffer && m_frameBuffer->hasFrames()) {
         // 缓冲模式：创建视频文件
@@ -787,3 +801,105 @@ bool ExtCaptureRecorder::processDmaBufferFrame(int dmaBufferFd, void *gbmBo, int
     return true;
 }
 
+void ExtCaptureRecorder::updateFrameTimestamps(int64_t timestamp)
+{
+    qint64 frameTimestampNs = timestamp;
+    if (frameTimestampNs <= 0) {
+        frameTimestampNs = static_cast<qint64>(m_wallClockTimer.elapsed()) * 1000000LL;
+    }
+
+    if (m_firstFrameTimestampNs < 0) {
+        m_firstFrameTimestampNs = frameTimestampNs;
+    }
+    m_lastFrameTimestampNs = frameTimestampNs;
+}
+
+bool ExtCaptureRecorder::adjustVideoDurationIfNeeded()
+{
+    if (m_frameCount <= 1 || m_firstFrameTimestampNs < 0 || m_lastFrameTimestampNs <= m_firstFrameTimestampNs) {
+        qCDebug(dsrApp) << "ExtCaptureRecorder::adjustVideoDurationIfNeeded: insufficient timestamp data, skip";
+        return true;
+    }
+
+    const qint64 intervalNs = m_lastFrameTimestampNs - m_firstFrameTimestampNs;
+    if (intervalNs <= 0) {
+        qCDebug(dsrApp) << "ExtCaptureRecorder::adjustVideoDurationIfNeeded: invalid interval, skip";
+        return true;
+    }
+
+    const double actualDurationSec = intervalNs / 1'000'000'000.0;
+    const double averageFrameIntervalSec = (m_frameCount > 1)
+            ? actualDurationSec / static_cast<double>(m_frameCount - 1)
+            : (1.0 / qMax(1, m_frameRate));
+    const double actualTotalDurationSec = actualDurationSec + averageFrameIntervalSec;
+    const double encodedDurationSec = static_cast<double>(m_frameCount) / qMax(1, m_frameRate);
+
+    if (actualTotalDurationSec <= 0.0 || encodedDurationSec <= 0.0) {
+        qCDebug(dsrApp) << "ExtCaptureRecorder::adjustVideoDurationIfNeeded: invalid duration values, skip";
+        return true;
+    }
+
+    const double stretchFactor = actualTotalDurationSec / encodedDurationSec;
+    const double deviation = std::abs(stretchFactor - 1.0);
+
+    // 如果时长误差在 3% 以内，忽略校正
+    if (deviation < 0.03) {
+        qCDebug(dsrApp) << "ExtCaptureRecorder::adjustVideoDurationIfNeeded: duration deviation small, skip correction";
+        return true;
+    }
+
+    QString tempPath = m_outputPath;
+    tempPath.append(".tmp_fix.mp4");
+
+    QProcess fixProcess;
+    QString stretchStr = QString::number(stretchFactor, 'f', 6);
+    QStringList args;
+    args << "-y"
+         << "-i" << m_outputPath
+         << "-filter:v" << QString("setpts=%1*PTS").arg(stretchStr)
+         << "-pix_fmt" << "yuv420p"
+         << "-c:v" << "libx264"
+         << tempPath;
+
+    qCWarning(dsrApp) << "ExtCaptureRecorder::adjustVideoDurationIfNeeded: correcting duration, stretch factor:" << stretchStr;
+
+    fixProcess.start("ffmpeg", args);
+    if (!fixProcess.waitForStarted(3000)) {
+        qCCritical(dsrApp) << "ExtCaptureRecorder::adjustVideoDurationIfNeeded: failed to start ffmpeg:" << fixProcess.errorString();
+        return false;
+    }
+
+    if (!fixProcess.waitForFinished(-1)) {
+        qCCritical(dsrApp) << "ExtCaptureRecorder::adjustVideoDurationIfNeeded: ffmpeg not finished in time";
+        fixProcess.kill();
+        return false;
+    }
+
+    if (fixProcess.exitStatus() != QProcess::NormalExit || fixProcess.exitCode() != 0) {
+        qCCritical(dsrApp) << "ExtCaptureRecorder::adjustVideoDurationIfNeeded: ffmpeg exit code" << fixProcess.exitCode();
+        qCCritical(dsrApp) << "stderr:" << fixProcess.readAllStandardError();
+        QFile::remove(tempPath);
+        return false;
+    }
+
+    if (!QFile::exists(tempPath) || QFileInfo(tempPath).size() <= 0) {
+        qCCritical(dsrApp) << "ExtCaptureRecorder::adjustVideoDurationIfNeeded: temp file invalid";
+        QFile::remove(tempPath);
+        return false;
+    }
+
+    if (!QFile::remove(m_outputPath)) {
+        qCCritical(dsrApp) << "ExtCaptureRecorder::adjustVideoDurationIfNeeded: failed to remove original file";
+        QFile::remove(tempPath);
+        return false;
+    }
+
+    if (!QFile::rename(tempPath, m_outputPath)) {
+        qCCritical(dsrApp) << "ExtCaptureRecorder::adjustVideoDurationIfNeeded: failed to replace with corrected file";
+        QFile::remove(tempPath);
+        return false;
+    }
+
+    qCWarning(dsrApp) << "ExtCaptureRecorder::adjustVideoDurationIfNeeded: duration correction succeeded";
+    return true;
+}
