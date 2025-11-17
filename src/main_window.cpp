@@ -1997,6 +1997,12 @@ void MainWindow::initLaunchMode(const QString &launchMode)
         m_sizeTips->setRecorderTipsInfo(true);
         m_sizeTips->updateTips(QPoint(recordX, recordY), QSize(recordWidth, recordHeight));
         m_functionType = status::record;
+        
+        // 录屏模式启动时初始化音频和摄像头监视器
+        if (m_toolBarInit) {
+            initAudioAndCameraWatchers();
+        }
+        
         initScreenRecorder();
         if (m_sideBar->isVisible()) {
             m_sideBar->hide();
@@ -2683,14 +2689,11 @@ void MainWindow::updateToolBarPos()
         m_toolBar->setRecordLaunchMode(m_functionType);
         // m_toolBar->setIsZhaoxinPlatform(m_isZhaoxin);
         m_toolBar->setScrollShotDisabled(!m_wmHelper->hasComposite());
-        m_pVoiceVolumeWatcher = new voiceVolumeWatcher(this);
-        m_pVoiceVolumeWatcher->setWatch(true);  // 取消之前的线程方式，采用定时器监测
-        connect(m_pVoiceVolumeWatcher, SIGNAL(sigRecodeState(bool)), this, SIGNAL(microPhoneEnable(bool)));
-        emit microPhoneEnable(false);
-        m_pCameraWatcher = new CameraWatcher(this);
-        m_pCameraWatcher->setWatch(true);  // 取消之前的线程方式，采用定时器监测
-        //        connect(m_pCameraWatcher, SIGNAL(sigCameraState(bool)), this, SLOT(on_CheckVideoCouldUse(bool)));
-
+        
+        // 只在录屏模式下初始化音频和摄像头监视器
+        if (m_functionType == status::record) {
+            initAudioAndCameraWatchers();
+        }
         qCInfo(dsrApp) << "正在加载依赖库...";
         initDynamicLibPath();
 
@@ -3236,6 +3239,10 @@ void MainWindow::changeFunctionButton(QString type)
         //切换录屏或截屏时保证工具栏右对齐
         m_toolBar->move(m_toolBarPoint.x() - m_toolBar->width(), m_toolBarPoint.y());
         updateToolBarPos();
+        
+        // 切换到录屏模式时初始化音频和摄像头监视器
+        initAudioAndCameraWatchers();
+        
         initScreenRecorder();
         if (m_sideBar->isVisible()) {
             m_sideBar->hide();
@@ -6997,8 +7004,12 @@ void MainWindow::startCountdown()
             countdownTooltip->start();
             countdownTooltip->show();
         }
-        m_pVoiceVolumeWatcher->setWatch(false);
-        m_pCameraWatcher->setWatch(false);
+        if (m_pVoiceVolumeWatcher) {
+            m_pVoiceVolumeWatcher->setWatch(false);
+        }
+        if (m_pCameraWatcher) {
+            m_pCameraWatcher->setWatch(false);
+        }
 
         if (m_devnumMonitor) {
             m_devnumMonitor->setWatch(false);  // 取消之前的线程方式，采用定时器监测
@@ -7392,6 +7403,28 @@ void MainWindow::onRecordingStopped()
     // 调用回调函数通知录屏状态变化
     if (m_recordingStateCallback) {
         m_recordingStateCallback(false);
+    }
+}
+
+void MainWindow::initAudioAndCameraWatchers()
+{
+    qCDebug(dsrApp) << "初始化音频和摄像头监视器...";
+    
+    // 初始化音频监视器
+    if (!m_pVoiceVolumeWatcher) {
+        m_pVoiceVolumeWatcher = new voiceVolumeWatcher(this);
+        m_pVoiceVolumeWatcher->setWatch(true);  // 取消之前的线程方式，采用定时器监测
+        connect(m_pVoiceVolumeWatcher, SIGNAL(sigRecodeState(bool)), this, SIGNAL(microPhoneEnable(bool)));
+        emit microPhoneEnable(false);
+        qCDebug(dsrApp) << "音频监视器初始化完成";
+    }
+    
+    // 初始化摄像头监视器
+    if (!m_pCameraWatcher) {
+        m_pCameraWatcher = new CameraWatcher(this);
+        m_pCameraWatcher->setWatch(true);  // 取消之前的线程方式，采用定时器监测
+        // connect(m_pCameraWatcher, SIGNAL(sigCameraState(bool)), this, SLOT(on_CheckVideoCouldUse(bool)));
+        qCDebug(dsrApp) << "摄像头监视器初始化完成";
     }
 }
 

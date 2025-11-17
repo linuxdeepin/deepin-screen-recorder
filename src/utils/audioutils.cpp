@@ -26,6 +26,13 @@
 
 #include "utils.h"
 
+namespace {
+    /**
+     * @brief AudioDBusTimeout DBus接口超时时间（毫秒）
+     */
+    const int AudioDBusTimeout = 3000;
+}
+
 AudioUtils::AudioUtils(QObject *parent)
 {
     qCDebug(dsrApp) << "AudioUtils constructor";
@@ -47,7 +54,9 @@ AudioUtils::AudioUtils(QObject *parent)
 void AudioUtils::initAudioDBusInterface()
 {
     qCDebug(dsrApp) << "Initializing audio DBus interface";
-    m_audioDBusInterface = new QDBusInterface(AudioService, AudioPath, AudioInterface, QDBusConnection::sessionBus());
+        m_audioDBusInterface = new QDBusInterface(AudioService, AudioPath, AudioInterface, QDBusConnection::sessionBus());
+    m_audioDBusInterface->setTimeout(AudioDBusTimeout);
+    
     // 检查是否存在音频服务
     if (m_audioDBusInterface->isValid()) {
         qInfo() << "音频服务初始化成功！音频服务： " << AudioService << " 地址：" << AudioPath << " 接口：" << AudioInterface;
@@ -74,6 +83,9 @@ void AudioUtils::initDefaultSourceDBusInterface()
     // 初始化Dus接口
     m_defaultSourceDBusInterface =
         new QDBusInterface(AudioService, m_defaultSourcePath, SourceInterface, QDBusConnection::sessionBus());
+
+    m_defaultSourceDBusInterface->setTimeout(AudioDBusTimeout);
+    
     if (m_defaultSourceDBusInterface->isValid()) {
         qInfo() << "默认音频输入源初始化成功！音频服务： " << AudioService << " 默认输入源地址" << m_defaultSourcePath
                 << " 默认输入源接口：" << SourceInterface;
@@ -93,6 +105,8 @@ void AudioUtils::initDefaultSinkDBusInterface()
     // 初始化Dus接口
     m_defaultSinkDBusInterface =
         new QDBusInterface(AudioService, m_defaultSinkPath, SinkInterface, QDBusConnection::sessionBus());
+    m_defaultSinkDBusInterface->setTimeout(AudioDBusTimeout);
+    
     if (m_defaultSinkDBusInterface->isValid()) {
         qCInfo(dsrApp) << "Default audio sink initialized - Service:" << AudioService << "Path:" << m_defaultSinkPath
                 << " Interface:" << SinkInterface;
@@ -204,6 +218,9 @@ QString AudioUtils::getDefaultDeviceName(DefaultAudioType mode)
                 for (int i = 0; i < sinks.size(); i++) {
                     QDBusInterface *realSink =
                         new QDBusInterface(AudioService, sinks[i].path(), SinkInterface, QDBusConnection::sessionBus());
+
+                    realSink->setTimeout(AudioDBusTimeout);
+                    
                     if (realSink->isValid()) {
                         device = realSink->property("Name").toString();
                         qCDebug(dsrApp) << "Found sink device:" << device;
@@ -391,6 +408,7 @@ AudioPort AudioUtils::defaultSourceActivePort()
 {
     AudioPort port;
     auto inter = new QDBusInterface(AudioService, m_defaultSourcePath, PropertiesInterface, QDBusConnection::sessionBus());
+    inter->setTimeout(AudioDBusTimeout);
 
     if (inter->isValid()) {
         // qInfo() << "音频服务： "<< AudioService <<" 默认输入源地址"<< m_defaultSourcePath << " 属性接口："<<

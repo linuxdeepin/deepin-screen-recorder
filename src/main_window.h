@@ -398,6 +398,11 @@ public:
      * 确保不会功能问题
      */
     void initTreelandtAttributes();
+    
+    /**
+     * @brief 初始化音频和摄像头监视器（仅在录屏模式下使用）
+     */
+    void initAudioAndCameraWatchers();
 
     void setToolbarVisable(bool visable) { isHideToolBar =  visable;};
 
