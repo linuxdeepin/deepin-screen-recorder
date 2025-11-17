@@ -1161,14 +1161,22 @@ void MainWindow::initSaveShortcut()
     connect(returnSC, &QShortcut::activated, this, [=] {
         if (status::shot == m_functionType || status::scrollshot == m_functionType) {
             qCDebug(dsrApp) << "shortcut : returnSC (key: enter)";
-            saveScreenShotToClipboardOnly();
+            if (status::shot == m_functionType && isHideToolBar) {
+                saveScreenShot();
+            } else {
+                saveScreenShotToClipboardOnly();
+            }
         }
     });
     // 截图模式/滚动模式 保存截图 小键盘
     connect(enterSC, &QShortcut::activated, this, [=] {
         if (status::shot == m_functionType || status::scrollshot == m_functionType) {
             qCDebug(dsrApp) << "shortcut : enterSC (key: enter)";
-            saveScreenShotToClipboardOnly();
+            if (status::shot == m_functionType && isHideToolBar) {
+                saveScreenShot();
+            } else {
+                saveScreenShotToClipboardOnly();
+            }
         }
         if (status::record == m_functionType && Utils::isWaylandMode)
             m_showButtons->showContentButtons(KEY_ENTER);
@@ -4708,7 +4716,11 @@ int MainWindow::mouseDblClickEF(QMouseEvent *mouseEvent, bool &needRepaint)
     if (mouseEvent->button() == Qt::LeftButton) {
         if (status::shot == m_functionType) {
             qCDebug(dsrApp) << "双击鼠标按钮！进行截图保存！";
-            saveScreenShotToClipboardOnly();
+            if (isHideToolBar) {
+                saveScreenShot();
+            } else {
+                saveScreenShotToClipboardOnly();
+            }
         }
     }
     return 1;
