@@ -1,3 +1,9 @@
+deepin-screen-recorder (6.6.13) unstable; urgency=medium
+
+  * fix: Optimize audio initialization timing and DBus interface timeout
+
+ -- dengzhongyuan <dengzhongyuan@uniontech.com>  Thu, 20 Nov 2025 19:49:36 +0800
+
 deepin-screen-recorder (6.6.12) unstable; urgency=medium
 
   * fix: Add BypassWindowManagerHint to toolbar window flags
