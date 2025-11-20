@@ -323,7 +323,7 @@ bool SideBar::isPressed()
 
 void SideBar::showAt(QPoint pos)
 {
-    qCDebug(dsrApp) << "SideBar::showAt called at pos:" << pos;
+    // pos已经是相对于父控件的本地坐标，直接使用
     if (!isVisible())
         this->show();
 

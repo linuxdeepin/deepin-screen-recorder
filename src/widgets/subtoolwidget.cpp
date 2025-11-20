@@ -655,6 +655,11 @@ void SubToolWidget::initShotLabel()
     m_aiAssistantButton->setIcon(QIcon::fromTheme("ai_assistant"));
     bool aiAssistantUsed = ConfigSettings::instance()->getValue("shot", "ai_assistant_used").toBool();
     m_aiAssistantButton->setShowRedDot(!aiAssistantUsed);
+    
+    QString badgePath = ":/icons/deepin/builtin/texts/ai_badge_32px.svg";
+    m_aiAssistantButton->setBadgeIcon(badgePath);
+    m_aiAssistantButton->setBadgeSize(QSize(10, 7)); 
+
     Utils::setAccessibility(m_aiAssistantButton, AC_SUBTOOLWIDGET_AI_ASSISTANT_BUTTON);
     m_shotBtnGroup->addButton(m_aiAssistantButton);
     m_aiAssistantButton->setFixedSize(TOOL_BUTTON_SIZE);
@@ -1430,6 +1435,12 @@ void SubToolWidget::initScrollLabel()
     m_aiAssistantScrollButton = new ToolButton();
     m_aiAssistantScrollButton->setIconSize(SMALL_TOOL_ICON_SIZE);
     m_aiAssistantScrollButton->setIcon(QIcon::fromTheme("ai_assistant"));
+    
+    // 设置常驻的 AI Icon 角标
+    QString scrollBadgePath = ":/icons/deepin/builtin/texts/ai_badge_32px.svg";
+    m_aiAssistantScrollButton->setBadgeIcon(scrollBadgePath);
+    m_aiAssistantScrollButton->setBadgeSize(QSize(10, 7));  // AI badge 的实际尺寸
+    
     Utils::setAccessibility(m_aiAssistantScrollButton, AC_SUBTOOLWIDGET_AI_ASSISTANT_BUTTON);
     m_aiAssistantScrollButton->setFixedSize(TOOL_BUTTON_SIZE);
     installTipHint(m_aiAssistantScrollButton, tr("AI Screenshot (A)"));

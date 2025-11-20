@@ -2,8 +2,8 @@
 #define AIASSISTANTWIDGET_H
 
 #include <DWidget>
-#include <DToolButton>
 #include <DBlurEffectWidget>
+#include "toolbutton.h"
 
 DWIDGET_USE_NAMESPACE
 
@@ -31,10 +31,10 @@ private slots:
     void onToolButtonClicked();
 
 private:
-    DToolButton *m_explainButton;
-    DToolButton *m_summarizeButton;
-    DToolButton *m_translateButton;
-    DToolButton *m_askAIButton;
+    ToolButton *m_explainButton;
+    ToolButton *m_summarizeButton;
+    ToolButton *m_translateButton;
+    ToolButton *m_askAIButton;
     
     DBlurEffectWidget *m_blurArea;
 };

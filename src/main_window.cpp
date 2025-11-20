@@ -2970,17 +2970,30 @@ void MainWindow::updateSideBarPos()
     else if (m_currentToolShape == "rectangle" || m_currentToolShape == "oval" || m_currentToolShape == "gio") {
         // 几何图形工具(包括矩形和椭圆)都使用 gioButton 的位置
         QString gioShape = "gio";
-        if (m_toolBar->getFuncSubToolX(gioShape) > -1)
+        int buttonX = m_toolBar->getFuncSubToolX(gioShape);
+        if (buttonX > -1) {
             sidebarPoint.setX(m_toolBar->x());
+        }
     } else if (m_currentToolShape == "aiassistant") {
-        QPoint aiBtnGlobalCenter = m_toolBar->getAiButtonGlobalCenter();
+        QRect aiBtnGlobalRect = m_toolBar->getAiButtonGlobalRect();
+        
+        // 将AI按钮的全局坐标转换为相对于ToolBar的本地坐标
+        QPoint toolBarGlobalPos = m_toolBar->mapToGlobal(QPoint(0, 0));
+        QRect aiBtnRelativeToToolBar = aiBtnGlobalRect.translated(-toolBarGlobalPos);
+        QPoint aiBtnCenterRelativeToToolBar = aiBtnRelativeToToolBar.center();
+        
+        // 计算AI按钮在MainWindow中的实际X坐标
+        int aiBtnXInMainWindow = m_toolBar->x() + aiBtnCenterRelativeToToolBar.x();
+        
         int aiPanelWidth = m_sideBar->getSideBarWidth("aiassistant");
-        int finalLeft = aiBtnGlobalCenter.x() - (aiPanelWidth / 2);
+        int finalLeft = aiBtnXInMainWindow - (aiPanelWidth / 2);
         finalLeft = std::max(0, std::min(finalLeft, m_backgroundRect.width() - aiPanelWidth));
         sidebarPoint.setX(finalLeft);
     } else {
-        if (m_toolBar->getFuncSubToolX(m_currentToolShape) > -1)
-            sidebarPoint.setX(m_toolBar->x() + m_toolBar->getFuncSubToolX(m_currentToolShape));
+        int buttonX = m_toolBar->getFuncSubToolX(m_currentToolShape);
+        if (buttonX > -1) {
+            sidebarPoint.setX(m_toolBar->x() + buttonX);
+        }
     }
     m_sideBar->showAt(sidebarPoint);
 }

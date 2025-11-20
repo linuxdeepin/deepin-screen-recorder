@@ -39,5 +39,6 @@
         <file>texts/explain_32px.svg</file>
         <file>texts/summary_32px.svg</file>
         <file>texts/translate_32px.svg</file>
+        <file>texts/ai_badge_32px.svg</file>
     </qresource>
 </RCC>

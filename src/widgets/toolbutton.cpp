@@ -12,6 +12,7 @@
 #include <QMenu>
 #include <QGuiApplication>
 #include <QScreen>
+#include <QIcon>
 
 namespace {
 // 红点常量定义（基于SVG设计）
@@ -55,10 +56,78 @@ void ToolButton::setUndoButtonFlag(const bool flag)
     m_isUndoButton = flag;
 }
 
+void ToolButton::setBadgeIcon(const QIcon &icon)
+{
+    m_badgeIcon = icon;
+    update();
+}
+
+void ToolButton::setBadgeIcon(const QString &iconPath)
+{
+    if (!iconPath.isEmpty()) {
+        m_badgeIcon = QIcon(iconPath);
+    } else {
+        m_badgeIcon = QIcon();
+    }
+    update();
+}
+
+QRect ToolButton::getIconRect(const QStyleOptionToolButton &opt) const
+{
+    QSize iconSize = opt.iconSize.isValid() ? opt.iconSize : QSize(24, 24);
+    int iconX = (width() - iconSize.width()) / 2;
+    int iconY = (height() - iconSize.height()) / 2;
+    return QRect(iconX, iconY, iconSize.width(), iconSize.height());
+}
+
+void ToolButton::drawRedDot(QPainter &painter, const QStyleOptionToolButton &opt, const QRect &iconRect)
+{
+    if (!m_showRedDot) {
+        return;
+    }
+    
+    painter.save();
+    painter.setRenderHint(QPainter::Antialiasing, true);
+    
+    const int actualDotX = iconRect.left() + (SVG_DOT_X / SVG_WIDTH) * iconRect.width();
+    const int actualDotY = iconRect.top() + (SVG_DOT_Y / SVG_HEIGHT) * iconRect.height();
+    const int actualDotRadius = qMax(MIN_DOT_RADIUS, (int)((SVG_DOT_RADIUS / SVG_WIDTH) * iconRect.width()));
+    
+    QPoint dotCenter(actualDotX, actualDotY);
+    
+    painter.setPen(Qt::NoPen);
+    painter.setBrush(RED_DOT_COLOR);
+    painter.drawEllipse(dotCenter, actualDotRadius, actualDotRadius);
+    
+    painter.restore();
+}
+
+void ToolButton::drawBadge(QPainter &painter, const QStyleOptionToolButton &opt, const QRect &iconRect)
+{
+    if (m_badgeIcon.isNull()) {
+        return;
+    }
+    
+    painter.save();
+    painter.setRenderHint(QPainter::Antialiasing, true);
+    
+    QSize badgeSize = m_badgeSize;
+    int badgeX = iconRect.right() - badgeSize.width(); 
+    int badgeY = iconRect.bottom() - badgeSize.height() + 1;  
+    
+    QRect badgeRect(badgeX, badgeY, badgeSize.width(), badgeSize.height());
+    m_badgeIcon.paint(&painter, badgeRect, Qt::AlignCenter, QIcon::Normal, QIcon::On);
+    
+    painter.restore();
+}
+
 void ToolButton::paintEvent(QPaintEvent *event)
 {
     QStyleOptionToolButton opt;
     initStyleOption(&opt);
+    
+    QPainter p(this);
+    QRect iconRect = getIconRect(opt);
 
     const bool hasMenu = menu();
     const bool isColorButton = property("name").isValid();
@@ -66,9 +135,35 @@ void ToolButton::paintEvent(QPaintEvent *event)
     if (hasMenu) {
         opt.features &= ~QStyleOptionToolButton::HasMenu;
     }
+    if (!isChecked() && !m_menuActive && !isColorButton && m_hasHoverState) {
+        if (opt.state & QStyle::State_MouseOver) {
+            p.setRenderHint(QPainter::Antialiasing);
+            p.setPen(Qt::NoPen);
+            
+            QColor windowColor = palette().color(QPalette::Window);
+            bool isLightTheme = windowColor.lightness() > 128;
+            
+            QColor bgColor;
+            if (isLightTheme) {
+                if (opt.state & QStyle::State_Sunken) {
+                    bgColor = QColor(0, 0, 0, 38);
+                } else {
+                    bgColor = QColor(0, 0, 0, 25);
+                }
+            } else {
+                if (opt.state & QStyle::State_Sunken) {
+                    bgColor = QColor(255, 255, 255, 38);
+                } else {
+                    bgColor = QColor(255, 255, 255, 25);
+                }
+            }
+            
+            p.setBrush(bgColor);
+            p.drawRoundedRect(rect(), 8, 8);
+        }
+    }
 
     if (isChecked() || m_menuActive) {
-        QPainter p(this);
         p.setRenderHint(QPainter::Antialiasing);
         p.setPen(Qt::NoPen);
         QColor bg = palette().highlight().color();
@@ -87,8 +182,8 @@ void ToolButton::paintEvent(QPaintEvent *event)
         if (isColorButton) {
             if (!opt.icon.isNull()) {
                 QIcon::Mode iconMode = isEnabled() ? QIcon::Normal : QIcon::Disabled;
-                QRect iconRect = QRect((width() - 14) / 2, (height() - 14) / 2, 14, 14);
-                opt.icon.paint(&p, iconRect, Qt::AlignCenter, iconMode, QIcon::On);
+                QRect colorIconRect = QRect((width() - 14) / 2, (height() - 14) / 2, 14, 14);
+                opt.icon.paint(&p, colorIconRect, Qt::AlignCenter, iconMode, QIcon::On);
             }
         } else {
             opt.palette.setColor(QPalette::ButtonText, Qt::white);
@@ -122,45 +217,37 @@ void ToolButton::paintEvent(QPaintEvent *event)
             opt.state &= ~QStyle::State_Sunken;
             style()->drawControl(QStyle::CE_ToolButtonLabel, &opt, &p, this);
         }
+        if (m_showRedDot) {
+            drawRedDot(p, opt, iconRect);
+        }
+        if (!m_badgeIcon.isNull()) {
+            drawBadge(p, opt, iconRect);
+        }
+        
         return;
     }
 
     if (isColorButton) {
-        QPainter p(this);
         if (!opt.icon.isNull()) {
             QIcon::Mode iconMode = isEnabled() ? QIcon::Normal : QIcon::Disabled;
-            QRect iconRect = QRect((width() - 14) / 2, (height() - 14) / 2, 14, 14);
-            opt.icon.paint(&p, iconRect, Qt::AlignCenter, iconMode, QIcon::Off);
+            QRect colorIconRect = QRect((width() - 14) / 2, (height() - 14) / 2, 14, 14);
+            opt.icon.paint(&p, colorIconRect, Qt::AlignCenter, iconMode, QIcon::Off);
         }
     } else if (hasMenu) {
-        QPainter p(this);
+        opt.state &= ~QStyle::State_MouseOver;
+        opt.state &= ~QStyle::State_Sunken;
         style()->drawComplexControl(QStyle::CC_ToolButton, &opt, &p, this);
     } else {
-        DToolButton::paintEvent(event);
+        opt.state &= ~QStyle::State_MouseOver;
+        opt.state &= ~QStyle::State_Sunken;
+        style()->drawControl(QStyle::CE_ToolButtonLabel, &opt, &p, this);
     }
 
     if (m_showRedDot) {
-        QPainter p(this);
-        p.setRenderHint(QPainter::Antialiasing, true);
-        
-        QStyleOptionToolButton opt;
-        initStyleOption(&opt);
-        
-        QSize iconSize = opt.iconSize.isValid() ? opt.iconSize : QSize(24, 24);
-        
-        int iconX = (width() - iconSize.width()) / 2;
-        int iconY = (height() - iconSize.height()) / 2;
-        QRect iconRect(iconX, iconY, iconSize.width(), iconSize.height());
-        
-        const int actualDotX = iconRect.left() + (SVG_DOT_X / SVG_WIDTH) * iconRect.width();
-        const int actualDotY = iconRect.top() + (SVG_DOT_Y / SVG_HEIGHT) * iconRect.height();
-        const int actualDotRadius = qMax(MIN_DOT_RADIUS, (int)((SVG_DOT_RADIUS / SVG_WIDTH) * iconRect.width()));
-        
-        QPoint dotCenter(actualDotX, actualDotY);
-        
-        p.setPen(Qt::NoPen);
-        p.setBrush(RED_DOT_COLOR);
-        p.drawEllipse(dotCenter, actualDotRadius, actualDotRadius);
+        drawRedDot(p, opt, iconRect);
+    }
+    if (!m_badgeIcon.isNull()) {
+        drawBadge(p, opt, iconRect);
     }
 }
 

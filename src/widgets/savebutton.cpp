@@ -68,34 +68,56 @@ void SaveButton::paintEvent(QPaintEvent *event)
         painter.setRenderHint(QPainter::Antialiasing);
         QRect rect = this->rect();
         
-        QColor hoverColor(0, 0, 0, 26); 
-        painter.setBrush(hoverColor);
-        painter.setPen(Qt::NoPen);
-        painter.drawRoundedRect(rect, kCornerRadius, kCornerRadius);
+        // 判断是浅色主题还是暗黑主题
+        QColor windowColor = palette().color(QPalette::Window);
+        bool isLightTheme = windowColor.lightness() > 128;
         
-        QColor deepenColor(0, 0, 0, 13);
-        painter.setBrush(deepenColor);
-        painter.setPen(Qt::NoPen);
-        
+        // 判断当前hover/press的区域
         bool highlightRightArea = (m_optionsMenu && m_optionsMenu->isVisible()) || (currentMouseX > kSaveAreaWidth);
         
+        // 定义颜色：基础色(0.1)、hover色(0.15)、press色(0.2)
+        QColor baseColor = isLightTheme ? QColor(0, 0, 0, 25) : QColor(255, 255, 255, 25);      // 0.1 * 255 ≈ 25
+        QColor hoverColor = isLightTheme ? QColor(0, 0, 0, 38) : QColor(255, 255, 255, 38);     // 0.15 * 255 ≈ 38
+        QColor pressColor = isLightTheme ? QColor(0, 0, 0, 51) : QColor(255, 255, 255, 51);     // 0.2 * 255 ≈ 51
+        
+        QColor leftColor, rightColor;
+        
         if (highlightRightArea) {
-            QRectF rightRect(kSaveAreaWidth - kCornerRadius, 0, kListAreaWidth + kCornerRadius, rect.height());
-            QPainterPath rightPath;
-            rightPath.addRoundedRect(rightRect, kCornerRadius, kCornerRadius);
-            
-            painter.setClipRect(kSaveAreaWidth, 0, kListAreaWidth, rect.height());
-            painter.fillPath(rightPath, deepenColor);
-            painter.setClipping(false);
+            // hover/press 右边下拉区域
+            leftColor = baseColor;  // 左边保存区域：基础色 0.1
+            if (m_listClicked) {
+                rightColor = pressColor;  // 右边下拉区域：press色 0.2
+            } else {
+                rightColor = hoverColor;  // 右边下拉区域：hover色 0.15
+            }
         } else {
-            QRectF leftRect(0, 0, kSaveAreaWidth + kCornerRadius, rect.height());
-            QPainterPath leftPath;
-            leftPath.addRoundedRect(leftRect, kCornerRadius, kCornerRadius);
-            
-            painter.setClipRect(0, 0, kSaveAreaWidth, rect.height());
-            painter.fillPath(leftPath, deepenColor);
-            painter.setClipping(false);
+            // hover/press 左边保存区域
+            rightColor = baseColor;  // 右边下拉区域：基础色 0.1
+            if (m_saveClicked) {
+                leftColor = pressColor;  // 左边保存区域：press色 0.2
+            } else {
+                leftColor = hoverColor;  // 左边保存区域：hover色 0.15
+            }
         }
+        
+        // 绘制左边保存区域
+        painter.setBrush(leftColor);
+        painter.setPen(Qt::NoPen);
+        QRectF leftRect(0, 0, kSaveAreaWidth + kCornerRadius, rect.height());
+        QPainterPath leftPath;
+        leftPath.addRoundedRect(leftRect, kCornerRadius, kCornerRadius);
+        painter.setClipRect(0, 0, kSaveAreaWidth, rect.height());
+        painter.fillPath(leftPath, leftColor);
+        painter.setClipping(false);
+        
+        // 绘制右边下拉区域
+        painter.setBrush(rightColor);
+        QRectF rightRect(kSaveAreaWidth - kCornerRadius, 0, kListAreaWidth + kCornerRadius, rect.height());
+        QPainterPath rightPath;
+        rightPath.addRoundedRect(rightRect, kCornerRadius, kCornerRadius);
+        painter.setClipRect(kSaveAreaWidth, 0, kListAreaWidth, rect.height());
+        painter.fillPath(rightPath, rightColor);
+        painter.setClipping(false);
     }
     
     QPainter painter(this);

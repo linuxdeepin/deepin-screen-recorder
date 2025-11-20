@@ -1,4 +1,5 @@
 #include "aiassistantwidget.h"
+#include "toolbutton.h"
 #include "../utils/log.h"
 
 #include <QHBoxLayout>
@@ -38,7 +39,7 @@ AIAssistantWidget::AIAssistantWidget(QWidget *parent) : DWidget(parent)
     buttonGroup->setExclusive(true);
     
     
-    m_explainButton = new DToolButton(this);
+    m_explainButton = new ToolButton(this);
     m_explainButton->setText(tr("Explain"));
     m_explainButton->setIcon(QIcon::fromTheme("explain"));
     m_explainButton->setIconSize(iconSize);
@@ -46,7 +47,7 @@ AIAssistantWidget::AIAssistantWidget(QWidget *parent) : DWidget(parent)
     m_explainButton->setCheckable(true);
     m_explainButton->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Fixed);
     
-    m_summarizeButton = new DToolButton(this);
+    m_summarizeButton = new ToolButton(this);
     m_summarizeButton->setText(tr("Summary"));
     m_summarizeButton->setIcon(QIcon::fromTheme("summary"));
     m_summarizeButton->setIconSize(iconSize);
@@ -54,7 +55,7 @@ AIAssistantWidget::AIAssistantWidget(QWidget *parent) : DWidget(parent)
     m_summarizeButton->setCheckable(true);
     m_summarizeButton->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Fixed);
     
-    m_translateButton = new DToolButton(this);
+    m_translateButton = new ToolButton(this);
     m_translateButton->setText(tr("Translate"));
     m_translateButton->setIcon(QIcon::fromTheme("translate"));
     m_translateButton->setIconSize(iconSize);
@@ -62,7 +63,7 @@ AIAssistantWidget::AIAssistantWidget(QWidget *parent) : DWidget(parent)
     m_translateButton->setCheckable(true);
     m_translateButton->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Fixed);
     
-    m_askAIButton = new DToolButton(this);
+    m_askAIButton = new ToolButton(this);
     m_askAIButton->setText(tr("Ask AI"));
     m_askAIButton->setIcon(QIcon::fromTheme("askai"));
     m_askAIButton->setIconSize(iconSize);
