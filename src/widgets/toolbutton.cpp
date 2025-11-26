@@ -135,7 +135,7 @@ void ToolButton::paintEvent(QPaintEvent *event)
     if (hasMenu) {
         opt.features &= ~QStyleOptionToolButton::HasMenu;
     }
-    if (!isChecked() && !m_menuActive && !isColorButton && m_hasHoverState) {
+    if (!isChecked() && !m_menuActive && !isColorButton && m_hasHoverState && isEnabled()) {
         if (opt.state & QStyle::State_MouseOver) {
             p.setRenderHint(QPainter::Antialiasing);
             p.setPen(Qt::NoPen);
@@ -145,16 +145,18 @@ void ToolButton::paintEvent(QPaintEvent *event)
             
             QColor bgColor;
             if (isLightTheme) {
+                // 浅色模式: hover #000000 10%, press #000000 20%
                 if (opt.state & QStyle::State_Sunken) {
-                    bgColor = QColor(0, 0, 0, 38);
+                    bgColor = QColor(0, 0, 0, 51);      // 20% = 0.2 * 255 ≈ 51
                 } else {
-                    bgColor = QColor(0, 0, 0, 25);
+                    bgColor = QColor(0, 0, 0, 25);      // 10% = 0.1 * 255 ≈ 25
                 }
             } else {
+                // 深色模式: hover #FFFFFF 10%, press #000000 15%
                 if (opt.state & QStyle::State_Sunken) {
-                    bgColor = QColor(255, 255, 255, 38);
+                    bgColor = QColor(0, 0, 0, 38);      // 15% = 0.15 * 255 ≈ 38
                 } else {
-                    bgColor = QColor(255, 255, 255, 25);
+                    bgColor = QColor(255, 255, 255, 25); // 10% = 0.1 * 255 ≈ 25
                 }
             }
             
@@ -227,12 +229,37 @@ void ToolButton::paintEvent(QPaintEvent *event)
         return;
     }
 
+    const bool isSunken = opt.state & QStyle::State_Sunken;
+    
     if (isColorButton) {
         if (!opt.icon.isNull()) {
             QIcon::Mode iconMode = isEnabled() ? QIcon::Normal : QIcon::Disabled;
             QRect colorIconRect = QRect((width() - 14) / 2, (height() - 14) / 2, 14, 14);
             opt.icon.paint(&p, colorIconRect, Qt::AlignCenter, iconMode, QIcon::Off);
         }
+    } else if (isSunken && !opt.icon.isNull()) {
+        const QSize targetIconSize = opt.iconSize.isValid() ? opt.iconSize : QSize(16, 16);
+        const QIcon::Mode iconMode = isEnabled() ? QIcon::Normal : QIcon::Disabled;
+        const qreal devicePixelRatio = this->devicePixelRatioF();
+        
+        QPixmap base = opt.icon.pixmap(targetIconSize, devicePixelRatio, iconMode, QIcon::On);
+        if (!base.isNull()) {
+            QPixmap tinted(base.size());
+            tinted.fill(Qt::transparent);
+            tinted.setDevicePixelRatio(devicePixelRatio);
+            
+            QPainter ip(&tinted);
+            ip.setRenderHint(QPainter::Antialiasing);
+            ip.drawPixmap(0, 0, base);
+            ip.setCompositionMode(QPainter::CompositionMode_SourceIn);
+            ip.fillRect(tinted.rect(), palette().highlight().color());
+            ip.end();
+            
+            opt.icon = QIcon(tinted);
+        }
+        opt.state &= ~QStyle::State_MouseOver;
+        opt.state &= ~QStyle::State_Sunken;
+        style()->drawControl(QStyle::CE_ToolButtonLabel, &opt, &p, this);
     } else if (hasMenu) {
         opt.state &= ~QStyle::State_MouseOver;
         opt.state &= ~QStyle::State_Sunken;

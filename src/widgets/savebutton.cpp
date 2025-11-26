@@ -76,28 +76,25 @@ void SaveButton::paintEvent(QPaintEvent *event)
         bool highlightRightArea = (m_optionsMenu && m_optionsMenu->isVisible()) || (currentMouseX > kSaveAreaWidth);
         
         // 定义颜色：基础色(0.1)、hover色(0.15)、press色(0.2)
+        // 浅色模式: rgba(0,0,0,alpha)  深色模式: rgba(255,255,255,alpha)
         QColor baseColor = isLightTheme ? QColor(0, 0, 0, 25) : QColor(255, 255, 255, 25);      // 0.1 * 255 ≈ 25
         QColor hoverColor = isLightTheme ? QColor(0, 0, 0, 38) : QColor(255, 255, 255, 38);     // 0.15 * 255 ≈ 38
         QColor pressColor = isLightTheme ? QColor(0, 0, 0, 51) : QColor(255, 255, 255, 51);     // 0.2 * 255 ≈ 51
         
         QColor leftColor, rightColor;
         
-        if (highlightRightArea) {
-            // hover/press 右边下拉区域
-            leftColor = baseColor;  // 左边保存区域：基础色 0.1
-            if (m_listClicked) {
-                rightColor = pressColor;  // 右边下拉区域：press色 0.2
-            } else {
-                rightColor = hoverColor;  // 右边下拉区域：hover色 0.15
-            }
+        if (m_saveClicked) {
+            leftColor = pressColor;
+            rightColor = baseColor;
+        } else if (m_listClicked) {
+            leftColor = baseColor;
+            rightColor = pressColor;
+        } else if (highlightRightArea) {
+            leftColor = baseColor;
+            rightColor = hoverColor;
         } else {
-            // hover/press 左边保存区域
-            rightColor = baseColor;  // 右边下拉区域：基础色 0.1
-            if (m_saveClicked) {
-                leftColor = pressColor;  // 左边保存区域：press色 0.2
-            } else {
-                leftColor = hoverColor;  // 左边保存区域：hover色 0.15
-            }
+            leftColor = hoverColor;
+            rightColor = baseColor;
         }
         
         // 绘制左边保存区域

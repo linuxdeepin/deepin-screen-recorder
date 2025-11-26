@@ -607,10 +607,10 @@ void SubToolWidget::initShotLabel()
 
     //添加滚动截图按钮
     m_scrollShotButton = new ToolButton();
+    m_scrollShotButton->setCheckable(false);
     m_scrollShotButton->setIconSize(TOOL_ICON_SIZE);
     m_scrollShotButton->setIcon(QIcon::fromTheme("scrollShot"));
     Utils::setAccessibility(m_scrollShotButton, AC_SUBTOOLWIDGET_SCROLLSHOT_BUTTON);
-    m_shotBtnGroup->addButton(m_scrollShotButton);
     m_scrollShotButton->setFixedSize(TOOL_BUTTON_SIZE);
     installTipHint(m_scrollShotButton, tr("Scrollshot (Alt+I）"));
 #ifdef  OCR_SCROLL_FLAGE_ON
@@ -621,16 +621,20 @@ void SubToolWidget::initShotLabel()
     connect(m_scrollShotButton, &DPushButton::clicked, this, [ = ] {
         qCDebug(dsrApp) << "滚动截图的按钮按下！";
         switchContent("scroll");
-        emit changeShotToolFunc("scroll");
+        emit changeShotToolFunc("scrollShot");
     });
     //添加ocr图文识别按钮
     m_ocrButton = new ToolButton();
+    m_ocrButton->setCheckable(false);
     m_ocrButton->setIconSize(TOOL_ICON_SIZE);
     m_ocrButton->setIcon(QIcon::fromTheme("ocr-normal"));
     Utils::setAccessibility(m_ocrButton, AC_SUBTOOLWIDGET_OCR_BUTTON);
-    m_shotBtnGroup->addButton(m_ocrButton);
     m_ocrButton->setFixedSize(TOOL_BUTTON_SIZE);
     installTipHint(m_ocrButton, tr("Extract text (Alt+O）"));
+    connect(m_ocrButton, &DPushButton::clicked, this, [ = ] {
+        qCDebug(dsrApp) << "OCR按钮按下！";
+        emit changeShotToolFunc("ocr");
+    });
 
 #ifdef  OCR_SCROLL_FLAGE_ON
     // TODO: 仅x11下开启，后续处理，目前treeland下仍有崩溃情况
@@ -640,12 +644,16 @@ void SubToolWidget::initShotLabel()
 
     //添加贴图按钮
     m_pinButton = new ToolButton();
+    m_pinButton->setCheckable(false);
     m_pinButton->setIconSize(TOOL_ICON_SIZE);
     m_pinButton->setIcon(QIcon::fromTheme("pinscreenshots"));
     Utils::setAccessibility(m_pinButton, AC_SUBTOOLWIDGET_PINSCREENSHOTS_BUTTON);
-    m_shotBtnGroup->addButton(m_pinButton);
     m_pinButton->setFixedSize(TOOL_BUTTON_SIZE);
     installTipHint(m_pinButton, tr("Pin screenshots (Alt+P）"));
+    connect(m_pinButton, &DPushButton::clicked, this, [ = ] {
+        qCDebug(dsrApp) << "贴图按钮按下！";
+        emit changeShotToolFunc("pinScreenshots");
+    });
     // TODO: treeland适配，初版暂时屏蔽
     if (!(Utils::isTreelandMode))
          btnList.append(m_pinButton);
@@ -788,16 +796,6 @@ void SubToolWidget::initShotLabel()
     connect(m_shotBtnGroup, &QButtonGroup::buttonClicked,
     [ = ](QAbstractButton *button) {
         Q_UNUSED(button);
-        if (m_pinButton->isChecked()) {
-            emit changeShotToolFunc("pinScreenshots");
-        }
-        if (m_scrollShotButton->isChecked()) {
-            emit changeShotToolFunc("scrollShot");
-            //switchContent("scroll");
-        }
-        if (m_ocrButton->isChecked()) {
-            emit changeShotToolFunc("ocr");
-        }
         if (m_gioButton->isChecked()) {
             // 当几何图形按钮被点击时，发送"gio"信号，而不是直接发送具体形状
             // 这样SideBarWidget可以正确识别这是几何图形按钮被点击的事件

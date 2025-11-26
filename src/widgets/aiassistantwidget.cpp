@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: 2022 UnionTech Software Technology Co., Ltd.
+//
+// SPDX-License-Identifier: GPL-3.0-or-later
+
 #include "aiassistantwidget.h"
 #include "toolbutton.h"
 #include "../utils/log.h"
@@ -44,7 +48,7 @@ AIAssistantWidget::AIAssistantWidget(QWidget *parent) : DWidget(parent)
     m_explainButton->setIcon(QIcon::fromTheme("explain"));
     m_explainButton->setIconSize(iconSize);
     m_explainButton->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
-    m_explainButton->setCheckable(true);
+    m_explainButton->setCheckable(false);
     m_explainButton->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Fixed);
     
     m_summarizeButton = new ToolButton(this);
@@ -52,7 +56,7 @@ AIAssistantWidget::AIAssistantWidget(QWidget *parent) : DWidget(parent)
     m_summarizeButton->setIcon(QIcon::fromTheme("summary"));
     m_summarizeButton->setIconSize(iconSize);
     m_summarizeButton->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
-    m_summarizeButton->setCheckable(true);
+    m_summarizeButton->setCheckable(false);
     m_summarizeButton->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Fixed);
     
     m_translateButton = new ToolButton(this);
@@ -60,7 +64,7 @@ AIAssistantWidget::AIAssistantWidget(QWidget *parent) : DWidget(parent)
     m_translateButton->setIcon(QIcon::fromTheme("translate"));
     m_translateButton->setIconSize(iconSize);
     m_translateButton->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
-    m_translateButton->setCheckable(true);
+    m_translateButton->setCheckable(false);
     m_translateButton->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Fixed);
     
     m_askAIButton = new ToolButton(this);
@@ -68,7 +72,7 @@ AIAssistantWidget::AIAssistantWidget(QWidget *parent) : DWidget(parent)
     m_askAIButton->setIcon(QIcon::fromTheme("askai"));
     m_askAIButton->setIconSize(iconSize);
     m_askAIButton->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
-    m_askAIButton->setCheckable(true);
+    m_askAIButton->setCheckable(false);
     m_askAIButton->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Fixed);
 
     // 绑定字体大小
