@@ -395,7 +395,7 @@ RESOURCES = ../assets/image/deepin-screen-recorder.qrc \
     # ../resources.qrc
 
 # Libraries
-LIBS += -lX11 -lXext -lXtst -lXfixes -lXcursor -ldl -lXinerama -ldrm -lgbm -lva -lva-drm
+LIBS += -lX11 -lXext -lXtst -lXfixes -lXcursor -ldl -lXinerama -ldrm -lgbm
 
 # 添加libdrm包含路径
 INCLUDEPATH += /usr/include/libdrm
