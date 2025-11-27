@@ -58,10 +58,15 @@ TreelandCaptureManager::~TreelandCaptureManager()
     if (m_context) {
         qCDebug(dsrApp) << "Log: TreelandCaptureManager::~TreelandCaptureManager - Deleting context object.";
         delete m_context;
+        m_context = nullptr;
     }
-    // 删除上下文对象
-    destroy();
-    // 销毁 Wayland 扩展
+    // 只有在 Wayland 连接仍然有效时才调用 destroy()，避免崩溃
+    if (isActive()) {
+        destroy();
+        // 销毁 Wayland 扩展
+    } else {
+        qCDebug(dsrApp) << "Log: TreelandCaptureManager::~TreelandCaptureManager - Wayland connection not active, skipping destroy";
+    }
     qCDebug(dsrApp) << "Exit: TreelandCaptureManager::~TreelandCaptureManager";
 }
 
@@ -115,6 +120,11 @@ void TreelandCaptureContext::treeland_capture_context_v1_source_failed(uint32_t 
 
 void TreelandCaptureManager::cancelCapture() {
     qCDebug(dsrApp) << "Entry: TreelandCaptureManager::cancelCapture";
+    // 检查 Wayland 连接是否仍然有效，避免在应用程序退出时崩溃
+    if (!isActive()) {
+        qCDebug(dsrApp) << "Cancel: Wayland connection not active, skipping destroy";
+        return;
+    }
     // 安全地结束当前选择会话：销毁 session，而不是销毁整个 Wayland 扩展
     // 目的：通知合成器退出选择器，避免 destroy() manager/context 引发无效 proxy 崩溃
     if (m_context && m_context->session()) {
@@ -165,13 +175,16 @@ TreelandCaptureContext::~TreelandCaptureContext()
     if (m_frame) {
         qCDebug(dsrApp) << "Log: TreelandCaptureContext::~TreelandCaptureContext - Deleting frame object.";
         delete m_frame;
+        m_frame = nullptr;
     }
     // 删除帧对象
     if (m_session) {
         qCDebug(dsrApp) << "Log: TreelandCaptureContext::~TreelandCaptureContext - Deleting session object.";
         delete m_session;
+        m_session = nullptr;
     }
     // 删除会话对象
+    // destroy() 方法内部已经检查了 isInitialized()，所以可以安全调用
     destroy();
     // 销毁 Wayland 上下文
     qCDebug(dsrApp) << "Exit: TreelandCaptureContext::~TreelandCaptureContext";

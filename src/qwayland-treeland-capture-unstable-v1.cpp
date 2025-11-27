@@ -93,6 +93,11 @@ static inline void *wlRegistryBind(struct ::wl_registry *registry, uint32_t name
     void treeland_capture_session_v1::destroy()
     {
         qCDebug(dsrApp) << "treeland_capture_session_v1 destroy called.";
+        // 检查对象是否已初始化，避免在 Wayland 连接已关闭时调用导致崩溃
+        if (!isInitialized() || !m_treeland_capture_session_v1) {
+            qCDebug(dsrApp) << "treeland_capture_session_v1 destroy skipped: object not initialized or already destroyed";
+            return;
+        }
         ::treeland_capture_session_v1_destroy(
             m_treeland_capture_session_v1);
         m_treeland_capture_session_v1 = nullptr;
@@ -283,6 +288,11 @@ static inline void *wlRegistryBind(struct ::wl_registry *registry, uint32_t name
     void treeland_capture_frame_v1::destroy()
     {
         qCDebug(dsrApp) << "treeland_capture_frame_v1 destroy called.";
+        // 检查对象是否已初始化，避免在 Wayland 连接已关闭时调用导致崩溃
+        if (!isInitialized() || !m_treeland_capture_frame_v1) {
+            qCDebug(dsrApp) << "treeland_capture_frame_v1 destroy skipped: object not initialized or already destroyed";
+            return;
+        }
         ::treeland_capture_frame_v1_destroy(
             m_treeland_capture_frame_v1);
         m_treeland_capture_frame_v1 = nullptr;
@@ -455,6 +465,11 @@ static inline void *wlRegistryBind(struct ::wl_registry *registry, uint32_t name
     void treeland_capture_context_v1::destroy()
     {
         qCDebug(dsrApp) << "treeland_capture_context_v1 destroy called.";
+        // 检查对象是否已初始化，避免在 Wayland 连接已关闭时调用导致崩溃
+        if (!isInitialized() || !m_treeland_capture_context_v1) {
+            qCDebug(dsrApp) << "treeland_capture_context_v1 destroy skipped: object not initialized or already destroyed";
+            return;
+        }
         ::treeland_capture_context_v1_destroy(
             m_treeland_capture_context_v1);
         m_treeland_capture_context_v1 = nullptr;
@@ -600,6 +615,11 @@ static inline void *wlRegistryBind(struct ::wl_registry *registry, uint32_t name
     void treeland_capture_manager_v1::destroy()
     {
         qCDebug(dsrApp) << "treeland_capture_manager_v1 destroy called.";
+        // 检查对象是否已初始化，避免在 Wayland 连接已关闭时调用导致崩溃
+        if (!isInitialized() || !m_treeland_capture_manager_v1) {
+            qCDebug(dsrApp) << "treeland_capture_manager_v1 destroy skipped: object not initialized or already destroyed";
+            return;
+        }
         ::treeland_capture_manager_v1_destroy(
             m_treeland_capture_manager_v1);
         m_treeland_capture_manager_v1 = nullptr;
