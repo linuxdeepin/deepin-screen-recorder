@@ -7073,7 +7073,10 @@ void MainWindow::startCountdown()
          setWindowFlag(Qt::WindowDoesNotAcceptFocus);
          this->show();
      }*/
-    // Utils::passInputEvent(static_cast<int>(this->winId()));
+    // X11 下开始录屏后，设置主窗口鼠标穿透
+    if (!Utils::isTreelandMode) {
+        Utils::passInputEvent(static_cast<int>(this->winId()));
+    }
 
     repaint();
 }
