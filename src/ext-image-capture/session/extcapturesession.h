@@ -23,7 +23,7 @@ struct wl_shm;
 struct CaptureConfig {
     QSize bufferSize;           // 缓冲区大小
     uint32_t format = 0;        // 像素格式
-    bool useDmaBuffer = false;  // 是否使用DMA缓冲区
+    bool useDmaBuffer = true;   // 是否使用DMA缓冲区（默认启用）
     bool paintCursors = false;  // 是否绘制光标
 };
 
@@ -84,6 +84,11 @@ public:
      * @return wl_shm 对象，用于创建共享内存缓冲区
      */
     wl_shm* getWaylandShm() const;
+
+    /**
+     * @brief 获取 Linux DMA-BUF 对象（用于创建DMA缓冲区）
+     */
+    void* getLinuxDmabuf() const;
 
     /**
      * @brief 获取支持的像素格式列表

@@ -15,6 +15,15 @@
 struct wl_buffer;
 struct CaptureConfig;
 
+// DMA Buffer相关
+extern "C" {
+#include <drm/drm_fourcc.h>
+#include <sys/mman.h>
+#include <unistd.h>
+#include <fcntl.h>
+#include <gbm.h>
+}
+
 /**
  * @brief 帧变换类型
  */
@@ -125,6 +134,21 @@ public:
      */
     uint64_t timestamp() const;
 
+    /**
+     * @brief 是否使用DMA Buffer
+     */
+    bool isDmaBuffer() const;
+
+    /**
+     * @brief 获取DMA Buffer文件描述符 (仅DMA Buffer有效)
+     */
+    int getDmaBufferFd() const;
+
+    /**
+     * @brief 获取GBM Buffer Object (仅DMA Buffer有效)
+     */
+    void* getGbmBufferObject() const;
+
 signals:
     /**
      * @brief 帧数据就绪
@@ -146,6 +170,9 @@ protected:
 
 private:
     bool createBuffer();
+    bool createShmBuffer();      // 创建共享内存缓冲区
+    bool createDmaBuffer();      // 创建DMA缓冲区
+    void cleanupDmaBuffer();     // 清理DMA缓冲区资源
     void setState(FrameState newState);
     QString failureReasonToString(uint32_t reason);
 

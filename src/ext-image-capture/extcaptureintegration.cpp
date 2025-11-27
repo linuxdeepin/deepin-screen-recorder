@@ -37,6 +37,8 @@ bool ExtCaptureIntegration::isAvailable() const
 
 bool ExtCaptureIntegration::startScreenRecording(QScreen *screen, bool includeCursor)
 {
+    qCWarning(dsrApp) << "ExtCaptureIntegration::startScreenRecording: *** STARTING *** includeCursor =" << includeCursor;
+    
     if (m_recording) {
         qWarning() << "Already recording";
         return false;
@@ -55,6 +57,7 @@ bool ExtCaptureIntegration::startScreenRecording(QScreen *screen, bool includeCu
     }
 
     // 创建捕获会话
+    qCWarning(dsrApp) << "ExtCaptureIntegration: Creating capture session with includeCursor =" << includeCursor;
     m_session = m_manager->createScreenCaptureSession(screen, includeCursor);
     if (!m_session) {
         qWarning() << "Failed to create capture session";
@@ -198,21 +201,33 @@ void ExtCaptureIntegration::onFrameReady(ExtCaptureFrame *frame)
 
     // 获取帧数据
     const FrameData &frameData = frame->frameData();
-    void *data = frame->mapBuffer();
     
-    if (!data) {
-        qWarning() << "Failed to map frame buffer";
-        frame->deleteLater();
-        return;
+    if (frame->isDmaBuffer()) {
+        // DMA Buffer模式：发射DMA Buffer专用信号
+        qCWarning(dsrApp) << "ExtCaptureIntegration::onFrameReady: *** DMA BUFFER FRAME *** fd:" << frame->getDmaBufferFd();
+        emit dmaFrameReady(frame->getDmaBufferFd(), frame->getGbmBufferObject(),
+                          frameData.size, frameData.dimensions.width(), frameData.dimensions.height(),
+                          frameData.stride, frameData.timestamp);
+    } else {
+        // SHM Buffer模式：传统方式映射内存
+        void *data = frame->mapBuffer();
+        
+        if (!data) {
+            qWarning() << "Failed to map frame buffer";
+            frame->deleteLater();
+            return;
+        }
+
+        // 发射帧就绪信号
+        emit frameReady(data, frameData.size, 
+                       frameData.dimensions.width(), frameData.dimensions.height(),
+                       frameData.stride, frameData.timestamp);
+        
+        // 取消映射
+        frame->unmapBuffer();
     }
 
-    // 发射帧就绪信号
-    emit frameReady(data, frameData.size, 
-                   frameData.dimensions.width(), frameData.dimensions.height(),
-                   frameData.stride, frameData.timestamp);
-
-    // 取消映射并清理
-    frame->unmapBuffer();
+    // 清理
     frame->deleteLater();
 
     qDebug() << "Frame processed:" << frameData.dimensions 

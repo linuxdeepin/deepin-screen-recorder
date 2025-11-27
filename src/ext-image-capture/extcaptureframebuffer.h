@@ -95,6 +95,11 @@ public:
      * @brief 检查是否允许获取帧
      */
     bool isGetFrameEnabled() const;
+    
+    /**
+     * @brief 重置缓冲区状态，为下次录制做准备
+     */
+    void reset();
 
 signals:
     /**

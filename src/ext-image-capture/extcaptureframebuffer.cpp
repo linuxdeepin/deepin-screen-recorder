@@ -13,7 +13,7 @@ ExtCaptureFrameBuffer::ExtCaptureFrameBuffer(QObject *parent)
     , m_frameWidth(0)
     , m_frameHeight(0)
     , m_frameStride(0)
-    , m_bufferSize(10)
+    , m_bufferSize(1000)
     , m_frameIndex(0)
     , m_frameDataSize(0)
     , m_initialized(false)
@@ -221,6 +221,21 @@ void ExtCaptureFrameBuffer::recycleMemory()
     // 确保所有缓冲区都在空闲列表中
     qDebug() << "Memory recycling - free buffers:" << m_freeBuffers.size()
              << "queued frames:" << m_frameQueue.size();
+}
+
+void ExtCaptureFrameBuffer::reset()
+{
+    QMutexLocker locker(&m_mutex);
+    
+    qDebug() << "ExtCaptureFrameBuffer::reset: Resetting for next recording session";
+    
+    // 清理现有缓冲区
+    cleanupBuffers();
+    
+    // 重置启用标志
+    m_getFrameEnabled = true;
+    
+    qDebug() << "ExtCaptureFrameBuffer::reset: Reset completed";
 }
 
 void ExtCaptureFrameBuffer::cleanupBuffers()

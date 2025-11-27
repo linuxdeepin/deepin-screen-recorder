@@ -88,6 +88,18 @@ signals:
     void frameReady(const void *data, size_t size, int width, int height, int stride, uint64_t timestamp);
 
     /**
+     * @brief DMA Buffer帧就绪
+     * @param dmaBufferFd DMA Buffer文件描述符
+     * @param gbmBo GBM Buffer Object指针
+     * @param size 数据大小
+     * @param width 帧宽度
+     * @param height 帧高度
+     * @param stride 行字节数
+     * @param timestamp 时间戳
+     */
+    void dmaFrameReady(int dmaBufferFd, void *gbmBo, size_t size, int width, int height, int stride, uint64_t timestamp);
+
+    /**
      * @brief 发生错误
      */
     void error(const QString &message);

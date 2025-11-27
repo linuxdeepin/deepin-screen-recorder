@@ -18,7 +18,13 @@
 #include <sys/mman.h>
 #include <unistd.h>
 #include <fcntl.h>
+#include <drm/drm_fourcc.h>
+
+// DMA-BUF相关
+#include <gbm.h>
+#include <sys/ioctl.h>
 #include "../../protocols/ext-image-copy-capture/wayland-ext-image-copy-capture-v1-client-protocol.h"
+#include "../../protocols/linux-dmabuf/wayland-linux-dmabuf-unstable-v1-client-protocol.h"
 
 class ExtCaptureFrame::Private : public QtWayland::ext_image_copy_capture_frame_v1
 {
@@ -39,6 +45,10 @@ public:
     size_t bufferSize = 0;
     
     bool bufferMapped = false;
+    
+    // DMA-BUF相关
+    struct gbm_bo *bo = nullptr;
+    struct gbm_device *gbmDevice = nullptr;
 
 protected:
     // 重写协议事件处理函数
@@ -81,12 +91,17 @@ ExtCaptureFrame::ExtCaptureFrame(QObject *parent)
 
 ExtCaptureFrame::~ExtCaptureFrame()
 {
-    if (d->mappedData && d->bufferFd >= 0) {
-        munmap(d->mappedData, d->bufferSize);
-    }
-    
-    if (d->bufferFd >= 0) {
-        close(d->bufferFd);
+    // 清理DMA-BUF或SHM资源
+    if (d->config.useDmaBuffer) {
+        cleanupDmaBuffer();
+    } else {
+        if (d->mappedData && d->bufferFd >= 0) {
+            munmap(d->mappedData, d->bufferSize);
+        }
+        
+        if (d->bufferFd >= 0) {
+            close(d->bufferFd);
+        }
     }
     
     if (d->buffer) {
@@ -248,6 +263,21 @@ uint64_t ExtCaptureFrame::timestamp() const
     return d->frameData.timestamp;
 }
 
+bool ExtCaptureFrame::isDmaBuffer() const
+{
+    return d->config.useDmaBuffer;
+}
+
+int ExtCaptureFrame::getDmaBufferFd() const
+{
+    return d->config.useDmaBuffer ? d->bufferFd : -1;
+}
+
+void* ExtCaptureFrame::getGbmBufferObject() const
+{
+    return d->config.useDmaBuffer ? d->bo : nullptr;
+}
+
 void ExtCaptureFrame::handleTransform(uint32_t transform)
 {
     d->frameData.transform = static_cast<FrameTransform>(transform);
@@ -291,6 +321,18 @@ void ExtCaptureFrame::handleFailed(uint32_t reason)
 }
 
 bool ExtCaptureFrame::createBuffer()
+{
+    // 根据配置选择缓冲区类型
+    if (d->config.useDmaBuffer) {
+        qCWarning(dsrApp) << "ExtCaptureFrame: Creating DMA Buffer";
+        return createDmaBuffer();
+    } else {
+        qCWarning(dsrApp) << "ExtCaptureFrame: Creating SHM Buffer";
+        return createShmBuffer();
+    }
+}
+
+bool ExtCaptureFrame::createShmBuffer()
 {
     // 计算缓冲区大小（假设RGBA格式，4字节/像素）
     uint32_t width = d->config.bufferSize.width();
@@ -368,6 +410,144 @@ void ExtCaptureFrame::setState(FrameState newState)
     if (d->state != newState) {
         d->state = newState;
         qDebug() << "Frame state changed to:" << newState;
+    }
+}
+
+bool ExtCaptureFrame::createDmaBuffer()
+{
+    uint32_t width = d->config.bufferSize.width();
+    uint32_t height = d->config.bufferSize.height();
+    uint32_t format = DRM_FORMAT_XBGR8888; // 使用XBGR8888格式
+    
+    qCWarning(dsrApp) << "Creating DMA Buffer:" << width << "x" << height 
+                      << "format:" << format;
+    
+    // 1. 打开DRM设备创建GBM设备
+    int drmFd = open("/dev/dri/renderD128", O_RDWR);
+    if (drmFd < 0) {
+        drmFd = open("/dev/dri/card0", O_RDWR);
+        if (drmFd < 0) {
+            qCWarning(dsrApp) << "Failed to open DRM device, falling back to SHM";
+            return createShmBuffer();
+        }
+    }
+    
+    d->gbmDevice = gbm_create_device(drmFd);
+    if (!d->gbmDevice) {
+        qCWarning(dsrApp) << "Failed to create GBM device, falling back to SHM";
+        close(drmFd);
+        return createShmBuffer();
+    }
+    
+    // 2. 创建GBM buffer object
+    uint32_t flags = GBM_BO_USE_RENDERING;
+    d->bo = gbm_bo_create(d->gbmDevice, width, height, format, flags);
+    
+    if (!d->bo) {
+        qCWarning(dsrApp) << "Failed to create GBM BO, falling back to SHM";
+        gbm_device_destroy(d->gbmDevice);
+        d->gbmDevice = nullptr;
+        close(drmFd);
+        return createShmBuffer();
+    }
+    
+    // 3. 获取BO信息（使用plane-specific方法，参考PipeWire实现）
+    uint32_t stride = gbm_bo_get_stride_for_plane(d->bo, 0);
+    uint32_t offset = gbm_bo_get_offset(d->bo, 0);
+    uint64_t modifier = gbm_bo_get_modifier(d->bo);
+    int planeFd = gbm_bo_get_fd_for_plane(d->bo, 0);
+    
+    if (planeFd < 0) {
+        qCWarning(dsrApp) << "Failed to get FD from GBM BO, falling back to SHM";
+        gbm_bo_destroy(d->bo);
+        d->bo = nullptr;
+        gbm_device_destroy(d->gbmDevice);
+        d->gbmDevice = nullptr;
+        close(drmFd);
+        return createShmBuffer();
+    }
+    
+    qCWarning(dsrApp) << "GBM BO created - stride:" << stride << "offset:" << offset 
+                      << "modifier:" << modifier << "fd:" << planeFd;
+    
+    d->frameData.stride = stride;
+    d->bufferSize = stride * height;
+    d->bufferFd = planeFd;
+    
+    // 4. 映射DMA-BUF以便CPU访问
+    d->mappedData = mmap(nullptr, d->bufferSize, PROT_READ | PROT_WRITE, MAP_SHARED, planeFd, 0);
+    if (d->mappedData == MAP_FAILED) {
+        // 某些驱动可能不支持CPU映射DMA-BUF，这是正常的
+        qCWarning(dsrApp) << "Cannot mmap DMA-BUF (this is normal for some drivers)";
+        d->mappedData = nullptr;
+    }
+    
+    // 5. 获取linux-dmabuf对象
+    if (!d->session) {
+        qCWarning(dsrApp) << "Session is null";
+        cleanupDmaBuffer();
+        close(drmFd);
+        return false;
+    }
+    
+    auto *linuxDmabuf = static_cast<struct zwp_linux_dmabuf_v1*>(d->session->getLinuxDmabuf());
+    if (!linuxDmabuf) {
+        qCWarning(dsrApp) << "Linux DMA-BUF not available, falling back to SHM";
+        cleanupDmaBuffer();
+        close(drmFd);
+        return createShmBuffer();
+    }
+    
+    // 6. 使用linux-dmabuf协议创建wl_buffer
+    auto *params = zwp_linux_dmabuf_v1_create_params(linuxDmabuf);
+    if (!params) {
+        qCWarning(dsrApp) << "Failed to create linux_buffer_params";
+        cleanupDmaBuffer();
+        close(drmFd);
+        return false;
+    }
+    
+    // 7. 添加plane参数 (对于单plane格式，通常只有plane 0)
+    zwp_linux_buffer_params_v1_add(params, planeFd, 0, offset, stride, 
+                                   modifier >> 32, modifier & 0xffffffff);
+    
+    // 8. 创建wl_buffer
+    d->buffer = zwp_linux_buffer_params_v1_create_immed(params, width, height, format, 0);
+    zwp_linux_buffer_params_v1_destroy(params);
+    
+    if (!d->buffer) {
+        qCWarning(dsrApp) << "Failed to create wl_buffer from DMA-BUF";
+        cleanupDmaBuffer();
+        close(drmFd);
+        return false;
+    }
+    
+    qCWarning(dsrApp) << "DMA Buffer created successfully using linux-dmabuf protocol!";
+    close(drmFd); // 可以关闭设备fd，GBM已经获得了所有需要的信息
+    
+    return true;
+}
+
+void ExtCaptureFrame::cleanupDmaBuffer()
+{
+    if (d->mappedData && d->mappedData != MAP_FAILED) {
+        munmap(d->mappedData, d->bufferSize);
+        d->mappedData = nullptr;
+    }
+    
+    if (d->bufferFd >= 0) {
+        close(d->bufferFd);
+        d->bufferFd = -1;
+    }
+    
+    if (d->bo) {
+        gbm_bo_destroy(d->bo);
+        d->bo = nullptr;
+    }
+    
+    if (d->gbmDevice) {
+        gbm_device_destroy(d->gbmDevice);
+        d->gbmDevice = nullptr;
     }
 }
 

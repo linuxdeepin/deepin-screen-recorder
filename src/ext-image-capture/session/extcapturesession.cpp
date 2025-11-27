@@ -6,6 +6,9 @@
 #include "extcapturesession.h"
 #include "../frame/extcaptureframe.h"
 #include "../../protocols/ext-image-copy-capture/qwayland-ext-image-copy-capture-v1.h"
+#include "../../protocols/ext-image-copy-capture/wayland-ext-image-copy-capture-v1-client-protocol.h"
+#include "../../protocols/linux-dmabuf/qwayland-linux-dmabuf-unstable-v1.h"
+#include "../../protocols/linux-dmabuf/wayland-linux-dmabuf-unstable-v1-client-protocol.h"
 
 #include <QDebug>
 #include <QGuiApplication>
@@ -38,6 +41,7 @@ public:
     // Wayland 全局对象
     wl_shm *waylandShm = nullptr;
     wl_registry *registry = nullptr;
+    QtWayland::zwp_linux_dmabuf_v1 *linuxDmabuf = nullptr;
     
     // 初始化 Wayland 全局对象
     void initializeWaylandGlobals() {
@@ -112,6 +116,8 @@ ExtCaptureSession::~ExtCaptureSession()
 
 bool ExtCaptureSession::initialize(void *manager, void *imageSource, bool paintCursors)
 {
+    qCWarning(dsrApp) << "ExtCaptureSession::initialize: *** INITIALIZING SESSION *** paintCursors =" << paintCursors;
+    
     if (d->state != Uninitialized) {
         qWarning() << "Session already initialized";
         return false;
@@ -131,17 +137,23 @@ bool ExtCaptureSession::initialize(void *manager, void *imageSource, bool paintC
 
     try {
         // 创建捕获会话
-        uint32_t options = paintCursors ? 1 : 0;  // ext_image_copy_capture_manager_v1::options_paint_cursors
+        // uint32_t options = paintCursors ? EXT_IMAGE_COPY_CAPTURE_MANAGER_V1_OPTIONS_PAINT_CURSORS : 0;
+        uint32_t options = 0;
+        qCWarning(dsrApp) << "ExtCaptureSession: paintCursors =" << paintCursors << "-> options =" << options << "(C enum value:" << EXT_IMAGE_COPY_CAPTURE_MANAGER_V1_OPTIONS_PAINT_CURSORS << "Qt enum:" << QtWayland::ext_image_copy_capture_manager_v1::options_paint_cursors << ")";
+        
+        if (!paintCursors) {
+            qCWarning(dsrApp) << "ExtCaptureSession: TESTING TreeLand options handling - using 0 (no cursors)";
+        }
         
         // 使用传入的 imageSource
         auto *source = reinterpret_cast<ext_image_capture_source_v1*>(imageSource);
         if (!source) {
-            qWarning() << "Invalid image source provided";
+            qWarning() << "Invalid image sourcea provided";
             setState(Error);
             return false;
         }
         
-        qDebug() << "Creating capture session with source:" << source << "options:" << options;
+        qCWarning(dsrApp) << "ExtCaptureSession: Creating capture session with source:" << source << "options:" << options;
         auto *session = managerPrivate->create_session(source, options);
         
         if (!session) {
@@ -177,7 +189,7 @@ const CaptureConfig& ExtCaptureSession::config() const
 
 ExtCaptureFrame* ExtCaptureSession::createFrame()
 {
-    if (d->state != Ready) {
+    if (d->state != Ready && d->state != Capturing) {
         qWarning() << "Session not ready for frame creation, current state:" << d->state;
         return nullptr;
     }
@@ -322,13 +334,17 @@ void ExtCaptureSession::selectOptimalFormat()
     if (!d->dmabufFormats.isEmpty()) {
         d->config.format = d->dmabufFormats.first();
         d->config.useDmaBuffer = true;
-        qDebug() << "Selected DMA-BUF format:" << d->config.format;
+        qCWarning(dsrApp) << "*** DMA-BUF FORMAT SELECTED ***";
+        qCWarning(dsrApp) << "Selected DMA-BUF format:" << d->config.format;
+        qCWarning(dsrApp) << "Available DMA-BUF formats count:" << d->dmabufFormats.size();
     } else if (!d->shmFormats.isEmpty()) {
         d->config.format = d->shmFormats.first();
         d->config.useDmaBuffer = false;
-        qDebug() << "Selected SHM format:" << d->config.format;
+        qCWarning(dsrApp) << "*** SHM FORMAT SELECTED (DMA-BUF not available) ***";
+        qCWarning(dsrApp) << "Selected SHM format:" << d->config.format;
+        qCWarning(dsrApp) << "Available SHM formats count:" << d->shmFormats.size();
     } else {
-        qWarning() << "No supported formats found";
+        qCWarning(dsrApp) << "*** NO SUPPORTED FORMATS FOUND ***";
         setState(Error);
         emit error("No supported pixel formats");
     }
@@ -337,6 +353,11 @@ void ExtCaptureSession::selectOptimalFormat()
 wl_shm* ExtCaptureSession::getWaylandShm() const
 {
     return d->waylandShm;
+}
+
+void* ExtCaptureSession::getLinuxDmabuf() const
+{
+    return d->linuxDmabuf ? d->linuxDmabuf->object() : nullptr;
 }
 
 // Wayland registry listener 实现
@@ -349,6 +370,10 @@ void ExtCaptureSession::Private::registryGlobal(void *data, wl_registry *registr
         priv->waylandShm = static_cast<wl_shm*>(
             wl_registry_bind(registry, id, &wl_shm_interface, qMin(version, 1u)));
         qCWarning(dsrApp) << "Bound to wl_shm, version:" << version;
+    } else if (strcmp(interface, zwp_linux_dmabuf_v1_interface.name) == 0) {
+        priv->linuxDmabuf = new QtWayland::zwp_linux_dmabuf_v1();
+        priv->linuxDmabuf->init(registry, id, qMin(version, 4u));
+        qCWarning(dsrApp) << "Bound to zwp_linux_dmabuf_v1, version:" << version;
     }
 }
 

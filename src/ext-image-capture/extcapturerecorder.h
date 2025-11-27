@@ -12,6 +12,22 @@
 #include <QQueue>
 #include <QMutex>
 #include <QThread>
+#include <QProcess>
+
+// DMA Buffer和硬件编码相关头文件
+#include <va/va.h>
+#include <va/va_drm.h>
+#include <libdrm/drm.h>
+#include <libdrm/drm_fourcc.h>
+#include <gbm.h>
+#include <xf86drm.h>
+#include <fcntl.h>
+#include <unistd.h>
+#include <sys/mman.h>
+#include <errno.h>
+#include <cstring>
+#include <algorithm>
+#include <QDateTime>
 
 class ExtCaptureIntegration;
 class ExtCaptureFrameBuffer;
@@ -129,6 +145,7 @@ private slots:
     void onRecordingStarted();
     void onRecordingStopped();
     void onFrameReady(const void *data, size_t size, int width, int height, int stride, uint64_t timestamp);
+    void onDmaFrameReady(int dmaBufferFd, void *gbmBo, size_t size, int width, int height, int stride, uint64_t timestamp);
     void onExtCaptureError(const QString &message);
     void onCaptureTimer();
 
@@ -138,9 +155,15 @@ private:
     void finalizeRecording();
     void processFrameQueue();
     QString generateDefaultOutputPath();
+    bool startFFmpegProcess();
+    bool startDmaFFmpegProcess();
+    bool processDmaBufferFrame(int dmaBufferFd, void *gbmBo, int width, int height, int stride);
+    bool initializeVAAPI();
+    bool importDmaBufferToVASurface(int dmaBufferFd, int width, int height, int stride, VASurfaceID *surface);
+    bool encodeVASurface(VASurfaceID surface);
 
     ExtCaptureIntegration *m_extCapture;
-    ExtCaptureFrameBuffer *m_frameBuffer;
+    ExtCaptureFrameBuffer *m_frameBuffer;  // 保留用于兼容性
     QTimer *m_captureTimer;
     
     RecordState m_state;
@@ -154,6 +177,21 @@ private:
     int m_frameWidth;
     int m_frameHeight;
     int m_frameStride;
+    
+    // 流式编码相关
+    QProcess *m_ffmpegProcess;
+    bool m_streamingMode;
+    bool m_ffmpegStarted;
+    QByteArray m_firstFrameBuffer;
+    
+    // VAAPI/DMA Buffer硬件编码相关
+    VADisplay m_vaDisplay;
+    VAConfigID m_vaConfig;
+    VAContextID m_vaContext;
+    int m_drmFd;
+    int m_firstFrameWidth;
+    int m_firstFrameHeight;
+    int m_firstFrameStride;
 };
 
 #endif // EXTCAPTURERECORDER_H
