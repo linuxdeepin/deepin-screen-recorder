@@ -7183,21 +7183,21 @@ void MainWindow::exitApp()
         _Exit(0);
     }
 
-    // TODO:treeland适配
+    // treeland 退出：避免直接销毁 Wayland proxy，改为取消并让进程退出清理
     if (Utils::isTreelandMode) {
-        if(m_shapesWidget)
+        if (m_pRecorderRegion)
+            m_pRecorderRegion->hide();
+        if (m_shapesWidget)
             m_shapesWidget->hide();
-        if(m_sideBar)
-             m_sideBar->hide();
-        auto manager = TreelandCaptureManager::instance();
-        auto captureContext = manager->context();
+        if (m_sideBar)
+            m_sideBar->hide();
 
-        // 添加销毁操作
-        if (captureContext) {
-            captureContext->destroy();
+        if (auto manager = TreelandCaptureManager::instance()) {
+            qCInfo(dsrApp) << __FUNCTION__ << __LINE__ << "treeland cancelCapture";
+            manager->cancelCapture();
         }
-        manager->destroy();
 
+        // 直接退出，不再调用 destroy()，避免 wl_proxy_get_version 崩溃
         _exit(0);
     }
 }
@@ -7424,6 +7424,210 @@ void MainWindow::updateCaptureRegion()
         }
     }
 }
+
+void MainWindow::onTreelandSwitchToRecordUI()
+{
+    // 仅 treeland 下生效：全屏选区 + 工具栏居中，仅做 UI 切换
+    if (!Utils::isTreelandMode)
+        return;
+
+    // 目标：录屏下取消后端选择器（模态选区），让其立即退出
+    qCWarning(dsrApp) << "[treeland] onTreelandSwitchToRecordUI enter";
+    auto manager = TreelandCaptureManager::instance();
+    // 先结束截图选择器（后端模态选区），避免残留：强制走一次 session 流程让后端 finish，然后销毁扩展
+    m_suppressTreelandFinishOnce = true; 
+    if (auto ctxClose = manager->ensureContext()) {
+        qCWarning(dsrApp) << "[treeland] ensureContext ok, ensureSession to finish";
+        ctxClose->ensureSession();
+    } else {
+        qCWarning(dsrApp) << "[treeland] ensureContext failed";
+    }
+    QTimer::singleShot(0, this, [manager]() { qCWarning(dsrApp) << "[treeland] cancelCapture"; manager->cancelCapture(); });
+    // 切到录屏样式
+    manager->setRecord(true);
+    qCWarning(dsrApp) << "[treeland] setRecord(true)";
+
+    // 工具栏移动到屏幕中间，并切换成"录屏"工具栏
+    if (!m_toolBar) {
+        m_toolBar = new ToolBar(this);
+        m_toolBar->initToolBar(this, isHideToolBar);
+        m_toolBar->setAttribute(Qt::WA_TranslucentBackground);
+        m_toolBar->setWindowFlags(Qt::FramelessWindowHint | Qt::Tool | Qt::WindowStaysOnTopHint | Qt::BypassWindowManagerHint);
+    }
+
+    // 切换工具栏为录屏模式
+    if (m_toolBar)
+        m_toolBar->setRecordLaunchMode(status::record);
+
+    // 记录"切到录屏前"的工具栏位置（用于回切截图时恢复）
+    if (m_toolBar) {
+        m_lastTreelandShotToolBarPos = m_toolBar->pos();
+        m_hasLastTreelandShotToolBarPos = true;
+    }
+
+    // 保证前端不再处于"截屏"编辑态
+    m_functionType = status::record;
+    if (m_shapesWidget)
+        m_shapesWidget->hide();
+    if (m_sideBar)
+        m_sideBar->hide();
+
+    // 工具栏居中到屏幕
+#if (QT_VERSION_MAJOR == 5)
+    const QRect scr = QApplication::desktop()->screenGeometry();
+#elif (QT_VERSION_MAJOR == 6)
+    const QRect scr = QGuiApplication::primaryScreen() ? QGuiApplication::primaryScreen()->geometry() : this->geometry();
+#endif
+
+    // 应用侧绘制全屏选区（非模态），并缓存当前截图选区以便回切
+    if (recordWidth > 0 && recordHeight > 0) {
+        m_lastTreelandShotRegion = QRect(recordX, recordY, recordWidth, recordHeight);
+        m_hasLastTreelandShotRegion = true;
+    }
+    recordX = 0;
+    recordY = 0;
+    recordWidth = scr.width();
+    recordHeight = scr.height();
+    if (!m_pRecorderRegion) {
+        m_pRecorderRegion = new RecorderRegionShow();
+        m_pRecorderRegion->setDevcieName(m_devnumMonitor ? m_devnumMonitor->availableCamera() : QString());
+    }
+    m_pRecorderRegion->resize(recordWidth + 2, recordHeight + 2);
+    m_pRecorderRegion->move(std::max(recordX - 1, 0), std::max(recordY - 1, 0));
+    m_pRecorderRegion->show();
+    qCWarning(dsrApp) << "[treeland] region show geom:" << m_pRecorderRegion->geometry();
+    const int centerX = scr.x() + scr.width() / 2 - m_toolBar->width() / 2;
+    const int centerY = scr.y() + scr.height() / 2 - m_toolBar->height() / 2;
+    m_toolBar->setAttribute(Qt::WA_ShowWithoutActivating, true);
+    m_toolBar->setFocusPolicy(Qt::NoFocus);
+    // 提升层级：保持独立顶层，并设置置顶标志
+    m_toolBar->setWindowFlags(m_toolBar->windowFlags() | Qt::Tool | Qt::WindowStaysOnTopHint | Qt::FramelessWindowHint);
+    // 将工具栏挂到边框窗口之上，避免被覆盖
+    if (m_pRecorderRegion && m_pRecorderRegion->windowHandle() && m_toolBar->windowHandle()) {
+        qCWarning(dsrApp) << "[treeland] toolbar reparent -> recorderRegion";
+        m_toolBar->windowHandle()->setParent(m_pRecorderRegion->windowHandle());
+    }
+    m_toolBar->hide();
+    m_toolBar->showWidget();
+    m_toolBar->adjustSize();
+    m_toolBar->showAt(QPoint(centerX, centerY));
+    m_toolBar->showWidget();
+    qCWarning(dsrApp) << "[treeland] toolbar showAt center:" << centerX << centerY << ", geom:" << m_toolBar->geometry();
+    // 置顶并确保显示（延迟一拍以等待几何稳定）
+    QTimer::singleShot(0, this, [this, centerX, centerY]() {
+        if (!m_toolBar)
+            return;
+        m_toolBar->adjustSize();
+        m_toolBar->showAt(QPoint(centerX, centerY));
+        m_toolBar->raise();
+        m_toolBar->show();
+    });
+    qCWarning(dsrApp) << "[treeland] onTreelandSwitchToRecordUI leave";
+}
+
+void MainWindow::onTreelandSwitchToShotUI()
+{
+    if (!Utils::isTreelandMode)
+        return;
+
+    qCWarning(dsrApp) << "[treeland] onTreelandSwitchToShotUI enter";
+
+    // 隐藏录屏边框
+    if (m_pRecorderRegion) {
+        m_pRecorderRegion->hide();
+    }
+
+    // 切到截图模式
+    m_functionType = status::shot;
+
+    // 恢复上一次截图区域（如有），否则请求后端选择器
+    auto manager = TreelandCaptureManager::instance();
+    // 设为截图样式
+    manager->setRecord(false);
+    auto ctx = manager->ensureContext();
+    if (!ctx) {
+        qCWarning(dsrApp) << "[treeland] ensureContext failed on switchToShot";
+        return;
+    }
+
+    // 确保存在会话，再发起选择请求
+    ctx->ensureSession();
+    qCWarning(dsrApp) << "[treeland] ensureSession ok, prepare to selectSource(region)";
+
+    // 使用工具栏的 wl_surface 作为 mask（若可用），以对齐正常截图路径的层级行为
+    wl_surface *maskSurface = nullptr;
+    if (m_toolBar && m_toolBar->windowHandle() && m_toolBar->windowHandle()->handle()) {
+        if (auto wlWin = static_cast<QtWaylandClient::QWaylandWindow *>(m_toolBar->windowHandle()->handle())) {
+            maskSurface = wlWin->surface();
+        }
+    }
+    if (!maskSurface && windowHandle() && windowHandle()->handle()) {
+        if (auto wlWin = static_cast<QtWaylandClient::QWaylandWindow *>(windowHandle()->handle())) {
+            maskSurface = wlWin->surface();
+        }
+    }
+
+    // 处理 selector busy：若被占用则延迟重试 selectSource
+    QObject::connect(ctx, &TreelandCaptureContext::sourceFailed, this,
+                     [this, ctx, maskSurface](uint32_t reason) {
+        if (reason == TREELAND_CAPTURE_CONTEXT_V1_SOURCE_FAILURE_SELECTOR_BUSY) {
+            qCWarning(dsrApp) << "[treeland] selector_busy, retrying selectSource(region)";
+            QTimer::singleShot(0, this, [this, ctx, maskSurface]() {
+                ctx->selectSource(TreelandCaptureContext::source_type_region, true, false, maskSurface);
+            });
+        }
+    }, Qt::SingleShotConnection);
+
+    if (m_hasLastTreelandShotRegion) {
+        const QRect r = m_lastTreelandShotRegion;
+        qCWarning(dsrApp) << "[treeland] restore last shot region:" << r;
+        // 发起区域选择（freeze=true 进入选择态）。合成器侧将出现选择器
+        ctx->selectSource(TreelandCaptureContext::source_type_region, true, false, maskSurface);
+        // 同步应用侧记录供绘制/逻辑
+        recordX = r.x();
+        recordY = r.y();
+        recordWidth = r.width();
+        recordHeight = r.height();
+    } else {
+        qCWarning(dsrApp) << "[treeland] selectSource(region default), maskSurface=" << maskSurface;
+        ctx->selectSource(TreelandCaptureContext::source_type_region, true, false, maskSurface);
+    }
+
+    // 工具栏切回截图模式：恢复父子关系与 flags
+    if (m_toolBar) {
+        m_toolBar->currentFunctionMode("shot");
+        if (windowHandle() && m_toolBar->windowHandle() && m_toolBar->windowHandle()->parent() != windowHandle()) {
+            qCWarning(dsrApp) << "[treeland] toolbar reparent -> main window";
+            m_toolBar->windowHandle()->setParent(windowHandle());
+        }
+        m_toolBar->setAttribute(Qt::WA_ShowWithoutActivating, true);
+        m_toolBar->setFocusPolicy(Qt::NoFocus);
+        m_toolBar->setWindowFlags(m_toolBar->windowFlags() | Qt::Tool | Qt::WindowStaysOnTopHint | Qt::FramelessWindowHint);
+
+#if (QT_VERSION_MAJOR == 5)
+        const QRect scr = QApplication::desktop()->screenGeometry();
+#elif (QT_VERSION_MAJOR == 6)
+        const QRect scr = QGuiApplication::primaryScreen() ? QGuiApplication::primaryScreen()->geometry() : this->geometry();
+#endif
+        QPoint targetPos;
+        if (m_hasLastTreelandShotToolBarPos) {
+            targetPos = m_lastTreelandShotToolBarPos;
+        } else {
+            targetPos = QPoint(scr.x() + scr.width() / 2 - m_toolBar->width() / 2,
+                               scr.y() + scr.height() / 2 - m_toolBar->height() / 2);
+        }
+        m_toolBar->hide();
+        m_toolBar->showWidget();
+        m_toolBar->adjustSize();
+        m_toolBar->showAt(targetPos);
+        m_toolBar->raise();
+        m_toolBar->show();
+        qCWarning(dsrApp) << "[treeland] toolbar showAt pos:" << targetPos << ", geom:" << m_toolBar->geometry();
+    }
+
+    qCWarning(dsrApp) << "[treeland] onTreelandSwitchToShotUI leave";
+}
+
 
 void MainWindow::onRecordingStarted()
 {

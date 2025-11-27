@@ -428,6 +428,15 @@ public slots:
      */
     void startRecord();
 
+    /**
+     * @brief treeland 下点击“切换录制”时，仅做 UI 调整：
+     * 1) 将选区切为全屏（通知 treeland 选择输出）
+     * 2) 将工具栏移动到屏幕中间
+     * 不做后续录制动作
+     */
+    void onTreelandSwitchToRecordUI();
+    void onTreelandSwitchToShotUI();
+
     //void flashTrayIcon();
     //void iconActivated(QSystemTrayIcon::ActivationReason reason);
     /**
@@ -1414,6 +1423,14 @@ private:
     
     // 录屏状态变化回调函数
     std::function<void(bool)> m_recordingStateCallback;
+    // treeland：抑制一次 handleCaptureFinish 的完成动作（用于中途切换时仅重置后端选区）
+    bool m_suppressTreelandFinishOnce = false;
+    // treeland：记录上一次截图模式的选区，用于从录屏切回截图时恢复
+    QRect m_lastTreelandShotRegion;
+    bool m_hasLastTreelandShotRegion = false;
+    // treeland：记录切到录屏前工具栏的屏幕位置，用于切回截图时还原
+    QPoint m_lastTreelandShotToolBarPos;
+    bool m_hasLastTreelandShotToolBarPos = false;
 };
 
 #endif //MAINWINDOW_H

@@ -140,6 +140,9 @@ void SubToolWidget::initRecordLabel()
         m_pMainWindow->getToolBarPoint();
         qInfo() << "shotbutton is clicked";
         switchContent("shot");
+        if (Utils::isTreelandMode) {
+            m_pMainWindow->onTreelandSwitchToShotUI();
+        }
         qInfo() << "emit changeShotToolFunc(shot)";
         emit changeShotToolFunc("shot");
     });

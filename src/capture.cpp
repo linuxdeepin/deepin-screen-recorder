@@ -115,8 +115,9 @@ void TreelandCaptureContext::treeland_capture_context_v1_source_failed(uint32_t 
 
 void TreelandCaptureManager::cancelCapture() {
     qCDebug(dsrApp) << "Entry: TreelandCaptureManager::cancelCapture";
-    destroy(); // 销毁 Wayland 扩展
-    qCDebug(dsrApp) << "Exit: TreelandCaptureManager::cancelCapture";
+    // 不再主动 destroy Wayland 扩展，避免在销毁阶段触碰无效 proxy 导致崩溃
+    // 此处保留占位，进程退出由 Wayland 连接清理资源
+    qCDebug(dsrApp) << "Exit: TreelandCaptureManager::cancelCapture (noop)";
 }
 
 TreelandCaptureFrame *TreelandCaptureContext::ensureFrame()
