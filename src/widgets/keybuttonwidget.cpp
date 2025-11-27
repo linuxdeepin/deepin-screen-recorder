@@ -62,7 +62,7 @@ KeyButtonWidget::KeyButtonWidget(DWidget *parent) : DBlurEffectWidget(parent)
     hLayout->setSpacing(2);
     hLayout->addWidget(m_word, 0, Qt::AlignVCenter | Qt::AlignHCenter);
     this->setLayout(hLayout);
-    if (!Utils::isWaylandMode) {
+    if (!Utils::isWaylandMode && !Utils::isTreelandMode) {
         qCDebug(dsrApp) << "Setting up X11 input event passthrough";
         Utils::passInputEvent(static_cast<int>(this->winId()));
     }

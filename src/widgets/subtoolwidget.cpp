@@ -700,14 +700,12 @@ void SubToolWidget::initShotLabel()
     });
 
     //切换到录屏按钮
-    // TODO: treeland适配，初版暂时屏蔽
-    if (!(Utils::isTreelandMode))
-    {
-        m_recorderButton = new ToolButton();
-        m_recorderButton->setCheckable(false);
-        m_recorderButton->setIconSize(TOOL_ICON_SIZE);
-        m_recorderButton->setIcon(QIcon::fromTheme("recorder"));
-        Utils::setAccessibility(m_recorderButton, AC_SUBTOOLWIDGET_RECORDER_BUTTON);
+    // TreeLand环境下现在已支持录屏功能
+    m_recorderButton = new ToolButton();
+    m_recorderButton->setCheckable(false);
+    m_recorderButton->setIconSize(TOOL_ICON_SIZE);
+    m_recorderButton->setIcon(QIcon::fromTheme("recorder"));
+    Utils::setAccessibility(m_recorderButton, AC_SUBTOOLWIDGET_RECORDER_BUTTON);
         m_recorderButton->setFixedSize(TOOL_BUTTON_SIZE);
         installTipHint(m_recorderButton, tr("Record"));
         btnList.append(m_recorderButton);
@@ -716,7 +714,6 @@ void SubToolWidget::initShotLabel()
             switchContent("record");
             emit changeShotToolFunc("record");
         });
-    }
 
     m_shotOptionButton = new ToolButton();
     m_shotOptionButton->setCheckable(false);

@@ -228,7 +228,7 @@ void MainWindow::initMainWindow()
             Qt::QueuedConnection);
     qCDebug(dsrApp) << "Connected mouseScroll signal.";
 
-    if (!Utils::isWaylandMode) {
+    if (!Utils::isWaylandMode && !Utils::isTreelandMode) {
         qCDebug(dsrApp) << "Setting up X11 keyboard event monitoring";
         connect(m_pScreenCaptureEvent,
                 SIGNAL(keyboardPress(unsigned char)),
@@ -395,7 +395,7 @@ void MainWindow::initAttributes()
         // Qt::FramelessWindowHint ： 设置窗口无边框，
         // Qt::WindowStaysOnTopHint： 通知窗口系统该窗口应位于所有其他窗口之上。请注意，在 X11 上的某些窗口管理器上，您还必须传递
         // Qt::X11BypassWindowManagerHint 以使此标志正常工作。 Qt::X11BypassWindowManagerHint : 完全绕过窗口管理器。
-        if (Utils::isWaylandMode) {
+        if (Utils::isWaylandMode || Utils::isTreelandMode) {
             // 1070焦点策略管理比1060严格，作为全屏窗口的截图录屏设置了无焦点属性后，窗管不会在设置为获取焦点
             // 因此在1070截图录屏截图录屏需要获取焦点，不然应用内快捷键无法响应。
             if (DSysInfo::minorVersion().toInt() >= 1070) {
@@ -1157,6 +1157,8 @@ void MainWindow::initSaveShortcut()
     QShortcut *saveShotSC = new QShortcut(QKeySequence("Ctrl+S"), this);
     // 截图模式/录屏模式（未做穿透）/滚动模式 退出
     QShortcut *escSC = new QShortcut(QKeySequence("Escape"), this);
+    // 录屏模式 停止录屏 
+    QShortcut *stopRecordSC = new QShortcut(QKeySequence("Ctrl+Alt+R"), this);
     // 截图模式/滚动模式 保存截图 大键盘
     connect(returnSC, &QShortcut::activated, this, [=] {
         if (status::shot == m_functionType || status::scrollshot == m_functionType) {
@@ -1200,6 +1202,14 @@ void MainWindow::initSaveShortcut()
         }
         if (status::record == m_functionType && Utils::isWaylandMode)
             m_showButtons->showContentButtons(KEY_ESCAPE);
+    });
+    
+    // 录屏模式 停止录屏 
+    connect(stopRecordSC, &QShortcut::activated, this, [=] {
+        if (status::record == m_functionType && RECORD_BUTTON_RECORDING == recordButtonStatus) {
+            qCWarning(dsrApp) << "*** STOP RECORD SHORTCUT TRIGGERED *** (Ctrl+Alt+R)";
+            stopRecord();
+        }
     });
 }
 
@@ -1392,15 +1402,16 @@ void MainWindow::initScreenRecorder()
 
     // recordButton->hide();
     // recordOptionPanel->hide();
-
-    m_zoomIndicator->hideMagnifier();
-    // 录屏初次进来此字段为false，后面进来此字段为ture故不会改变默认框选区域大小
-    if (!m_initScreenRecorder) {
-        qCDebug(dsrApp) << "initScreenRecorder m_initScreenRecorder false";
-        m_initScreenRecorder = true;
-    } else {
-        qCDebug(dsrApp) << "initScreenRecorder m_initScreenRecorder true";
-        return;
+    if(m_zoomIndicator) {
+        m_zoomIndicator->hideMagnifier();
+        // 录屏初次进来此字段为false，后面进来此字段为ture故不会改变默认框选区域大小
+        if (!m_initScreenRecorder) {
+            qCDebug(dsrApp) << "initScreenRecorder m_initScreenRecorder false";
+            m_initScreenRecorder = true;
+        } else {
+            qCDebug(dsrApp) << "initScreenRecorder m_initScreenRecorder true";
+            return;
+        }
     }
 
     m_toolBar->setFocus();
@@ -6900,6 +6911,7 @@ void MainWindow::iconActivated(QSystemTrayIcon::ActivationReason)
 void MainWindow::stopRecord()
 {
     qCInfo(dsrApp) << __FUNCTION__ << __LINE__ << "正在结束录屏...";
+    qCWarning(dsrApp) << "*** STOP RECORD CALLED *** recordButtonStatus:" << recordButtonStatus;
     if (recordButtonStatus == RECORD_BUTTON_RECORDING) {
         qCDebug(dsrApp) << "MainWindow::stopRecord()!";
         if (Utils::isWaylandMode) {
@@ -7055,7 +7067,7 @@ void MainWindow::startCountdown()
          setWindowFlag(Qt::WindowDoesNotAcceptFocus);
          this->show();
      }*/
-    Utils::passInputEvent(static_cast<int>(this->winId()));
+    // Utils::passInputEvent(static_cast<int>(this->winId()));
 
     repaint();
 }

@@ -12,7 +12,11 @@
 #include "utils/log.h"
 #ifdef KF5_WAYLAND_FLAGE_ON
 #include "waylandrecord/avlibinterface.h"
+#include "waylandrecord/waylandintegration_p.h"
+#include "waylandrecord/recordadmin.h"
 #endif
+#include "ext-image-capture/extcapturerecorder.h"
+#include "ext-image-capture/extcapturebridge.h"
 #include <QApplication>
 #include <QDate>
 #include <QDebug>
@@ -23,6 +27,8 @@
 #include <QMetaType>
 #include <QClipboard>
 #include <QUrl>
+#include <QEventLoop>
+#include <QTimer>
 #include <dlfcn.h>
 #include <signal.h>
 
@@ -601,6 +607,78 @@ void RecordProcess::waylandRecord()
     return;
 }
 
+//treeland录制视频
+void RecordProcess::treelandRecord()
+{
+    qCDebug(dsrApp) << "treeland ext-image-copy-capture 录屏！";
+    
+    initProcess();
+    
+    ExtCaptureRecorder *extRecorder = new ExtCaptureRecorder(this);
+    
+    // 检查协议可用性
+    if (!extRecorder->isAvailable()) {
+        qCWarning(dsrApp) << "ext-image-copy-capture协议暂未就绪，等待协议初始化...";
+        
+        QEventLoop waitLoop;
+        QTimer timeoutTimer;
+        timeoutTimer.setSingleShot(true);
+        timeoutTimer.setInterval(1000); 
+        
+        connect(&timeoutTimer, &QTimer::timeout, &waitLoop, &QEventLoop::quit);
+        
+        QMetaObject::Connection protocolConnection;
+        protocolConnection = connect(extRecorder, &ExtCaptureRecorder::protocolAvailable, 
+                                   [&waitLoop, &protocolConnection]() {
+            qCWarning(dsrApp) << "协议现在可用，继续录制";
+            QObject::disconnect(protocolConnection);
+            waitLoop.quit();
+        });
+        
+        timeoutTimer.start();
+        waitLoop.exec();
+        
+        if (!extRecorder->isAvailable()) {
+            qCCritical(dsrApp) << "等待超时，ext-image-copy-capture协议仍不可用";
+            delete extRecorder;
+            return;
+        } else {
+            qCWarning(dsrApp) << "协议现在可用，继续录制流程";
+        }
+    }
+    
+    QScreen *screen = QGuiApplication::primaryScreen();
+    if (!screen) {
+        qCCritical(dsrApp) << "无法获取屏幕信息";
+        delete extRecorder;
+        return;
+    }
+    
+    connect(extRecorder, &ExtCaptureRecorder::recordingStarted, this, [this]() {
+        qCDebug(dsrApp) << "TreeLand录制已开始";
+    });
+    
+    connect(extRecorder, &ExtCaptureRecorder::recordingStopped, this, [this]() {
+        qCDebug(dsrApp) << "TreeLand录制已停止";
+    });
+    
+    connect(extRecorder, &ExtCaptureRecorder::error, this, [this](const QString &message) {
+        qCCritical(dsrApp) << "TreeLand录制错误:" << message;
+    });
+    
+    bool startResult = extRecorder->startRecording(screen, m_mouseType != RECORD_MOUSE_NULL, savePath, m_framerate);
+    
+    if (!startResult) {
+        qCCritical(dsrApp) << "启动TreeLand录制失败";
+        delete extRecorder;
+        return;
+    }
+    
+    setProperty("extCaptureRecorder", QVariant::fromValue(extRecorder));
+    
+    qCInfo(dsrApp) << "TreeLand录制启动完成";
+}
+
 //gstreamer录制视频
 void RecordProcess::GstStartRecord()
 {
@@ -680,7 +758,28 @@ void RecordProcess::GstStartRecord()
 //gstreamer停止录制视频
 void RecordProcess::GstStopRecord()
 {
-    if (Utils::isWaylandMode) {
+    if (Utils::isTreelandMode) {
+        qCInfo(dsrApp) << "停止TreeLand GStreamer录屏...";
+        
+        ExtCaptureRecorder *extRecorder = property("extCaptureRecorder").value<ExtCaptureRecorder*>();
+        ExtCaptureBridge *bridge = property("extCaptureBridge").value<ExtCaptureBridge*>();
+        
+        if (extRecorder) {
+            extRecorder->stopRecording();
+        }
+        
+        if (bridge) {
+            bridge->stopBridge();
+        }
+        
+        if (m_gstRecordX) {
+            // 注意：TreeLand下可能没有使用GstRecordX，需要检查
+            // m_gstRecordX->waylandGstStopRecord();
+        }
+        
+        onExitGstRecord();
+    }
+    else if (Utils::isWaylandMode) {
 #ifdef KF5_WAYLAND_FLAGE_ON
         WaylandIntegration::stopStreaming();
 #endif
@@ -713,8 +812,11 @@ void RecordProcess::startRecord()
     if (!Utils::isFFmpegEnv) {
         GstStartRecord();
     } else {
+        if (Utils::isTreelandMode) {
+            treelandRecord();
+        }
         //x11下的录屏
-        if (!Utils::isWaylandMode) {
+        else if (!Utils::isWaylandMode) {
             recordVideo();
         }
         //wayland下的录屏
@@ -797,8 +899,35 @@ void RecordProcess::stopRecord()
         qCInfo(dsrApp) << __FUNCTION__ << __LINE__ << "录屏计时已暂停";
     }
     if (Utils::isFFmpegEnv) {
+        //停止treeland录屏
+        if (Utils::isTreelandMode) {
+            qCInfo(dsrApp) << "停止TreeLand录屏...";
+            
+            // 获取存储的组件实例
+            ExtCaptureRecorder *extRecorder = property("extCaptureRecorder").value<ExtCaptureRecorder*>();
+            
+            // 停止录制
+            if (extRecorder) {
+                extRecorder->stopRecording();
+            }
+            
+            // 清理property中的引用
+            setProperty("extCaptureRecorder", QVariant());
+            
+            // 清理对象
+            if (extRecorder) extRecorder->deleteLater();
+            
+            qCInfo(dsrApp) << "TreeLand录屏已停止";
+            
+            // 处理录制完成
+            if (Utils::kGIF == m_recordType) {
+                onStartTranscode();
+            } else {
+                onRecordFinish();
+            }
+        }
         //停止wayland录屏
-        if (Utils::isWaylandMode) {
+        else if (Utils::isWaylandMode) {
 #ifdef KF5_WAYLAND_FLAGE_ON
             WaylandIntegration::stopStreaming();
             if (Utils::kGIF == m_recordType) {

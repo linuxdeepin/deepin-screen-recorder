@@ -84,6 +84,11 @@ private:
     void waylandRecord();
 
     /**
+     * @brief treeland协议下ext-image-copy-capture录制视频
+     */
+    void treelandRecord();
+
+    /**
      * @brief gstreamer录制视频
      */
     void GstStartRecord();

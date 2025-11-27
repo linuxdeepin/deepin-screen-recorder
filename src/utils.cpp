@@ -212,9 +212,9 @@ void Utils::drawTooltipText(QPainter &painter, QString text, QString textColor, 
 void Utils::passInputEvent(int wid)
 {
     qCDebug(dsrApp) << "passInputEvent() called for window ID:" << wid << ".";
-    // Wayland 事件穿透
-    if (Utils::isWaylandMode) {
-        qCDebug(dsrApp) << "Wayland mode detected. Setting window handle mask.";
+    // Wayland/TreeLand 事件穿透
+    if (Utils::isWaylandMode || Utils::isTreelandMode) {
+        qCDebug(dsrApp) << "Wayland/TreeLand mode detected. Setting window handle mask.";
         QWidget *widget = QWidget::find(static_cast<WId>(wid));
         if (widget && widget->windowHandle()) {
             widget->windowHandle()->setMask(QRegion(0, 0, 1, 1));
@@ -278,8 +278,8 @@ void Utils::setAccessibility(QAction *action, const QString name)
 void Utils::getInputEvent(const int wid, const short x, const short y, const unsigned short width, const unsigned short height)
 {
     qCDebug(dsrApp) << "getInputEvent() called for window ID:" << wid << ", rect:(" << x << "," << y << "," << width << "," << height << ").";
-    if (Utils::isWaylandMode == true) {
-        qCDebug(dsrApp) << "Wayland mode detected, skipping getInputEvent().";
+    if (Utils::isWaylandMode == true || Utils::isTreelandMode == true) {
+        qCDebug(dsrApp) << "Wayland/TreeLand mode detected, skipping getInputEvent().";
         return;
     }
     XRectangle *reponseArea = new XRectangle;
@@ -309,8 +309,8 @@ void Utils::getInputEvent(const int wid, const short x, const short y, const uns
 void Utils::cancelInputEvent(const int wid, const short x, const short y, const unsigned short width, const unsigned short height)
 {
     qCDebug(dsrApp) << "cancelInputEvent() called for window ID:" << wid << ", rect:(" << x << "," << y << "," << width << "," << height << ").";
-    if (Utils::isWaylandMode == true) {
-        qCDebug(dsrApp) << "Wayland mode detected, skipping cancelInputEvent().";
+    if (Utils::isWaylandMode == true || Utils::isTreelandMode == true) {
+        qCDebug(dsrApp) << "Wayland/TreeLand mode detected, skipping cancelInputEvent().";
         return;
     }
     XRectangle *reponseArea = new XRectangle;
@@ -332,6 +332,10 @@ void Utils::cancelInputEvent1(
     const int wid, const short x, const short y, const unsigned short width, const unsigned short height)
 {
     qCDebug(dsrApp) << "cancelInputEvent1() called for window ID:" << wid << ", rect:(" << x << "," << y << "," << width << "," << height << ").";
+    if (Utils::isWaylandMode == true || Utils::isTreelandMode == true) {
+        qCDebug(dsrApp) << "Wayland/TreeLand mode detected, skipping cancelInputEvent1().";
+        return;
+    }
     XRectangle *reponseArea = new XRectangle;
     reponseArea->x = x;
     reponseArea->y = y;
@@ -432,8 +436,8 @@ void Utils::showCurrentSys()
 void Utils::enableXGrabButton()
 {
     qCDebug(dsrApp) << "enableXGrabButton() called.";
-    if (Utils::isWaylandMode == true) {
-        qCDebug(dsrApp) << "Wayland mode detected, skipping enableXGrabButton().";
+    if (Utils::isWaylandMode == true || Utils::isTreelandMode == true) {
+        qCDebug(dsrApp) << "Wayland/TreeLand mode detected, skipping enableXGrabButton().";
         return;
     }
     // extern int XGrabButton(
@@ -486,8 +490,8 @@ void Utils::enableXGrabButton()
 void Utils::disableXGrabButton()
 {
     qCDebug(dsrApp) << "disableXGrabButton() called.";
-    if (Utils::isWaylandMode == true) {
-        qCDebug(dsrApp) << "Wayland mode detected, skipping disableXGrabButton().";
+    if (Utils::isWaylandMode == true || Utils::isTreelandMode == true) {
+        qCDebug(dsrApp) << "Wayland/TreeLand mode detected, skipping disableXGrabButton().";
         return;
     }
     XUngrabButton(QX11Info::display(), true, AnyModifier, DefaultRootWindow(QX11Info::display()));

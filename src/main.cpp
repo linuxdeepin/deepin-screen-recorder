@@ -37,9 +37,9 @@ static bool isWaylandProtocol()
     QProcessEnvironment e = QProcessEnvironment::systemEnvironment();
     qCDebug(dsrApp) << "System environment retrieved.";
 
-    // check is treeland environment.
+    // TreeLand使用wayland协议，但需要特殊处理，不视为普通wayland
     if (e.value(QStringLiteral("DDE_CURRENT_COMPOSITOR")) == QStringLiteral("TreeLand")) {
-        qCDebug(dsrApp) << "DDE_CURRENT_COMPOSITOR is TreeLand, returning false.";
+        qCDebug(dsrApp) << "DDE_CURRENT_COMPOSITOR is TreeLand, returning false (TreeLand handled separately).";
         return false;
     }
 
@@ -49,6 +49,15 @@ static bool isWaylandProtocol()
            WAYLAND_DISPLAY.contains(QLatin1String("wayland"), Qt::CaseInsensitive);
     qCDebug(dsrApp) << "XDG_SESSION_TYPE:" << XDG_SESSION_TYPE << ", WAYLAND_DISPLAY:" << WAYLAND_DISPLAY << ", isWayland:" << isWayland;
     return isWayland;
+}
+
+static bool isTreelandEnvironment()
+{
+    qCDebug(dsrApp) << "isTreelandEnvironment called.";
+    QProcessEnvironment e = QProcessEnvironment::systemEnvironment();
+    bool isTreeland = e.value(QStringLiteral("DDE_CURRENT_COMPOSITOR")) == QStringLiteral("TreeLand");
+    qCDebug(dsrApp) << "DDE_CURRENT_COMPOSITOR:" << e.value(QStringLiteral("DDE_CURRENT_COMPOSITOR")) << ", isTreeland:" << isTreeland;
+    return isTreeland;
 }
 
 static bool CheckFFmpegEnv()
@@ -129,8 +138,9 @@ int main(int argc, char *argv[])
     // Utils::isTabletEnvironment = DGuiApplicationHelper::isTabletEnvironment();
     // wayland 协议
     Utils::isWaylandMode = isWaylandProtocol();
+    Utils::isTreelandMode = isTreelandEnvironment();
     Utils::isRootUser = (getuid() == 0);
-    qCDebug(dsrApp) << "isWaylandMode:" << Utils::isWaylandMode << ", isRootUser:" << Utils::isRootUser;
+    qCDebug(dsrApp) << "isWaylandMode:" << Utils::isWaylandMode << ", isTreelandMode:" << Utils::isTreelandMode << ", isRootUser:" << Utils::isRootUser;
 
     if (Utils::isWaylandMode) {
         qCDebug(dsrApp) << "Wayland mode active.";
