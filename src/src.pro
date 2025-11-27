@@ -233,6 +233,8 @@ HEADERS += main_window.h \
     ext-image-capture/session/extcapturesession.h \
     ext-image-capture/frame/extcaptureframe.h \
     ext-image-capture/extcaptureintegration.h \
+    ext-image-capture/multiscreencapturecoordinator.h \
+    ext-image-capture/multiscreenframecompositor.h \
     ext-image-capture/extcapturerecorder.h \
     ext-image-capture/extcaptureframebuffer.h \
     ext-image-capture/extcapturebridge.h \
@@ -327,6 +329,8 @@ SOURCES += main.cpp \
     ext-image-capture/session/extcapturesession.cpp \
     ext-image-capture/frame/extcaptureframe.cpp \
     ext-image-capture/extcaptureintegration.cpp \
+    ext-image-capture/multiscreencapturecoordinator.cpp \
+    ext-image-capture/multiscreenframecompositor.cpp \
     ext-image-capture/extcapturerecorder.cpp \
     ext-image-capture/extcaptureframebuffer.cpp \
     ext-image-capture/extcapturebridge.cpp \

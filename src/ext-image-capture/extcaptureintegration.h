@@ -8,10 +8,13 @@
 
 #include <QObject>
 #include <QScreen>
+#include <QList>
+#include <QRect>
 
 class ExtCaptureManager;
 class ExtCaptureSession;
 class ExtCaptureFrame;
+class MultiScreenCaptureCoordinator;
 
 /**
  * @brief ext-image-copy-capture集成接口
@@ -40,6 +43,14 @@ public:
     bool startScreenRecording(QScreen *screen, bool includeCursor = false);
 
     /**
+     * @brief 开始多屏录制
+     * @param screens 要录制的屏幕列表
+     * @param includeCursor 是否包含光标
+     * @return 是否成功开始
+     */
+    bool startMultiScreenRecording(const QList<QScreen*>& screens, bool includeCursor = false);
+
+    /**
      * @brief 停止录制
      */
     void stopRecording();
@@ -51,9 +62,25 @@ public:
     bool captureFrame();
 
     /**
+     * @brief 捕获多屏帧
+     * @return 是否成功开始捕获
+     */
+    bool captureMultiScreenFrame();
+
+    /**
      * @brief 获取当前会话状态
      */
     bool isRecording() const;
+
+    /**
+     * @brief 是否正在进行多屏录制
+     */
+    bool isMultiScreenRecording() const;
+
+    /**
+     * @brief 获取支持的屏幕列表
+     */
+    QList<QScreen*> getAvailableScreens() const;
 
 signals:
     /**
@@ -100,6 +127,16 @@ signals:
     void dmaFrameReady(int dmaBufferFd, void *gbmBo, size_t size, int width, int height, int stride, uint64_t timestamp);
 
     /**
+     * @brief 多屏合成帧就绪
+     * @param compositeFrameData 合成后的帧数据
+     * @param width 帧宽度
+     * @param height 帧高度
+     * @param stride 行字节数
+     * @param timestamp 时间戳
+     */
+    void multiScreenFrameReady(const QByteArray& compositeFrameData, int width, int height, int stride, uint64_t timestamp);
+
+    /**
      * @brief 发生错误
      */
     void error(const QString &message);
@@ -113,10 +150,18 @@ private slots:
     void onFrameReady(ExtCaptureFrame *frame);
     void onFrameFailed(const QString &reason);
 
+private slots:
+    void onMultiScreenFrameReady(const QByteArray& compositeFrameData, int width, int height, int stride, uint64_t timestamp);
+    void onMultiScreenCaptureStarted();
+    void onMultiScreenCaptureStopped();
+    void onMultiScreenCaptureError(const QString& message);
+
 private:
     ExtCaptureManager *m_manager;
     ExtCaptureSession *m_session;
+    MultiScreenCaptureCoordinator *m_multiScreenCoordinator;
     bool m_recording;
+    bool m_multiScreenRecording;
 };
 
 #endif // EXTCAPTUREINTEGRATION_H

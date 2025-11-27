@@ -116,6 +116,18 @@ signals:
      */
     void frameReady(ExtCaptureFrame *frame);
 
+    /**
+     * @brief DMA Buffer帧就绪
+     * @param dmaBufferFd DMA Buffer文件描述符
+     * @param gbmBo GBM Buffer Object指针
+     * @param size 数据大小
+     * @param width 帧宽度
+     * @param height 帧高度
+     * @param stride 行字节数
+     * @param timestamp 时间戳
+     */
+    void dmaFrameReady(int dmaBufferFd, void *gbmBo, size_t size, int width, int height, int stride, uint64_t timestamp);
+
 protected:
     // 协议事件处理
     void handleBufferSize(uint32_t width, uint32_t height);

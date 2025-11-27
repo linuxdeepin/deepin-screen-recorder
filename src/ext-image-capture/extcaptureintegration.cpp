@@ -7,22 +7,39 @@
 #include "manager/extcapturemanager.h"
 #include "session/extcapturesession.h"
 #include "frame/extcaptureframe.h"
+#include "multiscreencapturecoordinator.h"
 #include "../utils/log.h"
 
 #include <QDebug>
 #include <QTimer>
+#include <QGuiApplication>
 
 ExtCaptureIntegration::ExtCaptureIntegration(QObject *parent)
     : QObject(parent)
     , m_manager(new ExtCaptureManager(this))
     , m_session(nullptr)
+    , m_multiScreenCoordinator(new MultiScreenCaptureCoordinator(this))
     , m_recording(false)
+    , m_multiScreenRecording(false)
 {
     // 连接管理器信号
     connect(m_manager, &ExtCaptureManager::protocolAvailable,
             this, &ExtCaptureIntegration::onProtocolAvailable);
     connect(m_manager, &ExtCaptureManager::protocolUnavailable,
             this, &ExtCaptureIntegration::onProtocolUnavailable);
+    
+    // 设置多屏协调器的捕获管理器
+    m_multiScreenCoordinator->setCaptureManager(m_manager);
+    
+    // 连接多屏协调器信号
+    connect(m_multiScreenCoordinator, &MultiScreenCaptureCoordinator::compositeFrameReady,
+            this, &ExtCaptureIntegration::onMultiScreenFrameReady);
+    connect(m_multiScreenCoordinator, &MultiScreenCaptureCoordinator::captureStarted,
+            this, &ExtCaptureIntegration::onMultiScreenCaptureStarted);
+    connect(m_multiScreenCoordinator, &MultiScreenCaptureCoordinator::captureStopped,
+            this, &ExtCaptureIntegration::onMultiScreenCaptureStopped);
+    connect(m_multiScreenCoordinator, &MultiScreenCaptureCoordinator::error,
+            this, &ExtCaptureIntegration::onMultiScreenCaptureError);
 }
 
 ExtCaptureIntegration::~ExtCaptureIntegration()
@@ -91,20 +108,33 @@ bool ExtCaptureIntegration::startScreenRecording(QScreen *screen, bool includeCu
 
 void ExtCaptureIntegration::stopRecording()
 {
-    if (!m_recording) {
+    qCDebug(dsrApp) << "ExtCaptureIntegration::stopRecording: Stopping recording"
+                    << "single screen:" << m_recording << "multi screen:" << m_multiScreenRecording;
+
+    if (!m_recording && !m_multiScreenRecording) {
         return;
     }
 
-    m_recording = false;
+    // 停止单屏录制
+    if (m_recording) {
+        m_recording = false;
 
-    if (m_session) {
-        m_session->stop();
-        m_session->deleteLater();
-        m_session = nullptr;
+        if (m_session) {
+            m_session->stop();
+            m_session->deleteLater();
+            m_session = nullptr;
+        }
+
+        emit recordingStopped();
+        qCDebug(dsrApp) << "Single screen recording stopped";
     }
 
-    emit recordingStopped();
-    qDebug() << "Screen recording stopped";
+    // 停止多屏录制
+    if (m_multiScreenRecording) {
+        m_multiScreenCoordinator->stopMultiScreenCapture();
+        // m_multiScreenRecording 将在 onMultiScreenCaptureStopped 中设置为 false
+        qCDebug(dsrApp) << "Multi-screen recording stop requested";
+    }
 }
 
 bool ExtCaptureIntegration::captureFrame()
@@ -239,5 +269,89 @@ void ExtCaptureIntegration::onFrameFailed(const QString &reason)
 {
     qWarning() << "Frame capture failed:" << reason;
     emit error(QString("Frame capture failed: %1").arg(reason));
+}
+
+bool ExtCaptureIntegration::startMultiScreenRecording(const QList<QScreen*>& screens, bool includeCursor)
+{
+    qCWarning(dsrApp) << "ExtCaptureIntegration::startMultiScreenRecording: Starting with" 
+                      << screens.size() << "screens, includeCursor:" << includeCursor;
+
+    if (m_recording || m_multiScreenRecording) {
+        qCWarning(dsrApp) << "ExtCaptureIntegration: Already recording";
+        return false;
+    }
+
+    if (!isAvailable()) {
+        qCWarning(dsrApp) << "ExtCaptureIntegration: Protocol not available";
+        emit error("Protocol not available");
+        return false;
+    }
+
+    if (screens.isEmpty()) {
+        qCWarning(dsrApp) << "ExtCaptureIntegration: No screens provided";
+        emit error("No screens to record");
+        return false;
+    }
+
+    // 开始多屏捕获
+    if (!m_multiScreenCoordinator->startMultiScreenCapture(screens, includeCursor)) {
+        qCWarning(dsrApp) << "ExtCaptureIntegration: Failed to start multi-screen capture";
+        emit error("Failed to start multi-screen capture");
+        return false;
+    }
+
+    m_multiScreenRecording = true;
+    qCWarning(dsrApp) << "ExtCaptureIntegration: Multi-screen recording started";
+    
+    return true;
+}
+
+bool ExtCaptureIntegration::captureMultiScreenFrame()
+{
+    if (!m_multiScreenRecording) {
+        qCWarning(dsrApp) << "ExtCaptureIntegration: Not in multi-screen recording mode";
+        return false;
+    }
+
+    return m_multiScreenCoordinator->captureMultiScreenFrame();
+}
+
+bool ExtCaptureIntegration::isMultiScreenRecording() const
+{
+    return m_multiScreenRecording;
+}
+
+QList<QScreen*> ExtCaptureIntegration::getAvailableScreens() const
+{
+    return QGuiApplication::screens();
+}
+
+void ExtCaptureIntegration::onMultiScreenFrameReady(const QByteArray& compositeFrameData, 
+                                                   int width, int height, int stride, uint64_t timestamp)
+{
+    qCDebug(dsrApp) << "ExtCaptureIntegration::onMultiScreenFrameReady: Composite frame ready"
+                    << "size:" << compositeFrameData.size() << "dimensions:" << width << "x" << height;
+
+    emit multiScreenFrameReady(compositeFrameData, width, height, stride, timestamp);
+}
+
+void ExtCaptureIntegration::onMultiScreenCaptureStarted()
+{
+    qCDebug(dsrApp) << "ExtCaptureIntegration::onMultiScreenCaptureStarted";
+    emit recordingStarted();
+}
+
+void ExtCaptureIntegration::onMultiScreenCaptureStopped()
+{
+    qCDebug(dsrApp) << "ExtCaptureIntegration::onMultiScreenCaptureStopped";
+    m_multiScreenRecording = false;
+    emit recordingStopped();
+}
+
+void ExtCaptureIntegration::onMultiScreenCaptureError(const QString& message)
+{
+    qCWarning(dsrApp) << "ExtCaptureIntegration::onMultiScreenCaptureError:" << message;
+    m_multiScreenRecording = false;
+    emit error(QString("Multi-screen capture error: %1").arg(message));
 }
 

@@ -220,7 +220,24 @@ ExtCaptureFrame* ExtCaptureSession::createFrame()
         connect(d->currentFrame, &ExtCaptureFrame::ready,
                 this, [this]() {
                     qCWarning(dsrApp) << "ExtCaptureSession: Frame ready, emitting frameReady and resetting to Ready state";
+                    
+                    // 发射通用frameReady信号
                     emit frameReady(d->currentFrame);
+                    
+                    // 如果是DMA Buffer，同时发射dmaFrameReady信号
+                    if (d->currentFrame->isDmaBuffer()) {
+                        qCWarning(dsrApp) << "ExtCaptureSession: *** DMA BUFFER FRAME *** fd:" << d->currentFrame->getDmaBufferFd();
+                        
+                        const FrameData& frameData = d->currentFrame->frameData();
+                        emit dmaFrameReady(d->currentFrame->getDmaBufferFd(), 
+                                         d->currentFrame->getGbmBufferObject(),
+                                         frameData.size, 
+                                         frameData.dimensions.width(), 
+                                         frameData.dimensions.height(),
+                                         frameData.stride, 
+                                         frameData.timestamp);
+                    }
+                    
                     // 立即清理帧，不依赖于接收方的状态
                     if (d->currentFrame) {
                         delete d->currentFrame;  // 同步删除，避免时序问题
