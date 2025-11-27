@@ -227,7 +227,21 @@ HEADERS += main_window.h \
     camera/LPF_V4L2.h \
     camera/majorimageprocessingthread.h \
     utils/eventlogutils.h \
-    widgets/slider.h
+    widgets/slider.h \
+    ext-image-capture/manager/extcapturemanager.h \
+    ext-image-capture/manager/extoutputsourcemanager.h \
+    ext-image-capture/session/extcapturesession.h \
+    ext-image-capture/frame/extcaptureframe.h \
+    ext-image-capture/extcaptureintegration.h \
+    ext-image-capture/extcapturerecorder.h \
+    ext-image-capture/extcaptureframebuffer.h \
+    ext-image-capture/extcapturebridge.h \
+    protocols/ext-image-copy-capture/qwayland-ext-image-copy-capture-v1.h \
+    protocols/ext-image-copy-capture/wayland-ext-image-copy-capture-v1-client-protocol.h \
+    protocols/ext-image-copy-capture/qwayland-ext-image-capture-source-v1.h \
+    protocols/ext-image-copy-capture/wayland-ext-image-capture-source-v1-client-protocol.h \
+    protocols/ext-image-copy-capture/qwayland-ext-foreign-toplevel-list-v1.h \
+    protocols/ext-image-copy-capture/wayland-ext-foreign-toplevel-list-v1-client-protocol.h
 
 # Qt 版本特定的头文件
 lessThan(QT_MAJOR_VERSION, 6) {
@@ -305,7 +319,21 @@ SOURCES += main.cpp \
     camera/majorimageprocessingthread.cpp \
     camera/LPF_V4L2.c \
     utils/eventlogutils.cpp \
-    dbus_name.cpp
+    dbus_name.cpp \
+    ext-image-capture/manager/extcapturemanager.cpp \
+    ext-image-capture/manager/extoutputsourcemanager.cpp \
+    ext-image-capture/session/extcapturesession.cpp \
+    ext-image-capture/frame/extcaptureframe.cpp \
+    ext-image-capture/extcaptureintegration.cpp \
+    ext-image-capture/extcapturerecorder.cpp \
+    ext-image-capture/extcaptureframebuffer.cpp \
+    ext-image-capture/extcapturebridge.cpp \
+    protocols/ext-image-copy-capture/qwayland-ext-image-copy-capture-v1.cpp \
+    protocols/ext-image-copy-capture/wayland-ext-image-copy-capture-v1-protocol.c \
+    protocols/ext-image-copy-capture/qwayland-ext-image-capture-source-v1.cpp \
+    protocols/ext-image-copy-capture/wayland-ext-image-capture-source-v1-protocol.c \
+    protocols/ext-image-copy-capture/qwayland-ext-foreign-toplevel-list-v1.cpp \
+    protocols/ext-image-copy-capture/wayland-ext-foreign-toplevel-list-v1-protocol.c
 
 # Qt 版本特定的源文件
 lessThan(QT_MAJOR_VERSION, 6) {
