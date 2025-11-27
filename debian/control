@@ -59,8 +59,7 @@ Build-Depends: debhelper,
  libudev-dev,
  libprocps-dev | libproc2-dev,
  portaudio19-dev,
- libv4l-dev,
- libva-dev
+ libv4l-dev
 Standards-Version: 3.9.8
 Homepage: https://github.com/linuxdeepin/deepin-screen-recorder
 

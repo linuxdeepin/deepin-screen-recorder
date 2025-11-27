@@ -14,13 +14,8 @@
 #include <QThread>
 #include <QProcess>
 
-// DMA Buffer和硬件编码相关头文件
-#include <va/va.h>
-#include <va/va_drm.h>
-#include <libdrm/drm.h>
-#include <libdrm/drm_fourcc.h>
+// DMA Buffer相关头文件
 #include <gbm.h>
-#include <xf86drm.h>
 #include <fcntl.h>
 #include <unistd.h>
 #include <sys/mman.h>
@@ -158,9 +153,6 @@ private:
     bool startFFmpegProcess();
     bool startDmaFFmpegProcess();
     bool processDmaBufferFrame(int dmaBufferFd, void *gbmBo, int width, int height, int stride);
-    bool initializeVAAPI();
-    bool importDmaBufferToVASurface(int dmaBufferFd, int width, int height, int stride, VASurfaceID *surface);
-    bool encodeVASurface(VASurfaceID surface);
 
     ExtCaptureIntegration *m_extCapture;
     ExtCaptureFrameBuffer *m_frameBuffer;  // 保留用于兼容性
@@ -184,11 +176,7 @@ private:
     bool m_ffmpegStarted;
     QByteArray m_firstFrameBuffer;
     
-    // VAAPI/DMA Buffer硬件编码相关
-    VADisplay m_vaDisplay;
-    VAConfigID m_vaConfig;
-    VAContextID m_vaContext;
-    int m_drmFd;
+    // 首帧参数（用于DMA Buffer处理）
     int m_firstFrameWidth;
     int m_firstFrameHeight;
     int m_firstFrameStride;
