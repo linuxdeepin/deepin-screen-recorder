@@ -241,7 +241,9 @@ HEADERS += main_window.h \
     protocols/ext-image-copy-capture/qwayland-ext-image-capture-source-v1.h \
     protocols/ext-image-copy-capture/wayland-ext-image-capture-source-v1-client-protocol.h \
     protocols/ext-image-copy-capture/qwayland-ext-foreign-toplevel-list-v1.h \
-    protocols/ext-image-copy-capture/wayland-ext-foreign-toplevel-list-v1-client-protocol.h
+    protocols/ext-image-copy-capture/wayland-ext-foreign-toplevel-list-v1-client-protocol.h \
+    protocols/linux-dmabuf/qwayland-linux-dmabuf-unstable-v1.h \
+    protocols/linux-dmabuf/wayland-linux-dmabuf-unstable-v1-client-protocol.h
 
 # Qt 版本特定的头文件
 lessThan(QT_MAJOR_VERSION, 6) {
@@ -333,7 +335,9 @@ SOURCES += main.cpp \
     protocols/ext-image-copy-capture/qwayland-ext-image-capture-source-v1.cpp \
     protocols/ext-image-copy-capture/wayland-ext-image-capture-source-v1-protocol.c \
     protocols/ext-image-copy-capture/qwayland-ext-foreign-toplevel-list-v1.cpp \
-    protocols/ext-image-copy-capture/wayland-ext-foreign-toplevel-list-v1-protocol.c
+    protocols/ext-image-copy-capture/wayland-ext-foreign-toplevel-list-v1-protocol.c \
+    protocols/linux-dmabuf/qwayland-linux-dmabuf-unstable-v1.cpp \
+    protocols/linux-dmabuf/wayland-linux-dmabuf-unstable-v1-protocol.c
 
 # Qt 版本特定的源文件
 lessThan(QT_MAJOR_VERSION, 6) {
@@ -387,7 +391,10 @@ RESOURCES = ../assets/image/deepin-screen-recorder.qrc \
     # ../resources.qrc
 
 # Libraries
-LIBS += -lX11 -lXext -lXtst -lXfixes -lXcursor -ldl -lXinerama
+LIBS += -lX11 -lXext -lXtst -lXfixes -lXcursor -ldl -lXinerama -ldrm -lgbm -lva -lva-drm
+
+# 添加libdrm包含路径
+INCLUDEPATH += /usr/include/libdrm
 
 contains(DEFINES, OCR_SCROLL_FLAGE_ON) {
     LIBS += -lopencv_small
