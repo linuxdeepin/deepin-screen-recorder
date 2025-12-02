@@ -1433,11 +1433,13 @@ void SubToolWidget::initScrollLabel()
     m_scrollSubTool = new DLabel(this);
     QList<ToolButton *> btnList;
 
+    QButtonGroup *scrollBtnGroup = new QButtonGroup(this);
+    scrollBtnGroup->setExclusive(true);
+
     // AI 助手（滚动截图工具栏首位）
     m_aiAssistantScrollButton = new ToolButton();
     m_aiAssistantScrollButton->setIconSize(SMALL_TOOL_ICON_SIZE);
     m_aiAssistantScrollButton->setIcon(QIcon::fromTheme("ai_assistant"));
-    
     // 设置常驻的 AI Icon 角标
     QString scrollBadgePath = ":/icons/deepin/builtin/texts/ai_badge_32px.svg";
     m_aiAssistantScrollButton->setBadgeIcon(scrollBadgePath);
@@ -1446,6 +1448,7 @@ void SubToolWidget::initScrollLabel()
     Utils::setAccessibility(m_aiAssistantScrollButton, AC_SUBTOOLWIDGET_AI_ASSISTANT_BUTTON);
     m_aiAssistantScrollButton->setFixedSize(TOOL_BUTTON_SIZE);
     installTipHint(m_aiAssistantScrollButton, tr("AI Screenshot (A)"));
+    scrollBtnGroup->addButton(m_aiAssistantScrollButton);
     btnList.append(m_aiAssistantScrollButton);
     connect(m_aiAssistantScrollButton, &ToolButton::clicked, this, [=]{
         emit changeShotToolFunc("aiassistant");
