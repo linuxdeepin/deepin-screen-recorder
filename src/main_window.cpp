@@ -3679,7 +3679,7 @@ void MainWindow::saveScreenShotToFile()
 
 void MainWindow::onAiAssistantSelected(int func)
 {
-    qCWarning(dsrApp) << __FUNCTION__ << __LINE__ << "正在执行AI助手截图保存流程...";
+    qCWarning(dsrApp) << __FUNCTION__ << __LINE__ << "正在执行AI助手截图保存流程...:func"<<func;
     
     prepareScreenshot();
     
@@ -3740,7 +3740,7 @@ void MainWindow::onAiAssistantSelected(int func)
     case 3: /*Ask AI*/ mode = 4; break;
     default: mode = 1; break;
     }
-    
+    qCWarning(dsrApp) << __FUNCTION__ << __LINE__ << "正在执行AI助手截图保存流程...: mode:"<<mode;
     QDBusPendingReply<> reply;
     if (mode == 4) {
         reply = m_aiAssistantInterface->launchChatUploadImage(m_saveFileName);

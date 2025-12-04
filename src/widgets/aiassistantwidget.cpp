@@ -91,7 +91,7 @@ AIAssistantWidget::AIAssistantWidget(QWidget *parent) : DWidget(parent)
     hLayout->addWidget(m_translateButton);
     hLayout->addWidget(m_askAIButton);
     
-    connect(buttonGroup, QOverload<QAbstractButton *>::of(&QButtonGroup::buttonClicked), 
+    connect(buttonGroup, QOverload<int>::of(&QButtonGroup::idClicked),
             this, &AIAssistantWidget::onToolButtonClicked);
     
     QHBoxLayout *mainLayout = new QHBoxLayout(this);
@@ -107,13 +107,9 @@ QSize AIAssistantWidget::sizeHint() const
     return QSize(totalWidth, AIAssistantWidgetHeight);
 }
 
-void AIAssistantWidget::onToolButtonClicked()
+void AIAssistantWidget::onToolButtonClicked(int functionId)
 {
-    QButtonGroup *buttonGroup = qobject_cast<QButtonGroup *>(sender());
-    if (buttonGroup) {
-        int functionId = buttonGroup->checkedId();
-        AIFunction function = static_cast<AIFunction>(functionId);
-        qCDebug(dsrApp) << "AI function selected:" << function;
-        emit functionSelected(function);
-    }
+    AIFunction function = static_cast<AIFunction>(functionId);
+    qCWarning(dsrApp) << "AI function selected:" << function;
+    emit functionSelected(function);
 }

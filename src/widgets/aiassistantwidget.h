@@ -32,7 +32,7 @@ signals:
     void requestClose();
 
 private slots:
-    void onToolButtonClicked();
+    void onToolButtonClicked(int functionId);
 
 private:
     ToolButton *m_explainButton;
