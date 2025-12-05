@@ -1,3 +1,10 @@
+deepin-screen-recorder (6.6.16) unstable; urgency=medium
+
+  * fix: Improve AI Assistant button signal handling and add debug logging
+  * fix: Prevent sidebar from interfering with scroll screenshot auto-scroll
+
+ -- dengzhongyuan <dengzhongyuan@uniontech.com>  Fri, 05 Dec 2025 10:40:27 +0800
+
 deepin-screen-recorder (6.6.15) unstable; urgency=medium
 
   * fix: Enable mouse pass-through for main window in X11 recording mode
