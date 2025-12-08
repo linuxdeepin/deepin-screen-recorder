@@ -28,6 +28,9 @@
 #include <QFile>
 #include <QDir>
 #include <QStandardPaths>
+#if (QT_VERSION >= QT_VERSION_CHECK(6,0,0)) &&  defined(QT_QPA_PLATFORM_XCB)
+#define USE_X11_GETIMAGE 1
+#endif
 
 DWIDGET_USE_NAMESPACE
 
@@ -131,8 +134,18 @@ int main(int argc, char *argv[])
     qCDebug(dsrApp) << "Qt5: Inactive color group disabled.";
 #endif
 
+#ifdef USE_X11_GETIMAGE
+    // Qt6 X11 workaround: 禁用高 DPI 缩放
+    // Qt6 的 QScreen::grabWindow 在多屏+高DPI+非对齐布局的 X11 环境下存在 bug
+    // 禁用 DPI 缩放后，坐标系和 Qt5 一致，配合 XGetImage 可以正常工作
+    if (!isWaylandProtocol()) {
+        qputenv("QT_ENABLE_HIGHDPI_SCALING", "0");
+        qCDebug(dsrApp) << "Qt6 X11: High DPI scaling disabled (workaround for grabWindow bug).";
+    }
+#else
     QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
     qCDebug(dsrApp) << "High DPI scaling enabled.";
+#endif
 
     // 平板模式
     // Utils::isTabletEnvironment = DGuiApplicationHelper::isTabletEnvironment();

@@ -6,7 +6,8 @@ build/
 *.qm
 *.pro.user*
 
-# AI config
+AI config
 .cursor/
 .cursorindexingignore
 .specstory/
+x11_paint_demo/

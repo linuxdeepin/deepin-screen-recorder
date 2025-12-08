@@ -15,8 +15,15 @@
 #include <QScreen>
 #include <QGuiApplication>
 #include <QPainter>
+#include <QImage>
 #include <algorithm>
 #include <QMap>
+
+// X11 headers for XGetImage workaround
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+#include <X11/Xlib.h>
+#include <X11/Xutil.h>
+#endif
 
 ScreenGrabber::ScreenGrabber(QObject *parent) : QObject(parent)
 {
@@ -103,6 +110,14 @@ QPixmap ScreenGrabber::grabWaylandScreenshot(bool &ok, const QRect &rect, const 
 QPixmap ScreenGrabber::grabX11Screenshot(bool &ok, const QRect &rect, const qreal devicePixelRatio)
 {
     qCDebug(dsrApp) << "Grabbing X11 screenshot for rect:" << rect;
+
+#ifdef USE_X11_GETIMAGE
+    // Qt6 workaround: 使用 XGetImage 直接抓取 X11 根窗口
+    // Qt6 的 QScreen::grabWindow 在多屏+高DPI+非对齐布局下存在 bug
+    qCDebug(dsrApp) << "Qt6: Using XGetImage workaround for X11 screenshot";
+    return grabWithXGetImage(ok, rect);
+#else
+    // Qt5: 使用原有逻辑
     const QList<QScreen*> intersectingScreens = findIntersectingScreens(rect);
     
     if (intersectingScreens.isEmpty()) {
@@ -117,6 +132,7 @@ QPixmap ScreenGrabber::grabX11Screenshot(bool &ok, const QRect &rect, const qrea
     
     qCDebug(dsrApp) << "Multiple intersecting screens found, grabbing multiple screens.";
     return grabMultipleScreens(ok, rect, intersectingScreens, devicePixelRatio);
+#endif
 }
 
 /**
@@ -538,3 +554,85 @@ QPixmap ScreenGrabber::grabMultipleScreens(bool &ok, const QRect &rect, const QL
     ok = true;
     return result;
 }
+
+#ifdef USE_X11_GETIMAGE
+/**
+ * @brief Qt6 workaround: 使用 XGetImage 直接抓取 X11 根窗口
+ * @param ok Output parameter indicating screenshot success
+ * @param rect The rectangular area to capture (in physical coordinates, since DPI scaling is disabled)
+ * @return The captured desktop image
+ * 
+ * Qt6 的 QScreen::grabWindow 在多屏+高DPI+非对齐布局的 X11 环境下存在 bug，
+ * 返回的整屏截图是花屏/错乱的。此方法绕过 Qt6 的抓图 API，直接使用 X11 原生 API。
+ */
+QPixmap ScreenGrabber::grabWithXGetImage(bool &ok, const QRect &rect)
+{
+    qCDebug(dsrApp) << "[XGetImage] Starting X11 screenshot for rect:" << rect;
+
+    Display *dpy = XOpenDisplay(nullptr);
+    if (!dpy) {
+        qCWarning(dsrApp) << "[XGetImage] Failed to open X11 Display";
+        ok = false;
+        return QPixmap();
+    }
+
+    Window root = DefaultRootWindow(dpy);
+
+    // 获取根窗口尺寸
+    XWindowAttributes rootAttr;
+    XGetWindowAttributes(dpy, root, &rootAttr);
+    qCDebug(dsrApp) << "[XGetImage] X11 root window size:" << rootAttr.width << "x" << rootAttr.height;
+
+    // 抓取整个根窗口
+    XImage *ximg = XGetImage(dpy, root, 0, 0, rootAttr.width, rootAttr.height, AllPlanes, ZPixmap);
+    if (!ximg) {
+        qCWarning(dsrApp) << "[XGetImage] XGetImage returned NULL";
+        XCloseDisplay(dpy);
+        ok = false;
+        return QPixmap();
+    }
+
+    qCDebug(dsrApp) << "[XGetImage] XImage captured, size:" << ximg->width << "x" << ximg->height
+                    << "depth:" << ximg->depth << "bits_per_pixel:" << ximg->bits_per_pixel;
+
+    // 将 XImage 转换为 QImage
+    QImage qimg(ximg->width, ximg->height, QImage::Format_RGB32);
+    for (int row = 0; row < ximg->height; ++row) {
+        for (int col = 0; col < ximg->width; ++col) {
+            unsigned long pixel = XGetPixel(ximg, col, row);
+            int r = (pixel >> 16) & 0xFF;
+            int g = (pixel >> 8) & 0xFF;
+            int b = pixel & 0xFF;
+            qimg.setPixel(col, row, qRgb(r, g, b));
+        }
+    }
+
+    XDestroyImage(ximg);
+    XCloseDisplay(dpy);
+
+    // 转换为 QPixmap
+    QPixmap fullPixmap = QPixmap::fromImage(qimg);
+    qCDebug(dsrApp) << "[XGetImage] Full pixmap size:" << fullPixmap.size();
+
+    // 如果请求的是整个桌面，直接返回
+    if (rect.isNull() || rect == QRect(0, 0, rootAttr.width, rootAttr.height)) {
+        qCDebug(dsrApp) << "[XGetImage] Returning full desktop screenshot";
+        ok = true;
+        return fullPixmap;
+    }
+
+    // 裁剪请求的区域
+    QRect cropRect = rect.intersected(QRect(0, 0, rootAttr.width, rootAttr.height));
+    if (cropRect.isEmpty()) {
+        qCWarning(dsrApp) << "[XGetImage] Crop rect is empty or outside root window";
+        ok = false;
+        return QPixmap();
+    }
+
+    QPixmap result = fullPixmap.copy(cropRect);
+    qCDebug(dsrApp) << "[XGetImage] Cropped result size:" << result.size();
+
+    ok = !result.isNull();
+    return result;
+}
+#endif
