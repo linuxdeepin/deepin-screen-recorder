@@ -6983,6 +6983,11 @@ void MainWindow::startCountdown()
     recordProcess.setRecordInfo(recordRect, selectAreaName);
     recordProcess.setFullScreenRecord(m_isFullScreenRecord);
 
+    QPoint toolBarCenter;
+    if (m_toolBar) {
+        toolBarCenter = m_toolBar->geometry().center();
+    }
+
     resetCursor();
     hideAllWidget();
 
@@ -7520,52 +7525,27 @@ void MainWindow::onTreelandSwitchToRecordUI()
         scr = this->geometry();
     }
 #endif
-    // 应用侧绘制全屏选区（非模态），并缓存当前截图选区以便回切
-    if (recordWidth > 0 && recordHeight > 0) {
-        m_lastTreelandShotRegion = QRect(recordX, recordY, recordWidth, recordHeight);
-        m_hasLastTreelandShotRegion = true;
-    }
-    // Treeland 录屏模式下使用全屏区域（虚拟桌面，包含 dock 栏）
+    // Treeland 录屏只需要可点工具栏，跳过全屏透明区域窗口，避免遮挡输入
+    // 仍然把录屏区域设为全屏，供后续倒计时/录制参数使用
     recordX = scr.x();
     recordY = scr.y();
     recordWidth = scr.width();
     recordHeight = scr.height();
-    if (!m_pRecorderRegion) {
-        m_pRecorderRegion = new RecorderRegionShow();
-        m_pRecorderRegion->setDevcieName(m_devnumMonitor ? m_devnumMonitor->availableCamera() : QString());
-    }
-    // 在 Treeland 模式下，设置区域框选窗口为全透明无边框窗口
-    // 保留原有标志（WindowDoesNotAcceptFocus, BypassWindowManagerHint），并添加置顶、无边框和输入穿透标志
-    Qt::WindowFlags flags = m_pRecorderRegion->windowFlags();
-    flags |= Qt::WindowStaysOnTopHint | Qt::FramelessWindowHint | Qt::WindowTransparentForInput;
-    m_pRecorderRegion->setWindowFlags(flags);
-    // TreeLand模式下使用全屏大小，不需要边框偏移
-    QSize windowSize(recordWidth, recordHeight);
-    QPoint windowPos(scr.x(), scr.y());
-    m_pRecorderRegion->setFixedSize(windowSize);
-    m_pRecorderRegion->move(windowPos);
-    m_pRecorderRegion->show();
-    m_pRecorderRegion->raise();
 
-    // 在 Treeland 模式下，事件穿透由 RecorderRegionShow 的 showEvent 和 resizeEvent 处理
-    qCWarning(dsrApp) << "[treeland] region show geom:" << m_pRecorderRegion->geometry();
     const int centerX = scr.x() + scr.width() / 2 - m_toolBar->width() / 2;
     const int centerY = scr.y() + scr.height() / 2 - m_toolBar->height() / 2;
     m_toolBar->setAttribute(Qt::WA_ShowWithoutActivating, true);
     m_toolBar->setFocusPolicy(Qt::NoFocus);
-    // 提升层级：保持独立顶层，并设置置顶标志
-    m_toolBar->setWindowFlags(m_toolBar->windowFlags() | Qt::Tool | Qt::WindowStaysOnTopHint | Qt::FramelessWindowHint);
-    // 将工具栏挂到边框窗口之上，避免被覆盖
-    if (m_pRecorderRegion && m_pRecorderRegion->windowHandle() && m_toolBar->windowHandle()) {
-        qCWarning(dsrApp) << "[treeland] toolbar reparent -> recorderRegion";
-        m_toolBar->windowHandle()->setParent(m_pRecorderRegion->windowHandle());
+    m_toolBar->setWindowFlags(Qt::FramelessWindowHint | Qt::Tool | Qt::WindowStaysOnTopHint | Qt::BypassWindowManagerHint);
+    if (m_toolBar->windowHandle()) {
+        m_toolBar->windowHandle()->setParent(nullptr);
     }
     m_toolBar->hide();
     m_toolBar->showWidget();
     m_toolBar->adjustSize();
     m_toolBar->showAt(QPoint(centerX, centerY));
+    m_toolBar->raise();
     m_toolBar->showWidget();
-    qCWarning(dsrApp) << "[treeland] toolbar showAt center:" << centerX << centerY << ", geom:" << m_toolBar->geometry();
     // 置顶并确保显示（延迟一拍以等待几何稳定）
     QTimer::singleShot(0, this, [this, centerX, centerY]() {
         if (!m_toolBar)

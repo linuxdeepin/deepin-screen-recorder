@@ -190,6 +190,8 @@ public:
         return m_session;
     }
 
+    void destroySession(); // safe destroy & clear
+
     void selectSource(uint32_t sourceHint, bool freeze, bool withCursor, ::wl_surface *mask);
     TreelandCaptureFrame *ensureFrame();
     TreelandCaptureSession *ensureSession();

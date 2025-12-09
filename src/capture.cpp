@@ -61,7 +61,9 @@ TreelandCaptureManager::~TreelandCaptureManager()
         m_context = nullptr;
     }
     // 只有在 Wayland 连接仍然有效时才调用 destroy()，避免崩溃
-    if (isActive()) {
+    if (QCoreApplication::closingDown()) {
+        qCWarning(dsrApp) << "Skip TreelandCaptureManager::destroy because app closing down";
+    } else if (isActive() && waylandDisplay()) {
         destroy();
         // 销毁 Wayland 扩展
     } else {
@@ -178,14 +180,19 @@ TreelandCaptureContext::~TreelandCaptureContext()
         m_frame = nullptr;
     }
     // 删除帧对象
-    if (m_session) {
-        qCDebug(dsrApp) << "Log: TreelandCaptureContext::~TreelandCaptureContext - Deleting session object.";
-        delete m_session;
-        m_session = nullptr;
-    }
+    destroySession();
     // 删除会话对象
-    // destroy() 方法内部已经检查了 isInitialized()，所以可以安全调用
-    destroy();
+    // 在应用关闭阶段避免访问已销毁的 Wayland integration
+    if (QCoreApplication::closingDown()) {
+        qCWarning(dsrApp) << "Skip TreelandCaptureContext::destroy because app closing down";
+    } else {
+        auto manager = TreelandCaptureManager::instance();
+        if (manager && manager->isActive() && isInitialized()) {
+            destroy();
+        } else {
+            qCWarning(dsrApp) << "Skip TreelandCaptureContext::destroy because not initialized or manager inactive";
+        }
+    }
     // 销毁 Wayland 上下文
     qCDebug(dsrApp) << "Exit: TreelandCaptureContext::~TreelandCaptureContext";
 }
@@ -222,6 +229,26 @@ TreelandCaptureSession *TreelandCaptureContext::ensureSession()
     // 发出会话改变信号
     qCDebug(dsrApp) << "Exit: TreelandCaptureContext::ensureSession - New session:" << m_session;
     return m_session;
+}
+
+void TreelandCaptureContext::destroySession()
+{
+    if (m_session) {
+        qCDebug(dsrApp) << "Log: TreelandCaptureContext::destroySession - destroying session object.";
+        if (QCoreApplication::closingDown()) {
+            qCWarning(dsrApp) << "Skip session destroy because app closing down";
+        } else {
+            auto manager = TreelandCaptureManager::instance();
+            if (manager && manager->isActive() && m_session->isInitialized()) {
+                m_session->destroy();
+            } else {
+                qCWarning(dsrApp) << "Skip session destroy because not initialized or manager inactive";
+            }
+        }
+        delete m_session;
+        m_session = nullptr;
+        Q_EMIT sessionChanged();
+    }
 }
 
 TreelandCaptureFrame::TreelandCaptureFrame(::treeland_capture_frame_v1 *object, QObject *parent)
