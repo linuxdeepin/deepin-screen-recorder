@@ -7228,17 +7228,10 @@ void MainWindow::confirm()
         return;
     }
 
-    //TODO: treeland适配
-    if (Utils::isTreelandMode) {
+    if (!isHideToolBar) {
         saveScreenShotToClipboardOnly();
-        //onFinishClicked();
     } else {
-       //截图,滚动截图
-        if (!isHideToolBar) {
-            saveScreenShotToClipboardOnly();
-        } else {
-            saveScreenShot();
-        }
+        saveScreenShot();
     }
 }
 
@@ -7298,7 +7291,20 @@ void MainWindow::initializeCapture()
         return;
     }
 
+    // 检查窗口句柄是否可用
+    if (!windowHandle() || !windowHandle()->handle()) {
+        qCWarning(dsrApp) << "Window handle not available, cannot initialize capture";
+        // 如果窗口句柄还未创建，延迟初始化
+        // 等待窗口创建完成后再初始化
+        QTimer::singleShot(100, this, &MainWindow::initializeCapture);
+        return;
+    }
+
     auto waylandWindow = static_cast<QtWaylandClient::QWaylandWindow *>(windowHandle()->handle());
+    if (!waylandWindow) {
+        qCWarning(dsrApp) << "Failed to get wayland window, cannot initialize capture";
+        return;
+    }
 
     captureContext->selectSource(
             TreelandCaptureContext::source_type_region,
