@@ -6584,32 +6584,37 @@ void MainWindow::shotCurrentImg()
         eventloop1.exec();
 
         if (m_isShapesWidgetExist) {
+            // 强制结束文本编辑，提交内容并关闭输入框
+            m_shapesWidget->setAllTextEditReadOnly();
+            m_shapesWidget->clearSelected();
             qCInfo(dsrApp) << __FUNCTION__ << __LINE__ << "隐藏截图编辑界面！";
             m_shapesWidget->hide();
         }
         m_sizeTips->hide();
+        // Treeland: 直接使用 paintImage() 获取 treeland 帧并叠加文字，避免屏幕抓取为空
+        if (Utils::isTreelandMode) {
+            m_resultPixmap = paintImage();
+        } else {
+            shotFullScreen();
+            // 修正方案：对逻辑坐标进行相同的边界调整，然后转换为物理坐标
+            int adjustedX = std::max(recordX, 1);
+            int adjustedY = std::max(recordY, 1);
+            int adjustedWidth = std::min(recordWidth - 2, m_backgroundRect.width() - 2);
+            int adjustedHeight = std::min(recordHeight - 1, m_backgroundRect.height() - 2);
 
-        shotFullScreen();
-        // qCDebug(dsrApp) << recordX << "," << recordY << "," << recordWidth << "," << recordHeight << m_resultPixmap.rect() <<
-        // m_pixelRatio;
-        // 修正方案：对逻辑坐标进行相同的边界调整，然后转换为物理坐标
-        int adjustedX = std::max(recordX, 1);
-        int adjustedY = std::max(recordY, 1);
-        int adjustedWidth = std::min(recordWidth - 2, m_backgroundRect.width() - 2);
-        int adjustedHeight = std::min(recordHeight - 1, m_backgroundRect.height() - 2);
-        
-        QRect target(static_cast<int>(adjustedX * m_pixelRatio),
-                     static_cast<int>(adjustedY * m_pixelRatio),
-                     static_cast<int>(adjustedWidth * m_pixelRatio),
-                     static_cast<int>(adjustedHeight * m_pixelRatio));
-        
-        qCWarning(dsrApp) << "=== 截图区域计算调试 (onExit) 修正后 ===";
-        qCWarning(dsrApp) << "原始区域: x=" << recordX << "y=" << recordY << "width=" << recordWidth << "height=" << recordHeight;
-        qCWarning(dsrApp) << "调整后逻辑坐标: x=" << adjustedX << "y=" << adjustedY << "width=" << adjustedWidth << "height=" << adjustedHeight;
-        qCWarning(dsrApp) << "物理像素target:" << target;
-        qCWarning(dsrApp) << "截图右边界:" << (target.x() + target.width()) << "截图下边界:" << (target.y() + target.height());
+            QRect target(static_cast<int>(adjustedX * m_pixelRatio),
+                         static_cast<int>(adjustedY * m_pixelRatio),
+                         static_cast<int>(adjustedWidth * m_pixelRatio),
+                         static_cast<int>(adjustedHeight * m_pixelRatio));
 
-        m_resultPixmap = m_resultPixmap.copy(target);
+            qCWarning(dsrApp) << "=== 截图区域计算调试 (onExit) 修正后 ===";
+            qCWarning(dsrApp) << "原始区域: x=" << recordX << "y=" << recordY << "width=" << recordWidth << "height=" << recordHeight;
+            qCWarning(dsrApp) << "调整后逻辑坐标: x=" << adjustedX << "y=" << adjustedY << "width=" << adjustedWidth << "height=" << adjustedHeight;
+            qCWarning(dsrApp) << "物理像素target:" << target;
+            qCWarning(dsrApp) << "截图右边界:" << (target.x() + target.width()) << "截图下边界:" << (target.y() + target.height());
+
+            m_resultPixmap = m_resultPixmap.copy(target);
+        }
     } else {
         m_resultPixmap = paintImage();
     }
