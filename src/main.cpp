@@ -28,9 +28,6 @@
 #include <QFile>
 #include <QDir>
 #include <QStandardPaths>
-#if (QT_VERSION >= QT_VERSION_CHECK(6,0,0)) &&  defined(QT_QPA_PLATFORM_XCB)
-#define USE_X11_GETIMAGE 1
-#endif
 
 DWIDGET_USE_NAMESPACE
 
@@ -61,6 +58,22 @@ static bool isTreelandEnvironment()
     bool isTreeland = e.value(QStringLiteral("DDE_CURRENT_COMPOSITOR")) == QStringLiteral("TreeLand");
     qCDebug(dsrApp) << "DDE_CURRENT_COMPOSITOR:" << e.value(QStringLiteral("DDE_CURRENT_COMPOSITOR")) << ", isTreeland:" << isTreeland;
     return isTreeland;
+}
+
+static bool initQt6XcbEnv()
+{
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+    bool result = false;
+    if (QGuiApplication::instance()) {
+        const QString platformName = QGuiApplication::platformName().toLower();
+        result = platformName == QLatin1String("xcb");
+    } else {
+        const QString platformEnv = qEnvironmentVariable("QT_QPA_PLATFORM").toLower();
+        result = platformEnv.contains(QLatin1String("xcb"));
+    }
+    return result;
+#endif
+    return false;
 }
 
 static bool CheckFFmpegEnv()
@@ -134,18 +147,16 @@ int main(int argc, char *argv[])
     qCDebug(dsrApp) << "Qt5: Inactive color group disabled.";
 #endif
 
-#ifdef USE_X11_GETIMAGE
-    // Qt6 X11 workaround: 禁用高 DPI 缩放
-    // Qt6 的 QScreen::grabWindow 在多屏+高DPI+非对齐布局的 X11 环境下存在 bug
-    // 禁用 DPI 缩放后，坐标系和 Qt5 一致，配合 XGetImage 可以正常工作
-    if (!isWaylandProtocol()) {
+
+    Utils::isQt6XcbEnv = initQt6XcbEnv();
+    // Qt6: 仅在 X11(xcb) 环境下启用 XGetImage 相关的 DPI 处理
+    if (Utils::isQt6XcbEnv) {
         qputenv("QT_ENABLE_HIGHDPI_SCALING", "0");
-        qCDebug(dsrApp) << "Qt6 X11: High DPI scaling disabled (workaround for grabWindow bug).";
+        qCWarning(dsrApp) << "Qt6 with X11: High DPI scaling disabled (workaround for grabWindow bug).";
+    } else {
+        QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
+        qCDebug(dsrApp) << "High DPI scaling enabled (non-XCB environment).";
     }
-#else
-    QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
-    qCDebug(dsrApp) << "High DPI scaling enabled.";
-#endif
 
     // 平板模式
     // Utils::isTabletEnvironment = DGuiApplicationHelper::isTabletEnvironment();

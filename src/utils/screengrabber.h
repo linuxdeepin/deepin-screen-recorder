@@ -10,9 +10,6 @@
 #include <QPixmap>
 #include <QRect>
 #include <QList>
-#if (QT_VERSION >= QT_VERSION_CHECK(6,0,0)) &&  defined(QT_QPA_PLATFORM_XCB)
-#define USE_X11_GETIMAGE 1
-#endif
 class QScreen;
 
 class ScreenGrabber : public QObject
@@ -31,8 +28,8 @@ private:
     QPixmap grabMultipleScreens(bool &ok, const QRect &rect, const QList<QScreen*> &screens, const qreal devicePixelRatio);
     QPixmap grabScreenFragment(QScreen *screen, const QRect &intersection, const qreal devicePixelRatio);
 
-#ifdef USE_X11_GETIMAGE
-    // Qt6 X11 workaround: 使用 XGetImage 绕过 grabWindow 的 bug
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+    // Qt6 X11 workaround: 使用 XGetImage 绕过 grabWindow 的 bug（运行时再判断是否 XCB）
     QPixmap grabWithXGetImage(bool &ok, const QRect &rect);
 #endif
 };

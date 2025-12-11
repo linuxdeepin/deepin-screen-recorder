@@ -111,12 +111,11 @@ QPixmap ScreenGrabber::grabX11Screenshot(bool &ok, const QRect &rect, const qrea
 {
     qCDebug(dsrApp) << "Grabbing X11 screenshot for rect:" << rect;
 
-#ifdef USE_X11_GETIMAGE
-    // Qt6 workaround: 使用 XGetImage 直接抓取 X11 根窗口
-    // Qt6 的 QScreen::grabWindow 在多屏+高DPI+非对齐布局下存在 bug
-    qCDebug(dsrApp) << "Qt6: Using XGetImage workaround for X11 screenshot";
-    return grabWithXGetImage(ok, rect);
-#else
+    if (Utils::isQt6XcbEnv) {
+        qCDebug(dsrApp) << "Qt6 + XCB detected: Using XGetImage workaround for X11 screenshot";
+        return grabWithXGetImage(ok, rect);
+    }
+
     // Qt5: 使用原有逻辑
     const QList<QScreen*> intersectingScreens = findIntersectingScreens(rect);
     
@@ -132,7 +131,6 @@ QPixmap ScreenGrabber::grabX11Screenshot(bool &ok, const QRect &rect, const qrea
     
     qCDebug(dsrApp) << "Multiple intersecting screens found, grabbing multiple screens.";
     return grabMultipleScreens(ok, rect, intersectingScreens, devicePixelRatio);
-#endif
 }
 
 /**
@@ -555,7 +553,7 @@ QPixmap ScreenGrabber::grabMultipleScreens(bool &ok, const QRect &rect, const QL
     return result;
 }
 
-#ifdef USE_X11_GETIMAGE
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
 /**
  * @brief Qt6 workaround: 使用 XGetImage 直接抓取 X11 根窗口
  * @param ok Output parameter indicating screenshot success

@@ -60,6 +60,7 @@ bool Utils::isWaylandMode = false;
 bool Utils::isTreelandMode = false;
 
 bool Utils::forceResetScale = false;
+bool Utils::isQt6XcbEnv = false;
 
 bool Utils::isRootUser = false;
 qreal Utils::pixelRatio = 0.0;
