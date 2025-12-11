@@ -1,3 +1,9 @@
+deepin-screen-recorder (6.6.18) unstable; urgency=medium
+
+  *  fix: Refactor X11 screenshot handling for Qt6 compatibility 
+
+ -- dengzhongyuan <dengzhongyuan@duniontech.com>  Thu, 11 Dec 2025 19:11:45 +0800
+
 deepin-screen-recorder (6.6.17) unstable; urgency=medium
 
   * fix: Implement X11 screenshot workaround for Qt6
