@@ -1,3 +1,11 @@
+deepin-screen-recorder (6.6.17) unstable; urgency=medium
+
+  * fix: Implement X11 screenshot workaround for Qt6
+  * fix: Enhance screenshot functionality and improve capture initialization checks
+  * fix: Enhance destruction safety in capture management during application shutdown 
+
+ -- dengzhongyuan <dengzhongyuan@uniontech.com>  Thu, 11 Dec 2025 15:07:01 +0800
+
 deepin-screen-recorder (6.6.16) unstable; urgency=medium
 
   * fix: Improve AI Assistant button signal handling and add debug logging
