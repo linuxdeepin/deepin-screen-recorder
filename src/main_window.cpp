@@ -367,8 +367,6 @@ void MainWindow::initTreelandtAttributes() //initTreelandtAttributes
     m_backgroundRect = QRect(m_backgroundRect.topLeft() / m_pixelRatio, m_backgroundRect.size());
     move(m_backgroundRect.topLeft() * m_pixelRatio);
     this->setFixedSize(m_backgroundRect.size());
-
-    initBackground();
     initShortcut();
     qCDebug(dsrApp) << "Attributes initialization completed.";
 }
