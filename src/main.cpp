@@ -149,14 +149,7 @@ int main(int argc, char *argv[])
 
 
     Utils::isQt6XcbEnv = initQt6XcbEnv();
-    // Qt6: 仅在 X11(xcb) 环境下启用 XGetImage 相关的 DPI 处理
-    if (Utils::isQt6XcbEnv) {
-        qputenv("QT_ENABLE_HIGHDPI_SCALING", "0");
-        qCWarning(dsrApp) << "Qt6 with X11: High DPI scaling disabled (workaround for grabWindow bug).";
-    } else {
-        QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
-        qCDebug(dsrApp) << "High DPI scaling enabled (non-XCB environment).";
-    }
+    QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
 
     // 平板模式
     // Utils::isTabletEnvironment = DGuiApplicationHelper::isTabletEnvironment();

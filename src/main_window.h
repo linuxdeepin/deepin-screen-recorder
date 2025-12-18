@@ -298,6 +298,7 @@ public:
      */
     void initMainWindow();
     void initAttributes();
+    void forceX11WindowPosition();  // 强制设置X11窗口位置到(0,0)
     void initResource();
     void initScreenShot();
     void initScreenRecorder();

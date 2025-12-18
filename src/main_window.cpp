@@ -71,6 +71,7 @@ extern "C" {
 #endif
 
 #include <QtConcurrent>
+#include <X11/Xlib.h>
 #include <X11/Xcursor/Xcursor.h>
 #include <stdio.h>
 #include <fcntl.h>
@@ -192,7 +193,7 @@ void MainWindow::initMainWindow()
     
     setDragCursor();
     // FIXME(205567 / 307017): temporarily fix, we manually reset scale factor to 1
-    if (Utils::forceResetScale) {
+    if (Utils::forceResetScale && !Utils::isQt6XcbEnv) {
         m_pixelRatio = 1.0;
         qCDebug(dsrApp) << "Force resetting scale factor to 1.0";
     } else {
@@ -272,17 +273,20 @@ void MainWindow::initMainWindow()
         m_screenInfo.append(screenInfo);
     }
 
-    m_screenSize.setWidth(m_screenInfo[0].x + m_screenInfo[0].width);
-    m_screenSize.setHeight(m_screenInfo[0].y + m_screenInfo[0].height);
-
-    // 通过每个屏幕， 右下角的坐标来计算屏幕总大小。
-    for (int i = 1; i < m_screenInfo.size(); ++i) {
-        if ((m_screenInfo[i].height + m_screenInfo[i].y) > m_screenSize.height())
-            m_screenSize.setHeight(m_screenInfo[i].height + m_screenInfo[i].y);
-
-        if ((m_screenInfo[i].width + m_screenInfo[i].x) > m_screenSize.width())
-            m_screenSize.setWidth(m_screenInfo[i].width + m_screenInfo[i].x);
+    // 使用逻辑坐标计算虚拟桌面尺寸
+    int minX = INT_MAX, minY = INT_MAX;
+    int maxX = INT_MIN, maxY = INT_MIN;
+    
+    for (auto screen : screenList) {
+        QRect geom = screen->geometry();
+        minX = qMin(minX, geom.x());
+        minY = qMin(minY, geom.y());
+        maxX = qMax(maxX, geom.x() + geom.width());
+        maxY = qMax(maxY, geom.y() + geom.height());
     }
+    
+    m_screenSize.setWidth(maxX - minX);
+    m_screenSize.setHeight(maxY - minY);
 
     qCDebug(dsrApp) << "屏幕总大小: " << m_screenSize;
     if (m_screenInfo.size() > 1) {
@@ -395,11 +399,6 @@ void MainWindow::initAttributes()
         setWindowTitle(tr("Screen Capture"));
         m_keyButtonList.clear();
         m_isZhaoxin = Utils::checkCpuIsZhaoxin();
-
-        rootWindowRect = QRect(0,
-                               0,
-                               static_cast<int>(qRound(m_screenSize.width() / m_pixelRatio)),
-                               static_cast<int>(qRound(m_screenSize.height() / m_pixelRatio)));
         screenRect = QRect(screenRect.topLeft() / m_pixelRatio, screenRect.size());
         qCDebug(dsrApp) << __FUNCTION__ << __LINE__ << "screen size" << rootWindowRect;
 
@@ -521,15 +520,46 @@ void MainWindow::initAttributes()
         m_zoomIndicator->hideMagnifier();
 
         connect(m_toolBar, &ToolBar::currentFunctionToMain, this, &MainWindow::changeFunctionButton);
-        m_backgroundRect = rootWindowRect;
-        m_backgroundRect = QRect(m_backgroundRect.topLeft() / m_pixelRatio, m_backgroundRect.size());
-        move(m_backgroundRect.topLeft() * m_pixelRatio);
+        
+        // 在 Qt6+XCB 环境下的处理
+        // Qt6 的 High DPI 缩放：setFixedSize() 接受逻辑坐标，Qt 内部会乘以 DPR 转换为物理像素
+        // 所以需要将 X11 物理大小除以 DPR 得到正确的逻辑大小
+        if (Utils::isQt6XcbEnv) {
+            // 确保窗口标志包含 X11BypassWindowManagerHint，绕过窗口管理器的位置干预
+            setWindowFlags(Qt::FramelessWindowHint | Qt::X11BypassWindowManagerHint);
+            QSize x11RootSize = ScreenGrabber::getX11RootWindowSize();
+            if (!x11RootSize.isEmpty()) {
+                // 详细输出每个屏幕的物理布局
+                QList<QScreen *> screens = qApp->screens();
+                // rootWindowRect 保存物理大小（用于截图时的 rect 参数）
+                rootWindowRect = QRect(0, 0, x11RootSize.width(), x11RootSize.height());
+                
+                // m_backgroundRect 使用逻辑大小（用于 widget 大小设置）
+                // 逻辑大小 = 物理大小 / DPR
+                int logicalWidth = static_cast<int>(x11RootSize.width() / m_pixelRatio);
+                int logicalHeight = static_cast<int>(x11RootSize.height() / m_pixelRatio);
+                m_backgroundRect = QRect(0, 0, logicalWidth, logicalHeight);
+            } else {
+                m_backgroundRect = rootWindowRect;
+            }
+        } else {
+            m_backgroundRect = rootWindowRect;
+        }
+        
+        
+        // 非 Qt6+XCB 环境下的原有逻辑
+        if (!Utils::isQt6XcbEnv) {
+            m_backgroundRect = QRect(m_backgroundRect.topLeft() / m_pixelRatio, m_backgroundRect.size());
+        }
+        
+        
+        move(m_backgroundRect.topLeft());
         this->setFixedSize(m_backgroundRect.size());
 
         initBackground();
         initShortcut();
 
-        if (m_screenCount > 1 && m_pixelRatio > 1) {
+        if (!Utils::isQt6XcbEnv && m_screenCount > 1 && m_pixelRatio > 1) {
             if (m_isVertical) {
                 int heightAfterFirst = 0;
                 for (int index = 1; index < m_screenCount; ++index) {
@@ -545,11 +575,19 @@ void MainWindow::initAttributes()
                 for (int index = 1; index < m_screenCount; ++index) {
                     widthAfterFirst += m_screenInfo[index].width;
                 }
-                if (m_screenInfo[0].width < widthAfterFirst)
+                if (m_screenInfo[0].width < widthAfterFirst) {
                     // QT bug，这里暂时做特殊处理
                     // 多屏放缩情况下，小屏在前，整体需要偏移一定距离
                     this->move(m_screenInfo[0].width - static_cast<int>(m_screenInfo[0].width / m_pixelRatio), 0);
+                    qCWarning(dsrApp) << "[GeomTrace][initAttributes][multiScreenOffset] 水平布局偏移调整"
+                                      << "newPos=" << pos();
+                }
             }
+        } else if (Utils::isQt6XcbEnv) {
+            // 在 Qt6+XCB 环境下，确保窗口标志包含 X11BypassWindowManagerHint
+            // 这样窗口管理器就不会干预窗口位置
+            // 注意：这里需要重新设置，因为窗口大小/位置计算已经改变
+            this->forceX11WindowPosition();
         }
 
         // V20 or older system edition
@@ -572,6 +610,54 @@ void MainWindow::initAttributes()
 
         qCInfo(dsrApp) << __LINE__ << __FUNCTION__ << "属性初始化已完成";
     }
+}
+
+void MainWindow::forceX11WindowPosition()
+{
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+    if (!Utils::isQt6XcbEnv) {
+        return;
+    }
+    
+    Display *display = XOpenDisplay(nullptr);
+    if (!display) {
+        qCWarning(dsrApp) << "[GeomTrace][forceX11WindowPosition] 无法获取X11 Display";
+        return;
+    }
+    
+    Window winId = this->winId();
+    
+    // 获取 X11 根窗口大小
+    int screen = DefaultScreen(display);
+    Window root = RootWindow(display, screen);
+    XWindowAttributes rootAttr;
+    XGetWindowAttributes(display, root, &rootAttr);
+    int x11Width = rootAttr.width;
+    int x11Height = rootAttr.height;
+    
+    
+    // 获取当前窗口属性
+    XWindowAttributes beforeAttr;
+    XGetWindowAttributes(display, winId, &beforeAttr);
+    
+    // 获取窗口的绝对位置
+    Window child;
+    int absX = 0, absY = 0;
+    XTranslateCoordinates(display, winId, root, 0, 0, &absX, &absY, &child);
+    
+    // 使用 XMoveResizeWindow 同时设置位置和大小
+    XMoveResizeWindow(display, winId, 0, 0, x11Width, x11Height);
+    XFlush(display);
+    XSync(display, False);
+    
+    // 获取移动后的窗口属性
+    int newAbsX = 0, newAbsY = 0;
+    XTranslateCoordinates(display, winId, root, 0, 0, &newAbsX, &newAbsY, &child);
+    XWindowAttributes afterAttr;
+    XGetWindowAttributes(display, winId, &afterAttr);
+    
+    XCloseDisplay(display);
+#endif
 }
 
 #ifdef KF5_WAYLAND_FLAGE_ON
@@ -2346,12 +2432,18 @@ void MainWindow::initBackground()
 {
     qCDebug(dsrApp) << "initBackground";
     //    QTimer::singleShot(200, this, [ = ] {
-    QRect target = m_backgroundRect;
-    if (Utils::isWaylandMode) {
-        target = QRect(m_backgroundRect.x(),
-                       m_backgroundRect.y(),
-                       static_cast<int>(m_backgroundRect.width() * m_pixelRatio),
-                       static_cast<int>(m_backgroundRect.height() * m_pixelRatio));
+    
+    // Qt6+XCB: rootWindowRect 已经是物理大小，直接使用
+    // 非 Qt6+XCB: rootWindowRect 是逻辑大小，需要根据模式处理
+    QRect target = rootWindowRect;
+    
+    // Wayland 模式下需要将逻辑坐标转换为物理坐标
+    // 但 Qt6+XCB 下 rootWindowRect 已经是物理大小，不需要转换
+    if (Utils::isWaylandMode && !Utils::isQt6XcbEnv) {
+        target = QRect(rootWindowRect.x(),
+                       rootWindowRect.y(),
+                       static_cast<int>(rootWindowRect.width() * m_pixelRatio),
+                       static_cast<int>(rootWindowRect.height() * m_pixelRatio));
     }
 
     m_backgroundPixmap = getPixmapofRect(target);
@@ -2999,7 +3091,7 @@ void MainWindow::updateToolBarPos()
 
     // TODO: treeland适配，解决问题临时方案
     if (!(Utils::isTreelandMode))
-         m_toolBar->showAt(toolbarPoint);
+        m_toolBar->showAt(toolbarPoint);
 }
 
 void MainWindow::updateSideBarPos()
@@ -4595,8 +4687,17 @@ void MainWindow::paintEvent(QPaintEvent *event)
         QPainter painter(this);
         painter.setRenderHint(QPainter::Antialiasing, true);
         painter.setRenderHint(QPainter::Antialiasing, true);
-        QRect backgroundRect = QRect(0, 0, rootWindowRect.width(), rootWindowRect.height());
-        // FIXME: Under the magnifying glass, it seems to be magnified two times.
+        
+        // Qt6+XCB: widget是逻辑大小(m_backgroundRect)，pixmap是物理大小
+        // 需要设置DPR让Qt正确缩放物理像素到逻辑坐标
+        // 非Qt6+XCB: 使用 rootWindowRect（与之前行为一致）
+        QRect backgroundRect;
+        if (Utils::isQt6XcbEnv) {
+            backgroundRect = QRect(0, 0, m_backgroundRect.width(), m_backgroundRect.height());
+        } else {
+            backgroundRect = QRect(0, 0, rootWindowRect.width(), rootWindowRect.height());
+        }
+        
         m_backgroundPixmap.setDevicePixelRatio(m_pixelRatio);
         painter.drawPixmap(backgroundRect, m_backgroundPixmap);
         //        DWidget::paintEvent(event);
@@ -4610,13 +4711,19 @@ void MainWindow::paintEvent(QPaintEvent *event)
     if (status::shot == m_functionType || m_hasComposite == false) {
         //        qCDebug(dsrApp) << "function: " << __func__ << " ,line: " << __LINE__;
         painter.setRenderHint(QPainter::Antialiasing, true);
+        
+        // Qt6+XCB: widget是逻辑大小(m_backgroundRect)，pixmap是物理大小
         QRect backgroundRect;
-
-        backgroundRect = QRect(0, 0, rootWindowRect.width(), rootWindowRect.height());
-        // FIXME: Under the magnifying glass, it seems to be magnified two times.
+        if (Utils::isQt6XcbEnv) {
+            backgroundRect = QRect(0, 0, m_backgroundRect.width(), m_backgroundRect.height());
+        } else {
+            backgroundRect = QRect(0, 0, rootWindowRect.width(), rootWindowRect.height());
+        }
+        
         m_backgroundPixmap.setDevicePixelRatio(m_pixelRatio);
         painter.drawPixmap(backgroundRect, m_backgroundPixmap);
     }
+
 
     if (recordWidth > 0 && recordHeight > 0) {
         // qCDebug(dsrApp) << "function: " << __func__ << " ,line: " << __LINE__;

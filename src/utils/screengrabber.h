@@ -32,6 +32,11 @@ private:
     // Qt6 X11 workaround: 使用 XGetImage 绕过 grabWindow 的 bug（运行时再判断是否 XCB）
     QPixmap grabWithXGetImage(bool &ok, const QRect &rect);
 #endif
+
+public:
+    
+    // 获取 X11 根窗口的物理像素大小（Qt6+XCB 环境下使用）
+    static QSize getX11RootWindowSize();
 };
 
 #endif // SCREENGRABBER_H

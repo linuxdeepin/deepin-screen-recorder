@@ -18,6 +18,7 @@
 #include <QImage>
 #include <algorithm>
 #include <QMap>
+#include <QWindow>
 
 // X11 headers for XGetImage workaround
 #if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
@@ -566,6 +567,46 @@ QPixmap ScreenGrabber::grabMultipleScreens(bool &ok, const QRect &rect, const QL
 QPixmap ScreenGrabber::grabWithXGetImage(bool &ok, const QRect &rect)
 {
     qCDebug(dsrApp) << "[XGetImage] Starting X11 screenshot for rect:" << rect;
+    
+    qreal realDPR = QGuiApplication::primaryScreen() ? QGuiApplication::primaryScreen()->devicePixelRatio() : 1.0;
+    qreal appDPR = Utils::pixelRatio; 
+    QRect physicalRect = rect;
+    
+    // 当DPI缩放启用且DPR>1时，需要将逻辑坐标转换为X11物理坐标
+    // X11总是使用物理像素，而Qt在DPI缩放下使用逻辑像素
+    bool needCoordinateConversion = (realDPR > 1.0 && appDPR > 1.0);
+    if (needCoordinateConversion) {
+        
+        // 获取Qt逻辑虚拟桌面边界
+        QList<QScreen *> screens = QGuiApplication::screens();
+        QRect logicalVirtualDesktop;
+        for (auto screen : screens) {
+            QRect logicalGeom = screen->geometry();
+            if (logicalVirtualDesktop.isNull()) {
+                logicalVirtualDesktop = logicalGeom;
+            } else {
+                logicalVirtualDesktop = logicalVirtualDesktop.united(logicalGeom);
+            }
+            qCWarning(dsrApp) << "[GeomTrace][XGetImage][screen]" << screen->name() 
+                              << "qtGeom=" << logicalGeom << "DPR=" << screen->devicePixelRatio();
+        }
+        
+        // 检查是否是整个桌面截图
+        bool isFullDesktop = (rect == logicalVirtualDesktop || rect.contains(logicalVirtualDesktop));
+        
+        
+        if (isFullDesktop) {
+            physicalRect = QRect(); 
+        } else {
+            // 部分区域截图：位置不变，尺寸×DPR
+            physicalRect = QRect(
+                rect.x(),                                    // 位置X不变（已经是物理坐标）
+                rect.y(),                                    // 位置Y不变（已经是物理坐标）
+                static_cast<int>(rect.width() * realDPR),    // 宽度×DPR
+                static_cast<int>(rect.height() * realDPR)    // 高度×DPR
+            );
+        }
+    }
 
     Display *dpy = XOpenDisplay(nullptr);
     if (!dpy) {
@@ -580,7 +621,13 @@ QPixmap ScreenGrabber::grabWithXGetImage(bool &ok, const QRect &rect)
     XWindowAttributes rootAttr;
     XGetWindowAttributes(dpy, root, &rootAttr);
     qCDebug(dsrApp) << "[XGetImage] X11 root window size:" << rootAttr.width << "x" << rootAttr.height;
-
+    
+    if (needCoordinateConversion) {
+        QRect rootRect(0, 0, rootAttr.width, rootAttr.height);
+        QRect originalPhysical = physicalRect;
+        physicalRect = physicalRect.intersected(rootRect);
+    } 
+    
     // 抓取整个根窗口
     XImage *ximg = XGetImage(dpy, root, 0, 0, rootAttr.width, rootAttr.height, AllPlanes, ZPixmap);
     if (!ximg) {
@@ -613,14 +660,14 @@ QPixmap ScreenGrabber::grabWithXGetImage(bool &ok, const QRect &rect)
     qCDebug(dsrApp) << "[XGetImage] Full pixmap size:" << fullPixmap.size();
 
     // 如果请求的是整个桌面，直接返回
-    if (rect.isNull() || rect == QRect(0, 0, rootAttr.width, rootAttr.height)) {
+    if (physicalRect.isNull() || physicalRect == QRect(0, 0, rootAttr.width, rootAttr.height)) {
         qCDebug(dsrApp) << "[XGetImage] Returning full desktop screenshot";
         ok = true;
         return fullPixmap;
     }
 
-    // 裁剪请求的区域
-    QRect cropRect = rect.intersected(QRect(0, 0, rootAttr.width, rootAttr.height));
+    // 裁剪请求的区域（使用物理坐标）
+    QRect cropRect = physicalRect.intersected(QRect(0, 0, rootAttr.width, rootAttr.height));
     if (cropRect.isEmpty()) {
         qCWarning(dsrApp) << "[XGetImage] Crop rect is empty or outside root window";
         ok = false;
@@ -634,3 +681,30 @@ QPixmap ScreenGrabber::grabWithXGetImage(bool &ok, const QRect &rect)
     return result;
 }
 #endif
+
+QSize ScreenGrabber::getX11RootWindowSize()
+{
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+    if (!Utils::isQt6XcbEnv) {
+        return QSize();
+    }
+    
+    Display *dpy = XOpenDisplay(nullptr);
+    if (!dpy) {
+        qCWarning(dsrApp) << "[getX11RootWindowSize] Failed to open X11 Display";
+        return QSize();
+    }
+    
+    Window root = DefaultRootWindow(dpy);
+    XWindowAttributes rootAttr;
+    XGetWindowAttributes(dpy, root, &rootAttr);
+    
+    QSize rootSize(rootAttr.width, rootAttr.height);
+    qCWarning(dsrApp) << "[getX11RootWindowSize] X11 root window physical size:" << rootSize;
+    
+    XCloseDisplay(dpy);
+    return rootSize;
+#else
+    return QSize();
+#endif
+}
