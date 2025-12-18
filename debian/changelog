@@ -1,3 +1,10 @@
+deepin-screen-recorder (6.6.19) unstable; urgency=medium
+
+  * fix: Enhance X11 window handling for Qt6 compatibility
+  * Merge branches
+
+ -- dengzhongyuan <dengzhongyuan@duniontech.com>  Thu, 18 Dec 2025 19:23:36 +0800
+
 deepin-screen-recorder (6.6.18) unstable; urgency=medium
 
   *  fix: Refactor X11 screenshot handling for Qt6 compatibility 
