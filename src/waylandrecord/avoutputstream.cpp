@@ -985,6 +985,14 @@ int CAVOutputStream::writeMicAudioFrame(AVStream *stream, AVFrame *inputFrame, i
 
 int CAVOutputStream::writeMicToMixAudioFrame(AVStream *stream, AVFrame *inputFrame, int64_t lTimeStamp)
 {
+    // 检查对象是否仍然有效
+    if (!m_pMicCodecContext || !m_convertedMicSamples || !isWriteFrame()) {
+        qDebug() << "writeMicToMixAudioFrame: Resource check failed - m_pMicCodecContext:"
+                 << m_pMicCodecContext << " m_convertedMicSamples:" << m_convertedMicSamples
+                 << " isWriteFrame:" << isWriteFrame();
+        return -1;
+    }
+    
     Q_UNUSED(lTimeStamp)
     int ret;
     if (nullptr == m_pMicAudioSwrContext) {
@@ -1444,6 +1452,14 @@ int  CAVOutputStream::writeSysAudioFrame(AVStream *stream, AVFrame *inputFrame, 
 
 int CAVOutputStream::writeSysToMixAudioFrame(AVStream *stream, AVFrame *inputFrame, int64_t lTimeStamp)
 {
+    // 检查对象是否仍然有效
+    if (!m_pSysCodecContext || !m_convertedSysSamples || !isWriteFrame()) {
+        qDebug() << "writeSysToMixAudioFrame: Resource check failed - m_pSysCodecContext:"
+                 << m_pSysCodecContext << " m_convertedSysSamples:" << m_convertedSysSamples
+                 << " isWriteFrame:" << isWriteFrame();
+        return -1;
+    }
+    
     Q_UNUSED(lTimeStamp)
     int ret;
     if (nullptr == m_pSysAudioSwrContext) {

@@ -332,10 +332,20 @@ void *CAVInputStream::writeMixThreadFunc(void *param)
 
 void CAVInputStream::writMixAudio()
 {
+    qDebug() << "writMixAudio: Thread started, bWriteMix:" << bWriteMix() << " m_bMix:" << m_bMix;
+    
 //    while ((bWriteMix() || m_context->m_recordAdmin->m_pOutputStream->isNotAudioFifoEmty()) && m_bMix) {
     while (bWriteMix() && m_bMix) {
+        // 在每次循环前检查状态
+        if (!bWriteMix() || !m_bMix) {
+            qDebug() << "writMixAudio: Exit condition met, bWriteMix:" << bWriteMix() << " m_bMix:" << m_bMix;
+            break;
+        }
+        
         m_context->m_recordAdmin->m_pOutputStream->writeMixAudio();
     }
+    
+    qDebug() << "writMixAudio: Thread exiting";
 }
 
 void *CAVInputStream::captureMicAudioThreadFunc(void *param)
@@ -389,6 +399,13 @@ int CAVInputStream::readMicAudioPacket()
         avlibInterface::m_av_packet_unref(&inputPacket);
         /** If there is decoded data, convert and store it */
         if (got_frame_ptr) {
+            // 在处理每帧前检查线程状态
+            if (!bRunThread()) {
+                qDebug() << "readMicAudioPacket: Pre-processing check failed, bRunThread:" << bRunThread();
+                avlibInterface::m_av_frame_free(&inputFrame);
+                break;
+            }
+            
             m_context->m_recordAdmin->m_pOutputStream->writeMicAudioFrame(m_pMicAudioFormatContext->streams[m_micAudioindex], inputFrame, avlibInterface::m_av_gettime() - m_start_time);
         }
         avlibInterface::m_av_frame_free(&inputFrame);
@@ -408,12 +425,22 @@ int CAVInputStream::readMicAudioPacket()
 int CAVInputStream::readMicToMixAudioPacket()
 {
     int got_frame_ptr = 0;
+    qDebug() << "readMicToMixAudioPacket: Thread started, bRunThread:" << bRunThread() << " bWriteMix:" << bWriteMix();
+    
     //start decode and encode
     while (bRunThread()) {
+        // 在关键点检查线程状态
+        if (!bRunThread() || !bWriteMix()) {
+            qDebug() << "readMicToMixAudioPacket: Early exit check failed, bRunThread:" << bRunThread() << " bWriteMix:" << bWriteMix();
+            break;
+        }
+        
         int ret;
         AVFrame *inputFrame = avlibInterface::m_av_frame_alloc();
-        if (!inputFrame)
+        if (!inputFrame) {
+            qDebug() << "readMicToMixAudioPacket: Failed to allocate inputFrame";
             return AVERROR(ENOMEM);
+        }
         /** Decode one frame worth of audio samples.解码一帧值的音频样本。 */
         /** Packet used for temporary storage. 临时存储用的小包。*/
         AVPacket inputPacket;
@@ -424,8 +451,10 @@ int CAVInputStream::readMicToMixAudioPacket()
         if ((ret = avlibInterface::m_av_read_frame(m_pMicAudioFormatContext, &inputPacket)) < 0) {
             /** If we are at the end of the file, flush the decoder below. 如果我们在文件的末尾，刷新下面的解码器。*/
             if (ret == AVERROR_EOF) {
+                qDebug() << "readMicToMixAudioPacket: Reached EOF, setting bRunThread to false";
                 setbRunThread(false);
             } else {
+                qDebug() << "readMicToMixAudioPacket: av_read_frame failed with ret:" << ret;
                 avlibInterface::m_av_packet_unref(&inputPacket);
                 avlibInterface::m_av_frame_free(&inputFrame);
                 continue;
@@ -434,6 +463,7 @@ int CAVInputStream::readMicToMixAudioPacket()
         //AVPacket -> AVFrame
         if ((ret = avlibInterface::m_avcodec_decode_audio4(m_pMicAudioFormatContext->streams[m_micAudioindex]->codec, inputFrame, &got_frame_ptr, &inputPacket)) < 0) {
             printf("Could not decode audio frame\n");
+            qDebug() << "readMicToMixAudioPacket: avcodec_decode_audio4 failed with ret:" << ret;
             avlibInterface::m_av_packet_unref(&inputPacket);
             avlibInterface::m_av_frame_free(&inputFrame);
             return ret;
@@ -441,11 +471,19 @@ int CAVInputStream::readMicToMixAudioPacket()
         avlibInterface::m_av_packet_unref(&inputPacket);
         /** If there is decoded data, convert and store it 如果有解码的数据，转换并存储它*/
         if (got_frame_ptr) {
+            // 在处理每帧前再次检查
+            if (!bRunThread() || !bWriteMix()) {
+                qDebug() << "readMicToMixAudioPacket: Pre-processing check failed, bRunThread:" << bRunThread() << " bWriteMix:" << bWriteMix();
+                avlibInterface::m_av_frame_free(&inputFrame);
+                break;
+            }
+            
             m_context->m_recordAdmin->m_pOutputStream->writeMicToMixAudioFrame(m_pMicAudioFormatContext->streams[m_micAudioindex], inputFrame, avlibInterface::m_av_gettime() - m_start_time);
         }
         avlibInterface::m_av_frame_free(&inputFrame);
         fflush(stdout);
     }// -- while end
+    qDebug() << "readMicToMixAudioPacket: Thread exiting";
     if (nullptr != m_pMicAudioFormatContext) {
         avlibInterface::m_avformat_close_input(&m_pMicAudioFormatContext);
     }
@@ -508,6 +546,13 @@ int CAVInputStream::readSysAudioPacket()
         avlibInterface::m_av_packet_unref(&inputPacket);
         /** If there is decoded data, convert and store it */
         if (got_frame_ptr) {
+            // 在处理每帧前检查线程状态
+            if (!bRunThread()) {
+                qDebug() << "readSysAudioPacket: Pre-processing check failed, bRunThread:" << bRunThread();
+                avlibInterface::m_av_frame_free(&input_frame);
+                break;
+            }
+            
             m_context->m_recordAdmin->m_pOutputStream->writeSysAudioFrame(m_pSysAudioFormatContext->streams[m_sysAudioindex], input_frame, avlibInterface::m_av_gettime() - m_start_time);
         }
         avlibInterface::m_av_frame_free(&input_frame);
@@ -526,7 +571,14 @@ int CAVInputStream::readSysAudioPacket()
 int CAVInputStream::readSysToMixAudioPacket()
 {
     int got_frame_ptr = 0;
+    
     while (bRunThread()) {
+        // 在关键点检查线程状态
+        if (!bRunThread() || !bWriteMix()) {
+            qDebug() << "readSysToMixAudioPacket: Early exit check failed, bRunThread:" << bRunThread() << " bWriteMix:" << bWriteMix();
+            break;
+        }
+        
         int ret;
         AVFrame *inputFrame = avlibInterface::m_av_frame_alloc();
         if (!inputFrame) {
@@ -555,6 +607,13 @@ int CAVInputStream::readSysToMixAudioPacket()
         }
         avlibInterface::m_av_packet_unref(&inputPacket);
         if (got_frame_ptr) {
+            // 在处理每帧前再次检查
+            if (!bRunThread() || !bWriteMix()) {
+                qDebug() << "readSysToMixAudioPacket: Pre-processing check failed, bRunThread:" << bRunThread() << " bWriteMix:" << bWriteMix();
+                avlibInterface::m_av_frame_free(&inputFrame);
+                break;
+            }
+            
             m_context->m_recordAdmin->m_pOutputStream->writeSysToMixAudioFrame(m_pSysAudioFormatContext->streams[m_sysAudioindex], inputFrame, avlibInterface::m_av_gettime() - m_start_time);
         }
         avlibInterface::m_av_frame_free(&inputFrame);
