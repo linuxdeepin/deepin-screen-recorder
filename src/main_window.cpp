@@ -7227,22 +7227,82 @@ void MainWindow::startCountdown()
         connect(m_tabletRecorderHandle, SIGNAL(finished()), this, SLOT(startRecord()));
         m_tabletRecorderHandle->start();
     } else {
-        // QVBoxLayout *countdownLayout = new QVBoxLayout(this);
-        // setLayout(countdownLayout);
         countdownTooltip = new CountdownTooltip(this);
         connect(countdownTooltip, SIGNAL(finished()), this, SLOT(startRecord()));
 
-        // countdownLayout->addStretch();
-        // countdownLayout->addWidget(countdownTooltip, 0, Qt::AlignCenter);
-        // countdownLayout->addStretch();
-        // adjustLayout(countdownLayout, countdownTooltip->rect().width(), countdownTooltip->rect().height());
-        // countdownTooltip->move(recordRect.x() + recordRect.width() / 2 - countdownTooltip->width() / 2, recordRect.y() +
-        // recordRect.height() / 2 - countdownTooltip->height() / 2);
+        /* https://pms.uniontech.com/story-view-39101.html
+        * 当录制区域跨屏时，倒计时显示在工具栏所在屏幕的中心（若工具栏也跨屏则显示在主屏中心）
+        * 录制区域未跨屏时，倒计时仍显示在录屏区域中心。
+        * 其他场景保持不变。
+        */
+        bool isRecordAreaCrossScreen = false;
+        QScreen *recordAreaScreen = QGuiApplication::screenAt(recordRect.center());
+        if (recordAreaScreen) {
+            QRect screenGeom = recordAreaScreen->geometry();
+            QRect recordRectLogical(static_cast<int>(recordRect.x() / m_pixelRatio),
+                                    static_cast<int>(recordRect.y() / m_pixelRatio),
+                                    static_cast<int>(recordRect.width() / m_pixelRatio),
+                                    static_cast<int>(recordRect.height() / m_pixelRatio));
+            if (!screenGeom.contains(recordRectLogical)) {
+                isRecordAreaCrossScreen = true;
+            }
+        } else {
+            isRecordAreaCrossScreen = true;
+        }
 
-        countdownTooltip->move(static_cast<int>((recordRect.x() / m_pixelRatio +
-                                                 (recordRect.width() / m_pixelRatio - countdownTooltip->width()) / 2)),
-                               static_cast<int>((recordRect.y() / m_pixelRatio +
-                                                 (recordRect.height() / m_pixelRatio - countdownTooltip->height()) / 2)));
+        int countdownX, countdownY;
+        // 录制区域是否跨屏
+        if (isRecordAreaCrossScreen) {
+            QRect targetScreenRect;
+            if (m_toolBar) {
+                QRect toolBarGlobalRect = m_toolBar->geometry();
+                toolBarGlobalRect.moveTopLeft(m_toolBar->mapToGlobal(QPoint(0, 0)));
+
+                QScreen *toolBarScreen = QGuiApplication::screenAt(toolBarGlobalRect.center());
+                bool isToolBarCrossScreen = false;
+
+                // 工具栏是否跨屏
+                if (toolBarScreen) {
+                    QRect screenGeom = toolBarScreen->geometry();
+                    if (!screenGeom.contains(toolBarGlobalRect)) {
+                        isToolBarCrossScreen = true;
+                    }
+                } else {
+                    isToolBarCrossScreen = true;
+                }
+
+                if (isToolBarCrossScreen) {
+                    QScreen *primaryScreen = QGuiApplication::primaryScreen();
+                    if (primaryScreen) {
+                        targetScreenRect = primaryScreen->geometry();
+                        qCDebug(dsrApp) << "Countdown on primary screen (toolbar crosses screens):" << targetScreenRect;
+                    }
+                } else {
+                    targetScreenRect = toolBarScreen->geometry();
+                    qCDebug(dsrApp) << "Countdown on toolbar screen:" << targetScreenRect;
+                }
+            }
+
+            if (targetScreenRect.isEmpty()) {
+                QScreen *primaryScreen = QGuiApplication::primaryScreen();
+                if (primaryScreen) {
+                    targetScreenRect = primaryScreen->geometry();
+                }
+            }
+
+            // 录制区域跨屏时，倒计时显示在目标屏幕中心
+            countdownX = targetScreenRect.x() + (targetScreenRect.width() - countdownTooltip->width()) / 2;
+            countdownY = targetScreenRect.y() + (targetScreenRect.height() - countdownTooltip->height()) / 2;
+            qCDebug(dsrApp) << "Record area crosses screens, countdown position:" << countdownX << countdownY;
+        } else {
+            // 其他场景保持不变，倒计时显示在录屏区域中心
+            countdownX = static_cast<int>((recordRect.x() / m_pixelRatio +
+                                           (recordRect.width() / m_pixelRatio - countdownTooltip->width()) / 2));
+            countdownY = static_cast<int>((recordRect.y() / m_pixelRatio +
+                                           (recordRect.height() / m_pixelRatio - countdownTooltip->height()) / 2));
+            qCDebug(dsrApp) << "Record area not cross screen, countdown position (center of record area):" << countdownX << countdownY;
+        }
+        countdownTooltip->move(countdownX, countdownY);
 
         if (m_isFullScreenRecord) {
             // 全屏录制时不需要3s倒计时

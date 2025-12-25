@@ -11,3 +11,5 @@ AI config
 .cursorindexingignore
 .specstory/
 x11_paint_demo/
+
+.vscode/
