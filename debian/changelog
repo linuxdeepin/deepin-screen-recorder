@@ -1,3 +1,9 @@
+deepin-screen-recorder (6.6.20) unstable; urgency=medium
+
+  *  feat: Improve countdown tooltip positioning for multi-screen scenarios
+
+ -- dengzhongyuan <dengzhongyuan@duniontech.com>  Thu, 25 Dec 2025 19:17:42 +0800
+
 deepin-screen-recorder (6.6.19) unstable; urgency=medium
 
   * fix: Enhance X11 window handling for Qt6 compatibility
