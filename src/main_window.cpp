@@ -4707,8 +4707,9 @@ void MainWindow::paintEvent(QPaintEvent *event)
     QPainter painter(this);
     painter.setRenderHint(QPainter::Antialiasing, true);
 
-    // 2D窗管模式下，录屏背景用截图背景。
-    if (status::shot == m_functionType || m_hasComposite == false) {
+    // 绘制背景图片，用于工具栏模糊效果
+    // 原条件只在截图模式和2D模式下绘制，导致录屏/滚动截图模式下工具栏模糊失效
+    if (status::shot == m_functionType || status::record == m_functionType || status::scrollshot == m_functionType || m_hasComposite == false) {
         //        qCDebug(dsrApp) << "function: " << __func__ << " ,line: " << __LINE__;
         painter.setRenderHint(QPainter::Antialiasing, true);
         
