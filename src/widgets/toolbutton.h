@@ -26,6 +26,11 @@ public:
     void setOptionButtonFlag(const bool flag);
     void setUndoButtonFlag(const bool flag);
     
+    // 设置用于亮度检测的背景图
+    static void setBackgroundPixmap(const QPixmap *pixmap);
+    static void clearBackgroundPixmap(); 
+    static const QPixmap *backgroundPixmap();
+    
     // 红点角标控制
     void setShowRedDot(bool show) { m_showRedDot = show; update(); }
     
@@ -40,6 +45,8 @@ protected:
     void leaveEvent(QEvent *e) override;
     void mousePressEvent(QMouseEvent *e) override;
     void mouseReleaseEvent(QMouseEvent *e) override;
+    void moveEvent(QMoveEvent *event) override;
+    void resizeEvent(QResizeEvent *event) override;
 signals:
     /**
      * @brief isInButton 是否在button内部？
@@ -61,11 +68,19 @@ private:
     QIcon m_badgeIcon;
     QSize m_badgeSize = QSize(10, 7);
     
+    // disabled 状态图标缓存
+    QIcon m_cachedDisabledIcon;
+    QPoint m_lastGlobalPos;
+    QSize m_lastSize;
+    bool m_needRecalculateIcon = true;
+    
     // 计算图标区域
     QRect getIconRect(const QStyleOptionToolButton &opt) const;
     // 绘制红点角标
     void drawRedDot(QPainter &painter, const QStyleOptionToolButton &opt, const QRect &iconRect);
     // 绘制Icon角标
     void drawBadge(QPainter &painter, const QStyleOptionToolButton &opt, const QRect &iconRect);
+    // 根据背景亮度对图标着色（用于 disabled 状态）
+    QIcon tintIconByBackground(const QIcon &icon, const QSize &iconSize) const;
 };
 #endif // TOOLBUTTON_H

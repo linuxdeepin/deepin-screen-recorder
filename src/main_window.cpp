@@ -24,6 +24,7 @@
 #include "utils/log.h"
 #include "camera_process.h"
 #include "widgets/tooltips.h"
+#include "widgets/toolbutton.h"
 #include "dbusinterface/drawinterface.h"
 #include "accessibility/acTextDefine.h"
 #include "keydefine.h"
@@ -2467,6 +2468,8 @@ void MainWindow::initBackground()
     */
     m_resultPixmap = m_backgroundPixmap;
     TempFile::instance()->setFullScreenPixmap(m_backgroundPixmap);
+    // 设置 ToolButton 的背景图用于 disabled 状态图标着色
+    ToolButton::setBackgroundPixmap(&m_backgroundPixmap);
     //    });
 }
 

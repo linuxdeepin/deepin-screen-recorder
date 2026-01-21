@@ -25,6 +25,24 @@ constexpr int MIN_DOT_RADIUS = 2;
 const QColor RED_DOT_COLOR = QColor(0xFF, 0x40, 0x40);
 }
 
+// 静态成员：背景图指针
+static const QPixmap *s_backgroundPixmap = nullptr;
+
+void ToolButton::setBackgroundPixmap(const QPixmap *pixmap)
+{
+    s_backgroundPixmap = pixmap;
+}
+
+void ToolButton::clearBackgroundPixmap()
+{
+    s_backgroundPixmap = nullptr;
+}
+
+const QPixmap *ToolButton::backgroundPixmap()
+{
+    return s_backgroundPixmap;
+}
+
 ToolButton::ToolButton(QWidget *parent)
     : DToolButton(parent)
     , m_hasHoverState(true)
@@ -265,6 +283,25 @@ void ToolButton::paintEvent(QPaintEvent *event)
         opt.state &= ~QStyle::State_Sunken;
         style()->drawComplexControl(QStyle::CC_ToolButton, &opt, &p, this);
     } else {
+        // disabled 状态：根据背景亮度对图标着色
+        if (!isEnabled() && !opt.icon.isNull()) {
+            const QSize iconSize = opt.iconSize.isValid() ? opt.iconSize : QSize(16, 16);
+            
+            // 检查是否需要重新计算
+            QPoint currentGlobalPos = mapToGlobal(QPoint(0, 0));
+            if (m_needRecalculateIcon || 
+                m_lastGlobalPos != currentGlobalPos || 
+                m_lastSize != this->size()) {
+                
+                m_cachedDisabledIcon = tintIconByBackground(opt.icon, iconSize);
+                m_lastGlobalPos = currentGlobalPos;
+                m_lastSize = this->size();
+                m_needRecalculateIcon = false;
+            }
+            
+            opt.icon = m_cachedDisabledIcon;
+        }
+        
         opt.state &= ~QStyle::State_MouseOver;
         opt.state &= ~QStyle::State_Sunken;
         style()->drawControl(QStyle::CE_ToolButtonLabel, &opt, &p, this);
@@ -346,4 +383,75 @@ void ToolButton::mouseReleaseEvent(QMouseEvent *e)
     }
     
     DToolButton::mouseReleaseEvent(e);
+}
+
+void ToolButton::moveEvent(QMoveEvent *event)
+{
+    DToolButton::moveEvent(event);
+    m_needRecalculateIcon = true;
+}
+
+void ToolButton::resizeEvent(QResizeEvent *event)
+{
+    DToolButton::resizeEvent(event);
+    m_needRecalculateIcon = true;
+}
+
+QIcon ToolButton::tintIconByBackground(const QIcon &icon, const QSize &iconSize) const
+{
+    if (!s_backgroundPixmap || s_backgroundPixmap->isNull()) {
+        return icon;
+    }
+    
+    QPoint globalPos = mapToGlobal(QPoint(0, 0));
+    QRect btnRect(globalPos, this->size());
+    QRect intersect = btnRect.intersected(s_backgroundPixmap->rect());
+    
+    if (intersect.isEmpty()) {
+        return icon;
+    }
+    
+    // 计算按钮区域的背景亮度
+    QImage bgImage = s_backgroundPixmap->copy(intersect).toImage();
+    qint64 totalBrightness = 0;
+    int pixelCount = 0;
+    const int step = 2;
+    
+    for (int y = 0; y < bgImage.height(); y += step) {
+        for (int x = 0; x < bgImage.width(); x += step) {
+            QColor color = bgImage.pixelColor(x, y);
+            int brightness = (color.red() * 299 + color.green() * 587 + color.blue() * 114) / 1000;
+            totalBrightness += brightness;
+            pixelCount++;
+        }
+    }
+    
+    if (pixelCount == 0) {
+        return icon;
+    }
+    
+    // 暗背景用白色，亮背景用黑色
+    int avgBrightness = totalBrightness / pixelCount;
+    QColor tintColor = (avgBrightness < 128) ? Qt::white : Qt::black;
+    tintColor.setAlpha(100);
+    
+    // 着色
+    const qreal dpr = this->devicePixelRatioF();
+    QPixmap base = icon.pixmap(iconSize, dpr, QIcon::Normal, QIcon::Off);
+    if (base.isNull()) {
+        return icon;
+    }
+    
+    QPixmap tinted(base.size());
+    tinted.fill(Qt::transparent);
+    tinted.setDevicePixelRatio(dpr);
+    
+    QPainter p(&tinted);
+    p.setRenderHint(QPainter::Antialiasing);
+    p.drawPixmap(0, 0, base);
+    p.setCompositionMode(QPainter::CompositionMode_SourceIn);
+    p.fillRect(tinted.rect(), tintColor);
+    p.end();
+    
+    return QIcon(tinted);
 }

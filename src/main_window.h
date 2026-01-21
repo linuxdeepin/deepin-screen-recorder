@@ -160,6 +160,9 @@ public:
     ~MainWindow()
     {
         qInfo() << __FUNCTION__ << __LINE__ << "===正在释放截图录屏相关资源===";
+        
+        ToolButton::clearBackgroundPixmap();
+        
         if (m_pVoiceVolumeWatcher) {
             //voicevolumewatcher中没有setWatch方法
             //m_pVoiceVolumeWatcher->setWatch(false);
