@@ -30,6 +30,7 @@ public slots:
     void OcrScreenshot();
     void ScrollScreenshot();
     void savePathScreenshot(const QString &path);
+    void setSavePath(const QString &path);
     void startScreenshotFor3rd(const QString &path);
     void initLaunchMode(const QString &launchmode);
 

@@ -177,6 +177,12 @@ void Screenshot::savePathScreenshot(const QString &path)
     m_window.savePath(path);
 }
 
+void Screenshot::setSavePath(const QString &path)
+{
+    qCDebug(dsrApp) << "setSavePath() called with path:" << path << ".";
+    m_window.setSavePath(path);
+}
+
 void Screenshot::startScreenshotFor3rd(const QString &path)
 {
     qCDebug(dsrApp) << "startScreenshotFor3rd() called with path:" << path << ".";

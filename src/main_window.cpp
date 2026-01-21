@@ -2381,24 +2381,97 @@ void MainWindow::saveTopWindow()
     exitApp();
 }
 
+// 解析路径参数，判断是目录还是完整文件路径
+bool MainWindow::parsePathArgument(const QString &path, QString &outDir, QString &outFileName, QString &outFormat)
+{
+    if (path.isEmpty()) {
+        qCWarning(dsrApp) << "parsePathArgument: 输入路径为空";
+        return false;
+    }
+    
+    QFileInfo fileInfo(path);
+    QString suffix = fileInfo.suffix().toLower();
+    
+    // 检查是否为支持的图片格式
+    bool isSupportedFormat = (suffix == "png" || suffix == "jpg" || suffix == "jpeg" || suffix == "bmp");
+    
+    // 如果是支持的图片格式，且不是已存在的目录，则认为是文件路径
+    if (isSupportedFormat && !fileInfo.isDir()) {
+        // 这是一个完整的文件路径
+        outDir = fileInfo.absolutePath();
+        outFileName = fileInfo.fileName();
+        
+        // 转换格式名称
+        if (suffix == "png") {
+            outFormat = "PNG";
+        } else if (suffix == "jpg" || suffix == "jpeg") {
+            outFormat = "JPEG";
+        } else if (suffix == "bmp") {
+            outFormat = "BMP";
+        }
+        
+        qCInfo(dsrApp) << "parsePathArgument: 完整文件路径 - 目录:" << outDir 
+                       << ", 文件名:" << outFileName << ", 格式:" << outFormat;
+        return true;
+    } else {
+        // 这是一个目录路径
+        outDir = path;
+        outFileName.clear();
+        outFormat.clear();
+        
+        qCInfo(dsrApp) << "parsePathArgument: 目录路径:" << outDir;
+        return false;
+    }
+}
+
+void MainWindow::applyPathSettings(const QString &path)
+{
+    QString dir, fileName, format;
+    bool isFullPath = parsePathArgument(path, dir, fileName, format);
+    
+    if (isFullPath) {
+        // 用户指定了完整的文件路径
+        m_shotWithPath = true;
+        m_shotWithFullPath = true;
+        m_shotSavePath = dir;
+        m_shotFileName = fileName;
+        m_shotFileFormat = format;
+        
+        qCInfo(dsrApp) << "applyPathSettings: 完整路径模式 - 目录:" << m_shotSavePath 
+                       << ", 文件名:" << m_shotFileName << ", 格式:" << m_shotFileFormat;
+    } else {
+        // 用户指定了目录路径
+        m_shotWithPath = true;
+        m_shotWithFullPath = false;
+        m_shotSavePath = path;
+        m_shotFileName.clear();
+        m_shotFileFormat.clear();
+        
+        qCInfo(dsrApp) << "applyPathSettings: 目录模式 - 目录:" << m_shotSavePath;
+    }
+}
+
 void MainWindow::savePath(const QString &path)
 {
-    qCDebug(dsrApp) << "savePath";
-    if (!QFileInfo(path).dir().exists()) {
-        qCDebug(dsrApp) << "savePath QFileInfo(path).dir().exists()";
-        exitApp();
-    }
-
-    qCDebug(dsrApp) << "path exist!";
+    qCInfo(dsrApp) << "savePath: 接收到路径 =" << path;
+    
+    applyPathSettings(path);
 
     this->initAttributes();
     this->initLaunchMode("screenShot");
     this->showFullScreen();
     this->initResource();
-
-    m_shotWithPath = true;
-    m_shotSavePath = path;
+    
     qCDebug(dsrApp) << "savePath end";
+}
+
+void MainWindow::setSavePath(const QString &path)
+{
+    qCInfo(dsrApp) << "setSavePath: 仅设置保存路径 =" << path;
+    
+    applyPathSettings(path);
+    
+    qCDebug(dsrApp) << "setSavePath end (不启动截图)";
 }
 
 void MainWindow::startScreenshotFor3rd(const QString &path)
@@ -4206,6 +4279,8 @@ bool MainWindow::saveAction(const QPixmap &pix)
         m_saveIndex = ConfigSettings::instance()->getValue("shot", "save_op").value<SaveAction>();
         if (m_shotWithPath == true) {
             m_saveIndex = AutoSave;
+             // 命令行指定路径时，使用命令行的路径，避免ui配置的干扰流程
+            saveWays = SaveWays::SpecifyLocation; 
         }
     }
 
@@ -4560,79 +4635,78 @@ bool MainWindow::saveAction(const QPixmap &pix)
 
         return true;
     } else if (m_saveIndex == AutoSave && m_saveFileName.isEmpty()) {
-        QString savePath;
-        //        if (m_shotWithPath == false) {
-        //            savePath = QStandardPaths::writableLocation(saveOption);
-        //        }
-
-        //        else {
-        savePath = m_shotSavePath;
-        //        }
-        QString t_fileName = "";
-        if (savePath.contains(".png")) {
-            t_pictureFormat = 0;
-            //            savePath.lastIndexOf("/");
-            t_fileName = savePath;
-        }
-
-        if (savePath.contains(".jpg")) {
-            t_pictureFormat = 1;
-            //            savePath.lastIndexOf("/");
-            t_fileName = savePath;
-        }
-
-        if (savePath.contains(".bmp")) {
-            t_pictureFormat = 2;
-            //            savePath.lastIndexOf("/");
-            t_fileName = savePath;
-        }
-
-        if (t_fileName == "") {
+        qCInfo(dsrApp) << __FUNCTION__ << __LINE__ << "AutoSave: 自动保存模式";
+        
+        // 检查是否指定了完整文件路径
+        if (m_shotWithFullPath && !m_shotFileName.isEmpty()) {
+            qCInfo(dsrApp) << __FUNCTION__ << __LINE__ << "AutoSave: 使用用户指定的完整文件路径";
+            
+            // 确保目录存在
+            QDir saveDir(m_shotSavePath);
+            if (!saveDir.exists()) {
+                bool mkdirSucc = saveDir.mkpath(".");
+                if (!mkdirSucc) {
+                    qCritical() << "AutoSave: 无法创建目录:" << m_shotSavePath;
+                    return false;
+                }
+            }
+            
+            // 构建完整路径（直接覆盖同名文件）
+            m_saveFileName = m_shotSavePath + "/" + m_shotFileName;
+            
+            qCInfo(dsrApp) << __FUNCTION__ << __LINE__ << "AutoSave: 保存到:" << m_saveFileName 
+                           << ", 格式:" << m_shotFileFormat;
+            
+            if (!saveImg(pix, m_saveFileName, m_shotFileFormat.toLatin1().data()))
+                return false;
+        } else {
+            // 原有逻辑：用户只指定了目录，自动生成文件名
+            qCInfo(dsrApp) << __FUNCTION__ << __LINE__ << "AutoSave: 使用自动生成的文件名";
+            
+            QString savePath = m_shotSavePath;
+            
+            // 确保目录存在
             QDir saveDir(savePath);
             if (!saveDir.exists()) {
                 bool mkdirSucc = saveDir.mkpath(".");
                 if (!mkdirSucc) {
-                    qCritical() << "Save path not exist and cannot be created:" << savePath;
-                    qCritical() << "Fall back to temp location!";
-                    savePath = QDir::tempPath();
+                    qCritical() << "AutoSave: 无法创建目录:" << savePath;
+                    return false;
                 }
             }
-        }
-        QString t_formatStr;
-        QString t_formatBuffix;
-        switch (t_pictureFormat) {
-            case 0:
-                t_formatStr = "PNG";
-                t_formatBuffix = "png";
-                break;
-            case 1:
-                t_formatStr = "JPEG";
-                t_formatBuffix = "jpg";
-                break;
-            case 2:
-                t_formatStr = "BMP";
-                t_formatBuffix = "bmp";
-                break;
-            default:
-                t_formatStr = "PNG";
-                t_formatBuffix = "png";
-                break;
-        }
-        qCDebug(dsrApp) << "save path" << savePath;
+            
+            QString t_formatStr;
+            QString t_formatBuffix;
+            
+            switch (t_pictureFormat) {
+                case 0:
+                    t_formatStr = "PNG";
+                    t_formatBuffix = "png";
+                    break;
+                case 1:
+                    t_formatStr = "JPEG";
+                    t_formatBuffix = "jpg";
+                    break;
+                case 2:
+                    t_formatStr = "BMP";
+                    t_formatBuffix = "bmp";
+                    break;
+                default:
+                    t_formatStr = "PNG";
+                    t_formatBuffix = "png";
+                    break;
+            }
 
-        if (t_fileName != "") {
-            m_saveFileName = t_fileName;
-        } else {
             if (selectAreaName.isEmpty()) {
                 m_saveFileName = QString("%1/%2_%3.%4").arg(savePath, functionTypeStr, currentTime, t_formatBuffix);
             } else {
                 m_saveFileName =
                     QString("%1/%2_%3_%4.%5").arg(savePath, functionTypeStr, selectAreaName, currentTime, t_formatBuffix);
             }
-        }
 
-        if (!saveImg(pix, m_saveFileName, t_formatStr.toLatin1().data()))
-            return false;
+            if (!saveImg(pix, m_saveFileName, t_formatStr.toLatin1().data()))
+                return false;
+        }
     } else if (m_saveIndex == SaveToClipboard) {
         if (selectAreaName.isEmpty()) {
             tempFileName = QString("%1_%2_%3").arg(tr("Clipboard"), functionTypeStr, currentTime);

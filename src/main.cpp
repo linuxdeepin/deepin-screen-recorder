@@ -361,6 +361,21 @@ int main(int argc, char *argv[])
             }
             dbusService.setSingleInstance(true);
             qCDebug(dsrApp) << "DBus service set to single instance.";
+            
+            // 检查是否有其他截图模式参数
+            bool hasOtherMode = cmdParser.isSet(delayOption) || 
+                                cmdParser.isSet(fullscreenOption) || 
+                                cmdParser.isSet(topWindowOption) || 
+                                cmdParser.isSet(prohibitNotifyOption) || 
+                                cmdParser.isSet(screenRecordFullScreenOption);
+            
+            // 如果设置了 save-path 且有其他模式，只设置路径不启动截图
+            if (cmdParser.isSet(savePathOption) && hasOtherMode) {
+                window.setSavePath(cmdParser.value(savePathOption));
+                qCDebug(dsrApp) << "Save path set to:" << cmdParser.value(savePathOption);
+            }
+            
+            // 处理截图模式参数
             if (cmdParser.isSet(delayOption)) {
                 qDebug() << "cmd delay screenshot";
                 window.delayScreenshot(cmdParser.value(delayOption).toInt());
@@ -372,10 +387,6 @@ int main(int argc, char *argv[])
                 qDebug() << "cmd topWindow screenshot";
                 window.topWindowScreenshot();
                 qCDebug(dsrApp) << "Top window screenshot initiated.";
-            } else if (cmdParser.isSet(savePathOption)) {
-                qDebug() << "cmd savepath screenshot";
-                window.savePathScreenshot(cmdParser.value(savePathOption));
-                qCDebug(dsrApp) << "Save path screenshot initiated with path:" << cmdParser.value(savePathOption);
             } else if (cmdParser.isSet(prohibitNotifyOption)) {
                 qDebug() << "screenshot no notify!";
                 window.noNotifyScreenshot();
@@ -384,7 +395,13 @@ int main(int argc, char *argv[])
                 qDebug() << "screenRecordFullScreenOption!!!!" << cmdParser.value(screenRecordFullScreenOption);
                 window.fullScreenRecord(cmdParser.value(screenRecordFullScreenOption));
                 qCDebug(dsrApp) << "Full screen record initiated with file:" << cmdParser.value(screenRecordFullScreenOption);
+            } else if (cmdParser.isSet(savePathOption)) {
+                // 只设置了 save-path，没有其他截图模式，启动保存路径截图
+                qDebug() << "cmd savepath screenshot";
+                window.savePathScreenshot(cmdParser.value(savePathOption));
+                qCDebug(dsrApp) << "Save path screenshot initiated with path:" << cmdParser.value(savePathOption);
             } else {
+                // 如果没有设置任何参数，启动默认截图
                 window.startScreenshot();
                 qCDebug(dsrApp) << "Default screenshot initiated.";
             }

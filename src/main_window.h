@@ -376,8 +376,19 @@ public:
      */
     void saveTopWindow();
     void savePath(const QString &path);
+    void setSavePath(const QString &path);
     void startScreenshotFor3rd(const QString &path);
     void noNotify();
+    
+    /**
+     * @brief 解析路径参数，判断是目录还是完整文件路径
+     * @param path 输入路径
+     * @param outDir 输出：目录路径
+     * @param outFileName 输出：文件名（如果是完整路径）
+     * @param outFormat 输出：文件格式（PNG/JPEG/BMP）
+     * @return true=完整文件路径，false=目录路径
+     */
+    bool parsePathArgument(const QString &path, QString &outDir, QString &outFileName, QString &outFormat);
     void sendSavingNotify();
     // 强制录屏保存退出通知,3D->2D模式
     void forciblySavingNotify();
@@ -968,6 +979,12 @@ protected:
     void initDynamicLibPath();
     QString libPath(const QString &strlib);
 private:
+    /**
+     * @brief 应用路径设置到成员变量
+     * @param path 输入路径
+     */
+    void applyPathSettings(const QString &path);
+    
 //    QList<WindowRect> windowRects;
     /**
      * @brief 所有的窗口，与windowNames一一对应
@@ -1299,8 +1316,11 @@ private:
     bool m_selectedCamera = false;
     bool m_cameraOffFlag = false;
     bool m_shotWithPath = false;
+    bool m_shotWithFullPath = false;  
     int m_screenCount;
     QString m_shotSavePath;
+    QString m_shotFileName;  
+    QString m_shotFileFormat; 
     /**
      * @brief 保存截图的标志，进入保存截图时会置为1
      */
