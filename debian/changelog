@@ -1,3 +1,10 @@
+deepin-screen-recorder (6.6.21) unstable; urgency=medium
+
+  * fix(mainwindow): Enhance mouse position checks for toolbar visibility
+  * feat(main): Improve command-line save path handling with full file path support
+
+ -- dengzhongyuan <dengzhongyuan@duniontech.com>  Thu, 22 Jan 2026 18:59:09 +0800
+
 deepin-screen-recorder (6.6.20) unstable; urgency=medium
 
   *  feat: Improve countdown tooltip positioning for multi-screen scenarios
