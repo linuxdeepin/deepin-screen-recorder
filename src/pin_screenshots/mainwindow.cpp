@@ -12,6 +12,7 @@
 #include <QDBusInterface>
 #include <QScreen>
 #include <QGuiApplication>
+#include <QApplication>
 #include <QClipboard>
 #include <QFileDialog>
 #include <QStandardPaths>
@@ -909,7 +910,20 @@ void MainWindow::checkToolbarVisibility()
     }
 
     const QPoint globalPos = QCursor::pos();
-    const bool mouseOnMainWindow = this->geometry().contains(globalPos);
+    
+    // 检查鼠标是否在当前窗口的几何范围内
+    bool mouseOnMainWindow = this->geometry().contains(globalPos);
+    // 防止多个贴图重叠时，底层窗口工具栏不消失的问题
+    if (mouseOnMainWindow) {
+        QWidget *topWidget = QApplication::widgetAt(globalPos);
+        if (topWidget) {
+            QWidget *topWindow = topWidget->window();
+            if (topWindow != this && topWindow != m_toolBar) {
+                mouseOnMainWindow = false;
+            }
+        }
+    }
+    
     const bool mouseOnToolBar = m_toolBar && m_toolBar->isVisible() && m_toolBar->geometry().contains(globalPos);
 
     bool mouseOnMenu = false;
