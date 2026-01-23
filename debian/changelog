@@ -1,3 +1,9 @@
+deepin-screen-recorder (6.6.22) unstable; urgency=medium
+
+  * fix: Refine background rendering logic for toolbar in recording modes
+
+ -- dengzhongyuan <dengzhongyuan@uniontech.com>  Fri, 23 Jan 2026 14:17:18 +0800
+
 deepin-screen-recorder (6.6.21) unstable; urgency=medium
 
   * fix(mainwindow): Enhance mouse position checks for toolbar visibility
