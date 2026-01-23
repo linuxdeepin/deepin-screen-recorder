@@ -4785,21 +4785,32 @@ void MainWindow::paintEvent(QPaintEvent *event)
     painter.setRenderHint(QPainter::Antialiasing, true);
 
     // 绘制背景图片，用于工具栏模糊效果
-    // 原条件只在截图模式和2D模式下绘制，导致录屏/滚动截图模式下工具栏模糊失效
-    if (status::shot == m_functionType || status::record == m_functionType || status::scrollshot == m_functionType || m_hasComposite == false) {
-        //        qCDebug(dsrApp) << "function: " << __func__ << " ,line: " << __LINE__;
+    // Qt6+XCB: widget是逻辑大小(m_backgroundRect)，pixmap是物理大小
+    QRect backgroundRect;
+    if (Utils::isQt6XcbEnv) {
+        backgroundRect = QRect(0, 0, m_backgroundRect.width(), m_backgroundRect.height());
+    } else {
+        backgroundRect = QRect(0, 0, rootWindowRect.width(), rootWindowRect.height());
+    }
+    
+    if (status::shot == m_functionType || m_hasComposite == false) {
+        // 截图模式或2D模式：全屏绘制背景
         painter.setRenderHint(QPainter::Antialiasing, true);
-        
-        // Qt6+XCB: widget是逻辑大小(m_backgroundRect)，pixmap是物理大小
-        QRect backgroundRect;
-        if (Utils::isQt6XcbEnv) {
-            backgroundRect = QRect(0, 0, m_backgroundRect.width(), m_backgroundRect.height());
-        } else {
-            backgroundRect = QRect(0, 0, rootWindowRect.width(), rootWindowRect.height());
-        }
-        
         m_backgroundPixmap.setDevicePixelRatio(m_pixelRatio);
         painter.drawPixmap(backgroundRect, m_backgroundPixmap);
+    } else if (status::record == m_functionType || status::scrollshot == m_functionType) {
+        // 录屏/滚动截图模式：只在工具栏区域绘制背景
+        // 不全屏绘制，避免影响鼠标穿透
+        if (m_toolBar && m_toolBar->isVisible()) {
+            QRect toolBarRect = m_toolBar->geometry();
+            toolBarRect.adjust(-20, -20, 20, 20);
+            
+            painter.setRenderHint(QPainter::Antialiasing, true);
+            m_backgroundPixmap.setDevicePixelRatio(m_pixelRatio);
+            painter.setClipRect(toolBarRect);
+            painter.drawPixmap(backgroundRect, m_backgroundPixmap);
+            painter.setClipping(false);
+        }
     }
 
 
