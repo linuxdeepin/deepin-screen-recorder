@@ -160,7 +160,7 @@ private:
      * @param inputPath 输入视频路径
      * @param targetFps 目标帧率
      */
-    void processFrameInterpolation(const QString &inputPath, int targetFps);
+    bool processFrameInterpolation(const QString &inputPath, int targetFps);
 
     /**
      * @brief x11录屏进程

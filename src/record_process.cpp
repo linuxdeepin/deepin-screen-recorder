@@ -202,8 +202,8 @@ void RecordProcess::onRecordFinish()
         QString fileExtension = isLosslessRecording ? "mkv" : "mp4";
 
         if (savePath.endsWith(fileExtension)) {
-            processFrameInterpolation(savePath, m_framerate);
-            return;
+            if (processFrameInterpolation(savePath, m_framerate))
+                return;
         }
     }
 
@@ -215,13 +215,13 @@ void RecordProcess::onRecordFinish()
     exitRecord(newSavePath);
 }
 
-void RecordProcess::processFrameInterpolation(const QString &inputPath, int targetFps)
+bool RecordProcess::processFrameInterpolation(const QString &inputPath, int targetFps)
 {
     qInfo() << __LINE__ << __func__ << "Start frame interpolation";
 
     if (!QFile::exists(inputPath)) {
         qWarning() << "Input not:" << inputPath;
-        return;
+        return false;
     }
 
     m_interpolationProcess = new QProcess(this);
@@ -300,6 +300,7 @@ void RecordProcess::processFrameInterpolation(const QString &inputPath, int targ
     
     qDebug() << "waiting interpolation finished...";
     m_interpolationProcess->waitForFinished();
+    return true;
 }
 
 void RecordProcess::onFrameInterpolationFinish()
