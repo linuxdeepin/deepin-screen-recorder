@@ -2229,7 +2229,7 @@ void MainWindow::fullScreenRecord(const QString fileName)
     recordHeight = m_backgroundRect.height();
     updateToolBarPos();
     qCDebug(dsrApp) << "fullScreenRecord updateToolBarPos";
-    selectAreaName = fileName;
+    selectAreaName = BaseUtils::sanitizeFileName(fileName);
     startCountdown();
     qCDebug(dsrApp) << "fullScreenRecord startCountdown";
 }
@@ -2280,7 +2280,7 @@ void MainWindow::topWindow()
                 qCDebug(dsrApp) << "topWindow windowState == WindowMinimized, continue";
                 continue;
             }
-            selectAreaName = window->wmClass();
+            selectAreaName = BaseUtils::sanitizeFileName(window->wmClass());
             recordX = window->frameGeometry().x();
             recordY = window->frameGeometry().y();
             recordWidth = window->frameGeometry().width();
@@ -2354,7 +2354,7 @@ void MainWindow::saveTopWindow()
     if (topWindowIndex < 0) {
         topWindowIndex = 0;
     }
-    selectAreaName = windowNames[topWindowIndex];
+    selectAreaName = BaseUtils::sanitizeFileName(windowNames[topWindowIndex]);
     recordX = windowRects[topWindowIndex].x();
     recordY = windowRects[topWindowIndex].y();
     recordWidth = windowRects[topWindowIndex].width();
@@ -4422,7 +4422,7 @@ bool MainWindow::saveAction(const QPixmap &pix)
                     path = QStandardPaths::writableLocation(QStandardPaths::DesktopLocation);
                 }
 
-                if (fileName.isEmpty()) {
+                if (selectAreaName.isEmpty()) {
                     fileName = QString("%1_%2").arg(functionTypeStr).arg(currentTime);
                 } else {
                     fileName = QString("%1_%2_%3").arg(functionTypeStr).arg(selectAreaName).arg(currentTime);
@@ -5104,7 +5104,7 @@ int MainWindow::mouseReleaseEF(QMouseEvent *mouseEvent, bool &needRepaint)
                     for (auto it = windowRects.rbegin(); it != windowRects.rend(); ++it) {
                         if (QRect(it->x(), it->y(), it->width(), it->height())
                                 .contains(this->cursor().pos() + screenRect.topLeft())) {
-                            selectAreaName = windowNames[windowRects.rend() - it - 1];
+                            selectAreaName = BaseUtils::sanitizeFileName(windowNames[windowRects.rend() - it - 1]);
                             break;
                         }
                     }

@@ -66,6 +66,12 @@ public:
      */
     static bool          isValidFormat(QString suffix);
     static bool          isCommandExist(QString command);
+    /**
+     * @brief 清洗字符串中不适合作为文件名的字符
+     * @param name: 原始名称（如窗口 WM_CLASS）
+     * @return 替换了路径分隔符和特殊字符后的安全文件名
+     */
+    static QString       sanitizeFileName(const QString &name);
     static QMap<QString, QCursor> m_shapesCursor;
 };
 #endif // BASEUTILS_H

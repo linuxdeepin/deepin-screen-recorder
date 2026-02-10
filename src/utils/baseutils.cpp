@@ -13,6 +13,7 @@
 #include <QApplication>
 #include <QDebug>
 #include <QIcon>
+#include <QRegularExpression>
 
 const QSize START_SIZE = QSize(15, 15);
 const QSize RECT_SIZE = QSize(22, 26);
@@ -160,6 +161,15 @@ bool BaseUtils::isValidFormat(QString suffix)
     }
     qCDebug(dsrApp) << "Format" << suffix << "is valid:" << isValid;
     return isValid;
+}
+
+QString BaseUtils::sanitizeFileName(const QString &name)
+{
+    // 替换文件系统不允许或可能导致路径歧义的字符为 '-'
+    static const QRegularExpression unsafeChars(QStringLiteral(R"([/\\:*?"<>|])"));
+    QString safe = name.trimmed();
+    safe.replace(unsafeChars, QStringLiteral("-"));
+    return safe.isEmpty() ? QStringLiteral("unnamed") : safe;
 }
 
 bool BaseUtils::isCommandExist(QString command)
