@@ -95,6 +95,8 @@ equals(QT_MAJOR_VERSION, 6) {
     #INCLUDEPATH += $$PREFIX/include/KF6/KI18n
 
     INCLUDEPATH += /usr/include/x86_64-linux-gnu/qt6/QtWidgets
+     # Add an alternative search path because of the incorrect dtk6widget.pc
+    INCLUDEPATH += /usr/include/dtk6/DWidget
     
 } else {
     QT += core gui widgets network dbus multimedia multimediawidgets concurrent x11extras svg \
@@ -109,6 +111,8 @@ equals(QT_MAJOR_VERSION, 6) {
     INCLUDEPATH += $$PREFIX/include/KF5/KGlobalAccel
     INCLUDEPATH += $$PREFIX/include/KF5/KI18n
     
+    # Add an alternative search path because of the incorrect dtkwidget.pc
+    INCLUDEPATH += /usr/include/dtk5/DWidget
     # Comment out or remove Wayland support for Qt5
     # contains(DEFINES, KF5_WAYLAND_FLAGE_ON) {
     #     QT += KI18n KWaylandClient

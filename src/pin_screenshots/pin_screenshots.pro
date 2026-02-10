@@ -10,11 +10,15 @@ equals(QT_MAJOR_VERSION, 6) {
     
     # Qt6 specific configurations
     PKGCONFIG += dtk6widget dtk6core
+    # Add an alternative search path because of the incorrect dtk6widget.pc
+    INCLUDEPATH += /usr/include/dtk6/DWidget
 } else {
     QT += core gui widgets dbus
     
     # Qt5 specific configurations
     PKGCONFIG += dtkwidget dtkcore
+    # Add an alternative search path because of the incorrect dtkwidget.pc
+    INCLUDEPATH += /usr/include/dtk5/DWidget
 }
 
 TARGET = deepin-pin-screenshots
