@@ -598,10 +598,10 @@ QPixmap ScreenGrabber::grabWithXGetImage(bool &ok, const QRect &rect)
         if (isFullDesktop) {
             physicalRect = QRect(); 
         } else {
-            // 部分区域截图：位置不变，尺寸×DPR
+            // 部分区域截图：位置和尺寸都需要×DPR转换为物理坐标
             physicalRect = QRect(
-                rect.x(),                                    // 位置X不变（已经是物理坐标）
-                rect.y(),                                    // 位置Y不变（已经是物理坐标）
+                static_cast<int>(rect.x() * realDPR),        // 位置X×DPR
+                static_cast<int>(rect.y() * realDPR),        // 位置Y×DPR
                 static_cast<int>(rect.width() * realDPR),    // 宽度×DPR
                 static_cast<int>(rect.height() * realDPR)    // 高度×DPR
             );
