@@ -382,6 +382,8 @@ public slots:
     void showReleaseFeedback(int x, int y);
     void responseEsc();
     void compositeChanged();
+    /// 确保存在录制框并在 2D 下把主窗口摄像头迁到录制框
+    void ensureRecorderRegionAndMigrateCameraFor2D();
     void updateToolBarPos();
     void updateSideBarPos();
     //void updateRecordButtonPos();

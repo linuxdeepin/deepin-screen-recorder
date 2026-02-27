@@ -258,7 +258,7 @@ void MainWindow::initAttributes()
         } else {
             setWindowFlags(Qt::FramelessWindowHint | Qt::WindowStaysOnTopHint | Qt::WindowDoesNotAcceptFocus);
         }
-        if (this->windowHandle()) {            
+        if (this->windowHandle()) {
             if (DSysInfo::minorVersion().toInt() >= 1070) {
                 this->windowHandle()->setProperty("_d_dwayland_window-type", "override");
             } else {
@@ -2001,14 +2001,14 @@ int MainWindow::getWaitTimeByImageSize(const QPixmap &pix)
         qWarning() << __FUNCTION__ << "Empty pixmap, using default wait time";
         return 2; // 默认等待时间
     }
-    
+
     // 计算图片像素总数
     qint64 totalPixels = static_cast<qint64>(pix.width()) * pix.height();
-    qInfo() << __FUNCTION__ << "Image size:" << pix.width() << "x" << pix.height() 
+    qInfo() << __FUNCTION__ << "Image size:" << pix.width() << "x" << pix.height()
             << "Total pixels:" << totalPixels;
-    
+
     int waitTime = 2; // 默认等待时间
-    
+
     // 根据图片大小区间确定等待时间，按像素数倍数关系设计
     if (totalPixels <= 921600) { // 720p及以下 (1280×720) - 基准
         waitTime = 2;
@@ -2026,10 +2026,10 @@ int MainWindow::getWaitTimeByImageSize(const QPixmap &pix)
         waitTime = static_cast<int>(2 + log2(pixelRatio) * 2); // 对数增长，避免时间过长
         waitTime = qMin(waitTime, 15); // 最大不超过15秒
     }
-    
-    qInfo() << __FUNCTION__ << "Calculated wait time:" << waitTime << "seconds for image size:" 
+
+    qInfo() << __FUNCTION__ << "Calculated wait time:" << waitTime << "seconds for image size:"
             << pix.width() << "x" << pix.height() << "(total pixels:" << totalPixels << ")";
-    
+
     return waitTime;
 }
 
@@ -2310,52 +2310,65 @@ void MainWindow::responseEsc()
 
 void MainWindow::compositeChanged()
 {
+    bool newComposite = m_wmHelper->hasComposite();
 
     // 滚动截图过程中动态切换为2D模式，直接结束
     if (m_functionType == status::shot) {
-        m_toolBar->setScrollShotDisabled(!m_wmHelper->hasComposite());
+        m_toolBar->setScrollShotDisabled(!newComposite);
         return;
     }
-    if (!m_wmHelper->hasComposite() && m_functionType == status::scrollshot) {
+    if (!newComposite && m_functionType == status::scrollshot) {
         saveScreenShot();
         return;
     }
 
-    // 在非录屏状态下，通过快捷键关闭特效模式
-    if (recordButtonStatus != RECORD_BUTTON_RECORDING) {
-        m_hasComposite = m_wmHelper->hasComposite();
-        update();
-        return;
-    }
-
-    if (m_hasComposite == true  && !m_wmHelper->hasComposite()) {
-        // 录屏过程中 由初始3D转2D模式, 强制暂停录屏.
-        // 如果录屏由 由初始2D转3D模式, 则不强制退出录屏.
-        // 强制退出通知
-        forciblySavingNotify();
-        if (recordButtonStatus == RECORD_BUTTON_RECORDING) {
-            // 录屏过程中， 从3D切换回2D， 停止录屏。
-            stopRecord();
-            return;
+    // 录制中或非录制（含倒计时）：合成器变化时统一处理 2D/3D 切换
+    if (m_hasComposite != newComposite) {
+        if (newComposite) {
+            // 2D → 3D：恢复主窗口，隐藏录制框
+            qInfo() << "Composite state change to 3D";
+            if (this->testAttribute(Qt::WA_TranslucentBackground))
+                show();
+            if (m_pRecorderRegion)
+                m_pRecorderRegion->hide();
         } else {
-            // 倒计时3s内， 从3D切换回2D直接退出。
-            exitApp();
+            // 3D → 2D：确保录制框存在并迁移摄像头，再隐藏主窗口、显示录制框
+            qInfo() << "Composite state change to 2D";
+            ensureRecorderRegionAndMigrateCameraFor2D();
+            if (this->testAttribute(Qt::WA_TranslucentBackground))
+                hide();
+            if (m_pRecorderRegion) {
+                m_pRecorderRegion->show();
+                m_pRecorderRegion->setCameraShow(true);
+            }
         }
-
-        /*
-        qDebug() << "have no Composite";
-        Utils::warnNoComposite();
-        emit releaseEvent();
-        if (QSysInfo::currentCpuArchitecture().startsWith("x86") && m_isZhaoxin == false) {
-            m_pScreenRecordEvent->terminate();
-            m_pScreenRecordEvent->wait();
-        }
-        QApplication::quit();
-        */
+        update();
     }
-    //2D录屏, 切换模式后,更新当前按钮的样式
+
+    // 更新内部状态
+    m_hasComposite = newComposite;
+
+    // 更新按钮样式
     if (m_keyBoardStatus && m_pRecorderRegion) {
         m_pRecorderRegion->updateKeyBoardButtonStyle();
+    }
+}
+
+void MainWindow::ensureRecorderRegionAndMigrateCameraFor2D()
+{
+    if (!m_pRecorderRegion) {
+        m_pRecorderRegion = new RecorderRegionShow();
+        m_pRecorderRegion->resize(recordWidth + 2, recordHeight + 2);
+        m_pRecorderRegion->move(std::max(recordX - 1, 0), std::max(recordY - 1, 0));
+        if (m_cameraWidget && m_selectedCamera) {
+            m_cameraWidget->cameraStop();
+            m_cameraWidget->hide();
+            m_pRecorderRegion->initCameraInfo(m_cameraWidget->postion(), m_cameraWidget->geometry().size());
+        }
+    } else if (m_cameraWidget && m_selectedCamera) {
+        m_cameraWidget->cameraStop();
+        m_cameraWidget->hide();
+        m_pRecorderRegion->initCameraInfo(m_cameraWidget->postion(), m_cameraWidget->geometry().size());
     }
 }
 
@@ -5732,8 +5745,12 @@ void MainWindow::startRecord()
     if (m_hasComposite == false) {
         hide();
         // 显示录屏框区域 和 摄像头。
-        m_pRecorderRegion->setCameraShow();
-        m_pRecorderRegion->show();
+        if (m_pRecorderRegion) {
+            m_pRecorderRegion->setCameraShow();
+            m_pRecorderRegion->show();
+        } else {
+            qWarning() << "m_pRecorderRegion is null, cannot show recording border";
+        }
     }
 }
 

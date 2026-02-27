@@ -51,6 +51,13 @@ RecorderRegionShow::~RecorderRegionShow()
 
 void RecorderRegionShow::initCameraInfo(const CameraWidget::Position position, const QSize size)
 {
+    if (m_cameraWidget) {
+        if (m_cameraWidget->getCameraStatus()) {
+            m_cameraWidget->cameraStop();
+        }
+        delete m_cameraWidget;
+        m_cameraWidget = nullptr;
+    }
     m_cameraWidget = new CameraWidget();
 
     QRect r = this->geometry();
