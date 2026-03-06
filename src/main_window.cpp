@@ -151,7 +151,7 @@ static GetAllWindowStatesListPtr getAllWindowStatesList = nullptr;
 MainWindow::MainWindow(DWidget *parent)
     : QMainWindow(parent)
     , m_wmHelper(DWindowManagerHelper::instance())
-    , m_hasComposite(DWindowManagerHelper::instance()->hasComposite())
+    , m_hasComposite(DWindowManagerHelper::instance()->hasBlurWindow())
     , m_initScreenShot(false)
     , m_initScreenRecorder(false)
     , m_initScroll(false)
@@ -203,9 +203,9 @@ void MainWindow::initMainWindow()
     }
 
     Utils::pixelRatio = m_pixelRatio;
-    // 监控录屏过程中， 特效窗口的变化。
-    connect(m_wmHelper, &DWindowManagerHelper::hasCompositeChanged, this, &MainWindow::compositeChanged);
-    qCDebug(dsrApp) << "Connected hasCompositeChanged signal.";
+    // 监控录屏过程中， 特效/模糊状态的变化（用 hasBlurWindow 与系统保持一致）
+    connect(m_wmHelper, &DWindowManagerHelper::hasBlurWindowChanged, this, &MainWindow::compositeChanged);
+    qCDebug(dsrApp) << "Connected hasBlurWindowChanged signal.";
 
     connect(qApp, &QGuiApplication::screenAdded, this, &MainWindow::onExit);
     qCDebug(dsrApp) << "Connected screenAdded signal to onExit.";
@@ -2900,22 +2900,22 @@ void MainWindow::compositeChanged()
 {
     // 滚动截图过程中动态切换为2D模式，直接结束
     if (m_functionType == status::shot) {
-        m_toolBar->setScrollShotDisabled(!m_wmHelper->hasComposite());
+        m_toolBar->setScrollShotDisabled(!m_wmHelper->hasBlurWindow());
         return;
     }
-    if (!m_wmHelper->hasComposite() && m_functionType == status::scrollshot) {
+    if (!m_wmHelper->hasBlurWindow() && m_functionType == status::scrollshot) {
         saveScreenShot();
         return;
     }
 
     // 在非录屏状态下，通过快捷键关闭特效模式
     if (recordButtonStatus != RECORD_BUTTON_RECORDING) {
-        m_hasComposite = m_wmHelper->hasComposite();
+        m_hasComposite = m_wmHelper->hasBlurWindow();
         update();
         return;
     }
 
-    if (m_hasComposite == true && !m_wmHelper->hasComposite()) {
+    if (m_hasComposite && !m_wmHelper->hasBlurWindow()) {
         // 录屏过程中 由初始3D转2D模式, 强制暂停录屏.
         // 如果录屏由 由初始2D转3D模式, 则不强制退出录屏.
         // 强制退出通知
@@ -2947,7 +2947,7 @@ void MainWindow::updateToolBarPos()
         m_toolBar->initToolBar(this, isHideToolBar);
         m_toolBar->setRecordLaunchMode(m_functionType);
         // m_toolBar->setIsZhaoxinPlatform(m_isZhaoxin);
-        m_toolBar->setScrollShotDisabled(!m_wmHelper->hasComposite());
+        m_toolBar->setScrollShotDisabled(!m_wmHelper->hasBlurWindow());
         
         // 只在录屏模式下初始化音频和摄像头监视器
         if (m_functionType == status::record) {

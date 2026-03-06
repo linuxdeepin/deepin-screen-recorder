@@ -135,7 +135,7 @@ void ButtonFeedback::paintEvent(QPaintEvent *event)
     m_painter->begin(this);
     m_painter->drawPixmap(QPoint(0, 0), pixmap);
     m_painter->end();
-    if (!DWindowManagerHelper::instance()->hasComposite()) {
+    if (!DWindowManagerHelper::instance()->hasBlurWindow()) {
         setMask(pixmap.mask());
     }
     event->accept();

@@ -24,7 +24,7 @@ const int _BUTTON_WIDTH = 80;
 KeyButtonWidget::KeyButtonWidget(DWidget *parent) : DBlurEffectWidget(parent)
 {
     qCDebug(dsrApp) << "KeyButtonWidget constructor entered";
-    if(DWindowManagerHelper::instance()->hasComposite()){
+    if(DWindowManagerHelper::instance()->hasBlurWindow()){
         qCDebug(dsrApp) << "Composite manager detected, setting blur radius to 15";
         setBlurRectXRadius(15);
         setBlurRectYRadius(15);

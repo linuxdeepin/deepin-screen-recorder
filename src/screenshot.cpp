@@ -144,8 +144,8 @@ void Screenshot::ScrollScreenshot()
     qCDebug(dsrApp) << "ScrollScreenshot() called.";
 #ifdef OCR_SCROLL_FLAGE_ON
     //2d模式不支持滚动截图
-    qCDebug(dsrApp) << "Whether to turn on window effects? " << (DWindowManagerHelper::instance()->hasComposite() ? "yes" : "no") << ".";
-    if (DWindowManagerHelper::instance()->hasComposite()) {
+    qCDebug(dsrApp) << "Whether to turn on window effects? " << (DWindowManagerHelper::instance()->hasBlurWindow() ? "yes" : "no") << ".";
+    if (DWindowManagerHelper::instance()->hasBlurWindow()) {
         qCDebug(dsrApp) << "Starting scroll shot.";
         m_window.initAttributes();
         m_window.initResource();

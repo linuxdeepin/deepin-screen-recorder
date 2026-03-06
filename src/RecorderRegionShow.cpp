@@ -127,7 +127,7 @@ void RecorderRegionShow::updateKeyBoardButtonStyle()
     int count = m_keyButtonList.count();
     for (int j = 0; j < count; ++j) {
         qCDebug(dsrApp) << "Processing key button at index:" << j;
-        if (DWindowManagerHelper::instance()->hasComposite()) {
+        if (DWindowManagerHelper::instance()->hasBlurWindow()) {
             qCDebug(dsrApp) << "DWM has composite, setting blur radius to 15.";
             m_keyButtonList.at(j)->setBlurRectXRadius(15);
             m_keyButtonList.at(j)->setBlurRectYRadius(15);
