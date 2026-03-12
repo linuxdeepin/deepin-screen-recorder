@@ -1,5 +1,5 @@
-// Copyright (C) 2019 ~ 2019 Deepin Technology Co., Ltd.
-// SPDX-FileCopyrightText: 2022 UnionTech Software Technology Co., Ltd.
+// Copyright (C) 2019 ~ 2026 Deepin Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2022 - 2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -53,7 +53,7 @@ void MainWindow::initMainWindow()
     setMouseTracking(true);
     isLeftPressDown = false;
     dir = UP;
-    //获取屏幕的锁房比例
+    //获取屏幕的缩放比例
     m_pixelRatio = qApp->primaryScreen()->devicePixelRatio();
 
     m_menuController = new MenuController();
@@ -166,7 +166,7 @@ void MainWindow::saveImg()
         }
         m_lastImagePath = QString("%1/%2.%3").arg(savePath).arg(m_imageName).arg(formatStr);
     } else if (m_saveInfo.first == SubToolWidget::FOLDER_CHANGE) {
-        m_toolBar->setHiden();
+        this->hide();
         qDebug() << "保存到指定位置";
         QString saveFileName;
         QString imgName = Settings::instance()->getSavePath();
