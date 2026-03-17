@@ -4,7 +4,7 @@
 
 截圖錄影是一款集截圖、螢幕錄影於一體的小工具，支援圖片編輯、貼圖、捲動截圖、文字辨識、螢幕錄影等功能。
 
-![part_area](fig/partarea.png)
+![截圖](fig/partarea.png)
 
 ## 使用入門
 
@@ -46,8 +46,6 @@
 
 ![1|全螢幕截圖](fig/fullscreen.png)
 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-
 選取步驟：
 1. 使用快速鍵 **Ctrl + Alt + A** (截圖) 或 **Ctrl + Alt + R** (錄影)。
 2. 移動滑鼠至桌面自動選取全螢幕，左上角顯示尺寸。
@@ -62,8 +60,6 @@
 
 ![1|視窗截圖](fig/window.png)
 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-
 1. 使用快速鍵 **Ctrl + Alt + A** 或 **Ctrl + Alt + R**。
 2. 滑鼠懸停視窗自動選取。
 3. 左鍵點選視窗顯示工具列。
@@ -72,8 +68,6 @@
 自由選取任意範圍。
 
 ![1|自訂區域截圖](fig/partarea.png)
-
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
 1. 使用快速鍵 **Ctrl + Alt + A** 或 **Ctrl + Alt + R**。
 2. 按住左鍵拖曳選取區域，左上角即時顯示尺寸。
@@ -84,16 +78,15 @@
 
 #### 調整大小
 - 拖曳白色邊框 (游標變 ![双箭头](../common/Mouse_Arrow.svg))。
-- 按 **Ctrl** + ![向上](../common/Up.svg)/![向下](../common/Down.svg) 垂直調整，**Ctrl** + ![向左](../common/Left.svg)/![向右](../common/Right.svg) 水平調整。
-
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+- 按 **Ctrl** + ![向上](../common/Up.svg)/![向下](../common/Down.svg) 垂直調整，**Ctrl** + ![向左](../common/Left.svg)/![向右](../common/Right.svg) 水平調整。&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
 #### 移動位置
 - 游標為 ![手指](../common/hand.svg) 時拖曳區域。
 - 使用方向鍵 (![向上](../common/Up.svg)/![向下](../common/Down.svg) 等) 微調。
 
 ## 截圖功能
-截圖模式下使用工具列繪圖、新增文字、辨識文字等。
+截圖模式下使用工具列進行圖形繪製、文字註解等操作，同時可辨識圖中文字、將圖片置頂貼於桌面、使用**AI 擷圖**對擷圖內容進行解釋、總結、翻譯等處理。
+
 
 ![0|截圖工具列](fig/capturebar.png)
 
@@ -101,101 +94,57 @@
     <caption>工具列說明</caption>
     <tbody>
         <tr>
-            <td><img src="../common/rectangle_normal.svg" alt="矩形工具" class="inline" /></td>
-            <td>矩形工具</td>
-            <td><img src="../common/oval_normal.svg" alt="橢圓工具" class="inline" /></td>
-            <td>橢圓工具</td>
-             <td><img src="../common/line_mouse.svg" alt="直線工具" class="inline" /></td>
-            <td>直線工具</td>
+            <td style="text-align:center;"><img src="../common/bar_geometric.svg" alt="幾何工具" class="inline" /></td>
+            <td>幾何工具</td>
+             <td style="text-align:center;"><img src="../common/line_mouse.svg" alt="直線" class="inline" /></td>
+            <td>直線</td>
+             <td style="text-align:center;"><img src="../common/Arrow_normal.svg" alt="箭頭" class="inline" /></td>
+            <td>箭頭</td>
         </tr>
         <tr>
-             <td><img src="../common/Arrow_normal.svg" alt="箭頭工具" class="inline" /></td>
-            <td>箭頭工具</td>
-            <td><img src="../common/Combined_Shape.svg" alt="畫筆工具" class="inline" /></td>
-            <td>畫筆工具</td>
-            <td><img src="../common/Mosaic_normal.svg" alt="模糊工具" class="inline" /></td>
-            <td>模糊工具</td>
+            <td style="text-align:center;"><img src="../common/Combined_Shape.svg" alt="畫筆" class="inline" /></td>
+            <td>畫筆</td>
+            <td style="text-align:center;"><img src="../common/Mosaic_normal.svg" alt="模糊" class="inline" /></td>
+            <td>模糊</td>
+            <td style="text-align:center;"><img src="../common/text_normal.svg" alt="文字" class="inline" /></td>
+            <td>文字</td>
         </tr>
         <tr>
-            <td><img src="../common/text_normal.svg" alt="文字工具" class="inline" /></td>
-            <td>文字工具</td>
-            <td><img src="../common/scrollshot.svg" alt="捲動截圖" class="inline" /></td>
+            <td style="text-align:center;"><img src="../common/scrollshot.svg" alt="捲動截圖" class="inline" /></td>
             <td>捲動截圖</td>
-             <td><img src="../common/ocr.svg" alt="辨識文字" class="inline" /></td>
+             <td style="text-align:center;"><img src="../common/ocr.svg" alt="辨識文字" class="inline" /></td>
             <td>辨識文字</td>
+             <td style="text-align:center;"><img src="../common/pin.svg" alt="貼圖" class="inline" /></td>
+            <td>貼圖</td>
         </tr>
         <tr>
-             <td><img src="../common/pin.svg" alt="貼圖" class="inline" /></td>
-            <td>貼圖</td>
-            <td><img src="../common/close.svg" alt="關閉" class="inline" /></td>
-            <td>結束截圖</td>
+            <td style="text-align:center;"><img src="../common/bar_ai.svg" alt="AI截圖" class="inline" /></td>
+            <td>AI截圖</td>
+            <td style="text-align:center;"><img src="../common/bar_settings.svg" alt="設定" class="inline" /></td>
+            <td>設定</td>
+            <td style="text-align:center;"><img src="../common/bar_save.svg" alt="保存到本地" class="inline" /></td>
+            <td>保存到本地</td>            
+        </tr>       
+        <tr>
+            <td style="text-align:center;"><img src="../common/close.svg" alt="關閉" class="inline" /></td>
+            <td>關閉</td>
+            <td style="text-align:center;"><img src="../common/done.svg" alt="複製到剪貼板" class="inline" /></td>
+            <td>複製到剪貼板</td> 
         </tr>
     </tbody>
 </table>
 
+
 > ![notes](../common/notes.svg) 說明：若已設定線條粗細、字型大小等，應用程式會保存設定，下次啟動時自動套用，您也可重新設定。
 
 ### 繪製圖形
-按住 **Shift** 拖曳可繪製標準圖形（正方形/圓形/水平垂直線）。
+通過擷圖工具列上的**幾何工具**、**直線**、**箭頭**、**畫筆**按鈕，可繪製簡易圖形，並支援設定線條的粗細與顏色。
 
-#### 矩形工具
-![1|矩形工具](fig/partarea.png)
 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-
-1. 點選 ![矩形](../common/rectangle_normal.svg)。
-2. 選擇邊線粗細/顏色（多色可選）。
-3. 游標變 ![矩形游標](../common/rect_mouse.svg)。
-4. 按住左鍵拖曳繪製。
-
-#### 橢圓工具
-![1|橢圓工具](fig/ellipsetool.png)
-
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-
-1. 點選 ![橢圓](../common/oval_normal.svg)。
-2. 選擇邊線粗細/顏色。
-3. 游標變 ![橢圓游標](../common/ellipse_mouse.svg)。
-4. 按住左鍵拖曳繪製。
-
-#### 直線與箭頭工具
-![1|線條工具](fig/line.png)
-
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-
-1. 點選 ![直線](../common/line_normal.svg) 或 ![箭頭](../common/Arrow_normal.svg)。
-2. 選擇線條粗細/顏色。
-3. 游標變 ![直線游標](../common/line_mouse.svg) 或 ![箭頭游標](../common/arrow_mouse.svg)。
-4. 按住左鍵拖曳繪製。
-
-#### 畫筆工具
-![1|畫筆](fig/pencil.png)
-
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-
-1. 點選 ![畫筆](../common/Combined_Shape.svg)。
-2. 選擇筆觸粗細/顏色。
-3. 游標變 ![畫筆游標](../common/brush_red.svg)。
-4. 按住左鍵拖曳繪製。
-
-#### 模糊工具
-![1|模糊](fig/Mosaic.png)
-
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-
-1. 點選 ![模糊](../common/Mosaic_normal.svg)。
-2. 選擇樣式：![馬賽克](../common/Mosaic_normal.svg) 或 ![高斯模糊](../common/vague_normal.svg)。
-3. 選擇模式：![矩形](../common/rectangle_normal.svg) (矩形選取)、![橢圓](../common/oval_normal.svg) (橢圓選取)、![畫筆](../common/brush.svg) (自由繪製)。
-4. 拖曳滑桿調整強度。
+![1|繪製圖形](fig/ellipsetool.png)
 
 ### 修改圖形
 編輯或移動已繪製圖形。
-
-![1|編輯圖形](fig/changetool.png)
-
-#### 移動圖形
-1. 游標移至圖形邊線變 ![手指](fig/fingers.png)。
-2. 按住左鍵拖曳移動。
 
 #### 編輯圖形
 1. 游標移至圖形邊線變 ![手指](fig/fingers.png)。
@@ -205,12 +154,22 @@
    - 拖曳 ![旋轉](../common/icon_rotate.svg) 手柄 (游標變 ![旋轉](../common/rotate_mouse.svg)) 旋轉
 3. 編輯框外點選結束編輯。
 
+#### 移動圖形
+
+1. 游標移至圖形邊線變 ![手指](fig/fingers.png)。
+2. 按住左鍵拖曳移動。
+
+### 模糊工具
+
+1. 點選 ![模糊](../common/Mosaic_normal.svg)。
+2. 選擇樣式：![馬賽克](../common/Mosaic_normal.svg) 或 ![高斯模糊](../common/vague_normal.svg)。
+3. 選擇模式：![矩形](../common/rectangle_normal.svg) (矩形選取)、![橢圓](../common/oval_normal.svg) (橢圓選取)、![畫筆](../common/brush.svg) (自由繪製)。
+4. 拖曳滑桿調整強度。
+5. 與其他圖形一致，已繪製的模糊圖形同樣支援修改與移動。
+
 ### 新增文字註解
-為截圖新增說明文字。
 
-![0|文字框](fig/text.png)
-
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+為截圖新增說明文字。&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
 1. 點選 ![文字](../common/text_normal.svg)。
 2. 選擇字型大小/顏色（4色可選）。
@@ -232,17 +191,7 @@
    - 直接修改文字內容
 3. 文字框外點選結束編輯。
 
-### 貼圖 | pinscreenshots
-將截圖固定為桌面浮動視窗，方便對照參考。
-
-選取區域後點選 ![貼圖](../common/pin.svg)，圖片將浮於桌面：
-- 拖曳移動位置
-- 滾動滑鼠滾輪縮放
-- 點選 ![完成](../common/done.svg) 儲存
-
-![0|貼圖](fig/pin_pic.png)
-
-### 捲動截圖 | scrollshot
+### 捲動截圖
 擷取超出螢幕的長內容（如網頁）。
 
 **前提**：啟用 **控制中心 > 個人化 > 視窗特效**。
@@ -271,31 +220,61 @@
 
 ![OCR](fig/ocr.png)
 
+### 貼圖
+
+將截圖固定為桌面浮動視窗，方便對照參考。
+
+選取區域後點選 ![貼圖](../common/pin.svg)，圖片將浮於桌面：
+
+- 拖曳移動位置
+- 滾動滑鼠滾輪縮放
+- 點選 ![完成](../common/done.svg) 儲存
+
+![0|貼圖](fig/pin_pic.png)
+
+### AI截圖
+
+選取區域後點選<img src="../common/bar_ai.svg" alt="AI截图" class="inline" />，展開 AI菜單：
+
+- **解釋**：調起**AI 隨航**解釋截圖中的文字
+- **總結**：調起**AI 隨航**總結截圖中的文字
+- **翻譯**：調起**AI 隨航**翻譯截圖中的文字
+- **問問 AI**：調起**小U助手**並將擷圖傳送至對話方塊，以進行更深入的對話。
+
+![0|AI截圖](fig/ai_tools.png)
+
 ### 延遲截圖
+
 延遲指定時間後擷取畫面。
 
 - 快速鍵：**Ctrl** + ![Print](../common/Print.svg)
 - 終端指令：`deepin-screen-recorder -d n`（`n` 為延遲秒數）
 
-### 儲存截圖
-預設儲存至 **圖片 > Screenshots**。成功時桌面顯示通知（點選 **檢視** 開啟資料夾）。
+### 設定
 
-儲存方式：
-- 雙擊左鍵
-- 點選 ![完成](../common/done.svg)
-- 快速鍵：**Ctrl + S**
-- 右鍵選單 > **儲存**
+選取區域後點選<img src="../common/bar_settings.svg" alt="设置" class="inline" /> ，展開設定菜單：
 
-**選項選單** (![選項](fig/option.png))：
+![設定](fig/screen_setting.png)
 
-- **剪貼簿**：複製到剪貼簿
-- **桌面**：儲存至桌面
-- **圖片**：儲存至預設資料夾
-- **指定位置**：自訂儲存路徑
-- **顯示游標**：截圖包含游標
+- **邊框效果**：無邊框/投緣/外邊框/設備
 - **格式**：PNG/JPG/BMP
+- **顯示游標**：截圖包含游標
+
+### 儲存截圖
+
+選取區域後點選![icon](../common/bar_save.svg)或單擊滑鼠右鍵選擇 **保存**，可將截圖儲存至本機，單擊該按鈕右側的小圖示![icon](../common/dropdown.svg)展開選項，即可設定儲存規則。
+
+- **每次詢問**：每次點選儲存按鈕後選擇儲存路徑
+- **指定位置** > **桌面**：儲存至桌面
+- **指定位置** > **圖片**：儲存至圖片資料夾
+- **指定位置** > **保存時選擇位置**：本次點選儲存按鈕後選擇儲存路徑，下次截圖儲存時將預設儲存至該路徑，除非另行設定。
+
+### 複製到剪貼板
+
+選取區域後點選![icon](../common/done.svg)，或雙擊滑鼠左鍵，或使用快速鍵 **Ctrl + S**，將圖片儲存至剪貼板中。
 
 ## 螢幕錄影
+
 錄製螢幕活動，支援音訊、鏡頭、按鍵顯示等。
 
 > ![notes](../common/notes.svg) 功能依硬體/編碼支援而定。
@@ -306,21 +285,25 @@
     <caption>工具列說明</caption>
     <tbody>
         <tr>
-            <td><img src="../common/key_normal.svg" alt/></td>
+            <td style="text-align:center;"><img src="../common/key_normal.svg" alt/></td>
             <td>顯示按鍵</td>
-            <td><img src="../common/webcam_normal.svg" alt/></td>
+            <td style="text-align:center;"><img src="../common/webcam_normal.svg" alt/></td>
             <td>開啟鏡頭</td>
-            <td><img src="../common/switch.svg" alt/></td>
+            <td style="text-align:center;"><img src="../common/switch.svg" alt/></td>
             <td>切換截圖</td>
         </tr>
           <tr>
-            <td><img src="../common/close.svg" alt/></td>
-            <td>結束錄影</td>
-              <td><img src="../common/done.svg" alt/></td>
+            <td style="text-align:center;"><img src="../common/bar_settings.svg" /></td>
+            <td>設定</td>
+              <td style="text-align:center;"><img src="../common/done.svg" alt/></td>
+            <td>關閉</td>
+              <td style="text-align:center;"><img src="../common/close.svg" alt/></td>
             <td>開始錄影</td>
         </tr>
     </tbody>
 </table>
+
+
 
 ### 錄影設定
 - **顯示按鍵**：![按鍵](../common/key_normal.svg) 最多同時顯示5個按鍵操作

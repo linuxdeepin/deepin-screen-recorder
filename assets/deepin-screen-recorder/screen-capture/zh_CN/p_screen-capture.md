@@ -37,6 +37,8 @@
 
 ![1|快捷键](fig/hotkey.png)
 
+
+
 ## 选择和调整区域
 
 ### 选择截图录屏区域
@@ -50,8 +52,6 @@
 截图录屏会自动识别当前显示器的整个屏幕。
 
 ![1|全屏截图](fig/fullscreen.png)
-
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
 您可以通过操作以下步骤来选择全屏：
 
@@ -70,8 +70,6 @@
 
 ![1|窗口截图](fig/window.png)
 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-
 1. 使用快捷键 **Ctrl + Alt + A** 进入截图模式，或 **Ctrl + Alt + R** 进入录屏模式。
 2. 将鼠标指针移至打开的应用窗口上，截图录屏会自动选中该窗口，并在其左上角显示当前截图录屏区域的尺寸大小。
 3. 鼠标左键单击窗口，弹出工具栏。
@@ -81,8 +79,6 @@
 您还可以自由选择截图录屏的范围。
 
 ![1|区域截图](fig/partarea.png)
-
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
 1. 使用快捷键 **Ctrl + Alt + A** 进入截图模式，或 **Ctrl + Alt + R** 进入录屏模式。
 2. 按住鼠标左键不放，拖动鼠标选择截图录屏区域，在其左上角将实时显示当前截图区域的尺寸大小。
@@ -96,9 +92,7 @@
 
 - 将鼠标指针置于截图录屏区域的白色边框上，鼠标指针变为 ![双箭头](../common/Mouse_Arrow.svg)，
 按住鼠标左键不放，拖动鼠标放大或缩小区域。
-- 按下键盘上的 **Ctrl** + ![向上](../common/Up.svg) 或 ![向下](../common/Down.svg) 来上下扩展区域，按下键盘上的 **Ctrl** + ![向左](../common/Left.svg) 或 ![向右](../common/Right.svg) 来左右扩展区域。
-
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+- 按下键盘上的 **Ctrl** + ![向上](../common/Up.svg) 或 ![向下](../common/Down.svg) 来上下扩展区域，按下键盘上的 **Ctrl** + ![向左](../common/Left.svg) 或 ![向右](../common/Right.svg) 来左右扩展区域。&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
 #### 移动区域位置
 
@@ -110,7 +104,7 @@
 
 ## 截图
 
-在截图模式下，单击工具栏上的按钮，您可以在截图区域绘制图形、编辑图形、添加文字批注、识别图片中的文字等。
+在截图模式下，单击工具栏上的按钮，您可以在截图区域进行图形绘制、文字批注等操作，并可以识别图中文字、将图片置顶贴在桌面上、使用**AI截图**对截图内容进行解释、总结、翻译等。
 
 
 ![0|截图工具栏](fig/capturebar.png)
@@ -119,127 +113,58 @@
     <caption>工具栏说明</caption>
     <tbody>
         <tr>
-            <td><img src="../common/rectangle_normal.svg" alt="矩形工具" class="inline" /></td>
-            <td>矩形工具</td>
-            <td><img src="../common/oval_normal.svg" alt="椭圆工具" class="inline" /></td>
-            <td>椭圆工具</td>
-             <td><img src="../common/line_mouse.svg" alt="直线工具" class="inline" /></td>
-            <td>直线工具</td>
+            <td style="text-align:center;"><img src="../common/bar_geometric.svg" alt="几何工具" class="inline" /></td>
+            <td>几何工具</td>
+            <td style="text-align:center;"><img src="../common/line_mouse.svg" alt="直线" class="inline" /></td>
+            <td>直线</td>
+            <td style="text-align:center;"><img src="../common/Arrow_normal.svg" alt="箭头" class="inline" /></td>
+            <td>箭头</td>
         </tr>
         <tr>
-             <td><img src="../common/Arrow_normal.svg" alt="箭头工具" class="inline" /></td>
-            <td>箭头工具</td>
-            <td><img src="../common/Combined_Shape.svg" alt="画笔工具" class="inline" /></td>
-            <td>画笔工具</td>
-            <td><img src="../common/Mosaic_normal.svg" alt="模糊马赛克工具" class="inline" /></td>
-            <td>模糊工具</td>
+            <td style="text-align:center;"><img src="../common/Combined_Shape.svg" alt="画笔" class="inline" /></td>
+            <td>画笔</td>
+            <td style="text-align:center;"><img src="../common/Mosaic_normal.svg" alt="模糊" class="inline" /></td>
+            <td>模糊</td>
+            <td style="text-align:center;"><img src="../common/text_normal.svg" alt="文字" class="inline" /></td>
+            <td>文字</td>
         </tr>
         <tr>
-            <td><img src="../common/text_normal.svg" alt="文本工具" class="inline" /></td>
-            <td>文本工具</td>
-            <td><img src="../common/scrollshot.svg" alt="滚动截图" class="inline" /></td>
+            <td style="text-align:center;"><img src="../common/scrollshot.svg" alt="滚动截图" class="inline" /></td>
             <td>滚动截图</td>
-             <td><img src="../common/ocr.svg" alt="识别文字" class="inline" /></td>
+            <td style="text-align:center;"><img src="../common/ocr.svg" alt="识别文字" class="inline" /></td>
             <td>识别文字</td>
+            <td style="text-align:center;"><img src="../common/pin.svg" alt="贴图" class="inline" /></td>
+            <td>贴图</td>
         </tr>
         <tr>
-             <td><img src="../common/pin.svg" alt="贴图" class="inline" /></td>
-            <td>贴图</td>
-            <td><img src="../common/close.svg" alt="关闭" class="inline" /></td>
-            <td>退出截图</td>
+            <td style="text-align:center;"><img src="../common/bar_ai.svg" alt="AI截图" class="inline" /></td>
+            <td>AI截图</td>
+            <td style="text-align:center;"><img src="../common/bar_settings.svg" alt="设置" class="inline" /></td>
+            <td>设置</td>
+            <td style="text-align:center;"><img src="../common/bar_save.svg" alt="保存到本地" class="inline" /></td>
+            <td>保存到本地</td>            
+        </tr>
+        <tr>
+            <td style="text-align:center;"><img src="../common/close.svg" alt="关闭" class="inline" /></td>
+            <td>关闭</td>
+            <td style="text-align:center;"><img src="../common/done.svg" alt="复制到剪贴板" class="inline" /></td>
+            <td>复制到剪贴板</td>            
         </tr>
     </tbody>
 </table>
-
-
 
 
 > ![notes](../common/notes.svg) 说明：如果您已经对工具栏和属性栏中如线条粗细、字体大小等进行了选择，截图录屏会保存设置，再次启动截图录屏，将默认使用该设置，您也可以重新进行选择。
 
 ### 绘制图形
 
-通过截图工具栏上的按钮可以绘制简单的图形。选择图形工具后，按住键盘上 **Shift** 键，拖动鼠标绘制正方形、圆形或水平/垂直方向的直线。
+通过截图工具栏上的**几何工具**、**直线**、**箭头**、**画笔**按钮可以绘制简单的图形，并支持设置线条的粗细和颜色。
 
-#### 矩形工具
-
-![1|矩形工具](fig/partarea.png)
-
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-
-1. 在截图工具栏中，单击 ![矩形](../common/rectangle_normal.svg)。
-2. 在工具栏展开的面板中，选择矩形边线的粗细及颜色，有多种颜色可供选择。
-3. 将鼠标指针置于截图区域上，鼠标指针变为 ![矩形指针](../common/rect_mouse.svg)。
-4. 按住鼠标左键不放，拖动鼠标完成图形区域的绘制。
-   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-
-
-#### 椭圆工具
-
-![1|椭圆工具](fig/ellipsetool.png)
-
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-
-1. 在截图工具栏中，单击 ![椭圆](../common/oval_normal.svg)。
-
-2. 在工具栏展开的面板中，选择椭圆边线的粗细和颜色，有多种颜色可供选择。
-
-3. 将鼠标指针置于截图区域上，鼠标指针变为 ![椭圆指针](../common/ellipse_mouse.svg)。
-
-4. 按住鼠标左键不放，拖动鼠标完成图形区域的绘制。
-
-   
-
-
-#### 直线和箭头工具
-
-![1|线条工具](fig/line.png)
-
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-
-1. 在截图工具栏中，单击 ![箭头](../common/line_normal.svg)或 ![箭头](../common/Arrow_normal.svg)。
-2. 在工具栏展开的面板中，选择线条的粗细和颜色，有多种颜色可供选择。
-3. 将鼠标指针置于截图区域上，鼠标指针变为 ![线条指针](../common/line_mouse.svg) 或 ![箭头指针](../common/arrow_mouse.svg)。
-5. 按住鼠标左键不放，拖动鼠标完成图形区域的绘制。
-
-#### 画笔工具
-
-![1|pencil](fig/pencil.png)
-
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-
-1. 在截图工具栏中，单击 ![画笔](../common/Combined_Shape.svg)。
-
-2. 在工具栏展开的面板中，选择画笔的粗细和颜色，有多种颜色可供选择。
-
-3. 将鼠标指针置于截图区域上，鼠标指针变为 ![画笔指针](../common/brush_red.svg)。
-
-4. 按住鼠标左键不放，拖动鼠标完成图形区域的绘制。
-
-   
-
-#### 模糊工具
-
-![1|pencil](fig/Mosaic.png)
-
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-
-1. 在截图工具栏中，单击 ![模糊](../common/Mosaic_normal.svg)。
-2. 在工具栏展开的面板中，可以选择模糊的样式，默认为![模糊](../common/Mosaic_normal.svg)马赛克样式，亦或是![模糊](../common/vague_normal.svg)高斯模糊样式。
-3. 可以选择绘制的方式，如![模糊](../common/rectangle_normal.svg)矩形框选，![模糊](../common/oval_normal.svg)椭圆形框选，![模糊](../common/brush.svg)自由涂抹。
-4. 工具栏展开的面板的最右侧，可以左右拖动，选择模糊的强度。
-
+![1|绘制图形](fig/ellipsetool.png)
 
 ### 修改图形
 
-如果您在截图中绘制了其他的图形，可以对图形进行修改和移动。
-
-![1|修改图形](fig/changetool.png)
-
-
-#### 移动图形
-
-1. 将鼠标指针置于图形的边线上，此时鼠标指针变为 ![手指](fig/fingers.png)。
-2. 按住鼠标左键不放，将图形移动到截图区域的任何位置。
+如果您在截图中绘制了图形，可以对图形进行修改和移动。
 
 
 #### 编辑图形
@@ -251,14 +176,22 @@
    - 将鼠标指针置于编辑框的 ![旋转](../common/icon_rotate.svg) 上，此时鼠标指针变成 ![旋转](../common/rotate_mouse.svg)，通过拖动鼠标指针，来旋转图形。
 3. 在编辑框外单击鼠标左键，退出编辑模式。
 
+#### 移动图形
+
+1. 将鼠标指针置于图形的边线上，此时鼠标指针变为 ![手指](fig/fingers.png)。
+2. 按住鼠标左键不放，将图形移动到截图区域的任何位置。
+
+### 模糊工具
+
+1. 在截图工具栏中，单击 ![模糊](../common/Mosaic_normal.svg)。
+2. 在工具栏展开的面板中，可以选择模糊的样式，默认为![模糊](../common/Mosaic_normal.svg)马赛克样式，亦或是![模糊](../common/vague_normal.svg)高斯模糊样式。
+3. 可以选择绘制的方式，如![模糊](../common/rectangle_normal.svg)矩形框选，![模糊](../common/oval_normal.svg)椭圆形框选，![模糊](../common/brush.svg)自由涂抹。
+4. 工具栏展开的面板的最右侧，可以左右拖动，选择模糊的强度。
+5. 与其他图形一样，绘制的模糊图形也支持修改和移动。
 
 ### 添加文字批注
 
-对截取的图片进行文字补充和说明，帮助他人更清晰地了解截取的图片。
-
-![0|文本框](fig/text.jpg)
-
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+对截取的图片进行文字补充和说明，帮助他人更清晰地了解截取的图片。&nbsp;&nbsp;
 
 1. 在截图工具栏中，单击 ![文字](../common/text_normal.svg)。
 2. 在工具栏展开的面板中，选择字号和颜色，有四种颜色可供选择。
@@ -284,20 +217,7 @@
    - 在文本框内，修改文字信息。
 3. 在文本框外单击鼠标左键，退出编辑模式。
 
-
-### 贴图|pinscreenshots
-
-通过贴图功能将截图变为桌面浮窗，方便您快速查阅、对比和梳理信息。
-
-选择需要截取的区域后，单击工具栏上的贴图按钮 ![icon](../common/pin.svg)，截图浮于桌面上即为贴图，您可以对贴图进行如下操作：
-
-- 通过鼠标移动图片的位置。
-- 将鼠标指针置于图片上，向上或向下滚动鼠标滚轮等比缩放图片。
-- 单击按钮 ![icon](../common/done.svg) 保存图片。
-
-![0|option](fig/pin_pic.jpg)
-
-### 滚动截图|scrollshot
+### 滚动截图
 
 滚动截图功能不仅可以截取屏幕内可见的内容，还能截取超过屏幕外的内容，满足一次性截取长图的需求。
 
@@ -323,8 +243,6 @@
 - 滚动操作速度不宜过快。
 
 
-
-
 ### 识别文字
 
 对于截图区域中无法复制的内容，可以使用识别文字功能提取文字。
@@ -334,47 +252,58 @@
 
 ![ocr](fig/ocr.png)
 
+### 贴图
 
+通过贴图功能将截图变为桌面浮窗，方便您快速查阅、对比和梳理信息。
+
+选择需要截取的区域后，单击工具栏上的贴图按钮 ![icon](../common/pin.svg)，截图浮于桌面上即为贴图，您可以对贴图进行如下操作：
+
+- 通过鼠标移动图片的位置。
+- 将鼠标指针置于图片上，向上或向下滚动鼠标滚轮等比缩放图片。
+- 单击按钮 ![icon](../common/done.svg) 保存图片。
+
+![0|贴图](fig/pin_pic.png)
+
+### AI截图
+
+在截图工具栏中，单击按钮<img src="../common/bar_ai.svg" alt="AI截图" class="inline" />展开AI菜单，您可以：
+
+- 选择 **解释**，让**AI随航**为您解释截图中的文字；
+- 选择 **总结**，让**AI随航**为您总结截图中的文字；
+- 选择 **翻译**，让**AI随航**为您翻译截图中的文字；
+- 选择 **问问AI**，直接唤起**小U助手**并将截图发送至对话框，以进行更深入的对话。
+
+![0|AI截图](fig/ai_tools.png)
 
 ### 延时截图
 
 您可以通过延时截图功能，捕捉特定状态或时间下的屏幕内容。
 
 - 使用快捷键 **Ctrl** + ![icon](../common/Print.svg)，启动延时截图。
-- 在终端中执行命令 “deepin-screen-recorder -d n”，其中n表示以秒为单位的延时时长。
+- 在终端中执行命令 “deepin-screen-recorder -d n”，其中n表示以秒为单位的延时时长。 
 
-   
+### 设置
+
+您还可以在截图工具栏中，单击按钮<img src="../common/bar_settings.svg" alt="设置" class="inline" />，展开设置菜单：
+
+![0|option](fig/screen_setting.png)
+
+- 选择**无边框/投影/外边框/样机**，设置图片边框效果。
+- 选择 **PNG/JPG/BMP**，设置图片格式。
+- 选择 **显示光标**，光标在截图区域内，截图生成图片时会同时显示光标所在的位置和样式。
 
 ### 保存截图
 
-将截取的图片保存下来，为后续的使用储存素材！
+单击工具栏中的按钮![icon](../common/bar_save.svg)或单击鼠标右键选择 **保存**，可将截图保存在本地，单击该按钮右侧的小图标![icon](../common/dropdown.svg)展开选项可设置保存规则。
 
-当截图保存成功之后，桌面上方弹出提示信息，单击 **查看**，打开截图所在的文件夹。
+- 选择 **每次询问**，可在每次点击保存按钮后选择保存路径。
+- 选择 **指定位置** > **桌面**，将图片保存到桌面。
+- 选择 **指定位置** > **图片**，截图文件自动保存到图片文件夹目录下。
+- 选择 **指定位置** > **保存时选择位置**，可在本次点击保存按钮后选择保存路径，下次截图保存时会默认保存至该路径，除非另行设置。
 
-开启截图录屏，选定截图区域后，通过以下操作之一来保存截取的图片：
+### 复制到剪贴板
 
-- 双击鼠标左键来保存。
-- 单击工具栏中的截图按钮 ![icon](../common/done.svg)。
-- 使用快捷键 **Ctrl + S** 来保存。
-- 单击鼠标右键，选择 **保存**。
-
-   > ![notes](../common/notes.svg) 说明：在以上操作中，截取的图片默认存放到 **图片 > Screenshots** 文件夹中。
-
-您还可以在截图工具栏中，单击 **选项** 的下拉菜单：
-
-![0|option](fig/option.png)
-
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-
-- 选择 **剪贴板**，将图片保存到剪贴板中。
-- 选择 **桌面**，将图片保存到桌面。
-- 选择 **图片**，截图文件自动保存到图片文件夹目录下。
-- 选择 **指定位置**，截图文件将保存到用户设定的文件夹目录下。
-- 选择 **显示光标**，光标在截图区域内，截图生成图片时会同时显示光标所在的位置和样式。
-- 选择 **PNG/JPG/BMP**，设置图片格式。
-- 选择**无边框/投影/外边框/样机**，设置图片边框效果。
-
-
+单击工具栏中的按钮 ![icon](../common/done.svg)，或双击鼠标左键，或使用快捷键 **Ctrl + S**，将图片保存到剪贴板中。
 
 ## 录屏
 
@@ -383,23 +312,25 @@
 > ![notes](../common/notes.svg) 说明：采用不同的解码技术，其所支持的功能也会不同，具体请参考应用界面。
 
 
-![0|工具栏](fig/recorder_bar.jpg)
+![0|工具栏](fig/recorder_bar.png)
 
 <table class="block1">
     <caption>工具栏说明</caption>
     <tbody>
         <tr>
-            <td><img src="../common/key_normal.svg" alt/></td>
+            <td style="text-align:center;"><img src="../common/key_normal.svg" alt/></td>
             <td>显示按键</td>
-            <td><img src="../common/webcam_normal.svg" alt/></td>
+            <td style="text-align:center;"><img src="../common/webcam_normal.svg" alt/></td>
             <td>开启摄像头</td>
-            <td><img src="../common/switch.svg" alt/></td>
+            <td style="text-align:center;"><img src="../common/switch.svg" alt/></td>
             <td>切换截图</td>
         </tr>
           <tr>
-            <td><img src="../common/close.svg" alt/></td>
-            <td>退出录屏</td>
-              <td><img src="../common/done.svg" alt/></td>
+            <td style="text-align:center;"><img src="../common/bar_settings.svg" alt="设置" class="inline" /></td>
+            <td>设置</td>
+            <td style="text-align:center;"><img src="../common/close.svg" alt/></td>
+            <td>关闭</td>
+            <td style="text-align:center;"><img src="../common/done.svg" alt/></td>
             <td>开始录屏</td>
         </tr>
     </tbody>
@@ -411,13 +342,13 @@
 
 在录屏工具栏中，您可以：
 
-- 显示按键：单击按钮 ![icon](../common/key_normal.svg)，录屏时显示键盘按键操作，最多同时显示5个按键操作。
+- 显示按键：单击按钮![icon](../common/key_normal.svg)，录屏时显示键盘按键操作，最多同时显示5个按键操作。
 
-- 开启摄像头：单击按钮 ![icon](../common/webcam_normal.svg) ，启动摄像头，录屏时同时录制摄像头画面和屏幕画面，拖拽摄像头窗口可以调整位置。
+- 开启摄像头：单击按钮![icon](../common/webcam_normal.svg) ，启动摄像头，录屏时同时录制摄像头画面和屏幕画面，拖拽摄像头窗口可以调整位置。
 
    > ![attention](../common/attention.svg) 注意：请先检测接入的设备是否支持声音录制或摄像头功能，若不支持，则无法进行相应的操作。
 
-- 选项：在选项下拉菜单中选择 **GIF** 、 **MP4** 或 **MKV** 视频格式，并选择视频帧率、声音录制、显示光标等。
+- 更多设置：单击按钮<img src="../common/bar_settings.svg" alt="设置" class="inline" />，在设置菜单中选择 **GIF** 、 **MP4** 或 **MKV** 视频格式，并选择视频帧率、声音录制、显示光标等。
 
    > ![notes](../common/notes.svg) 说明：MIPS架构不支持GIF格式。
 
