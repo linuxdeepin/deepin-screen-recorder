@@ -550,11 +550,11 @@ Press and hold Shift to draw a straight line</source>
     </message>
     <message>
         <source>Settings</source>
-        <translation>設置</translation>
+        <translation>設定</translation>
     </message>
     <message>
         <source>Settings (F3)</source>
-        <translation>設置 F3</translation>
+        <translation>設定 F3</translation>
     </message>
     <message>
         <source>Format</source>
