@@ -10,7 +10,9 @@
 #include "saveutils.h"
 #include "../dbusinterface/dbusnotify.h"
 
+#include <QDBusConnection>
 #include <QDBusInterface>
+#include <QDBusMessage>
 #include <QDBusReply>
 #include <QDir>
 #include <QPixmap>
@@ -176,6 +178,7 @@ bool ScreenGrabber::quickFullScreenshot()
         QFile::remove(tempImagePath);
         return false;
     }
+    qDebug() << "saveFilePath:" << saveFileName;
 
     // 保存到剪贴板
     QMimeData *imageData = new QMimeData;
@@ -199,11 +202,6 @@ bool ScreenGrabber::quickFullScreenshot()
     }
 
     // 发送系统通知
-    QDBusInterface notification("org.freedesktop.Notifications",
-                                "/org/freedesktop/Notifications",
-                                "org.freedesktop.Notifications",
-                                QDBusConnection::sessionBus());
-    
     QStringList actions;
     QVariantMap hints;
     QString notifyTitle = QString("");
@@ -224,7 +222,6 @@ bool ScreenGrabber::quickFullScreenshot()
         hints["x-deepin-action-_open"] = command;
         hints["x-deepin-action-_open1"] = savepathcommand;
     }
-    qDebug() << "saveFilePath:" << saveFileName;
     QList<QVariant> arg;
     arg << QCoreApplication::applicationName()
         << (unsigned int) 0
@@ -234,8 +231,18 @@ bool ScreenGrabber::quickFullScreenshot()
         << actions
         << hints
         << 5000;
-    
-    notification.callWithArgumentList(QDBus::AutoDetect, "Notify", arg);
+    const QDBusConnection sessionBus = QDBusConnection::sessionBus();
+    if (sessionBus.isConnected()) {
+        QDBusMessage notifyCall = QDBusMessage::createMethodCall(
+            QStringLiteral("org.freedesktop.Notifications"),
+            QStringLiteral("/org/freedesktop/Notifications"),
+            QStringLiteral("org.freedesktop.Notifications"),
+            QStringLiteral("Notify"));
+        notifyCall.setArguments(arg);
+        sessionBus.call(notifyCall, QDBus::NoBlock);
+    } else {
+        qWarning() << "Session D-Bus is not connected, skip notification";
+    }
     
     // 清理临时文件
     QFile::remove(tempImagePath);
