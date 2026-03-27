@@ -1031,16 +1031,19 @@ void RecordProcess::exitRecord(QString newSavePath)
 
     //保存到剪切板
     save2Clipboard(newSavePath);
-    
+
     qCInfo(dsrApp) << __LINE__ << __func__ <<"录屏已退出";
-    QApplication::quit();
-    
-    // Treeland 和 Wayland 模式下都强制退出，避免残留事件循环导致进程无法退出
-    if (Utils::isWaylandMode || Utils::isTreelandMode) {
-        qCInfo(dsrApp) << (Utils::isTreelandMode ? "treeland" : "wayland") << "record exit! (_Exit(0))";
-        // 使用 QTimer::singleShot 延迟一小段时间，确保 QApplication::quit() 有机会处理
-        QTimer::singleShot(100, []() {
-            _Exit(0);
-        });
-    }
+
+    // 延迟退出，确保剪切板操作完成
+    QTimer::singleShot(500, []() {
+        QApplication::quit();
+
+        // Treeland 和 Wayland 模式下都强制退出，避免残留事件循环导致进程无法退出
+        if (Utils::isWaylandMode || Utils::isTreelandMode) {
+            qCInfo(dsrApp) << (Utils::isTreelandMode ? "treeland" : "wayland") << "record exit! (_Exit(0))";
+            QTimer::singleShot(100, []() {
+                _Exit(0);
+            });
+        }
+    });
 }
