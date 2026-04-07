@@ -1268,7 +1268,7 @@ void MainWindow::initSaveShortcut()
     connect(returnSC, &QShortcut::activated, this, [=] {
         if (status::shot == m_functionType || status::scrollshot == m_functionType) {
             qCDebug(dsrApp) << "shortcut : returnSC (key: enter)";
-            if (status::shot == m_functionType && isHideToolBar) {
+            if (status::shot == m_functionType && (isHideToolBar || m_shotWithPath)) {
                 saveScreenShot();
             } else {
                 saveScreenShotToClipboardOnly();
@@ -1279,7 +1279,7 @@ void MainWindow::initSaveShortcut()
     connect(enterSC, &QShortcut::activated, this, [=] {
         if (status::shot == m_functionType || status::scrollshot == m_functionType) {
             qCDebug(dsrApp) << "shortcut : enterSC (key: enter)";
-            if (status::shot == m_functionType && isHideToolBar) {
+            if (status::shot == m_functionType && (isHideToolBar || m_shotWithPath)) {
                 saveScreenShot();
             } else {
                 saveScreenShotToClipboardOnly();
@@ -5014,7 +5014,7 @@ int MainWindow::mouseDblClickEF(QMouseEvent *mouseEvent, bool &needRepaint)
     if (mouseEvent->button() == Qt::LeftButton) {
         if (status::shot == m_functionType) {
             qCDebug(dsrApp) << "双击鼠标按钮！进行截图保存！";
-            if (isHideToolBar) {
+            if (isHideToolBar || m_shotWithPath) {
                 saveScreenShot();
             } else {
                 saveScreenShotToClipboardOnly();
@@ -7573,7 +7573,7 @@ void MainWindow::confirm()
         return;
     }
 
-    if (!isHideToolBar) {
+    if (!isHideToolBar && !m_shotWithPath) {
         saveScreenShotToClipboardOnly();
     } else {
         saveScreenShot();
