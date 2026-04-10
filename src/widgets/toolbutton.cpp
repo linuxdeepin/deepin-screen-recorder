@@ -272,9 +272,14 @@ void ToolButton::paintEvent(QPaintEvent *event)
             ip.setCompositionMode(QPainter::CompositionMode_SourceIn);
             ip.fillRect(tinted.rect(), palette().highlight().color());
             ip.end();
-            
+
             opt.icon = QIcon(tinted);
         }
+        // 设置文字为主题色
+        opt.palette.setColor(QPalette::ButtonText, palette().highlight().color());
+        opt.palette.setColor(QPalette::WindowText, palette().highlight().color());
+        opt.palette.setColor(QPalette::Text, palette().highlight().color());
+
         opt.state &= ~QStyle::State_MouseOver;
         opt.state &= ~QStyle::State_Sunken;
         style()->drawControl(QStyle::CE_ToolButtonLabel, &opt, &p, this);

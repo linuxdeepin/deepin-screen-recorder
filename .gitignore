@@ -11,3 +11,5 @@ AI config
 .cursorindexingignore
 .specstory/
 .vscode/
+.npm-cache/
+.claude/
