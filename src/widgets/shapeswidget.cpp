@@ -1341,6 +1341,11 @@ void ShapesWidget::mousePressEvent(QMouseEvent *e)
     m_pressedPoint = e->pos();
     m_isPressed = true;
     if (!clickedOnShapes(m_pressedPoint)) {
+        // AI助手不是绘图工具，不进入绘制逻辑
+        if (m_currentType == "aiassistant") {
+            DFrame::mousePressEvent(e);
+            return;
+        }
 
         m_isRecording = true;
         //qDebug() << "no one shape be clicked!" << m_selectedIndex << m_shapes.length();
