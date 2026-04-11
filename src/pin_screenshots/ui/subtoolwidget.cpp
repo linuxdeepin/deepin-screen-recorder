@@ -40,8 +40,8 @@ void SubToolWidget::initShotLable()
     m_ocrButton = new ToolButton(this);
     m_ocrButton->setObjectName(AC_SUBTOOLWIDGET_PIN_OCR_BUT);
     m_ocrButton->setAccessibleName(AC_SUBTOOLWIDGET_PIN_OCR_BUT);
-    m_ocrButton->setIconSize(QSize(32, 32));
-    m_ocrButton->setFixedSize(32, 32);
+    m_ocrButton->setIconSize(QSize(36, 36));
+    m_ocrButton->setFixedSize(36, 36);
     m_ocrButton->setIcon(QIcon::fromTheme("ocr-normal"));
     m_ocrButton->setToolTip(tr("Extract Text"));
     connect(m_ocrButton, SIGNAL(clicked()), this, SIGNAL(signalOcrButtonClicked()));
