@@ -100,6 +100,12 @@ public:
     void showWidget();
     void hideWidget();
 
+    /**
+     * @brief getInnerWidgetRect 获取 SideBarWidget 的 contentsRect（模糊面板区域）
+     *        在 SideBar 坐标系下的位置
+     */
+    QRect getInnerWidgetRect() const;
+
 signals:
     void heightChanged();
     void buttonChecked(QString shape);

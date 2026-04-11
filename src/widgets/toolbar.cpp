@@ -252,6 +252,15 @@ void ToolBar::paintEvent(QPaintEvent *e)
     DLabel::paintEvent(e);
 }
 
+QRect ToolBar::getInnerWidgetRect() const
+{
+    if (!m_toolbarWidget)
+        return rect();
+    // 返回 ToolBarWidget 的 contentsRect 在 ToolBar 坐标系下的位置
+    QRect cr = m_toolbarWidget->contentsRect();
+    return QRect(m_toolbarWidget->mapTo(const_cast<ToolBar *>(this), cr.topLeft()), cr.size());
+}
+
 #if (QT_VERSION_MAJOR == 5)
 void ToolBar::enterEvent(QEvent *e)
 {

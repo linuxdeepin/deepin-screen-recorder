@@ -350,6 +350,14 @@ void SideBar::hideWidget(){
     m_sidebarWidget->hide();
 }
 
+QRect SideBar::getInnerWidgetRect() const
+{
+    if (!m_sidebarWidget)
+        return rect();
+    QRect cr = m_sidebarWidget->contentsRect();
+    return QRect(m_sidebarWidget->mapTo(const_cast<SideBar *>(this), cr.topLeft()), cr.size());
+}
+
 void SideBar::initSideBar(MainWindow *pmainWindow)
 {
     qCDebug(dsrApp) << "SideBar::initSideBar called.";

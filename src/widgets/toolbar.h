@@ -156,6 +156,12 @@ public:
      * @return
      */
     QRect getShotOptionRect();
+
+    /**
+     * @brief getInnerWidgetRect 获取 ToolBarWidget 的 contentsRect（模糊面板区域）
+     *        在 ToolBar 坐标系下的位置
+     */
+    QRect getInnerWidgetRect() const;
 signals:
     void buttonChecked(QString shape);
     void currentFunctionToMain(QString shapeType);

@@ -2950,6 +2950,8 @@ void MainWindow::updateToolBarPos()
         qCDebug(dsrApp) << "正在初始化工具栏...";
         m_toolBar->initToolBar(this, isHideToolBar);
         m_toolBar->setRecordLaunchMode(m_functionType);
+        if (m_toolBar->layout())
+            m_toolBar->layout()->activate();
         // m_toolBar->setIsZhaoxinPlatform(m_isZhaoxin);
         m_toolBar->setScrollShotDisabled(!m_wmHelper->hasBlurWindow());
         
@@ -4809,23 +4811,23 @@ void MainWindow::paintEvent(QPaintEvent *event)
         m_backgroundPixmap.setDevicePixelRatio(m_pixelRatio);
         painter.drawPixmap(backgroundRect, m_backgroundPixmap);
     } else if (status::record == m_functionType || status::scrollshot == m_functionType) {
-        // 录屏/滚动截图模式：只在工具栏区域绘制背景
-        // 不全屏绘制，避免影响鼠标穿透
+        // 录屏/滚动截图模式：只在模糊面板精确圆角区域绘制背景截图，供 InWidgetBlend 模糊采样。
+        // 使用 ToolBarWidget/SideBarWidget 的 contentsRect 配合 DFloatingWidget 圆角半径(18)
+        // 裁剪，避免脏截图在阴影区域和圆角外泄漏。
         if (m_toolBar && m_toolBar->isVisible()) {
-            QRegion clipRegion;
-            QRect toolBarRect = m_toolBar->geometry();
-            toolBarRect.adjust(-20, -20, 20, 20);
-            clipRegion += toolBarRect;
-            // 二级工具栏（如AI助手面板）也需要背景模糊效果
+            QPainterPath clipPath;
+            QRect innerRect = m_toolBar->getInnerWidgetRect();
+            innerRect.translate(m_toolBar->pos());
+            clipPath.addRoundedRect(innerRect, 18, 18);
             if (m_sideBar && m_sideBar->isVisible()) {
-                QRect sideBarRect = m_sideBar->geometry();
-                sideBarRect.adjust(-20, -20, 20, 20);
-                clipRegion += sideBarRect;
+                QRect sideInner = m_sideBar->getInnerWidgetRect();
+                sideInner.translate(m_sideBar->pos());
+                clipPath.addRoundedRect(sideInner, 18, 18);
             }
 
             painter.setRenderHint(QPainter::Antialiasing, true);
             m_backgroundPixmap.setDevicePixelRatio(m_pixelRatio);
-            painter.setClipRegion(clipRegion);
+            painter.setClipPath(clipPath);
             painter.drawPixmap(backgroundRect, m_backgroundPixmap);
             painter.setClipping(false);
         }
@@ -5106,17 +5108,9 @@ int MainWindow::mouseReleaseEF(QMouseEvent *mouseEvent, bool &needRepaint)
     if (!m_isShapesWidgetExist) {
         // 未打开截图形状编辑界面
         if (mouseEvent->button() == Qt::LeftButton) {
-            // 滚动截图的图片大小提示更新，不会使用此方法
-            if (status::scrollshot != m_functionType) {
-                m_sizeTips->updateTips(QPoint(recordX, recordY), QSize(recordWidth, recordHeight));
-            }
             if (!isFirstReleaseButton) {
                 isFirstReleaseButton = true;
                 updateCursor(mouseEvent);
-                updateToolBarPos();
-                if (status::shot == m_functionType && m_sideBar->isVisible()) {
-                    updateSideBarPos();
-                }
                 m_zoomIndicator->hideMagnifier();
                 if (!isFirstDrag) {
                     for (auto it = windowRects.rbegin(); it != windowRects.rend(); ++it) {
@@ -5128,18 +5122,22 @@ int MainWindow::mouseReleaseEF(QMouseEvent *mouseEvent, bool &needRepaint)
                     }
                 }
 
+                // 先调整选区最小尺寸和边界，再更新工具栏位置
+                // 使用 m_backgroundRect（逻辑大小）做边界检查，
+                // rootWindowRect 在高DPI下是物理像素，与 recordX/Y 坐标系不一致
                 if (status::record == m_functionType) {
                     // Make sure record area not too small.
                     recordWidth = recordWidth < RECORD_MIN_SIZE ? RECORD_MIN_SIZE : recordWidth;
                     recordHeight = recordHeight < RECORD_MIN_HEIGHT ? RECORD_MIN_HEIGHT : recordHeight;
 
-                    if (recordX + recordWidth > rootWindowRect.width()) {
-                        recordX = rootWindowRect.width() - recordWidth;
+                    if (recordX + recordWidth > m_backgroundRect.width()) {
+                        recordX = m_backgroundRect.width() - recordWidth;
                     }
-
-                    if (recordY + recordHeight > rootWindowRect.height()) {
-                        recordY = rootWindowRect.height() - recordHeight;
+                    if (recordY + recordHeight > m_backgroundRect.height()) {
+                        recordY = m_backgroundRect.height() - recordHeight;
                     }
+                    if (recordX < 0) recordX = 0;
+                    if (recordY < 0) recordY = 0;
                 }
 
                 else if (status::shot == m_functionType) {
@@ -5147,13 +5145,19 @@ int MainWindow::mouseReleaseEF(QMouseEvent *mouseEvent, bool &needRepaint)
                     recordWidth = recordWidth < RECORD_MIN_SHOT_SIZE ? RECORD_MIN_SHOT_SIZE : recordWidth;
                     recordHeight = recordHeight < RECORD_MIN_SHOT_SIZE ? RECORD_MIN_SHOT_SIZE : recordHeight;
 
-                    if (recordX + recordWidth > rootWindowRect.width()) {
-                        recordX = rootWindowRect.width() - recordWidth;
+                    if (recordX + recordWidth > m_backgroundRect.width()) {
+                        recordX = m_backgroundRect.width() - recordWidth;
                     }
+                    if (recordY + recordHeight > m_backgroundRect.height()) {
+                        recordY = m_backgroundRect.height() - recordHeight;
+                    }
+                    if (recordX < 0) recordX = 0;
+                    if (recordY < 0) recordY = 0;
+                }
 
-                    if (recordY + recordHeight > rootWindowRect.height()) {
-                        recordY = rootWindowRect.height() - recordHeight;
-                    }
+                // 尺寸调整完成后更新提示和工具栏位置
+                if (status::scrollshot != m_functionType) {
+                    m_sizeTips->updateTips(QPoint(recordX, recordY), QSize(recordWidth, recordHeight));
                 }
                 // showRecordButton();
                 updateToolBarPos();
@@ -5294,9 +5298,9 @@ int MainWindow::mouseMoveEF(QMouseEvent *mouseEvent, bool &needRepaint)
                 if (recordButtonStatus == RECORD_BUTTON_NORMAL && dragRecordX >= 0 && dragRecordY >= 0) {
                     if (dragAction == ACTION_MOVE) {
                         recordX = std::max(
-                            std::min(dragRecordX + mouseEvent->x() - dragStartX, rootWindowRect.width() - recordWidth), 0);
+                            std::min(dragRecordX + mouseEvent->x() - dragStartX, m_backgroundRect.width() - recordWidth), 0);
                         recordY = std::max(
-                            std::min(dragRecordY + mouseEvent->y() - dragStartY, rootWindowRect.height() - recordHeight), 0);
+                            std::min(dragRecordY + mouseEvent->y() - dragStartY, m_backgroundRect.height() - recordHeight), 0);
                     } else if (dragAction == ACTION_RESIZE_TOP_LEFT) {
                         resizeTop(mouseEvent);
                         resizeLeft(mouseEvent);
@@ -5767,7 +5771,7 @@ int MainWindow::keyPressEF(QKeyEvent *keyEvent, bool &needRepaint)
 
                         needRepaint = true;
                     } else if (keyEvent->key() == Qt::Key_Right || keyEvent->key() == Qt::Key_D) {
-                        recordX = std::min(rootWindowRect.width() - recordWidth, recordX + 1);
+                        recordX = std::min(m_backgroundRect.width() - recordWidth, recordX + 1);
 
                         needRepaint = true;
                     } else if (keyEvent->key() == Qt::Key_Up || keyEvent->key() == Qt::Key_W) {
@@ -5775,7 +5779,7 @@ int MainWindow::keyPressEF(QKeyEvent *keyEvent, bool &needRepaint)
 
                         needRepaint = true;
                     } else if (keyEvent->key() == Qt::Key_Down || keyEvent->key() == Qt::Key_S) {
-                        recordY = std::min(rootWindowRect.height() - recordHeight, recordY + 1);
+                        recordY = std::min(m_backgroundRect.height() - recordHeight, recordY + 1);
 
                         needRepaint = true;
                     }
@@ -7061,13 +7065,13 @@ void MainWindow::resizeTop(QMouseEvent *mouseEvent)
     if (status::record == m_functionType) {
         int offsetY = mouseEvent->y() - dragStartY;
         recordY = std::max(std::min(dragRecordY + offsetY, dragRecordY + dragRecordHeight - RECORD_MIN_HEIGHT), 1);
-        recordHeight = std::max(std::min(dragRecordHeight - offsetY, rootWindowRect.height()), RECORD_MIN_HEIGHT);
+        recordHeight = std::max(std::min(dragRecordHeight - offsetY, m_backgroundRect.height()), RECORD_MIN_HEIGHT);
     }
 
     else if (status::shot == m_functionType) {
         int offsetY = mouseEvent->y() - dragStartY;
         recordY = std::max(std::min(dragRecordY + offsetY, dragRecordY + dragRecordHeight - RECORD_MIN_SHOT_SIZE), 1);
-        recordHeight = std::max(std::min(dragRecordHeight - offsetY, rootWindowRect.height()), RECORD_MIN_SHOT_SIZE);
+        recordHeight = std::max(std::min(dragRecordHeight - offsetY, m_backgroundRect.height()), RECORD_MIN_SHOT_SIZE);
     }
 }
 
@@ -7075,10 +7079,10 @@ void MainWindow::resizeBottom(QMouseEvent *mouseEvent)
 {
     if (status::record == m_functionType) {
         int offsetY = mouseEvent->y() - dragStartY;
-        recordHeight = std::max(std::min(dragRecordHeight + offsetY, rootWindowRect.height()), RECORD_MIN_HEIGHT);
+        recordHeight = std::max(std::min(dragRecordHeight + offsetY, m_backgroundRect.height()), RECORD_MIN_HEIGHT);
     } else if (status::shot == m_functionType) {
         int offsetY = mouseEvent->y() - dragStartY;
-        recordHeight = std::max(std::min(dragRecordHeight + offsetY, rootWindowRect.height()), RECORD_MIN_SHOT_SIZE);
+        recordHeight = std::max(std::min(dragRecordHeight + offsetY, m_backgroundRect.height()), RECORD_MIN_SHOT_SIZE);
     }
 }
 
@@ -7087,11 +7091,11 @@ void MainWindow::resizeLeft(QMouseEvent *mouseEvent)
     if (status::record == m_functionType) {
         int offsetX = mouseEvent->x() - dragStartX;
         recordX = std::max(std::min(dragRecordX + offsetX, dragRecordX + dragRecordWidth - RECORD_MIN_SIZE), 1);
-        recordWidth = std::max(std::min(dragRecordWidth - offsetX, rootWindowRect.width()), RECORD_MIN_SIZE);
+        recordWidth = std::max(std::min(dragRecordWidth - offsetX, m_backgroundRect.width()), RECORD_MIN_SIZE);
     } else if (m_functionType == 1) {
         int offsetX = mouseEvent->x() - dragStartX;
         recordX = std::max(std::min(dragRecordX + offsetX, dragRecordX + dragRecordWidth - RECORD_MIN_SHOT_SIZE), 1);
-        recordWidth = std::max(std::min(dragRecordWidth - offsetX, rootWindowRect.width()), RECORD_MIN_SHOT_SIZE);
+        recordWidth = std::max(std::min(dragRecordWidth - offsetX, m_backgroundRect.width()), RECORD_MIN_SHOT_SIZE);
     }
 }
 
@@ -7099,10 +7103,10 @@ void MainWindow::resizeRight(QMouseEvent *mouseEvent)
 {
     if (status::record == m_functionType) {
         int offsetX = mouseEvent->x() - dragStartX;
-        recordWidth = std::max(std::min(dragRecordWidth + offsetX, rootWindowRect.width()), RECORD_MIN_SIZE);
+        recordWidth = std::max(std::min(dragRecordWidth + offsetX, m_backgroundRect.width()), RECORD_MIN_SIZE);
     } else if (status::shot == m_functionType) {
         int offsetX = mouseEvent->x() - dragStartX;
-        recordWidth = std::max(std::min(dragRecordWidth + offsetX, rootWindowRect.width()), RECORD_MIN_SHOT_SIZE);
+        recordWidth = std::max(std::min(dragRecordWidth + offsetX, m_backgroundRect.width()), RECORD_MIN_SHOT_SIZE);
     }
 }
 
@@ -7491,8 +7495,8 @@ void MainWindow::adjustLayout(QVBoxLayout *layout, int layoutWidth, int layoutHe
     layout->setContentsMargins(
                 recordX,
                 recordY,
-                rootWindowRect.width() - recordX - recordWidth,
-                rootWindowRect.height() - recordY - recordHeight);
+                m_backgroundRect.width() - recordX - recordWidth,
+                m_backgroundRect.height() - recordY - recordHeight);
 }
 
 void MainWindow::initShapeWidget(QString type)
