@@ -1,3 +1,14 @@
+deepin-screen-recorder (6.6.29) unstable; urgency=medium
+
+  * fix(pin): correct OCR button size in pin screenshot toolbar
+  * fix: hide color tool in effect (blur/mosaic) mode
+  * fix(shot): include sidebar in background clip region for blur effect
+  * fix(shot): prevent abnormal shape drawing when AI assistant button is clicked
+  * fix(text): Sync text color with theme highlight color in pressed state
+  * fix: Fix screenshot file path not returned when called via third-party interface
+
+ -- dengzhongyuan <dengzhongyuan@uniontech.com>  Sat, 11 Apr 2026 13:57:06 +0800
+
 deepin-screen-recorder (6.6.28) unstable; urgency=medium
 
   * fix(record): delay app exit to ensure clipboard operation completes
