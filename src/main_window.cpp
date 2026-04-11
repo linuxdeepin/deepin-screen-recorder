@@ -4802,12 +4802,20 @@ void MainWindow::paintEvent(QPaintEvent *event)
         // 录屏/滚动截图模式：只在工具栏区域绘制背景
         // 不全屏绘制，避免影响鼠标穿透
         if (m_toolBar && m_toolBar->isVisible()) {
+            QRegion clipRegion;
             QRect toolBarRect = m_toolBar->geometry();
             toolBarRect.adjust(-20, -20, 20, 20);
-            
+            clipRegion += toolBarRect;
+            // 二级工具栏（如AI助手面板）也需要背景模糊效果
+            if (m_sideBar && m_sideBar->isVisible()) {
+                QRect sideBarRect = m_sideBar->geometry();
+                sideBarRect.adjust(-20, -20, 20, 20);
+                clipRegion += sideBarRect;
+            }
+
             painter.setRenderHint(QPainter::Antialiasing, true);
             m_backgroundPixmap.setDevicePixelRatio(m_pixelRatio);
-            painter.setClipRect(toolBarRect);
+            painter.setClipRegion(clipRegion);
             painter.drawPixmap(backgroundRect, m_backgroundPixmap);
             painter.setClipping(false);
         }
