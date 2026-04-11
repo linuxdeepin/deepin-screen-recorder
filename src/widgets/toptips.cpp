@@ -70,7 +70,10 @@ void TopTips::updateTips(QPoint pos, const QSize &size)
 
     QPoint startPoint = pos;
     qreal pixelRatio = qApp->primaryScreen()->devicePixelRatio();
-    QSize s = QSize(static_cast<int>(size.width()*pixelRatio),static_cast<int>(size.height()*pixelRatio));
+    // 与实际截图裁剪逻辑保持一致：宽度-2、高度-1（避开选区虚线边框）
+    int tipWidth = qMax(static_cast<int>((size.width() - 2) * pixelRatio), 0);
+    int tipHeight = qMax(static_cast<int>((size.height() - 1) * pixelRatio), 0);
+    QSize s = QSize(tipWidth, tipHeight);
     setContent(s);
     startPoint.setX(pos.x());
 
