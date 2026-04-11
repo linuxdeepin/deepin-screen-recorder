@@ -197,6 +197,16 @@ void SideBarWidget::changeShotToolWidget(const QString &func)
         qCDebug(dsrApp) << "Using AI assistant recommended size:" << recommendedSize;
         resize(recommendedSize);
         m_currentFunc = func;
+    } else if (func == "effect") {
+        // 模糊工具不需要颜色功能，隐藏颜色工具和形状工具
+        qCDebug(dsrApp) << "Effect mode: hiding ShapeToolWidget and ColorToolWidget";
+        m_shapeTool->hide();
+        m_seperator1->hide();
+        m_aiAssistantTool->hide();
+        m_shotTool->show();
+        m_colorTool->hide();
+        setMinimumSize(TOOLBAR_WIDGET_SIZE1);
+        m_currentFunc = func;
     } else {
         qCDebug(dsrApp) << "Non-geometry mode: hiding ShapeToolWidget";
         m_shapeTool->hide();
@@ -206,7 +216,7 @@ void SideBarWidget::changeShotToolWidget(const QString &func)
         m_colorTool->show();
         setMinimumSize(TOOLBAR_WIDGET_SIZE1);
         m_currentFunc = func;
-        
+
     }
 
     //不同图形下二级菜单的大小及长度不一样
