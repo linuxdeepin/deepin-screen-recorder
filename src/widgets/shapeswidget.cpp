@@ -164,14 +164,19 @@ void ShapesWidget::setCurrentShape(QString shapeType)
 void ShapesWidget::clearSelected()
 {
     qCDebug(dsrApp) << "Clearing selected shape";
-    
+
     for (int j = 0; j < m_selectedShape.mainPoints.length(); j++) {
         m_selectedShape.mainPoints[j] = QPointF(0, 0);
+    }
+    for (int j = 0; j < m_hoveredShape.mainPoints.length(); j++) {
         m_hoveredShape.mainPoints[j] = QPointF(0, 0);
     }
 
     //qDebug() << "clear selected!!!";
     m_isSelected = false;
+    m_selectedIndex = -1;
+    m_hoveredIndex = -1;
+    m_selectedOrder = -1;
     m_selectedShape.points.clear();
     m_hoveredShape.points.clear();
     updateCursorShape();
@@ -2389,7 +2394,7 @@ void ShapesWidget::tapTriggered(QTapGesture *tap)
 void ShapesWidget::deleteCurrentShape()
 {
     qDebug() << "delete shape";
-    if (m_selectedOrder < m_shapes.length()) {
+    if (m_selectedOrder >= 0 && m_selectedOrder < m_shapes.length()) {
         m_shapes.removeAt(m_selectedOrder);
     } else {
         qWarning() << "Invalid index";
