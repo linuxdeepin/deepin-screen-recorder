@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2022-2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -15,10 +15,6 @@ public:
         OpeningTime         = 1000000000,
         ClosingTime         = 1000000001,
         Start               = 1000200000,
-        StartRecording      = 1000200001,
-        StartScreenShot     = 1000200002,
-        StartOcr            = 1000200003,
-        StartScrollShot     = 1000200004,
         EndRecording        = 1000200005,
         EndScreenShot       = 1000200006
     };

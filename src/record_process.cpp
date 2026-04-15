@@ -8,7 +8,6 @@
 #include "utils.h"
 #include "utils/audioutils.h"
 #include "gstrecord/gstinterface.h"
-#include "utils/eventlogutils.h"
 #include "utils/log.h"
 #ifdef KF5_WAYLAND_FLAGE_ON
 #include "waylandrecord/avlibinterface.h"
@@ -825,12 +824,6 @@ void RecordProcess::startRecord()
         }
     }
 
-    QJsonObject obj{
-        {"tid", EventLogUtils::StartRecording},
-        {"version", QCoreApplication::applicationVersion()},
-        {"type", m_recordType == Utils::kGIF ? "gif" : (m_recordType == Utils::kMKV ? "mkv" : "mp4")}
-    };
-    EventLogUtils::get().writeLogs(obj);
     if (Utils::isSysHighVersion1040() == false) {
         qCInfo(dsrApp) << "系统版本小于1040, 不显示录制时长功能。";
         return;
@@ -876,12 +869,6 @@ void RecordProcess::setFullScreenRecord(bool flag)
 
 void RecordProcess::stopRecord()
 {
-//    QJsonObject obj{
-//        {"tid", EventLogUtils::EndRecording},
-//        {"version", QCoreApplication::applicationVersion()},
-//        {"type", m_recordType == Utils::kGIF ? "gif" : (m_recordType == Utils::kMKV ? "mkv" : "mp4")}
-//    };
-//    EventLogUtils::get().writeLogs(obj);
     if (Utils::isSysHighVersion1040() == true) {
         qCInfo(dsrApp) << __FUNCTION__ << __LINE__ << "正在暂停录屏计时...";
         qCDebug(dsrApp) << "Pause the screen recording timer!";

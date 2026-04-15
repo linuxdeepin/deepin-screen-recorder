@@ -1530,8 +1530,6 @@ void MainWindow::initScreenRecorder()
 void MainWindow::initScrollShot()
 {
     qCInfo(dsrApp) << __LINE__ << __FUNCTION__ << "正在初始化滚动截图...";
-    QJsonObject obj{{"tid", EventLogUtils::StartScrollShot}, {"version", QCoreApplication::applicationVersion()}};
-    EventLogUtils::get().writeLogs(obj);
     m_zoomIndicator->hideMagnifier();
 
 #ifdef OCR_SCROLL_FLAGE_ON
@@ -2255,8 +2253,6 @@ void MainWindow::topWindow()
         return;
     }
 
-    QJsonObject obj{{"tid", EventLogUtils::StartScreenShot}, {"version", QCoreApplication::applicationVersion()}};
-    EventLogUtils::get().writeLogs(obj);
     int t_windowCount = DWindowManagerHelper::instance()->allWindowIdList().size();
     DForeignWindow *prewindow = nullptr;
     for (int i = t_windowCount - 1; i >= 0; i--) {
@@ -3742,8 +3738,6 @@ void MainWindow::changeShotToolEvent(const QString &func)
     qCDebug(dsrApp) << "MainWindow::changeShotToolEvent >> func: " << func;
     // 调用ocr功能时先截图后，退出截图录屏，将刚截图的图片串递到ocr识别界面；
     if (func == "ocr") {
-        QJsonObject obj{{"tid", EventLogUtils::StartOcr}, {"version", QCoreApplication::applicationVersion()}};
-        EventLogUtils::get().writeLogs(obj);
         // 调起OCR识别界面， 传入截图路径
         m_ocrInterface = new OcrInterface("com.deepin.Ocr", "/com/deepin/Ocr", QDBusConnection::sessionBus(), this);
         int delayTime = 0;
@@ -3765,6 +3759,13 @@ void MainWindow::changeShotToolEvent(const QString &func)
             });
         }
     } else if (func == "pinScreenshots") {
+        {
+            QJsonObject obj{{"tid", EventLogUtils::Start},
+                            {"version", QCoreApplication::applicationVersion()},
+                            {"mode", 1},
+                            {"startup_mode", "B8"}};
+            EventLogUtils::get().writeLogs(obj);
+        }
         m_functionType = status::pinscreenshots;
         m_pinInterface = new PinScreenShotsInterface(
             "com.deepin.PinScreenShots", "/com/deepin/PinScreenShots", QDBusConnection::sessionBus(), this);
@@ -3788,6 +3789,13 @@ void MainWindow::changeShotToolEvent(const QString &func)
     } else if (func == "record" || func == "shot") {
         changeFunctionButton(func);
     } else {
+        if (func == QStringLiteral("aiassistant")) {
+            QJsonObject obj{{"tid", EventLogUtils::Start},
+                            {"version", QCoreApplication::applicationVersion()},
+                            {"mode", 1},
+                            {"startup_mode", "B9"}};
+            EventLogUtils::get().writeLogs(obj);
+        }
         m_currentToolShape = func;
         //        if (!m_sideBar->isVisible()) {
         updateSideBarPos();
@@ -3813,9 +3821,6 @@ void MainWindow::prepareScreenshot()
 {
     qCInfo(dsrApp) << __FUNCTION__ << __LINE__ << "正在准备截图...";
     // 双击截图保存按钮会触发重复进入
-    QJsonObject obj{{"tid", EventLogUtils::StartScreenShot}, {"version", QCoreApplication::applicationVersion()}};
-    if (m_functionType == status::shot)
-        EventLogUtils::get().writeLogs(obj);
     static bool isSaving = false;
     if (isSaving)
         return;
@@ -4054,9 +4059,6 @@ void MainWindow::saveScreenShot()
 {
     qCInfo(dsrApp) << __FUNCTION__ << __LINE__ << "正在执行截图保存流程...";
     // 双击截图保存按钮会触发重复进入
-    QJsonObject obj{{"tid", EventLogUtils::StartScreenShot}, {"version", QCoreApplication::applicationVersion()}};
-    if (m_functionType == status::shot)
-        EventLogUtils::get().writeLogs(obj);
     static bool isSaving = false;
     if (isSaving)
         return;
@@ -7020,8 +7022,6 @@ void MainWindow::addCursorToImage()
 void MainWindow::shotFullScreen(bool isFull)
 {
     qCInfo(dsrApp) << __FUNCTION__ << __LINE__ << "正在截取全屏...";
-    QJsonObject obj{{"tid", EventLogUtils::StartScreenShot}, {"version", QCoreApplication::applicationVersion()}};
-    EventLogUtils::get().writeLogs(obj);
     QRect target = m_backgroundRect;
     qCDebug(dsrApp) << "m_backgroundRect" << m_backgroundRect;
     if (Utils::isWaylandMode) {
