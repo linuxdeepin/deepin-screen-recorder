@@ -163,11 +163,15 @@ void DBusScreenshotService::TopWindowScreenshot()
         {"startup_mode", "B3"}
     };
     EventLogUtils::get().writeLogs(obj);
-    if (!m_singleInstance) {
-        qCDebug(dsrApp) << "Starting new top window screenshot instance";
-        parent()->topWindowScreenshot();
+    if (m_singleInstance) {
+        qCDebug(dsrApp) << "Screenshot already in progress, ignoring.";
+        return;
     }
+    // topWindowScreenshot() 内部会同步调用 saveAction() → QFileDialog，
+    // 模态对话框的嵌套事件循环仍会处理 D-Bus 消息，必须在调用前置标志位
     m_singleInstance = true;
+    qCDebug(dsrApp) << "Starting new top window screenshot instance";
+    parent()->topWindowScreenshot();
     qCDebug(dsrApp) << "TopWindowScreenshot method finished.";
 }
 
@@ -182,11 +186,15 @@ void DBusScreenshotService::FullscreenScreenshot()
         {"startup_mode", "B1"}
     };
     EventLogUtils::get().writeLogs(obj);
-    if (!m_singleInstance) {
-        qCDebug(dsrApp) << "Starting new fullscreen screenshot instance";
-        parent()->fullscreenScreenshot();
+    if (m_singleInstance) {
+        qCDebug(dsrApp) << "Screenshot already in progress, ignoring.";
+        return;
     }
+    // fullscreenScreenshot() 内部会同步调用 saveAction() → QFileDialog，
+    // 模态对话框的嵌套事件循环仍会处理 D-Bus 消息，必须在调用前置标志位
     m_singleInstance = true;
+    qCDebug(dsrApp) << "Starting new fullscreen screenshot instance";
+    parent()->fullscreenScreenshot();
     qCDebug(dsrApp) << "FullscreenScreenshot method finished.";
 }
 
