@@ -407,15 +407,18 @@ void MainWindow::initAttributes()
         // Qt::WindowStaysOnTopHint： 通知窗口系统该窗口应位于所有其他窗口之上。请注意，在 X11 上的某些窗口管理器上，您还必须传递
         // Qt::X11BypassWindowManagerHint 以使此标志正常工作。 Qt::X11BypassWindowManagerHint : 完全绕过窗口管理器。
         if (Utils::isWaylandMode || Utils::isTreelandMode) {
-            // 1070焦点策略管理比1060严格，作为全屏窗口的截图录屏设置了无焦点属性后，窗管不会在设置为获取焦点
-            // 因此在1070截图录屏截图录屏需要获取焦点，不然应用内快捷键无法响应。
-            if (DSysInfo::minorVersion().toInt() >= 1070) {
+            // V20(1070+)/V25社区版 焦点策略更严格：全屏窗口设置了无焦点属性后，窗管不会再设置为获取焦点，
+            // 因此截图录屏需要获取焦点，不然应用内快捷键无法响应。
+            const int minor = DSysInfo::minorVersion().toInt();
+            const bool isNewFocusPolicy = minor >= 1070
+                || DSysInfo::uosEditionType() == DSysInfo::UosCommunity;
+            if (isNewFocusPolicy) {
                 setWindowFlags(Qt::FramelessWindowHint | Qt::WindowStaysOnTopHint);
             } else {
                 setWindowFlags(Qt::FramelessWindowHint | Qt::WindowStaysOnTopHint | Qt::WindowDoesNotAcceptFocus);
             }
             if (this->windowHandle()) {
-                if (DSysInfo::minorVersion().toInt() >= 1070) {
+                if (isNewFocusPolicy) {
                     this->windowHandle()->setProperty("_d_dwayland_window-type", "override");
                 } else {
                     this->windowHandle()->setProperty("_d_dwayland_window-type", "onScreenDisplay"); // 窗管层级在1060和1070有所区别，兼容适配bug254705-275661
@@ -2646,8 +2649,11 @@ void MainWindow::save2Clipboard(const QPixmap &pix)
         quality = 60;
     }
     if (Utils::is3rdInterfaceStart == false) {
-        if (DSysInfo::minorVersion().toInt() >= 1070) {
-            // check if save to clipboard finished
+        const int minor = DSysInfo::minorVersion().toInt();
+        const bool hasClipboardDaemon = minor >= 1070
+            || DSysInfo::uosEditionType() == DSysInfo::UosCommunity;
+        if (hasClipboardDaemon) {
+            // 连接 dde-clipboard-daemon 的 dataComing 信号，用于确认数据已被剪贴板服务接管
             const QString ClipboardSignal = QStringLiteral("dataComing");
             qCInfo(dsrApp) << "Connecting the clipboard feedback signal..."
                     << "\nClipboardService: " << CLIPBOARD_NAME << "\nClipboardPath: " << CLIPBOARD_PATH
@@ -2719,13 +2725,15 @@ void MainWindow::save2Clipboard(const QPixmap &pix)
             qCDebug(dsrApp) << "Whether the data passed to the clipboard is empty? " << t_imageData->imageData().isNull();
         }
 
-        if (DSysInfo::minorVersion().toInt() >= 1070) {
+        if (hasClipboardDaemon) {
             if (!Utils::isWaylandMode) {
                 this->hide();  // 隐藏主界面
             }
-            //根据图片大小动态计算等待时间，如果数据还没有传递到剪切板，则退出程序
+            // 等待 dde-clipboard-daemon 通过 dataComing 信号确认已接管数据
+            // 超时后仍退出，避免无限阻塞
             int waitSeconds = getWaitTimeByImageSize(pix);
             time_t endTime = time(nullptr) + waitSeconds;
+            m_isSaveClipboard = false;
             qCInfo(dsrApp) << "Start Wait" << waitSeconds << "s for data to be saved to the clipboard..." << endTime;
             time_t lastTime = 0;
             while (1) {
@@ -6366,7 +6374,7 @@ void MainWindow::onLockScreenEvent(QDBusMessage msg)
 void MainWindow::onSaveClipboardComing(const QByteArray &msg)
 {
     Q_UNUSED(msg);
-    qCInfo(dsrApp) << "Received data transfer to the clipboard complete signal!";
+    qCWarning(dsrApp) << "Received dataComing signal from clipboard daemon";
     emit saveClipboardComing();
     m_isSaveClipboard = true;
 }
