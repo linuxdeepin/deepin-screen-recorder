@@ -1,3 +1,11 @@
+deepin-screen-recorder (6.6.31) unstable; urgency=medium
+
+  * fix(shot): align size tips with actual saved image dimensions
+  * fix(toolbar): improve toolbar positioning on HiDPI displays
+  * fix(record): fix selection area and toolbar offset offscreen when drawing small region on HiDPI
+
+ -- dengzhongyuan <dengzhongyuan@uniontech.com>  Thu, 16 Apr 2026 20:42:04 +0800
+
 deepin-screen-recorder (6.6.30) unstable; urgency=medium
 
   * fix(screenshot): prevent multiple simultaneous screenshot requests
