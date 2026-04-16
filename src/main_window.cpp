@@ -3027,52 +3027,42 @@ void MainWindow::updateToolBarPos()
             m_isToolBarInside = true;
         }
     }
-    //    qCDebug(dsrApp) << "工具栏坐标: " << toolbarPoint.x() << toolbarPoint.y() ;
-
     bool toolIsInScreen = false;  //
     QRect tempScreen;
     // 根据屏幕的具体实际坐标修正Y值
     // 多屏情况下， 右下角有可能在屏幕外面。
     if (m_isVertical == false) {
         for (int i = 0; i < m_screenInfo.size(); ++i) {
-            // 通用的屏幕范围检查：统一处理X/Y坐标，考虑像素比例
-            bool xInRange = toolbarPoint.x() >= m_screenInfo[i].x && 
-                           toolbarPoint.x() < (m_screenInfo[i].x + m_screenInfo[i].width / m_pixelRatio);
-            bool yInRange = toolbarPoint.y() >= m_screenInfo[i].y && 
-                           toolbarPoint.y() < (m_screenInfo[i].y + m_screenInfo[i].height / m_pixelRatio);
-            
+            // Qt6+XCB 下：screen->geometry().x/y 是物理位置，需要除以 DPR 才能与 MainWindow 的逻辑坐标系对齐。
+            const int screenX = Utils::isQt6XcbEnv ? static_cast<int>(m_screenInfo[i].x / m_pixelRatio) : m_screenInfo[i].x;
+            const int screenY = Utils::isQt6XcbEnv ? static_cast<int>(m_screenInfo[i].y / m_pixelRatio) : m_screenInfo[i].y;
+            const int screenW = static_cast<int>(m_screenInfo[i].width / m_pixelRatio);
+            const int screenH = static_cast<int>(m_screenInfo[i].height / m_pixelRatio);
+
+            // 通用的屏幕范围检查：统一处理X/Y坐标（逻辑坐标系）
+            const bool xInRange = toolbarPoint.x() >= screenX && toolbarPoint.x() < (screenX + screenW);
+            const bool yInRange = toolbarPoint.y() >= screenY && toolbarPoint.y() < (screenY + screenH);
             toolIsInScreen = xInRange && yInRange;
-            bool recordIsInScreen = recordX >= m_screenInfo[i].x && recordX < (m_screenInfo[i].x + m_screenInfo[i].width) &&
-                                    recordY >= m_screenInfo[i].y && recordY < (m_screenInfo[i].y + m_screenInfo[i].height);
+            const bool recordIsInScreen = recordX >= screenX && recordX < (screenX + screenW) &&
+                                          recordY >= screenY && recordY < (screenY + screenH);
             // 取出捕捉区域所在的屏幕
             if (recordIsInScreen) {
-                tempScreen.setX(m_screenInfo[i].x);
-                tempScreen.setY(m_screenInfo[i].y);
-                tempScreen.setWidth(m_screenInfo[i].width);
-                tempScreen.setHeight(m_screenInfo[i].height);
+                tempScreen = QRect(screenX, screenY, screenW, screenH);
             }
             // 判断工具栏左上角在哪块屏幕上
             if (toolIsInScreen) {
-                // qCDebug(dsrApp) << "工具栏是否在屏幕（"<< m_screenInfo[i].name<<"）内 ? " << toolIsInScreen;
-                // qCDebug(dsrApp) << "屏幕: " << m_screenInfo[i].name <<  m_screenInfo[i].x << m_screenInfo[i].y <<
-                // m_screenInfo[i].width<<m_screenInfo[i].height;
-
-                if (toolbarPoint.y() < m_screenInfo[i].y + TOOLBAR_Y_SPACING) {
+                if (toolbarPoint.y() < screenY + TOOLBAR_Y_SPACING) {
                     // 屏幕上超出
                     toolbarPoint.setY(recordY + TOOLBAR_Y_SPACING);
-                    // toolbarPoint.setY(m_screenInfo[i].y + TOOLBAR_Y_SPACING);
                 } else if (toolbarPoint.y() >
-                           m_screenInfo[i].y + m_screenInfo[i].height / m_pixelRatio - m_toolBar->height() - TOOLBAR_Y_SPACING) {
+                           screenY + screenH - m_toolBar->height() - TOOLBAR_Y_SPACING) {
                     // 屏幕下超出
                     int y = std::max(recordY - m_toolBar->height() - TOOLBAR_Y_SPACING, 0);
-                    // qCDebug(dsrApp) << ">>> y: " << y;
-                    if (y > m_screenInfo[i].y + m_screenInfo[i].height / m_pixelRatio - m_toolBar->height() -
-                        TOOLBAR_Y_SPACING)
-                        y = m_screenInfo[i].y + static_cast<int>(m_screenInfo[i].height / m_pixelRatio) - m_toolBar->height() -
-                            TOOLBAR_Y_SPACING;
+                    if (y > screenY + screenH - m_toolBar->height() - TOOLBAR_Y_SPACING)
+                        y = screenY + screenH - m_toolBar->height() - TOOLBAR_Y_SPACING;
 
                     // 已经调整工具栏位置之后，发现工具栏位置超出屏幕上边缘
-                    if (y < m_screenInfo[i].y) {
+                    if (y < screenY) {
                         y = recordY + TOOLBAR_Y_SPACING;
                     }
                     toolbarPoint.setY(y);
@@ -3106,35 +3096,37 @@ void MainWindow::updateToolBarPos()
         // 垂直多屏：使用相同的通用逻辑
         for (int i = 0; i < m_screenInfo.size(); ++i) {
             
-            // 通用的屏幕范围检查：统一处理X/Y坐标，考虑像素比例
-            bool xInRange = toolbarPoint.x() >= m_screenInfo[i].x && 
-                           toolbarPoint.x() < (m_screenInfo[i].x + m_screenInfo[i].width / m_pixelRatio);
-            bool yInRange = toolbarPoint.y() >= m_screenInfo[i].y && 
-                           toolbarPoint.y() < (m_screenInfo[i].y + m_screenInfo[i].height / m_pixelRatio);
+            const int screenX = Utils::isQt6XcbEnv ? static_cast<int>(m_screenInfo[i].x / m_pixelRatio) : m_screenInfo[i].x;
+            const int screenY = Utils::isQt6XcbEnv ? static_cast<int>(m_screenInfo[i].y / m_pixelRatio) : m_screenInfo[i].y;
+            const int screenW = static_cast<int>(m_screenInfo[i].width / m_pixelRatio);
+            const int screenH = static_cast<int>(m_screenInfo[i].height / m_pixelRatio);
+
+            // 通用的屏幕范围检查：统一处理X/Y坐标（逻辑坐标系）
+            bool xInRange = toolbarPoint.x() >= screenX &&
+                           toolbarPoint.x() < (screenX + screenW);
+            bool yInRange = toolbarPoint.y() >= screenY &&
+                           toolbarPoint.y() < (screenY + screenH);
             
             toolIsInScreen = xInRange && yInRange;
             
-            bool recordIsInScreen = recordX >= m_screenInfo[i].x && recordX < (m_screenInfo[i].x + m_screenInfo[i].width / m_pixelRatio) &&
-                                   recordY >= m_screenInfo[i].y && recordY < (m_screenInfo[i].y + m_screenInfo[i].height / m_pixelRatio);
+            bool recordIsInScreen = recordX >= screenX && recordX < (screenX + screenW) &&
+                                   recordY >= screenY && recordY < (screenY + screenH);
             // 取出捕捉区域所在的屏幕
             if (recordIsInScreen) {
-                tempScreen.setX(m_screenInfo[i].x);
-                tempScreen.setY(m_screenInfo[i].y);
-                tempScreen.setWidth(m_screenInfo[i].width);
-                tempScreen.setHeight(m_screenInfo[i].height);
+                tempScreen = QRect(screenX, screenY, screenW, screenH);
             }
             
             // 使用相同的边界检查逻辑
             if (toolIsInScreen) {
-                if (toolbarPoint.y() < m_screenInfo[i].y + TOOLBAR_Y_SPACING) {
+                if (toolbarPoint.y() < screenY + TOOLBAR_Y_SPACING) {
                     toolbarPoint.setY(recordY + TOOLBAR_Y_SPACING);
                 }
-                else if (toolbarPoint.y() > m_screenInfo[i].y + m_screenInfo[i].height / m_pixelRatio - m_toolBar->height() - TOOLBAR_Y_SPACING) {
+                else if (toolbarPoint.y() > screenY + screenH - m_toolBar->height() - TOOLBAR_Y_SPACING) {
                     int y = std::max(recordY - m_toolBar->height() - TOOLBAR_Y_SPACING, 0);
-                    if (y > m_screenInfo[i].y + m_screenInfo[i].height / m_pixelRatio - m_toolBar->height() - TOOLBAR_Y_SPACING)
-                        y = m_screenInfo[i].y + static_cast<int>(m_screenInfo[i].height / m_pixelRatio) - m_toolBar->height() - TOOLBAR_Y_SPACING;
+                    if (y > screenY + screenH - m_toolBar->height() - TOOLBAR_Y_SPACING)
+                        y = screenY + screenH - m_toolBar->height() - TOOLBAR_Y_SPACING;
                     
-                    if (y < m_screenInfo[i].y) {
+                    if (y < screenY) {
                         y = recordY + TOOLBAR_Y_SPACING;
                     }
                     toolbarPoint.setY(y);
@@ -3323,28 +3315,46 @@ QPoint MainWindow::getTwoScreenIntersectPos(QPoint rawPos)
         tmp_screenInfo.append(m_screenInfo.at(0));
     }
 
+    const qreal ratio = m_pixelRatio;
+    auto toLogicalPos = [&](int v) -> int {
+        // Qt6+XCB: geometry().x/y 是物理位置；其它环境这里就是逻辑坐标
+        return Utils::isQt6XcbEnv ? static_cast<int>(v / ratio) : v;
+    };
+    auto toLogicalSize = [&](int v) -> int {
+        // m_screenInfo.width/height 为物理px存储（rect.width()*ratio），转逻辑需除以 ratio
+        return static_cast<int>(v / ratio);
+    };
+
+    const int s1x = toLogicalPos(tmp_screenInfo.at(0).x);
+    const int s1y = toLogicalPos(tmp_screenInfo.at(0).y);
+    const int s1w = toLogicalSize(tmp_screenInfo.at(0).width);
+    const int s1h = toLogicalSize(tmp_screenInfo.at(0).height);
+    const int s2x = toLogicalPos(tmp_screenInfo.at(1).x);
+    const int s2y = toLogicalPos(tmp_screenInfo.at(1).y);
+    const int s2w = toLogicalSize(tmp_screenInfo.at(1).width);
+    const int s2h = toLogicalSize(tmp_screenInfo.at(1).height);
+
     // 2. get the cross area
     double area_1 = 0, area_2 = 0;
     bool is_inScreen1 = false, is_inScreen2 = false;
     QRect intersectRect_1, intersectRect_2;
-    QRect screen_1(tmp_screenInfo.at(0).x, tmp_screenInfo.at(0).y, tmp_screenInfo.at(0).width, tmp_screenInfo.at(0).height);
-    QRect screen_2(tmp_screenInfo.at(1).x, tmp_screenInfo.at(1).y, tmp_screenInfo.at(1).width, tmp_screenInfo.at(1).height);
+    QRect screen_1(s1x, s1y, s1w, s1h);
+    QRect screen_2(s2x, s2y, s2w, s2h);
 
     if (is_inScreen1 = QRect(recordX, recordY, recordWidth, recordHeight).intersects(screen_1)) {
         intersectRect_1 =
             QRect(recordX, recordY, recordWidth, recordHeight)
-                .intersected(QRect(
-                    tmp_screenInfo.at(0).x, tmp_screenInfo.at(0).y, tmp_screenInfo.at(0).width, tmp_screenInfo.at(0).height));
+                .intersected(screen_1);
         area_1 = intersectRect_1.width() * intersectRect_1.height();
     }
 
     if (is_inScreen2 = QRect(recordX, recordY, recordWidth, recordHeight).intersects(screen_2)) {
         intersectRect_2 =
             QRect(recordX, recordY, recordWidth, recordHeight)
-                .intersected(QRect(
-                    tmp_screenInfo.at(1).x, tmp_screenInfo.at(1).y, tmp_screenInfo.at(1).width, tmp_screenInfo.at(1).height));
+                .intersected(screen_2);
         area_2 = intersectRect_2.width() * intersectRect_2.height();
     }
+
 
     // 3. screen-1 intersect screen-2
     if (area_1 != 0 && area_2 != 0 && is_inScreen1 && is_inScreen2) {
@@ -3359,7 +3369,7 @@ QPoint MainWindow::getTwoScreenIntersectPos(QPoint rawPos)
         }
 
         if (area_1 > area_2) {  // screen1
-            x = tmp_screenInfo.at(0).x + tmp_screenInfo.at(0).width - m_toolBar->width() - SIDEBAR_X_SPACING;
+            x = s1x + s1w - m_toolBar->width() - SIDEBAR_X_SPACING;
             if (type == 1) {
                 if (intersectRect_1.y() < m_toolBar->height()) {
                     y = intersectRect_1.y() + intersectRect_1.height();
@@ -3369,21 +3379,21 @@ QPoint MainWindow::getTwoScreenIntersectPos(QPoint rawPos)
             }
             if (type == 2) {
                 if (intersectRect_1.y() + intersectRect_1.height() + m_toolBar->height() >
-                    tmp_screenInfo.at(0).y + tmp_screenInfo.at(0).height) {
+                    s1y + s1h) {
                     y = intersectRect_1.y() + intersectRect_1.height() - m_toolBar->height();
                 } else {
                     y = intersectRect_1.y() + intersectRect_1.height();
                 }
             }
             if (type == 0) {
-                if (intersectRect_1.x() + intersectRect_1.width() == tmp_screenInfo.at(0).x + tmp_screenInfo.at(0).width) {}
+                if (intersectRect_1.x() + intersectRect_1.width() == s1x + s1w) {}
 
-                if (intersectRect_1.y() <= tmp_screenInfo.at(0).y) {
+                if (intersectRect_1.y() <= s1y) {
                     y = intersectRect_1.y() + intersectRect_1.height();
                 } else {
-                    if (intersectRect_1.y() - tmp_screenInfo.at(0).y > m_toolBar->height() &&
+                    if (intersectRect_1.y() - s1y > m_toolBar->height() &&
                         intersectRect_1.y() + intersectRect_1.height() + m_toolBar->height() >
-                            tmp_screenInfo.at(0).y + tmp_screenInfo.at(0).height) {
+                            s1y + s1h) {
                         y = intersectRect_1.y() - m_toolBar->height();
                     }
                 }
@@ -3406,7 +3416,7 @@ QPoint MainWindow::getTwoScreenIntersectPos(QPoint rawPos)
                     y = intersectRect_2.y() + intersectRect_2.height();
                 } else {
                     if (intersectRect_2.y() + intersectRect_2.height() + m_toolBar->height() >
-                        tmp_screenInfo.at(1).y + tmp_screenInfo.at(1).height) {
+                        s2y + s2h) {
                         y = intersectRect_2.y() - m_toolBar->height();
                     }
                 }
@@ -3421,21 +3431,21 @@ QPoint MainWindow::getTwoScreenIntersectPos(QPoint rawPos)
     if (area_1 != 0 && area_2 == 0 && is_inScreen1 && !is_inScreen2 && area_1 != recordWidth * recordHeight) {
         int x = toolbarPoint.x(), y = toolbarPoint.y();
 
-        if (intersectRect_1.x() == tmp_screenInfo.at(0).x || intersectRect_1.x() < m_toolBar->width()) {
+        if (intersectRect_1.x() == s1x || intersectRect_1.x() < m_toolBar->width()) {
             x = intersectRect_1.x() + SIDEBAR_X_SPACING;
         }
 
-        if (intersectRect_1.x() + intersectRect_1.width() == tmp_screenInfo.at(0).x + tmp_screenInfo.at(0).width) {
-            x = tmp_screenInfo.at(0).x + tmp_screenInfo.at(0).width - m_toolBar->width() - SIDEBAR_X_SPACING;
+        if (intersectRect_1.x() + intersectRect_1.width() == s1x + s1w) {
+            x = s1x + s1w - m_toolBar->width() - SIDEBAR_X_SPACING;
         }
 
-        if (intersectRect_1.y() == tmp_screenInfo.at(0).y &&
+        if (intersectRect_1.y() == s1y &&
             intersectRect_1.y() + intersectRect_1.height() + m_toolBar->height() <=
-                tmp_screenInfo.at(0).y + tmp_screenInfo.at(0).height) {
+                s1y + s1h) {
             y = intersectRect_1.y() + intersectRect_1.height();
-        } else if (intersectRect_1.y() + intersectRect_1.height() == tmp_screenInfo.at(0).y + tmp_screenInfo.at(0).height ||
+        } else if (intersectRect_1.y() + intersectRect_1.height() == s1y + s1h ||
                    intersectRect_1.y() + intersectRect_1.height() + m_toolBar->height() >=
-                       tmp_screenInfo.at(0).y + tmp_screenInfo.at(0).height) {
+                       s1y + s1h) {
             y = intersectRect_1.y() - m_toolBar->height();
         } else {
             y = recordY + recordHeight;
@@ -3448,19 +3458,19 @@ QPoint MainWindow::getTwoScreenIntersectPos(QPoint rawPos)
     // 5. screen-2
     if (area_1 == 0 && area_2 != 0 && !is_inScreen1 && is_inScreen2 && area_2 != recordWidth * recordHeight) {
         int x = toolbarPoint.x(), y = toolbarPoint.y();
-        if (intersectRect_2.x() == tmp_screenInfo.at(1).x || mapToGlobal(m_toolBar->pos()).x() < tmp_screenInfo.at(1).x) {
+        if (intersectRect_2.x() == s2x || mapToGlobal(m_toolBar->pos()).x() < s2x) {
             x = intersectRect_2.x() + SIDEBAR_X_SPACING;
         }
 
-        if (intersectRect_2.x() + intersectRect_2.width() == tmp_screenInfo.at(1).x + tmp_screenInfo.at(1).width) {
-            x = tmp_screenInfo.at(1).x + tmp_screenInfo.at(1).width - m_toolBar->width() - SIDEBAR_X_SPACING;
+        if (intersectRect_2.x() + intersectRect_2.width() == s2x + s2w) {
+            x = s2x + s2w - m_toolBar->width() - SIDEBAR_X_SPACING;
         }
 
-        if (intersectRect_2.y() == tmp_screenInfo.at(1).y) {
+        if (intersectRect_2.y() == s2y) {
             y = intersectRect_2.y() + intersectRect_2.height();
-        } else if (intersectRect_2.y() + intersectRect_2.height() == tmp_screenInfo.at(1).y + tmp_screenInfo.at(1).height ||
+        } else if (intersectRect_2.y() + intersectRect_2.height() == s2y + s2h ||
                    intersectRect_2.y() + intersectRect_2.height() + m_toolBar->height() >=
-                       tmp_screenInfo.at(1).y + tmp_screenInfo.at(1).height) {
+                       s2y + s2h) {
             y = intersectRect_2.y() - m_toolBar->height();
         } else {
             y = recordY + recordHeight;
@@ -7345,71 +7355,89 @@ void MainWindow::startCountdown()
         * 其他场景保持不变。
         */
         bool isRecordAreaCrossScreen = false;
-        QScreen *recordAreaScreen = QGuiApplication::screenAt(recordRect.center());
-        if (recordAreaScreen) {
-            QRect screenGeom = recordAreaScreen->geometry();
+        QList<QScreen *> allScreens = QGuiApplication::screens();
+
+        // Qt6+XCB 下 screen->geometry() 返回「物理位置 + 逻辑尺寸」的混合坐标，
+        // 两个屏幕之间会出现逻辑坐标间隙，导致 screenAt/contains 判断不准确。
+        // 因此在 Qt6+XCB 下使用物理坐标检测跨屏。
+        if (Utils::isQt6XcbEnv) {
+            bool found = false;
+            for (QScreen *screen : allScreens) {
+                qreal dpr = screen->devicePixelRatio();
+                QRect screenPhysical(
+                    screen->geometry().x(),
+                    screen->geometry().y(),
+                    static_cast<int>(screen->geometry().width() * dpr),
+                    static_cast<int>(screen->geometry().height() * dpr));
+                if (screenPhysical.contains(recordRect)) {
+                    found = true;
+                    break;
+                }
+            }
+            isRecordAreaCrossScreen = !found;
+        } else {
             QRect recordRectLogical(static_cast<int>(recordRect.x() / m_pixelRatio),
                                     static_cast<int>(recordRect.y() / m_pixelRatio),
                                     static_cast<int>(recordRect.width() / m_pixelRatio),
                                     static_cast<int>(recordRect.height() / m_pixelRatio));
-            if (!screenGeom.contains(recordRectLogical)) {
+            QScreen *recordAreaScreen = QGuiApplication::screenAt(recordRectLogical.center());
+            if (recordAreaScreen) {
+                if (!recordAreaScreen->geometry().contains(recordRectLogical)) {
+                    isRecordAreaCrossScreen = true;
+                }
+            } else {
                 isRecordAreaCrossScreen = true;
             }
-        } else {
-            isRecordAreaCrossScreen = true;
         }
+        qCDebug(dsrApp) << "isRecordAreaCrossScreen:" << isRecordAreaCrossScreen;
 
         int countdownX, countdownY;
-        // 录制区域是否跨屏
         if (isRecordAreaCrossScreen) {
-            QRect targetScreenRect;
+            // 跨屏：倒计时放在 toolbar 所在屏幕中心，toolbar 也跨屏则放主屏中心
+            QScreen *targetScreen = nullptr;
             if (m_toolBar) {
                 QRect toolBarGlobalRect = m_toolBar->geometry();
                 toolBarGlobalRect.moveTopLeft(m_toolBar->mapToGlobal(QPoint(0, 0)));
 
                 QScreen *toolBarScreen = QGuiApplication::screenAt(toolBarGlobalRect.center());
                 bool isToolBarCrossScreen = false;
-
-                // 工具栏是否跨屏
                 if (toolBarScreen) {
-                    QRect screenGeom = toolBarScreen->geometry();
-                    if (!screenGeom.contains(toolBarGlobalRect)) {
+                    if (!toolBarScreen->geometry().contains(toolBarGlobalRect)) {
                         isToolBarCrossScreen = true;
                     }
                 } else {
                     isToolBarCrossScreen = true;
                 }
 
-                if (isToolBarCrossScreen) {
-                    QScreen *primaryScreen = QGuiApplication::primaryScreen();
-                    if (primaryScreen) {
-                        targetScreenRect = primaryScreen->geometry();
-                        qCDebug(dsrApp) << "Countdown on primary screen (toolbar crosses screens):" << targetScreenRect;
-                    }
-                } else {
-                    targetScreenRect = toolBarScreen->geometry();
-                    qCDebug(dsrApp) << "Countdown on toolbar screen:" << targetScreenRect;
+                if (!isToolBarCrossScreen && toolBarScreen) {
+                    targetScreen = toolBarScreen;
                 }
             }
-
-            if (targetScreenRect.isEmpty()) {
-                QScreen *primaryScreen = QGuiApplication::primaryScreen();
-                if (primaryScreen) {
-                    targetScreenRect = primaryScreen->geometry();
-                }
+            if (!targetScreen) {
+                targetScreen = QGuiApplication::primaryScreen();
             }
 
-            // 录制区域跨屏时，倒计时显示在目标屏幕中心
-            countdownX = targetScreenRect.x() + (targetScreenRect.width() - countdownTooltip->width()) / 2;
-            countdownY = targetScreenRect.y() + (targetScreenRect.height() - countdownTooltip->height()) / 2;
-            qCDebug(dsrApp) << "Record area crosses screens, countdown position:" << countdownX << countdownY;
+            // Qt6+XCB: geometry().x()/y() 是物理位置，需要除以 DPR 转为 MainWindow 本地坐标
+            QRect targetLocal;
+            if (Utils::isQt6XcbEnv) {
+                targetLocal = QRect(
+                    static_cast<int>(targetScreen->geometry().x() / m_pixelRatio),
+                    static_cast<int>(targetScreen->geometry().y() / m_pixelRatio),
+                    targetScreen->geometry().width(),
+                    targetScreen->geometry().height());
+            } else {
+                targetLocal = targetScreen->geometry();
+            }
+
+            countdownX = targetLocal.x() + (targetLocal.width() - countdownTooltip->width()) / 2;
+            countdownY = targetLocal.y() + (targetLocal.height() - countdownTooltip->height()) / 2;
+            qCDebug(dsrApp) << "Countdown on screen" << targetScreen->name()
+                            << "position:" << countdownX << countdownY;
         } else {
-            // 其他场景保持不变，倒计时显示在录屏区域中心
-            countdownX = static_cast<int>((recordRect.x() / m_pixelRatio +
-                                           (recordRect.width() / m_pixelRatio - countdownTooltip->width()) / 2));
-            countdownY = static_cast<int>((recordRect.y() / m_pixelRatio +
-                                           (recordRect.height() / m_pixelRatio - countdownTooltip->height()) / 2));
-            qCDebug(dsrApp) << "Record area not cross screen, countdown position (center of record area):" << countdownX << countdownY;
+            // 非跨屏：倒计时放在录制区域中心
+            countdownX = recordX + (recordWidth - countdownTooltip->width()) / 2;
+            countdownY = recordY + (recordHeight - countdownTooltip->height()) / 2;
+            qCDebug(dsrApp) << "Countdown centered in record area, position:" << countdownX << countdownY;
         }
         countdownTooltip->move(countdownX, countdownY);
 
@@ -7442,6 +7470,15 @@ void MainWindow::startCountdown()
     if (!Utils::isWaylandMode) {
         hide();
         show();
+        if (Utils::isQt6XcbEnv) {
+            // Qt6 的 show() 会用内部逻辑大小重新发送 ConfigureRequest，
+            // 覆盖掉 initAttributes 阶段 forceX11WindowPosition 设置的物理大小，
+            // 导致窗口缩小、无法覆盖所有屏幕。
+            // 必须延迟到 Qt 事件循环处理完 show 的 configure 事件后再强制修正。
+            QTimer::singleShot(0, this, [this]() {
+                forceX11WindowPosition();
+            });
+        }
     } /* else {
          qCDebug(dsrApp) << "wayland开始录屏之后不获取焦点";
          setWindowFlag(Qt::WindowDoesNotAcceptFocus);
