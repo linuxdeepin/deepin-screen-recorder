@@ -22,7 +22,6 @@ TopTips::TopTips(DWidget *parent)
     : QLabel(parent)
 {
     qCDebug(dsrApp) << "TopTips constructor called.";
-    setFixedSize(90, 30);
     setAttribute(Qt::WA_TransparentForMouseEvents, true);
 //    this->setStyleSheet(" TopTips { background-color: transparent;"
 //                        "border-image: url(:/resources/images/action/sizetip.png)  no-repeat;"
@@ -46,15 +45,17 @@ void TopTips::setContent(const QSize &size)
     if(m_showRecorderTips && size.width() * size.height() > 1920 * 1080 && size.width() != m_width && size.height() != m_height) {
         // 1920 / 1080 = w / h
         // w h 等比缩放
-        setFixedSize(500, 30);
         int h = static_cast<int>(sqrt(1920.0 * 1080 * size.height() / size.width()));
         int w = static_cast<int>(sqrt(1920.0 * 1080 * size.width() / size.height()));
         QString recorderTips = tr(" Adjust the recording area within %1*%2 to get better video effect");
         qCDebug(dsrApp) << "Setting content with recording area adjustment tip:" << w << "x" << h;
-        setText(text + recorderTips.arg(w).arg(h));
+        QString fullText = text + recorderTips.arg(w).arg(h);
+        setText(fullText);
+        setFixedSize(fontMetrics().horizontalAdvance(fullText), fontMetrics().boundingRect(fullText).height());
     } else {
         qCDebug(dsrApp) << "Setting content size:" << size;
         setText(text);
+        setFixedSize(fontMetrics().horizontalAdvance(text), fontMetrics().boundingRect(text).height());
     }
 }
 
