@@ -3750,6 +3750,13 @@ void MainWindow::changeShotToolEvent(const QString &func)
     qCDebug(dsrApp) << "MainWindow::changeShotToolEvent >> func: " << func;
     // 调用ocr功能时先截图后，退出截图录屏，将刚截图的图片串递到ocr识别界面；
     if (func == "ocr") {
+        {
+            QJsonObject obj{{"tid", EventLogUtils::Start},
+                            {"version", QCoreApplication::applicationVersion()},
+                            {"mode", 1},
+                            {"startup_mode", "B4"}};
+            EventLogUtils::get().writeLogs(obj);
+        }
         // 调起OCR识别界面， 传入截图路径
         m_ocrInterface = new OcrInterface("com.deepin.Ocr", "/com/deepin/Ocr", QDBusConnection::sessionBus(), this);
         int delayTime = 0;
@@ -3787,6 +3794,13 @@ void MainWindow::changeShotToolEvent(const QString &func)
         QTimer::singleShot(2, [=] { exitApp(); });
 
     } else if (func == "scrollShot") {  // 点击滚动截图
+        {
+            QJsonObject obj{{"tid", EventLogUtils::Start},
+                            {"version", QCoreApplication::applicationVersion()},
+                            {"mode", 1},
+                            {"startup_mode", "B5"}};
+            EventLogUtils::get().writeLogs(obj);
+        }
         // 捕捉区域的固件不显示
         drawDragPoint = false;
         m_toolBar->hide();
