@@ -2036,6 +2036,7 @@ void SubToolWidget::setRecordLaunchMode(const unsigned int funType)
     if (funType == MainWindow::record) {
         //setCurrentWidget(m_recordSubTool);
         switchContent("record");
+        emit changeShotToolFunc("record");
     } else if (funType == MainWindow::ocr) {
         m_ocrButton->click();
     } else if (funType == MainWindow::scrollshot) {

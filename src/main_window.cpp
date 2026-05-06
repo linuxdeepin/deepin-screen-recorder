@@ -1276,6 +1276,10 @@ void MainWindow::initSaveShortcut()
             } else {
                 saveScreenShotToClipboardOnly();
             }
+        } else if (status::record == m_functionType) {
+            // 录屏模式下启动倒计时
+            qCDebug(dsrApp) << "shortcut : returnSC (key: enter) in record mode";
+            confirm();
         }
     });
     // 截图模式/滚动模式 保存截图 小键盘
@@ -1287,6 +1291,10 @@ void MainWindow::initSaveShortcut()
             } else {
                 saveScreenShotToClipboardOnly();
             }
+        } else if (status::record == m_functionType) {
+            // 录屏模式下启动倒计时
+            qCDebug(dsrApp) << "shortcut : enterSC (key: enter) in record mode";
+            confirm();
         }
         if (status::record == m_functionType && Utils::isWaylandMode)
             m_showButtons->showContentButtons(KEY_ENTER);

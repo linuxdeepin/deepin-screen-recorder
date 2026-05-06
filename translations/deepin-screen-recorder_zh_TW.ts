@@ -52,7 +52,7 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Copy to clipboard (Enter)</source>
-        <translation>複製到剪貼板</translation>
+        <translation>複製到剪貼板 Enter</translation>
     </message>
 </context>
 <context>
@@ -767,7 +767,7 @@ Hold down Shift to draw squares or circles.</source>
     </message>
     <message>
         <source>Copy to clipboard (Enter)</source>
-        <translation>複製到剪貼板</translation>
+        <translation>複製到剪貼板 Enter</translation>
     </message>
     <message>
         <source>OK (Enter)</source>
