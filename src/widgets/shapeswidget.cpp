@@ -157,8 +157,22 @@ void ShapesWidget::setCurrentShape(QString shapeType)
 {
     qDebug() << __FUNCTION__ << __LINE__ << "type: " << shapeType;
     m_currentType = shapeType;
-    if (shapeType != "text")
+    if (shapeType == "text") {
+        resetForTextToolSwitch();
+    } else {
         setAllTextEditReadOnly();
+    }
+}
+
+void ShapesWidget::resetForTextToolSwitch()
+{
+    // 切换到 text 时仍保留上一个图形的选中态，
+    // 导致第一次点击先“清选中”，第二次点击才进入文本创建。
+    // 这里在工具切换时清理选中态，保证首次点击直接进入文本输入。
+    clearSelected();
+    m_isRotated = false;
+    m_isResize = false;
+    m_clickedKey = Unknow;
 }
 
 void ShapesWidget::clearSelected()

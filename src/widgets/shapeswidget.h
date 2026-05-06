@@ -227,6 +227,8 @@ protected:
     void tapTriggered(QTapGesture *tap);
 
 private:
+    void resetForTextToolSwitch();
+
     QPointF m_pos1 = QPointF(0, 0);
     QPointF m_pos2 = QPointF(0, 0);
     QPointF m_pos3, m_pos4;
