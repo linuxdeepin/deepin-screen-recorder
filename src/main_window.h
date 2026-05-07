@@ -389,7 +389,7 @@ public:
      * @return true=完整文件路径，false=目录路径
      */
     bool parsePathArgument(const QString &path, QString &outDir, QString &outFileName, QString &outFormat);
-    void sendSavingNotify();
+    quint32 sendSavingNotify();
     // 强制录屏保存退出通知,3D->2D模式
     void forciblySavingNotify();
 

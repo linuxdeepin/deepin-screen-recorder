@@ -988,10 +988,10 @@ QString MainWindow::libPath(const QString &strlib)
     return list.last();
 }
 
-void MainWindow::sendSavingNotify()
+quint32 MainWindow::sendSavingNotify()
 {
     if (Utils::isRootUser) {
-        return;
+        return RecordProcess::RECORD_SAVING_NOTIFY_ID_INVALID;
     }
     // Popup notify.
     QDBusInterface notification("org.freedesktop.Notifications",
@@ -1001,7 +1001,7 @@ void MainWindow::sendSavingNotify()
     QStringList actions;
     actions << "_close" << tr("Ignore");
     int timeout = 3000;
-    unsigned int id = 0;
+    quint32 id = RecordProcess::RECORD_SAVING_NOTIFY_ID_INVALID;
 
     QList<QVariant> arg;
     arg << Utils::appName                                                   // (QCoreApplication::applicationName()) appname
@@ -1012,7 +1012,10 @@ void MainWindow::sendSavingNotify()
         << actions                                                          // actions
         << QVariantMap()                                                    // hints
         << timeout;                                                         // timeout
-    notification.callWithArgumentList(QDBus::AutoDetect, "Notify", arg);
+    QDBusMessage reply = notification.callWithArgumentList(QDBus::AutoDetect, "Notify", arg);
+    if (reply.type() == QDBusMessage::ReplyMessage && !reply.arguments().isEmpty())
+        return reply.arguments().constFirst().toUInt();
+    return RecordProcess::RECORD_SAVING_NOTIFY_ID_INVALID;
 }
 
 void MainWindow::forciblySavingNotify()
@@ -1028,7 +1031,7 @@ void MainWindow::forciblySavingNotify()
     QStringList actions;
     actions << "_close" << tr("Ignore");
     int timeout = 3000;
-    unsigned int id = 0;
+    quint32 id = RecordProcess::RECORD_SAVING_NOTIFY_ID_INVALID;
 
     QList<QVariant> arg;
     arg << Utils::appName                     //(QCoreApplication::applicationName()) // appname
@@ -7268,9 +7271,9 @@ void MainWindow::stopRecord()
         }
         hide();
         emit releaseEvent();
-        // 正在保存录屏文件通知,全屏录制时不需进行通知
+        // 正在保存录屏文件通知，全屏录制时不需进行通知；完成时用 CloseNotification 关闭本条再弹「录制完成」
         if (!m_isFullScreenRecord)
-            sendSavingNotify();
+            recordProcess.setRecordSavingNotifyId(sendSavingNotify());
         // 状态栏闪烁停止
         if (Utils::isTabletEnvironment && m_tabletRecorderHandle) {
             m_tabletRecorderHandle->stop();

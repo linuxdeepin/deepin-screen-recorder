@@ -41,6 +41,8 @@ public:
     static const int RECORD_FRAMERATE_24;
     static const int RECORD_FRAMERATE_30;
 
+    static constexpr quint32 RECORD_SAVING_NOTIFY_ID_INVALID = 0;
+
     explicit RecordProcess(QObject *parent = nullptr);
     ~RecordProcess();
 
@@ -72,6 +74,12 @@ public:
      * @param flag
      */
     void setFullScreenRecord(bool flag);
+
+    /**
+     * @brief 由 MainWindow 在弹出「正在保存」通知后传入 Notify 返回的 id，
+     *        exitRecord 弹出「录制完成」前会先 CloseNotification 关闭该通知。
+     */
+    void setRecordSavingNotifyId(quint32 id);
 private:
     /**
      * @brief x11协议下ffmpeg录制视频
@@ -194,6 +202,8 @@ private:
      * @brief m_isFullScreenRecord 是否是快捷全屏录制，默认为false
      */
     bool m_isFullScreenRecord = false;
+
+    quint32 m_recordSavingNotifyId = RECORD_SAVING_NOTIFY_ID_INVALID;
 
 signals:
     void recordingStopped();

@@ -87,6 +87,22 @@ static QDBusMessage callTrayRecorderIcon(const QString &function)
     return recorderInterface.call(function);
 }
 
+static void closeFdoNotification(quint32 id)
+{
+    if (id == RecordProcess::RECORD_SAVING_NOTIFY_ID_INVALID)
+        return;
+    QDBusInterface notification("org.freedesktop.Notifications",
+                                "/org/freedesktop/Notifications",
+                                "org.freedesktop.Notifications",
+                                QDBusConnection::sessionBus());
+    notification.call("CloseNotification", id);
+}
+
+void RecordProcess::setRecordSavingNotifyId(quint32 id)
+{
+    m_recordSavingNotifyId = id;
+}
+
 RecordProcess::RecordProcess(QObject *parent) : QObject(parent)
 {
     qCDebug(dsrApp) << "Record process control class initialized.";
@@ -804,6 +820,7 @@ void RecordProcess::onExitGstRecord()
 //开始录屏
 void RecordProcess::startRecord()
 {
+    m_recordSavingNotifyId = RECORD_SAVING_NOTIFY_ID_INVALID;
     getScreenRecordSavePath();
     //使用QtConcurrent::run受cpu核心线程数的影响，线程池默认大小为CPU核心线程数大小，由于程序中通过此方法启动的线程数超出4个，故再次设置线程池大小
     QThreadPool::globalInstance()->setMaxThreadCount(QThreadPool::globalInstance()->maxThreadCount() > 6 ? QThreadPool::globalInstance()->maxThreadCount() : 10);
@@ -959,7 +976,11 @@ void RecordProcess::stopRecord()
 void RecordProcess::exitRecord(QString newSavePath)
 {
     if (!Utils::isRootUser && !m_isFullScreenRecord) {
-        qCInfo(dsrApp) << __LINE__ << __func__ << "正在弹出保存完成的通知...";
+        qCInfo(dsrApp) << __LINE__ << __func__ << "关闭「正在保存」通知（若有）并弹出保存完成通知";
+        if (m_recordSavingNotifyId != RECORD_SAVING_NOTIFY_ID_INVALID) {
+            closeFdoNotification(m_recordSavingNotifyId);
+            m_recordSavingNotifyId = RECORD_SAVING_NOTIFY_ID_INVALID;
+        }
         // Popup notify.
         QDBusInterface notification("org.freedesktop.Notifications",
                                     "/org/freedesktop/Notifications",
