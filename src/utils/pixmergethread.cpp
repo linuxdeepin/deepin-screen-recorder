@@ -9,6 +9,66 @@
 #include <QMutexLocker>
 #include <QDateTime>
 #include <opencv2/imgproc/types_c.h>
+
+static void blendVerticalSeamBand(cv::Mat &dst, const cv::Mat &a, const cv::Mat &b, int yDst, int bandH)
+{
+    // Feather blend two same-size BGRA bands into dst at yDst.
+    // dst/a/b must be CV_8UC4 and have identical width/height (height==bandH).
+    if (bandH <= 0) {
+        return;
+    }
+    if (dst.empty() || a.empty() || b.empty()) {
+        return;
+    }
+    if (dst.type() != CV_8UC4 || a.type() != CV_8UC4 || b.type() != CV_8UC4) {
+        return;
+    }
+    if (a.cols != b.cols || a.rows != b.rows || a.rows != bandH) {
+        return;
+    }
+    if (yDst < 0 || yDst + bandH > dst.rows || a.cols > dst.cols) {
+        return;
+    }
+
+    // Use OpenCV vectorized ops (faster than per-pixel loops).
+    // Alpha channel is forced to 255 because the stitched preview/output is treated as opaque ARGB32 in Qt.
+    // (The upstream pipeline uses QImage::Format_ARGB32 for preview and saving; keeping alpha from sources can
+    // introduce unexpected transparency artifacts in the merged image.)
+    cv::Mat a32, b32;
+    a.convertTo(a32, CV_32FC4);
+    b.convertTo(b32, CV_32FC4);
+
+    // Build vertical ramp alphaB in [0..1] with shape (bandH x cols)
+    cv::Mat alphaCol(bandH, 1, CV_32FC1);
+    if (bandH == 1) {
+        alphaCol.at<float>(0, 0) = 1.0f;
+    } else {
+        for (int r = 0; r < bandH; ++r) {
+            alphaCol.at<float>(r, 0) = static_cast<float>(r) / static_cast<float>(bandH - 1);
+        }
+    }
+    cv::Mat alphaB;
+    cv::repeat(alphaCol, 1, a.cols, alphaB);
+    cv::Mat alphaA = 1.0f - alphaB;
+
+    std::array<cv::Mat, 4> aCh;
+    std::array<cv::Mat, 4> bCh;
+    cv::split(a32, aCh.data());
+    cv::split(b32, bCh.data());
+
+    std::array<cv::Mat, 4> outCh;
+    for (int k = 0; k < 3; ++k) {
+        outCh[k] = aCh[k].mul(alphaA) + bCh[k].mul(alphaB);
+    }
+    outCh[3] = cv::Mat(a.rows, a.cols, CV_32FC1, cv::Scalar(255.0f));
+
+    cv::Mat out32;
+    cv::merge(outCh.data(), 4, out32);
+    cv::Mat out8;
+    out32.convertTo(out8, CV_8UC4);
+    out8.copyTo(dst(cv::Rect(0, yDst, out8.cols, out8.rows)));
+}
+
 const int PixMergeThread::LONG_IMG_MAX_HEIGHT = 10000;
 const int PixMergeThread::TEMPLATE_HEIGHT = 50;
 
@@ -311,7 +371,16 @@ bool PixMergeThread::splicePictureUp(const cv::Mat &image)
             return false;
         }
 
+        // Compose with seam blending (reduce visible horizontal band).
         image.copyTo(cv::Mat(result, cv::Rect(0, 0, image.cols, image.rows)));
+        // Seam band: image bottom TEMPLATE_HEIGHT overlaps with cur around maxLoc.y..maxLoc.y+TEMPLATE_HEIGHT
+        if (TEMPLATE_HEIGHT > 0
+            && image.rows >= TEMPLATE_HEIGHT
+            && m_curImg.rows >= maxLoc.y + TEMPLATE_HEIGHT) {
+            const cv::Mat a = image(cv::Rect(0, image.rows - TEMPLATE_HEIGHT, image.cols, TEMPLATE_HEIGHT));
+            const cv::Mat b = m_curImg(cv::Rect(0, maxLoc.y, m_curImg.cols, TEMPLATE_HEIGHT));
+            blendVerticalSeamBand(result, a, b, image.rows - TEMPLATE_HEIGHT, TEMPLATE_HEIGHT);
+        }
         temp1.copyTo(cv::Mat(result, cv::Rect(0, image.rows, temp1.cols, temp1.rows)));
         if (result.rows == m_curImg.rows) {// 拼接前后图片高度不变
             if (m_MeragerCount == 1) {
@@ -421,9 +490,18 @@ bool PixMergeThread::splicePictureDown(const cv::Mat &image)
             return false;
         }
 
-        /*将图1的非模板部分和图2拷贝到result*/
+        /*将图1的非模板部分和图2拷贝到result（并在接缝处做融合，避免横向接缝条带）*/
         temp1.copyTo(cv::Mat(result, cv::Rect(0, 0, m_curImg.cols, maxLoc.y)));
         image.copyTo(cv::Mat(result, cv::Rect(0, maxLoc.y, image.cols, image.rows)));
+        // Seam band: cur at [maxLoc.y .. maxLoc.y+TEMPLATE_HEIGHT) overlaps with image top band.
+        if (TEMPLATE_HEIGHT > 0
+            && image.rows >= TEMPLATE_HEIGHT
+            && m_curImg.rows >= maxLoc.y + TEMPLATE_HEIGHT
+            && result.rows >= maxLoc.y + TEMPLATE_HEIGHT) {
+            const cv::Mat a = m_curImg(cv::Rect(0, maxLoc.y, m_curImg.cols, TEMPLATE_HEIGHT));
+            const cv::Mat b = image(cv::Rect(0, 0, image.cols, TEMPLATE_HEIGHT));
+            blendVerticalSeamBand(result, a, b, maxLoc.y, TEMPLATE_HEIGHT);
+        }
         if (result.rows == m_curImg.rows) {// 拼接前后图片高度不变
             cv::Mat curImg = m_curImg;
             QRect rect = getScrollChangeRectArea(curImg, image);

@@ -6315,10 +6315,17 @@ void MainWindow::scrollShotMouseScrollEvent(int mouseTime, int direction, int x,
                      static_cast<int>(recordY * m_pixelRatio),
                      static_cast<int>(recordWidth * m_pixelRatio),
                      static_cast<int>(recordHeight * m_pixelRatio)};
-    // 当前鼠标滚动的点
-    QPoint mouseScrollPoint(x * m_pixelRatio, y * m_pixelRatio);
+    // 当前鼠标滚动的点：
+    // 注意：底层回调传进来的 x/y 坐标在 HiDPI 场景下可能已经是“物理像素坐标”，此处如果再乘一次 pixelRatio 会导致判断失败。
+    const QPoint pRaw(x, y);
+    const QPoint pScaled(static_cast<int>(x * m_pixelRatio), static_cast<int>(y * m_pixelRatio));
+    const bool inRaw = recordRect.contains(pRaw);
+    const bool inScaled = recordRect.contains(pScaled);
+    // 优先选择能命中的坐标系；两者都命中时选 raw（更符合“已是物理坐标”的常见情况）
+    const QPoint mouseScrollPoint = (inRaw || !inScaled) ? pRaw : pScaled;
+    const bool inRect = recordRect.contains(mouseScrollPoint);
     // 判断鼠标滚动的位置是否是在捕捉区域内部，不在捕捉区域内部不进行处理
-    if (!recordRect.contains(mouseScrollPoint))
+    if (!inRect)
         return;
     if (!Utils::isWaylandMode) {
         // 对比监听自动滚动事件是否正在进行触发, wayland模式下不做此判断
