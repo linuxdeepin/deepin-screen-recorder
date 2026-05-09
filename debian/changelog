@@ -1,3 +1,14 @@
+deepin-screen-recorder (6.6.33) unstable; urgency=medium
+
+  * chore: Update version to 6.6.33
+  * fix(main_window): improve mouse scroll event handling for HiDPI support
+  * fix(main_window): update sendSavingNotify to return notification ID
+  * fix(shapeswidget): improve text shape handling and logging
+  * fix(toolbar): correct confirm button tooltip when launching record from plugin
+  * fix(audio): disable system audio option for GIF format
+
+ -- zhanghongyuan <zhanghongyuan@uniontech.com>  Sat, 09 May 2026 11:39:26 +0800
+
 deepin-screen-recorder (6.6.32) unstable; urgency=medium
 
   * fix(quickpanel): delay DBus call to wait for panel close animation
