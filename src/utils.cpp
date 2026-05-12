@@ -1,5 +1,5 @@
 // Copyright (C) 2020 ~ 2021 Uniontech Software Technology Co.,Ltd.
-// SPDX-FileCopyrightText: 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2022 - 2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -241,6 +241,35 @@ void Utils::showCurrentSys()
     //qDebug() << "udpateVersion: " << DSysInfo::udpateVersion();
     //qDebug() << "majorVersion: " << DSysInfo::majorVersion();
     //qDebug() << "majorVersion: " << DSysInfo::majorVersion();
+    qInfo() << "isVirtualMachine: " << isRunningInVirtualMachine();
+}
+
+//Detect whether running in a virtual machine
+bool Utils::isRunningInVirtualMachine(bool forceVirtualMachine)
+{
+    QProcess process;
+    process.start("/usr/bin/systemd-detect-virt");
+    process.waitForFinished();
+    QString output = process.readAllStandardOutput().trimmed();
+
+    // Print the output of systemd-detect-virt command
+    qInfo() << "systemd-detect-virt output: " << output;
+
+    // none: not a virtual machine
+    // kvm, vmware, virtualbox, xen, qemu, etc.: virtual machine
+    // empty output: also considered as not a virtual machine
+    if (forceVirtualMachine) {
+        qInfo() << "Force treat as virtual machine";
+        return true;
+    }
+
+    if (output.isEmpty() || output.toLower() == "none") {
+        qInfo() << "Running on physical machine, not a virtual machine";
+        return false;
+    } else {
+        qInfo() << "Running in a virtual machine, type:" << output;
+        return true;
+    }
 }
 void Utils::enableXGrabButton()
 {

@@ -1,5 +1,5 @@
 // Copyright (C) 2020 ~ 2021 Uniontech Software Technology Co.,Ltd.
-// SPDX-FileCopyrightText: 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2022 - 2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -143,7 +143,14 @@ public:
      * @brief showCurrentSys 显示
      */
     static void showCurrentSys();
-
+    
+    /**
+     * @brief isRunningInVirtualMachine Detect whether running in a virtual machine
+     * @param forceVirtualMachine If true, force treat as virtual machine; if false, auto-detect
+     * @return true: running in a virtual machine; false: not running in a virtual machine
+     */
+    static bool isRunningInVirtualMachine(bool forceVirtualMachine = false);
+    
     /**
      * @brief 使能XGrabButton抓取所有的鼠标点击事件
      */

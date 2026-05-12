@@ -1,5 +1,5 @@
 // Copyright (C) 2020 ~ 2021 Uniontech Software Technology Co.,Ltd.
-// SPDX-FileCopyrightText: 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2022 - 2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -1456,8 +1456,11 @@ void SubToolWidget::setSystemAudioEnable(bool status)
     m_haveSystemAudio = status;
     m_systemAudioAction->setEnabled(status);
     m_systemAudioAction->setCheckable(status);
-    m_systemAudioAction->setChecked(!status);
-    m_systemAudioAction->trigger();
+    m_systemAudioAction->setChecked(!status && !Utils::isRunningInVirtualMachine());
+    if (Utils::isRunningInVirtualMachine())
+        emit m_systemAudioAction->triggered(false);
+    else
+        m_systemAudioAction->trigger();
 }
 // 当m_microphoneAction或m_systemAudioAction被点击或者程序主动调用trigg()时，会触发工具栏音频采集图标的改变及发射实际需要录制的音频
 void SubToolWidget::onChangeAudioType(bool checked)

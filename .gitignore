@@ -1,7 +1,13 @@
 Makefile
 moc_*.o
 moc_*.cpp
+moc_*.h
+qrc_*.cpp
 *.o
+*.so
 build/
 *.qm
 *.pro.user*
+deepin-screen-recorder
+deepin-pin-screenshots
+.qmake.stash
