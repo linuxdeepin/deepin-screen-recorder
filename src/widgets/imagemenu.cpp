@@ -254,15 +254,34 @@ ImageBorderHelper *ImageBorderHelper::instance()
     return m_imageBorderHelper;
 }
 
+void ImageBorderHelper::pruneBorderMenus()
+{
+    for (auto it = m_allBorderMenu.begin(); it != m_allBorderMenu.end();) {
+        if (it.value().isNull()) {
+            it = m_allBorderMenu.erase(it);
+        } else {
+            ++it;
+        }
+    }
+}
+
 ImageMenu *ImageBorderHelper::getBorderMenu(const BorderType type, const QString title, QWidget *parent)
 {
     qCDebug(dsrApp) << "ImageBorderHelper::getBorderMenu called for type:" << type << ", title:" << title;
-    if (!m_allBorderMenu.contains(type)) {
-        qCDebug(dsrApp) << "Menu for type" << type << "not found, creating new one";
-        m_allBorderMenu.insert(type, new ImageMenu(type, title, parent));
+    pruneBorderMenus();
+
+    if (ImageMenu *cached = m_allBorderMenu.value(type)) {
+        if (cached->parent() == parent) {
+            return cached;
+        }
+        m_allBorderMenu.remove(type);
+        delete cached;
     }
-    qCDebug(dsrApp) << "Returning menu for type:" << type;
-    return m_allBorderMenu[type];
+
+    ImageMenu *menu = new ImageMenu(type, title, parent);
+    m_allBorderMenu.insert(type, menu);
+    qCDebug(dsrApp) << "Created border menu for type:" << type;
+    return menu;
 }
 
 void ImageBorderHelper::setActionState(const BorderType type, const bool isChecked)
@@ -270,10 +289,14 @@ void ImageBorderHelper::setActionState(const BorderType type, const bool isCheck
     qCDebug(dsrApp) << "ImageBorderHelper::setActionState called for type:" << type << ", isChecked:" << isChecked;
     // 选中某边框，后清空其他类型的所有边框
     for (auto itr = m_allBorderMenu.begin(); itr != m_allBorderMenu.end(); ++itr) {
-        qCDebug(dsrApp) << "Processing menu for border type:" << itr.value()->borderType();
-        if (itr.value()->borderType() != type) {
-            qCDebug(dsrApp) << "Clearing action state for other border type:" << itr.value()->borderType();
-            itr.value()->ActionChecked(nullptr);
+        ImageMenu *menu = itr.value();
+        if (!menu) {
+            continue;
+        }
+        qCDebug(dsrApp) << "Processing menu for border type:" << menu->borderType();
+        if (menu->borderType() != type) {
+            qCDebug(dsrApp) << "Clearing action state for other border type:" << menu->borderType();
+            menu->ActionChecked(nullptr);
         }
     }
 
@@ -287,6 +310,9 @@ int ImageBorderHelper::getBorderTypeDetail()
     int typeDetail = 0;
     for (auto itr = m_allBorderMenu.begin(); itr != m_allBorderMenu.end(); ++itr) {
         ImageMenu *menu = itr.value();
+        if (!menu) {
+            continue;
+        }
         qCDebug(dsrApp) << "Getting border type detail for menu of type:" << menu->borderType();
         typeDetail = menu->getBorderTypeDetail();
         if (typeDetail != 0) {
@@ -306,9 +332,9 @@ void ImageBorderHelper::setBorderTypeDetail(const int typeDetail)
     int id = typeDetail & 0xFF;
     qCDebug(dsrApp) << "Parsed type:" << type << ", ID:" << id;
 
-    if (m_allBorderMenu.contains(type)) {
+    if (ImageMenu *menu = m_allBorderMenu.value(type)) {
         qCDebug(dsrApp) << "Menu for type" << type << "found, setting border type detail";
-        m_allBorderMenu[type]->setBorderTypeDetail(id);
+        menu->setBorderTypeDetail(id);
     }
 }
 
@@ -387,9 +413,12 @@ ImageBorderHelper::~ImageBorderHelper()
 {
     qCDebug(dsrApp) << "ImageBorderHelper destructor entered";
     for (auto itr = m_allBorderMenu.begin(); itr != m_allBorderMenu.end(); ++itr) {
-        qCDebug(dsrApp) << "Deleting border menu for type:" << itr.value()->borderType();
-        delete *itr;
+        if (ImageMenu *menu = itr.value()) {
+            qCDebug(dsrApp) << "Deleting border menu for type:" << menu->borderType();
+            delete menu;
+        }
     }
+    m_allBorderMenu.clear();
     if (m_borderhandle != nullptr) {
         qCDebug(dsrApp) << "Deleting border handler";
         delete m_borderhandle;

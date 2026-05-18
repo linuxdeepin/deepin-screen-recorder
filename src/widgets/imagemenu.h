@@ -9,6 +9,7 @@
 #include <DMenu>
 #include <DIconButton>
 #include <QButtonGroup>
+#include <QPointer>
 
 DWIDGET_USE_NAMESPACE
 class BorderProcessInterface;
@@ -26,6 +27,8 @@ public:
 
     static ImageBorderHelper *instance();
     ImageMenu* getBorderMenu(const BorderType type, const QString title, QWidget *parent = nullptr);
+    /** 工具栏/选项菜单销毁后清理悬空缓存（如 Treeland 重选区重建工具栏） */
+    void pruneBorderMenus();
     void setActionState(const BorderType type, const bool isChecked);
     int getBorderTypeDetail();
     void setBorderTypeDetail(const int typeDetail);
@@ -41,7 +44,7 @@ private:
     ~ImageBorderHelper();
 private:
     static ImageBorderHelper *m_imageBorderHelper;
-    QMap<BorderType, ImageMenu*> m_allBorderMenu;
+    QMap<BorderType, QPointer<ImageMenu>> m_allBorderMenu;
     BorderProcessInterface *m_borderhandle;
 };
 
