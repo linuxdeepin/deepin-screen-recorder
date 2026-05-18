@@ -342,10 +342,7 @@ void MainWindow::initTreelandtAttributes() //initTreelandtAttributes
     installEventFilter(this);
     createWinId();
 
-    //构建截屏工具栏和相关组件
-    m_toolBar =new ToolBar(this);
-    m_toolBar->move(100,128);
-    m_toolBar->show();
+    // Treeland 截图工具栏在 sourceReady(captureRegionChanged) 后由 updateCaptureRegion 创建
 
     m_sideBar = new SideBar(this);
     m_sideBar->initSideBar(this);
@@ -367,8 +364,6 @@ void MainWindow::initTreelandtAttributes() //initTreelandtAttributes
         }
         m_zoomIndicator->hideMagnifier();
     }
-    // 设置窗口大小和位置
-    connect(m_toolBar, &ToolBar::currentFunctionToMain, this, &MainWindow::changeFunctionButton);
     m_backgroundRect = rootWindowRect;
     m_backgroundRect = QRect(m_backgroundRect.topLeft() / m_pixelRatio, m_backgroundRect.size());
     move(m_backgroundRect.topLeft() * m_pixelRatio);
@@ -915,9 +910,11 @@ void MainWindow::checkIsLockScreen()
     qCInfo(dsrApp) << "Current Screen is LockScreen?" << isLockScreen;
     if (isLockScreen) {
         pinScreenshotsLockScreen(isLockScreen);
-        m_toolBar->setScrollShotDisabled(true);
-        m_toolBar->setOcrScreenshotsEnable(false);
-        m_toolBar->setButEnableOnLockScreen(false);
+        if (m_toolBar) {
+            m_toolBar->setScrollShotDisabled(true);
+            m_toolBar->setOcrScreenshotsEnable(false);
+            m_toolBar->setButEnableOnLockScreen(false);
+        }
     }
     // 电源界面判断接口
     QDBusInterface ddeLockFront(
@@ -935,9 +932,11 @@ void MainWindow::checkIsLockScreen()
     qCInfo(dsrApp) << "Current Screen is Powersource UI?" << isLockFront;
     if (isLockFront) {
         pinScreenshotsLockScreen(isLockScreen);
-        m_toolBar->setScrollShotDisabled(true);
-        m_toolBar->setOcrScreenshotsEnable(false);
-        m_toolBar->setButEnableOnLockScreen(false);
+        if (m_toolBar) {
+            m_toolBar->setScrollShotDisabled(true);
+            m_toolBar->setOcrScreenshotsEnable(false);
+            m_toolBar->setButEnableOnLockScreen(false);
+        }
     }
 }
 void MainWindow::initDynamicLibPath()
@@ -1407,30 +1406,36 @@ void MainWindow::initScreenShot()
     // 构建截屏工具栏按钮 by zyg
     if (m_firstShot == 0) {
         qCDebug(dsrApp) << "initScreenShot m_firstShot == 0";
-        m_toolBar->hide();
+        if (m_toolBar) {
+            m_toolBar->hide();
+        }
         m_sideBar->hide();
 
         // m_recordButton->hide();
         // m_shotButton->hide();
         m_sizeTips->hide();
-    }
-
-    else {
+    } else {
         qCDebug(dsrApp) << "initScreenShot m_firstShot != 0";
-        m_toolBar->show();
+        if (m_toolBar) {
+            m_toolBar->show();
+        }
         m_sideBar->hide();
 
         // m_recordButton->hide();
         // m_shotButton->show();
         m_sizeTips->show();
 
-        updateToolBarPos();
+        if (m_toolBar) {
+            updateToolBarPos();
+        }
         // updateShotButtonPos();
         m_sizeTips->setRecorderTipsInfo(false);
         m_sizeTips->updateTips(QPoint(recordX, recordY), QSize(recordWidth, recordHeight));
     }
 
-    m_toolBar->setFocus();
+    if (m_toolBar) {
+        m_toolBar->setFocus();
+    }
     qCDebug(dsrApp) << "initScreenShot end";
 }
 
@@ -1496,24 +1501,28 @@ void MainWindow::initScreenRecorder()
     // 构建截屏工具栏按钮 by zyg
     if (m_firstShot == 0) {
         qCDebug(dsrApp) << "initScreenRecorder m_firstShot == 0";
-        m_toolBar->hide();
+        if (m_toolBar) {
+            m_toolBar->hide();
+        }
         m_sideBar->hide();
 
         // m_recordButton->hide();
         // m_shotButton->hide();
         m_sizeTips->hide();
-    }
-
-    else {
+    } else {
         qCDebug(dsrApp) << "initScreenRecorder m_firstShot != 0";
-        m_toolBar->show();
+        if (m_toolBar) {
+            m_toolBar->show();
+        }
         m_sideBar->hide();
 
         // m_recordButton->show();
         // m_shotButton->hide();
         m_sizeTips->show();
 
-        updateToolBarPos();
+        if (m_toolBar) {
+            updateToolBarPos();
+        }
         // updateRecordButtonPos();
         m_sizeTips->setRecorderTipsInfo(true);
         m_sizeTips->updateTips(QPoint(recordX, recordY), QSize(recordWidth, recordHeight));
@@ -1533,7 +1542,9 @@ void MainWindow::initScreenRecorder()
         }
     }
 
-    m_toolBar->setFocus();
+    if (m_toolBar) {
+        m_toolBar->setFocus();
+    }
     qCDebug(dsrApp) << "initScreenRecorder end";
 }
 
@@ -2819,7 +2830,7 @@ void MainWindow::wheelEvent(QWheelEvent *event)
 
 void MainWindow::pinScreenshotsLockScreen(bool isLocked)
 {
-    if (m_toolBarInit) {
+    if (m_toolBar) {
         m_toolBar->setPinScreenshotsEnable(!isLocked);
     }
 }
@@ -2915,7 +2926,10 @@ void MainWindow::compositeChanged()
 {
     // 滚动截图过程中动态切换为2D模式，直接结束
     if (m_functionType == status::shot) {
-        m_toolBar->setScrollShotDisabled(!m_wmHelper->hasBlurWindow());
+        // Treeland：工具栏在 sourceReady 后才创建，Wayland 初始化可能先触发 hasBlurWindowChanged
+        if (m_toolBar) {
+            m_toolBar->setScrollShotDisabled(!m_wmHelper->hasBlurWindow());
+        }
         return;
     }
     if (!m_wmHelper->hasBlurWindow() && m_functionType == status::scrollshot) {
@@ -2952,7 +2966,7 @@ void MainWindow::compositeChanged()
 
 void MainWindow::updateToolBarPos()
 {
-    if (m_shotflag == 1) {
+    if (m_shotflag == 1 || !m_toolBar) {
         return;
     }
     m_isToolBarInside = false;
@@ -5243,16 +5257,18 @@ int MainWindow::mouseMoveEF(QMouseEvent *mouseEvent, bool &needRepaint)
     m_currentCursor = mouseEvent->pos();
     // 没打开截图的编辑模式
     if (!m_isShapesWidgetExist) {
-        if (m_toolBar->isVisible()) {
+        if (m_toolBar && m_toolBar->isVisible()) {
             updateToolBarPos();
-            m_zoomIndicator->hideMagnifier();
+            if (m_zoomIndicator) {
+                m_zoomIndicator->hideMagnifier();
+            }
         }
 
         if (!isFirstMove) {
             isFirstMove = true;
         } else {
             if (status::shot == m_functionType) {
-                if (!m_toolBar->isVisible() && !isFirstReleaseButton) {
+                if (m_toolBar && !m_toolBar->isVisible() && !isFirstReleaseButton) {
                     // QPoint curPos = this->cursor().pos(); 采用全局坐标，替换局部坐标
                     // mouseEvent->globalPos()此接口获取的光标坐标是已经缩放后的坐标，需还原
                     QPoint curPos = this->cursor().pos();  // 采用全局坐标，替换局部坐标
@@ -7748,7 +7764,7 @@ void MainWindow::initializeCapture()
         );
 
     connect(manager->context(), &TreelandCaptureContext::captureRegionChanged,
-            this, &MainWindow::updateCaptureRegion);
+            this, &MainWindow::updateCaptureRegion, Qt::UniqueConnection);
 
     connect(manager, &TreelandCaptureManager::finishSelect,
             this, &MainWindow::handleCaptureFinish);
@@ -7854,32 +7870,68 @@ void MainWindow::onFinishClicked()
     TreelandCaptureManager::instance()->finishSelect();
 }
 
+void MainWindow::destroyTreelandToolBar()
+{
+    if (!m_toolBar) {
+        return;
+    }
+
+    ToolBar *toolBar = m_toolBar;
+    m_toolBar = nullptr;
+    m_toolBarInit = false;
+
+    if (toolBar->windowHandle()) {
+        toolBar->windowHandle()->setParent(nullptr);
+    }
+    toolBar->blockSignals(true);
+    disconnect(toolBar, nullptr, nullptr, nullptr);
+    disconnect(nullptr, nullptr, toolBar, nullptr);
+    toolBar->hide();
+    delete toolBar;
+    // 选项菜单里的边框子菜单由 ImageBorderHelper 缓存，需清理悬空指针
+    ImageBorderHelper::instance()->pruneBorderMenus();
+}
+
 void MainWindow::updateCaptureRegion()
 {
     auto context = TreelandCaptureManager::instance()->context();
-    if (!context) return;
-    QRect region = context->captureRegion().toRect();
+    if (!context) {
+        return;
+    }
+
+    const QRect region = context->captureRegion().toRect();
+    // 无效选区：只销毁旧工具栏，等下一次 sourceReady 再创建
+    if (region.width() <= 0 || region.height() <= 0) {
+        destroyTreelandToolBar();
+        return;
+    }
+
+    // 每次重新选区：先析构上一块工具栏（含 Wayland subsurface），再按新选区 new
+    destroyTreelandToolBar();
 
     m_toolBar = new ToolBar(this);
+    connect(m_toolBar, &ToolBar::currentFunctionToMain, this, &MainWindow::changeFunctionButton);
     m_toolBar->initToolBar(this, isHideToolBar);
+    m_toolBar->setRecordLaunchMode(m_functionType);
+    m_toolBarInit = true;
 
     m_toolBar->setAttribute(Qt::WA_TranslucentBackground);
     m_toolBar->setWindowFlags(Qt::FramelessWindowHint | Qt::Tool | Qt::WindowStaysOnTopHint);
 
+    recordX = region.x();
+    recordY = region.y();
+    recordWidth = region.width();
+    recordHeight = region.height();
+
     m_toolBar->showWidget();
-    QPoint pos(region.x(), qMin(region.bottom(), height() - 2 * m_toolBar->height()));
+    const QPoint pos(region.x(), qMin(region.bottom(), height() - 2 * m_toolBar->height()));
     m_toolBar->showAt(pos);
-    m_toolBar->showWidget();
 
-
-    if(windowHandle()&&m_toolBar->windowHandle())
-    {
-        if(m_toolBar->windowHandle()->parent() != windowHandle())
-        {
-            m_toolBar->windowHandle()->setParent(windowHandle());
-            m_toolBar->hide();
-            m_toolBar->show();
-        }
+    if (windowHandle() && m_toolBar->windowHandle()
+        && m_toolBar->windowHandle()->parent() != windowHandle()) {
+        m_toolBar->windowHandle()->setParent(windowHandle());
+        m_toolBar->hide();
+        m_toolBar->show();
     }
 }
 

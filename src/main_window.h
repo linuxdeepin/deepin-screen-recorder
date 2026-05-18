@@ -470,6 +470,9 @@ public slots:
      */
     void updateCaptureRegion();
 
+    /** Treeland：销毁当前工具栏（含 subsurface 解绑），便于重选区后重建 */
+    void destroyTreelandToolBar();
+
     Q_SCRIPTABLE void stopRecord();
     Q_SCRIPTABLE void stopApp();
     

@@ -323,38 +323,44 @@ void ToolBar::mouseReleaseEvent(QMouseEvent *event)
 
 void ToolBar::setScrollShotDisabled(const bool state)
 {
+    if (!m_toolbarWidget) {
+        return;
+    }
     m_toolbarWidget->setScrollShotDisabled(state);
 }
 
 void ToolBar::setPinScreenshotsEnable(const bool &state)
 {
-    m_toolbarWidget->setPinScreenshotsEnable(state);
+    if (m_toolbarWidget)
+        m_toolbarWidget->setPinScreenshotsEnable(state);
 }
 
 void ToolBar::setOcrScreenshotsEnable(const bool &state)
 {
-    m_toolbarWidget->setOcrScreenshotsEnable(state);
+    if (m_toolbarWidget)
+        m_toolbarWidget->setOcrScreenshotsEnable(state);
 }
 
 void ToolBar::setButEnableOnLockScreen(const bool &state)
 {
-    m_toolbarWidget->setButEnableOnLockScreen(state);
+    if (m_toolbarWidget)
+        m_toolbarWidget->setButEnableOnLockScreen(state);
 }
 
 int ToolBar::getFuncSubToolX(QString &func)
 {
-    return m_toolbarWidget->getFuncSubToolX(func);
+    return m_toolbarWidget ? m_toolbarWidget->getFuncSubToolX(func) : 0;
 }
 
 
 QRect ToolBar::getAiButtonGlobalRect() const
 {
-    return m_toolbarWidget->getAiButtonGlobalRect();
+    return m_toolbarWidget ? m_toolbarWidget->getAiButtonGlobalRect() : QRect();
 }
 
 QPoint ToolBar::getAiButtonGlobalCenter() const
 {
-    return m_toolbarWidget->getAiButtonGlobalCenter();
+    return m_toolbarWidget ? m_toolbarWidget->getAiButtonGlobalCenter() : QPoint();
 }
 
 bool ToolBar::isDraged()
@@ -414,18 +420,21 @@ void ToolBar::hideWidget(){
 
 void ToolBar::setRecordButtonDisable()
 {
-    m_toolbarWidget->setRecordButtonDisable();
+    if (m_toolbarWidget)
+        m_toolbarWidget->setRecordButtonDisable();
 }
 
 void ToolBar::setRecordLaunchMode(const unsigned int funType)
 {
     qCDebug(dsrApp) << "Setting record launch mode:" << funType;
-    m_toolbarWidget->setRecordLaunchFromMain(funType);
+    if (m_toolbarWidget)
+        m_toolbarWidget->setRecordLaunchFromMain(funType);
 }
 
 void ToolBar::setVideoButtonInit()
 {
-    m_toolbarWidget->setVideoInitFromMain();
+    if (m_toolbarWidget)
+        m_toolbarWidget->setVideoInitFromMain();
 }
 
 void ToolBar::shapeClickedFromMain(QString shape)
@@ -442,11 +451,12 @@ void ToolBar::shapeClickedFromMain(QString shape)
 void ToolBar::setCameraDeviceEnable(bool status)
 {
     qCDebug(dsrApp) << "Setting camera device enable:" << status;
-    m_toolbarWidget->setCameraDeviceEnable(status);
+    if (m_toolbarWidget)
+        m_toolbarWidget->setCameraDeviceEnable(status);
 }
 
 QRect ToolBar::getShotOptionRect(){
-   return m_toolbarWidget->getShotOptionRect();
+   return m_toolbarWidget ? m_toolbarWidget->getShotOptionRect() : QRect();
 }
 ToolBar::~ToolBar()
 {
