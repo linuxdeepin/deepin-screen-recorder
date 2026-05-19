@@ -2291,8 +2291,12 @@ void MainWindow::topWindow()
         //  经DTK确认，type存在bug。用flags替换，获取窗口类型功能。bug 77300；
         if (window->flags().testFlag(Qt::Window) || window->flags().testFlag(Qt::Desktop)) {
             // 排除dde-dock作为顶层窗口
-            if (window->wmClass() == "dde-dock" || window->wmClass() == "dde-shell") {
-                qCDebug(dsrApp) << "topWindow wmClass == dde-dock || wmClass == dde-shell, continue";
+            QString wmClass = window->wmClass();
+            static const QVector<QString> excludedWmClasses = {
+                "dde-dock", "dde-shell", "dde-shell/dock", "org.deepin.dde-shell"
+            };
+            if (excludedWmClasses.contains(wmClass)) {
+                qCDebug(dsrApp) << "topWindow excluded by wmClass:" << wmClass << ", continue";
                 continue;
             }
 
