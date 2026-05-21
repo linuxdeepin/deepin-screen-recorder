@@ -715,6 +715,7 @@ void MainWindow::checkIsLockScreen()
     bool isLockScreen = sessionManagerIntert.property("Locked").toBool();
 
     qInfo() << "Current Screen is LockScreen?" << isLockScreen;
+    m_isLockedState = isLockScreen;
     if (isLockScreen) {
         pinScreenshotsLockScreen(isLockScreen);
         m_toolBar->setScrollShotDisabled(true);
@@ -4431,6 +4432,9 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
             }
 
             if (mouseEvent->button() == Qt::RightButton) {
+                if (m_isLockedState) {
+                    return false;
+                }
                 if (!isFirstPressButton) {
                     return false;
                 }
@@ -5387,6 +5391,9 @@ void MainWindow::onLockScreenEvent(QDBusMessage msg)
     }
     qDebug() << ">>>>>>>>> isLocked: " << isLocked;
     m_isLockedState = isLocked;
+    if (m_shapesWidget) {
+        m_shapesWidget->setLockedState(isLocked);
+    }
     if (status::scrollshot == m_functionType) {
         scrollShotLockScreen(isLocked);
     } else if (status::shot == m_functionType) {
@@ -5408,6 +5415,9 @@ void MainWindow::onPowersource(bool flag)
 {
     qDebug() << "The Powersource is show? " << flag;
     m_isLockedState = flag;
+    if (m_shapesWidget) {
+        m_shapesWidget->setLockedState(flag);
+    }
     if (status::scrollshot == m_functionType) {
         scrollShotLockScreen(flag);
     } else if (status::shot == m_functionType) {
@@ -6329,6 +6339,7 @@ void MainWindow::initShapeWidget(QString type)
 {
     qDebug() << "function: " << __func__ << " , line: " << __LINE__;
     m_shapesWidget = new ShapesWidget(this);
+    m_shapesWidget->setLockedState(m_isLockedState);
     m_shapesWidget->setShiftKeyPressed(m_isShiftPressed);
 
     if (type != "color")

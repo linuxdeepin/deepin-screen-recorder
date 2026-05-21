@@ -64,6 +64,7 @@ public slots:
      */
     void updateSelectedShape(const QString &group, const QString &key, int index);
     void setCurrentShape(QString shapeType);
+    void setLockedState(bool locked);
     //void updatePenColor();
     //void setPenColor(QColor color);
     /**
@@ -270,6 +271,7 @@ private:
     void updateTextRect(TextEdit *edit, QRectF newRect, QString text, int fontsize);
     Toolshapes m_shapes;
     MenuController *m_menuController;
+    bool m_isLockedState = false;
     //SideBar *m_sideBar;
 
     QRect m_globalRect;
