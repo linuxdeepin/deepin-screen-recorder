@@ -1,5 +1,5 @@
-// Copyright (C) 2019 ~ 2019 Deepin Technology Co., Ltd.
-// SPDX-FileCopyrightText: 2023 UnionTech Software Technology Co., Ltd.
+// Copyright (C) 2019 ~ 2026 Deepin Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -22,6 +22,7 @@
 
 #include <QScreen>
 #include <QGuiApplication>
+#include <QSurfaceFormat>
 
 DWIDGET_USE_NAMESPACE
 
@@ -30,9 +31,11 @@ bool isWaylandProtocol()
     qCDebug(dsrApp) << "Checking if Wayland protocol is in use.";
     QProcessEnvironment e = QProcessEnvironment::systemEnvironment();
 
-    // check is treeland environment.
-    if (e.value(QStringLiteral("DDE_CURRENT_COMPOSITOR")) == QStringLiteral("TreeLand")) {
-        qCDebug(dsrApp) << "DDE_CURRENT_COMPOSITOR is TreeLand, not Wayland.";
+    // TreeLand：环境变量取值在不同版本可能有大小写差异，与主程序一致做不区分大小写判断
+    const QString compositor = e.value(QStringLiteral("DDE_CURRENT_COMPOSITOR"));
+    if (compositor.compare(QStringLiteral("treeland"), Qt::CaseInsensitive) == 0) {
+        PUtils::isTreelandMode = true;
+        qCDebug(dsrApp) << "DDE_CURRENT_COMPOSITOR is TreeLand-like:" << compositor;
         return false;
     }
 
@@ -53,18 +56,20 @@ int main(int argc, char *argv[])
         return 0;
     }
     PUtils::isWaylandMode = isWaylandProtocol();
+    qCInfo(dsrApp) << "PinScreenShots session: isWaylandMode=" << PUtils::isWaylandMode
+                   << "isTreelandMode=" << PUtils::isTreelandMode;
     if (PUtils::isWaylandMode) {
         qCDebug(dsrApp) << "Setting Wayland shell integration";
         qputenv("QT_WAYLAND_SHELL_INTEGRATION", "kwayland-shell");
     }
-
-#if (QT_VERSION >= QT_VERSION_CHECK(6, 0, 0))
-    DGuiApplicationHelper::instance()->setPaletteType(DGuiApplicationHelper::UnknownType);
-    qCDebug(dsrApp) << "Set palette type for Qt6.";
-#else
-    DGuiApplicationHelper::setUseInactiveColorGroup(false);
-    qCDebug(dsrApp) << "Set inactive color group for Qt5.";
-#endif
+    // Treeland 时 isWaylandMode 为 false，不会走上面的 Wayland 分支；Wayland 下透明/模糊常需默认 surface 带 alpha
+    if (PUtils::isTreelandMode) {
+        QSurfaceFormat format;
+        format.setAlphaBufferSize(8);
+        format.setRenderableType(QSurfaceFormat::OpenGLES);
+        QSurfaceFormat::setDefaultFormat(format);
+        qCInfo(dsrApp) << "Treeland: QSurfaceFormat default alpha buffer set (before QApplication).";
+    }
 
 #if(DTK_VERSION < DTK_VERSION_CHECK(5,4,0,0))
     DApplication::loadDXcbPlugin();
@@ -75,6 +80,15 @@ int main(int argc, char *argv[])
     QScopedPointer<DApplication> app(DApplication::globalApplication(argc, argv));
     qCDebug(dsrApp) << "Created DApplication for DTK >= 5.4.0.0.";
 #endif
+
+#if (QT_VERSION >= QT_VERSION_CHECK(6, 0, 0))
+    DGuiApplicationHelper::instance()->setPaletteType(DGuiApplicationHelper::UnknownType);
+    qCDebug(dsrApp) << "Set palette type for Qt6 (after QApplication).";
+#else
+    DGuiApplicationHelper::setUseInactiveColorGroup(false);
+    qCDebug(dsrApp) << "Set inactive color group for Qt5.";
+#endif
+
     app->setOrganizationName("deepin");
     app->setApplicationName("deepin-screen-recorder");
     app->setProductName(QObject::tr("Pin Screenshots"));

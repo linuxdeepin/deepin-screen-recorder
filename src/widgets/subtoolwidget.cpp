@@ -669,9 +669,7 @@ void SubToolWidget::initShotLabel()
         qCDebug(dsrApp) << "贴图按钮按下！";
         emit changeShotToolFunc("pinScreenshots");
     });
-    // TODO: treeland适配，初版暂时屏蔽
-    if (!(Utils::isTreelandMode))
-         btnList.append(m_pinButton);
+    btnList.append(m_pinButton);
 
     m_aiAssistantButton = new ToolButton();
     m_aiAssistantButton->setIconSize(SMALL_TOOL_ICON_SIZE);
