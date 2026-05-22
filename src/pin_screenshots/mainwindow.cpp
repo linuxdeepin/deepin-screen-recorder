@@ -1,5 +1,5 @@
-// Copyright (C) 2019 ~ 2019 Deepin Technology Co., Ltd.
-// SPDX-FileCopyrightText: 2022 UnionTech Software Technology Co., Ltd.
+// Copyright (C) 2019 ~ 2026 Deepin Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -17,6 +17,8 @@
 #include <QFileDialog>
 #include <QStandardPaths>
 #include <QTimer>
+#include <QWindow>
+#include <QShowEvent>
 
 #define MOVENUM 1
 
@@ -57,8 +59,14 @@ void MainWindow::initMainWindow()
     m_ocrInterface = nullptr;
     m_toolBar = nullptr;
     //去菜单栏，置顶窗口
-    setWindowFlags(Qt::FramelessWindowHint | Qt::WindowStaysOnTopHint | Qt::BypassWindowManagerHint);
-    qCDebug(dsrApp) << "Set window flags.";
+    if (PUtils::isTreelandMode) {
+        // Treeland: 由合成器管理主窗口移动，工具栏作为 subsurface 跟随。
+        setWindowFlags(Qt::FramelessWindowHint | Qt::Window | Qt::WindowStaysOnTopHint);
+        qCDebug(dsrApp) << "Set window flags for Treeland mode.";
+    } else {
+        setWindowFlags(Qt::FramelessWindowHint | Qt::WindowStaysOnTopHint | Qt::BypassWindowManagerHint);
+        qCDebug(dsrApp) << "Set window flags.";
+    }
 
     //设置可以进行鼠标操作
     setMouseTracking(true);
@@ -432,18 +440,28 @@ void MainWindow::mousePressEvent(QMouseEvent *event)
 {
     //qCDebug(dsrApp) << this << __FUNCTION__ << __LINE__ ;
     switch (event->button()) {
-    case Qt::LeftButton:
+    case Qt::LeftButton: {
+        const QPointF globalPress = event->globalPosition();
+        if (PUtils::isTreelandMode) {
+            region(globalPress.toPoint());
+            if (dir == NONE && windowHandle()) {
+                windowHandle()->startSystemMove();
+                event->accept();
+                return;
+            }
+        }
         isLeftPressDown = true;
         if (dir != NONE) {
             this->mouseGrabber();
         } else {
-            dragPosition = (event->globalPosition() - this->frameGeometry().topLeft()).toPoint();
+            dragPosition = (globalPress - this->frameGeometry().topLeft()).toPoint();
         }
-        // 鼠标按下时隐藏工具栏
-        if (!m_toolBar->isHidden())
+        // 鼠标按下时隐藏工具栏；Treeland 下工具栏是 subsurface，可随主窗口移动。
+        if (!PUtils::isTreelandMode && !m_toolBar->isHidden())
             m_toolBar->hide();
         //qCDebug(dsrApp) << this << __FUNCTION__ << __LINE__ ;
         break;
+    }
     case Qt::RightButton:
         handleMouseRightBtn(event);
         break;
@@ -465,7 +483,7 @@ void MainWindow::mouseMoveEvent(QMouseEvent *event)
         this->region(gloPoint);
     } else {
         // 确保在拖动过程中隐藏工具栏
-        if (!m_toolBar->isHidden()) {
+        if (!PUtils::isTreelandMode && !m_toolBar->isHidden()) {
             m_toolBar->hide();
         }
         
@@ -604,23 +622,30 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
     int x = this->pos().x();
     int y = this->pos().y();
     bool isNeedUpdateToolBar = false;
+    const auto applyWindowMove = [this](int nx, int ny) {
+        if (PUtils::isTreelandMode && windowHandle()) {
+            windowHandle()->setPosition(nx, ny);
+        } else {
+            move(nx, ny);
+        }
+    };
     if (event->key() == Qt::Key_Left) {
-        this->move(x - MOVENUM, y);
+        applyWindowMove(x - MOVENUM, y);
         isNeedUpdateToolBar = true;
     } else if (event->key() == Qt::Key_Right) {
-        this->move(x + MOVENUM, y);
+        applyWindowMove(x + MOVENUM, y);
         isNeedUpdateToolBar = true;
     } else if (event->key() == Qt::Key_Up) {
         // 适配wayland
         if (y - MOVENUM < 0) {
-            this->move(x, 0);
+            applyWindowMove(x, 0);
         } else {
-            this->move(x, y - MOVENUM);
+            applyWindowMove(x, y - MOVENUM);
         }
 
         isNeedUpdateToolBar = true;
     } else if (event->key() == Qt::Key_Down) {
-        this->move(x, y + MOVENUM);
+        applyWindowMove(x, y + MOVENUM);
         isNeedUpdateToolBar = true;
     }
 
@@ -686,7 +711,7 @@ bool MainWindow::eventFilter(QObject *watched, QEvent *event)
             
             // 检查鼠标是否在工具栏上，如果是则不隐藏工具栏
             QPoint globalPos = QCursor::pos();
-            if (m_toolBar->isActiveWindow() || m_toolBar->geometry().contains(globalPos))
+            if (m_toolBar->isActiveWindow() || m_toolBar->rect().contains(m_toolBar->mapFromGlobal(globalPos)))
                 return false;
             
             // 检查是否有菜单正在显示
@@ -861,7 +886,6 @@ void MainWindow::sendNotify(QString savePath, bool bSaveState)
     onExit();
 }
 
-// 更新工具栏显示位置
 void MainWindow::updateToolBarPosition()
 {
     //获取贴图界面右下角的点
@@ -893,9 +917,23 @@ void MainWindow::updateToolBarPosition()
     } else if (x + m_toolBar->width() > m_screenSize.width()) {
         x = m_screenSize.width() - m_toolBar->width();
     }
-    m_toolBar->showAt(QPoint(x, y), m_isfirstTime);
-    m_toolBar->activateWindow();
+    QPoint toolbarPos(x, y);
+    if (toolbarAttachedToWindow()) {
+        toolbarPos = mapFromGlobal(toolbarPos);
+    }
+    m_toolBar->showAt(toolbarPos, m_isfirstTime);
+    // Treeland subsurface 下工具栏 QWindow 已 setParent，非顶层；activateWindow 会触发 Qt Warning
+    if (!(PUtils::isTreelandMode && toolbarAttachedToWindow())) {
+        m_toolBar->activateWindow();
+    }
     m_isfirstTime = false;
+}
+
+bool MainWindow::toolbarAttachedToWindow() const
+{
+    const QWindow *mainWindow = windowHandle();
+    const QWindow *toolbarWindow = m_toolBar ? m_toolBar->windowHandle() : nullptr;
+    return mainWindow && toolbarWindow && toolbarWindow->parent() == mainWindow;
 }
 
 void MainWindow::checkToolbarVisibility()
@@ -924,13 +962,14 @@ void MainWindow::checkToolbarVisibility()
         }
     }
     
-    const bool mouseOnToolBar = m_toolBar && m_toolBar->isVisible() && m_toolBar->geometry().contains(globalPos);
+    const bool mouseOnToolBar = m_toolBar && m_toolBar->isVisible()
+        && m_toolBar->rect().contains(m_toolBar->mapFromGlobal(globalPos));
 
     bool mouseOnMenu = false;
     if (m_toolBar && m_toolBar->isVisible()) {
         QList<QMenu*> menus = m_toolBar->findChildren<QMenu*>();
         for (QMenu* menu : menus) {
-            if (menu->isVisible() && menu->geometry().contains(globalPos)) {
+            if (menu->isVisible() && menu->rect().contains(menu->mapFromGlobal(globalPos))) {
                 mouseOnMenu = true;
                 break;
             }
@@ -946,6 +985,26 @@ void MainWindow::checkToolbarVisibility()
             m_toolBar->hide();
         }
     }
+}
+
+void MainWindow::showEvent(QShowEvent *event)
+{
+    DWidget::showEvent(event);
+    if (!PUtils::isTreelandMode || !m_toolBar) {
+        return;
+    }
+
+    createWinId();
+    m_toolBar->createWinId();
+    if (!windowHandle() || !m_toolBar->windowHandle() || toolbarAttachedToWindow()) {
+        return;
+    }
+
+    m_toolBar->windowHandle()->setParent(windowHandle());
+    m_toolBar->hide();
+    m_toolBar->show();
+    qCDebug(dsrApp) << "[Treeland] pin toolbar QWindow::setParent (subsurface with custom style)";
+    updateToolBarPosition();
 }
 
 void MainWindow::enterEvent(QEnterEvent *event)

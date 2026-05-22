@@ -1,5 +1,5 @@
-// Copyright (C) 2020 ~ 2021 Uniontech Software Technology Co.,Ltd.
-// SPDX-FileCopyrightText: 2022 UnionTech Software Technology Co., Ltd.
+// Copyright (C) 2020 ~ 2026 Uniontech Software Technology Co.,Ltd.
+// SPDX-FileCopyrightText: 2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -3819,8 +3819,20 @@ void MainWindow::changeShotToolEvent(const QString &func)
             "com.deepin.PinScreenShots", "/com/deepin/PinScreenShots", QDBusConnection::sessionBus(), this);
         // 保存贴图到剪贴板
         saveScreenShot();
-        m_pinInterface->openImageAndName(m_resultPixmap.toImage(), m_saveFileName, QPoint(recordX, recordY));
-        QTimer::singleShot(2, [=] { exitApp(); });
+        QImage pinImage = m_resultPixmap.toImage();
+        QDBusPendingCall pendingCall = m_pinInterface->openImageAndName(pinImage, m_saveFileName, QPoint(recordX, recordY));
+        auto *watcher = new QDBusPendingCallWatcher(pendingCall, this);
+        connect(watcher, &QDBusPendingCallWatcher::finished, this, [this, watcher]() {
+            if (watcher->isError()) {
+                qCWarning(dsrApp) << "[PIN_DIAG] D-Bus openImageAndName failed:"
+                                  << watcher->error().name()
+                                  << watcher->error().message();
+            } else {
+                qCWarning(dsrApp) << "[PIN_DIAG] D-Bus openImageAndName succeeded";
+            }
+            watcher->deleteLater();
+            exitApp();
+        });
 
     } else if (func == "scrollShot") {  // 点击滚动截图
         {
@@ -7012,20 +7024,25 @@ QPixmap MainWindow::paintImage()
         backgroundImage = m_backgroundPixmap.toImage(); // 非treeland模式下的背景图像
     }
     QImage saveImage;
-    // 修正方案：对逻辑坐标进行相同的边界调整，然后转换为物理坐标
-    // 虚线绘制的调整逻辑：x=max(x,1), y=max(y,1), width=min(width-2, maxWidth-2), height=min(height-1, maxHeight-2)
-    int adjustedX = std::max(recordX, 1);
-    int adjustedY = std::max(recordY, 1);
-    int adjustedWidth = std::min(recordWidth - 2, m_backgroundRect.width() - 2);
-    int adjustedHeight = std::min(recordHeight - 1, m_backgroundRect.height() - 2);
-    
-    QRect target(static_cast<int>(adjustedX * m_pixelRatio),
-                 static_cast<int>(adjustedY * m_pixelRatio),
-                 static_cast<int>(adjustedWidth * m_pixelRatio),
-                 static_cast<int>(adjustedHeight * m_pixelRatio));
-    
-    // 从背景图中裁剪出截图区域
-    saveImage = backgroundImage.copy(target);
+    // Treeland：capture 帧已是 captureRegion/cropRect 大小的选区图（与 test_capture 一致），
+    // 不能再按全屏 recordX/recordY 二次裁剪，否则坐标越界导致截图残缺。
+    if (Utils::isTreelandMode) {
+        saveImage = backgroundImage;
+    } else {
+        // 修正方案：对逻辑坐标进行相同的边界调整，然后转换为物理坐标
+        // 虚线绘制的调整逻辑：x=max(x,1), y=max(y,1), width=min(width-2, maxWidth-2), height=min(height-1, maxHeight-2)
+        int adjustedX = std::max(recordX, 1);
+        int adjustedY = std::max(recordY, 1);
+        int adjustedWidth = std::min(recordWidth - 2, m_backgroundRect.width() - 2);
+        int adjustedHeight = std::min(recordHeight - 1, m_backgroundRect.height() - 2);
+
+        QRect target(static_cast<int>(adjustedX * m_pixelRatio),
+                     static_cast<int>(adjustedY * m_pixelRatio),
+                     static_cast<int>(adjustedWidth * m_pixelRatio),
+                     static_cast<int>(adjustedHeight * m_pixelRatio));
+
+        saveImage = backgroundImage.copy(target);
+    }
     if (m_shapesWidget)
         // 在图片上绘制编辑的内容
         m_shapesWidget->paintImage(saveImage);

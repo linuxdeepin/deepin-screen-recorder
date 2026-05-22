@@ -1,5 +1,5 @@
-// Copyright (C) 2020 ~ 2021 Uniontech Software Technology Co., Ltd.
-// SPDX-FileCopyrightText: 2022 UnionTech Software Technology Co., Ltd.
+// Copyright (C) 2020 ~ 2026 Uniontech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -10,6 +10,7 @@
 
 #include <QActionGroup>
 #include <QMouseEvent>
+#include <QPainter>
 #include <QTimer>
 #include "mainwindow.h"
 
@@ -30,6 +31,10 @@ ToolBarWidget::ToolBarWidget(DWidget *parent): DBlurEffectWidget(parent)
     if (PUtils::isWaylandMode) {
         setWindowFlags(Qt::Sheet | Qt::WindowStaysOnTopHint | Qt::WindowDoesNotAcceptFocus);
         qCDebug(dsrApp) << "Window flags set for Wayland mode.";
+    } else if (PUtils::isTreelandMode) {
+        // Treeland：作为主贴图窗口的 subsurface；背景改为自绘，避免 DBlur 在 subsurface 下失效。
+        setWindowFlags(Qt::FramelessWindowHint | Qt::Tool | Qt::WindowStaysOnTopHint);
+        qCDebug(dsrApp) << "Window flags set for Treeland mode.";
     } else if (sysIsV23) {
         //v23上ToolTip会导致工具栏的圆角失效
         setWindowFlags(Qt::FramelessWindowHint /*| Qt::WindowStaysOnTopHint*/ | Qt::ToolTip);
@@ -38,12 +43,18 @@ ToolBarWidget::ToolBarWidget(DWidget *parent): DBlurEffectWidget(parent)
         setWindowFlags(Qt::FramelessWindowHint | Qt::WindowStaysOnTopHint | Qt::Tool);
         qCDebug(dsrApp) << "Window flags set for default mode.";
     }
-    this->setWindowFlags(windowFlags() | Qt::BypassWindowManagerHint);
+    if (!PUtils::isTreelandMode) {
+        this->setWindowFlags(windowFlags() | Qt::BypassWindowManagerHint);
+    }
 
     this->setRadius(30);
-    this->setBlurEnabled(true);
+    this->setBlurEnabled(!PUtils::isTreelandMode);
     this->setMode(DBlurEffectWidget::GaussianBlur);
     this->setBlendMode(DBlurEffectWidget::InWidgetBlend);
+    if (PUtils::isTreelandMode) {
+        setAttribute(Qt::WA_TranslucentBackground, true);
+        setAutoFillBackground(false);
+    }
     qCDebug(dsrApp) << "Blur effect properties set.";
     // 初始化主题样式
     if (DGuiApplicationHelper::instance()->themeType() == THEMETYPE) {
@@ -141,6 +152,31 @@ void ToolBarWidget::initToolBarWidget()
     setLayout(hLayout);
     qCDebug(dsrApp) << "Layout set for toolbar widget.";
     setMouseTracking(true);
+}
+
+void ToolBarWidget::paintEvent(QPaintEvent *event)
+{
+    if (!PUtils::isTreelandMode) {
+        DBlurEffectWidget::paintEvent(event);
+        return;
+    }
+
+    Q_UNUSED(event);
+    QPainter painter(this);
+    painter.setRenderHint(QPainter::Antialiasing, true);
+
+    // 铺满客户区的不透明圆角底（单色、无描边）
+    const QRectF backgroundRect = QRectF(rect());
+    const qreal radius = 16.0;
+
+    const QColor backgroundColor =
+        (DGuiApplicationHelper::instance()->themeType() == THEMETYPE)
+            ? QColor(237, 237, 237, 255)
+            : QColor(48, 48, 48, 255);
+
+    painter.setPen(Qt::NoPen);
+    painter.setBrush(backgroundColor);
+    painter.drawRoundedRect(backgroundRect, radius, radius);
 }
 
 //重写鼠标移动事件：解决工具栏可以被拖动的问题

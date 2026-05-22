@@ -1,5 +1,5 @@
-// Copyright (C) 2019 ~ 2019 Deepin Technology Co., Ltd.
-// SPDX-FileCopyrightText: 2022 UnionTech Software Technology Co., Ltd.
+// Copyright (C) 2019 ~ 2026 Deepin Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -121,6 +121,7 @@ protected:
     void enterEvent(QEnterEvent *event) override;
     void leaveEvent(QEvent *event) override;
     void resizeEvent(QResizeEvent *event) override;
+    void showEvent(QShowEvent *event) override;
     /**
      * @brief 快捷键初始化
      */
@@ -142,6 +143,7 @@ protected:
      * @brief 更新工具栏显示位置
      */
     void updateToolBarPosition(); // 工具栏显示位置
+    bool toolbarAttachedToWindow() const;
 
 private:
     /**
