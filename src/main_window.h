@@ -359,6 +359,14 @@ public:
     void initSaveShortcut();
 
     void initLaunchMode(const QString &launchMode);
+
+    /**
+     * @brief 在截图窗口 showFullScreen 之后重新获取窗口列表
+     * 解决右键菜单等弹出窗口残留在 windowRects 中的问题
+     */
+    void refetchWindowInfo();
+    void sendSimulatedMouseEvent(QEvent::Type type, const QPoint &pos,
+                                 Qt::MouseButton button, Qt::MouseButtons buttons);
     //void delayScreenshot(double num);
     void fullScreenshot();
 
