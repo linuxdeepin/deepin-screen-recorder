@@ -89,13 +89,13 @@ private:
     QPointer<DBusService> m_dBusService;
     bool m_bshow;
 
-    int m_nextCount = 0;
-    int m_count = 0;
     /**
-     * @brief 此定时器的作用为每隔1秒检查下截图录屏是否还在运行中。
-     * 避免截图录屏崩溃后导致本插件还在执行
+     * @brief 监听主进程 com.deepin.ScreenRecorder 服务名的注销事件。
+     * 主进程崩溃时 dbus-daemon 会自动注销该服务名，watcher 立刻触发——
+     * 用以替换原先基于心跳定时器的崩溃探测，避免同步 D-Bus 调用拖慢
+     * 显示定时器。
      */
-    QTimer *m_checkTimer;
+    QDBusServiceWatcher *m_serviceWatcher;
 };
 
 #endif // RECORDTIME_H
