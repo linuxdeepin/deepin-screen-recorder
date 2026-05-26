@@ -16,8 +16,8 @@ RecordTimePlugin::RecordTimePlugin(QObject *parent)
 {
     qCDebug(dsrApp) << "RecordTimePlugin constructor called.";
     m_timer = nullptr;
-    m_checkTimer = nullptr;
     m_timeWidget = nullptr;
+    m_serviceWatcher = nullptr;
 }
 
 const QString RecordTimePlugin::pluginName() const
@@ -102,11 +102,10 @@ void RecordTimePlugin::clear()
         m_timeWidget = nullptr;
     }
 
-    if (nullptr != m_checkTimer) {
-        qCDebug(dsrApp) << "Stopping and deleting check timer";
-        m_checkTimer->stop();
-        m_checkTimer->deleteLater();
-        m_checkTimer = nullptr;
+    if (nullptr != m_serviceWatcher) {
+        qCDebug(dsrApp) << "Deleting service watcher";
+        m_serviceWatcher->deleteLater();
+        m_serviceWatcher = nullptr;
     }
     qCDebug(dsrApp) << "clear method finished.";
 }
@@ -120,7 +119,6 @@ void RecordTimePlugin::onStart(bool resetTime)
         qCDebug(dsrApp) << "Clearing time widget settings";
         m_timeWidget->clearSetting();
     }
-    m_checkTimer = nullptr;
     m_timer->start(600);
     connect(m_timer, &QTimer::timeout, this, &RecordTimePlugin::refresh);
 
@@ -142,19 +140,14 @@ void RecordTimePlugin::onStart(bool resetTime)
 void RecordTimePlugin::onStop()
 {
     qCDebug(dsrApp) << "onStop method called.";
-    if (m_timeWidget->enabled()) {
+    // m_timeWidget 可能已被前一次 onStop->clear() 置空。
+    // 例如主程序先正常停录、随后退出，watcher 会再触发一次进来——
+    // 此时直接解引用会崩，先保护再判 enabled。
+    if (m_timeWidget && m_timeWidget->enabled()) {
         qInfo() << "unload plugin";
         qCDebug(dsrApp) << "Time widget enabled, unloading plugin.";
         m_proxyInter->itemRemoved(this, pluginName());
         m_bshow = false;
-        if (nullptr != m_checkTimer) {
-            qCDebug(dsrApp) << "Stopping check timer";
-            m_checkTimer->stop();
-            m_checkTimer->deleteLater();
-            m_checkTimer = nullptr;
-        }
-        m_count = 0;
-        m_nextCount = 0;
         clear();
     }
     qInfo() << "stop record time";
@@ -173,23 +166,20 @@ void RecordTimePlugin::onRecording()
 
     if (m_timeWidget->enabled() && m_bshow) {
         qCDebug(dsrApp) << "Time widget enabled and visible.";
-        m_nextCount++;
-        if (1 == m_nextCount) {
-            qCDebug(dsrApp) << "Starting check timer for recording status";
-            m_checkTimer = new QTimer();
-            connect(m_checkTimer, &QTimer::timeout, this, [=] {
-                // 说明录屏还在进行中
-                if (m_count < m_nextCount) {
-                    qCDebug(dsrApp) << "Recording in progress, updating count";
-                    m_count = m_nextCount;
-                }
-                // 说明录屏已经停止了
-                else {
-                    qCDebug(dsrApp) << "Recording stopped, calling onStop";
-                    onStop();
-                }
+        // 首次进入录屏状态时，安装服务监听器以便主进程崩溃时及时收尾。
+        // 主进程正常停止会主动通过 DBus 调用 onStop，无需 watcher 介入。
+        if (nullptr == m_serviceWatcher) {
+            qCDebug(dsrApp) << "Installing QDBusServiceWatcher for main recorder process";
+            m_serviceWatcher = new QDBusServiceWatcher(
+                "com.deepin.ScreenRecorder",
+                QDBusConnection::sessionBus(),
+                QDBusServiceWatcher::WatchForUnregistration,
+                this);
+            connect(m_serviceWatcher, &QDBusServiceWatcher::serviceUnregistered,
+                    this, [this](const QString &) {
+                qCInfo(dsrApp) << "main recorder service unregistered, stopping plugin";
+                onStop();
             });
-            m_checkTimer->start(2000);
         }
     }
     qCDebug(dsrApp) << "onRecording method finished.";
