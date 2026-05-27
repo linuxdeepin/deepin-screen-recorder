@@ -48,7 +48,7 @@ public:
     void setScrollModel(bool isManualScrollMode); //设置是否为手动模式
 
     void clearCurImg();
-    void calculateTimeDiff(int time); //计算时间差
+    void calculateTimeDiff(qint64 time); //计算时间差
     bool isOneWay(); //是否单向
     void setIsLastImg(bool isLastImg); //设置最后一张图片标记
 protected:
@@ -84,8 +84,8 @@ private:
     //bool m_successfullySplicedDwon = false;//向下拼接成功
     bool m_isManualScrollModel = false;//是否手动模式
     int m_bottomHeight = -1;// 长图底部固定区域高度
-    int m_curTimeDiff = 0; //当前时间差
-    int m_lastTime = 0;    //上一次的时间
+    qint64 m_curTimeDiff = 0; //当前时间差
+    qint64 m_lastTime = 0; //上一次的时间
     int m_upCount = 0;
     int m_downCount = 0;
     bool m_isLastPixmap = false; // 是否是最后一张
