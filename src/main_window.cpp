@@ -491,10 +491,8 @@ void MainWindow::initAttributes()
             m_connectionThreadObject->initConnection();
     #endif
         } else {
-            // x11: 窗口列表延迟到 showFullScreen 之后通过 refetchWindowInfo() 获取
-            // 避免右键菜单等弹出窗口残留在 windowRects 中
-            windowRects.clear();
-            windowNames.clear();
+            // x11自动识别窗口
+            Utils::getAllWindowInfo(static_cast<quint32>(this->winId()), m_screenWidth, m_screenHeight, windowRects, windowNames);
         }
         // 构建截屏工具栏按钮 by zyg
         m_toolBar = new ToolBar(this);
@@ -601,36 +599,16 @@ void MainWindow::initAttributes()
                                                 this,
                                                 SLOT(onLockScreenEvent(QDBusMessage)));
 
-        // 模拟鼠标事件延迟到 refetchWindowInfo() 中，与窗口列表获取同步
+        if (!isFirstMove && !Utils::isWaylandMode) {
+            qCDebug(dsrApp) << "发送鼠标事件!";
+            QMouseEvent *mouseMove =
+                new QMouseEvent(QEvent::MouseMove, this->cursor().pos(), Qt::LeftButton, Qt::LeftButton, Qt::NoModifier);
+            QApplication::sendEvent(this, mouseMove);
+            delete mouseMove;
+        }
 
         qCInfo(dsrApp) << __LINE__ << __FUNCTION__ << "属性初始化已完成";
     }
-}
-
-void MainWindow::refetchWindowInfo()
-{
-    qCDebug(dsrApp) << "refetchWindowInfo() called.";
-    if (Utils::isWaylandMode || Utils::isTreelandMode) {
-        // Wayland 下窗口列表通过异步回调 waylandwindowinfo() 获取，无需在此处理
-        return;
-    }
-
-    windowRects.clear();
-    windowNames.clear();
-    Utils::getAllWindowInfo(static_cast<quint32>(this->winId()), m_screenWidth, m_screenHeight, windowRects, windowNames);
-    qCDebug(dsrApp) << "refetchWindowInfo: got" << windowRects.size() << "windows";
-
-    if (!isFirstMove) {
-        qCDebug(dsrApp) << "发送鼠标事件!";
-        sendSimulatedMouseEvent(QEvent::MouseMove, this->cursor().pos(), Qt::NoButton, Qt::NoButton);
-    }
-}
-
-void MainWindow::sendSimulatedMouseEvent(QEvent::Type type, const QPoint &pos,
-                                         Qt::MouseButton button, Qt::MouseButtons buttons)
-{
-    QScopedPointer<QMouseEvent> event(new QMouseEvent(type, pos, button, buttons, Qt::NoModifier));
-    QApplication::sendEvent(this, event.data());
 }
 
 void MainWindow::forceX11WindowPosition()
@@ -2290,7 +2268,6 @@ void MainWindow::topWindow()
     this->initLaunchMode("screenShot");
     this->showFullScreen();
     this->initResource();
-    refetchWindowInfo();
 
     // wayland 模式下不进入以下步骤
     if (Utils::isWaylandMode) {
@@ -2509,8 +2486,7 @@ void MainWindow::savePath(const QString &path)
     this->initLaunchMode("screenShot");
     this->showFullScreen();
     this->initResource();
-    refetchWindowInfo();
-
+    
     qCDebug(dsrApp) << "savePath end";
 }
 
@@ -2536,7 +2512,6 @@ void MainWindow::startScreenshotFor3rd(const QString &path)
     this->initLaunchMode("screenShot");
     this->showFullScreen();
     this->initResource();
-    refetchWindowInfo();
     m_shotWithPath = true;  // 自带路径
     m_noNotify = true;      // 关闭通知
     qCDebug(dsrApp) << "startScreenshotFor3rd end";
@@ -2550,7 +2525,6 @@ void MainWindow::noNotify()
     this->initLaunchMode("screenShot");
     this->showFullScreen();
     this->initResource();
-    refetchWindowInfo();
 }
 
 void MainWindow::initBackground()
@@ -6036,16 +6010,6 @@ void MainWindow::onMouseDrag(int x, int y)
     if (status::record == m_functionType) {
         showDragFeedback(x, y);
     }
-
-    // 截图模式：拖拽阶段（按下左键后移动）XRecord 发出 mouseDrag 而非 mouseMove。
-    // Dock Grab 存在时 Qt event filter 收不到拖拽移动事件，框选区域无法更新。
-    // 同样用坐标去重避免正常情况下双重触发。
-    if (status::shot == m_functionType && isFirstPressButton && !isFirstReleaseButton) {
-        QPoint pos(x, y);
-        if (m_currentCursor != pos) {
-            sendSimulatedMouseEvent(QEvent::MouseMove, pos, Qt::NoButton, Qt::LeftButton);
-        }
-    }
 }
 
 // 通过x11从底层获取鼠标按压事件
@@ -6059,15 +6023,6 @@ void MainWindow::onMousePress(int x, int y)
     } else if (m_initScroll && status::scrollshot == m_functionType) {
         scrollShotMouseClickEvent(x, y);
     }
-
-    // 截图模式：Dock 右键菜单持有 X11 Pointer Grab 时，按下事件会被路由到
-    // Dock 而非截图工具，Qt event filter 收不到。通过 XRecord 补发，确保截图
-    // 工具能正确进入拖拽状态（isFirstPressButton = true）。
-    // 利用 QueuedConnection 的时序：Qt 同步处理已在前，此处排队到后——若 Qt
-    // 已处理（isFirstPressButton == true），条件不成立，不重复触发。
-    if (status::shot == m_functionType && !isFirstPressButton) {
-        sendSimulatedMouseEvent(QEvent::MouseButtonPress, QPoint(x, y), Qt::LeftButton, Qt::LeftButton);
-    }
 }
 
 // 通过x11从底层获取鼠标释放事件
@@ -6078,14 +6033,6 @@ void MainWindow::onMouseRelease(int x, int y)
     }
     if (status::record == m_functionType) {
         showReleaseFeedback(x, y);
-    }
-
-    // 截图模式：与 onMousePress 对应——Dock Grab 导致释放事件也路由到 Dock，
-    // Qt event filter 收不到，工具栏无法显示。通过 XRecord 补发释放事件。
-    // 同样利用 QueuedConnection 时序避免重复：Qt 已处理则 isFirstReleaseButton
-    // 为 true，条件不成立；isFirstPressButton 为 true 确保有匹配的按下事件。
-    if (status::shot == m_functionType && isFirstPressButton && !isFirstReleaseButton) {
-        sendSimulatedMouseEvent(QEvent::MouseButtonRelease, QPoint(x, y), Qt::LeftButton, Qt::LeftButton);
     }
 }
 
@@ -6103,18 +6050,11 @@ void MainWindow::onMouseMove(int x, int y)
         }
     }
 
-    // 截图悬停阶段（未开始框选）通过 XRecord 持续补发鼠标移动事件。
-    // Dock Grab 存在时 Qt 正常事件通路被阻断，XRecord 在协议层拦截不受影响。
-    // 拖拽阶段由 onMouseDrag 负责补发，此处只覆盖悬停阶段（!isFirstPressButton）。
-    // 非截图模式保持原有逻辑：仅补发第一次（!isFirstMove）。
-    // m_currentCursor 在 mouseMoveEF 开头被更新：坐标已匹配说明 Qt 正常处理过，
-    // 无需重复补发，避免正常情况下双重触发。
-    bool inShotHoverPhase = status::shot == m_functionType && !isFirstPressButton;
-    if (!isFirstMove || inShotHoverPhase) {
-        QPoint pos(x, y);
-        if (m_currentCursor != pos) {
-            sendSimulatedMouseEvent(QEvent::MouseMove, pos, Qt::NoButton, Qt::NoButton);
-        }
+    // 启动截图或者录屏后第一次鼠标移动时需要通过此方法，后面都不会在进入此方法
+    if (!isFirstMove) {
+        QMouseEvent *mouseMove;
+        mouseMove = new QMouseEvent(QEvent::MouseMove, QPoint(x, y), Qt::LeftButton, Qt::LeftButton, Qt::NoModifier);
+        QApplication::sendEvent(QWidget::focusWidget(), mouseMove);
     }
 }
 
