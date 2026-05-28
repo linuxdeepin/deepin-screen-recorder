@@ -5,7 +5,7 @@
 
 #include "waylandscrollmonitor.h"
 
-#define SCROLL_DOWN 15.0
+static const double SCROLL_DOWN = 10.0;
 
 WaylandScrollMonitor::WaylandScrollMonitor(QObject *parent) : QObject(parent)
     , m_connection(nullptr)
@@ -114,7 +114,7 @@ void WaylandScrollMonitor::releaseWaylandScrollThread()
 void WaylandScrollMonitor::doWaylandAutoScroll()
 {
     if (m_fakeinput != nullptr) {
-        // Qt::Vertical 垂直滚动，15.0 代表向下滚动
+        // Qt::Vertical 垂直滚动，正值代表向下滚动
         m_fakeinput->requestPointerAxisForCapture(Qt::Vertical, SCROLL_DOWN);
     }
 }
