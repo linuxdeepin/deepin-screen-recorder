@@ -100,7 +100,7 @@ void ScrollScreenshot::addPixmap(const QPixmap &piximg, int wheelDirection)
 
 void ScrollScreenshot::addLastPixmap(const QPixmap &piximg)
 {
-    setTimeAndCalculateTimeDiff(static_cast<int>(QDateTime::currentDateTime().toTime_t()));
+    setTimeAndCalculateTimeDiff(QDateTime::currentMSecsSinceEpoch());
     m_PixMerageThread->setIsLastImg(true); //添加最后一张图片标记
     if (nullptr != m_PixMerageThread)
         m_PixMerageThread->addShotImg(piximg, m_lastDirection);
@@ -151,7 +151,7 @@ QRect ScrollScreenshot::getInvalidArea()
     return m_rect;
 }
 //设置时间并计算时间差
-void ScrollScreenshot::setTimeAndCalculateTimeDiff(int time)
+void ScrollScreenshot::setTimeAndCalculateTimeDiff(qint64 time)
 {
     m_PixMerageThread->calculateTimeDiff(time);
 }

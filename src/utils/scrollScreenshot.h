@@ -45,7 +45,7 @@ public:
     //手动滚动时的函数处理
     void setScrollModel(bool model); //设置滚动模式，先设置滚动模式，再添加图片
     QRect getInvalidArea();//获取调整区域
-    void setTimeAndCalculateTimeDiff(int time); //设置时间并计算时间差
+    void setTimeAndCalculateTimeDiff(qint64 time); //设置时间并计算时间差
 signals:
     void getOneImg();
     void updatePreviewImg(QImage img);
