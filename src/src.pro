@@ -441,4 +441,14 @@ dbus_service.path = $$PREFIX/share/dbus-1/services
 manual_dir.files = $$PWD/../assets/deepin-screen-recorder
 manual_dir.path = $$PREFIX/share/deepin-manual/manual-assets/application/
 
+# Treeland override: disable prelaunch splash
+equals(QT_MAJOR_VERSION, 6) {
+    CONFIG += dtk_install_dconfig
+    treeland_splash.files = $$PWD/../assets/treeland/org.deepin.dde.treeland/org.deepin.dde.treeland.app/deepin-screen-recorder/90-disable-splash.json
+    treeland_splash.base = $$PWD/../assets/treeland/org.deepin.dde.treeland/org.deepin.dde.treeland.app
+    treeland_splash.appid = org.deepin.dde.treeland
+    treeland_splash.meta_name = org.deepin.dde.treeland.app
+    DCONFIG_OVERRIDE_FILES += treeland_splash
+}
+
 INSTALLS += target icon desktop translations dbus_service manual_dir
