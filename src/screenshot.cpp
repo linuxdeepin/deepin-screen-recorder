@@ -49,7 +49,6 @@ void Screenshot::startScreenshot()
         qCDebug(dsrApp) << "Showing window in full screen mode for non-Wayland.";
     }
     m_window.createWinId();
-    m_window.refetchWindowInfo();
     qCDebug(dsrApp) << "Window ID created.";
     //平板模式截图录屏
     if (Utils::isTabletEnvironment) {
@@ -103,7 +102,6 @@ void Screenshot::delayScreenshot(double num)
         m_window.showFullScreen();
         m_window.initResource();
         m_window.createWinId();
-        m_window.refetchWindowInfo();
         qCDebug(dsrApp) << "Screenshot window initialized and shown after delay.";
     });
 }
@@ -135,7 +133,6 @@ void Screenshot::OcrScreenshot()
     m_window.initLaunchMode("screenOcr");
     m_window.showFullScreen();
     m_window.createWinId();
-    m_window.refetchWindowInfo();
     qCDebug(dsrApp) << "OCR screenshot window initialized and shown.";
 #else
     qCDebug(dsrApp) << "OCR_SCROLL_FLAGE_ON is not defined, skipping OCR screenshot initialization.";
@@ -155,7 +152,6 @@ void Screenshot::ScrollScreenshot()
         m_window.initLaunchMode("screenScroll");
         m_window.showFullScreen();
         m_window.createWinId();
-        m_window.refetchWindowInfo();
         qCDebug(dsrApp) << "Scroll screenshot window initialized and shown.";
     } else {
         qCDebug(dsrApp) << "Scroll shot exit. Window effects not supported.";
