@@ -1,3 +1,9 @@
+deepin-screen-recorder (6.6.35) unstable; urgency=medium
+
+  * Revert "fix(shot): relay XRecord events when Dock grab blocks Qt input on X11"
+
+ -- dengzhongyuan <dengzhongyuan@uniontech.com>  Thu, 28 May 2026 20:31:51 +0800
+
 deepin-screen-recorder (6.6.34) unstable; urgency=medium
 
   * feat(record): add Treeland override to disable prelaunch splash
