@@ -2139,7 +2139,7 @@ void MainWindow::initLaunchMode(const QString &launchMode)
 {
     qCDebug(dsrApp) << "initLaunchMode";
     m_functionType = status::shot;
-    if (launchMode == "screenRecord") {
+    if (launchMode == "screenRecord" && !Utils::isTreelandMode) {
         qCDebug(dsrApp) << "initLaunchMode screenRecord";
         m_sizeTips->setRecorderTipsInfo(true);
         m_sizeTips->updateTips(QPoint(recordX, recordY), QSize(recordWidth, recordHeight));
