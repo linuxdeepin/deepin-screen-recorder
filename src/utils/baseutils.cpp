@@ -157,14 +157,8 @@ bool BaseUtils::isValidFormat(QString suffix)
 
 bool BaseUtils::isCommandExist(QString command)
 {
-    QProcess *proc = new QProcess;
-    if (!proc) {
-        return false;
-    }
-    QString cm = QString("which %1\n").arg(command);
-    proc->start(cm);
-    proc->waitForFinished(1000);
-    int ret = proc->exitCode() == 0;
-    delete proc;
-    return ret;
+    QProcess proc;
+    proc.start(QStringLiteral("which"), QStringList() << command);
+    proc.waitForFinished(1000);
+    return proc.exitCode() == 0;
 }
