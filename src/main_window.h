@@ -518,7 +518,7 @@ public slots:
      * @param x 当前的x坐标
      * @param y 当前的y坐标
      */
-    void scrollShotMouseScrollEvent(int mouseTime, int direction, int x, int y);
+    void scrollShotMouseScrollEvent(qint64 mouseTime, int direction, int x, int y);
 
     /**
      * @brief 监听是否正在进行自动滚动
@@ -708,7 +708,7 @@ protected:
      * @param direction 滚动的方向
      */
 #ifdef OCR_SCROLL_FLAGE_ON
-    void scrollShotGrabPixmap(PreviewWidget::PostionStatus previewPostion, int direction, int mosueTime = 0);
+    void scrollShotGrabPixmap(PreviewWidget::PostionStatus previewPostion, int direction, qint64 mouseTime = 0);
 #endif
     /**
      * @brief 判断工具栏是否在在捕捉区域内部
@@ -921,6 +921,10 @@ private:
       * @brief 滚动截图提示显示时间的定时器
       */
     QTimer *m_tipShowtimer = nullptr;
+    QTimer *m_waylandManualScrollTimer = nullptr;
+    PreviewWidget::PostionStatus m_waylandManualScrollPreviewPostion = PreviewWidget::PostionStatus::RIGHT;
+    int m_waylandManualScrollDirection = 0;
+    qint64 m_waylandManualScrollMouseTime = 0;
 
     ButtonFeedback *buttonFeedback = nullptr;
     /**
