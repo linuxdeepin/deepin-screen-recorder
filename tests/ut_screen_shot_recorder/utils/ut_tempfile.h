@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2022-2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -6,7 +6,6 @@
 #include <QScreen>
 #include <QPixmap>
 #include <QApplication>
-#include <QDesktopWidget>
 #include <gtest/gtest.h>
 #include "../../src/utils/tempfile.h"
 
@@ -22,7 +21,7 @@ public:
     virtual void SetUp() override{
         tempFile = TempFile::instance();
         m_primaryScreen = QGuiApplication::primaryScreen();
-        m_pix = m_primaryScreen->grabWindow(QApplication::desktop()->winId());
+        m_pix = m_primaryScreen->grabWindow(0);
         std::cout << "start TempFileTest" << std::endl;
     }
 

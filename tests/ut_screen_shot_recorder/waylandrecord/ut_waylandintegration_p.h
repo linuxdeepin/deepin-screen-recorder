@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2022-2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -14,7 +14,6 @@
 #include <QHBoxLayout>
 #include  <QFont>
 #include <QScreen>
-#include <QDesktopWidget>
 
 #include "stub.h"
 #include "addr_pri.h"
@@ -29,7 +28,9 @@
 #include <KWayland/Client/connection_thread.h>
 #include <KWayland/Client/event_queue.h>
 #include <KWayland/Client/registry.h>
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
 #include <KWayland/Client/remote_access.h>
+#endif
 using namespace testing;
 using namespace WaylandIntegration;
 class WaylandIntegrationPrivateTest: public testing::Test
@@ -112,7 +113,10 @@ TEST_F(WaylandIntegrationPrivateTest, isEGLInitialized)
 //}
 
 ACCESS_PRIVATE_FIELD(WaylandIntegrationPrivate, bool, m_streamingEnabled);
+ACCESS_PRIVATE_FIELD(WaylandIntegrationPrivate, bool, m_streamingEnabled);
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
 ACCESS_PRIVATE_FIELD(WaylandIntegrationPrivate, KWayland::Client::RemoteAccessManager *, m_remoteAccessManager);
+#endif
 TEST_F(WaylandIntegrationPrivateTest, stopStreaming)
 {
     access_private_field::WaylandIntegrationPrivatem_streamingEnabled(*m_waylandIntegrationPrivate) = true;
@@ -124,7 +128,7 @@ QPixmap grabEntireDesktop()
 {
     QPixmap g_tempPixmap;
     QScreen *t_primaryScreen = QGuiApplication::primaryScreen();
-    g_tempPixmap = t_primaryScreen->grabWindow(QApplication::desktop()->winId(), 0, 0, 1920, 1080);
+    g_tempPixmap = t_primaryScreen->grabWindow(0, 0, 0, 1920, 1080);
     // 在多屏模式下, winId 不是0
     return g_tempPixmap;
 

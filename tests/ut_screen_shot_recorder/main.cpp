@@ -1,11 +1,12 @@
-// SPDX-FileCopyrightText: 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2022-2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
 #include <QApplication>
 #include <gtest/gtest.h>
 #include <QDebug>
-#include <QCameraInfo>
+#include <QMediaDevices>
+#include <QCameraDevice>
 #include <QDBusMessage>
 #include <QPixmap>
 #include <QtDBus>
@@ -18,9 +19,9 @@
 
 static Stub globalStub;
 
-QList<QCameraInfo> availableCameras_stub(void* obj, QCamera::Position position = QCamera::UnspecifiedPosition)
+QList<QCameraDevice> availableCameras_stub(void* obj)
 {
-    return QList<QCameraInfo>();
+    return QList<QCameraDevice>();
 }
 
 int quit_stub(void* obj)
@@ -49,8 +50,8 @@ int main(int argc, char *argv[])
 {
     QApplication app(argc, argv);
     qDebug() << "start test cases ..............";
-    globalStub.set(ADDR(QCameraInfo, availableCameras), availableCameras_stub);
-    globalStub.set(ADDR(QCameraInfo, isNull), isNull_stub);
+    globalStub.set(ADDR(QMediaDevices, availableCameras), availableCameras_stub);
+    globalStub.set(ADDR(QCameraDevice, isNull), isNull_stub);
     globalStub.set(get_private_fun::MainWindowsaveImg(), MainWindow_saveImg_stub);
     globalStub.set(ADDR(QDBusInterface, callWithArgumentList), callWithArgumentList_stub);
     //testing::GTEST_FLAG(output) = "xml:./report/report.xml";

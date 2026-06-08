@@ -1,6 +1,6 @@
 QT              += core widgets dbus
 CONFIG          += c++11 plugin link_pkgconfig
-PKGCONFIG += dtkgui dtkwidget
+PKGCONFIG += dtk6gui dtk6widget
 include(../../../3rdparty/stub_linux/stub.pri)
 
 TARGET = ut_record_time
@@ -28,6 +28,7 @@ equals(TSAN_TOOL_ENABLE, true ){
 HEADERS += \
     ut_mock_pluginproxyinterface.h \
     ../../../src/dde-dock-plugins/recordtime/timewidget.h \
+    ../../../src/dde-dock-plugins/recordtime/timewidget_interface.h \
     ../../../src/dde-dock-plugins/recordtime/dbusservice.h \
     ../../../src/dde-dock-plugins/recordtime/recordtimeplugin.h
 
@@ -35,6 +36,7 @@ SOURCES += \
     main.cpp \
     ../../../src/dde-dock-plugins/recordtime/recordtimeplugin.cpp \
     ../../../src/dde-dock-plugins/recordtime/timewidget.cpp \
+    ../../../src/dde-dock-plugins/recordtime/timewidget_interface.cpp \
     ../../../src/dde-dock-plugins/recordtime/dbusservice.cpp \
     ut_mock_stub_recordtimeplugin.cpp \
     ut_timewidget.cpp \

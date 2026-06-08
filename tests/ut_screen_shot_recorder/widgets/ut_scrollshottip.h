@@ -8,7 +8,6 @@
 #include <QTest>
 #include <QObject>
 #include <QScreen>
-#include <QDesktopWidget>
 #include <QDebug>
 #include "../../src/widgets/scrollshottip.h"
 #include "addr_pri.h"
@@ -52,28 +51,28 @@ TEST_F(ScrollShotTipTest, showTip)
     scrollShotTip->move(500, 500);
     scrollShotTip->show();
     QEventLoop loop;
-    QTimer::singleShot(3000, &loop, SLOT(quit()));
+    QTimer::singleShot(3000, &loop, [&](){ loop.quit(); });
     loop.exec();
     scrollShotTip->hide();
 
     scrollShotTip->showTip(TipType::ErrorScrollShotTip);
     scrollShotTip->move(500, 500);
     scrollShotTip->show();
-    QTimer::singleShot(3000, &loop, SLOT(quit()));
+    QTimer::singleShot(3000, &loop, [&](){ loop.quit(); });
     loop.exec();
     scrollShotTip->hide();
 
     scrollShotTip->showTip(TipType::EndScrollShotTip);
     scrollShotTip->move(500, 500);
     scrollShotTip->show();
-    QTimer::singleShot(3000, &loop, SLOT(quit()));
+    QTimer::singleShot(3000, &loop, [&](){ loop.quit(); });
     loop.exec();
     scrollShotTip->hide();
 
     scrollShotTip->showTip(TipType::MaxLengthScrollShotTip);
     scrollShotTip->move(500, 500);
     scrollShotTip->show();
-    QTimer::singleShot(3000, &loop, SLOT(quit()));
+    QTimer::singleShot(3000, &loop, [&](){ loop.quit(); });
     loop.exec();
     scrollShotTip->hide();
 
@@ -91,7 +90,7 @@ TEST_F(ScrollShotTipTest, showStartScrollShotTip)
     scrollShotTip->move(1000, 500);
     scrollShotTip->show();
     QEventLoop loop;
-    QTimer::singleShot(3000, &loop, SLOT(quit()));
+    QTimer::singleShot(3000, &loop, [&](){ loop.quit(); });
     loop.exec();
     scrollShotTip->hide();
 }
@@ -102,7 +101,7 @@ TEST_F(ScrollShotTipTest, showErrorScrollShotTip)
     scrollShotTip->move(1000, 500);
     scrollShotTip->show();
     QEventLoop loop;
-    QTimer::singleShot(3000, &loop, SLOT(quit()));
+    QTimer::singleShot(3000, &loop, [&](){ loop.quit(); });
     loop.exec();
     scrollShotTip->hide();
 }
@@ -113,7 +112,7 @@ TEST_F(ScrollShotTipTest, showEndScrollShotTip)
     scrollShotTip->move(1000, 500);
     scrollShotTip->show();
     QEventLoop loop;
-    QTimer::singleShot(3000, &loop, SLOT(quit()));
+    QTimer::singleShot(3000, &loop, [&](){ loop.quit(); });
     loop.exec();
     scrollShotTip->hide();
 }
@@ -124,7 +123,7 @@ TEST_F(ScrollShotTipTest, showMaxScrollShotTip)
     scrollShotTip->move(1000, 500);
     scrollShotTip->show();
     QEventLoop loop;
-    QTimer::singleShot(3000, &loop, SLOT(quit()));
+    QTimer::singleShot(3000, &loop, [&](){ loop.quit(); });
     loop.exec();
     scrollShotTip->hide();
 }
@@ -135,7 +134,7 @@ TEST_F(ScrollShotTipTest, showQuickScrollShotTip)
     scrollShotTip->move(1000, 500);
     scrollShotTip->show();
     QEventLoop loop;
-    QTimer::singleShot(3000, &loop, SLOT(quit()));
+    QTimer::singleShot(3000, &loop, [&](){ loop.quit(); });
     loop.exec();
     scrollShotTip->hide();
 }
@@ -146,7 +145,7 @@ TEST_F(ScrollShotTipTest, showInvalidAreaShotTip)
     scrollShotTip->move(1000, 500);
     scrollShotTip->show();
     QEventLoop loop;
-    QTimer::singleShot(3000, &loop, SLOT(quit()));
+    QTimer::singleShot(3000, &loop, [&](){ loop.quit(); });
     loop.exec();
     scrollShotTip->hide();
 }
@@ -155,7 +154,7 @@ TEST_F(ScrollShotTipTest, paintRect)
     QPainter painter;
     QScreen *t_primaryScreen = QGuiApplication::primaryScreen();
     // 在多屏模式下, winId 不是0
-    QPixmap pix = t_primaryScreen->grabWindow(QApplication::desktop()->winId(), 0, 0, 1920, 1080);
+    QPixmap pix = t_primaryScreen->grabWindow(0, 0, 0, 1920, 1080);
     call_private_fun::ScrollShotTippaintRect(*scrollShotTip, painter, pix, 20);
 
 }

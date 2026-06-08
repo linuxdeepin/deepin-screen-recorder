@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2022-2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -99,7 +99,7 @@ TEST_F(RecordProcessTest, recordVideoMp4)
     m_process->setRecordInfo(QRect(0, 0, 1920, 1080), "mp4");
     m_process->startRecord();
     QEventLoop loop;
-    QTimer::singleShot(5000, &loop, SLOT(quit()));
+    QTimer::singleShot(5000, &loop, [&](){ loop.quit(); });
     loop.exec();
     m_process->stopRecord();
     delete  m_process;
@@ -116,7 +116,7 @@ TEST_F(RecordProcessTest, recordVideoMKV)
     m_process->setRecordInfo(QRect(0, 0, 1920, 1080), "mkv");
     m_process->startRecord();
     QEventLoop loop;
-    QTimer::singleShot(5000, &loop, SLOT(quit()));
+    QTimer::singleShot(5000, &loop, [&](){ loop.quit(); });
     loop.exec();
     m_process->stopRecord();
     delete  m_process;
@@ -135,7 +135,7 @@ TEST_F(RecordProcessTest, mpisRecordVideoMp4)
     m_process->setRecordInfo(QRect(0, 0, 1920, 1080), "mips_mp4");
     m_process->startRecord();
     QEventLoop loop;
-    QTimer::singleShot(5000, &loop, SLOT(quit()));
+    QTimer::singleShot(5000, &loop, [&](){ loop.quit(); });
     loop.exec();
     m_process->stopRecord();
     delete  m_process;
@@ -153,7 +153,7 @@ TEST_F(RecordProcessTest, mpisRecordVideoMKV)
     m_process->setRecordInfo(QRect(0, 0, 1920, 1080), "mips_mkv");
     m_process->startRecord();
     QEventLoop loop;
-    QTimer::singleShot(5000, &loop, SLOT(quit()));
+    QTimer::singleShot(5000, &loop, [&](){ loop.quit(); });
     loop.exec();
     m_process->stopRecord();
     delete  m_process;

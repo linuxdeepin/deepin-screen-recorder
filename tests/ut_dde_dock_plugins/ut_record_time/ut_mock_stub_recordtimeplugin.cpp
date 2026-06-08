@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2022-2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -19,6 +19,8 @@ public:
     {
         m_recordTimePlugin.reset(new RecordTimePlugin());
         m_recordTimePlugin->init(&mock_proxy);
+        if (!m_recordTimePlugin->m_timeWidget)
+            m_recordTimePlugin->m_timeWidget = new TimeWidget();
     }
     void TearDown() override
     {
@@ -60,7 +62,7 @@ TEST_F(TestRecordTimePlugin, onStart)
 
 TEST_F(TestRecordTimePlugin, onStop)
 {
-    m_recordTimePlugin->m_checkTimer = new QTimer();
+    m_recordTimePlugin->m_timer = new QTimer();
     emit m_recordTimePlugin->m_dBusService->stop();
 }
 

@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2022-2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -7,7 +7,6 @@
 #include <QTest>
 #include <QObject>
 #include <QScreen>
-#include <QDesktopWidget>
 #include <QDebug>
 #include <QPainter>
 #include "stub.h"
@@ -45,7 +44,7 @@ TEST_F(CountdownTooltipTest, start)
     m_countTip->show();
     m_countTip->start();
     QEventLoop loop;
-    QTimer::singleShot(5000, &loop, SLOT(quit()));
+    QTimer::singleShot(5000, &loop, [&](){ loop.quit(); });
     loop.exec();
 }
 void CountdownTooltipTest::startRecord()
@@ -58,7 +57,7 @@ QPixmap getFullscreenPixmap_stub()
 
     QScreen *t_primaryScreen = QGuiApplication::primaryScreen();
     // 在多屏模式下, winId 不是0
-    return t_primaryScreen->grabWindow(QApplication::desktop()->winId(), 0, 0, 1920, 1080);
+    return t_primaryScreen->grabWindow(0, 0, 0, 1920, 1080);
 
 }
 
