@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2022-2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -69,7 +69,7 @@ TEST_F(SideBarWidgetTest, showEvent)
     QShowEvent *e = new QShowEvent();
     call_private_fun::SideBarWidgetshowEvent(*m_sideBarWidget,e);
     QEventLoop loop;
-    QTimer::singleShot(1000, &loop, SLOT(quit()));
+    QTimer::singleShot(1000, &loop, [&](){ loop.quit(); });
     loop.exec();
 
      delete e;

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# SPDX-FileCopyrightText: 2022 UnionTech Software Technology Co., Ltd.
+# SPDX-FileCopyrightText: 2022-2026 UnionTech Software Technology Co., Ltd.
 #
 # SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -12,8 +12,8 @@ mkdir ./ut_dde_dock_plugins/ut_record_time/build-ut
 
 cd ./ut_dde_dock_plugins/ut_record_time/build-ut
 pwd
-export QT_SELECT=qt5
-qmake ../
+export QT_SELECT=qt6
+qmake6 ../
 make -j4
 
 workdir=$(cd ../$(dirname $0)/build-ut; pwd)

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# SPDX-FileCopyrightText: 2022 UnionTech Software Technology Co., Ltd.
+# SPDX-FileCopyrightText: 2022-2026 UnionTech Software Technology Co., Ltd.
 #
 # SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -16,8 +16,8 @@ rm -rf ./ut_screen_shot_recorder/build-ut
 mkdir ./ut_screen_shot_recorder/build-ut
 
 cd ./ut_screen_shot_recorder/build-ut
-export QT_SELECT=qt5
-qmake ../
+export QT_SELECT=qt6
+qmake6 ../
 make -j4
 
 #workdir=$(cd ../../$(dirname $0)/build-filemanager-unknown-Debug/test; pwd)

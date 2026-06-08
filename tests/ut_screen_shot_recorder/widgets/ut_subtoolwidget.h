@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2022-2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -178,7 +178,7 @@ TEST_F(SubToolWidgetTest, initRecordLabel)
     m_subToolWidget->m_systemAudioAction->triggered(true);
 
     QEventLoop loop;
-    QTimer::singleShot(1000, &loop, SLOT(quit()));
+    QTimer::singleShot(1000, &loop, [&](){ loop.quit(); });
     loop.exec();
 }
 

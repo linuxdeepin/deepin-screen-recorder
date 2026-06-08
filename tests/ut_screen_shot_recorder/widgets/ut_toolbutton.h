@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2022-2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -71,7 +71,7 @@ TEST_F(ToolButtonTest, leaveEvent)
 
 TEST_F(ToolButtonTest, mousePressEvent)
 {
-    QMouseEvent *e = new QMouseEvent(QEvent::MouseButtonPress, QPoint(10,10), Qt::LeftButton, Qt::LeftButton, Qt::NoModifier);
+    QMouseEvent *e = new QMouseEvent(QEvent::MouseButtonPress, QPoint(10,10), QPoint(10,10), Qt::LeftButton, Qt::LeftButton, Qt::NoModifier);
     call_private_fun::ToolButtonmousePressEvent(*m_toolButton,e);
     delete e;
 }

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# SPDX-FileCopyrightText: 2022 UnionTech Software Technology Co., Ltd.
+# SPDX-FileCopyrightText: 2022-2026 UnionTech Software Technology Co., Ltd.
 #
 # SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -15,8 +15,8 @@ cd ./ut_dde_dock_plugins/ut_shot_start_record/build-ut
 mkdir -p html
 mkdir -p report
 
-export QT_SELECT=qt5
-qmake ../
+export QT_SELECT=qt6
+qmake6 ../
 make -j4
 
 executable=ut_shot_start_record #可执行程序的文件名

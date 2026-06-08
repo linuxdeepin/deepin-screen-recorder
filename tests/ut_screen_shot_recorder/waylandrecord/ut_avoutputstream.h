@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2022-2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -13,7 +13,6 @@
 #include <QHBoxLayout>
 #include  <QFont>
 #include <QScreen>
-#include <QDesktopWidget>
 #include "stub.h"
 #include "addr_pri.h"
 #include "../../src/waylandrecord/avoutputstream.h"
@@ -419,7 +418,7 @@ QPixmap grabEntireDesktop1()
 {
     QPixmap g_tempPixmap;
     QScreen *t_primaryScreen = QGuiApplication::primaryScreen();
-    g_tempPixmap = t_primaryScreen->grabWindow(QApplication::desktop()->winId(), 0, 0, 1920, 1080);
+    g_tempPixmap = t_primaryScreen->grabWindow(0, 0, 0, 1920, 1080);
     return g_tempPixmap;
 }
 

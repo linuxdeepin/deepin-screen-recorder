@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2022-2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -80,7 +80,7 @@ TEST_F(UtilsTest, getInputEvent)
 
     QEventLoop loop;
     QTest::mouseMove(mainWindow, tempPoint);
-    QTimer::singleShot(5000, &loop, SLOT(quit()));
+    QTimer::singleShot(5000, &loop, [&](){ loop.quit(); });
     loop.exec();
 
     mainWindow->close();
@@ -124,7 +124,7 @@ TEST_F(UtilsTest, cancelInputEvent)
                      mainWindow->y() + mainWindow->height() / 2 - widget->height() / 2);
     QEventLoop loop;
     QTest::mouseMove(mainWindow, tempPoint);
-    QTimer::singleShot(5000, &loop, SLOT(quit()));
+    QTimer::singleShot(5000, &loop, [&](){ loop.quit(); });
     loop.exec();
     mainWindow->close();
     delete hBoxLayout;
@@ -164,7 +164,7 @@ TEST_F(UtilsTest, cancelInputEvent1)
                      mainWindow->y() + mainWindow->height() / 2 - widget->height() / 2);
     QEventLoop loop;
     QTest::mouseMove(mainWindow, tempPoint);
-    QTimer::singleShot(5000, &loop, SLOT(quit()));
+    QTimer::singleShot(5000, &loop, [&](){ loop.quit(); });
     loop.exec();
     mainWindow->close();
     delete hBoxLayout;
@@ -181,7 +181,7 @@ TEST_F(UtilsTest, enableXGrabButton)
     mainWindow->show();
     Utils::enableXGrabButton();
     QEventLoop loop;
-    QTimer::singleShot(5000, &loop, SLOT(quit()));
+    QTimer::singleShot(5000, &loop, [&](){ loop.quit(); });
     loop.exec();
     mainWindow->close();
     Utils::disableXGrabButton();
@@ -199,11 +199,11 @@ TEST_F(UtilsTest, disableXGrabButton)
     mainWindow->show();
     Utils::enableXGrabButton();
     QEventLoop loop;
-    QTimer::singleShot(5000, &loop, SLOT(quit()));
+    QTimer::singleShot(5000, &loop, [&](){ loop.quit(); });
     loop.exec();
     mainWindow->close();
     Utils::disableXGrabButton();
-    QTimer::singleShot(5000, &loop, SLOT(quit()));
+    QTimer::singleShot(5000, &loop, [&](){ loop.quit(); });
     loop.exec();
     delete mainWindow;
 

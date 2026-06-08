@@ -5,28 +5,36 @@ include($$PWD/../../3rdparty/stub_linux/stub.pri)
 TEMPLATE = app
 TARGET = ut_screen_shot_recorder
 INCLUDEPATH += . ../../src/ \
+            ../compat \
             /usr/include/gstreamer-1.0 \
-            /usr/include/opencv_mobile          
+            /usr/include/glib-2.0 \
+            /usr/lib/x86_64-linux-gnu/glib-2.0/include \
+            /usr/include/KWayland \
+            /usr/include/opencv_mobile \
+            ../../../3rdparty/libcam/libcam/ \
+            ../../../3rdparty/libcam/libcam_v4l2core/ \
+            ../../../3rdparty/libcam/libcam_render/ \
+            ../../../3rdparty/libcam/libcam_encoder/          
 DEFINES += DDE_START_FLAGE_ON
 DEFINES += OCR_SCROLL_FLAGE_ON
 DEFINES += KF5_WAYLAND_FLAGE_ON
 
-QT += core gui testlib KWindowSystem KWaylandClient KI18n KConfigCore
+QT += core gui testlib
 
 QT += core
 QT += widgets
 QT += gui
 QT += network
-QT += x11extras
 QT += dbus
 QT += multimedia
 QT += multimediawidgets
-QT += concurrent
-LIBS += -lX11 -lXext -lXtst -lXfixes -lXcursor -lgtest -lopencv_small -lKF5WaylandClient -lKF5ConfigCore -lavcodec -lavdevice -lavfilter -lavformat -lavutil -lswscale -lswresample -lepoxy
+QT += concurrent openglwidgets
+QT += waylandclient-private
+LIBS += -lX11 -lXext -lXtst -lXfixes -lXcursor -lgtest -lopencv_small -lavcodec -lavdevice -lavfilter -lavformat -lavutil -lswscale -lswresample -lepoxy -lKWaylandClient
 
 CONFIG += link_pkgconfig
-CONFIG += c++11
-PKGCONFIG += dtkgui dtkwidget xcb xcb-util
+CONFIG += c++17
+PKGCONFIG += dtk6gui dtk6widget xcb xcb-util
 
 
 RESOURCES = ../../assets/image/deepin-screen-recorder.qrc \

@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2022-2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -7,7 +7,6 @@
 #include <QEventLoop>
 #include <QApplication>
 #include <QScreen>
-#include <QDesktopWidget>
 #include <QPixmap>
 #include <QPaintEvent>
 #include "stub.h"
@@ -75,7 +74,7 @@ TEST_F(ButtonFeedbackTest, showPressFeedback)
     access_private_field::ButtonFeedbacktimer(*buttonFeedback) = new QTimer();
     buttonFeedback->showPressFeedback(50, 150);
     QEventLoop loop;
-    QTimer::singleShot(1000, &loop, SLOT(quit()));
+    QTimer::singleShot(1000, &loop, [&](){ loop.quit(); });
     loop.exec();
     access_private_field::ButtonFeedbacktimer(*buttonFeedback)->stop();
     delete access_private_field::ButtonFeedbacktimer(*buttonFeedback);
@@ -89,7 +88,7 @@ TEST_F(ButtonFeedbackTest, showDragFeedback)
     buttonFeedback->showDragFeedback(50, 150);
     access_private_field::ButtonFeedbacktimer(*buttonFeedback)->start();
     QEventLoop loop;
-    QTimer::singleShot(1000, &loop, SLOT(quit()));
+    QTimer::singleShot(1000, &loop, [&](){ loop.quit(); });
     loop.exec();
     delete access_private_field::ButtonFeedbacktimer(*buttonFeedback);
     access_private_field::ButtonFeedbacktimer(*buttonFeedback) = nullptr;
@@ -102,7 +101,7 @@ TEST_F(ButtonFeedbackTest, showReleaseFeedback)
     access_private_field::ButtonFeedbacktimer(*buttonFeedback) = new QTimer();
     buttonFeedback->showReleaseFeedback(50, 150);
     QEventLoop loop;
-    QTimer::singleShot(1000, &loop, SLOT(quit()));
+    QTimer::singleShot(1000, &loop, [&](){ loop.quit(); });
     loop.exec();
     access_private_field::ButtonFeedbacktimer(*buttonFeedback)->stop();
     delete access_private_field::ButtonFeedbacktimer(*buttonFeedback);

@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2022-2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -7,7 +7,6 @@
 #include <QScreen>
 #include <QPixmap>
 #include <QApplication>
-#include <QDesktopWidget>
 #include <gtest/gtest.h>
 #include "../dbusinterface/drawinterface.h"
 
@@ -47,7 +46,7 @@ TEST_F(DrawInterfaceTest, openImages)
 {
     QList<QImage> list;
     QScreen *t_primaryScreen = QGuiApplication::primaryScreen();
-    QPixmap pix = t_primaryScreen->grabWindow(QApplication::desktop()->winId());
+    QPixmap pix = t_primaryScreen->grabWindow(0);
     list.append(pix.toImage());
     m_draw->openImages(list);
 }

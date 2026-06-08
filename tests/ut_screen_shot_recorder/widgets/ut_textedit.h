@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2022-2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -45,7 +45,7 @@ public:
 
 TEST_F(TextEditTest, mousePressEvent)
 {
-    QMouseEvent *e = new QMouseEvent(QEvent::MouseButtonPress, QPoint(10,10), Qt::LeftButton, Qt::LeftButton, Qt::NoModifier);
+    QMouseEvent *e = new QMouseEvent(QEvent::MouseButtonPress, QPoint(10,10), QPoint(10,10), Qt::LeftButton, Qt::LeftButton, Qt::NoModifier);
 
     m_textEdit->setEditing(true);
     call_private_fun::TextEditmousePressEvent(*m_textEdit,e);
@@ -55,7 +55,7 @@ TEST_F(TextEditTest, mousePressEvent)
     call_private_fun::TextEditmousePressEvent(*m_textEdit,e);
 
     m_textEdit->setEditing(false);
-    QMouseEvent *leftButtonEvent = new QMouseEvent(QEvent::MouseButtonPress, QPoint(10,10), Qt::LeftButton, Qt::LeftButton, Qt::NoModifier);
+    QMouseEvent *leftButtonEvent = new QMouseEvent(QEvent::MouseButtonPress, QPoint(10,10), QPoint(10,10), Qt::LeftButton, Qt::LeftButton, Qt::NoModifier);
     call_private_fun::TextEditmousePressEvent(*m_textEdit,leftButtonEvent);
 
     delete e;
@@ -65,7 +65,7 @@ TEST_F(TextEditTest, mousePressEvent)
 TEST_F(TextEditTest, mouseMoveEvent)
 {
     m_textEdit->setEditing(true);
-    QMouseEvent *e = new QMouseEvent(QEvent::MouseButtonPress, QPoint(10,10), Qt::LeftButton, Qt::LeftButton, Qt::NoModifier);
+    QMouseEvent *e = new QMouseEvent(QEvent::MouseButtonPress, QPoint(10,10), QPoint(10,10), Qt::LeftButton, Qt::LeftButton, Qt::NoModifier);
     call_private_fun::TextEditmouseMoveEvent(*m_textEdit,e);
 
     m_textEdit->setEditing(false);
@@ -78,7 +78,7 @@ TEST_F(TextEditTest, mouseMoveEvent)
 
 TEST_F(TextEditTest, mouseReleaseEvent)
 {
-    QMouseEvent *e = new QMouseEvent(QEvent::MouseButtonPress, QPoint(10,10), Qt::LeftButton, Qt::LeftButton, Qt::NoModifier);
+    QMouseEvent *e = new QMouseEvent(QEvent::MouseButtonPress, QPoint(10,10), QPoint(10,10), Qt::LeftButton, Qt::LeftButton, Qt::NoModifier);
     m_textEdit->setEditing(true);
     call_private_fun::TextEditmouseReleaseEvent(*m_textEdit,e);
     m_textEdit->setEditing(false);
@@ -90,7 +90,7 @@ TEST_F(TextEditTest, mouseReleaseEvent)
 
 TEST_F(TextEditTest, mouseDoubleClickEvent)
 {
-    QMouseEvent *e = new QMouseEvent(QEvent::MouseButtonPress, QPoint(10,10), Qt::LeftButton, Qt::LeftButton, Qt::NoModifier);
+    QMouseEvent *e = new QMouseEvent(QEvent::MouseButtonPress, QPoint(10,10), QPoint(10,10), Qt::LeftButton, Qt::LeftButton, Qt::NoModifier);
     call_private_fun::TextEditmouseDoubleClickEvent(*m_textEdit,e);
     delete e;
 }
@@ -109,7 +109,7 @@ TEST_F(TextEditTest, keyPressEvent)
     call_private_fun::TextEditkeyPressEvent(*m_textEdit,escEvent);
 
     QEventLoop eventloop;
-    QTimer::singleShot(200, &eventloop, SLOT(quit()));
+    QTimer::singleShot(200, &eventloop, [&](){ eventloop.quit(); });
     eventloop.exec();
 
     delete escEvent;
@@ -121,7 +121,7 @@ TEST_F(TextEditTest, focusInEvent)
     call_private_fun::TextEditfocusInEvent(*m_textEdit,e);
 
     QEventLoop eventloop;
-    QTimer::singleShot(200, &eventloop, SLOT(quit()));
+    QTimer::singleShot(200, &eventloop, [&](){ eventloop.quit(); });
     eventloop.exec();
 
     delete e;

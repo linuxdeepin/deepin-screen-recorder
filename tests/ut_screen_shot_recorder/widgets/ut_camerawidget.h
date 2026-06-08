@@ -1,10 +1,12 @@
-// SPDX-FileCopyrightText: 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2022-2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
 #pragma once
 #include <gtest/gtest.h>
 #include <QTest>
+#include <QMediaDevices>
+#include <QCameraDevice>
 #include "stub.h"
 #include "addr_pri.h"
 
@@ -30,12 +32,12 @@ public:
     CameraWidget *m_cameraWidget;
     virtual void SetUp() override{
         m_cameraWidget = new CameraWidget();
-        stub.set(ADDR(QCameraInfo,isNull),_isNull_stub);
+        stub.set(ADDR(QCameraDevice,isNull),_isNull_stub);
         m_cameraWidget->initCamera();
     }
 
     virtual void TearDown() override{
-        stub.reset(ADDR(QCameraInfo,isNull));
+        stub.reset(ADDR(QCameraDevice,isNull));
         if(nullptr != m_cameraWidget)
             delete m_cameraWidget;
     }
@@ -51,7 +53,7 @@ TEST_F(CameraWidgetTest, enterEvent)
 
 TEST_F(CameraWidgetTest, mousePressEvent)
 {
-    QMouseEvent *ev = new QMouseEvent(QEvent::MouseButtonPress, QPoint(10,10), Qt::LeftButton, Qt::LeftButton, Qt::NoModifier);
+    QMouseEvent *ev = new QMouseEvent(QEvent::MouseButtonPress, QPoint(10,10), QPoint(10,10), Qt::LeftButton, Qt::LeftButton, Qt::NoModifier);
     call_private_fun::CameraWidgetmousePressEvent(*m_cameraWidget,ev);
 
     delete ev;
@@ -59,14 +61,14 @@ TEST_F(CameraWidgetTest, mousePressEvent)
 
 TEST_F(CameraWidgetTest, mouseMoveEvent)
 {
-    QMouseEvent *ev = new QMouseEvent(QEvent::MouseButtonPress, QPoint(10,10), Qt::LeftButton, Qt::LeftButton, Qt::NoModifier);
+    QMouseEvent *ev = new QMouseEvent(QEvent::MouseButtonPress, QPoint(10,10), QPoint(10,10), Qt::LeftButton, Qt::LeftButton, Qt::NoModifier);
     call_private_fun::CameraWidgetmouseMoveEvent(*m_cameraWidget,ev);
     delete ev;
 }
 
 TEST_F(CameraWidgetTest, mouseReleaseEvent)
 {
-    QMouseEvent *ev = new QMouseEvent(QEvent::MouseButtonPress, QPoint(10,10), Qt::LeftButton, Qt::LeftButton, Qt::NoModifier);
+    QMouseEvent *ev = new QMouseEvent(QEvent::MouseButtonPress, QPoint(10,10), QPoint(10,10), Qt::LeftButton, Qt::LeftButton, Qt::NoModifier);
     call_private_fun::CameraWidgetmouseReleaseEvent(*m_cameraWidget,ev);
 
     delete ev;
@@ -162,6 +164,6 @@ TEST_F(CameraWidgetTest, getcameraStatus)
 
 TEST_F(CameraWidgetTest, cameraInitError)
 {
-    m_cameraWidget->cameraInitError(QCamera::Error::NoError);
+    m_cameraWidget->cameraInitError(QCamera::NoError);
 }
 
