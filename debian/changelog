@@ -1,3 +1,10 @@
+deepin-screen-recorder (6.6.37) unstable; urgency=medium
+
+  * fix(shot): skip save2Clipboard in Treeland mode to improve pin screenshot response
+  * test: migrate unit tests from Qt5 to Qt6
+
+ -- dengzhongyuan <dengzhongyuan@uniontech.com>  Fri, 12 Jun 2026 11:22:29 +0800
+
 deepin-screen-recorder (6.6.36) unstable; urgency=medium
 
   * fix(shot): hide record button on toolbar under Treeland
