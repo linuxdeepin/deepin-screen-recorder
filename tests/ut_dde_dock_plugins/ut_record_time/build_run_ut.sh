@@ -16,7 +16,7 @@ export QT_SELECT=qt6
 qmake6 ../
 make -j4
 
-workdir=$(cd ../$(dirname $0)/build-ut; pwd)
+workdir=$(pwd)
 executable=ut_record_time #可执行程序的文件名
 
 #下面是覆盖率目录操作，一种正向操作，一种逆向操作
@@ -33,8 +33,6 @@ lcov -d $build_dir -c -o $build_dir/coverage.info
 
 lcov --extract $build_dir/coverage.info $extract_info --output-file  $build_dir/coverage.info
 lcov --remove $build_dir/coverage.info $remove_info --output-file $build_dir/coverage.info
-
-lcov --list-full-path -e $build_dir/coverage.info –o $build_dir/coverage-stripped.info
 
 genhtml -o $result_coverage_dir $build_dir/coverage.info
 

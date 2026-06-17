@@ -115,7 +115,11 @@ void MainToolWidget::initMainLabel()
     m_mainTool->setLayout(m_baseLayout);
     addWidget(m_mainTool);
 
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+    connect(buttonGroup, &QButtonGroup::idClicked,
+#else
     connect(buttonGroup, QOverload<int>::of(&QButtonGroup::buttonClicked),
+#endif
             [ = ](int status) {
         Q_UNUSED(status);
         qCDebug(dsrApp) << "Button group clicked signal received, status:" << status;

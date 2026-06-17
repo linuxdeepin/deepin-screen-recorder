@@ -14,3 +14,13 @@ AI config
 .npm-cache/
 .claude/
 .trellis/
+
+# build artifacts: qmake/moc/rcc outputs, coverage, caches, built binaries
+build-ut/
+.qmake.stash
+.cache/
+moc_predefs.h
+qrc_*.cpp
+*.so
+*.debhelper.log
+src/pin_screenshots/deepin-pin-screenshots

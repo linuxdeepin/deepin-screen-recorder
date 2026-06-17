@@ -25,7 +25,7 @@ public:
 
     virtual void TearDown() override{
         std::cout << "end RecordProcessTest" << std::endl;
-        stub.reset(ADDR(ConfigSettings, value));
+        stub.reset(ADDR(ConfigSettings, getValue));
         stub.reset(ADDR(QSysInfo, currentCpuArchitecture));
     }
 };
@@ -74,7 +74,7 @@ static QString currentCpuArchitecture_stub(void* obj)
 
 //TEST_F(RecordProcessTest, recordGIF)
 //{
-//    stub.set(ADDR(ConfigSettings, value), getOption_gif_stub);
+//    stub.set(ADDR(ConfigSettings, getValue), getOption_gif_stub);
 //    RecordProcess *m_process;
 //    m_process = new RecordProcess;
 //    m_process->setRecordAudioInputType(RecordProcess::RECORD_AUDIO_INPUT_SYSTEMAUDIO);
@@ -91,7 +91,7 @@ void emitRecording_stub(){
 }
 TEST_F(RecordProcessTest, recordVideoMp4)
 {
-    stub.set(ADDR(ConfigSettings, value), getOption_mp4_stub);
+    stub.set(ADDR(ConfigSettings, getValue), getOption_mp4_stub);
     stub.set(ADDR(RecordProcess,emitRecording),emitRecording_stub);
     RecordProcess *m_process;
     m_process = new RecordProcess;
@@ -108,7 +108,7 @@ TEST_F(RecordProcessTest, recordVideoMp4)
 
 TEST_F(RecordProcessTest, recordVideoMKV)
 {
-    stub.set(ADDR(ConfigSettings, value), getOption_mkv_stub);
+    stub.set(ADDR(ConfigSettings, getValue), getOption_mkv_stub);
     stub.set(ADDR(RecordProcess,emitRecording),emitRecording_stub);
     RecordProcess *m_process;
     m_process = new RecordProcess;
@@ -127,7 +127,7 @@ TEST_F(RecordProcessTest, recordVideoMKV)
 TEST_F(RecordProcessTest, mpisRecordVideoMp4)
 {
     stub.set(ADDR(QSysInfo, currentCpuArchitecture), currentCpuArchitecture_stub);
-    stub.set(ADDR(ConfigSettings, value), getOption_mp4_stub);
+    stub.set(ADDR(ConfigSettings, getValue), getOption_mp4_stub);
     stub.set(ADDR(RecordProcess,emitRecording),emitRecording_stub);
     RecordProcess *m_process;
     m_process = new RecordProcess;
@@ -144,7 +144,7 @@ TEST_F(RecordProcessTest, mpisRecordVideoMp4)
 
 TEST_F(RecordProcessTest, mpisRecordVideoMKV)
 {
-    stub.set(ADDR(ConfigSettings, value), getOption_mkv_stub);
+    stub.set(ADDR(ConfigSettings, getValue), getOption_mkv_stub);
     stub.set(ADDR(QSysInfo, currentCpuArchitecture), currentCpuArchitecture_stub);
     stub.set(ADDR(RecordProcess,emitRecording),emitRecording_stub);
     RecordProcess *m_process;

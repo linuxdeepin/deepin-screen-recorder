@@ -50,7 +50,8 @@ int main(int argc, char *argv[])
 {
     QApplication app(argc, argv);
     qDebug() << "start test cases ..............";
-    globalStub.set(ADDR(QMediaDevices, availableCameras), availableCameras_stub);
+    // Qt6: QMediaDevices::availableCameras() was renamed to videoInputs().
+    globalStub.set(ADDR(QMediaDevices, videoInputs), availableCameras_stub);
     globalStub.set(ADDR(QCameraDevice, isNull), isNull_stub);
     globalStub.set(get_private_fun::MainWindowsaveImg(), MainWindow_saveImg_stub);
     globalStub.set(ADDR(QDBusInterface, callWithArgumentList), callWithArgumentList_stub);

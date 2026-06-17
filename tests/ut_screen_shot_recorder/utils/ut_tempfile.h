@@ -41,14 +41,16 @@ TEST_F(TempFileTest, setFullScreenPixmap)
 
 TEST_F(TempFileTest, setBlurPixmap)
 {
-    tempFile->setBlurPixmap(m_pix);
-    tempFile->getBlurPixmap();
+    const int radius = 10;
+    tempFile->setBlurPixmap(m_pix, radius);
+    tempFile->getBlurPixmap(radius);
     EXPECT_NE(nullptr, tempFile);
 }
 
 TEST_F(TempFileTest, setMosaicPixmap)
 {
-    tempFile->setMosaicPixmap(m_pix);
-    tempFile->getMosaicPixmap();
+    const int radius = 10;
+    tempFile->setMosaicPixmap(m_pix, radius);
+    tempFile->getMosaicPixmap(radius);
     EXPECT_NE(nullptr, tempFile);
 }
