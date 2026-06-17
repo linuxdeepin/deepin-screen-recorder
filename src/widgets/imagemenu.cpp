@@ -390,6 +390,14 @@ ImageBorderHelper::ImageBorderHelper(QObject *parent) : QObject(parent)
         qCDebug(dsrApp) << "Screen geometry added:" << rect;
     }
 
+#ifdef QT_TESTLIB_LIB
+    if (screenInfo.isEmpty()) {
+        qCWarning(dsrApp) << "No screens detected (qApp->screens() empty); using default 1920x1080.";
+        screenInfo.append(QRect(0, 0, 1920, 1080));
+        m_screenCount = 1;
+    }
+#endif
+
     screenSize.setWidth(screenInfo[0].x() + screenInfo[0].width());
     screenSize.setHeight(screenInfo[0].y() + screenInfo[0].height());
     qCDebug(dsrApp) << "Initial screen size:" << screenSize;

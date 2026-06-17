@@ -7,6 +7,10 @@
 #include "../../src/utils.h"
 #include "../../src/main_window.h"
 
+// main_window.h -> event_monitor.h -> <X11/Xlib.h> leaks macros (True, False,
+// None, ...) that corrupt Qt6 enums pulled in by <QTest>/<QNetworkCookie>.
+#include "undef_x11.h"
+
 #include <QTest>
 #include <QPoint>
 #include <QScreen>
@@ -728,7 +732,9 @@ TEST_F(MainWindowTest, screenRecord)
     QTimer::singleShot(1000, &loop, [&](){ loop.quit(); });
     loop.exec();
 
-    window->changeSystemAudioSelectEvent(true);
+    // changeSystemAudioSelectEvent was removed from MainWindow; only the camera
+    // variant remains. Kept commented for traceability.
+    //window->changeSystemAudioSelectEvent(true);
     window->changeCameraSelectEvent(true);
 
     window->startCountdown();
@@ -2062,7 +2068,8 @@ TEST_F(MainWindowTest, topWindow)
 
     QScreen *t_primaryScreen = QGuiApplication::primaryScreen();
     // 在多屏模式下, winId 不是0
-    MainWindow_m_backgroundPixmap = t_primaryScreen->grabWindow(QApplication::desktop()->winId(), 0, 0, 1920, 1080);
+    // QScreen has no winId(); pass 0 to grab the root window of the screen.
+    MainWindow_m_backgroundPixmap = t_primaryScreen->grabWindow(0, 0, 0, 1920, 1080);
 
     window->topWindow();
 
@@ -2101,7 +2108,8 @@ TEST_F(MainWindowTest, saveTopWindow)
 
     QScreen *t_primaryScreen = QGuiApplication::primaryScreen();
     // 在多屏模式下, winId 不是0
-    MainWindow_m_backgroundPixmap = t_primaryScreen->grabWindow(QApplication::desktop()->winId(), 0, 0, 1920, 1080);
+    // QScreen has no winId(); pass 0 to grab the root window of the screen.
+    MainWindow_m_backgroundPixmap = t_primaryScreen->grabWindow(0, 0, 0, 1920, 1080);
 
     access_private_field::MainWindowwindowRects(*window).append(QRect(0, 0, 1000, 1000));
     access_private_field::MainWindowwindowRects(*window).append(QRect(0, 0, 500, 500));
@@ -2584,6 +2592,11 @@ void whileCheckTempFileArm_stub()
 {
 }
 ACCESS_PRIVATE_FIELD(MainWindow, RecorderRegionShow *, m_pRecorderRegion);
+#ifdef KF5_WAYLAND_FLAGE_ON
+// The following tests reference KWayland::Client::ClientManagement,
+// ConnectionThread and the KF5-gated MainWindow members (m_connectionThread,
+// whileCheckTempFileArm, waylandwindowinfo). They only compile when
+// KF5_WAYLAND_FLAGE_ON is defined, which is currently disabled (see .pro).
 ACCESS_PRIVATE_FIELD(MainWindow, QThread *, m_connectionThread);
 ACCESS_PRIVATE_FUN(MainWindow, void(), whileCheckTempFileArm);
 TEST_F(MainWindowTest, startRecord)
@@ -2867,3 +2880,4 @@ TEST_F(MainWindowTest, waylandwindowinfo5)
     delete window;
 
 }
+#endif // KF5_WAYLAND_FLAGE_ON

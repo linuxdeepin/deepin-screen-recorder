@@ -3682,7 +3682,11 @@ void MainWindow::changeCameraSelectEvent(bool checked)
         // 摄像头界面层级下调,防止遮住工具栏
         m_cameraWidget->lower();
         // 设置可用的设备名称
+#ifdef QT_TESTLIB_LIB
+        m_cameraWidget->setDevcieName(m_devnumMonitor ? m_devnumMonitor->availableCamera() : QString());
+#else
         m_cameraWidget->setDevcieName(m_devnumMonitor->availableCamera());
+#endif
         m_cameraWidget->initUI();
     }
 
@@ -3709,7 +3713,13 @@ void MainWindow::changeCameraSelectEvent(bool checked)
         m_cameraWidget->setRecordRect(recordX, recordY, recordWidth, recordHeight);
         m_cameraWidget->resize(cameraWidgetWidth, cameraWidgetHeight);
         m_cameraWidget->showAt(QPoint(x, y));
+#ifdef QT_TESTLIB_LIB
+        if (m_devnumMonitor) {
+            m_devnumMonitor->setCanUse(false);
+        }
+#else
         m_devnumMonitor->setCanUse(false);
+#endif
         m_cameraWidget->cameraStart();
     } else {
         qCDebug(dsrApp) << "停止摄像头画面采集！";
@@ -7383,7 +7393,11 @@ void MainWindow::startCountdown()
     if (m_hasComposite == false) {
         // 设置录屏框区域。
         m_pRecorderRegion = new RecorderRegionShow();
+#ifdef QT_TESTLIB_LIB
+        m_pRecorderRegion->setDevcieName(m_devnumMonitor ? m_devnumMonitor->availableCamera() : QString());
+#else
         m_pRecorderRegion->setDevcieName(m_devnumMonitor->availableCamera());
+#endif
         m_pRecorderRegion->resize(recordWidth + 2, recordHeight + 2);
         if (m_pixelRatio > 1 && m_screenCount > 1) {
             if (m_isVertical) {

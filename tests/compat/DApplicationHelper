@@ -1,0 +1,13 @@
+// SPDX-FileCopyrightText: 2024 UnionTech Software Technology Co., Ltd.
+//
+// SPDX-License-Identifier: GPL-3.0-or-later
+
+// DTK6 compat forwarding header. DTK6 DWidget ships dapplicationhelper.h
+// (lowercase) but does not provide a CamelCase DApplicationHelper forwarding
+// header like it does for DApplication. This shim restores the CamelCase
+// include used by the test sources.
+
+#ifndef DTK6_COMPAT_DAPPLICATIONHELPER_H
+#define DTK6_COMPAT_DAPPLICATIONHELPER_H
+#include <dapplicationhelper.h>
+#endif

@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2022-2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -28,7 +28,9 @@ public:
     }
 };
 
-ACCESS_PRIVATE_FIELD(voiceVolumeWatcher,    QScopedPointer<com::deepin::daemon::audio::Source>, m_defaultSource);
+// m_defaultSource (com::deepin::daemon::AudioSource::Source) is Qt5-only; in
+// Qt6 voiceVolumeWatcher uses AudioUtils instead. The getystemAudioState test
+// below does not need the field, so the ACCESS_PRIVATE_FIELD line is removed.
 TEST_F(voiceVolumeWatcherTest, getystemAudioState)
 {
     m_voiceVolumeWatcher->getystemAudioState();

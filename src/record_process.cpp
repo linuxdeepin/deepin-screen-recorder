@@ -197,6 +197,9 @@ void RecordProcess::onTranscodePaletteFinished(const QString &palettePng)
 #elif (QT_VERSION_MAJOR == 6)
     // Qt6 syntax for error signal
     connect(transcodeProcess, &QProcess::errorOccurred,
+#ifdef QT_TESTLIB_LIB
+            this,
+#endif
             [ = ](QProcess::ProcessError processError) {
                 qCDebug(dsrApp) << "Transcode process error (Qt6):" << processError;
             });
@@ -218,6 +221,9 @@ void RecordProcess::onTranscodePaletteFinished(const QString &palettePng)
 #elif (QT_VERSION_MAJOR == 6)
     // Qt6 syntax for finished signal
     connect(transcodeProcess, &QProcess::finished,
+#ifdef QT_TESTLIB_LIB
+            this,
+#endif
             [ = ](int exitCode, QProcess::ExitStatus exitStatus) {
                 qCDebug(dsrApp) << "Transcode process finished (Qt6). Exit Code:" << exitCode << ", Exit Status:" << exitStatus;
                 //转换进程是否正常退出
