@@ -203,6 +203,34 @@ HEADERS += test_all_interfaces.h \
     #waylandrecord/ut_writeframethread.h \
     utils/ut_voiceVolumeWatcher.h \
     utils/ut_WaylandScrollMonitor.h \
+    ext-image-capture/ut_extcaptureframebuffer.h \
+    ext-image-capture/ut_multiscreenframecompositor.h \
+    ext-image-capture/ut_extcapturerecorder.h \
+    ext-image-capture/ut_extcapturebridge.h \
+    ext-image-capture/ut_extcaptureframe.h \
+    ext-image-capture/ut_extcaptureintegration.h \
+    ext-image-capture/ut_extcapturesession.h \
+    ext-image-capture/ut_multiscreencapturecoordinator.h \
+    gstrecord/ut_gstinterface.h \
+    utils/ut_borderprocessinterface.h \
+    ut_event_monitor.h \
+    widgets/ut_shapeswidget_ext.h \
+    utils/ut_calculaterect_ext.h \
+    utils/ut_screengrabber_ext.h \
+    ut_utils_ext.h \
+    widgets/ut_toolbutton_ext.h \
+    widgets/ut_camerawidget_ext.h \
+    widgets/ut_sidebar_ext.h \
+    ut_RecorderRegionShow_ext.h \
+    ext-image-capture/ut_extcapturerecorder_ext.h \
+    ext-image-capture/ut_multiscreencapturecoordinator_ext.h \
+    ext-image-capture/ut_extcaptureframe_ext.h \
+    widgets/ut_savemenumanager_ext.h \
+    widgets/ut_savebutton_ext.h \
+    gstrecord/ut_gstrecordx_ext.h \
+    ut_record_process_ext.h \
+    widgets/ut_subtoolwidget_ext.h \
+    widgets/ut_imagemenu_ext.h \
     # --- P0-2 补全：为已编译源码的 Q_OBJECT 类补 moc 头 ---
     ../../src/capture.h \
     ../../src/camera/devnummonitor.h \
