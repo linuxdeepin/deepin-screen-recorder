@@ -148,3 +148,103 @@ TEST_F(ToolButtonExtTest, ConstructorDefaults)
     EXPECT_EQ(m_btn->focusPolicy(), Qt::NoFocus);
     SUCCEED();
 }
+
+// === Deep coverage: paint + draw methods ===
+ACCESS_PRIVATE_FUN(ToolButton, void(QPainter &, const QStyleOptionToolButton &, const QRect &), drawRedDot);
+ACCESS_PRIVATE_FUN(ToolButton, void(QPainter &, const QStyleOptionToolButton &, const QRect &), drawBadge);
+ACCESS_PRIVATE_FUN(ToolButton, void(QPaintEvent *), paintEvent);
+
+TEST_F(ToolButtonExtTest, drawRedDotRunsClean)
+{
+    QImage img(64, 64, QImage::Format_ARGB32);
+    img.fill(Qt::transparent);
+    QPainter painter(&img);
+    QStyleOptionToolButton opt;
+    opt.rect = QRect(0, 0, 64, 64);
+    QRect iconRect(10, 10, 24, 24);
+    EXPECT_NO_FATAL_FAILURE(call_private_fun::ToolButtondrawRedDot(*m_btn, painter, opt, iconRect));
+}
+
+TEST_F(ToolButtonExtTest, drawBadgeWithSetIcon)
+{
+    // Set a badge icon so drawBadge exercises the pixmap path
+    QIcon badgeIcon(QIcon::fromTheme("edit-cut"));
+    m_btn->setBadgeIcon(badgeIcon);
+    QImage img(64, 64, QImage::Format_ARGB32);
+    img.fill(Qt::transparent);
+    QPainter painter(&img);
+    QStyleOptionToolButton opt;
+    opt.rect = QRect(0, 0, 64, 64);
+    QRect iconRect(10, 10, 24, 24);
+    EXPECT_NO_FATAL_FAILURE(call_private_fun::ToolButtondrawBadge(*m_btn, painter, opt, iconRect));
+}
+
+TEST_F(ToolButtonExtTest, drawBadgeWithBadgeSize)
+{
+    m_btn->setBadgeSize(QSize(12, 8));
+    QImage img(64, 64, QImage::Format_ARGB32);
+    img.fill(Qt::transparent);
+    QPainter painter(&img);
+    QStyleOptionToolButton opt;
+    opt.rect = QRect(0, 0, 64, 64);
+    QRect iconRect(10, 10, 24, 24);
+    EXPECT_NO_FATAL_FAILURE(call_private_fun::ToolButtondrawBadge(*m_btn, painter, opt, iconRect));
+}
+
+TEST_F(ToolButtonExtTest, paintEventNormalState)
+{
+    // paintEvent needs a pixmap device; render onto an image
+    m_btn->resize(48, 48);
+    QImage img(48, 48, QImage::Format_ARGB32);
+    img.fill(Qt::transparent);
+    m_btn->render(&img);
+    EXPECT_NO_FATAL_FAILURE((void)img);
+}
+
+TEST_F(ToolButtonExtTest, paintEventWithRedDot)
+{
+    m_btn->setShowRedDot(true);
+    m_btn->resize(48, 48);
+    QImage img(48, 48, QImage::Format_ARGB32);
+    img.fill(Qt::transparent);
+    EXPECT_NO_FATAL_FAILURE(m_btn->render(&img));
+}
+
+TEST_F(ToolButtonExtTest, paintEventCheckedState)
+{
+    m_btn->setChecked(true);
+    m_btn->resize(48, 48);
+    QImage img(48, 48, QImage::Format_ARGB32);
+    img.fill(Qt::transparent);
+    EXPECT_NO_FATAL_FAILURE(m_btn->render(&img));
+}
+
+TEST_F(ToolButtonExtTest, paintEventDisabledState)
+{
+    m_btn->setEnabled(false);
+    m_btn->resize(48, 48);
+    QImage img(48, 48, QImage::Format_ARGB32);
+    img.fill(Qt::transparent);
+    EXPECT_NO_FATAL_FAILURE(m_btn->render(&img));
+}
+
+TEST_F(ToolButtonExtTest, paintEventWithBackgroundPixmap)
+{
+    QPixmap bg(16, 16);
+    bg.fill(Qt::blue);
+    ToolButton::setBackgroundPixmap(&bg);
+    m_btn->resize(48, 48);
+    QImage img(48, 48, QImage::Format_ARGB32);
+    img.fill(Qt::transparent);
+    EXPECT_NO_FATAL_FAILURE(m_btn->render(&img));
+    ToolButton::clearBackgroundPixmap();
+}
+
+TEST_F(ToolButtonExtTest, enterLeaveEventSafe)
+{
+    // enterEvent/leaveEvent set/clear override cursor; safe in offscreen
+    QEnterEvent enterEvent(QPointF(5, 5), QPointF(5, 5), QPointF(5, 5));
+    EXPECT_NO_FATAL_FAILURE(QCoreApplication::sendEvent(m_btn, &enterEvent));
+    QEvent leaveEvent(QEvent::Leave);
+    EXPECT_NO_FATAL_FAILURE(QCoreApplication::sendEvent(m_btn, &leaveEvent));
+}

@@ -22,6 +22,7 @@ INCLUDEPATH += . ../../src/ \
             ../../../src/ext-image-capture/
 DEFINES += DDE_START_FLAGE_ON
 DEFINES += OCR_SCROLL_FLAGE_ON
+DEFINES += ENABLE_UNIT_TEST
 # KF5_WAYLAND_FLAGE_ON disabled: KF6 KWayland lacks ClientManagement and the
 # waylandrecord module depends on removed ffmpeg 5.x APIs (AVPicture,
 # AVStream::codec, avcodec_decode_audio4). Re-enabling requires porting both
@@ -40,7 +41,7 @@ QT += multimediawidgets
 QT += concurrent openglwidgets
 QT += svg
 QT += waylandclient-private
-LIBS += -lX11 -lXext -lXtst -lXfixes -lXcursor -lgtest -lopencv_small -lavcodec -lavdevice -lavfilter -lavformat -lavutil -lswscale -lswresample -lepoxy -lKWaylandClient -lgbm
+LIBS += -lX11 -lXext -lXtst -lXfixes -lXcursor -lgtest -lopencv_small -lavcodec -lavdevice -lavfilter -lavformat -lavutil -lswscale -lswresample -lepoxy -lKWaylandClient -lgbm -lXinerama
 
 CONFIG += link_pkgconfig
 CONFIG += c++17
@@ -231,6 +232,16 @@ HEADERS += test_all_interfaces.h \
     ut_record_process_ext.h \
     widgets/ut_subtoolwidget_ext.h \
     widgets/ut_imagemenu_ext.h \
+    ut_main_window_ext.h \
+    # --- P0-2 补全：新增测试头文件 ---
+    ut_dbus_name.h \
+    ut_constant.h \
+    ut_utils_ext2.h \
+    ut_main_window_ef.h \
+    widgets/ut_shapeswidget_ext2.h \
+    utils/ut_shapesutils_ext.h \
+    utils/ut_delaytime.h \
+    widgets/ut_previewwidget.h \
     # --- P0-2 补全：为已编译源码的 Q_OBJECT 类补 moc 头 ---
     ../../src/capture.h \
     ../../src/camera/devnummonitor.h \
@@ -257,7 +268,13 @@ HEADERS += test_all_interfaces.h \
     ../../src/utils_interface.h \
     ../../src/qwayland-treeland-capture-unstable-v1.h \
     ../../src/camera/majorimageprocessingthread.h \
-    ../../src/widgets/slider.h
+    ../../src/widgets/slider.h \
+    # --- P0-2 补全：新增源码对应的 moc 头 ---
+    ../../src/utils/delaytime.h \
+    ../../src/dbusservice/dbusscreenshot.h \
+    ../../src/dbusservice/dbusscreenshotservice.h \
+    ../../src/utils/proxyaudioport.h \
+    ../../src/utils/x_multi_screen_info.h
 
 
 SOURCES += main.cpp \
@@ -355,4 +372,10 @@ SOURCES += main.cpp \
     ../../src/protocols/ext-image-copy-capture/qwayland-ext-image-capture-source-v1.cpp \
     ../../src/protocols/ext-image-copy-capture/wayland-ext-image-capture-source-v1-protocol.c \
     ../../src/capture.cpp \
-    ../../src/wayland-treeland-capture-unstable-v1-protocol.c
+    ../../src/wayland-treeland-capture-unstable-v1-protocol.c \
+    # --- P0-2 补全：新增漏列源文件 ---
+    ../../src/utils/delaytime.cpp \
+    ../../src/utils/proxyaudioport.cpp \
+    ../../src/utils/x_multi_screen_info.cpp \
+    ../../src/dbusservice/dbusscreenshot.cpp \
+    ../../src/dbusservice/dbusscreenshotservice.cpp

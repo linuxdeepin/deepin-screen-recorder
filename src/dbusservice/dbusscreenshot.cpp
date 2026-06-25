@@ -4,6 +4,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 
 #include "dbusscreenshot.h"
+#include "utils/log.h"
 
 /*
  * Implementation of interface class DBusScreenshot

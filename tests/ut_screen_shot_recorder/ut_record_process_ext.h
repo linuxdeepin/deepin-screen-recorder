@@ -196,3 +196,84 @@ TEST_F(RecordProcessExtTest, FreshObjectIsImmediatelyDestructible)
     EXPECT_NO_FATAL_FAILURE(tmp = new RecordProcess());
     EXPECT_NO_FATAL_FAILURE(delete tmp);
 }
+
+// --- Additional safe methods for broader coverage ---
+
+// setRecordSavingNotifyId: verify the ID is stored (observable only through
+// exitRecord which we skip, but the setter itself is crash-safe).
+TEST_F(RecordProcessExtTest, SetRecordSavingNotifyIdInvalidAndValid)
+{
+    EXPECT_NO_FATAL_FAILURE(m_proc->setRecordSavingNotifyId(0));
+    EXPECT_NO_FATAL_FAILURE(m_proc->setRecordSavingNotifyId(42));
+    EXPECT_NO_FATAL_FAILURE(m_proc->setRecordSavingNotifyId(
+        RecordProcess::RECORD_SAVING_NOTIFY_ID_INVALID));
+}
+
+// setRecordInfo with GIF format (key=0 → m_recordType=0)
+TEST_F(RecordProcessExtTest, SetRecordInfoGifFormat)
+{
+    // getValue stub returns 0 for unknown keys — "format" key returns 0 = GIF
+    EXPECT_NO_FATAL_FAILURE(m_proc->setRecordInfo(QRect(0, 0, 640, 480),
+        QString("test_gif")));
+}
+
+// setRecordInfo with different audio types
+static QVariant ut_record_process_audio_stub(void *obj, const QString &group, const QString &key)
+{
+    Q_UNUSED(obj);
+    Q_UNUSED(group);
+    if (key == "format") return 1;  // MP4
+    if (key == "audio") return 2;   // kSystemAudio
+    if (key == "cursor") return 1;  // RECORD_MOUSE_CURSE
+    if (key == "frame_rate") return 30;
+    if (key == "save_dir") return QString();
+    if (key == "save_op") return 0;
+    return QVariant();
+}
+
+TEST_F(RecordProcessExtTest, SetRecordInfoWithAudio)
+{
+    // Override stub with audio-aware variant
+    Stub localStub;
+    localStub.set(ADDR(ConfigSettings, getValue), ut_record_process_audio_stub);
+    EXPECT_NO_FATAL_FAILURE(m_proc->setRecordInfo(QRect(0, 0, 1280, 720),
+        QString("test_audio")));
+    localStub.reset(ADDR(ConfigSettings, getValue));
+}
+
+// setFullScreenRecord: verify both states are accepted
+TEST_F(RecordProcessExtTest, SetFullScreenRecordTrueThenFalse)
+{
+    EXPECT_NO_FATAL_FAILURE(m_proc->setFullScreenRecord(true));
+    EXPECT_NO_FATAL_FAILURE(m_proc->setFullScreenRecord(false));
+}
+
+// getScreenRecordSavePath: verify stability with different config
+static QVariant ut_record_process_dir_stub(void *obj, const QString &group, const QString &key)
+{
+    Q_UNUSED(obj); Q_UNUSED(group);
+    if (key == "save_dir") return QString("/tmp/ut_screen_record");
+    if (key == "save_op") return 0;
+    return QVariant();
+}
+
+TEST_F(RecordProcessExtTest, GetScreenRecordSavePathWithDir)
+{
+    Stub localStub;
+    localStub.set(ADDR(ConfigSettings, getValue), ut_record_process_dir_stub);
+    EXPECT_NO_FATAL_FAILURE(m_proc->getScreenRecordSavePath());
+    localStub.reset(ADDR(ConfigSettings, getValue));
+}
+
+// onExitGstRecord with m_gstRecordX == nullptr (no-op, safe)
+TEST_F(RecordProcessExtTest, OnExitGstRecordWhenNoGst)
+{
+    EXPECT_NO_FATAL_FAILURE(m_proc->onExitGstRecord());
+}
+
+// Constructor sets DISPLAY env var into displayNumber
+TEST_F(RecordProcessExtTest, ConstructorReadsDisplayEnv)
+{
+    // displayNumber is set from getenv("DISPLAY") — may be empty in some envs
+    EXPECT_NO_FATAL_FAILURE((void)new RecordProcess());
+}

@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2022-2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -47,4 +47,61 @@ TEST_F(MainToolWidgetTest, colorChecked)
 void MainToolWidgetTest::buttonChecked(bool checked, QString type)
 {
     EXPECT_EQ(type, curType);
+}
+
+// === Extended coverage ===
+TEST_F(MainToolWidgetTest, constructNotNull)
+{
+    EXPECT_NE(widget, nullptr);
+}
+
+TEST_F(MainToolWidgetTest, setRecordButtonOut)
+{
+    EXPECT_NO_FATAL_FAILURE(widget->setRecordButtonOut());
+}
+
+TEST_F(MainToolWidgetTest, setRecordLauchModeRecord)
+{
+    EXPECT_NO_FATAL_FAILURE(widget->setRecordLauchMode(0));
+}
+
+TEST_F(MainToolWidgetTest, setRecordLauchModeShot)
+{
+    EXPECT_NO_FATAL_FAILURE(widget->setRecordLauchMode(1));
+}
+
+TEST_F(MainToolWidgetTest, setRecordLauchModeScroll)
+{
+    EXPECT_NO_FATAL_FAILURE(widget->setRecordLauchMode(2));
+}
+
+TEST_F(MainToolWidgetTest, setRecordLauchModeOcr)
+{
+    EXPECT_NO_FATAL_FAILURE(widget->setRecordLauchMode(3));
+}
+
+TEST_F(MainToolWidgetTest, initWidgetAgain)
+{
+    EXPECT_NO_FATAL_FAILURE(widget->initWidget());
+}
+
+TEST_F(MainToolWidgetTest, initMainLabel)
+{
+    EXPECT_NO_FATAL_FAILURE(widget->initMainLabel());
+}
+
+TEST_F(MainToolWidgetTest, installTipHintSafe)
+{
+    EXPECT_NO_FATAL_FAILURE(widget->installTipHint(nullptr, "test hint"));
+}
+
+TEST_F(MainToolWidgetTest, installHintSafe)
+{
+    EXPECT_NO_FATAL_FAILURE(widget->installHint(nullptr, nullptr));
+}
+
+TEST_F(MainToolWidgetTest, destructorRunsClean)
+{
+    MainToolWidget *tmp = new MainToolWidget(nullptr);
+    EXPECT_NO_FATAL_FAILURE(delete tmp);
 }

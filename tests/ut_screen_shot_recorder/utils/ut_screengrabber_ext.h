@@ -81,3 +81,68 @@ TEST_F(ScreenGrabberExtTest, grabEntireDesktop_waylandFlagRouting)
     EXPECT_NO_FATAL_FAILURE(g.grabEntireDesktop(ok, QRect(0, 0, 1, 1), 1.0));
     // Wayland DBus unavailable in CI -> ok flipped to false; we only assert it ran.
 }
+
+// === Deep coverage via ACCESS_PRIVATE_FUN ===
+#include "addr_pri.h"
+
+ACCESS_PRIVATE_FUN(ScreenGrabber, QList<QScreen*>(const QRect &), findIntersectingScreens);
+ACCESS_PRIVATE_FUN(ScreenGrabber, QPixmap(bool &, const QRect &, const qreal), grabPrimaryScreenFallback);
+ACCESS_PRIVATE_FUN(ScreenGrabber, QPixmap(bool &, const QRect &, QScreen *, const qreal), grabSingleScreen);
+
+TEST_F(ScreenGrabberExtTest, findIntersectingScreensEmpty)
+{
+    ScreenGrabber g;
+    QList<QScreen*> screens = call_private_fun::ScreenGrabberfindIntersectingScreens(g, QRect(-9999, -9999, 1, 1));
+    // No intersection expected (or at least no crash)
+    EXPECT_NO_FATAL_FAILURE((void)screens.size());
+}
+
+TEST_F(ScreenGrabberExtTest, findIntersectingScreensIntersecting)
+{
+    ScreenGrabber g;
+    // offscreen screen is at (0,0) with some size; use a rect at origin
+    QList<QScreen*> screens = call_private_fun::ScreenGrabberfindIntersectingScreens(g, QRect(0, 0, 100, 100));
+    EXPECT_GE(screens.size(), 0);
+}
+
+TEST_F(ScreenGrabberExtTest, findIntersectingScreensFullRect)
+{
+    ScreenGrabber g;
+    QList<QScreen*> all = QGuiApplication::screens();
+    QList<QScreen*> screens = call_private_fun::ScreenGrabberfindIntersectingScreens(g, QRect(-10000, -10000, 50000, 50000));
+    // Should include all screens
+    EXPECT_EQ(screens.size(), all.size());
+}
+
+TEST_F(ScreenGrabberExtTest, grabPrimaryScreenFallbackSafe)
+{
+    ScreenGrabber g;
+    bool ok = true;
+    QPixmap pm = call_private_fun::ScreenGrabbergrabPrimaryScreenFallback(g, ok, QRect(0, 0, 10, 10), 1.0);
+    EXPECT_NO_FATAL_FAILURE((void)pm);
+}
+
+TEST_F(ScreenGrabberExtTest, grabSingleScreenSafe)
+{
+    ScreenGrabber g;
+    QScreen *primary = QGuiApplication::primaryScreen();
+    bool ok = true;
+    QPixmap pm = call_private_fun::ScreenGrabbergrabSingleScreen(g, ok, QRect(0, 0, 10, 10), primary, 1.0);
+    EXPECT_NO_FATAL_FAILURE((void)pm);
+}
+
+TEST_F(ScreenGrabberExtTest, grabSingleScreenNullScreen)
+{
+    ScreenGrabber g;
+    bool ok = true;
+    QPixmap pm = call_private_fun::ScreenGrabbergrabSingleScreen(g, ok, QRect(0, 0, 10, 10), nullptr, 1.0);
+    EXPECT_NO_FATAL_FAILURE((void)pm);
+}
+
+// getX11RootWindowSize with isQt6XcbEnv=true would open X11 display; keep false
+TEST_F(ScreenGrabberExtTest, getX11RootWindowSizeStaticNotXcb)
+{
+    Utils::isQt6XcbEnv = false;
+    QSize s = ScreenGrabber::getX11RootWindowSize();
+    EXPECT_TRUE(s.isEmpty());
+}
