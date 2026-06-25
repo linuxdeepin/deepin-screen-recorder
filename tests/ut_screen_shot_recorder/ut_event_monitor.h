@@ -53,3 +53,55 @@ TEST_F(EventMonitorTest, releaseResSafeWhenNoDisplay)
     // 未 run() 时 m_display 为空，releaseRes 应安全无操作
     EXPECT_NO_FATAL_FAILURE(m_mon->releaseRes());
 }
+
+// --- Extended coverage: wayland slot branches and signal emissions ---
+
+TEST_F(EventMonitorTest, buttonPressEventNonTriggeringButtons)
+{
+    QSignalSpy pressSpy(m_mon, &EventMonitor::mousePress);
+    // Button2 (middle), Button4-7 should NOT trigger mousePress
+    m_mon->ButtonPressEvent(Button2, 10, 20, QString());
+    m_mon->ButtonPressEvent(4, 10, 20, QString());
+    m_mon->ButtonPressEvent(999, 1, 2, QString());
+    EXPECT_EQ(pressSpy.count(), 0);
+}
+
+TEST_F(EventMonitorTest, buttonReleaseEventButton1And3)
+{
+    QSignalSpy releaseSpy(m_mon, &EventMonitor::mouseRelease);
+    m_mon->ButtonReleaseEvent(Button1, 10, 20, QString());
+    m_mon->ButtonReleaseEvent(Button3, 30, 40, QString());
+    EXPECT_EQ(releaseSpy.count(), 2);
+}
+
+TEST_F(EventMonitorTest, buttonReleaseEventNonTriggeringButtons)
+{
+    QSignalSpy releaseSpy(m_mon, &EventMonitor::mouseRelease);
+    m_mon->ButtonReleaseEvent(Button2, 10, 20, QString());
+    m_mon->ButtonReleaseEvent(999, 1, 2, QString());
+    EXPECT_EQ(releaseSpy.count(), 0);
+}
+
+TEST_F(EventMonitorTest, cursorMoveEventEmitsMouseMove)
+{
+    QSignalSpy moveSpy(m_mon, &EventMonitor::mouseMove);
+    m_mon->CursorMoveEvent(100, 200, QString());
+    EXPECT_EQ(moveSpy.count(), 1);
+    QList<QVariant> args = moveSpy.takeFirst();
+    EXPECT_EQ(args.at(0).toInt(), 100);
+    EXPECT_EQ(args.at(1).toInt(), 200);
+}
+
+TEST_F(EventMonitorTest, destructorCallsReleaseRes)
+{
+    // Destructor should not crash even without prior run()
+    EventMonitor *mon = new EventMonitor();
+    EXPECT_NO_FATAL_FAILURE(delete mon);
+}
+
+TEST_F(EventMonitorTest, initWaylandEventMonitorWhenWaylandOff)
+{
+    // When Utils::isWaylandMode is false, initWaylandEventMonitor is not called in ctor
+    // but we can call it directly; it will fail on DBus but should not crash
+    EXPECT_NO_FATAL_FAILURE(m_mon->initWaylandEventMonitor());
+}

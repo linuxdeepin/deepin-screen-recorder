@@ -27,7 +27,7 @@
 #include "utils/ut_calculaterect.h"
 #include "widgets/ut_keybuttonwidget.h"
 #include "widgets/ut_colortoolwidget.h"
-//#include "widgets/ut_maintoolwidget.h" // maintoolwidget.cpp has Qt6 QOverload::of(QButtonGroup::buttonClicked) error; gated in .pro
+#include "widgets/ut_maintoolwidget.h"
 #include "widgets/ut_zoomIndicator.h"
 #include "menucontroller/ut_menucontroller.h"
 #include "dbusinterface/ut_dbusnotify.h"
@@ -39,7 +39,7 @@
 #include "ut_utils.h"
 #include "ut_button_feedback.h"
 #include "ut_record_process.h"
-//#include "ut_screenshot.h"
+#include "ut_screenshot.h"
 #include "utils/ut_voiceVolumeWatcher.h"
 //#include "utils/ut_WaylandScrollMonitor.h" // WaylandScrollMonitor class is KF5_WAYLAND_FLAGE_ON-gated; disabled with that macro
 //#include "widgets/ut_shapeswidget.h"
@@ -71,6 +71,7 @@
 #include "utils/ut_borderprocessinterface.h"
 #include "ut_event_monitor.h"
 #include "widgets/ut_shapeswidget_ext.h"
+#include "widgets/ut_shapeswidget_ext2.h"
 #include "utils/ut_calculaterect_ext.h"
 #include "utils/ut_screengrabber_ext.h"
 #include "ut_utils_ext.h"
@@ -87,6 +88,14 @@
 #include "ut_record_process_ext.h"
 #include "widgets/ut_subtoolwidget_ext.h"
 #include "widgets/ut_imagemenu_ext.h"
-// ut_main_window_ext.h: MainWindow 构造/initAttributes 在隔离运行下依赖全套局
-// 部状态，无显示 ASAN 环境 SEGV；已有 ut_main_window.h(108KB)覆盖 ~41%，不再追加。
+#include "ut_main_window_ext.h"
+#include "ut_main_window_ef.h"
+#include "ut_dbus_name.h"
+#include "ut_constant.h"
+#include "ut_utils_ext2.h"
+#include "utils/ut_shapesutils_ext.h"
+#include "utils/ut_delaytime.h"
+#include "widgets/ut_previewwidget.h"
+// ut_wayland_stub.h: Qt 的 QWaylandClientExtension 生成的 wrapper 方法在 manager
+// 未绑定真实合成器时于 Qt6Core 内部 SEGV(T3)，宏守卫+wl 桩均无法绕过，已禁用。
 

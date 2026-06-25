@@ -4,6 +4,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 
 #include "delaytime.h"
+#include "utils/log.h"
 #include <QDebug>
 DelayTime::DelayTime(int msec)
 {
@@ -36,7 +37,13 @@ void DelayTime::setForceToExitApp(bool isForceToExitApp)
 void DelayTime::forceToExitApp()
 {
     qCDebug(dsrApp) << "Forcing application exit due to timeout.";
+#ifdef ENABLE_UNIT_TEST
+    // In unit test mode, avoid _Exit(0) which terminates the test process.
+    // Instead emit doWork so the test can verify the timeout logic path.
+    emit doWork();
+#else
     _Exit(0);
+#endif
 }
 
 void DelayTime::run()

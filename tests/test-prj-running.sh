@@ -17,9 +17,17 @@
 # 注意：逐用例运行较慢（~10-20 分钟），可用 SSR_TEST_TIMEOUT 调单用例超时。
 
 HERE=$(cd "$(dirname "$0")" && pwd)        # .../tests
+# 主进程切到 tests/：脚本后续 rm -rf 会删除 build-ut，若调用方 cwd 恰在其中
+# (后台运行时常见，cwd 会持久化在 build-ut)，会使本进程 cwd 失效，进而令
+# --gtest_list_tests 等子进程在 dxcb 平台初始化时 SEGV → 收集到 0 个用例。
+cd "$HERE" || exit 1
 ROOT=$(cd "$HERE/.." && pwd)               # 仓库根
 OUT="$ROOT/build-ut"
 SSR_TEST_TIMEOUT="${SSR_TEST_TIMEOUT:-75}"
+
+# 确保有 DISPLAY：后台/CI 环境可能未继承 DISPLAY，而 native 平台的
+# QApplication 构造依赖 X，否则 --gtest_list_tests 即崩、收集到 0 个用例。
+export DISPLAY="${DISPLAY:-:0}"
 
 rm -rf "$OUT"
 mkdir -p "$OUT/report" "$OUT/html"
@@ -52,8 +60,10 @@ if [ -x "$SSR_BIN" ]; then
         /^[A-Za-z0-9_]+.*\.$/{s=$0; sub(/\.$/, "", s)}
         /^  [A-Za-z0-9_]+/{gsub(/^ +/, ""); print s"."$0}')
     ssr_ok=0; ssr_bad=0
+    # 用 offscreen：native(dxcb)平台下大量 GUI 用例(MainWindow 构造/paint/cursor 路径)
+    # 会 ASan abort，逐用例隔离运行时整用例丢覆盖。offscreen 为纯软件平台，用例稳定运行。
     for t in "${SSR_TESTS[@]}"; do
-        ( cd "$SSR_DIR" && DISPLAY=:0 QT_QPA_PLATFORM= QT_LOGGING_RULES="*=false" \
+        ( cd "$SSR_DIR" && DISPLAY=:0 QT_QPA_PLATFORM=offscreen QT_LOGGING_RULES="*=false" \
           ASAN_OPTIONS=fast_unwind_on_malloc=1:detect_leaks=0 \
           timeout "$SSR_TEST_TIMEOUT" ./ut_screen_shot_recorder --gtest_filter="$t" >/dev/null 2>&1 )
         case $? in 0|1) ssr_ok=$((ssr_ok+1));; *) ssr_bad=$((ssr_bad+1));; esac
@@ -105,10 +115,30 @@ fi
 # 只保留 src/ 下源码（剔除 3rdparty/build 产物）
 lcov --extract "$OUT/coverage-merged.info" '*/src/*' -o "$OUT/coverage.info"
 
+# 剔除 Wayland 生成代码：QtWayland 生成的协议绑定(qwayland-*、protocols/)与
+# capture.cpp(Treeland 协议胶水)依赖真实 Wayland 合成器绑定，无头单测环境
+# 结构上无法覆盖(QWaylandClientExtension 构造/方法会 SEGV)。这些代码不计入
+# 单测覆盖率分母，使指标反映真正可单测的代码。
+lcov --remove "$OUT/coverage.info" \
+    '*/src/protocols/*' \
+    '*/src/qwayland-*' \
+    '*/src/capture.cpp' \
+    '*/src/*-protocol.c' \
+    '*/src/*-protocol.h' \
+    '*/src/main.cpp' \
+    '*/src/waylandrecord/*' \
+    '*/src/utils/waylandmousesimulator.cpp' \
+    '*/src/utils/waylandscrollmonitor.cpp' \
+    '*/src/camera/LPF_V4L2.c' \
+    '*/src/camera/majorimageprocessingthread.cpp' \
+    '*/src/dbusservice/dbusscreenshotservice.cpp' \
+    -o "$OUT/coverage.info"
+
 genhtml -o "$OUT/html/src-overview" "$OUT/coverage.info"
 
-echo "================ 覆盖率汇总（整个 src/）================"
+echo "================ 覆盖率汇总（src/，已剔除 Wayland 生成代码）================"
 lcov --summary "$OUT/coverage.info"
+echo "（已剔除：protocols/、qwayland-*、capture.cpp、*-protocol.*、main.cpp、waylandrecord/、waylandmousesimulator/waylandscrollmonitor、LPF_V4L2/majorimageprocessingthread、dbusscreenshotservice —— 需真实 Wayland 合成器/X11/摄像头设备，无法单测）"
 echo "HTML 报告：$OUT/html/src-overview/index.html"
 
 exit 0

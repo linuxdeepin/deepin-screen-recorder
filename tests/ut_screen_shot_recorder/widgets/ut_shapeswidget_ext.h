@@ -22,6 +22,7 @@ ACCESS_PRIVATE_FUN(ShapesWidget, void(QPainter &, FourPoints, int, ShapesWidget:
 ACCESS_PRIVATE_FUN(ShapesWidget, void(QPainter &, QList<QPointF>, int, bool), paintArrow);
 ACCESS_PRIVATE_FUN(ShapesWidget, void(QPainter &, QList<QPointF>), paintLine);
 ACCESS_PRIVATE_FUN(ShapesWidget, void(QPainter &, QList<QPointF>, bool, int, int), paintEffectLine);
+ACCESS_PRIVATE_FUN(ShapesWidget, void(QPainter &, QPointF, QPixmap, bool), paintImgPoint);
 // paintText 是重载，ACCESS_PRIVATE_FUN 无法消歧，故不测
 
 static FourPoints rectPoints(qreal x, qreal y, qreal w, qreal h)
@@ -109,5 +110,6 @@ TEST_F(ShapesWidgetSmokeTest, privatePaintMethods)
     EXPECT_NO_FATAL_FAILURE(call_private_fun::ShapesWidgetpaintLine(*m_w, painter, line));
     EXPECT_NO_FATAL_FAILURE(call_private_fun::ShapesWidgetpaintEffectLine(*m_w, painter, line, false, 10, 2));
     EXPECT_NO_FATAL_FAILURE(call_private_fun::ShapesWidgetpaintEffectLine(*m_w, painter, line, true, 10, 2));
+    EXPECT_NO_FATAL_FAILURE(call_private_fun::ShapesWidgetpaintImgPoint(*m_w, painter, QPointF(5, 5), QPixmap(8, 8), true));
     painter.end();
 }
