@@ -214,6 +214,7 @@ void Utils::passInputEvent(int wid)
 {
     qCDebug(dsrApp) << "passInputEvent() called for window ID:" << wid << ".";
     // Wayland/TreeLand 事件穿透
+#ifndef ENABLE_UNIT_TEST
     if (Utils::isWaylandMode || Utils::isTreelandMode) {
         qCDebug(dsrApp) << "Wayland/TreeLand mode detected. Setting window handle mask.";
         QWidget *widget = QWidget::find(static_cast<WId>(wid));
@@ -223,6 +224,7 @@ void Utils::passInputEvent(int wid)
         }
         return;
     }
+#endif
 
     XRectangle *reponseArea = new XRectangle;
     reponseArea->x = 0;
@@ -279,10 +281,12 @@ void Utils::setAccessibility(QAction *action, const QString name)
 void Utils::getInputEvent(const int wid, const short x, const short y, const unsigned short width, const unsigned short height)
 {
     qCDebug(dsrApp) << "getInputEvent() called for window ID:" << wid << ", rect:(" << x << "," << y << "," << width << "," << height << ").";
+#ifndef ENABLE_UNIT_TEST
     if (Utils::isWaylandMode == true || Utils::isTreelandMode == true) {
         qCDebug(dsrApp) << "Wayland/TreeLand mode detected, skipping getInputEvent().";
         return;
     }
+#endif
     XRectangle *reponseArea = new XRectangle;
     reponseArea->x = x;
     reponseArea->y = y;
@@ -310,10 +314,12 @@ void Utils::getInputEvent(const int wid, const short x, const short y, const uns
 void Utils::cancelInputEvent(const int wid, const short x, const short y, const unsigned short width, const unsigned short height)
 {
     qCDebug(dsrApp) << "cancelInputEvent() called for window ID:" << wid << ", rect:(" << x << "," << y << "," << width << "," << height << ").";
+#ifndef ENABLE_UNIT_TEST
     if (Utils::isWaylandMode == true || Utils::isTreelandMode == true) {
         qCDebug(dsrApp) << "Wayland/TreeLand mode detected, skipping cancelInputEvent().";
         return;
     }
+#endif
     XRectangle *reponseArea = new XRectangle;
     reponseArea->x = x;
     reponseArea->y = y;
@@ -333,10 +339,12 @@ void Utils::cancelInputEvent1(
     const int wid, const short x, const short y, const unsigned short width, const unsigned short height)
 {
     qCDebug(dsrApp) << "cancelInputEvent1() called for window ID:" << wid << ", rect:(" << x << "," << y << "," << width << "," << height << ").";
+#ifndef ENABLE_UNIT_TEST
     if (Utils::isWaylandMode == true || Utils::isTreelandMode == true) {
         qCDebug(dsrApp) << "Wayland/TreeLand mode detected, skipping cancelInputEvent1().";
         return;
     }
+#endif
     XRectangle *reponseArea = new XRectangle;
     reponseArea->x = x;
     reponseArea->y = y;
@@ -438,10 +446,12 @@ void Utils::showCurrentSys()
 void Utils::enableXGrabButton()
 {
     qCDebug(dsrApp) << "enableXGrabButton() called.";
+#ifndef ENABLE_UNIT_TEST
     if (Utils::isWaylandMode == true || Utils::isTreelandMode == true) {
         qCDebug(dsrApp) << "Wayland/TreeLand mode detected, skipping enableXGrabButton().";
         return;
     }
+#endif
     // extern int XGrabButton(
     //     Display *      /* display */,
     //     unsigned int  /* button */,
@@ -492,10 +502,12 @@ void Utils::enableXGrabButton()
 void Utils::disableXGrabButton()
 {
     qCDebug(dsrApp) << "disableXGrabButton() called.";
+#ifndef ENABLE_UNIT_TEST
     if (Utils::isWaylandMode == true || Utils::isTreelandMode == true) {
         qCDebug(dsrApp) << "Wayland/TreeLand mode detected, skipping disableXGrabButton().";
         return;
     }
+#endif
     XUngrabButton(QX11Info::display(), true, AnyModifier, DefaultRootWindow(QX11Info::display()));
     qCDebug(dsrApp) << "XUngrabButton called.";
 }
@@ -797,6 +809,7 @@ void Utils::cursorMove(QPoint currentCursor, QKeyEvent *keyEvent)
         qCInfo(dsrApp) << "the key is " << keyEvent->key() << " (" << keyEvent->text() << ")";
     }
 
+#ifndef ENABLE_UNIT_TEST
     if (Utils::isWaylandMode) {
         qCInfo(dsrApp) << "isWaylandMode is true, use WaylandMouseSimulator to move cursor.";
 #ifdef KF5_WAYLAND_FLAGE_ON
@@ -808,6 +821,9 @@ void Utils::cursorMove(QPoint currentCursor, QKeyEvent *keyEvent)
 #endif  // KF5_WAYLAND_FLAGE_ON
     } else {
         qCInfo(dsrApp) << "isWaylandMode is false, use QCursor to move cursor.";
+#endif
         QCursor::setPos(pos);
+#ifndef ENABLE_UNIT_TEST
     }
+#endif
 }

@@ -46,6 +46,7 @@ public:
     
     // 初始化 Wayland 全局对象
     void initializeWaylandGlobals() {
+#ifndef ENABLE_UNIT_TEST
         auto *nativeInterface = QGuiApplication::platformNativeInterface();
         auto *wlDisplay = static_cast<wl_display*>(
             nativeInterface->nativeResourceForIntegration("display"));
@@ -57,6 +58,7 @@ public:
                 wl_display_roundtrip(wlDisplay);
             }
         }
+#endif
     }
     
     // Wayland registry listener
@@ -117,6 +119,12 @@ ExtCaptureSession::~ExtCaptureSession()
 
 bool ExtCaptureSession::initialize(void *manager, void *imageSource, bool paintCursors)
 {
+#ifdef ENABLE_UNIT_TEST
+    Q_UNUSED(manager)
+    Q_UNUSED(imageSource)
+    Q_UNUSED(paintCursors)
+    return false;
+#else
     // qCWarning(dsrApp) << "ExtCaptureSession::initialize: *** INITIALIZING SESSION *** paintCursors =" << paintCursors;
     
     if (d->state != Uninitialized) {
@@ -176,6 +184,7 @@ bool ExtCaptureSession::initialize(void *manager, void *imageSource, bool paintC
         setState(Error);
         return false;
     }
+#endif
 }
 
 ExtCaptureSession::SessionState ExtCaptureSession::state() const
@@ -200,6 +209,10 @@ ExtCaptureFrame* ExtCaptureSession::createFrame()
         return nullptr;
     }
 
+#ifdef ENABLE_UNIT_TEST
+    // 测试桩：Wayland 帧创建与 DMA 信号路径不在单元测试覆盖
+    return nullptr;
+#else
     try {
         auto *frame = d->create_frame();
         if (!frame) {
@@ -284,6 +297,7 @@ ExtCaptureFrame* ExtCaptureSession::createFrame()
         emit error(QString("Frame creation failed: %1").arg(e.what()));
         return nullptr;
     }
+#endif
 }
 
 void ExtCaptureSession::stop()
@@ -389,18 +403,33 @@ void ExtCaptureSession::selectOptimalFormat()
 
 wl_shm* ExtCaptureSession::getWaylandShm() const
 {
+#ifdef ENABLE_UNIT_TEST
+    return nullptr;
+#else
     return d->waylandShm;
+#endif
 }
 
 void* ExtCaptureSession::getLinuxDmabuf() const
 {
+#ifdef ENABLE_UNIT_TEST
+    return nullptr;
+#else
     return d->linuxDmabuf ? d->linuxDmabuf->object() : nullptr;
+#endif
 }
 
 // Wayland registry listener 实现
 void ExtCaptureSession::Private::registryGlobal(void *data, wl_registry *registry, 
                                                uint32_t id, const char *interface, uint32_t version)
 {
+#ifdef ENABLE_UNIT_TEST
+    Q_UNUSED(data)
+    Q_UNUSED(registry)
+    Q_UNUSED(id)
+    Q_UNUSED(interface)
+    Q_UNUSED(version)
+#else
     auto *priv = static_cast<ExtCaptureSession::Private*>(data);
     
     if (strcmp(interface, wl_shm_interface.name) == 0) {
@@ -412,14 +441,21 @@ void ExtCaptureSession::Private::registryGlobal(void *data, wl_registry *registr
         priv->linuxDmabuf->init(registry, id, qMin(version, 4u));
         qCWarning(dsrApp) << "Bound to zwp_linux_dmabuf_v1, version:" << version;
     }
+#endif
 }
 
 void ExtCaptureSession::Private::registryGlobalRemove(void *data, wl_registry *registry, uint32_t id)
 {
+#ifdef ENABLE_UNIT_TEST
+    Q_UNUSED(data)
+    Q_UNUSED(registry)
+    Q_UNUSED(id)
+#else
     Q_UNUSED(data)
     Q_UNUSED(registry) 
     Q_UNUSED(id)
     // 不需要处理移除事件
+#endif
 }
 
 const wl_registry_listener ExtCaptureSession::Private::s_registryListener = {

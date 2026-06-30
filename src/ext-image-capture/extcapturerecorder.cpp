@@ -617,6 +617,9 @@ bool ExtCaptureRecorder::startFFmpegProcess()
 
 bool ExtCaptureRecorder::startDmaFFmpegProcess()
 {
+#ifdef ENABLE_UNIT_TEST
+    return false; // 单测桩：DMA-BUF/GBM 需真实 Wayland，跳过
+#else
     if (m_ffmpegProcess) {
         qCWarning(dsrApp) << "ExtCaptureRecorder::startDmaFFmpegProcess: FFmpeg process already exists";
         return false;
@@ -680,10 +683,19 @@ bool ExtCaptureRecorder::startDmaFFmpegProcess()
     
     qCWarning(dsrApp) << "ExtCaptureRecorder::startDmaFFmpegProcess: DMA Buffer FFmpeg process started successfully";
     return true;
+#endif
 }
 
 bool ExtCaptureRecorder::processDmaBufferFrame(int dmaBufferFd, void *gbmBo, int width, int height, int stride)
 {
+#ifdef ENABLE_UNIT_TEST
+    Q_UNUSED(dmaBufferFd)
+    Q_UNUSED(gbmBo)
+    Q_UNUSED(width)
+    Q_UNUSED(height)
+    Q_UNUSED(stride)
+    return false; // 单测桩：DMA-BUF/GBM 需真实 Wayland，跳过
+#else
     if (dmaBufferFd < 0 || !gbmBo) {
         qCWarning(dsrApp) << "ExtCaptureRecorder::processDmaBufferFrame: Invalid parameters";
         return false;
@@ -799,6 +811,7 @@ bool ExtCaptureRecorder::processDmaBufferFrame(int dmaBufferFd, void *gbmBo, int
     
     // qCWarning(dsrApp) << "ExtCaptureRecorder::processDmaBufferFrame: Successfully wrote" << bytes_written << "bytes of frame data to FFmpeg";
     return true;
+#endif
 }
 
 void ExtCaptureRecorder::updateFrameTimestamps(int64_t timestamp)

@@ -20,10 +20,12 @@ EventMonitor::EventMonitor(QObject *parent) : QThread(parent)
 {
     qCDebug(dsrApp) << "EventMonitor constructor called.";
     isPress = false;
+#ifndef ENABLE_UNIT_TEST
     if (Utils::isWaylandMode) {
         qCDebug(dsrApp) << "Wayland mode detected, initializing Wayland event monitor.";
         initWaylandEventMonitor();
     }
+#endif
     qCDebug(dsrApp) << "EventMonitor constructor finished.";
 }
 

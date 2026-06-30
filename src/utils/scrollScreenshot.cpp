@@ -21,16 +21,20 @@ ScrollScreenshot::ScrollScreenshot(QObject *parent)
     qRegisterMetaType<PixMergeThread::MergeErrorValue>("MergeErrorValue");
 
 #if defined(KF5_WAYLAND_FLAGE_ON) && !defined(DWAYLAND_SUPPORT)
+#ifndef ENABLE_UNIT_TEST
     if (Utils::isWaylandMode) {
         m_WaylandScrollMonitor = new WaylandScrollMonitor(this);  // 初始化wayland模拟滚动
         qCDebug(dsrApp) << "WaylandScrollMonitor initialized for Wayland mode.";
     }
 #endif
+#endif
 
     m_mouseWheelTimer = new QTimer(this);
     connect(m_mouseWheelTimer, &QTimer::timeout, this, [=] {
         qCDebug(dsrApp) << "Mouse wheel timer timed out.";
+#ifndef ENABLE_UNIT_TEST
         if (!Utils::isWaylandMode) {
+#endif
             // 发送滚轮事件， 自动滚动
             static Display *m_display = XOpenDisplay(nullptr);
             XTestFakeButtonEvent(m_display, Button5, 1, CurrentTime);
@@ -38,6 +42,7 @@ ScrollScreenshot::ScrollScreenshot(QObject *parent)
             XTestFakeButtonEvent(m_display, Button5, 0, CurrentTime);
             XFlush(m_display);
             qCDebug(dsrApp) << "Simulated X11 mouse wheel scroll.";
+#ifndef ENABLE_UNIT_TEST
         } else {
 #ifdef KF5_WAYLAND_FLAGE_ON
 #ifdef DWAYLAND_SUPPORT
@@ -49,6 +54,7 @@ ScrollScreenshot::ScrollScreenshot(QObject *parent)
 #endif  // DWAYLAND_SUPPORT
 #endif  // KF5_WAYLAND_FLAGE_ON
         }
+#endif
 
         //当模拟鼠标进行自动滚动时，会发射此信号
         emit autoScroll(m_autoScrollFlag++);
@@ -69,6 +75,7 @@ ScrollScreenshot::ScrollScreenshot(QObject *parent)
             this,
             SLOT(merageImgState(PixMergeThread::MergeErrorValue)));
     connect(m_PixMerageThread, &PixMergeThread::invalidAreaError, this, &ScrollScreenshot::merageInvalidArea);
+#ifndef ENABLE_UNIT_TEST
     if (Utils::isWaylandMode) {
 #ifdef KF5_WAYLAND_FLAGE_ON
 #ifdef DWAYLAND_SUPPORT
@@ -83,6 +90,7 @@ ScrollScreenshot::ScrollScreenshot(QObject *parent)
 #endif  // DWAYLAND_SUPPORT
 #endif  // KF5_WAYLAND_FLAGE_ON
     }
+#endif
 }
 
 ScrollScreenshot::~ScrollScreenshot()

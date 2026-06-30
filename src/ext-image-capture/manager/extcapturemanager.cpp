@@ -91,6 +91,11 @@ ExtCaptureSession* ExtCaptureManager::createScreenCaptureSession(QScreen *screen
         qWarning() << "Invalid screen provided";
         return nullptr;
     }
+#ifdef ENABLE_UNIT_TEST
+    // 测试桩：Wayland output 绑定与协议会话创建不在单元测试覆盖
+    Q_UNUSED(paintCursors)
+    return nullptr;
+#else
 
     // 获取 Wayland output
     wl_output *waylandOutput = getWaylandOutput(screen);
@@ -120,6 +125,7 @@ ExtCaptureSession* ExtCaptureManager::createScreenCaptureSession(QScreen *screen
     }
 
     return session;
+#endif
 }
 
 int ExtCaptureManager::protocolVersion() const
@@ -129,6 +135,11 @@ int ExtCaptureManager::protocolVersion() const
 
 void ExtCaptureManager::bind(wl_registry *registry, int id, int version)
 {
+#ifdef ENABLE_UNIT_TEST
+    Q_UNUSED(registry)
+    Q_UNUSED(id)
+    Q_UNUSED(version)
+#else
     qCWarning(dsrApp) << "ExtCaptureManager::bind called - registry:" << registry 
                       << "id:" << id << "version:" << version;
     d->version = version;
@@ -144,6 +155,7 @@ void ExtCaptureManager::bind(wl_registry *registry, int id, int version)
         qWarning() << "Failed to get Wayland registry for ext-image-copy-capture-manager-v1";
         emit protocolUnavailable();
     }
+#endif
 }
 
 
@@ -168,10 +180,15 @@ void ExtCaptureManager::setupWaylandIntegration()
 
 wl_output* ExtCaptureManager::getWaylandOutput(QScreen *screen)
 {
+#ifdef ENABLE_UNIT_TEST
+    Q_UNUSED(screen)
+    return nullptr;
+#else
     auto *nativeInterface = QGuiApplication::platformNativeInterface();
     auto *output = static_cast<wl_output*>(
         nativeInterface->nativeResourceForScreen("output", screen));
     
     return output;
+#endif
 }
 
