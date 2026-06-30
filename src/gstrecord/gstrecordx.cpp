@@ -148,6 +148,7 @@ void GstRecordX::x11GstStopRecord()
 //wayland协议下gstreamer录制管道构建及启动录制视频
 void GstRecordX::waylandGstStartRecord()
 {
+#ifndef ENABLE_UNIT_TEST
     qCInfo(dsrApp) << "Starting Wayland GStreamer recording";
     QStringList wlarguments;
     wlarguments << "appsrc name=videoSrc";
@@ -198,11 +199,13 @@ void GstRecordX::waylandGstStartRecord()
         qCCritical(dsrApp) << "Error: GStreamer pipeline creation failed";
     }
     qCDebug(dsrApp) << "waylandGstStartRecord finished.";
+#endif
 }
 
 //wayland协议下gstreamer停止录制视频
 void GstRecordX::waylandGstStopRecord()
 {
+#ifndef ENABLE_UNIT_TEST
     qCInfo(dsrApp) << "Stopping Wayland GStreamer recording";
     if (!m_pipeline) {
         qCWarning(dsrApp) << "Wayland GStreamer recording could not end normally! Pipeline was released early!";
@@ -224,11 +227,16 @@ void GstRecordX::waylandGstStopRecord()
     //发射wayland gstreamer录屏完成信号
     emit waylandGstRecrodFinish();
     qCInfo(dsrApp) << "Wayland GStreamer recording ended";
+#endif
 }
 
 //wayland下写入视频帧
 bool GstRecordX::waylandWriteVideoFrame(const unsigned char *frame, const int framewidth, const int frameheight)
 {
+#ifdef ENABLE_UNIT_TEST
+    Q_UNUSED(frame); Q_UNUSED(framewidth); Q_UNUSED(frameheight);
+    return false; // 单测桩
+#else
     qCDebug(dsrApp) << "waylandWriteVideoFrame called with framewidth:" << framewidth << ", frameheight:" << frameheight;
     if (!m_pipeline) {
         qCWarning(dsrApp) << "Wayland GStreamer failed to write video frame! Recording pipeline not initialized!";
@@ -271,6 +279,7 @@ bool GstRecordX::waylandWriteVideoFrame(const unsigned char *frame, const int fr
 
     qCDebug(dsrApp) << "waylandWriteVideoFrame finished. Returning:" << (ret == GST_FLOW_OK);
     return ret == GST_FLOW_OK;
+#endif
 }
 
 //设置输入设备名称

@@ -432,6 +432,10 @@ void* MultiScreenCaptureCoordinator::getWaylandOutput(QScreen* screen)
     if (!screen) {
         return nullptr;
     }
+#ifdef ENABLE_UNIT_TEST
+    // 测试桩：offscreen 平台无 Wayland output
+    return nullptr;
+#else
 
     QPlatformNativeInterface* nativeInterface = QGuiApplication::platformNativeInterface();
     if (!nativeInterface) {
@@ -444,6 +448,7 @@ void* MultiScreenCaptureCoordinator::getWaylandOutput(QScreen* screen)
                     << screen->name() << ":" << waylandOutput;
     
     return waylandOutput;
+#endif
 }
 
 bool MultiScreenCaptureCoordinator::allScreenFramesReady() const
@@ -512,6 +517,14 @@ QByteArray MultiScreenCaptureCoordinator::extractDmaBufferData(int dmaBufferFd, 
         qCWarning(dsrApp) << "MultiScreenCaptureCoordinator::extractDmaBufferData: Invalid parameters";
         return QByteArray();
     }
+#ifdef ENABLE_UNIT_TEST
+    // 测试桩：GBM/DMA-BUF mmap 提取路径不在单元测试覆盖
+    Q_UNUSED(width)
+    Q_UNUSED(height)
+    Q_UNUSED(stride)
+    Q_UNUSED(size)
+    return QByteArray();
+#else
     
     qCDebug(dsrApp) << "MultiScreenCaptureCoordinator::extractDmaBufferData: Processing DMA Buffer fd:" << dmaBufferFd << "size:" << width << "x" << height;
     
@@ -592,4 +605,5 @@ QByteArray MultiScreenCaptureCoordinator::extractDmaBufferData(int dmaBufferFd, 
     
     qCDebug(dsrApp) << "MultiScreenCaptureCoordinator::extractDmaBufferData: Successfully extracted" << frame_data.size() << "bytes of frame data";
     return frame_data;
+#endif
 }

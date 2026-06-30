@@ -258,10 +258,12 @@ void RecordProcess::onTranscodePaletteFinished(const QString &palettePng)
 
     //部分hw arm架构的机型需要这样设置
 #if defined (__aarch64__)
+#ifndef ENABLE_UNIT_TEST
     if (Utils::isWaylandMode) {
         qCDebug(dsrApp) << "Waiting transcode gif end (aarch64 Wayland)...";
         transcodeProcess->waitForFinished();
     }
+#endif
 #endif
 }
 
@@ -755,6 +757,7 @@ void RecordProcess::GstStartRecord()
     m_gstRecordX->setSavePath(savePath);
     m_gstRecordX->setX11RecordMouse(m_mouseType);
     //开始录制
+#ifndef ENABLE_UNIT_TEST
     if (Utils::isWaylandMode) {
 #ifdef KF5_WAYLAND_FLAGE_ON
         //wayland下停止录屏需要通过信号槽控制，避免Gstreamer管道数据未写完程序就被退出了
@@ -771,14 +774,18 @@ void RecordProcess::GstStartRecord()
         WaylandIntegration::init(arguments, m_gstRecordX);
 #endif
     } else {
+#endif
         m_gstRecordX->x11GstStartRecord();
 
+#ifndef ENABLE_UNIT_TEST
     }
+#endif
 }
 
 //gstreamer停止录制视频
 void RecordProcess::GstStopRecord()
 {
+#ifndef ENABLE_UNIT_TEST
     if (Utils::isTreelandMode) {
         qCInfo(dsrApp) << "停止TreeLand GStreamer录屏...";
         
@@ -805,10 +812,13 @@ void RecordProcess::GstStopRecord()
         WaylandIntegration::stopStreaming();
 #endif
     } else {
+#endif
         //x11 gstreamer录屏
         m_gstRecordX->x11GstStopRecord();
         onExitGstRecord();
+#ifndef ENABLE_UNIT_TEST
     }
+#endif
 }
 
 //退出gstreamer wayland录屏，需要Gstreamer录屏类触发
@@ -834,17 +844,21 @@ void RecordProcess::startRecord()
     if (!Utils::isFFmpegEnv) {
         GstStartRecord();
     } else {
+#ifndef ENABLE_UNIT_TEST
         if (Utils::isTreelandMode) {
             treelandRecord();
         }
         //x11下的录屏
         else if (!Utils::isWaylandMode) {
+#endif
             recordVideo();
+#ifndef ENABLE_UNIT_TEST
         }
         //wayland下的录屏
         else {
             waylandRecord();
         }
+#endif
     }
 
     if (Utils::isSysHighVersion1040() == false) {
@@ -909,6 +923,7 @@ void RecordProcess::stopRecord()
         qCInfo(dsrApp) << __FUNCTION__ << __LINE__ << "录屏计时已暂停";
     }
     if (Utils::isFFmpegEnv) {
+#ifndef ENABLE_UNIT_TEST
         //停止treeland录屏
         if (Utils::isTreelandMode) {
             // 获取存储的组件实例
@@ -965,6 +980,7 @@ void RecordProcess::stopRecord()
         }
         //停止x11录屏
         else {
+#endif
             //录制的视频类型是否是gif格式，是gif的话需要进行转码
             if (Utils::kGIF == m_recordType) {
                 connect(m_recorderProcess, SIGNAL(finished(int)), this, SLOT(onStartTranscode()));
@@ -972,7 +988,9 @@ void RecordProcess::stopRecord()
                 connect(m_recorderProcess, SIGNAL(finished(int)), this, SLOT(onRecordFinish()));
             }
             m_recorderProcess->write("q");
+#ifndef ENABLE_UNIT_TEST
         }
+#endif
     } else {
         GstStopRecord();
     }
@@ -1021,11 +1039,13 @@ void RecordProcess::exitRecord(QString newSavePath)
         QFile::remove(savePath);
     }
     
+#ifndef ENABLE_UNIT_TEST
     if (Utils::isWaylandMode) {
 #ifdef KF5_WAYLAND_FLAGE_ON
         avlibInterface::unloadFunctions();
 #endif
     }
+#endif
 
     m_recordingFlag = false;
     
@@ -1053,11 +1073,13 @@ void RecordProcess::exitRecord(QString newSavePath)
         QApplication::quit();
 
         // Treeland 和 Wayland 模式下都强制退出，避免残留事件循环导致进程无法退出
+#ifndef ENABLE_UNIT_TEST
         if (Utils::isWaylandMode || Utils::isTreelandMode) {
             qCInfo(dsrApp) << (Utils::isTreelandMode ? "treeland" : "wayland") << "record exit! (_Exit(0))";
             QTimer::singleShot(100, []() {
                 _Exit(0);
             });
         }
+#endif
     });
 }

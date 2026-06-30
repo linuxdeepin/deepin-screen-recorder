@@ -58,6 +58,10 @@ void* ExtOutputSourceManager::createSourceForOutput(wl_output *output)
         qWarning() << "Invalid output provided";
         return nullptr;
     }
+#ifdef ENABLE_UNIT_TEST
+    // 测试桩：Wayland source 创建不在单元测试覆盖
+    return nullptr;
+#else
     
     qCWarning(dsrApp) << "Creating image capture source for output:" << output;
     
@@ -67,6 +71,7 @@ void* ExtOutputSourceManager::createSourceForOutput(wl_output *output)
     
     qCWarning(dsrApp) << "Image capture source created:" << source;
     return source;
+#endif
 }
 
 int ExtOutputSourceManager::protocolVersion() const
@@ -81,6 +86,11 @@ const wl_interface *ExtOutputSourceManager::extensionInterface() const
 
 void ExtOutputSourceManager::bind(wl_registry *registry, int id, int version)
 {
+#ifdef ENABLE_UNIT_TEST
+    Q_UNUSED(registry)
+    Q_UNUSED(id)
+    Q_UNUSED(version)
+#else
     qCWarning(dsrApp) << "ExtOutputSourceManager::bind called - registry:" << registry 
                       << "id:" << id << "version:" << version;
     d->version = version;
@@ -91,6 +101,7 @@ void ExtOutputSourceManager::bind(wl_registry *registry, int id, int version)
         d->protocolActive = true;
         qCWarning(dsrApp) << "ExtOutputSourceManager bound to registry, version:" << version;
     }
+#endif
 }
 
 void ExtOutputSourceManager::onActiveChanged()

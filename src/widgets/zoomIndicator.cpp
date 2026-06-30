@@ -53,12 +53,14 @@ ZoomIndicator::ZoomIndicator(DWidget *parent,bool isRecord)
     }
     m_isRecord = isRecord;
 
+#ifndef ENABLE_UNIT_TEST
     if (Utils::isWaylandMode && !m_isOpenWM && !m_isRecord) {
         qCDebug(dsrApp) << "Creating ZoomIndicatorGL for Wayland mode, hiding current indicator.";
         m_zoomIndicatorGL = new ZoomIndicatorGL(parent);
         this->hide();
         return;
     }
+#endif
 
     setFixedSize(BACKGROUND_SIZE);
 //    setStyleSheet(getFileContent(":/resources/qss/zoomindicator.qss"));
@@ -76,10 +78,12 @@ ZoomIndicator::ZoomIndicator(DWidget *parent,bool isRecord)
 ZoomIndicator::~ZoomIndicator()
 {
     qCDebug(dsrApp) << "ZoomIndicator destructor called.";
+#ifndef ENABLE_UNIT_TEST
     if (Utils::isWaylandMode && !m_isOpenWM && m_zoomIndicatorGL && !m_isRecord) {
         qCDebug(dsrApp) << "Deleting ZoomIndicatorGL in Wayland mode.";
         delete  m_zoomIndicatorGL;
     }
+#endif
 }
 
 void ZoomIndicator::paintEvent(QPaintEvent *)
@@ -151,10 +155,12 @@ void ZoomIndicator::paintEvent(QPaintEvent *)
 
 void ZoomIndicator::showMagnifier(QPoint pos)
 {
+#ifndef ENABLE_UNIT_TEST
     if (Utils::isWaylandMode && !m_isOpenWM && !m_isRecord) {
         m_zoomIndicatorGL->showMagnifier(pos);
         return;
     }
+#endif
 
     this->show();
 
@@ -164,12 +170,14 @@ void ZoomIndicator::showMagnifier(QPoint pos)
 
 void ZoomIndicator::hideMagnifier()
 {
+#ifndef ENABLE_UNIT_TEST
     if (Utils::isWaylandMode && !m_isOpenWM && !m_isRecord) {
         qCDebug(dsrApp) << "Hiding magnifier in Wayland mode";
         m_zoomIndicatorGL->makeCurrent();
         m_zoomIndicatorGL->hide();
         return;
     }
+#endif
     qCDebug(dsrApp) << "Hiding magnifier";
     this->hide();
 }

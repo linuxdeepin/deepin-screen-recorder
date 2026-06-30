@@ -126,25 +126,30 @@ bool ExtCaptureFrame::initialize(void *frame, const CaptureConfig &config)
         return false;
     }
 
+#ifndef ENABLE_UNIT_TEST
     d->config = config;
     d->frameData.dimensions = config.bufferSize;
     d->frameData.format = config.format;
-    
+
     // 初始化协议绑定
     d->init(frameObj);
     // qCWarning(dsrApp) << "ExtCaptureFrame::initialize: Protocol binding initialized, listener registered for frame:" << frameObj;
-    
+
     // qCWarning(dsrApp) << "ExtCaptureFrame::initialize: Qt Wayland listener already registered";
-    
+
     // 创建缓冲区
     if (!createBuffer()) {
         qWarning() << "Failed to create buffer";
         return false;
     }
-    
+
     setState(Attached);
     // qDebug() << "Frame initialized with size:" << config.bufferSize;
     return true;
+#else
+    Q_UNUSED(config)
+    return false; // 单测桩：Wayland 协议绑定 + createBuffer 需真实 compositor，跳过
+#endif
 }
 
 ExtCaptureFrame::FrameState ExtCaptureFrame::state() const
@@ -161,11 +166,12 @@ bool ExtCaptureFrame::capture(bool fullDamage)
         return false;
     }
 
+#ifndef ENABLE_UNIT_TEST
     try {
         // 附加缓冲区
         // qCWarning(dsrApp) << "ExtCaptureFrame::capture: Attaching buffer:" << d->buffer;
         d->attach_buffer(d->buffer);
-        
+
         // 设置损坏区域
         if (fullDamage) {
             d->damage_buffer(0, 0, d->config.bufferSize.width(), d->config.bufferSize.height());
@@ -174,14 +180,14 @@ bool ExtCaptureFrame::capture(bool fullDamage)
             // 目前简单起见，总是使用全损坏
             d->damage_buffer(0, 0, d->config.bufferSize.width(), d->config.bufferSize.height());
         }
-        
+
         setState(Damaged);
         // qCWarning(dsrApp) << "ExtCaptureFrame::capture: State set to Damaged, starting capture...";
-        
+
         // 开始捕获
         d->capture();
         setState(Capturing);
-        
+
     // 确保 Wayland 事件被处理
     QPlatformNativeInterface *native = QGuiApplication::platformNativeInterface();
     if (native) {
@@ -190,23 +196,27 @@ bool ExtCaptureFrame::capture(bool fullDamage)
         if (display) {
             // qCWarning(dsrApp) << "ExtCaptureFrame::capture: Flushing Wayland display...";
             wl_display_flush(display);
-            
+
         // 强制处理待处理的事件
         // qCWarning(dsrApp) << "ExtCaptureFrame::capture: Dispatching pending events...";
         // 直接处理待处理的事件，不阻塞
         wl_display_dispatch_pending(display);
         }
     }
-        
+
         // qCWarning(dsrApp) << "ExtCaptureFrame::capture: Frame capture started successfully, state set to Capturing";
         return true;
-        
+
     } catch (const std::exception &e) {
         // qCWarning(dsrApp) << "ExtCaptureFrame::capture: Exception during capture:" << e.what();
         setState(Failed);
         emit failed(QString("Capture failed: %1").arg(e.what()));
         return false;
     }
+#else
+    Q_UNUSED(fullDamage)
+    return false; // 单测桩：Wayland attach_buffer/capture 需真实 compositor，跳过
+#endif
 }
 
 const FrameData& ExtCaptureFrame::frameData() const
@@ -320,6 +330,9 @@ void ExtCaptureFrame::handleFailed(uint32_t reason)
 
 bool ExtCaptureFrame::createBuffer()
 {
+#ifdef ENABLE_UNIT_TEST
+    return false; // 单测桩：Wayland/SHM 缓冲区需真实 Wayland，跳过
+#else
     // 根据配置选择缓冲区类型
     if (d->config.useDmaBuffer) {
         // qCWarning(dsrApp) << "ExtCaptureFrame: Creating DMA Buffer";
@@ -328,10 +341,14 @@ bool ExtCaptureFrame::createBuffer()
         // qCWarning(dsrApp) << "ExtCaptureFrame: Creating SHM Buffer";
         return createShmBuffer();
     }
+#endif
 }
 
 bool ExtCaptureFrame::createShmBuffer()
 {
+#ifdef ENABLE_UNIT_TEST
+    return false; // 单测桩：SHM 缓冲区需真实 Wayland，跳过
+#else
     // 计算缓冲区大小（假设RGBA格式，4字节/像素）
     uint32_t width = d->config.bufferSize.width();
     uint32_t height = d->config.bufferSize.height();
@@ -401,6 +418,7 @@ bool ExtCaptureFrame::createShmBuffer()
     
     qDebug() << "Buffer created:" << width << "x" << height << "stride:" << stride << "size:" << d->bufferSize;
     return true;
+#endif
 }
 
 void ExtCaptureFrame::setState(FrameState newState)
@@ -413,6 +431,9 @@ void ExtCaptureFrame::setState(FrameState newState)
 
 bool ExtCaptureFrame::createDmaBuffer()
 {
+#ifdef ENABLE_UNIT_TEST
+    return false; // 单测桩：DRM/GBM/DMA-BUF 需真实设备，跳过
+#else
     uint32_t width = d->config.bufferSize.width();
     uint32_t height = d->config.bufferSize.height();
     uint32_t format = DRM_FORMAT_XBGR8888; // 使用XBGR8888格式
@@ -522,12 +543,14 @@ bool ExtCaptureFrame::createDmaBuffer()
     
     // qCWarning(dsrApp) << "DMA Buffer created successfully using linux-dmabuf protocol!";
     close(drmFd); // 可以关闭设备fd，GBM已经获得了所有需要的信息
-    
+
     return true;
+#endif
 }
 
 void ExtCaptureFrame::cleanupDmaBuffer()
 {
+#ifndef ENABLE_UNIT_TEST
     if (d->mappedData && d->mappedData != MAP_FAILED) {
         munmap(d->mappedData, d->bufferSize);
         d->mappedData = nullptr;
@@ -547,6 +570,7 @@ void ExtCaptureFrame::cleanupDmaBuffer()
         gbm_device_destroy(d->gbmDevice);
         d->gbmDevice = nullptr;
     }
+#endif
 }
 
 QString ExtCaptureFrame::failureReasonToString(uint32_t reason)

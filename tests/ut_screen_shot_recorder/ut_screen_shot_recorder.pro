@@ -93,6 +93,7 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 # Input
 HEADERS += test_all_interfaces.h \
+           ut_camera_cov.h \
            ut_button_feedback.h \
            ut_countdown_tooltip.h \
            ut_main_window.h \
@@ -229,6 +230,7 @@ HEADERS += test_all_interfaces.h \
     widgets/ut_savemenumanager_ext.h \
     widgets/ut_savebutton_ext.h \
     gstrecord/ut_gstrecordx_ext.h \
+    gstrecord/ut_gstrecordx_x11_cov.h \
     ut_record_process_ext.h \
     widgets/ut_subtoolwidget_ext.h \
     widgets/ut_imagemenu_ext.h \
@@ -239,6 +241,9 @@ HEADERS += test_all_interfaces.h \
     ut_utils_ext2.h \
     ut_main_window_ef.h \
     widgets/ut_shapeswidget_ext2.h \
+    widgets/ut_shapeswidget_geo.h \
+    widgets/ut_shapeswidget_paint_cov.h \
+    widgets/ut_shapetoolwidget.h \
     utils/ut_shapesutils_ext.h \
     utils/ut_delaytime.h \
     widgets/ut_previewwidget.h \
@@ -274,7 +279,48 @@ HEADERS += test_all_interfaces.h \
     ../../src/dbusservice/dbusscreenshot.h \
     ../../src/dbusservice/dbusscreenshotservice.h \
     ../../src/utils/proxyaudioport.h \
-    ../../src/utils/x_multi_screen_info.h
+    ../../src/utils/x_multi_screen_info.h \
+    utils/ut_audioutils_cov.h \
+    utils/ut_baseutils_cov.h \
+    utils/ut_borderprocessinterface_cov.h \
+    utils/ut_configsettings_cov.h \
+    utils/ut_dbusutils_cov.h \
+    utils/ut_pixmergethread_cov.h \
+    utils/ut_screengrabber_cov.h \
+    utils/ut_shortcut_cov.h \
+    utils/ut_tempfile_cov.h \
+    utils/ut_voicevolumewatcher_cov.h \
+    utils/ut_x_multi_screen_info_cov.h \
+    ext-image-capture/ut_extcaptureframebuffer_cov.h \
+    ext-image-capture/ut_extcapturerecorder_cov.h \
+    ext-image-capture/ut_extcaptureframe_cov.h \
+    ext-image-capture/ut_extcapturesession_cov.h \
+    ext-image-capture/ut_extcaptureintegration_cov.h \
+    ext-image-capture/ut_extcapturemanager_cov.h \
+    ext-image-capture/ut_extoutputsourcemanager_cov.h \
+    ext-image-capture/ut_multiscreencapturecoordinator_cov.h \
+    ext-image-capture/ut_multiscreenframecompositor_cov.h \
+    ext-image-capture/ut_extcapturebridge_cov.h \
+    ext-image-capture/ut_extcapturerecorder_ffmpeg_cov.h \
+    ext-image-capture/ut_extcaptureframe_run_cov.h \
+    ut_main_window_cov.h \
+    ut_main_window_ef_state_cov.h \
+    widgets/ut_savebutton_cov.h \
+    widgets/ut_savemenumanager_cov.h \
+    widgets/ut_toolbutton_cov.h \
+    widgets/ut_sidebar_cov.h \
+    widgets/ut_subtoolwidget_cov.h \
+    widgets/ut_shottoolwidget_cov.h \
+    widgets/ut_imagemenu_cov.h \
+    widgets/ut_toolbar_cov.h \
+    widgets/ut_tooltips_cov.h \
+    ut_record_process_cov.h \
+    ut_utils_cov.h \
+    ut_countdown_tooltip_cov.h \
+    ut_show_buttons_cov.h \
+    ut_recordertablet_cov.h \
+    menucontroller/ut_menucontroller_cov.h \
+    dbusinterface/ut_dbusinterface_cov.h
 
 
 SOURCES += main.cpp \

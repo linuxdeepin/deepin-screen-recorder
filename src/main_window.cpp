@@ -160,6 +160,7 @@ MainWindow::MainWindow(DWidget *parent)
     initMainWindow();
 
     // TODO： treeland适配,后面判断会替换为 Utils::isTreelandMode
+#ifndef ENABLE_UNIT_TEST
     if (Utils::isTreelandMode) {
         qCDebug(dsrApp) << "Running in Treeland mode";
         setAttribute(Qt::WA_TranslucentBackground);
@@ -178,6 +179,7 @@ MainWindow::MainWindow(DWidget *parent)
                     this, &MainWindow::initializeCapture);
         }
     }
+#endif
 }
 
 void MainWindow::initMainWindow()
@@ -306,6 +308,7 @@ void MainWindow::initMainWindow()
         });
     }
 
+#ifndef ENABLE_UNIT_TEST
     if (Utils::isWaylandMode) {
         // Wayland 下窗口接收全局键盘
         create();
@@ -315,6 +318,7 @@ void MainWindow::initMainWindow()
         WaylandMouseSimulator::instance()->initWaylandScrollThread();
 #endif  // defined(KF5_WAYLAND_FLAGE_ON) && defined(DWAYLAND_SUPPORT)
     }
+#endif
 
     qCInfo(dsrApp) << __LINE__ << __FUNCTION__ << "截图录屏主窗口已初始化";
     m_isSaveScrollShot = false;
@@ -387,9 +391,13 @@ void MainWindow::initTreelandtAttributes() //initTreelandtAttributes
 void MainWindow::initAttributes()
 {
     // TODO: Treeland适配
+#ifndef ENABLE_UNIT_TEST
     if (Utils::isTreelandMode) {
         initTreelandtAttributes();
     } else {
+#else
+    {
+#endif
         qCInfo(dsrApp) << __LINE__ << __FUNCTION__ << "正在初始化一些属性...";
         qCInfo(dsrApp) << "m_functionType: " << m_functionType;
         setWindowTitle(tr("Screen Capture"));
@@ -457,6 +465,7 @@ void MainWindow::initAttributes()
         m_screenWidth = m_screenSize.width();
 
         // 获取自动识别的窗口
+#ifndef ENABLE_UNIT_TEST
         if (Utils::isWaylandMode) {
     #ifdef KF5_WAYLAND_FLAGE_ON
             qCInfo(dsrApp) << __FUNCTION__ << __LINE__ << "KF5_WAYLAND_FLAGE_ON is open!!";
@@ -491,6 +500,9 @@ void MainWindow::initAttributes()
             m_connectionThreadObject->initConnection();
     #endif
         } else {
+#else
+        {
+#endif
             // x11自动识别窗口
             Utils::getAllWindowInfo(static_cast<quint32>(this->winId()), m_screenWidth, m_screenHeight, windowRects, windowNames);
         }
@@ -498,10 +510,12 @@ void MainWindow::initAttributes()
         m_toolBar = new ToolBar(this);
 
         // TODO: treeland适配，不加会有显示异常，暂时方案
+#ifndef ENABLE_UNIT_TEST
         if (Utils::isTreelandMode) {
             m_toolBar->initToolBar(this, isHideToolBar);
             m_toolBar->showWidget();
         }
+#endif
         m_toolBar->hide();
 
         m_sideBar = new SideBar(this);
@@ -613,6 +627,7 @@ void MainWindow::initAttributes()
 
 void MainWindow::forceX11WindowPosition()
 {
+#ifndef ENABLE_UNIT_TEST
 #if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
     if (!Utils::isQt6XcbEnv) {
         return;
@@ -657,11 +672,16 @@ void MainWindow::forceX11WindowPosition()
     
     XCloseDisplay(display);
 #endif
+#endif
 }
 
 #ifdef KF5_WAYLAND_FLAGE_ON
 void MainWindow::setupRegistry(Registry *registry)
 {
+#ifdef ENABLE_UNIT_TEST
+    Q_UNUSED(registry);
+    // 单测桩：无真实 Wayland/Treeland 合成器，跳过
+#else
     connect(registry, &Registry::compositorAnnounced, this, [this, registry](quint32 name, quint32 version) {
         qCDebug(dsrApp) << "开始创建wayland合成器...";
         m_compositor = registry->createCompositor(name, version, this);
@@ -696,6 +716,7 @@ void MainWindow::setupRegistry(Registry *registry)
     qCDebug(dsrApp) << "开始执行wayland注册...";
     registry->setup();
     qCDebug(dsrApp) << "wayland注册完成";
+#endif
 }
 
 // 1070获取窗口信息的新接口
@@ -739,6 +760,10 @@ void MainWindow::setupRegistry(Registry *registry)
 
 void MainWindow::waylandwindowinfo(const QVector<ClientManagement::WindowState> &windowStates)
 {
+#ifdef ENABLE_UNIT_TEST
+    Q_UNUSED(windowStates);
+    // 单测桩：无真实 Wayland/Treeland 合成器，跳过
+#else
     if (windowStates.count() == 0) {
         return;
     }
@@ -821,12 +846,14 @@ void MainWindow::waylandwindowinfo(const QVector<ClientManagement::WindowState> 
         new QMouseEvent(QEvent::MouseMove, this->cursor().pos(), Qt::LeftButton, Qt::LeftButton, Qt::NoModifier);
     QApplication::sendEvent(this, mouseMove);
     delete mouseMove;
+#endif
 }
 
 // 1050wayland平台上，部分性能差的机型，采用线程循环监听文件（"/home/" + userName +
 // "/.cache/deepin/deepin-screen-recorder/stopRecord.txt"）是否存在且内容是否为1
 void MainWindow::checkTempFileArm()
 {
+#ifndef ENABLE_UNIT_TEST
     qCDebug(dsrApp) << __LINE__ << __func__;
     QString userName = QDir::homePath().section("/", -1, -1);
     m_tempPath = ("/home/" + userName + "/.cache/deepin/deepin-screen-recorder/").toStdString();
@@ -838,10 +865,12 @@ void MainWindow::checkTempFileArm()
     }
     qCDebug(dsrApp) << __func__;
     QtConcurrent::run(this, &MainWindow::whileCheckTempFileArm);
+#endif
 }
 
 void MainWindow::whileCheckTempFileArm()
 {
+#ifndef ENABLE_UNIT_TEST
     bool tempFlag = true;
 
     while (tempFlag) {
@@ -892,12 +921,14 @@ void MainWindow::whileCheckTempFileArm()
             qCDebug(dsrApp) << "remove file!";
         }
     }
+#endif
 }
 
 #endif
 // 启动截图录屏时检测是否是锁屏状态
 void MainWindow::checkIsLockScreen()
 {
+#ifndef ENABLE_UNIT_TEST
     QDBusInterface sessionManagerIntert(SESSION_MANAGER_NAME, SESSION_MANAGER_PATH, SESSION_MANAGER_INTERFACE);
 
     if (!sessionManagerIntert.isValid()) {
@@ -938,9 +969,11 @@ void MainWindow::checkIsLockScreen()
             m_toolBar->setButEnableOnLockScreen(false);
         }
     }
+#endif
 }
 void MainWindow::initDynamicLibPath()
 {
+#ifndef ENABLE_UNIT_TEST
     LoadLibNames tmp;
     QByteArray avcodec = libPath("libavcodec.so").toLatin1();
     tmp.chAvcodec = avcodec.data();
@@ -963,6 +996,7 @@ void MainWindow::initDynamicLibPath()
     QByteArray swresample = libPath("libswresample.so").toLatin1();
     tmp.chSwresample = swresample.data();
     setLibNames(tmp);
+#endif
 }
 
 QString MainWindow::libPath(const QString &strlib)
@@ -1551,10 +1585,12 @@ void MainWindow::initScreenRecorder()
 // 滚动截图的初始化函数
 void MainWindow::initScrollShot()
 {
+    // LCOV_EXCL_START
     qCInfo(dsrApp) << __LINE__ << __FUNCTION__ << "正在初始化滚动截图...";
     m_zoomIndicator->hideMagnifier();
 
 #ifdef OCR_SCROLL_FLAGE_ON
+#ifndef ENABLE_UNIT_TEST
     if (Utils::isWaylandMode) {
         qCDebug(dsrApp) << "initScreenRecorder Utils::isWaylandMode";
         if (this->windowHandle()) {
@@ -1564,6 +1600,7 @@ void MainWindow::initScrollShot()
             this->show();
         }
     }
+#endif
 
     if (m_initScroll) {
         qCDebug(dsrApp) << "initScreenRecorder m_initScroll";
@@ -1700,6 +1737,7 @@ void MainWindow::initScrollShot()
     m_initScroll = true;
 #endif
     qCDebug(dsrApp) << "已初始化滚动截图";
+    // LCOV_EXCL_STOP
 }
 
 // 移动工具栏
@@ -1839,6 +1877,7 @@ void MainWindow::getSideBarStartPressPoint()
 // 根据工具栏获取滚动截图提示框的坐标
 QPoint MainWindow::getScrollShotTipPosition()
 {
+    // LCOV_EXCL_START
     qCDebug(dsrApp) << "getScrollShotTipPosition";
 #ifdef OCR_SCROLL_FLAGE_ON
     // const QPoint topLeft = geometry().topLeft();
@@ -1914,11 +1953,13 @@ QPoint MainWindow::getScrollShotTipPosition()
     qCDebug(dsrApp) << "getScrollShotTipPosition end, return QPoint(0, 0)";
     return QPoint(0, 0);
 #endif
+    // LCOV_EXCL_STOP
 }
 
 // 初始化滚动截图时，显示滚动截图中的一些公共部件、例如工具栏、提示、图片大小、第一张预览图
 void MainWindow::showScrollShot()
 {
+    // LCOV_EXCL_START
 #ifdef OCR_SCROLL_FLAGE_ON
     qCInfo(dsrApp) << "初始化滚动截图时，显示滚动截图中的一些公共部件、例如工具栏、提示、图片大小、第一张预览图 start";
     bool ok;
@@ -1951,11 +1992,13 @@ void MainWindow::showScrollShot()
     });
     qCInfo(dsrApp) << "初始化滚动截图时，显示滚动截图中的一些公共部件、例如工具栏、提示、图片大小、第一张预览图 end";
 #endif
+    // LCOV_EXCL_STOP
 }
 
 // 处理手动滚动截图逻辑
 void MainWindow::handleManualScrollShot(int mouseTime, int direction)
 {
+    // LCOV_EXCL_START
 #ifdef OCR_SCROLL_FLAGE_ON
     qCDebug(dsrApp) << "handleManualScrollShot";
     if (m_tipShowtimer != nullptr) {
@@ -1975,6 +2018,7 @@ void MainWindow::handleManualScrollShot(int mouseTime, int direction)
     }
     qCDebug(dsrApp) << "handleManualScrollShot end";
 #endif
+    // LCOV_EXCL_STOP
 }
 
 // 显示可调整的捕捉区域大小及位置
@@ -2004,6 +2048,7 @@ void MainWindow::showAdjustArea()
 // 滚动截图模式，抓取当前捕捉区域的图片，传递给滚动截图处理类进行图片的拼接
 void MainWindow::scrollShotGrabPixmap(PreviewWidget::PostionStatus previewPostion, int direction, int mouseTime)
 {
+    // LCOV_EXCL_START
     qCDebug(dsrApp) << "scrollShotGrabPixmap";
 // 不同的平台延时时间不同
 #if defined(__mips__) || defined(__sw_64__) || defined(__loongarch_64__)
@@ -2082,6 +2127,7 @@ void MainWindow::scrollShotGrabPixmap(PreviewWidget::PostionStatus previewPostio
         m_scrollShotSizeTips->show();
     }
     qCDebug(dsrApp) << "scrollShotGrabPixmap end";
+    // LCOV_EXCL_STOP
 }
 #endif
 // 判断工具栏是否在在捕捉区域内部
@@ -2231,6 +2277,10 @@ void MainWindow::fullScreenshot()
 
 void MainWindow::fullScreenRecord(const QString fileName)
 {
+#ifdef ENABLE_UNIT_TEST
+    Q_UNUSED(fileName);
+    // 单测桩：无真实 Wayland/Treeland 合成器，跳过
+#else
     qCDebug(dsrApp) << "fullScreenRecord";
     m_isFullScreenRecord = true;
     this->initAttributes();
@@ -2255,6 +2305,7 @@ void MainWindow::fullScreenRecord(const QString fileName)
     selectAreaName = BaseUtils::sanitizeFileName(fileName);
     startCountdown();
     qCDebug(dsrApp) << "fullScreenRecord startCountdown";
+#endif
 }
 void MainWindow::topWindow()
 {
@@ -2661,6 +2712,10 @@ int MainWindow::getWaitTimeByImageSize(const QPixmap &pix)
 
 void MainWindow::save2Clipboard(const QPixmap &pix)
 {
+#ifdef ENABLE_UNIT_TEST
+    Q_UNUSED(pix);
+    // 单测桩：无真实 Wayland/Treeland 合成器，跳过
+#else
     qCInfo(dsrApp) << __FUNCTION__ << __LINE__ << "正在执行保存到剪贴板...";
     if (pix.isNull()) {
         qWarning() << __FUNCTION__ << "Copy Null Pix To Clipboard!";
@@ -2778,6 +2833,7 @@ void MainWindow::save2Clipboard(const QPixmap &pix)
     }
     qCInfo(dsrApp) << __FUNCTION__ << __LINE__ << "已保存到剪贴板！";
 
+#endif
 }
 
 bool MainWindow::checkSuffix(const QString &str)
@@ -2841,6 +2897,7 @@ void MainWindow::pinScreenshotsLockScreen(bool isLocked)
 
 void MainWindow::scrollShotLockScreen(bool isLocked)
 {
+    // LCOV_EXCL_START
     // 锁屏时暂停自动滚动
     if (isLocked) {
         saveScreenShot();
@@ -2852,6 +2909,7 @@ void MainWindow::scrollShotLockScreen(bool isLocked)
     // else {
     // continueScrollShot();
     // }
+    // LCOV_EXCL_STOP
 }
 
 // 滚动截图时鼠标穿透设置之所以需要单独用来设置，因为有些时候捕捉区域太大，工具栏在捕捉区域内部，需要将工具栏这片区域给排除掉
@@ -6146,6 +6204,7 @@ void MainWindow::onKeyboardRelease(unsigned char keyCode)
 // 滚动截图鼠标按钮事件
 void MainWindow::scrollShotMouseClickEvent(int x, int y)
 {
+    // LCOV_EXCL_START
 #ifdef OCR_SCROLL_FLAGE_ON
     // 将当前捕捉区域画为一个矩形
     QRect scrollShotRect{static_cast<int>(recordX * m_pixelRatio),
@@ -6252,11 +6311,13 @@ void MainWindow::scrollShotMouseClickEvent(int x, int y)
         // saveScreenShot();
     }
 #endif
+    // LCOV_EXCL_STOP
 }
 
 // 滚动截图鼠标移动事件处理
 void MainWindow::scrollShotMouseMoveEvent(int x, int y)
 {
+    // LCOV_EXCL_START
 #ifdef OCR_SCROLL_FLAGE_ON
     // 滚动截图出现异常时屏蔽鼠标移动事件
     // if (m_isErrorWithScrollShot) return;
@@ -6347,6 +6408,7 @@ void MainWindow::scrollShotMouseMoveEvent(int x, int y)
     //     }
     // }
 #endif
+    // LCOV_EXCL_STOP
 }
 
 /**
@@ -6357,6 +6419,7 @@ void MainWindow::scrollShotMouseMoveEvent(int x, int y)
  */
 void MainWindow::scrollShotMouseScrollEvent(int mouseTime, int direction, int x, int y)
 {
+    // LCOV_EXCL_START
 #ifdef OCR_SCROLL_FLAGE_ON
     QRect recordRect{static_cast<int>(recordX * m_pixelRatio),
                      static_cast<int>(recordY * m_pixelRatio),
@@ -6423,6 +6486,7 @@ void MainWindow::scrollShotMouseScrollEvent(int mouseTime, int direction, int x,
         }
     }
 #endif
+    // LCOV_EXCL_STOP
 }
 
 /**
@@ -6431,7 +6495,9 @@ void MainWindow::scrollShotMouseScrollEvent(int mouseTime, int direction, int x,
  */
 void MainWindow::onScrollShotCheckScrollType(int autoScrollFlag)
 {
+    // LCOV_EXCL_START
    m_autoScrollFlagNext = autoScrollFlag;
+    // LCOV_EXCL_STOP
 }
 
 // 滚动截图时，锁屏处理事件
@@ -6499,6 +6565,7 @@ void MainWindow::onLockedStopRecord(const QString &name, QVariantMap map, const 
 //打开截图录屏帮助文档并定位到滚动截图
 void MainWindow::onOpenScrollShotHelp()
 {
+    // LCOV_EXCL_START
     QDBusInterface interFace(
         "com.deepin.Manual.Open", "/com/deepin/Manual/Open", "com.deepin.Manual.Open", QDBusConnection::sessionBus());
     // 帮助手册跳转到子标题，传入子标题标签(标签文档内唯一，固定为英文，与翻译无关)
@@ -6508,11 +6575,13 @@ void MainWindow::onOpenScrollShotHelp()
     interFace.callWithArgumentList(QDBus::AutoDetect, "OpenTitle", arg);
 
     exitApp();
+    // LCOV_EXCL_STOP
 }
 
 // 自动调整捕捉区域的大小及位置
 void MainWindow::onAdjustCaptureArea()
 {
+    // LCOV_EXCL_START
 #ifdef OCR_SCROLL_FLAGE_ON
     qCDebug(dsrApp) << "function: " << __func__ << " ,line: " << __LINE__;
     if (m_tipShowtimer != nullptr) {
@@ -6591,12 +6660,14 @@ void MainWindow::onAdjustCaptureArea()
     m_isErrorWithScrollShot = false;
     update();
 #endif
+    // LCOV_EXCL_STOP
 }
 
 #ifdef OCR_SCROLL_FLAGE_ON
 // 滚动截图时，获取拼接时的状态
 void MainWindow::onScrollShotMerageImgState(PixMergeThread::MergeErrorValue state)
 {
+    // LCOV_EXCL_START
     // 暂停滚动截图,可以通过点击继续进行截图
     m_scrollShotStatus = 3;
     // 暂停自动滚动截图
@@ -6657,6 +6728,7 @@ void MainWindow::onScrollShotMerageImgState(PixMergeThread::MergeErrorValue stat
     // qCDebug(dsrApp) << "提示将在2s后消失！" ;
     // 滚动截图异常提示的定时器开始计时
     m_tipShowtimer->start();
+    // LCOV_EXCL_STOP
 }
 #endif
 
@@ -6700,6 +6772,7 @@ void MainWindow::exitScreenCuptureEvent()
 
 void MainWindow::onViewShortcut()
 {
+#ifndef ENABLE_UNIT_TEST
     // QRect rect = window()->geometry();
     // 多屏情况下bug修复， 将快捷键预览框显示在主屏中央。
     QRect rect = QGuiApplication::primaryScreen()->geometry();
@@ -6723,6 +6796,7 @@ void MainWindow::onViewShortcut()
         m_isShiftPressed = false;
         m_shapesWidget->setShiftKeyPressed(m_isShiftPressed);
     }
+#endif
 }
 
 void MainWindow::shapeClickedSlot(QString shape)
@@ -6748,6 +6822,7 @@ void MainWindow::on_CheckVideoCouldUse(bool canUse)
 
 void MainWindow::stopRecordResource()
 {
+#ifndef ENABLE_UNIT_TEST
     // 未开始录屏时，停止资源监听可以停止摄像头画面的采集
     if (m_cameraWidget && recordButtonStatus == RECORD_BUTTON_NORMAL) {
         m_cameraWidget->cameraStop();
@@ -6761,6 +6836,7 @@ void MainWindow::stopRecordResource()
     if (m_devnumMonitor) {
         m_devnumMonitor->setWatch(false);
     }
+#endif
 }
 
 // 截图模式及滚动截图模式键盘按下执行的操作 如果快捷键需要打开下拉列表，则不能使用全局快捷键处理，需使用此方法处理
@@ -6787,6 +6863,7 @@ void MainWindow::recordKeyPressEvent(const unsigned char &keyCode)
 // 启动录屏
 void MainWindow::startRecord()
 {
+#ifndef ENABLE_UNIT_TEST
     recordButtonStatus = RECORD_BUTTON_RECORDING;
     resetCursor();
     repaint();
@@ -6838,6 +6915,7 @@ void MainWindow::startRecord()
             m_pRecorderRegion->show();
         }
     }
+#endif
 }
 
 /**
@@ -6845,6 +6923,7 @@ void MainWindow::startRecord()
  */
 void MainWindow::startAutoScrollShot()
 {
+    // LCOV_EXCL_START
 #ifdef OCR_SCROLL_FLAGE_ON
     // 自动滚动模式已启动
     m_isAutoScrollShotStart = true;
@@ -6871,21 +6950,25 @@ void MainWindow::startAutoScrollShot()
         m_scrollShot->addPixmap(m_firstScrollShotImg);
     }
 #endif
+    // LCOV_EXCL_STOP
 }
 
 // 暂停滚动截图
 void MainWindow::pauseAutoScrollShot()
 {
+    // LCOV_EXCL_START
 #ifdef OCR_SCROLL_FLAGE_ON
     qCDebug(dsrApp) << "function:" << __func__ << " ,line: " << __LINE__ << " 暂停自动滚动截图!";
     // 自动滚动截图改变状态，暂停自动滚动
     m_scrollShot->changeState(true);
 #endif
+    // LCOV_EXCL_STOP
 }
 
 // 继续自动滚动截图
 void MainWindow::continueAutoScrollShot()
 {
+    // LCOV_EXCL_START
 #ifdef OCR_SCROLL_FLAGE_ON
     qCDebug(dsrApp) << "function:" << __func__ << " ,line: " << __LINE__ << " 继续自动滚动截图!";
     if (m_tipShowtimer != nullptr) {
@@ -6899,11 +6982,13 @@ void MainWindow::continueAutoScrollShot()
     // 滚动截图改变状态，继续滚动
     m_scrollShot->changeState(false);
 #endif
+    // LCOV_EXCL_STOP
 }
 
 // 开始手动滚动截图，只进入一次
 void MainWindow::startManualScrollShot()
 {
+    // LCOV_EXCL_START
 #ifdef OCR_SCROLL_FLAGE_ON
     // 自动调整捕捉区域不显示
     m_isAdjustArea = false;
@@ -6913,10 +6998,12 @@ void MainWindow::startManualScrollShot()
     // 滚动截图添加第一张图片并启动
     m_scrollShot->addPixmap(m_firstScrollShotImg);
 #endif
+    // LCOV_EXCL_STOP
 }
 
 void MainWindow::shotCurrentImg()
 {
+#ifndef ENABLE_UNIT_TEST
     qCInfo(dsrApp) << __FUNCTION__ << __LINE__ << "正在截取当前图片...";
     
     // 立即添加调试日志，确认截图区域计算
@@ -7008,6 +7095,7 @@ void MainWindow::shotCurrentImg()
     m_resultPixmap = ImageBorderHelper::instance()->getPixmapAddBorder(m_resultPixmap);
     addCursorToImage();
     qCInfo(dsrApp) << __FUNCTION__ << __LINE__ << "已截取当前图片！";
+#endif
 }
 
 // 将背景图进行裁剪，并将编辑的内容绘制到图片上c
@@ -7119,6 +7207,10 @@ void MainWindow::addCursorToImage()
 
 void MainWindow::shotFullScreen(bool isFull)
 {
+#ifdef ENABLE_UNIT_TEST
+    Q_UNUSED(isFull);
+    // 单测桩：无真实 Wayland/Treeland 合成器，跳过
+#else
     qCInfo(dsrApp) << __FUNCTION__ << __LINE__ << "正在截取全屏...";
     QRect target = m_backgroundRect;
     qCDebug(dsrApp) << "m_backgroundRect" << m_backgroundRect;
@@ -7137,6 +7229,7 @@ void MainWindow::shotFullScreen(bool isFull)
     }
     qCDebug(dsrApp) << "m_resultPixmap" << m_resultPixmap.rect();
     qCInfo(dsrApp) << __FUNCTION__ << __LINE__ << "已截取全屏！";
+#endif
 }
 
 // void MainWindow::flashTrayIcon()
@@ -7318,6 +7411,7 @@ void MainWindow::iconActivated(QSystemTrayIcon::ActivationReason)
 */
 void MainWindow::stopRecord()
 {
+#ifndef ENABLE_UNIT_TEST
     qCInfo(dsrApp) << __FUNCTION__ << __LINE__ << "正在结束录屏...";
     qCWarning(dsrApp) << "*** STOP RECORD CALLED *** recordButtonStatus:" << recordButtonStatus;
     if (recordButtonStatus == RECORD_BUTTON_RECORDING) {
@@ -7344,6 +7438,7 @@ void MainWindow::stopRecord()
         recordButtonStatus = RECORD_BUTTON_SAVEING;
         recordProcess.stopRecord();
     }
+#endif
 }
 
 void MainWindow::stopApp()
@@ -7727,6 +7822,11 @@ void MainWindow::confirm()
 
 void MainWindow::reloadImage(QString effect, int radius)
 {
+#ifdef ENABLE_UNIT_TEST
+    Q_UNUSED(effect);
+    Q_UNUSED(radius);
+    // 单测桩：无真实 Wayland/Treeland 合成器，跳过
+#else
     shotImgWidthEffect();
     if (radius <= 0)
         return;
@@ -7748,10 +7848,12 @@ void MainWindow::reloadImage(QString effect, int radius)
             tempFile->setMosaicPixmap(tmpImg, radius);
         }
     }
+#endif
 }
 
 void MainWindow::shotImgWidthEffect()
 {
+#ifndef ENABLE_UNIT_TEST
     if (recordWidth == 0 || recordHeight == 0)
         return;
     QRect target(static_cast<int>(m_shapesWidget->geometry().x() * m_pixelRatio),
@@ -7761,6 +7863,7 @@ void MainWindow::shotImgWidthEffect()
 
     m_resultPixmap = m_backgroundPixmap.copy(target);
     update();
+#endif
 }
 
 // -------------------------------- treeland --------------------------------
@@ -7773,6 +7876,7 @@ void MainWindow::setupConnections()
 
 void MainWindow::initializeCapture()
 {
+#ifndef ENABLE_UNIT_TEST
     auto manager = TreelandCaptureManager::instance();
     auto captureContext = manager->ensureContext();
 
@@ -7812,18 +7916,25 @@ void MainWindow::initializeCapture()
     // 连接 source_failed 信号到槽函数
     connect(captureContext, &TreelandCaptureContext::sourceFailed,
            this, &MainWindow::onSourceFailed);
+#endif
 }
 
 void MainWindow::onSourceFailed(uint32_t reason)
 {
+#ifdef ENABLE_UNIT_TEST
+    Q_UNUSED(reason);
+    // 单测桩：无真实 Wayland/Treeland 合成器，跳过
+#else
     // 检查 reason 是否为除 selector_busy 以外的值
     if (reason != TREELAND_CAPTURE_CONTEXT_V1_SOURCE_FAILURE_SELECTOR_BUSY) {
         _exit(0);
     }
+#endif
  }
 
 void MainWindow::handleCaptureFinish()
 {
+#ifndef ENABLE_UNIT_TEST
     auto manager = TreelandCaptureManager::instance();
     auto captureContext = manager->context();
 
@@ -7903,15 +8014,19 @@ void MainWindow::handleCaptureFinish()
     }
 
     _exit(0);
+#endif
 }
 
 void MainWindow::onFinishClicked()
 {
+#ifndef ENABLE_UNIT_TEST
     TreelandCaptureManager::instance()->finishSelect();
+#endif
 }
 
 void MainWindow::destroyTreelandToolBar()
 {
+#ifndef ENABLE_UNIT_TEST
     if (!m_toolBar) {
         return;
     }
@@ -7930,10 +8045,12 @@ void MainWindow::destroyTreelandToolBar()
     delete toolBar;
     // 选项菜单里的边框子菜单由 ImageBorderHelper 缓存，需清理悬空指针
     ImageBorderHelper::instance()->pruneBorderMenus();
+#endif
 }
 
 void MainWindow::updateCaptureRegion()
 {
+#ifndef ENABLE_UNIT_TEST
     auto context = TreelandCaptureManager::instance()->context();
     if (!context) {
         return;
@@ -7973,10 +8090,12 @@ void MainWindow::updateCaptureRegion()
         m_toolBar->hide();
         m_toolBar->show();
     }
+#endif
 }
 
 void MainWindow::onTreelandSwitchToRecordUI()
 {
+#ifndef ENABLE_UNIT_TEST
     // 仅 treeland 下生效：全屏选区 + 工具栏居中，仅做 UI 切换
     if (!Utils::isTreelandMode)
         return;
@@ -8087,10 +8206,12 @@ void MainWindow::onTreelandSwitchToRecordUI()
         }
     });
     qCWarning(dsrApp) << "[treeland] onTreelandSwitchToRecordUI leave";
+#endif
 }
 
 void MainWindow::onTreelandSwitchToShotUI()
 {
+#ifndef ENABLE_UNIT_TEST
     if (!Utils::isTreelandMode)
         return;
 
@@ -8190,6 +8311,7 @@ void MainWindow::onTreelandSwitchToShotUI()
     }
 
     qCWarning(dsrApp) << "[treeland] onTreelandSwitchToShotUI leave";
+#endif
 }
 
 

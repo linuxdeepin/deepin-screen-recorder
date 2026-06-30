@@ -41,13 +41,17 @@ void Screenshot::startScreenshot()
     m_window.initAttributes();
     m_window.initResource();
     m_window.initLaunchMode(m_launchMode);
+#ifndef ENABLE_UNIT_TEST
     if (Utils::isWaylandMode){
         m_window.showNormal();
         qCDebug(dsrApp) << "Showing window in normal mode for Wayland.";
     }else {
+#endif
         m_window.showFullScreen();
         qCDebug(dsrApp) << "Showing window in full screen mode for non-Wayland.";
+#ifndef ENABLE_UNIT_TEST
     }
+#endif
     m_window.createWinId();
     qCDebug(dsrApp) << "Window ID created.";
     //平板模式截图录屏
@@ -156,18 +160,22 @@ void Screenshot::ScrollScreenshot()
     } else {
         qCDebug(dsrApp) << "Scroll shot exit. Window effects not supported.";
         qApp->quit();
+#ifndef ENABLE_UNIT_TEST
         if (Utils::isWaylandMode) {
             _Exit(0);
             qCDebug(dsrApp) << "Exiting application for Wayland mode.";
         }
+#endif
     }
 #else
     qCDebug(dsrApp) << "OCR_SCROLL_FLAGE_ON is not defined, exiting scroll screenshot.";
     qApp->quit();
+#ifndef ENABLE_UNIT_TEST
     if (Utils::isWaylandMode) {
         _Exit(0);
         qCDebug(dsrApp) << "Exiting application for Wayland mode.";
     }
+#endif
 #endif
 }
 

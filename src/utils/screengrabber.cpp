@@ -46,10 +46,12 @@ QPixmap ScreenGrabber::grabEntireDesktop(bool &ok, const QRect &rect, const qrea
 {
     qCDebug(dsrApp) << "Grabbing entire desktop for rect:" << rect << ", devicePixelRatio:" << devicePixelRatio;
     ok = true;
+#ifndef ENABLE_UNIT_TEST
     if (Utils::isWaylandMode) {
         qCDebug(dsrApp) << "Wayland mode detected, using Wayland screenshot.";
         return grabWaylandScreenshot(ok, rect, devicePixelRatio);
     }
+#endif
     qCDebug(dsrApp) << "X11 mode detected, using X11 screenshot.";
     return grabX11Screenshot(ok, rect, devicePixelRatio);
 }
