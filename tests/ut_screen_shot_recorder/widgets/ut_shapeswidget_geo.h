@@ -213,3 +213,15 @@ TEST_F(ShapesWidgetGeoTest, clickedShapesAndAccessors)
     EXPECT_NO_FATAL_FAILURE(m_w->textEditIsReadOnly());
     EXPECT_NO_FATAL_FAILURE(m_w->isExistsText());
 }
+
+// ---- 之前未覆盖的低风险 public slots / 状态方法 ----
+// 仅这些在默认 ShapesWidget 上安全：设置成员 bool 或发信号，不触发 clearSelected()
+// ->updateCursorShape()（后者在未完整初始化的 widget 上对 QCursor 比较会 SEGV）。
+// saveActionTriggered / resetForTextToolSwitch 因调用 clearSelected() 暂不测。
+TEST_F(ShapesWidgetGeoTest, simpleSlotsAndStateSetters_runClean)
+{
+    EXPECT_NO_FATAL_FAILURE(m_w->isInUndoBtn(true));
+    EXPECT_NO_FATAL_FAILURE(m_w->isInUndoBtn(false));
+    EXPECT_NO_FATAL_FAILURE(m_w->menuSaveSlot());   // emit saveFromMenu()
+    EXPECT_NO_FATAL_FAILURE(m_w->menuCloseSlot());  // emit closeFromMenu()
+}
