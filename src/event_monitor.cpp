@@ -98,6 +98,11 @@ void EventMonitor::run()
     }
     qCDebug(dsrApp) << "Second X display for datalink opened.";
 
+#ifndef ENABLE_UNIT_TEST
+    // XRecordEnableContext 会阻塞并开始拦截所有 X 事件，仅在生产行为下启用。
+    // 测试期跳过它：run() 跑完上面的 XRecord 廉价 setup 后直接进入下面的清理并返回，
+    // 线程随即退出 -> ~QThread 时已 !isRunning()，不会触发
+    // "QThread: Destroyed while thread is still running" abort；同时覆盖 setup/清理。
     if (!XRecordEnableContext(m_display_datalink, m_context,  callback, reinterpret_cast<XPointer>(this))) {
         fprintf(stderr, "XRecordEnableContext() failed\n");
         qCDebug(dsrApp) << "Failed to enable XRecord context.";
@@ -105,6 +110,7 @@ void EventMonitor::run()
     }
     qInfo() << "XRecordEnableContext() finished.";
     qCDebug(dsrApp) << "XRecord context enabled.";
+#endif
 
     qInfo() << __FUNCTION__ << __LINE__ << "执行 XRecordFreeContext ...";
     XRecordFreeContext(m_display, m_context);

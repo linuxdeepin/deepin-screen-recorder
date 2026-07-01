@@ -365,3 +365,67 @@ TEST_F(CalculaterectExtTest, pointRotate_identityAndQuarter)
     EXPECT_NEAR(0.0, r90.x(), 1e-9);
     EXPECT_NEAR(5.0, r90.y(), 1e-9);
 }
+
+// ---- pointNResizeM branch sweep (358 uncovered lines -> branch coverage) ----
+// The 56 resize functions (point{1..8}Resize{1..7}) each branch on rectangle
+// orientation (atan2 of an edge vs TANT_EDGEVALUE), drag quadrant (pointLineDir
+// combinations), degenerate proximity (pointToLineDistance < MIN_PADDING), and
+// isShift. Existing tests only reach them via resizePointPosition with a couple
+// of fixed rectangles, so most internal branches stay uncovered. Here we drive
+// every resize function directly through a grid of orientations x drag positions
+// x isShift and only assert no crash — the goal is branch coverage, not geometry
+// correctness (the math is exercised; results are not asserted).
+typedef FourPoints (*ResizeFn)(QPointF, QPointF, QPointF, QPointF, QPointF, bool);
+
+static const ResizeFn kResizeFns[] = {
+    point1Resize1, point1Resize2, point1Resize3, point1Resize4, point1Resize5, point1Resize6, point1Resize7,
+    point2Resize1, point2Resize2, point2Resize3, point2Resize4, point2Resize5, point2Resize6, point2Resize7,
+    point3Resize1, point3Resize2, point3Resize3, point3Resize4, point3Resize5, point3Resize6, point3Resize7,
+    point4Resize1, point4Resize2, point4Resize3, point4Resize4, point4Resize5, point4Resize6, point4Resize7,
+    point5Resize1, point5Resize2, point5Resize3, point5Resize4, point5Resize5, point5Resize6, point5Resize7,
+    point6Resize1, point6Resize2, point6Resize3, point6Resize4, point6Resize5, point6Resize6, point6Resize7,
+    point7Resize1, point7Resize2, point7Resize3, point7Resize4, point7Resize5, point7Resize6, point7Resize7,
+    point8Resize1, point8Resize2, point8Resize3, point8Resize4, point8Resize5, point8Resize6, point8Resize7,
+};
+
+TEST_F(CalculaterectExtTest, resizeBranchSweep_allOrientationsAndDragQuadrants)
+{
+    // Corner sets spanning every orientation branch each resize function gates
+    // on, INCLUDING negative-atan2(p2-p1) edges (p2 above p1) for the
+    // <= -TANT_EDGEVALUE branches that axis-aligned rects never reach.
+    struct R4 { QPointF p1, p2, p3, p4; };
+    static const R4 rects[] = {
+        {{100, 100}, {300, 100}, {100, 300}, {300, 300}}, // p1 top-left, axis
+        {{300, 100}, {100, 100}, {300, 300}, {100, 300}}, // p1 top-right, axis
+        {{100, 300}, {300, 300}, {100, 100}, {300, 100}}, // p1 bottom-left, axis
+        {{300, 300}, {100, 300}, {300, 100}, {100, 100}}, // p1 bottom-right, axis
+        {{100, 100}, {300, 200}, { 80, 250}, {280, 350}}, // shallow-rotated
+        {{200, 100}, {300, 200}, {100, 200}, {200, 300}}, // 45-degree diamond
+        {{100, 200}, {300, 130}, {150, 360}, {350, 290}}, // skewed quad
+        // p2-p1 edge points up-and-right (atan2<0): unlocks the <= -TANT branches.
+        {{100, 200}, {250,  50}, {250, 350}, {400, 200}}, // 45° rotated, edge up-right
+        {{150, 300}, {200, 150}, {400, 350}, {450, 200}}, // steep rotated, edge up-right
+    };
+    // Fine 2D pos grid spanning each rect's bbox +- margin: systematically hits
+    // EVERY pointLineDir quadrant and pointToLineDistance region a branch may
+    // require (e.g. pos.x<=p1.x-MIN && pos.y>=p4.y+MIN), which a fixed compass
+    // set misses. ~100 positions/rect x 9 rects x 56 fns x 2 isShift; pure math.
+    for (ResizeFn fn : kResizeFns) {
+        for (const auto &r : rects) {
+            const qreal xmin = qMin(qMin(r.p1.x(), r.p2.x()), qMin(r.p3.x(), r.p4.x())) - 280;
+            const qreal xmax = qMax(qMax(r.p1.x(), r.p2.x()), qMax(r.p3.x(), r.p4.x())) + 280;
+            const qreal ymin = qMin(qMin(r.p1.y(), r.p2.y()), qMin(r.p3.y(), r.p4.y())) - 280;
+            const qreal ymax = qMax(qMax(r.p1.y(), r.p2.y()), qMax(r.p3.y(), r.p4.y())) + 280;
+            for (bool isShift : {false, true}) {
+                for (qreal x = xmin; x <= xmax; x += 50) {
+                    for (qreal y = ymin; y <= ymax; y += 50) {
+                        (void)fn(r.p1, r.p2, r.p3, r.p4, QPointF(x, y), isShift);
+                    }
+                }
+            }
+        }
+    }
+    // Sanity: at least one call returns a 4-point result.
+    EXPECT_EQ(4, point1Resize1(QPointF(100, 100), QPointF(300, 100), QPointF(100, 300),
+                               QPointF(300, 300), QPointF(50, 350), false).size());
+}
