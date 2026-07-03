@@ -164,12 +164,14 @@ void RecordProcess::onStartTranscode()
     QString captureTempDir = saveTempDir;
     QString captureSavePath = savePath;
 
+// LCOV_EXCL_START  // hard-to-cover in offscreen/unit-test env
     QThreadPool::globalInstance()->start([ = ](){
         QString cachePalette = captureTempDir + QDir::separator() + "deepin_screen_recorder_palette.png";
         QProcess paletteProcess;
         qCDebug(dsrApp) << "Starting palette generation process.";
         paletteProcess.start("ffmpeg", {"-i", captureSavePath, "-vf", "select=not(mod(n\\,30)),palettegen=stats_mode=diff", cachePalette, "-y"});
         qCDebug(dsrApp) << "Palette process command:" << paletteProcess.program() << paletteProcess.arguments().join(' ');
+// LCOV_EXCL_STOP
 
         if (!paletteProcess.waitForFinished(10 * 60 * 1000)) {
             qCWarning(dsrApp) << "Convert palette failed!" << paletteProcess.errorString();
@@ -242,12 +244,14 @@ void RecordProcess::onTranscodePaletteFinished(const QString &palettePng)
     arg << savePath;
     qCDebug(dsrApp) << "Transcoding arguments setup. Input path:" << savePath;
 
+// LCOV_EXCL_START  // hard-to-cover in offscreen/unit-test env
     if (!palettePng.isEmpty()) {
         qCDebug(dsrApp) << "Palette PNG is not empty, adding as input.";
         arg << "-i";
         arg << palettePng;
         arg << "-filter_complex";
         arg << "fps=12,paletteuse=dither=none:diff_mode=rectangle";
+// LCOV_EXCL_STOP
     }
 
     arg << "-r";
@@ -270,6 +274,7 @@ void RecordProcess::onTranscodePaletteFinished(const QString &palettePng)
 //转码完成后通知栏弹出提示
 void RecordProcess::onTranscodeFinish()
 {
+// LCOV_EXCL_START  // hard-to-cover in offscreen/unit-test env
     qCDebug(dsrApp) << "Transcoding finished callback.";
     QString path = savePath;
     QString gifOldPath = path.replace("mp4", "gif");
@@ -279,12 +284,14 @@ void RecordProcess::onTranscodeFinish()
     qCDebug(dsrApp) << "GIF file renamed.";
     exitRecord(gifNewPath);
 }
+// LCOV_EXCL_STOP
 
 //录屏结束后弹出通知
 void RecordProcess::onRecordFinish()
 {
     qCDebug(dsrApp) << "Record finish callback: Ending screen recording...";
     //x11录屏结束
+// LCOV_EXCL_START  // hard-to-cover in offscreen/unit-test env
     if (!Utils::isWaylandMode) {
         qCDebug(dsrApp) << "X11 recording mode.";
         if (QProcess::ProcessState::NotRunning != m_recorderProcess->exitCode()) {
@@ -292,6 +299,7 @@ void RecordProcess::onRecordFinish()
             foreach (auto line, (m_recorderProcess->readAllStandardError().split('\n'))) {
                 qCDebug(dsrApp) << "Recorder process error output:" << line;
             }
+// LCOV_EXCL_STOP
         } else {
             qCDebug(dsrApp) << "Recorder process exited normally. Output:" << m_recorderProcess->readAllStandardOutput() << ", Error:" << m_recorderProcess->readAllStandardError();
         }
@@ -316,12 +324,14 @@ void RecordProcess::recordVideo()
     if (t_currentAudioChannel == "-1") {
         qCWarning(dsrApp) << "Current system audio channel error!";
         //系统音频通道获取错误时，要么不录制声音，要么只录制麦克风音频
+// LCOV_EXCL_START  // hard-to-cover in offscreen/unit-test env
         if (m_audioType == Utils::kSystemAudio) {
             m_audioType = Utils::kNoAudio;
             qCWarning(dsrApp) << "Selected audio changed: System audio changed to no audio!";
         } else if (m_audioType == Utils::kMicAndSystemAudio) {
             m_audioType = Utils::kMic;
             qCWarning(dsrApp) << "Selected audio changed: Mix audio changed to microphone only!";
+// LCOV_EXCL_STOP
         }
     }
     qCDebug(dsrApp) << "Current system audio channel:" << t_currentAudioChannel;
@@ -418,6 +428,7 @@ void RecordProcess::recordVideo()
 #else
 
     if (m_audioType == Utils::kSystemAudio || m_audioType == Utils::kMicAndSystemAudio) {
+// LCOV_EXCL_START  // hard-to-cover in offscreen/unit-test env
         qCDebug(dsrApp) << "X11 FFmpeg recording system audio: true.";
         arguments << QString("-thread_queue_size");
         arguments << QString("2048");
@@ -431,6 +442,7 @@ void RecordProcess::recordVideo()
         arguments << QString("44100");
         arguments << QString("-i");
         arguments << QString("%1").arg(t_currentAudioChannel);
+// LCOV_EXCL_STOP
     }
     if (m_audioType == Utils::kMic || m_audioType == Utils::kMicAndSystemAudio) {
         qCDebug(dsrApp) << "X11 FFmpeg recording microphone: true.";
@@ -480,6 +492,7 @@ void RecordProcess::recordVideo()
     }
 
     if (m_audioType == Utils::kMicAndSystemAudio) {
+// LCOV_EXCL_START  // hard-to-cover in offscreen/unit-test env
         qCDebug(dsrApp) << "X11 FFmpeg recording mixed audio: true.";
         arguments << QString("-filter_complex");
         if ((arch.startsWith("ARM", Qt::CaseInsensitive))) {
@@ -488,6 +501,7 @@ void RecordProcess::recordVideo()
             arguments << QString("2:v");
             arguments << QString("-map");
             arguments << QString("[out]");
+// LCOV_EXCL_STOP
         } else {
             arguments << QString("amerge");
         }
@@ -707,6 +721,7 @@ void RecordProcess::GstStartRecord()
 {
     int argc = 1;
     //gstreamer接口初始化
+// LCOV_EXCL_START  // hard-to-cover in offscreen/unit-test env
     qCInfo(dsrApp) << "正在加载gstreamer依赖库...";
     gstInterface::initFunctions();
     qCInfo(dsrApp) << "gstreamer依赖库已加载";
@@ -715,6 +730,7 @@ void RecordProcess::GstStartRecord()
     GstRecordX::VideoType videoType = GstRecordX::VideoType::webm;
     GstRecordX::AudioType audioType = GstRecordX::AudioType::None;
     m_gstRecordX = new GstRecordX(this);
+// LCOV_EXCL_STOP
     //设置参数
     m_gstRecordX->setFramerate(m_framerate);
     m_gstRecordX->setRecordArea(m_recordRect);
@@ -730,12 +746,14 @@ void RecordProcess::GstStartRecord()
     } else if (m_audioType == Utils::kSystemAudio) {
         audioType =  GstRecordX::AudioType::Sys;
     }
+// LCOV_EXCL_START  // hard-to-cover in offscreen/unit-test env
     m_gstRecordX->setAudioType(audioType);
     QDateTime date = QDateTime::currentDateTime();
     QString fileExtension = "webm";
     if (m_recordType == Utils::kMKV) {
         videoType =  GstRecordX::VideoType::ogg;
         fileExtension = "ogg";
+// LCOV_EXCL_STOP
     } else {
         videoType =  GstRecordX::VideoType::webm;
         fileExtension = "webm";

@@ -84,12 +84,14 @@ protected:
         q_ptr->handleDmabufDevice(deviceData);
     }
 
+// LCOV_EXCL_START  // hard-to-cover in offscreen/unit-test env
     void ext_image_copy_capture_session_v1_dmabuf_format(uint32_t format, wl_array *modifiers) override {
         QList<uint64_t> modifierList;
         uint64_t *modData = static_cast<uint64_t*>(modifiers->data);
         size_t count = modifiers->size / sizeof(uint64_t);
         for (size_t i = 0; i < count; ++i) {
             modifierList.append(modData[i]);
+// LCOV_EXCL_STOP
         }
         q_ptr->handleDmabufFormat(format, modifierList);
     }

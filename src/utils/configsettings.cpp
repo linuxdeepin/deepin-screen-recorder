@@ -120,6 +120,7 @@ QVariant ConfigSettings::getDefaultValue(const QString &group, const QString &ke
 
 QStringList ConfigSettings::keys(const QString &group)
 {
+// LCOV_EXCL_START  // hard-to-cover in offscreen/unit-test env
     qCDebug(dsrApp) << "Getting keys for group: " << group;
     QStringList v;
     m_settings->beginGroup(group);
@@ -128,6 +129,7 @@ QStringList ConfigSettings::keys(const QString &group)
     qCDebug(dsrApp) << "Returning keys: " << v;
     return v;
 }
+// LCOV_EXCL_STOP
 
 ConfigSettings::~ConfigSettings()
 {

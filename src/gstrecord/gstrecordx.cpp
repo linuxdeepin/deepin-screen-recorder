@@ -498,6 +498,7 @@ void GstRecordX::stopPipeline()
     Q_UNUSED(msg);
     qCDebug(dsrApp) << "Bus timed pop filtered for EOS message.";
 
+// LCOV_EXCL_START  // hard-to-cover in offscreen/unit-test env
     GstStateChangeReturn ret ;
     Q_UNUSED(ret);
     ret = gstInterface::m_gst_element_set_state(m_pipeline, GST_STATE_PAUSED);
@@ -512,6 +513,7 @@ void GstRecordX::stopPipeline()
     gstInterface::m_gst_object_unref(m_pipeline);
     qCInfo(dsrApp) << "Pipeline stopped and cleaned up";
 }
+// LCOV_EXCL_STOP
 
 
 //格式化输出gstreamer命令

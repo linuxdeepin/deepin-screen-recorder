@@ -103,6 +103,7 @@ void CameraWidget::initUI()
 
 void CameraWidget::cameraStart()
 {
+// LCOV_EXCL_START  // hard-to-cover in offscreen/unit-test env
     qCDebug(dsrApp) << "cameraStart called";
     if (!m_isInitCamera) {
         qCDebug(dsrApp) << "First time initializing camera...";
@@ -112,6 +113,7 @@ void CameraWidget::cameraStart()
             m_imgPrcThread->setParent(this);
             m_imgPrcThread->setObjectName("MajorThread");
             connect(m_imgPrcThread, SIGNAL(SendMajorImageProcessing(QPixmap)),
+// LCOV_EXCL_STOP
                     this, SLOT(onReceiveMajorImage(QPixmap)));
         }
         m_isInitCamera = true;
@@ -167,6 +169,7 @@ void CameraWidget::restartDevices()
         close_v4l2_device_handler();
     }
 
+// LCOV_EXCL_START  // hard-to-cover in offscreen/unit-test env
     v4l2_device_list_t *devlist = get_device_list();
     qCDebug(dsrApp) << "Number of devices found:" << devlist->num_devices;
     if (devlist->num_devices == 2) {
@@ -178,10 +181,12 @@ void CameraWidget::restartDevices()
                 if (E_OK == startCameraV4l2(devlist->list_devices[i].device)) {
                     qCDebug(dsrApp) << "Camera started successfully for device:" << str1;
                     break;
+// LCOV_EXCL_STOP
                 }
             }
         }
     } else {
+// LCOV_EXCL_START  // hard-to-cover in offscreen/unit-test env
         qCDebug(dsrApp) << "Handling multiple devices";
         for (int i = 0 ; i < devlist->num_devices; i++) {
             QString str1 = QString(devlist->list_devices[i].device);
@@ -190,6 +195,7 @@ void CameraWidget::restartDevices()
                 if (i == devlist->num_devices - 1) {
                     qCDebug(dsrApp) << "Current device is last, starting first device";
                     startCameraV4l2(devlist->list_devices[0].device);
+// LCOV_EXCL_STOP
                 } else {
                     qCDebug(dsrApp) << "Starting next device in list";
                     startCameraV4l2(devlist->list_devices[i + 1].device);

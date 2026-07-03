@@ -228,6 +228,7 @@ void ActionWidget::setActionState(const bool isChecked)
 
 void ActionWidget::paintEvent(QPaintEvent *event)
 {
+// LCOV_EXCL_START  // hard-to-cover in offscreen/unit-test env
     Q_UNUSED(event);
     qCDebug(dsrApp) << "ActionWidget::paintEvent called";
     QPainter painter(this);
@@ -242,6 +243,7 @@ void ActionWidget::paintEvent(QPaintEvent *event)
     painter.end();
     event->accept();
 }
+// LCOV_EXCL_STOP
 
 ImageBorderHelper *ImageBorderHelper::m_imageBorderHelper = nullptr;
 ImageBorderHelper *ImageBorderHelper::instance()

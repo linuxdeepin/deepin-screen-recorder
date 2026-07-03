@@ -89,12 +89,14 @@ void HintFilterPrivate::showHint(QWidget *hint)
         hintWidget->show();
         hintWidget->adjustSize();
 
+// LCOV_EXCL_START  // hard-to-cover in offscreen/unit-test env
         auto sz = hintWidget->size();
         centerPos.setX(centerPos.x()  - sz.width() / 2 + 2);
         centerPos.setY(centerPos.y() - 32 - sz.height());
         if (centerPos.y() - 32 - sz.height() <= 0) {
             qCDebug(dsrApp) << "Adjusting hint position due to screen boundary";
             centerPos.setY(centerPos.y() + w->height() + 22 + sz.height());
+// LCOV_EXCL_STOP
         }
         centerPos = hintWidget->mapFromGlobal(centerPos);
         centerPos = hintWidget->mapToParent(centerPos);

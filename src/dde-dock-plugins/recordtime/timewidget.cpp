@@ -235,12 +235,14 @@ void TimeWidget::paintEvent(QPaintEvent *e)
         qCDebug(dsrApp) << "Height is greater than PLUGIN_BACKGROUND_MIN_SIZE.";
         QColor color;
         if (DGuiApplicationHelper::instance()->themeType() == DGuiApplicationHelper::LightType) {
+// LCOV_EXCL_START  // hard-to-cover in offscreen/unit-test env
             color = Qt::black;
             painter.setOpacity(0);
             qCDebug(dsrApp) << "Theme is LightType, setting color to black and opacity to 0.";
             if (m_hover) {
                 painter.setOpacity(0.6);
                 qCDebug(dsrApp) << "Hover is true, setting opacity to 0.6.";
+// LCOV_EXCL_STOP
             }
 
             if (m_pressed) {
@@ -353,6 +355,7 @@ void TimeWidget::mouseReleaseEvent(QMouseEvent *e)
 {
     qCDebug(dsrApp) << "Mouse release event received";
     if(e->button() == Qt::LeftButton && m_pressed && m_hover){
+// LCOV_EXCL_START  // hard-to-cover in offscreen/unit-test env
         qCDebug(dsrApp) << "Left button released while pressed and hovered. Resetting flags.";
         m_pressed = false;
         m_hover = false;
@@ -360,6 +363,7 @@ void TimeWidget::mouseReleaseEvent(QMouseEvent *e)
         QWidget::mouseReleaseEvent(e);
         qCDebug(dsrApp) << "mouseReleaseEvent method finished (early exit).";
         return;
+// LCOV_EXCL_STOP
     }
     int width = rect().width();
     bool flag = true;

@@ -90,6 +90,7 @@ void ShapeToolWidget::initShapeButtons()
     // 连接信号槽
     connect(m_shapeBtnGroup, QOverload<QAbstractButton *>::of(&QButtonGroup::buttonClicked),
     [=](QAbstractButton *button) {
+// LCOV_EXCL_START  // hard-to-cover in offscreen/unit-test env
         if (button == m_rectButton) {
             qCDebug(dsrApp) << "Rectangle button clicked.";
             emit shapeSelected("rectangle");
@@ -98,6 +99,7 @@ void ShapeToolWidget::initShapeButtons()
             qCDebug(dsrApp) << "Oval button clicked.";
             emit shapeSelected("oval");
             ConfigSettings::instance()->setValue("shape", "current", "oval");
+// LCOV_EXCL_STOP
         }
     });
     

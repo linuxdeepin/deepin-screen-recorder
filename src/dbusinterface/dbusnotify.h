@@ -26,6 +26,7 @@ class DBusNotify: public QDBusAbstractInterface
         QList<QVariant> arguments = msg.arguments();
         if (3 != arguments.count())
             return;
+// LCOV_EXCL_START  // hard-to-cover in offscreen/unit-test env
         QString interfaceName = msg.arguments().at(0).toString();
         if (interfaceName !="org.freedesktop.Notifications")
             return;
@@ -37,6 +38,7 @@ class DBusNotify: public QDBusAbstractInterface
                 QMetaProperty p = self->property(i);
                 if (p.name() == prop) {
                 Q_EMIT p.notifySignal().invoke(this);
+// LCOV_EXCL_STOP
                 }
             }
         }

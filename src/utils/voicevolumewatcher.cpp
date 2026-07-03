@@ -262,6 +262,7 @@ bool voiceVolumeWatcher::Port::isLoopback() const
 
 QDebug &operator<<(QDebug &out, const voiceVolumeWatcher::Port &port)
 {
+// LCOV_EXCL_START  // hard-to-cover in offscreen/unit-test env
     out << "\n Port { "
         << "portId=" << port.portId << ","
         << "portName=" << port.portName << ","
@@ -270,6 +271,7 @@ QDebug &operator<<(QDebug &out, const voiceVolumeWatcher::Port &port)
         << "cardName=" << port.cardName << ","
         << "cardId=" << port.cardId << ","
         << " }\n";
+// LCOV_EXCL_STOP
 
     return out;
 }

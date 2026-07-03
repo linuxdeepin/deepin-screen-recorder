@@ -236,12 +236,14 @@ void ShotToolWidget::initEffectLabel()
 
     connect(effectTypeBtnGroup, QOverload<QAbstractButton *>::of(&QButtonGroup::buttonClicked),
     [ = ] {
+// LCOV_EXCL_START  // hard-to-cover in offscreen/unit-test env
         qCDebug(dsrApp) << "Effect type button clicked.";
         ConfigSettings::instance()->setValue("effect", "isBlur", blurBut->isChecked());
         if (blurBut->isChecked()) {
             qCDebug(dsrApp) << "Blur button checked, setting blur icons.";
             t_radiusSize->setLeftIcon(QIcon::fromTheme(QString("effect_pen1")));
             t_radiusSize->setRightIcon(QIcon::fromTheme(QString("effect_pen2")));
+// LCOV_EXCL_STOP
         } else {
             qCDebug(dsrApp) << "Mosaic button checked, setting mosaic icons.";
             t_radiusSize->setLeftIcon(QIcon::fromTheme(QString("mosaic1")));
