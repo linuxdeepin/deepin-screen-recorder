@@ -299,7 +299,7 @@ void Utils::disableXGrabButton()
 {
     if (Utils::isWaylandMode == true)
         return;
-    XUngrabButton(QX11Info::display(), true, AnyModifier, DefaultRootWindow(QX11Info::display()));
+    XUngrabButton(QX11Info::display(), AnyButton, AnyModifier, DefaultRootWindow(QX11Info::display()));
 
 }
 
