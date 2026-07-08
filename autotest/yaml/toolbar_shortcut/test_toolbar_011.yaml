@@ -1,0 +1,60 @@
+name: 截图终端命令-全屏截图命令
+app: deepin-screen-recorder
+description: '前置条件: 无
+
+  测试步骤:
+
+  1. 打开终端，键入命令deepin-screen-recorder -f 回车
+
+  2. 打开终端，键入命令deepin-screen-recorder --fullscreen 回车
+
+  预期结果:
+
+  1. 整个屏幕被截图，然后自动保存到预设的保存方式中
+
+  2. 整个屏幕被截图，然后自动保存到预设的保存方式中
+
+  '
+module: 截图录屏/工具栏
+feature: 命令行
+tags:
+- L3
+vars:
+  xlsx_id: '1644749'
+  case_type: 功能测试
+steps:
+- name: 打开终端
+  action: keyboard_hot_key
+  keys: ctrl,alt,t
+  wait: 1.0
+- name: 输入全屏截图命令-f
+  action: keyboard_type
+  keys: deepin-screen-recorder -f
+- name: 按回车执行全屏截图
+  action: keyboard_press
+  keys: Return
+  wait: 2.0
+- name: 验证全屏截图完成
+  action: screenshot
+- name: 关闭当前终端
+  action: keyboard_press
+  keys: ctrl,shift,w
+  wait: 0.3
+- name: 打开终端
+  action: keyboard_hot_key
+  keys: ctrl,alt,t
+  wait: 1.0
+- name: 输入全屏截图命令--fullscreen
+  action: keyboard_type
+  keys: deepin-screen-recorder --fullscreen
+- name: 按回车执行全屏截图
+  action: keyboard_press
+  keys: Return
+  wait: 2.0
+- name: 验证全屏截图完成
+  action: screenshot
+teardown: []
+setup:
+  - action: session_start
+    command: "deepin-screen-recorder"
+    wait: 3.0

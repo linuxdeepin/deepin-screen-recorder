@@ -1,0 +1,85 @@
+name: AI截图功能-选择解释/总结/翻译后OCR识别中显示验证
+app: deepin-screen-recorder
+module: 截图录屏/AI截图
+feature: AI解释
+tags:
+- L1
+vars:
+  xlsx_id: '1949939'
+  case_type: 功能测试
+description: '前置条件: 唤起截图录屏
+
+  测试步骤:
+
+  1. 框选包含中文文字的区域，释放鼠标完成截图
+
+  2. 点击AI工具栏中的「解释」按钮
+
+  3. 打开系统剪贴板查看工具
+
+  4. 检查AI随航功能界面OCR处理中的显示内容
+
+  预期结果:
+
+  1. 屏幕显示截图编辑区域，底部弹出包含「解释」「总结」「翻译」的AI工具栏
+
+  2. AI工具栏消失，截图编辑窗口关闭（退出截图状态）
+
+  3. 剪贴板中存在本次截图的图像数据
+
+  4. AI随航界面显示OCR识别中，随航面板的原文区域和生成区域均为加载中
+
+  '
+steps:
+- name: 唤起截图模式
+  action: keyboard_hot_key
+  keys: ctrl,alt,a
+  wait: 1.0
+- name: 框选包含文字的截图区域
+  action: mouse_drag
+  start:
+    x: 400
+    y: 300
+  end:
+    x: 1400
+    y: 700
+  wait: 0.5
+- name: 等待工具栏出现
+  action: wait
+  wait: 1.0
+- name: 断言AI工具栏按钮存在
+  action: element_assert
+  ref: ai_assistant_button
+  assert:
+    - type: element_visible
+- name: 点击AI截图按钮打开AI工具栏
+  action: element_action
+  ref: ai_assistant_button
+  do: click
+  wait: 1.0
+- name: 断言解释按钮存在
+  action: element_assert
+  ref: ai_explain_button
+  assert:
+    - type: element_visible
+- name: 点击解释按钮
+  action: element_action
+  ref: ai_explain_button
+  do: click
+  wait: 2.0
+- name: 断言AI随航面板出现
+  action: element_assert
+  selector:
+    role: panel
+    name: .*
+  assert:
+    - type: element_visible
+teardown:
+- action: keyboard_press
+  keys: Escape
+  wait: 0.3
+skip: ''
+setup:
+  - action: session_start
+    command: "deepin-screen-recorder"
+    wait: 3.0

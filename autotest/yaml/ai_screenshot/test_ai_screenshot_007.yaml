@@ -1,0 +1,59 @@
+name: AI截图功能-快捷键A触发AI功能验证
+app: deepin-screen-recorder
+module: 截图录屏/AI截图
+feature: AI图标
+tags:
+- L1
+vars:
+  xlsx_id: '1949943'
+  case_type: 功能测试
+description: '前置条件: 未打开截图录屏
+
+  测试步骤:
+
+  1. 进入截图模式，框选区域后按下快捷键A
+
+  2. 检查界面是否切换至AI截图功能操作页面或出现AI截图功能入口
+
+  预期结果:
+
+  2. 成功触发AI截图功能（界面显示AI截图功能操作区域）
+
+  '
+steps:
+- name: 唤起截图模式
+  action: keyboard_hot_key
+  keys: ctrl,alt,a
+  wait: 1.0
+- name: 框选截图区域
+  action: mouse_drag
+  start:
+    x: 400
+    y: 300
+  end:
+    x: 1400
+    y: 700
+  wait: 0.5
+- name: 等待工具栏出现
+  action: wait
+  wait: 1.0
+- name: 按下快捷键A触发AI截图
+  action: keyboard_press
+  keys: a
+  wait: 1.0
+- name: 断言AI功能面板出现
+  action: element_assert
+  selector:
+    role: panel
+    name: .*
+  assert:
+    - type: element_visible
+teardown:
+- action: keyboard_press
+  keys: Escape
+  wait: 0.3
+skip: ''
+setup:
+  - action: session_start
+    command: "deepin-screen-recorder"
+    wait: 3.0

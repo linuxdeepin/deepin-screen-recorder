@@ -1,0 +1,42 @@
+name: 快捷键面板新增贴图快捷键
+app: deepin-screen-recorder
+module: 截图录屏/贴图
+feature: 快捷键
+tags:
+- L3
+vars:
+  xlsx_id: '1644703'
+  case_type: 功能测试
+description: "测试步骤:\n  1. 使用快捷键Ctrl+Shift+?，查看快捷键面板\n预期结果:\n  1. 在工具列的滚动截图后新增贴图Alt+P\n"
+steps:
+- name: 唤起截图模式
+  action: keyboard_hot_key
+  keys: ctrl,alt,a
+  wait: 1.0
+- name: 框选截图区域
+  action: mouse_drag
+  start:
+    x: 400
+    y: 300
+  end:
+    x: 1400
+    y: 700
+  wait: 0.5
+- name: 等待工具栏出现
+  action: wait
+  wait: 1.0
+- name: 打开快捷键面板
+  action: keyboard_hot_key
+  keys: ctrl,shift,slash
+  wait: 1.0
+- name: 验证快捷键面板显示贴图快捷键
+  action: screenshot
+teardown:
+- action: keyboard_press
+  keys: Escape
+  wait: 0.3
+skip: ''
+setup:
+  - action: session_start
+    command: "deepin-screen-recorder"
+    wait: 3.0

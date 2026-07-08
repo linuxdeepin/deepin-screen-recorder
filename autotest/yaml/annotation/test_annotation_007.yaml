@@ -1,0 +1,106 @@
+name: 几何工具-非首次使用时默认沿用最后一次使用时的选择
+app: deepin-screen-recorder
+description: '前置条件:
+
+  1. 已通过操作设置几何工具为圆形+粗线条（3px+蓝色）
+
+  2. 未进行应用升级或重装操作
+
+  3. 关闭并重新打开截图工具条
+
+  测试步骤:
+
+  1. 点击截图工具栏的几何工具图标
+
+  2. 检查默认选中的图标
+
+  3. 检查圆形工具的描边粗细和颜色选择
+
+  预期结果:
+
+  1. 图标下方显示''矩形''和''圆形''两个图标
+
+  2. 默认选中''圆形''图标
+
+  3. 描边粗细为粗线条（3px），颜色为蓝色
+
+  '
+module: 截图录屏/标注工具
+feature: 几何工具记忆
+tags:
+- L1
+vars:
+  xlsx_id: '1915675'
+  case_type: 功能测试
+steps:
+- name: 第一次唤起截图模式-设置圆形+粗线条+蓝色
+  action: keyboard_hot_key
+  keys: ctrl,alt,a
+  wait: 1.0
+- name: 框选截图区域
+  action: mouse_drag
+  start:
+    x: 400
+    y: 300
+  end:
+    x: 1400
+    y: 700
+  wait: 0.5
+- name: 等待工具栏出现
+  action: wait
+  wait: 1.0
+- name: 点击圆形工具
+  action: element_action
+  ref: circl_button
+  do: click
+  wait: 0.5
+- name: 选择粗线条3px
+  action: element_action
+  ref: thick_three_circ
+  do: click
+  wait: 0.3
+- name: 选择蓝色
+  action: element_action
+  ref: color_blue
+  do: click
+  wait: 0.3
+- name: 关闭截图工具
+  action: keyboard_press
+  keys: Escape
+  wait: 1.0
+- name: 重新唤起截图模式
+  action: keyboard_hot_key
+  keys: ctrl,alt,a
+  wait: 1.0
+- name: 框选截图区域
+  action: mouse_drag
+  start:
+    x: 400
+    y: 300
+  end:
+    x: 1400
+    y: 700
+  wait: 0.5
+- name: 等待工具栏出现
+  action: wait
+  wait: 1.0
+- name: 点击几何工具图标
+  action: element_action
+  ref: rect_button
+  do: click
+  wait: 0.5
+- name: 验证默认选中圆形
+  action: element_action
+  ref: circl_button
+  do: click
+  wait: 0.5
+- name: 验证描边粗细和颜色为粗线条3px蓝色
+  action: screenshot
+teardown:
+- action: keyboard_press
+  keys: Escape
+  wait: 0.3
+setup:
+  - action: session_start
+    command: "deepin-screen-recorder"
+    wait: 3.0

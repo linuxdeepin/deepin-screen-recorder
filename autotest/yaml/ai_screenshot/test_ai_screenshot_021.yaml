@@ -1,0 +1,30 @@
+name: AI截图功能-输入框有文字状态点击问问AI
+app: deepin-screen-recorder
+module: 截图录屏/AI截图
+feature: 问问AI
+tags:
+- L2
+vars:
+  xlsx_id: '1949915'
+  case_type: 功能测试
+description: '前置条件: 打开UOS AI助手页面，输入框中已有文字
+
+  测试步骤:
+
+  1. UOS AI输入框已输入文字
+
+  2. 唤起截图，点击AI截图，点击页面中的"问问AI"按钮
+
+  3. 检查是否新建对话、切换智能体和模型、修改深度思考和联网开关
+
+  预期结果:
+
+  2. 输入框中保留原有文字内容，且截图内容成功带入UOS AI输入框
+
+  3. 没有新建对话、不切换智能体和模型、不修改深度思考和联网开关
+
+  '
+steps: []
+teardown: []
+skip: 需要特殊环境或人工验证
+setup: []

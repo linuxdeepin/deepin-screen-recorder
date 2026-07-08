@@ -1,0 +1,28 @@
+name: '[acp2][需求池][应用][截图录屏]文档编辑中截图录屏生成通知横幅消息时，不抢占鼠标焦点，文档编辑正常'
+app: deepin-screen-recorder
+module: 截图录屏/兼容性
+feature: 兼容性测试
+tags:
+- L2
+vars:
+  xlsx_id: '1644525'
+  case_type: 功能测试
+description: '前置条件: 已打开word文档并进入编辑状态
+
+  测试步骤:
+
+  1. 快捷键Ctrl+Alt+A进行截图，然后点击保存
+
+  2. 在消息未消失前，观察word文档上编辑状态的光标状态，并继续输入文字
+
+  预期结果:
+
+  1. 桌面上方生成一条截图的通知横幅消息
+
+  2. 光标呈闪烁状态，文字输入正常
+
+  '
+steps: []
+skip: 跳过-需要word文档环境及焦点验证
+setup: []
+teardown: []

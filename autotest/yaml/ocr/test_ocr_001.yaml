@@ -1,0 +1,50 @@
+name: '[smoke]OCR-启动检查-快捷键启动'
+app: deepin-screen-recorder
+module: 截图录屏/OCR
+feature: 入口检查
+tags:
+- L0
+- smoke
+vars:
+  xlsx_id: '1645875'
+  case_type: 功能测试
+description: '测试步骤: 使用快捷键Alt+O启动OCR
+
+  预期结果: 调起OCR识别窗口
+
+  '
+steps:
+- name: 唤起截图模式
+  action: keyboard_hot_key
+  keys: ctrl,alt,a
+  wait: 1.0
+- name: 框选截图区域
+  action: mouse_drag
+  start:
+    x: 400
+    y: 300
+  end:
+    x: 1400
+    y: 700
+  wait: 0.5
+- name: 等待工具栏出现
+  action: wait
+  wait: 1.0
+- name: 使用快捷键Alt+O启动OCR
+  action: keyboard_press
+  keys: alt,o
+  wait: 2.0
+- name: 验证OCR窗口已打开
+  action: screenshot
+  assert:
+  - type: element_visible
+    selector:
+      name: ocrWindow
+teardown:
+- action: keyboard_press
+  keys: Escape
+  wait: 0.3
+setup:
+  - action: session_start
+    command: "deepin-screen-recorder"
+    wait: 3.0

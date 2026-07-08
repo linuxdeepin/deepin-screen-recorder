@@ -1,0 +1,1 @@
+ERROR    dbus.proxies:proxies.py:407 Introspect error on :1.36040:/com/deepin/Screenshot: dbus.exceptions.DBusException: org.freedesktop.DBus.Error.UnknownObject: No such object path '/com/deepin/Screenshot'

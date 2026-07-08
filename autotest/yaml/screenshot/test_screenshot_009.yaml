@@ -1,0 +1,32 @@
+name: '[core]触控屏和触控板设备的交叉场景测试'
+app: deepin-screen-recorder
+description: '前置条件: 无
+
+  测试步骤:
+
+  1. 使用触控屏，启动截图录屏
+
+  2. 使用触控板，选择截图框选区域
+
+  3. 反复在触控屏和触控板设备间交叉操作
+
+  预期结果:
+
+  1. 截图录屏正常启动
+
+  2. 框选区域正常
+
+  3. 交叉操作的功能均正常
+
+  '
+module: 截图录屏/截图基础
+feature: 区域选择
+tags:
+- L1
+vars:
+  xlsx_id: '1644979'
+  case_type: 功能测试
+steps: []
+skip: 跳过-需要触控屏硬件设备
+setup: []
+teardown: []

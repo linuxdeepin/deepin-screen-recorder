@@ -1,0 +1,68 @@
+name: 储存逻辑-自动生成文件名
+app: deepin-screen-recorder
+module: 截图录屏/设置
+feature: 文件命名
+tags:
+- L1
+vars:
+  xlsx_id: '1915751'
+  case_type: 功能测试
+description: '前置条件: 1. 系统已安装截图录屏工具； 2.截图工具条已唤起，处于可截图状态
+
+  测试步骤:
+
+  1. 保存方式设置为每次询问，不进行修改直接点击保存将截图保存至桌面
+
+  2. 设置保存方式为指定位置-桌面，不进行修改直接点击保存将截图保存
+
+  预期结果:
+
+  1. 桌面生成文件（如截图_选择区域_20250730100741.png）
+
+  2. 桌面生成文件（如截图_选择区域_20250730100750.png）
+
+  '
+steps:
+- name: 唤起截图模式
+  action: keyboard_hot_key
+  keys: ctrl,alt,a
+  wait: 1.0
+- name: 框选截图区域
+  action: mouse_drag
+  start:
+    x: 200
+    y: 200
+  end:
+    x: 800
+    y: 600
+  wait: 0.5
+- name: 等待工具栏出现
+  action: wait
+  wait: 1.0
+- name: 点击保存按钮打开菜单
+  action: element_action
+  ref: save_local_button
+  do: click
+  wait: 0.5
+- name: 等待菜单展开
+  action: wait
+  wait: 0.5
+- name: 选择每次询问
+  action: main_menu_comb
+  ref: save_menu_ask
+  wait: 0.5
+- name: 按Enter完成截图
+  action: keyboard_press
+  keys: Return
+  wait: 1.0
+- name: 验证截图保存到桌面
+  action: screenshot
+teardown:
+- action: keyboard_press
+  keys: Escape
+  wait: 0.3
+skip: ''
+setup:
+  - action: session_start
+    command: "deepin-screen-recorder"
+    wait: 3.0

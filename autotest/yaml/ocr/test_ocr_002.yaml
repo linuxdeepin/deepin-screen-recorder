@@ -1,0 +1,51 @@
+name: '[smoke]OCR-入口检查-工具栏按钮'
+app: deepin-screen-recorder
+module: 截图录屏/OCR
+feature: 入口检查
+tags:
+- L0
+- smoke
+vars:
+  xlsx_id: '1645879'
+  case_type: 功能测试
+description: '测试步骤: 1.启动截图，框选任意区域 2.点击工具栏的识别文字按钮
+
+  预期结果: 1.工具栏上截图工具按钮之后为识别文字按钮 2.调起OCR识别窗口
+
+  '
+steps:
+- name: 唤起截图模式
+  action: keyboard_hot_key
+  keys: ctrl,alt,a
+  wait: 1.0
+- name: 框选截图区域
+  action: mouse_drag
+  start:
+    x: 400
+    y: 300
+  end:
+    x: 1400
+    y: 700
+  wait: 0.5
+- name: 等待工具栏出现
+  action: wait
+  wait: 1.0
+- name: 验证OCR按钮可见
+  action: element_action
+  ref: ocr_button
+  do: click
+  wait: 2.0
+- name: 验证OCR窗口已打开
+  action: screenshot
+  assert:
+  - type: element_visible
+    selector:
+      name: ocrWindow
+teardown:
+- action: keyboard_press
+  keys: Escape
+  wait: 0.3
+setup:
+  - action: session_start
+    command: "deepin-screen-recorder"
+    wait: 3.0

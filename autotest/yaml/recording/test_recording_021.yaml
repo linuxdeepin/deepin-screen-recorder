@@ -1,0 +1,57 @@
+name: 录屏保存时查看通知中心内容
+app: deepin-screen-recorder
+description: |
+  前置条件: 无
+  测试步骤:
+  1. 录制视频并保存
+  2. 查看通知中心内容
+  预期结果:
+  1. 录制视频成功并保存
+  2. 内容正常展示
+module: 截图录屏/录屏
+feature: 保存
+tags:
+- L3
+vars:
+  xlsx_id: '1645275'
+  case_type: 功能测试
+steps:
+- name: "激活录屏模式"
+  action: keyboard_hot_key
+  keys: ctrl,alt,r
+  wait: 1.0
+- name: "框选录屏区域"
+  action: mouse_drag
+  ref: screen_center
+  wait: 0.5
+- name: "等待工具栏出现"
+  action: wait
+  wait: 1.0
+- name: "开始录制"
+  action: keyboard_press
+  keys: Return
+  wait: 5.0
+- name: "等待录制开始（3秒倒计时）"
+  action: wait
+  wait: 3.0
+- name: "录制一小段后停止"
+  action: keyboard_hot_key
+  keys: ctrl,alt,r
+  wait: 1.0
+- name: "等待保存"
+  action: wait
+  wait: 2.0
+- name: "验证通知栏显示保存成功通知"
+  action: wait
+  wait: 0.3
+  assert:
+    - type: screenshot
+      expected: "record_save_notification"
+setup:
+  - action: session_start
+    command: "deepin-screen-recorder"
+    wait: 3.0
+teardown:
+- action: keyboard_press
+  keys: Escape
+  wait: 0.5

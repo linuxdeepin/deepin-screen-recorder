@@ -1,0 +1,30 @@
+name: AI截图功能-正常待命状态点击问问AI
+app: deepin-screen-recorder
+module: 截图录屏/AI截图
+feature: 问问AI
+tags:
+- L1
+vars:
+  xlsx_id: '1949917'
+  case_type: 功能测试
+description: '前置条件: 打开UOS AI助手页面
+
+  测试步骤:
+
+  1. 唤起截图，点击AI截图，点击页面中的"问问AI"按钮
+
+  2. 检查UOS AI输入框内容
+
+  3. 检查是否新建对话、切换智能体和模型、修改深度思考和联网开关
+
+  预期结果:
+
+  2. 截图内容成功带入UOS AI输入框
+
+  3. 没有新建对话、不切换智能体和模型、不修改深度思考和联网开关
+
+  '
+steps: []
+teardown: []
+skip: 需要特殊环境或人工验证
+setup: []

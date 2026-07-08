@@ -1,0 +1,51 @@
+name: OCR-交互操作-识别向上滚动截取的长图
+app: deepin-screen-recorder
+module: 截图录屏/OCR
+feature: 文字识别
+tags:
+- L2
+vars:
+  xlsx_id: '1645985'
+  case_type: 功能测试
+description: '测试步骤: 1.鼠标点击捕捉区域 2.向上滚动截图 3.点击工具栏OCR识别按钮
+
+  预期结果: 自动识别已截取的文字
+
+  '
+steps:
+- name: 唤起截图模式
+  action: keyboard_hot_key
+  keys: ctrl,alt,a
+  wait: 1.0
+- name: 点击捕捉区域
+  action: mouse_click
+  x: 960
+  y: 540
+  wait: 0.5
+- name: 鼠标向上滚动截图
+  action: mouse_scroll
+  x: 960
+  y: 540
+  delta: -10
+  wait: 0.5
+- name: 等待工具栏出现
+  action: wait
+  wait: 1.0
+- name: 点击工具栏OCR识别按钮
+  action: element_action
+  ref: ocr_button
+  do: click
+  wait: 0.5
+- name: 等待OCR识别完成
+  action: wait
+  wait: 5.0
+- name: 验证识别结果
+  action: screenshot
+teardown:
+- action: keyboard_press
+  keys: Escape
+  wait: 0.3
+setup:
+  - action: session_start
+    command: "deepin-screen-recorder"
+    wait: 3.0

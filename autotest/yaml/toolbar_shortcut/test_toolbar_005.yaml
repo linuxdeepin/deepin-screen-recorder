@@ -1,0 +1,50 @@
+name: 区域大小-快捷键调整-向右缩小
+app: deepin-screen-recorder
+description: '前置条件: 无
+
+  测试步骤:
+
+  1. 按Ctrl+Shift+←
+
+  预期结果:
+
+  1. 向右缩小选取高度，每次移动1px
+
+  '
+module: 截图录屏/工具栏
+feature: 快捷键
+tags:
+- L2
+vars:
+  xlsx_id: '1645147'
+  case_type: 功能测试
+steps:
+- name: 唤起截图模式
+  action: keyboard_hot_key
+  keys: ctrl,alt,a
+  wait: 0.5
+- name: 框选截图区域
+  action: mouse_drag
+  start:
+    x: 600
+    y: 200
+  end: '@screen_bottom_right'
+  wait: 0.5
+- name: 按Ctrl+Shift+向左箭头-向右缩小选取宽度
+  action: keyboard_press
+  keys: ctrl,shift,Left
+  wait: 0.3
+- name: 再次按Ctrl+Shift+向左箭头
+  action: keyboard_press
+  keys: ctrl,shift,Left
+  wait: 0.3
+- name: 验证区域向右缩小
+  action: screenshot
+setup:
+  - action: session_start
+    command: "deepin-screen-recorder"
+    wait: 3.0
+teardown:
+- action: keyboard_press
+  keys: Escape
+  wait: 0.3

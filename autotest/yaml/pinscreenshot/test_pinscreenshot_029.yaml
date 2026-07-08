@@ -1,0 +1,14 @@
+name: 贴图系统交互-桌面已有贴图，休眠，贴图不关闭
+app: deepin-screen-recorder
+module: 截图录屏/贴图
+feature: 贴图系统交互
+tags:
+- L3
+skip: 跳过-需要系统重启/休眠/注销操作
+vars:
+  xlsx_id: '1644551'
+  case_type: 功能测试
+description: "测试步骤:\n  1. 创建贴图后，点击启动器电源进入休眠模式\n  2. 唤醒系统\n预期结果:\n  1. 进入休眠模式\n  2.\
+  \ 唤醒后贴图仍在桌面\nskip_reason: \"需要系统休眠和唤醒操作，AT-SPI自动化无法执行系统级休眠并恢复会话验证\"\n"
+steps: []
+teardown: []

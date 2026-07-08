@@ -1,0 +1,116 @@
+name: 储存逻辑-tooltips检查
+app: deepin-screen-recorder
+module: 截图录屏/设置
+feature: tooltips
+tags:
+- L2
+vars:
+  xlsx_id: '1915689'
+  case_type: 功能测试
+description: '前置条件: 1. 已安装并打开截图录屏工具；
+
+  测试步骤:
+
+  1. 设置存储方式为每次询问，鼠标hover到截图工具条的保存按钮
+
+  2. 设置存储方式为指定位置->桌面，鼠标hover到截图工具条的保存按钮
+
+  3. 设置存储方式为指定位置->图片，鼠标hover到截图工具条的保存按钮
+
+  4. 设置存储方式为指定位置->保存时选择位置，鼠标hover到截图工具条的保存按钮
+
+  5. 设置存储方式为指定位置->保存时更新位置，鼠标hover到截图工具条的保存按钮
+
+  6. 设置存储方式为指定位置->/home/user/test_folder，鼠标hover到截图工具条的保存按钮
+
+  7. 设置存储方式为指定位置->/home/user/test_folder，删除文件夹后，鼠标hover到截图工具条的保存按钮
+
+  8. 设置存储方式为指定位置->u盘/smb，鼠标hover到截图栏的保存按钮
+
+  预期结果:
+
+  1. tooltips显示文案为保存到本地
+
+  2. tooltips显示文案为保存到桌面
+
+  3. tooltips显示文案为保存到图片
+
+  4. tooltips显示文案为保存时选择位置
+
+  5. tooltips显示文案为保存时更新位置
+
+  6. tooltips显示文案为保存到/home/user/test_folder
+
+  7. tooltips显示文案为保存时选择位置
+
+  8. tooltips显示文案"保存到/home/uos/xxx"，确保U盘和smb名称无误
+
+  '
+steps:
+- name: 唤起截图模式
+  action: keyboard_hot_key
+  keys: ctrl,alt,a
+  wait: 1.0
+- name: 框选截图区域
+  action: mouse_drag
+  start:
+    x: 200
+    y: 200
+  end:
+    x: 800
+    y: 600
+  wait: 0.5
+- name: 等待工具栏出现
+  action: wait
+  wait: 1.0
+- name: 点击保存按钮打开菜单
+  action: element_action
+  ref: save_local_button
+  do: click
+  wait: 0.5
+- name: 等待菜单展开
+  action: wait
+  wait: 0.5
+- name: 设置保存方式为每次询问
+  action: main_menu_comb
+  ref: save_menu_ask
+  wait: 0.5
+- name: 验证每次询问tooltip
+  action: screenshot
+- name: 点击保存按钮打开菜单
+  action: element_action
+  ref: save_local_button
+  do: click
+  wait: 0.5
+- name: 等待菜单展开
+  action: wait
+  wait: 0.5
+- name: 设置保存方式为指定位置-桌面
+  action: main_menu_comb
+  ref: save_menu_desktop
+  wait: 0.5
+- name: 验证保存到桌面tooltip
+  action: screenshot
+- name: 点击保存按钮打开菜单
+  action: element_action
+  ref: save_local_button
+  do: click
+  wait: 0.5
+- name: 等待菜单展开
+  action: wait
+  wait: 0.5
+- name: 设置保存方式为指定位置-图片
+  action: main_menu_comb
+  ref: save_menu_pictures
+  wait: 0.5
+- name: 验证保存到图片tooltip
+  action: screenshot
+teardown:
+- action: keyboard_press
+  keys: Escape
+  wait: 0.3
+skip: ''
+setup:
+  - action: session_start
+    command: "deepin-screen-recorder"
+    wait: 3.0

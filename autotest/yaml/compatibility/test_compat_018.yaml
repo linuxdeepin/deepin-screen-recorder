@@ -1,0 +1,87 @@
+name: '[acp2][录屏]检查录屏工具栏功能'
+app: deepin-screen-recorder
+module: 截图录屏/兼容性
+feature: 兼容性测试
+tags:
+- L2
+vars:
+  xlsx_id: '1644513'
+  case_type: 功能测试
+description: '测试步骤:
+
+  1. 使用快捷键Ctrl+Alt+R
+
+  2. 点击左键
+
+  3. 依次测试工具功能
+
+  预期结果:
+
+  1. 成功调出截图工具
+
+  2. 出现工具栏
+
+  3. 截图、开启摄像头、录音等功能正常
+
+  '
+steps:
+- name: 唤起录屏模式
+  action: keyboard_hot_key
+  keys: ctrl,alt,r
+  wait: 1.0
+- name: 框选录屏区域
+  action: mouse_drag
+  start:
+    x: 400
+    y: 300
+  end:
+    x: 1400
+    y: 700
+  wait: 0.5
+- name: 等待工具栏出现
+  action: wait
+  wait: 1.0
+- name: 验证声音按钮
+  action: element_action
+  ref: audio_button
+  do: click
+  wait: 0.3
+- name: 验证按键按钮
+  action: element_action
+  ref: keyboard_button
+  do: click
+  wait: 0.3
+- name: 验证摄像头按钮
+  action: element_action
+  ref: camera_button
+  do: click
+  wait: 0.3
+- name: 验证鼠标按钮
+  action: element_action
+  ref: mouse_button
+  do: click
+  wait: 0.3
+- name: 验证录屏选项按钮
+  action: element_action
+  ref: record_option_button
+  do: click
+  wait: 0.5
+- name: 按Escape关闭选项菜单
+  action: keyboard_press
+  keys: Escape
+  wait: 0.3
+- name: 验证截图按钮
+  action: element_action
+  ref: shot_button
+  do: click
+  wait: 0.5
+- name: 验证录屏工具栏整体功能
+  action: screenshot
+teardown:
+- action: keyboard_press
+  keys: Escape
+  wait: 0.3
+setup:
+  - action: session_start
+    command: "deepin-screen-recorder"
+    wait: 3.0

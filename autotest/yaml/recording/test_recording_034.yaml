@@ -1,0 +1,58 @@
+name: 录制鼠标选项-图标交互-勾选显示光标和点击
+app: deepin-screen-recorder
+description: |
+  前置条件: 无
+  测试步骤:
+  1. 点击录制鼠标选项
+  2. 勾选显示点击和显示光标选项
+  3. 查看工具栏录制鼠标样式
+  预期结果:
+  1. 鼠标选项展开
+  2. 勾选成功
+  3. 箭头+点击样式
+module: 截图录屏/录屏
+feature: 显示鼠标
+tags:
+- L3
+vars:
+  xlsx_id: '1645173'
+  case_type: 功能测试
+steps:
+- name: "激活录屏模式"
+  action: keyboard_hot_key
+  keys: ctrl,alt,r
+  wait: 1.0
+- name: "框选录屏区域"
+  action: mouse_drag
+  ref: screen_center
+  wait: 0.5
+- name: "等待工具栏出现"
+  action: wait
+  wait: 1.0
+- name: "点击录制鼠标选项"
+  action: element_action
+  ref: mouse_button
+  do: click
+  wait: 0.5
+- name: "勾选显示光标选项"
+  action: main_menu_comb
+  ref: record_option_show_cursor
+  wait: 0.5
+- name: "勾选显示鼠标点击选项"
+  action: main_menu_comb
+  ref: record_option_show_click
+  wait: 0.5
+- name: "验证鼠标选项样式为箭头+点击"
+  action: wait
+  wait: 0.3
+  assert:
+    - type: screenshot
+      expected: "mouse_option_cursor_click"
+setup:
+  - action: session_start
+    command: "deepin-screen-recorder"
+    wait: 3.0
+teardown:
+- action: keyboard_press
+  keys: Escape
+  wait: 0.5

@@ -1,0 +1,60 @@
+name: 储存逻辑-工具条包含保存按钮验证
+app: deepin-screen-recorder
+module: 截图录屏/设置
+feature: 保存按钮
+tags:
+- L0
+vars:
+  xlsx_id: '1915753'
+  case_type: 功能测试
+description: '前置条件: 1. 打开截图录屏工具
+
+  测试步骤:
+
+  1. 进入滚动截图模式，观察工具栏图标
+
+  2. 进入贴图模式，观察工具栏图标
+
+  3. 进入区域截图，观察工具栏图标
+
+  预期结果:
+
+  1. 工具条中显示保存按钮
+
+  2. 工具条中显示保存按钮
+
+  3. 工具条中显示保存按钮
+
+  '
+steps:
+- name: 唤起截图模式
+  action: keyboard_hot_key
+  keys: ctrl,alt,a
+  wait: 1.0
+- name: 框选截图区域
+  action: mouse_drag
+  start:
+    x: 200
+    y: 200
+  end:
+    x: 800
+    y: 600
+  wait: 0.5
+- name: 等待工具栏出现
+  action: wait
+  wait: 1.0
+- name: 验证区域截图工具栏保存按钮
+  action: screenshot
+assert:
+- type: element_visible
+  selector:
+    name: save_local_button
+teardown:
+- action: keyboard_press
+  keys: Escape
+  wait: 0.3
+skip: ''
+setup:
+  - action: session_start
+    command: "deepin-screen-recorder"
+    wait: 3.0

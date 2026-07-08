@@ -1,0 +1,61 @@
+name: 显示按键选项-鼠标取消选择工具
+app: deepin-screen-recorder
+description: |
+  前置条件: 无
+  测试步骤:
+  1. 点击显示按键选项
+  2. 再次点击显示快捷键选项
+  预期结果:
+  1. 显示按键选项被选中
+  2. 显示按键选项取消选中,呈现黑白样式
+module: 截图录屏/录屏
+feature: 显示按键
+tags:
+- L3
+vars:
+  xlsx_id: '1645219'
+  case_type: 功能测试
+steps:
+- name: "激活录屏模式"
+  action: keyboard_hot_key
+  keys: ctrl,alt,r
+  wait: 1.0
+- name: "框选录屏区域"
+  action: mouse_drag
+  ref: screen_center
+  wait: 0.5
+- name: "等待工具栏出现"
+  action: wait
+  wait: 1.0
+- name: "第一次点击显示按键选项"
+  action: element_action
+  ref: keyboard_button
+  do: click
+  wait: 0.5
+- name: "验证显示按键选项被选中"
+  action: wait
+  wait: 0.3
+  assert:
+    - type: element_checked
+      selector:
+        name: keyboard_button
+- name: "第二次点击显示按键选项取消选中"
+  action: element_action
+  ref: keyboard_button
+  do: click
+  wait: 0.5
+- name: "验证显示按键选项已取消选中"
+  action: wait
+  wait: 0.3
+  assert:
+    - type: element_unchecked
+      selector:
+        name: keyboard_button
+setup:
+  - action: session_start
+    command: "deepin-screen-recorder"
+    wait: 3.0
+teardown:
+- action: keyboard_press
+  keys: Escape
+  wait: 0.5

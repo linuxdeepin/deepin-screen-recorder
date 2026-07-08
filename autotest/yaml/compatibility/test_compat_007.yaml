@@ -1,0 +1,22 @@
+name: 滚动截图保存时间（ms）
+app: deepin-screen-recorder
+module: 截图录屏/兼容性
+feature: 保存时间
+tags:
+- L2
+vars:
+  xlsx_id: '1644783'
+  case_type: 性能测试
+description: '测试步骤:
+
+  1. 按文档说明进行测试，滚动截图后测量保存时间
+
+  预期结果:
+
+  1. 各个架构符合产品定义的基线值
+
+  '
+steps: []
+skip: 跳过-需要手动测量保存时间
+setup: []
+teardown: []

@@ -1,0 +1,75 @@
+name: 完成截图
+app: deepin-screen-recorder
+description: '前置条件: 无
+
+  测试步骤:
+
+  1. 快捷键唤起后，双击完成截图
+
+  2. 点击截图按钮完成截图
+
+  预期结果:
+
+  1. 完成截图
+
+  2. 完成截图
+
+  '
+module: 截图录屏/截图基础
+feature: 截图完成
+tags:
+- L0
+vars:
+  xlsx_id: '1644985'
+  case_type: 功能测试
+steps:
+- name: 唤起截图模式
+  action: keyboard_hot_key
+  keys: ctrl,alt,a
+  wait: 1.0
+- name: 框选截图区域
+  action: mouse_drag
+  start:
+    x: 400
+    y: 300
+  end:
+    x: 1400
+    y: 700
+  wait: 0.5
+- name: 双击完成截图
+  action: mouse_double_click
+  x: 900
+  y: 500
+  wait: 1.0
+- name: 验证截图完成-界面退出
+  action: screenshot
+- name: 再次唤起截图模式
+  action: keyboard_hot_key
+  keys: ctrl,alt,a
+  wait: 1.0
+- name: 框选截图区域
+  action: mouse_drag
+  start:
+    x: 300
+    y: 200
+  end:
+    x: 1200
+    y: 600
+  wait: 0.5
+- name: 等待工具栏出现
+  action: wait
+  wait: 1.0
+- name: 按Enter完成截图
+  action: keyboard_press
+  keys: Return
+  wait: 1.0
+- name: 验证截图完成
+  action: screenshot
+setup:
+  - action: session_start
+    command: "deepin-screen-recorder"
+    wait: 3.0
+teardown:
+- action: keyboard_press
+  keys: Escape
+  wait: 0.3

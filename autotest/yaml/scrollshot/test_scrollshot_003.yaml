@@ -1,0 +1,89 @@
+name: 截长图-工具栏-选项切换
+app: deepin-screen-recorder
+description: '前置条件: 无
+
+  测试步骤:
+
+  1. 点击工具栏选项按钮
+
+  2. 点击桌面
+
+  3. 点击工具栏选项按钮
+
+  4. 点击JPG
+
+  预期结果:
+
+  1. 选项列表展开
+
+  2. 选择桌面选项，收起选项列表
+
+  3. 选项列表再次展开
+
+  4. 选择JPG选项，收起选项列表
+
+  '
+module: 截图录屏/滚动截图
+feature: 工具栏
+tags:
+- L2
+vars:
+  xlsx_id: '1645781'
+  case_type: 功能测试
+steps:
+- name: 唤起截图模式
+  action: keyboard_hot_key
+  keys: ctrl,alt,a
+  wait: 1.0
+- name: 框选截图区域
+  action: mouse_drag
+  start:
+    x: 400
+    y: 300
+  end:
+    x: 1400
+    y: 700
+  wait: 0.5
+- name: 等待工具栏出现
+  action: wait
+  wait: 1.0
+- name: 点击滚动截图按钮
+  action: element_action
+  ref: scrollshot_button
+  do: click
+  wait: 1.0
+- name: 点击工具栏选项按钮
+  action: element_action
+  ref: shot_option_button
+  do: click
+  wait: 0.5
+- name: 验证选项列表展开
+  action: screenshot
+- name: 点击桌面选项
+  action: element_action
+  ref: png_action
+  do: click
+  wait: 0.5
+- name: 验证选项列表收起
+  action: screenshot
+- name: 再次点击工具栏选项按钮
+  action: element_action
+  ref: shot_option_button
+  do: click
+  wait: 0.5
+- name: 点击JPG选项
+  action: element_action
+  ref: jpg_action
+  do: click
+  wait: 0.5
+- name: 验证选项列表收起
+  action: screenshot
+teardown:
+- action: keyboard_press
+  keys: Escape
+  wait: 0.3
+skip: ''
+setup:
+  - action: session_start
+    command: "deepin-screen-recorder"
+    wait: 3.0

@@ -1,0 +1,64 @@
+name: 选项-格式选择交互
+app: deepin-screen-recorder
+module: 截图录屏/设置
+feature: 录屏选项
+tags:
+- L2
+vars:
+  xlsx_id: '1645087'
+  case_type: 功能测试
+description: '前置条件: 无
+
+  测试步骤:
+
+  1. 点击选项
+
+  2. 点击MP4
+
+  预期结果:
+
+  1.
+
+  2. 选择MP4选项，收起选项栏
+
+  '
+steps:
+- name: 激活录屏模式
+  action: keyboard_hot_key
+  keys: ctrl,alt,r
+  wait: 1.0
+- name: 框选录屏区域
+  action: mouse_drag
+  ref: screen_center
+  wait: 0.5
+- name: 等待工具栏出现
+  action: wait
+  wait: 1.0
+- name: 打开录屏选项面板
+  action: element_action
+  ref: record_option_button
+  do: click
+  wait: 0.5
+- name: 等待菜单展开
+  action: wait
+  wait: 0.5
+- name: 选择MP4格式
+  action: element_action
+  ref: mp4_action
+  do: click
+  wait: 0.5
+- name: 验证菜单收起
+  action: screenshot
+assert:
+- type: element_checked
+  selector:
+    name: mp4Action
+teardown:
+- action: keyboard_press
+  keys: Escape
+  wait: 0.3
+skip: ''
+setup:
+  - action: session_start
+    command: "deepin-screen-recorder"
+    wait: 3.0

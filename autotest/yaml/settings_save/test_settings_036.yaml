@@ -1,0 +1,94 @@
+name: 几何工具-多次切换后持续沿用记忆的选择
+app: deepin-screen-recorder
+module: 截图录屏/设置
+feature: 几何工具记忆
+tags:
+- L2
+vars:
+  xlsx_id: '1915679'
+  case_type: 功能测试
+description: '前置条件: 1. 打开截图工具，点击几何工具图标； 2. 已设置矩形为粗线条（3px+蓝色），圆形为细线条（1px+红色）
+
+  测试步骤:
+
+  1. 执行切换操作：矩形→圆形→矩形→圆形（依次点击对应图标）
+
+  2. 检查每一次点击后线条和颜色选择
+
+  预期结果:
+
+  1. 每次切换后界面正常显示对应工具类型，无卡顿或崩溃
+
+  2. 圆形和矩形的线条颜色与设置的一致
+
+  '
+steps:
+- name: 唤起截图模式
+  action: keyboard_hot_key
+  keys: ctrl,alt,a
+  wait: 1.0
+- name: 框选截图区域
+  action: mouse_drag
+  start:
+    x: 200
+    y: 200
+  end:
+    x: 800
+    y: 600
+  wait: 0.5
+- name: 等待工具栏出现
+  action: wait
+  wait: 1.0
+- name: 点击几何工具
+  action: element_action
+  ref: gio_button
+  do: click
+  wait: 0.5
+- name: 设置矩形为3px粗线条
+  action: element_action
+  ref: thick_three_rect
+  do: click
+  wait: 0.3
+- name: 设置矩形颜色为蓝色
+  action: element_action
+  ref: color_blue
+  do: click
+  wait: 0.3
+- name: 切换到圆形
+  action: element_action
+  ref: circl_button
+  do: click
+  wait: 0.3
+- name: 设置圆形为1px细线条
+  action: element_action
+  ref: thick_one_circ
+  do: click
+  wait: 0.3
+- name: 设置圆形颜色为红色
+  action: element_action
+  ref: color_red
+  do: click
+  wait: 0.3
+- name: 切换回矩形
+  action: element_action
+  ref: rect_button
+  do: click
+  wait: 0.3
+- name: 验证矩形记忆-3px蓝色
+  action: screenshot
+- name: 切换到圆形
+  action: element_action
+  ref: circl_button
+  do: click
+  wait: 0.3
+- name: 验证圆形记忆-1px红色
+  action: screenshot
+teardown:
+- action: keyboard_press
+  keys: Escape
+  wait: 0.3
+skip: ''
+setup:
+  - action: session_start
+    command: "deepin-screen-recorder"
+    wait: 3.0

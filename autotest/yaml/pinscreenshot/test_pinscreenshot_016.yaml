@@ -1,0 +1,15 @@
+name: 进入贴图模式后旋转屏幕
+app: deepin-screen-recorder
+module: 截图录屏/贴图
+feature: 贴图系统交互
+tags:
+- L2
+vars:
+  xlsx_id: '1645433'
+  case_type: 功能测试
+description: "测试步骤:\n  1. 打开截图录屏工具，进入截图模式\n  2. 截取区域后点击贴图按钮，生成贴图\n  3. 在控制中心显示设置中旋转屏幕\n\
+  \  4. 查看贴图展示\n预期结果:\n  4. 贴图跟随屏幕旋转，显示正常\n"
+steps: []
+teardown: []
+skip: 需要特殊环境或人工验证
+setup: []

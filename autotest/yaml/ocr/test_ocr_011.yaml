@@ -1,0 +1,54 @@
+name: OCR-文本区域-编辑
+app: deepin-screen-recorder
+module: 截图录屏/OCR
+feature: 文本编辑
+tags:
+- L2
+vars:
+  xlsx_id: '1645943'
+  case_type: 功能测试
+description: '测试步骤: 1.通过截图录屏，框选含有文字的图像 2.点击OCR按钮，进入OCR功能 3.点击文本区域，观察文本区域展示
+
+  预期结果: 点击后，点击位置出现编辑光标，进入可编辑模式
+
+  '
+steps:
+- name: 唤起截图模式
+  action: keyboard_hot_key
+  keys: ctrl,alt,a
+  wait: 1.0
+- name: 框选截图区域
+  action: mouse_drag
+  start:
+    x: 400
+    y: 300
+  end:
+    x: 1400
+    y: 700
+  wait: 0.5
+- name: 等待工具栏出现
+  action: wait
+  wait: 1.0
+- name: 点击OCR按钮
+  action: element_action
+  ref: ocr_button
+  do: click
+  wait: 0.5
+- name: 等待OCR识别完成
+  action: wait
+  wait: 5.0
+- name: 点击OCR文本区域
+  action: mouse_click
+  x: 1100
+  y: 500
+  wait: 0.5
+- name: 验证编辑光标出现
+  action: screenshot
+teardown:
+- action: keyboard_press
+  keys: Escape
+  wait: 0.3
+setup:
+  - action: session_start
+    command: "deepin-screen-recorder"
+    wait: 3.0

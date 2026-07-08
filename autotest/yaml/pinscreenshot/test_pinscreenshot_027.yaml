@@ -1,0 +1,14 @@
+name: 贴图系统交互-桌面已有贴图，重启，所有贴图关闭
+app: deepin-screen-recorder
+module: 截图录屏/贴图
+feature: 贴图系统交互
+tags:
+- L3
+skip: 跳过-需要系统重启/休眠/注销操作
+vars:
+  xlsx_id: '1644559'
+  case_type: 功能测试
+description: "测试步骤:\n  1. 创建贴图后，点击启动器电源按钮重启\n预期结果:\n  1. 直接重启，重启后桌面无贴图\nskip_reason:\
+  \ \"需要系统重启操作，AT-SPI自动化无法执行系统级重启并恢复会话验证\"\n"
+steps: []
+teardown: []

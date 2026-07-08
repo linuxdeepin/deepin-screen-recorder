@@ -1,0 +1,20 @@
+{
+    "reportName": "Funny_Test",
+    "testRuns": [],
+    "statistic": {
+        "failed": 0,
+        "broken": 167,
+        "skipped": 0,
+        "passed": 153,
+        "unknown": 0,
+        "total": 320
+    },
+    "time": {
+        "start": 1783397124001,
+        "stop": 1783421724045,
+        "duration": 24600044,
+        "minDuration": 0,
+        "maxDuration": 64646,
+        "sumDuration": 289403
+    }
+}

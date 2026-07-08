@@ -1,0 +1,44 @@
+name: 最小区域-尺寸
+app: deepin-screen-recorder
+description: '前置条件: 无
+
+  测试步骤:
+
+  1. Ctrl+Alt+R启动录屏，框选录屏最小区域
+
+  预期结果:
+
+  1. 最小区域尺寸为580*280
+
+  '
+module: 截图录屏/截图基础
+feature: 区域选择
+tags:
+- L2
+vars:
+  xlsx_id: '1645105'
+  case_type: 功能测试
+steps:
+- name: 唤起录屏模式
+  action: keyboard_hot_key
+  keys: ctrl,alt,r
+  wait: 0.5
+- name: 尝试框选最小录屏区域
+  action: mouse_drag
+  start:
+    x: 500
+    y: 400
+  end:
+    x: 580
+    y: 480
+  wait: 0.5
+- name: 验证最小区域尺寸
+  action: screenshot
+setup:
+  - action: session_start
+    command: "deepin-screen-recorder"
+    wait: 3.0
+teardown:
+- action: keyboard_press
+  keys: Escape
+  wait: 0.3

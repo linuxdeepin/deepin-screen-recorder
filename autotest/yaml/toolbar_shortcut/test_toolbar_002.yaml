@@ -1,0 +1,36 @@
+name: 控制中心更改快捷键后，同步更新插件区、快捷键提示面板、帮助文档
+app: deepin-screen-recorder
+description: '前置条件: 无
+
+  测试步骤:
+
+  1. 依次点击控制中心-键盘和语言-快捷键-截图-ctrl+f
+
+  2. hover插件区的截图按钮
+
+  3. 启动截图录屏应用后，按ctrl+shift+?,并查看截图提示
+
+  4. 查看帮助手册文档
+
+  预期结果:
+
+  1. 控制中心中正常将截图的快捷键修改为ctrl+f
+
+  2. 提示 ctrl+f
+
+  3. 提示 ctrl+f
+
+  4. 截图提示ctrl+f
+
+  '
+module: 截图录屏/工具栏
+feature: 控制中心
+tags:
+- L2
+vars:
+  xlsx_id: '1646085'
+  case_type: 功能测试
+steps: []
+skip: 跳过-需要控制中心系统设置交互，非截图录屏应用内可自动化
+setup: []
+teardown: []

@@ -1,0 +1,88 @@
+name: 保存提示-忽略提示
+app: deepin-screen-recorder
+module: 截图录屏/设置
+feature: 保存提示
+tags:
+- L2
+vars:
+  xlsx_id: '1645307'
+  case_type: 功能测试
+description: '前置条件: None
+
+  测试步骤:
+
+  1. 点击选项
+
+  2. 录制格式选择为GIF
+
+  3. 点击录制，录制10S
+
+  4. 停止录制
+
+  5. 点击忽略
+
+  预期结果:
+
+  1.
+
+  2.
+
+  3.
+
+  4.
+
+  5. 点击忽略后，提示框马上消失
+
+  '
+steps:
+- name: 激活录屏模式
+  action: keyboard_hot_key
+  keys: ctrl,alt,r
+  wait: 1.0
+- name: 框选录屏区域
+  action: mouse_drag
+  ref: screen_center
+  wait: 0.5
+- name: 等待工具栏出现
+  action: wait
+  wait: 1.0
+- name: 打开录屏选项面板
+  action: element_action
+  ref: record_option_button
+  do: click
+  wait: 0.5
+- name: 等待菜单展开
+  action: wait
+  wait: 0.5
+- name: 选择GIF格式
+  action: element_action
+  ref: gif_action
+  do: click
+  wait: 0.5
+- name: 点击录制按钮开始录制
+  action: element_action
+  ref: recorder_button
+  do: click
+  wait: 10.0
+- name: 停止录制
+  action: keyboard_hot_key
+  keys: ctrl,alt,r
+  wait: 2.0
+- name: 验证保存提示出现
+  action: screenshot
+- name: 点击忽略按钮
+  action: mouse_click
+  x: 1050
+  y: 50
+  wait: 1.0
+- name: 验证提示框消失
+  action: screenshot
+teardown:
+- action: keyboard_press
+  keys: Escape
+  wait: 0.3
+skip: ''
+setup:
+  - action: session_start
+    command: "deepin-screen-recorder"
+    wait: 3.0

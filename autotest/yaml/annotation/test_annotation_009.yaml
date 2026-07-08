@@ -1,0 +1,55 @@
+name: 几何工具-tooltips检查
+app: deepin-screen-recorder
+description: '前置条件: 截图录屏已启动
+
+  测试步骤:
+
+  1. 将鼠标hover到工具栏的几何工具图标上
+
+  预期结果:
+
+  1. 悬停时显示tooltips信息：''几何工具(R) 按住Shift可画正方形/正圆''
+
+  '
+module: 截图录屏/标注工具
+feature: tooltips检查
+tags:
+- L1
+vars:
+  xlsx_id: '1915669'
+  case_type: 功能测试
+steps:
+- name: 唤起截图模式
+  action: keyboard_hot_key
+  keys: ctrl,alt,a
+  wait: 1.0
+- name: 框选截图区域
+  action: mouse_drag
+  start:
+    x: 400
+    y: 300
+  end:
+    x: 1400
+    y: 700
+  wait: 0.5
+- name: 等待工具栏出现
+  action: wait
+  wait: 1.0
+- name: 鼠标悬停在几何工具按钮上
+  action: mouse_move
+  ref: rect_button
+  wait: 1.0
+- name: 验证几何工具tooltip
+  action: screenshot
+  assert:
+  - type: element_visible
+    selector:
+      name: '几何工具 (R)\n按住Shift可画正方形/正圆'
+teardown:
+- action: keyboard_press
+  keys: Escape
+  wait: 0.3
+setup:
+  - action: session_start
+    command: "deepin-screen-recorder"
+    wait: 3.0

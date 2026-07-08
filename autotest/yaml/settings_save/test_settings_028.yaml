@@ -1,0 +1,77 @@
+name: 储存逻辑-每次询问时，保存时，修改路径为本次目录，如下载
+app: deepin-screen-recorder
+module: 截图录屏/设置
+feature: 每次询问
+tags:
+- L2
+vars:
+  xlsx_id: '1915701'
+  case_type: 功能测试
+description: '前置条件: 1. 截图工具已安装并启动 2.保存方式设置为每次询问 3.首次截图保存（rm -r ～/.config/deepin/deepin-screen-recorder）
+
+  测试步骤:
+
+  1. 框选任意区域，点击保存按钮
+
+  2. 检查文管窗口默认显示路径
+
+  3. 修改保存路径为下载，点击保存按钮
+
+  预期结果:
+
+  1. 打开文管窗口
+
+  2. 默认显示为桌面
+
+  3. 截图成功，下载目录新增截图文件
+
+  '
+steps:
+- name: 清除配置
+  action: exec
+  command: rm -rf ~/.config/deepin/deepin-screen-recorder
+  wait: 0.3
+- name: 唤起截图模式
+  action: keyboard_hot_key
+  keys: ctrl,alt,a
+  wait: 1.0
+- name: 框选截图区域
+  action: mouse_drag
+  start:
+    x: 200
+    y: 200
+  end:
+    x: 800
+    y: 600
+  wait: 0.5
+- name: 等待工具栏出现
+  action: wait
+  wait: 1.0
+- name: 点击保存按钮打开菜单
+  action: element_action
+  ref: save_local_button
+  do: click
+  wait: 0.5
+- name: 等待菜单展开
+  action: wait
+  wait: 0.5
+- name: 选择每次询问
+  action: main_menu_comb
+  ref: save_menu_ask
+  wait: 0.5
+- name: 点击保存按钮
+  action: element_action
+  ref: save_local_button
+  do: click
+  wait: 1.0
+- name: 验证文管窗口默认路径为桌面
+  action: screenshot
+teardown:
+- action: keyboard_press
+  keys: Escape
+  wait: 0.3
+skip: ''
+setup:
+  - action: session_start
+    command: "deepin-screen-recorder"
+    wait: 3.0

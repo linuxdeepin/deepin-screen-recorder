@@ -1,0 +1,31 @@
+name: 旋转屏幕后截长图
+app: deepin-screen-recorder
+description: '前置条件: 无
+
+  测试步骤:
+
+  1. 启动截长图
+
+  2. 截取长图
+
+  3. 保存长图
+
+  预期结果:
+
+  1. 启动正常
+
+  2. 截取正常
+
+  3. 保存正常
+
+  '
+module: 截图录屏/滚动截图
+feature: 旋转屏幕
+tags:
+- L2
+skip: 跳过-需要旋转屏幕操作
+vars:
+  xlsx_id: '1644645'
+  case_type: 功能测试
+steps: []
+teardown: []

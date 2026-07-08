@@ -1,0 +1,32 @@
+name: 录屏-锁屏界面-鼠标选项按钮显示
+app: deepin-screen-recorder
+description: '前置条件: 无
+
+  测试步骤:
+
+  1. ctrl+alt+R启动截图
+
+  2. 框选任意区域
+
+  3. 查看鼠标选项按钮显示
+
+  预期结果:
+
+  1. 界面锁定，显示录屏框选十字图标
+
+  2. 显示录屏框选区域和录屏工具栏
+
+  3. 鼠标选项按钮显示置灰
+
+  '
+module: 截图录屏/录屏
+feature: 启动录屏
+tags:
+- L2
+vars:
+  xlsx_id: '1644565'
+  case_type: 功能测试
+steps: []
+skip: 跳过-需要锁屏界面环境
+setup: []
+teardown: []

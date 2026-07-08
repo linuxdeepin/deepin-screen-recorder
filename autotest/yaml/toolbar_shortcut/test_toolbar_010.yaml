@@ -1,0 +1,60 @@
+name: 截图终端命令-延时截图命令
+app: deepin-screen-recorder
+description: '前置条件: 无
+
+  测试步骤:
+
+  1. 打开终端，在终端中输入deepin-screen-recorder -d 5回车
+
+  2. 打开终端，在终端中输入deepin-screen-recorder --delay 5回车
+
+  预期结果:
+
+  1. 软件会延时5秒截图
+
+  2. 软件会延时５秒截图
+
+  '
+module: 截图录屏/工具栏
+feature: 命令行
+tags:
+- L3
+vars:
+  xlsx_id: '1644753'
+  case_type: 功能测试
+steps:
+- name: 打开终端
+  action: keyboard_hot_key
+  keys: ctrl,alt,t
+  wait: 1.0
+- name: 输入延时5秒截图命令-d
+  action: keyboard_type
+  keys: deepin-screen-recorder -d 5
+- name: 按回车执行延时截图
+  action: keyboard_press
+  keys: Return
+  wait: 6.0
+- name: 验证延时截图完成
+  action: screenshot
+- name: 关闭当前终端
+  action: keyboard_press
+  keys: ctrl,shift,w
+  wait: 0.3
+- name: 打开终端
+  action: keyboard_hot_key
+  keys: ctrl,alt,t
+  wait: 1.0
+- name: 输入延时5秒截图命令--delay
+  action: keyboard_type
+  keys: deepin-screen-recorder --delay 5
+- name: 按回车执行延时截图
+  action: keyboard_press
+  keys: Return
+  wait: 6.0
+- name: 验证延时截图完成
+  action: screenshot
+teardown: []
+setup:
+  - action: session_start
+    command: "deepin-screen-recorder"
+    wait: 3.0

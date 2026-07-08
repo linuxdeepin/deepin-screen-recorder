@@ -1,0 +1,34 @@
+name: AI截图功能-语音对话中状态点击问问AI
+app: deepin-screen-recorder
+description: '前置条件: 打开UOS AI助手页面，处于语音对话中
+
+  测试步骤:
+
+  1. 点击页面中的"问问AI"按钮
+
+  2. 检查页面跳转情况（观察是否回到UOS AI助手首页）
+
+  3. 检查UOS AI输入框内容
+
+  4. 检查是否新建对话、切换智能体和模型、修改深度思考和联网开关
+
+  预期结果:
+
+  2. 打断语音对话，页面跳转至UOS AI助手首页
+
+  3. 截图内容成功带入UOS AI输入框
+
+  4. 没有新建对话、不切换智能体和模型、不修改深度思考和联网开关
+
+  '
+module: 截图录屏/AI截图
+feature: 问问AI
+tags:
+- L2
+vars:
+  xlsx_id: '1949909'
+  case_type: 功能测试
+steps: []
+skip: 跳过-需要语音对话状态
+setup: []
+teardown: []

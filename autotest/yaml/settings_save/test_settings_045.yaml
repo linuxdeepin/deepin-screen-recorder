@@ -1,0 +1,64 @@
+name: 选项-选项样式
+app: deepin-screen-recorder
+module: 截图录屏/设置
+feature: 录屏选项
+tags:
+- L3
+vars:
+  xlsx_id: '1645089'
+  case_type: 功能测试
+description: '前置条件: 无
+
+  测试步骤:
+
+  1. 点击选项
+
+  预期结果:
+
+  1. 格式选项有GIF、MP4、MKV高亮展示，帧数选项有5fps、10fps、20fps、24fps、30fps置灰展示
+
+  '
+steps:
+- name: 激活录屏模式
+  action: keyboard_hot_key
+  keys: ctrl,alt,r
+  wait: 1.0
+- name: 框选录屏区域
+  action: mouse_drag
+  ref: screen_center
+  wait: 0.5
+- name: 等待工具栏出现
+  action: wait
+  wait: 1.0
+- name: 打开录屏选项面板
+  action: element_action
+  ref: record_option_button
+  do: click
+  wait: 0.5
+- name: 等待菜单展开
+  action: wait
+  wait: 0.5
+- name: 验证菜单选项样式
+  action: screenshot
+assert:
+- type: element_visible
+  selector:
+    name: gifAction
+- type: element_visible
+  selector:
+    name: mp4Action
+- type: element_visible
+  selector:
+    name: fps5Action
+- type: element_visible
+  selector:
+    name: fps30Action
+teardown:
+- action: keyboard_press
+  keys: Escape
+  wait: 0.3
+skip: ''
+setup:
+  - action: session_start
+    command: "deepin-screen-recorder"
+    wait: 3.0

@@ -1,0 +1,60 @@
+name: 截图终端命令-版本显示命令
+app: deepin-screen-recorder
+description: '前置条件: 无
+
+  测试步骤:
+
+  1. 打开终端，在终端中输入deepin-screen-recorder -v 回车
+
+  2. 打开终端，在终端中输入deepin-screen-recorder --version 回车
+
+  预期结果:
+
+  1. 在终端中可以显示截图录屏的版本
+
+  2. 在终端中可以显示截图录屏的版本
+
+  '
+module: 截图录屏/工具栏
+feature: 命令行
+tags:
+- L3
+vars:
+  xlsx_id: '1644755'
+  case_type: 功能测试
+steps:
+- name: 打开终端
+  action: keyboard_hot_key
+  keys: ctrl,alt,t
+  wait: 1.0
+- name: 输入deepin-screen-recorder -v命令
+  action: keyboard_type
+  keys: deepin-screen-recorder -v
+- name: 按回车执行
+  action: keyboard_press
+  keys: Return
+  wait: 1.0
+- name: 验证版本号输出
+  action: screenshot
+- name: 关闭当前终端
+  action: keyboard_press
+  keys: ctrl,shift,w
+  wait: 0.3
+- name: 打开终端
+  action: keyboard_hot_key
+  keys: ctrl,alt,t
+  wait: 1.0
+- name: 输入deepin-screen-recorder --version命令
+  action: keyboard_type
+  keys: deepin-screen-recorder --version
+- name: 按回车执行
+  action: keyboard_press
+  keys: Return
+  wait: 1.0
+- name: 验证版本号输出
+  action: screenshot
+teardown: []
+setup:
+  - action: session_start
+    command: "deepin-screen-recorder"
+    wait: 3.0

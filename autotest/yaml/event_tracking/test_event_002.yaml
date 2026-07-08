@@ -1,0 +1,35 @@
+name: 【埋点检查】延迟截图B2
+app: deepin-screen-recorder
+module: 截图录屏/埋点
+feature: 延迟截图埋点
+tags:
+- L2
+vars:
+  xlsx_id: '1996897'
+  case_type: 功能测试
+  startup_mode: B2
+description: "测试步骤:\n  1. 打开终端，cd /var/lib/deepin/event-log 目录，执行 ls 查看当前日志文件\n  2.\
+  \ 通过 gdbus call 调用延迟截图接口，延迟3秒截图\n  3. 等待截图完成后，在终端执行 cat event_*.log 查看日志内容\n预期结果:\n\
+  \  1. 成功进入 event-log 目录，存在 event_xxxxxxx.log 文件\n  2. 延迟截图操作正常执行\n  3. 日志中包含 JSON\
+  \ 数据，startup_mode 字段值为 \"B2\"，package 为 \"deepin-screen-recorder\"\n"
+setup:
+  - action: session_start
+    command: "deepin-screen-recorder"
+    wait: 3.0
+steps:
+  - name: "通过DBus调用延迟截图接口，延迟3秒"
+    action: dbus_call
+    value:
+      bus_type: "session"
+      dbus_name: "com.deepin.Screenshot"
+      object_path: "/com/deepin/Screenshot"
+      interface: "com.deepin.Screenshot"
+      method: "DelayScreenshot"
+      args: [3]
+    wait: 4.0
+  - name: "等待延迟截图操作完成"
+    action: wait
+    wait: 0.3
+teardown:
+  - action: keyboard_press
+    keys: "Escape"

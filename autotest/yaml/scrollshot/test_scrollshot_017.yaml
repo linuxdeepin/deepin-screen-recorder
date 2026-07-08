@@ -1,0 +1,33 @@
+name: 截长图-启动-系统快捷键启动
+app: deepin-screen-recorder
+description: '前置条件: 无
+
+  测试步骤:
+
+  1. 按Ctrl+Alt+I
+
+  预期结果:
+
+  1. 进入滚动截长图
+
+  '
+module: 截图录屏/滚动截图
+feature: 启动
+tags:
+- L2
+vars:
+  xlsx_id: '1645597'
+  case_type: 功能测试
+steps:
+- name: 使用系统快捷键进入滚动截图
+  action: keyboard_hot_key
+  keys: ctrl,alt,i
+  wait: 0.5
+setup:
+  - action: session_start
+    command: "deepin-screen-recorder"
+    wait: 3.0
+teardown:
+- action: keyboard_press
+  keys: Escape
+  wait: 0.3

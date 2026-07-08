@@ -1,0 +1,28 @@
+name: 全局验证-文案检查-英文环境新功能上线提示文案
+app: deepin-screen-recorder
+description: '前置条件: 设置系统语言为英文
+
+  测试步骤:
+
+  1. 触发新功能提示（如首次打开软件后出现的提示弹窗/浮层）
+
+  2. 查看新功能提示区域的文案内容
+
+  预期结果:
+
+  1. 新功能提示正常弹出
+
+  2. 提示文案为"Screenshots now support AI capabilities, click to experience"
+
+  '
+module: 截图录屏/截图基础
+feature: 文案检查
+tags:
+- L2
+vars:
+  xlsx_id: '1949889'
+  case_type: 功能测试
+steps: []
+skip: 需要特殊环境或人工验证
+setup: []
+teardown: []

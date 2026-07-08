@@ -1,0 +1,99 @@
+name: AI助手-唤起界面仅显示【x】和【√】按钮
+app: deepin-screen-recorder
+description: |
+  前置条件:
+  1. UOS AI助手已安装并正常运行
+  2. 截图录屏应用已更新至支持与AI助手集成的版本（版本号符合要求）
+  3. 输入框内图片数量小于3张（未触发入口置灰条件）
+  测试步骤:
+  1. 打开UOS AI助手主界面
+  2. 点击主界面上的【截图问答】入口
+  3. 观察截图录屏界面工具条元素
+  4. 尝试使用系统截图录屏快捷键（R/O/L/X/P/B/T/ALT I/ALT O、ALT P）
+  预期结果:
+  1. 成功进入UOS AI主界面，【截图问答】入口可见
+  2. UOS AI界面隐藏，唤起截图录屏界面
+  3. 界面仅显示【x】（关闭）和【√】（确认）按钮，无几何工具、保存按钮等其他工具条元素
+  4. 不会触发对应功能
+module: 截图录屏/AI助手
+feature: 面板唤起
+tags:
+- L1
+vars:
+  xlsx_id: '1915797'
+  case_type: 功能测试
+steps:
+  - name: "通过DBus调用StartScreenshotFor3rd模拟第三方唤起"
+    action: dbus_call
+    value:
+      bus_type: session
+      dbus_name: com.deepin.Screenshot
+      object_path: /com/deepin/Screenshot
+      interface: com.deepin.Screenshot.DBusScreenshotService
+      method: StartScreenshotFor3rd
+      args:
+        - type: string
+          value: "${PICTURES_PATH}/test_third_party_shot.png"
+    wait: 2.0
+  - name: "等待截图模式启动"
+    action: wait
+    wait: 1.0
+    assert:
+      - type: process_running
+        app: "deepin-screen-recorder"
+  - name: "等待并验证工具栏状态"
+    action: wait
+    wait: 1.0
+    assert:
+      - type: element_not_visible
+        selector:
+          name: rect_button
+      - type: element_not_visible
+        selector:
+          name: orc_button
+      - type: element_not_visible
+        selector:
+          name: pen_button
+      - type: element_not_visible
+        selector:
+          name: save_local_button
+      - type: element_not_visible
+        selector:
+          name: scrollshot_button
+      - type: element_not_visible
+        selector:
+          name: pinscreenshots_button
+  - name: "验证仅有关闭和确认按钮可见"
+    action: wait
+    wait: 0.5
+    assert:
+      - type: element_visible
+        selector:
+          name: toolbar_close_button
+  - name: "点击确认按钮完成截图"
+    action: keyboard_press
+    keys: Return
+    wait: 2.0
+  - name: "验证截图文件已生成"
+    action: wait
+    wait: 1.0
+    assert:
+      - type: file_exists
+        path: "${PICTURES_PATH}/test_third_party_shot.png"
+  - name: "清理测试文件"
+    action: dbus_call
+    value:
+      bus_type: session
+      dbus_name: com.deepin.FileManager
+      object_path: /com/deepin/FileManager
+      interface: com.deepin.FileManager.FileManager
+      method: DeleteFile
+      args:
+        - type: string
+          value: "${PICTURES_PATH}/test_third_party_shot.png"
+    wait: 0.5
+setup:
+  - action: session_start
+    command: "deepin-screen-recorder"
+    wait: 3.0
+teardown: []

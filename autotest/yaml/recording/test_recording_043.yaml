@@ -1,0 +1,28 @@
+name: '[core]录制视频时2D模式切换到3D模式'
+app: deepin-screen-recorder
+description: '前置条件: 无
+
+  测试步骤:
+
+  1. 2D模式启动截图录屏录制MP4格式视屏
+
+  2. 录制视屏过程切换3D模式
+
+  预期结果:
+
+  1. 录屏正常启动
+
+  2. 切换成功继续录制
+
+  '
+module: 截图录屏/录屏
+feature: 3D模式
+tags:
+- L1
+vars:
+  xlsx_id: '1644897'
+  case_type: 功能测试
+steps: []
+teardown: []
+skip: 需要特殊环境或人工验证
+setup: []

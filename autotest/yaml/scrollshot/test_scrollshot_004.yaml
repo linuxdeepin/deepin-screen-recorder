@@ -1,0 +1,52 @@
+name: 截长图-自动滚动-滚动到底部停止
+app: deepin-screen-recorder
+description: '前置条件: 无
+
+  测试步骤:
+
+  1. 鼠标单击捕捉区域
+
+  2. 等待自动滚动到底部
+
+  3. 观察2S
+
+  预期结果:
+
+  1. 开始自动滚动
+
+  2. 提示"已滚动到区域底部"
+
+  3. 提示自动消失
+
+  '
+module: 截图录屏/滚动截图
+feature: 自动滚动
+tags:
+- L3
+vars:
+  xlsx_id: '1645755'
+  case_type: 功能测试
+steps:
+- name: 进入截图模式
+  action: keyboard_hot_key
+  keys: ctrl,alt,a
+  wait: 0.5
+- name: 切换到滚动截图
+  action: keyboard_hot_key
+  keys: alt,i
+  wait: 0.5
+- name: 鼠标单击捕捉区域开始自动滚动
+  action: mouse_click
+  ref: screen_center
+  wait: 5
+- name: 等待提示自动消失
+  action: wait
+  duration: 2
+setup:
+  - action: session_start
+    command: "deepin-screen-recorder"
+    wait: 3.0
+teardown:
+- action: keyboard_press
+  keys: Escape
+  wait: 0.3

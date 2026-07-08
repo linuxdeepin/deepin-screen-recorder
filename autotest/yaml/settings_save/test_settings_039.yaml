@@ -1,0 +1,72 @@
+name: 保存优化-截图保存路径-非剪切板，提示查看
+app: deepin-screen-recorder
+module: 截图录屏/设置
+feature: 保存提示
+tags:
+- L2
+vars:
+  xlsx_id: '1646083'
+  case_type: 功能测试
+description: '前置条件: None
+
+  测试步骤:
+
+  1. 使用快捷键ctrl+alt+a启动截图
+
+  2. 工具栏选项-指定位置，并完成截图
+
+  3. 查看屏幕顶部的提示信息
+
+  预期结果:
+
+  1. 正常启动截图
+
+  2. 选择任意保存路径，并正常完成截图
+
+  3. 提示信息的右侧只有【查看】按钮
+
+  '
+steps:
+- name: 唤起截图模式
+  action: keyboard_hot_key
+  keys: ctrl,alt,a
+  wait: 1.0
+- name: 框选截图区域
+  action: mouse_drag
+  start:
+    x: 200
+    y: 200
+  end:
+    x: 800
+    y: 600
+  wait: 0.5
+- name: 等待工具栏出现
+  action: wait
+  wait: 1.0
+- name: 点击保存按钮打开菜单
+  action: element_action
+  ref: save_local_button
+  do: click
+  wait: 0.5
+- name: 等待菜单展开
+  action: wait
+  wait: 0.5
+- name: 选择保存到桌面
+  action: main_menu_comb
+  ref: save_menu_desktop
+  wait: 0.5
+- name: 按Enter完成截图
+  action: keyboard_press
+  keys: Return
+  wait: 2.0
+- name: 验证提示信息右侧只有查看按钮
+  action: screenshot
+teardown:
+- action: keyboard_press
+  keys: Escape
+  wait: 0.3
+skip: ''
+setup:
+  - action: session_start
+    command: "deepin-screen-recorder"
+    wait: 3.0

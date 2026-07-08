@@ -1,0 +1,28 @@
+name: '[core]系统锁屏时，进行截图和录屏的操作'
+app: deepin-screen-recorder
+description: '前置条件: 无
+
+  测试步骤:
+
+  1. 进行截图操作
+
+  2. 进行录屏操作
+
+  预期结果:
+
+  1. 截图功能正常
+
+  2. 录屏功能正常
+
+  '
+module: 截图录屏/录屏
+feature: 启动录屏
+tags:
+- L1
+vars:
+  xlsx_id: '1644599'
+  case_type: 功能测试
+steps: []
+skip: 跳过-需要锁屏交互
+setup: []
+teardown: []

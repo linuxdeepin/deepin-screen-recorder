@@ -1,0 +1,34 @@
+name: AI助手-英文环境Hover显示验证
+app: deepin-screen-recorder
+description: '前置条件:
+
+  1. 系统语言设置为英文
+
+  2. UOS AI助手已启动并进入主界面
+
+  3. 截图问答入口未置灰（输入框内文件数小于3个）
+
+  测试步骤:
+
+  1. 在UOS AI助手主界面中，观察''截图问答''入口（未置灰状态）
+
+  2. 将鼠标悬停在''截图问答''入口区域
+
+  预期结果:
+
+  1. 截图问答入口可见
+
+  2. 悬停区域显示文案：Screenshot Q&A Shortcut (Ctrl+Alt+Q), up to 3 images supported
+
+  '
+module: 截图录屏/AI助手
+feature: Hover提示
+tags:
+- L2
+vars:
+  xlsx_id: '1915771'
+  case_type: 功能测试
+steps: []
+skip: 跳过-依赖UOS AI助手应用，非截图录屏独立可测试
+setup: []
+teardown: []

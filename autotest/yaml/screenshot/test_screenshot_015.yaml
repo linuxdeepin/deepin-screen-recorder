@@ -1,0 +1,87 @@
+name: 【截图】截图添加多行文字，文字左对齐
+app: deepin-screen-recorder
+description: '前置条件: 无
+
+  测试步骤:
+
+  1. 启动截图，编辑文字，输入多行文字
+
+  2. 完成截图，查看截图内容
+
+  预期结果:
+
+  1. 操作成功
+
+  2. 截图中多行文字左对齐显示
+
+  '
+module: 截图录屏/截图基础
+feature: 文字标注
+tags:
+- L1
+vars:
+  xlsx_id: '1644765'
+  case_type: 功能测试
+steps:
+- name: 唤起截图模式
+  action: keyboard_hot_key
+  keys: ctrl,alt,a
+  wait: 1.0
+- name: 框选截图区域
+  action: mouse_drag
+  start:
+    x: 300
+    y: 200
+  end:
+    x: 1500
+    y: 800
+  wait: 0.5
+- name: 等待工具栏出现
+  action: wait
+  wait: 1.0
+- name: 点击文字工具按钮
+  action: element_action
+  ref: text_button
+  do: click
+  wait: 0.5
+- name: 在选区内点击创建文本框
+  action: mouse_click
+  x: 500
+  y: 400
+  wait: 0.3
+- name: 输入第一行文字
+  action: keyboard_type
+  text: "第一行文字内容"
+  wait: 0.3
+- name: 按回车换行
+  action: keyboard_press
+  keys: Return
+  wait: 0.3
+- name: 输入第二行文字
+  action: keyboard_type
+  text: "第二行文字内容"
+  wait: 0.3
+- name: 按回车换行
+  action: keyboard_press
+  keys: Return
+  wait: 0.3
+- name: 输入第三行文字
+  action: keyboard_type
+  text: "第三行文字内容"
+  wait: 0.3
+- name: 验证多行文字左对齐显示
+  action: screenshot
+- name: 按Enter完成截图
+  action: keyboard_press
+  keys: Return
+  wait: 1.0
+- name: 验证截图保存
+  action: screenshot
+setup:
+  - action: session_start
+    command: "deepin-screen-recorder"
+    wait: 3.0
+teardown:
+- action: keyboard_press
+  keys: Escape
+  wait: 0.3

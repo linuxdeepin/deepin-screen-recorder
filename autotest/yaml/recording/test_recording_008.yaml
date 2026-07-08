@@ -1,0 +1,32 @@
+name: 声音记忆选项-应用升级后状态重置为默认
+app: deepin-screen-recorder
+description: '前置条件:
+
+  1. 设备已完成录屏应用升级
+
+  2. 升级前录屏设置中麦克风、系统音频选项为关闭状态
+
+  3. 录屏功能升级后正常运行
+
+  4. 删除配置文件重置状态～/.config/deepin/deepin-screen-recorder
+
+  测试步骤:
+
+  1. 打开录屏功能，进入录屏设置界面
+
+  预期结果:
+
+  1. 成功进入录屏设置界面，麦克风、系统音频选项显示为开启状态
+
+  '
+module: 截图录屏/录屏
+feature: 音频选项
+tags:
+- L2
+vars:
+  xlsx_id: '1915817'
+  case_type: 功能测试
+steps: []
+skip: 跳过-需要应用升级
+setup: []
+teardown: []

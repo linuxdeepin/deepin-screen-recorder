@@ -1,0 +1,15 @@
+name: 贴图功能栏-双屏模式保存贴图，点击功能栏最右侧【保存】按钮，保存贴图
+app: deepin-screen-recorder
+module: 截图录屏/贴图
+feature: 贴图保存
+tags:
+- L2
+vars:
+  xlsx_id: '1645429'
+  case_type: 功能测试
+description: "测试步骤:\n  1. 使用快捷键Ctrl+Alt+A打开截图\n  2. 选择截图区域，覆盖两个屏幕\n  3. 点击截图功能栏【贴图】按钮\n\
+  \  4. 点击贴图功能栏【保存】按钮\n预期结果:\n  1. 打开截图\n  2. 选择区域成功\n  3. 进入贴图模式\n  4. 成功保存贴图，贴图内容与截取内容一致\n"
+steps: []
+teardown: []
+skip: 需要特殊环境或人工验证
+setup: []

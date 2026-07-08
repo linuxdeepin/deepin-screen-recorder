@@ -1,0 +1,77 @@
+name: 文字-鼠标调整光标位置
+app: deepin-screen-recorder
+description: '前置条件: 无
+
+  测试步骤:
+
+  1. 鼠标点击行尾
+
+  2. 鼠标点击行首
+
+  预期结果:
+
+  1. 光标在行尾
+
+  2. 光标在行首
+
+  '
+module: 截图录屏/截图基础
+feature: 文字标注
+tags:
+- L2
+vars:
+  xlsx_id: '1645805'
+  case_type: 功能测试
+steps:
+- name: 唤起截图模式
+  action: keyboard_hot_key
+  keys: ctrl,alt,a
+  wait: 1.0
+- name: 框选截图区域
+  action: mouse_drag
+  start:
+    x: 400
+    y: 300
+  end:
+    x: 1400
+    y: 700
+  wait: 0.5
+- name: 等待工具栏出现
+  action: wait
+  wait: 1.0
+- name: 点击文字工具按钮
+  action: element_action
+  ref: text_button
+  do: click
+  wait: 0.5
+- name: 在选区内点击创建文本框
+  action: mouse_click
+  x: 600
+  y: 500
+  wait: 0.3
+- name: 输入文字内容
+  action: keyboard_type
+  text: "测试文字光标位置"
+  wait: 0.3
+- name: 鼠标点击文字行尾位置
+  action: mouse_click
+  x: 780
+  y: 500
+  wait: 0.3
+- name: 验证光标在行尾
+  action: screenshot
+- name: 鼠标点击文字行首位置
+  action: mouse_click
+  x: 600
+  y: 500
+  wait: 0.3
+- name: 验证光标在行首
+  action: screenshot
+setup:
+  - action: session_start
+    command: "deepin-screen-recorder"
+    wait: 3.0
+teardown:
+- action: keyboard_press
+  keys: Escape
+  wait: 0.3

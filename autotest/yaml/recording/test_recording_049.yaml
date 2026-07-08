@@ -1,0 +1,60 @@
+name: '[core]录屏时间显示-任务栏右键菜单'
+app: deepin-screen-recorder
+description: '前置条件: 无
+
+  测试步骤:
+
+  1. 使用快捷键Ctrl+Alt+R启动录屏
+
+  2. 点击录屏开始按钮，开启录屏
+
+  3. 右键任务栏，查看插件中是否有截图录屏插件
+
+  预期结果:
+
+  1. 录屏正常启动
+
+  2. 录屏正常开始
+
+  3. 任务栏右键菜单中无截图录屏的插件
+
+  '
+module: 截图录屏/录屏
+feature: 任务栏
+tags:
+- L1
+vars:
+  xlsx_id: '1644639'
+  case_type: 功能测试
+steps:
+- name: 进入录屏模式
+  action: keyboard_hot_key
+  keys: ctrl,alt,r
+  wait: 0.5
+- name: 框选录屏区域
+  action: mouse_drag
+  start: screen_top_left
+  end: screen_center
+  wait: 0.5
+- name: 开始录制
+  action: keyboard_press
+  keys: Return
+  wait: 4.0
+- name: 右键点击任务栏
+  action: mouse_right_click
+  ref: dock_area
+  wait: 0.5
+- name: 截图验证任务栏右键菜单
+  action: screenshot
+- name: 停止录制
+  action: keyboard_hot_key
+  keys: ctrl,alt,r
+  wait: 1.0
+setup:
+  - action: session_start
+    command: "deepin-screen-recorder"
+    wait: 3.0
+teardown:
+- action: keyboard_press
+  keys: Escape
+  wait: 0.3

@@ -1,0 +1,24 @@
+name: AI截图功能-模型过期触发截图
+app: deepin-screen-recorder
+description: '前置条件: 模型已过期（修改服务端的数据库，让账号过期）
+
+  测试步骤:
+
+  1. 点击截图工具界面中的「AI截图」按钮（或按下系统设定的AI截图快捷键触发功能）
+
+  预期结果:
+
+  1. 打开随航快捷面板，面板内显示「未配置模型」提示文字
+
+  '
+module: 截图录屏/AI截图
+feature: AI解释
+tags:
+- L1
+vars:
+  xlsx_id: '1949897'
+  case_type: 功能测试
+steps: []
+skip: 跳过-需要修改服务端数据库使模型过期
+setup: []
+teardown: []

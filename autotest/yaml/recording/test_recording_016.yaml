@@ -1,0 +1,28 @@
+name: 截图录屏入口插件-调整任务栏大小后后可以正常使用
+app: deepin-screen-recorder
+description: '前置条件: 无
+
+  测试步骤:
+
+  1. 鼠标拖动任务栏边框放大任务栏，单击截图录屏入口插件
+
+  2. 鼠标拖动任务栏边框缩小任务栏
+
+  预期结果:
+
+  1. 正常打开截图
+
+  2. 正常打开截图
+
+  '
+module: 截图录屏/录屏
+feature: 入口插件
+tags:
+- L2
+vars:
+  xlsx_id: '1645561'
+  case_type: 功能测试
+steps: []
+skip: 跳过-需要拖动任务栏边框调整大小
+setup: []
+teardown: []

@@ -1,0 +1,72 @@
+name: AI截图功能-含中文文字内容点击翻译（中译英）
+app: deepin-screen-recorder
+module: 截图录屏/AI截图
+feature: AI翻译
+tags:
+- L1
+vars:
+  xlsx_id: '1949929'
+  case_type: 功能测试
+description: '前置条件: 截图录屏点击AI截图，选择翻译
+
+  测试步骤:
+
+  1. 切换到AI随航功能界面
+
+  2. 检查AI随航界面显示内容
+
+  预期结果:
+
+  1. AI随航界面显示「OCR识别内容」字样，且输出对应中文文字的英文翻译结果
+
+  '
+steps:
+- name: 唤起截图模式
+  action: keyboard_hot_key
+  keys: ctrl,alt,a
+  wait: 1.0
+- name: 框选包含中文文字的截图区域
+  action: mouse_drag
+  start:
+    x: 400
+    y: 300
+  end:
+    x: 1400
+    y: 700
+  wait: 0.5
+- name: 等待工具栏出现
+  action: wait
+  wait: 1.0
+- name: 点击AI截图按钮打开AI工具栏
+  action: element_action
+  ref: ai_assistant_button
+  do: click
+  wait: 1.0
+- name: 点击翻译按钮
+  action: element_action
+  ref: ai_translate_button
+  do: click
+  wait: 5.0
+- name: 断言AI随航面板出现
+  action: element_assert
+  selector:
+    role: panel
+    name: .*
+  assert:
+    - type: element_visible
+- name: 断言AI结果区域显示翻译内容
+  action: element_assert
+  selector:
+    role: text
+    name: .*
+  assert:
+    - type: element_visible
+teardown:
+- action: keyboard_press
+  keys: Escape
+  wait: 0.3
+skip: ''
+setup:
+  - action: session_start
+    command: "deepin-screen-recorder"
+    wait: 3.0

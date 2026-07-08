@@ -1,0 +1,81 @@
+name: 兼容性测试-区域选择
+app: deepin-screen-recorder
+module: 截图录屏/兼容性
+feature: 兼容性测试
+tags:
+- L0
+vars:
+  xlsx_id: '1644803'
+  case_type: 兼容性测试
+description: '测试步骤:
+
+  1. 使用快捷键Ctrl+Alt+A打开截图
+
+  2. 使用鼠标和快捷键调整截图区域大小位置
+
+  3. 使用快捷键Ctrl+Alt+R打开录屏
+
+  4. 使用鼠标和快捷键调整截图区域大小位置
+
+  5. 自动识别桌面、应用、任务栏，也可自动选择区域
+
+  预期结果:
+
+  1. 打开成功
+
+  2. 可以正常调整
+
+  3. 打开成功
+
+  4. 可以正常调整
+
+  5. 可以自动识别，并且保存后的图片名称正常
+
+  '
+steps:
+- name: 进入截图模式
+  action: keyboard_hot_key
+  keys: ctrl,alt,a
+  wait: 0.5
+- name: 使用鼠标框选区域
+  action: mouse_drag
+  start:
+    x: 200
+    y: 200
+  end:
+    x: 800
+    y: 600
+  wait: 0.5
+- name: 使用方向键调整区域位置
+  action: keyboard_press
+  keys: Left
+  wait: 0.2
+- name: 退出截图模式
+  action: keyboard_press
+  keys: Escape
+  wait: 0.5
+- name: 进入录屏模式
+  action: keyboard_hot_key
+  keys: ctrl,alt,r
+  wait: 0.5
+- name: 使用鼠标框选录屏区域
+  action: mouse_drag
+  start:
+    x: 300
+    y: 300
+  end:
+    x: 900
+    y: 700
+  wait: 0.5
+- name: 使用方向键调整录屏区域位置
+  action: keyboard_press
+  keys: Right
+  wait: 0.2
+setup:
+  - action: session_start
+    command: "deepin-screen-recorder"
+    wait: 3.0
+teardown:
+- action: keyboard_press
+  keys: Escape
+  wait: 0.3

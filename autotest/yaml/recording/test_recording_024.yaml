@@ -1,0 +1,54 @@
+name: 声音选项-有声音输入输出时选项
+app: deepin-screen-recorder
+description: |
+  前置条件: 无
+  测试步骤:
+  1. 点击声音选项
+  预期结果:
+  1. 勾选麦克风选项及系统音频选项
+module: 截图录屏/录屏
+feature: 音频选项
+tags:
+- L3
+vars:
+  xlsx_id: '1645255'
+  case_type: 功能测试
+steps:
+- name: "激活录屏模式"
+  action: keyboard_hot_key
+  keys: ctrl,alt,r
+  wait: 1.0
+- name: "框选录屏区域"
+  action: mouse_drag
+  ref: screen_center
+  wait: 0.5
+- name: "等待工具栏出现"
+  action: wait
+  wait: 1.0
+- name: "点击声音选项按钮"
+  action: element_action
+  ref: audio_button
+  do: click
+  wait: 0.5
+- name: "验证声音选项展开，麦克风选项可见"
+  action: wait
+  wait: 0.3
+  assert:
+    - type: element_visible
+      selector:
+        name: micAction
+- name: "验证系统音频选项可见"
+  action: wait
+  wait: 0.3
+  assert:
+    - type: element_visible
+      selector:
+        name: systemAudioAction
+setup:
+  - action: session_start
+    command: "deepin-screen-recorder"
+    wait: 3.0
+teardown:
+- action: keyboard_press
+  keys: Escape
+  wait: 0.5

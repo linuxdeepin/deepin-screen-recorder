@@ -1,0 +1,67 @@
+name: 【截图】截图后剪切板验证
+app: deepin-screen-recorder
+description: '前置条件: 无
+
+  测试步骤:
+
+  1. 点击键盘ctrl+alt+a
+
+  2. 选择区域后点击截屏按钮
+
+  3. 点击键盘ctrl+alt+v
+
+  预期结果:
+
+  1. 调起截图区域选择框
+
+  2. 截屏成功
+
+  3. 调出剪切板且存在截屏的图片
+
+  '
+module: 截图录屏/截图基础
+feature: 剪切板
+tags:
+- L1
+vars:
+  xlsx_id: '1644771'
+  case_type: 功能测试
+steps:
+- name: 唤起截图模式
+  action: keyboard_hot_key
+  keys: ctrl,alt,a
+  wait: 1.0
+- name: 框选截图区域
+  action: mouse_drag
+  start:
+    x: 400
+    y: 300
+  end:
+    x: 1400
+    y: 700
+  wait: 0.5
+- name: 等待工具栏出现
+  action: wait
+  wait: 1.0
+- name: 按Enter完成截图并复制到剪切板
+  action: keyboard_press
+  keys: Return
+  wait: 1.0
+- name: 按Ctrl+Alt+V打开剪切板
+  action: keyboard_hot_key
+  keys: ctrl,alt,v
+  wait: 1.5
+- name: 验证剪切板内容
+  action: screenshot
+  assert:
+    - type: element_visible
+      selector:
+        name: ClipboardWidget
+setup:
+  - action: session_start
+    command: "deepin-screen-recorder"
+    wait: 3.0
+teardown:
+- action: keyboard_press
+  keys: Escape
+  wait: 0.3

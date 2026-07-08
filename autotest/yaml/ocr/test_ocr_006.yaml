@@ -1,0 +1,64 @@
+name: '[smoke]OCR-复制按钮-复制部分文本'
+app: deepin-screen-recorder
+module: 截图录屏/OCR
+feature: 复制保存
+tags:
+- L0
+- smoke
+vars:
+  xlsx_id: '1645915'
+  case_type: 功能测试
+description: '测试步骤: 1.通过截图录屏，框选含有文字的图像 2.点击OCR按钮，进入OCR功能 3.选中部分文本，点击右下方复制按钮
+
+  预期结果: 提示已复制（2秒后自动消失）
+
+  '
+steps:
+- name: 唤起截图模式
+  action: keyboard_hot_key
+  keys: ctrl,alt,a
+  wait: 1.0
+- name: 框选截图区域
+  action: mouse_drag
+  start:
+    x: 400
+    y: 300
+  end:
+    x: 1400
+    y: 700
+  wait: 0.5
+- name: 等待工具栏出现
+  action: wait
+  wait: 1.0
+- name: 点击OCR按钮
+  action: element_action
+  ref: ocr_button
+  do: click
+  wait: 0.5
+- name: 等待OCR识别完成
+  action: wait
+  wait: 5.0
+- name: 在OCR文本区域点击并选中部分文本
+  action: mouse_drag
+  start:
+    x: 1100
+    y: 400
+  end:
+    x: 1300
+    y: 600
+  wait: 0.5
+- name: 点击复制按钮
+  action: element_action
+  ref: ocr_copy_button
+  do: click
+  wait: 2.0
+- name: 验证复制成功提示
+  action: screenshot
+teardown:
+- action: keyboard_press
+  keys: Escape
+  wait: 0.3
+setup:
+  - action: session_start
+    command: "deepin-screen-recorder"
+    wait: 3.0

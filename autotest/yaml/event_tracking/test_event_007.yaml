@@ -1,0 +1,38 @@
+name: 【埋点检查】录屏B7
+app: deepin-screen-recorder
+module: 截图录屏/埋点
+feature: 录屏埋点
+tags:
+- L2
+vars:
+  xlsx_id: '1996907'
+  case_type: 功能测试
+  startup_mode: B7
+description: "测试步骤:\n  1. 打开终端，cd /var/lib/deepin/event-log 目录，执行 ls 查看当前日志文件\n  2.\
+  \ 按快捷键 Ctrl+Alt+R 进入录屏模式\n  3. 按回车开始录屏，等待3秒后按 Ctrl+Alt+R 停止录屏\n  4. 在终端执行 cat event_*.log\
+  \ 查看日志内容\n预期结果:\n  1. 成功进入 event-log 目录，存在 event_xxxxxxx.log 文件\n  2. 录屏操作正常执行\n\
+  \  3. 日志中包含 JSON 数据，startup_mode 字段值为 \"B7\"，package 为 \"deepin-screen-recorder\"\
+  \n"
+setup:
+  - action: session_start
+    command: "deepin-screen-recorder"
+    wait: 3.0
+steps:
+  - name: "按快捷键Ctrl+Alt+R进入录屏模式"
+    action: keyboard_press
+    keys: "ctrl+alt+R"
+    wait: 1.0
+  - name: "按回车键开始录屏"
+    action: keyboard_press
+    keys: "Return"
+    wait: 3.0
+  - name: "按Ctrl+Alt+R停止录屏"
+    action: keyboard_press
+    keys: "ctrl+alt+R"
+    wait: 1.0
+  - name: "等待录屏保存完成"
+    action: wait
+    wait: 0.3
+teardown:
+  - action: keyboard_press
+    keys: "Escape"

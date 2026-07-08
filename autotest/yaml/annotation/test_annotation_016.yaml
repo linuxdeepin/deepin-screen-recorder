@@ -1,0 +1,24 @@
+name: '[core]一指单点工具栏'
+app: deepin-screen-recorder
+description: '前置条件: 无
+
+  测试步骤:
+
+  1. 一指单点工具栏截图、录音、显示按键、摄像头、显示点击、选项
+
+  预期结果:
+
+  1. 工具栏按钮均正常
+
+  '
+module: 截图录屏/标注工具
+feature: 触控操作
+tags:
+- L1
+vars:
+  xlsx_id: '1644957'
+  case_type: 功能测试
+steps: []
+skip: 跳过-需要触控屏设备
+setup: []
+teardown: []

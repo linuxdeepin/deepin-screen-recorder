@@ -1,0 +1,31 @@
+name: 截长图-多屏下截取长图
+app: deepin-screen-recorder
+description: '前置条件: 无
+
+  测试步骤:
+
+  1. 鼠标单击捕捉区域
+
+  2. 截取长图
+
+  3. 保存长图
+
+  预期结果:
+
+  1. 捕捉区选中
+
+  2. 截取长图正常
+
+  3. 可以保存成功，截图内容正常
+
+  '
+module: 截图录屏/滚动截图
+feature: 多屏
+tags:
+- L1
+skip: 跳过-需要多屏硬件环境
+vars:
+  xlsx_id: '1644643'
+  case_type: 功能测试
+steps: []
+teardown: []

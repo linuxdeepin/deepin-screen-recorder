@@ -1,0 +1,60 @@
+name: 储存逻辑-按回车触发复制到粘贴板
+app: deepin-screen-recorder
+module: 截图录屏/设置
+feature: 复制到剪贴板
+tags:
+- L1
+vars:
+  xlsx_id: '1915691'
+  case_type: 功能测试
+description: '前置条件: 1. 系统已安装截图录屏工具且功能正常； 2. 打开截图工具完成任意区域截图；
+
+  测试步骤:
+
+  1. 在截图完成后显示工具条的界面，按下键盘回车键
+
+  2. 观察屏幕通知区域
+
+  3. 打开任意支持粘贴图片的应用，按下Ctrl+V粘贴
+
+  预期结果:
+
+  1. 退出截图界面
+
+  2. 显示通知''截图已复制到剪贴板''
+
+  3. 成功粘贴截图文案，与截取的区域一致
+
+  '
+steps:
+- name: 唤起截图模式
+  action: keyboard_hot_key
+  keys: ctrl,alt,a
+  wait: 1.0
+- name: 框选截图区域
+  action: mouse_drag
+  start:
+    x: 200
+    y: 200
+  end:
+    x: 800
+    y: 600
+  wait: 0.5
+- name: 等待工具栏出现
+  action: wait
+  wait: 1.0
+- name: 按回车键复制到剪贴板
+  action: keyboard_press
+  keys: Return
+  wait: 1.0
+- name: 验证剪贴板复制通知
+  action: screenshot
+teardown:
+- action: keyboard_press
+  keys: Escape
+  wait: 0.3
+skip: ''
+setup:
+  - action: session_start
+    command: "deepin-screen-recorder"
+    wait: 3.0

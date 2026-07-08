@@ -1,0 +1,20 @@
+name: OCR-交互操作-系统交互
+app: deepin-screen-recorder
+module: 截图录屏/OCR
+feature: 文字识别
+tags:
+- L2
+vars:
+  xlsx_id: '1646017'
+  case_type: 功能测试
+description: '测试步骤: 1.切换系统分辨率/缩放比/字体大小等 2.查看OCR界面展示
+
+  预期结果: 2.界面展示正常
+
+  注: 需要修改系统分辨率和缩放比，当前为非自动化用例桩
+
+  '
+steps: []
+teardown: []
+skip: 标记-非自动化-需要修改系统分辨率缩放比
+setup: []

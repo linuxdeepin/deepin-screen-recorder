@@ -1,0 +1,24 @@
+name: AI截图功能-未安装uosai，或者版本过低时AI图标显示验证
+app: deepin-screen-recorder
+description: '前置条件: 未安装uosai助手，或者uosai助手版本低于2.12
+
+  测试步骤:
+
+  1. 唤起截图录屏，查看截图工具栏中AI图标的显示
+
+  预期结果:
+
+  1. 截图工具栏中不显示AI图标
+
+  '
+module: 截图录屏/AI截图
+feature: AI图标
+tags:
+- L1
+vars:
+  xlsx_id: '1949955'
+  case_type: 功能测试
+steps: []
+skip: 跳过-需要卸载或降级uosai助手
+setup: []
+teardown: []

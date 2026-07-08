@@ -1,0 +1,15 @@
+name: 贴图内容-1.25倍缩放比下与截图内容保持一致
+app: deepin-screen-recorder
+module: 截图录屏/贴图
+feature: 贴图缩放
+tags:
+- L2
+vars:
+  xlsx_id: '1645523'
+  case_type: 功能测试
+description: "测试步骤:\n  1. 设置系统缩放比为1.25倍\n  2. 打开截图录屏工具，进入截图模式\n  3. 截取指定区域\n  4. 点击贴图按钮，生成贴图\n\
+  \  5. 查看贴图的内容\n预期结果:\n  5. 与截图选择的内容保持一致\n"
+steps: []
+teardown: []
+skip: 需要特殊环境或人工验证
+setup: []

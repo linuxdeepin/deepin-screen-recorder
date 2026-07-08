@@ -1,0 +1,22 @@
+name: 启动CPU占用（占比）
+app: deepin-screen-recorder
+module: 截图录屏/兼容性
+feature: CPU占用
+tags:
+- L2
+vars:
+  xlsx_id: '1644777'
+  case_type: 性能测试
+description: '测试步骤:
+
+  1. 按文档说明进行测试，测量启动后CPU占用占比
+
+  预期结果:
+
+  1. 各个架构符合产品定义的基线值
+
+  '
+steps: []
+skip: 跳过-需要手动测量CPU占用
+setup: []
+teardown: []

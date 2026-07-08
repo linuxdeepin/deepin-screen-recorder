@@ -1,0 +1,14 @@
+name: 贴图系统交互-桌面已有贴图，注销，所有贴图关闭
+app: deepin-screen-recorder
+module: 截图录屏/贴图
+feature: 贴图系统交互
+tags:
+- L3
+skip: 跳过-需要系统重启/休眠/注销操作
+vars:
+  xlsx_id: '1644557'
+  case_type: 功能测试
+description: "测试步骤:\n  1. 创建贴图后，点击启动器电源注销当前用户\n  2. 重新登录当前用户\n预期结果:\n  1. 直接注销\n \
+  \ 2. 登录后桌面无贴图\nskip_reason: \"需要用户注销和重新登录操作，AT-SPI自动化无法执行系统级注销并恢复会话验证\"\n"
+steps: []
+teardown: []

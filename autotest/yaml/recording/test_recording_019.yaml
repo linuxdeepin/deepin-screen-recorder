@@ -1,0 +1,40 @@
+name: 长时间录制-MKV
+app: deepin-screen-recorder
+description: '前置条件: 无
+
+  测试步骤:
+
+  1. 点击选项录屏格式选择MKV
+
+  2. 点击录制按钮
+
+  3. 录制10h视频
+
+  4. 保存视频
+
+  5. 查看MKV
+
+  预期结果:
+
+  1. 格式选择成功
+
+  2. 开始录制
+
+  3. 录制10h
+
+  4. 保存成功
+
+  5. MKV播放正常，时长为10h
+
+  '
+module: 截图录屏/录屏
+feature: 保存
+tags:
+- L3
+vars:
+  xlsx_id: '1645283'
+  case_type: 功能测试
+steps: []
+skip: 跳过-长时间录制10h
+setup: []
+teardown: []

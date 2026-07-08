@@ -1,0 +1,57 @@
+name: 声音选项-快捷键选择工具
+app: deepin-screen-recorder
+description: |
+  前置条件: 无
+  测试步骤:
+  1. 按S键
+  2. 按↓
+  3. 按Enter键
+  预期结果:
+  1. 打开声音选项
+  2. 切换选项
+  3. 取消选中麦克风选项，收起声音选择栏
+module: 截图录屏/录屏
+feature: 音频选项
+tags:
+- L3
+vars:
+  xlsx_id: '1645249'
+  case_type: 功能测试
+steps:
+- name: "激活录屏模式"
+  action: keyboard_hot_key
+  keys: ctrl,alt,r
+  wait: 1.0
+- name: "框选录屏区域"
+  action: mouse_drag
+  ref: screen_center
+  wait: 0.5
+- name: "等待工具栏出现"
+  action: wait
+  wait: 1.0
+- name: "按S键打开声音选项"
+  action: keyboard_press
+  keys: s
+  wait: 0.5
+- name: "按↓切换选项"
+  action: keyboard_press
+  keys: Down
+  wait: 0.5
+- name: "按Enter确认选择"
+  action: keyboard_press
+  keys: Return
+  wait: 0.5
+- name: "验证声音选项已切换"
+  action: wait
+  wait: 0.3
+  assert:
+    - type: screenshot
+      expected: "audio_option_switched"
+setup:
+  - action: session_start
+    command: "deepin-screen-recorder"
+    wait: 3.0
+teardown:
+- action: keyboard_press
+  keys: Escape
+  wait: 0.5

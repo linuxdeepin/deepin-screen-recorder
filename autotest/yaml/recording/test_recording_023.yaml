@@ -1,0 +1,46 @@
+name: 工具栏-位置-屏幕边界时录屏-全屏截取
+app: deepin-screen-recorder
+description: |
+  前置条件: 无
+  测试步骤:
+  1. 移动录屏区域为全屏截取
+  预期结果:
+  1. 工具栏展示在右上角
+module: 截图录屏/录屏
+feature: 启动录屏
+tags:
+- L3
+vars:
+  xlsx_id: '1645257'
+  case_type: 功能测试
+steps:
+- name: "激活录屏模式"
+  action: keyboard_hot_key
+  keys: ctrl,alt,r
+  wait: 1.0
+- name: "全屏框选录屏区域"
+  action: mouse_drag
+  start:
+    x: 0
+    y: 0
+  end:
+    x: 1919
+    y: 1079
+  wait: 0.5
+- name: "等待工具栏出现"
+  action: wait
+  wait: 1.0
+- name: "验证工具栏出现在右上角"
+  action: wait
+  wait: 0.3
+  assert:
+    - type: screenshot
+      expected: "toolbar_fullscreen_position"
+setup:
+  - action: session_start
+    command: "deepin-screen-recorder"
+    wait: 3.0
+teardown:
+- action: keyboard_press
+  keys: Escape
+  wait: 0.5

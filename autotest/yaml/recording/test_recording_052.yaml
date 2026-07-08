@@ -1,0 +1,60 @@
+name: '[core]录屏时间显示'
+app: deepin-screen-recorder
+description: '前置条件: 无
+
+  测试步骤:
+
+  1. 启动截图录屏，录制2分钟视屏，查看录屏时间显示
+
+  2. 启动截图录屏，录制1小时视屏，查看录屏时间显示
+
+  3. 分别将dock栏设置在桌面上、下，查看录屏时间显示
+
+  4. 分别将dock栏设置在桌面左右，查看录屏显示
+
+  预期结果:
+
+  1. 录屏以时：分：秒格式正常显示当前录制时间
+
+  2. 录屏以时：分：秒格式正常显示当前录制时间
+
+  3. 录屏时间正常显示
+
+  4. 录屏不显示录制时间
+
+  '
+module: 截图录屏/录屏
+feature: 任务栏
+tags:
+- L1
+vars:
+  xlsx_id: '1644631'
+  case_type: 功能测试
+steps:
+- name: 进入录屏模式
+  action: keyboard_hot_key
+  keys: ctrl,alt,r
+  wait: 0.5
+- name: 框选录屏区域
+  action: mouse_drag
+  start: screen_top_left
+  end: screen_center
+  wait: 0.5
+- name: 开始录制
+  action: keyboard_press
+  keys: Return
+  wait: 4.0
+- name: 截图验证录屏时间显示格式
+  action: screenshot
+- name: 停止录制
+  action: keyboard_hot_key
+  keys: ctrl,alt,r
+  wait: 1.0
+setup:
+  - action: session_start
+    command: "deepin-screen-recorder"
+    wait: 3.0
+teardown:
+- action: keyboard_press
+  keys: Escape
+  wait: 0.3

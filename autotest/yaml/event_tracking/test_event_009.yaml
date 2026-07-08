@@ -1,0 +1,38 @@
+name: 【埋点检查】点击AI助手图标B9
+app: deepin-screen-recorder
+module: 截图录屏/埋点
+feature: AI埋点
+tags:
+- L3
+vars:
+  xlsx_id: '1996909'
+  case_type: 功能测试
+  startup_mode: B9
+description: "测试步骤:\n  1. 打开终端，cd /var/lib/deepin/event-log 目录，执行 ls 查看当前日志文件\n  2.\
+  \ 按快捷键 Ctrl+Alt+A 进入截图模式，框选区域后点击AI助手图标\n  3. 在终端执行 cat event_*.log 查看日志内容\n预期结果:\n\
+  \  1. 成功进入 event-log 目录，存在 event_xxxxxxx.log 文件\n  2. AI助手功能正常触发\n  3. 日志中包含 JSON\
+  \ 数据，startup_mode 字段值为 \"B9\"，package 为 \"deepin-screen-recorder\"\n"
+setup:
+  - action: session_start
+    command: "deepin-screen-recorder"
+    wait: 3.0
+steps:
+  - name: "按快捷键Ctrl+Alt+A进入截图模式"
+    action: keyboard_press
+    keys: "ctrl+alt+A"
+    wait: 0.5
+  - name: "框选截图区域"
+    action: mouse_drag
+    ref: screen_bottom_right
+    wait: 0.5
+  - name: "点击AI助手图标"
+    action: element_action
+    ref: ai_assistant_button
+    do: "click"
+    wait: 0.3
+  - name: "等待AI助手功能触发完成"
+    action: wait
+    wait: 0.3
+teardown:
+  - action: keyboard_press
+    keys: "Escape"

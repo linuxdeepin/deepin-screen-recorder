@@ -1,0 +1,103 @@
+name: '[acp2][截图]检查截图识别区域功能'
+app: deepin-screen-recorder
+module: 截图录屏/兼容性
+feature: 兼容性测试
+tags:
+- L2
+vars:
+  xlsx_id: '1644519'
+  case_type: 功能测试
+description: '测试步骤:
+
+  1. 打开任意应用窗口，使用快捷键Ctrl+Alt+A
+
+  2. 点击应用窗口
+
+  3. 手动框选任意区域
+
+  4. 在工具栏选项中，选择保存文件格式选择jpg/png/bmp
+
+  预期结果:
+
+  1. 成功调出截图工具
+
+  2. 自动选中截图当前打开的窗口
+
+  3. 支持手动选择区域
+
+  4. 能够保存为对应的jpg/png/bmp格式文件
+
+  '
+steps:
+- name: 唤起截图模式
+  action: keyboard_hot_key
+  keys: ctrl,alt,a
+  wait: 1.0
+- name: 手动框选任意区域
+  action: mouse_drag
+  start:
+    x: 400
+    y: 300
+  end:
+    x: 1400
+    y: 700
+  wait: 0.5
+- name: 等待工具栏出现
+  action: wait
+  wait: 1.0
+- name: 点击截图选项按钮
+  action: element_action
+  ref: shot_option_button
+  do: click
+  wait: 1.0
+- name: 选择PNG格式
+  action: element_action
+  ref: png_action
+  do: click
+  wait: 0.3
+- name: 按Enter完成截图
+  action: keyboard_press
+  keys: Return
+  wait: 1.0
+- name: 验证PNG格式截图完成
+  action: screenshot
+- name: 再次唤起截图模式
+  action: keyboard_hot_key
+  keys: ctrl,alt,a
+  wait: 1.0
+- name: 手动框选任意区域
+  action: mouse_drag
+  start:
+    x: 400
+    y: 300
+  end:
+    x: 1400
+    y: 700
+  wait: 0.5
+- name: 等待工具栏出现
+  action: wait
+  wait: 1.0
+- name: 点击截图选项按钮
+  action: element_action
+  ref: shot_option_button
+  do: click
+  wait: 1.0
+- name: 选择JPG格式
+  action: element_action
+  ref: jpg_action
+  do: click
+  wait: 0.3
+- name: 按Enter完成截图
+  action: keyboard_press
+  keys: Return
+  wait: 1.0
+- name: 验证JPG格式截图完成
+  action: screenshot
+teardown:
+- action: keyboard_press
+  keys: Escape
+  wait: 0.3
+setup:
+  - action: session_start
+    command: "deepin-screen-recorder"
+    wait: 3.0

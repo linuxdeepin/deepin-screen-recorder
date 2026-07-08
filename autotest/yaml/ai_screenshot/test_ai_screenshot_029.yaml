@@ -1,0 +1,24 @@
+name: AI截图功能-未领取模型触发截图
+app: deepin-screen-recorder
+description: '前置条件: 打开UOS AI模型管理界面，删除所有已领取的AI模型
+
+  测试步骤:
+
+  1. 使用快捷键点击uosai界面中的「截图」按钮
+
+  预期结果:
+
+  1. 打开随航快捷面板，面板内显示「未配置模型」提示文字
+
+  '
+module: 截图录屏/AI截图
+feature: AI解释
+tags:
+- L1
+vars:
+  xlsx_id: '1949899'
+  case_type: 功能测试
+steps: []
+skip: 跳过-需要未领取模型状态
+setup: []
+teardown: []

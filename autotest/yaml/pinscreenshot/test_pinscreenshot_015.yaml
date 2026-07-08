@@ -1,0 +1,74 @@
+name: 桌面已有30张贴图，可以正常进入贴图模式
+app: deepin-screen-recorder
+module: 截图录屏/贴图
+feature: 贴图多贴图
+tags:
+- L2
+vars:
+  xlsx_id: '1645435'
+  case_type: 功能测试
+description: "测试步骤:\n  1. 打开截图录屏工具，进入截图模式\n  2. 选择截图区域\n  3. 单击工具栏贴图按钮，进入贴图模式\n前置条件:\n\
+  \  桌面已有30张贴图\n预期结果:\n  2. 成功选择区域\n  3. 成功进入贴图模式\n"
+steps:
+- name: 循环创建30张贴图
+  action: for_loop
+  range: 30
+  steps:
+  - name: 唤起截图模式
+    action: keyboard_hot_key
+    keys: ctrl,alt,a
+    wait: 1.0
+  - name: 框选小区域
+    action: mouse_drag
+    start:
+      x: 100
+      y: 100
+    end:
+      x: 300
+      y: 200
+    wait: 0.5
+  - name: 等待工具栏出现
+    action: wait
+    wait: 1.0
+  - name: 点击贴图按钮
+    action: element_action
+    ref: pinscreenshots_button
+    do: click
+    wait: 0.5
+- name: 第31次唤起截图模式
+  action: keyboard_hot_key
+  keys: ctrl,alt,a
+  wait: 1.0
+- name: 框选截图区域
+  action: mouse_drag
+  start:
+    x: 400
+    y: 300
+  end:
+    x: 800
+    y: 500
+  wait: 0.5
+- name: 等待工具栏出现
+  action: wait
+  wait: 1.0
+- name: 断言贴图按钮存在且可点击
+  action: element_assert
+  ref: pinscreenshots_button
+  assert:
+    - type: element_visible
+- name: 点击贴图按钮
+  action: element_action
+  ref: pinscreenshots_button
+  do: click
+  wait: 1.0
+- name: 验证贴图成功创建
+  action: screenshot
+teardown:
+- action: keyboard_press
+  keys: Escape
+  wait: 0.3
+skip: ''
+setup:
+  - action: session_start
+    command: "deepin-screen-recorder"
+    wait: 3.0

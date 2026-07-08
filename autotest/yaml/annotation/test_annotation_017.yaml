@@ -1,0 +1,32 @@
+name: 截图-锁屏界面-文字工具按钮显示
+app: deepin-screen-recorder
+description: '前置条件: 无
+
+  测试步骤:
+
+  1. ctrl+alt+a启动截图
+
+  2. 框选任意区域
+
+  3. 查看文字工具按钮显示
+
+  预期结果:
+
+  1. 界面锁定，显示截图框选十字图标
+
+  2. 显示截图框选区域和截图工具栏
+
+  3. 文字工具按钮显示置灰
+
+  '
+module: 截图录屏/标注工具
+feature: 锁屏界面标注
+tags:
+- L2
+vars:
+  xlsx_id: '1644583'
+  case_type: 功能测试
+steps: []
+skip: 跳过-需要锁屏界面环境
+setup: []
+teardown: []

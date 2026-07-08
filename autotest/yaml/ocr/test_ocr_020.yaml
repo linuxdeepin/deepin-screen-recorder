@@ -1,0 +1,20 @@
+name: '[core]OCR-锁屏界面调用-调用后解除锁屏'
+app: deepin-screen-recorder
+module: 截图录屏/OCR
+feature: 文字识别
+tags:
+- L1
+vars:
+  xlsx_id: '1646011'
+  case_type: 功能测试
+description: '测试步骤: 1.在锁屏界面使用截图录屏，框选含有文字的图片 2.使用OCR功能，进行图像识别 3.输入密码，登录系统
+
+  预期结果: 3.界面展示OCR识别窗口及识别结果
+
+  注: 需要锁屏环境，当前为非自动化用例桩
+
+  '
+steps: []
+teardown: []
+skip: 标记-非自动化-需要锁屏环境
+setup: []

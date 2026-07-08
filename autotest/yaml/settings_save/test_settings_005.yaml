@@ -1,0 +1,97 @@
+name: 储存逻辑-文管窗口修改文件格式和文件名称
+app: deepin-screen-recorder
+module: 截图录屏/设置
+feature: 文管窗口
+tags:
+- L1
+vars:
+  xlsx_id: '1915747'
+  case_type: 功能测试
+description: '前置条件: 1. 截图工具已安装并启动；
+
+  测试步骤:
+
+  1. 保存方式设置为每次询问，完成截图后点击保存按钮
+
+  2. 修改文件名称为test1并保存
+
+  3. 重复操作步骤1，修改文件格式为JPEG/BMP
+
+  4. 保存方式设置为保存时更新位置，完成截图后点击保存按钮
+
+  5. 修改文件名称为test1并保存
+
+  6. 重复操作步骤4，修改文件格式为JPEG/BMP
+
+  7. 保存方式设置为保存时选择位置，完成截图后点击保存按钮
+
+  8. 修改文件名称为test1并保存
+
+  9. 重复操作步骤7，修改文件格式为JPEG/BMP
+
+  预期结果:
+
+  1. 弹出文管的选择窗口
+
+  2. 保存成功，文件显示为test1.png
+
+  3. 保存成功，格式为JPEG/BMP
+
+  4. 弹出文管的选择窗口
+
+  5. 保存成功，文件显示为test1.png
+
+  6. 保存成功，格式为JPEG/BMP
+
+  7. 弹出文管的选择窗口
+
+  8. 保存成功，文件显示为test1.png
+
+  9. 保存成功，格式为JPEG/BMP
+
+  '
+steps:
+- name: 唤起截图模式
+  action: keyboard_hot_key
+  keys: ctrl,alt,a
+  wait: 1.0
+- name: 框选截图区域
+  action: mouse_drag
+  start:
+    x: 200
+    y: 200
+  end:
+    x: 800
+    y: 600
+  wait: 0.5
+- name: 等待工具栏出现
+  action: wait
+  wait: 1.0
+- name: 点击保存按钮打开菜单
+  action: element_action
+  ref: save_local_button
+  do: click
+  wait: 0.5
+- name: 等待菜单展开
+  action: wait
+  wait: 0.5
+- name: 选择每次询问
+  action: main_menu_comb
+  ref: save_menu_ask
+  wait: 0.5
+- name: 点击保存按钮
+  action: element_action
+  ref: save_local_button
+  do: click
+  wait: 1.0
+- name: 验证文管弹窗
+  action: screenshot
+teardown:
+- action: keyboard_press
+  keys: Escape
+  wait: 0.3
+skip: ''
+setup:
+  - action: session_start
+    command: "deepin-screen-recorder"
+    wait: 3.0

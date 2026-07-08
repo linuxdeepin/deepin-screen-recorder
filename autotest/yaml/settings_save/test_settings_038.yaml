@@ -1,0 +1,48 @@
+name: 工具栏-选项文案适配繁体
+app: deepin-screen-recorder
+module: 截图录屏/设置
+feature: 文案适配
+tags:
+- L3
+vars:
+  xlsx_id: '1646095'
+  case_type: 功能测试
+description: '前置条件: None
+
+  测试步骤:
+
+  1. 将鼠标悬停在滚动截图图标上
+
+  2. 将鼠标悬停在文字识别图标上
+
+  3. 将鼠标悬停在矩形图标上
+
+  4. 将鼠标悬停在圆形图标上
+
+  5. 将鼠标悬停在箭头图标上
+
+  6. 将鼠标悬停在画笔图标上
+
+  7. 将鼠标悬停在文字图标上
+
+  预期结果:
+
+  1. tooltip文案显示为繁体
+
+  2. tooltip文案显示为繁体
+
+  3. tooltip文案显示为繁体
+
+  4. tooltip文案显示为繁体
+
+  5. tooltip文案显示为繁体
+
+  6. tooltip文案显示为繁体
+
+  7. tooltip文案显示为繁体
+
+  '
+steps: []
+skip: 跳过-需要特殊硬件或网络环境
+setup: []
+teardown: []

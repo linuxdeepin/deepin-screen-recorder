@@ -1,0 +1,73 @@
+name: 截长图-手动滚动-向下滚动到底部
+app: deepin-screen-recorder
+description: '前置条件: 无
+
+  测试步骤:
+
+  1. 光标移动至捕捉区内
+
+  2. 向后滚动鼠标滚轮
+
+  3. 滚动到滚动区底部
+
+  预期结果:
+
+  1. 捕捉区高亮
+
+  2. 向下滚动截图
+
+  3. 无提示
+
+  '
+module: 截图录屏/滚动截图
+feature: 手动滚动
+tags:
+- L2
+vars:
+  xlsx_id: '1645641'
+  case_type: 功能测试
+steps:
+- name: 唤起截图模式
+  action: keyboard_hot_key
+  keys: ctrl,alt,a
+  wait: 1.0
+- name: 框选截图区域
+  action: mouse_drag
+  start:
+    x: 400
+    y: 300
+  end:
+    x: 1400
+    y: 700
+  wait: 0.5
+- name: 等待工具栏出现
+  action: wait
+  wait: 1.0
+- name: 点击滚动截图按钮
+  action: element_action
+  ref: scrollshot_button
+  do: click
+  wait: 1.0
+- name: 光标移动至捕捉区内
+  action: mouse_move
+  x: 800
+  y: 500
+  wait: 0.5
+- name: 向后滚动鼠标滚轮
+  action: mouse_scroll
+  x: 800
+  y: 500
+  direction: down
+  clicks: 20
+  wait: 3.0
+- name: 验证滚动到底部
+  action: screenshot
+teardown:
+- action: keyboard_press
+  keys: Escape
+  wait: 0.3
+skip: ''
+setup:
+  - action: session_start
+    command: "deepin-screen-recorder"
+    wait: 3.0

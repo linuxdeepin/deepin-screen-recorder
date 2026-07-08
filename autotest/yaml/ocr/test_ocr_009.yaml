@@ -1,0 +1,19 @@
+name: '[core]OCR-文本区域-唤起右键菜单'
+app: deepin-screen-recorder
+module: 截图录屏/OCR
+feature: 文本编辑
+tags:
+- L1
+vars:
+  xlsx_id: '1645929'
+  case_type: 功能测试
+description: '测试步骤: 1.通过截图录屏，框选含有文字的图像 2.点击OCR按钮，进入OCR功能 3.在文本区域，点击鼠标右键 4.在文本区域一指长按触控屏
+  5.在文本区域触控板二指点击文本区域
+
+  预期结果: 3.能成功唤起右键菜单，右键菜单包含全选、复制、剪切（无选中文本时复制和剪切置灰不可用）
+
+  '
+steps: []
+teardown: []
+skip: 需要特殊环境或人工验证
+setup: []

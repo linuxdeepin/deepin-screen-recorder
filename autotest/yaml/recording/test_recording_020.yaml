@@ -1,0 +1,68 @@
+name: 录屏-保存路径-视频文件夹无权限
+app: deepin-screen-recorder
+description: |
+  前置条件: 无
+  测试步骤:
+  1. 开始录屏
+  2. 点击保存录屏按钮
+  预期结果:
+  1. 正常启动录屏
+  2. 提示保存失败
+module: 截图录屏/录屏
+feature: 保存
+tags:
+- L3
+vars:
+  xlsx_id: '1645279'
+  case_type: 功能测试
+steps:
+- name: "移除Videos目录权限"
+  action: shell
+  command: chmod 000 ~/Videos
+  wait: 0.5
+- name: "激活录屏模式"
+  action: keyboard_hot_key
+  keys: ctrl,alt,r
+  wait: 1.0
+- name: "框选录屏区域"
+  action: mouse_drag
+  ref: screen_center
+  wait: 0.5
+- name: "等待工具栏出现"
+  action: wait
+  wait: 1.0
+- name: "开始录制"
+  action: keyboard_press
+  keys: Return
+  wait: 5.0
+- name: "等待录制开始（3秒倒计时）"
+  action: wait
+  wait: 3.0
+- name: "录制一小段后停止"
+  action: keyboard_hot_key
+  keys: ctrl,alt,r
+  wait: 1.0
+- name: "等待保存失败提示"
+  action: wait
+  wait: 2.0
+- name: "验证出现保存失败提示"
+  action: wait
+  wait: 0.3
+  assert:
+    - type: screenshot
+      expected: "record_save_fail"
+- name: "恢复Videos目录权限"
+  action: shell
+  command: chmod 755 ~/Videos
+  wait: 0.5
+setup:
+  - action: session_start
+    command: "deepin-screen-recorder"
+    wait: 3.0
+teardown:
+- action: shell
+  command: chmod 755 ~/Videos
+  wait: 0.3
+- action: keyboard_press
+  keys: Escape
+  wait: 0.5

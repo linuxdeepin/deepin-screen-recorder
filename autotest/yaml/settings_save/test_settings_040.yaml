@@ -1,0 +1,76 @@
+name: 截图-保存路径-图片文件夹无权限
+app: deepin-screen-recorder
+module: 截图录屏/设置
+feature: 权限处理
+tags:
+- L2
+vars:
+  xlsx_id: '1645835'
+  case_type: 功能测试
+description: '前置条件: None
+
+  测试步骤:
+
+  1. 保存位置选择图片
+
+  2. 点击保存截图按钮
+
+  预期结果:
+
+  1.
+
+  2. 提示保存失败
+
+  '
+steps:
+- name: 移除图片文件夹写权限
+  action: exec
+  command: chmod 000 ~/Pictures
+  wait: 0.3
+- name: 唤起截图模式
+  action: keyboard_hot_key
+  keys: ctrl,alt,a
+  wait: 1.0
+- name: 框选截图区域
+  action: mouse_drag
+  start:
+    x: 200
+    y: 200
+  end:
+    x: 800
+    y: 600
+  wait: 0.5
+- name: 等待工具栏出现
+  action: wait
+  wait: 1.0
+- name: 点击保存按钮打开菜单
+  action: element_action
+  ref: save_local_button
+  do: click
+  wait: 0.5
+- name: 等待菜单展开
+  action: wait
+  wait: 0.5
+- name: 选择保存到图片
+  action: main_menu_comb
+  ref: save_menu_pictures
+  wait: 0.5
+- name: 按Enter完成截图
+  action: keyboard_press
+  keys: Return
+  wait: 2.0
+- name: 验证保存失败提示
+  action: screenshot
+- name: 恢复图片文件夹权限
+  action: exec
+  command: chmod 755 ~/Pictures
+  wait: 0.3
+teardown:
+- action: keyboard_press
+  keys: Escape
+  wait: 0.3
+skip: ''
+setup:
+  - action: session_start
+    command: "deepin-screen-recorder"
+    wait: 3.0

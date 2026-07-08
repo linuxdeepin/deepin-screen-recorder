@@ -1,0 +1,24 @@
+name: '[core]一指单点选项中菜单'
+app: deepin-screen-recorder
+module: 截图录屏/设置
+feature: 录屏选项
+tags:
+- L1
+vars:
+  xlsx_id: '1645007'
+  case_type: 功能测试
+description: '前置条件: None
+
+  测试步骤:
+
+  1. 一指单点选项菜单中的不同格式，和不同帧数
+
+  预期结果:
+
+  1. 选项菜单中功能正常
+
+  '
+steps: []
+skip: 跳过-需要特殊硬件或网络环境
+setup: []
+teardown: []

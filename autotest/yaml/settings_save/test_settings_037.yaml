@@ -1,0 +1,103 @@
+name: 几何工具-切换图形时沿用记忆的粗细与颜色
+app: deepin-screen-recorder
+module: 截图录屏/设置
+feature: 几何工具记忆
+tags:
+- L1
+vars:
+  xlsx_id: '1915673'
+  case_type: 功能测试
+description: '前置条件: 1. 打开截图工具并展开几何工具选项； 2. 已通过操作设置几何工具为矩形+细线条（1px+红色），圆形+粗线条（3px+蓝色）；
+  3. 选项区域处于展开状态
+
+  测试步骤:
+
+  1. 点击选项区域的圆形图标
+
+  2. 检查圆形工具的描边粗细和颜色选择
+
+  3. 点击选项区域的矩形图标
+
+  4. 检查矩形工具的描边粗细和颜色选择
+
+  预期结果:
+
+  1. 圆形图标变为选中状态，矩形图标取消选中
+
+  2. 描边粗细为粗线条（3px），颜色为蓝色
+
+  3.
+
+  4. 矩形图标变为选中状态，圆形图标取消选中
+
+  '
+steps:
+- name: 唤起截图模式
+  action: keyboard_hot_key
+  keys: ctrl,alt,a
+  wait: 1.0
+- name: 框选截图区域
+  action: mouse_drag
+  start:
+    x: 200
+    y: 200
+  end:
+    x: 800
+    y: 600
+  wait: 0.5
+- name: 等待工具栏出现
+  action: wait
+  wait: 1.0
+- name: 点击几何工具
+  action: element_action
+  ref: gio_button
+  do: click
+  wait: 0.5
+- name: 设置矩形为1px细线条
+  action: element_action
+  ref: thick_one_rect
+  do: click
+  wait: 0.3
+- name: 设置矩形颜色为红色
+  action: element_action
+  ref: color_red
+  do: click
+  wait: 0.3
+- name: 切换到圆形
+  action: element_action
+  ref: circl_button
+  do: click
+  wait: 0.3
+- name: 设置圆形为3px粗线条
+  action: element_action
+  ref: thick_three_circ
+  do: click
+  wait: 0.3
+- name: 设置圆形颜色为蓝色
+  action: element_action
+  ref: color_blue
+  do: click
+  wait: 0.3
+- name: 切换到圆形验证记忆
+  action: element_action
+  ref: circl_button
+  do: click
+  wait: 0.3
+- name: 验证圆形记忆-3px蓝色
+  action: screenshot
+- name: 切换到矩形
+  action: element_action
+  ref: rect_button
+  do: click
+  wait: 0.3
+- name: 验证矩形记忆-1px红色
+  action: screenshot
+teardown:
+- action: keyboard_press
+  keys: Escape
+  wait: 0.3
+skip: ''
+setup:
+  - action: session_start
+    command: "deepin-screen-recorder"
+    wait: 3.0

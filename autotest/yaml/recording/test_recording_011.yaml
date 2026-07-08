@@ -1,0 +1,28 @@
+name: 当安装系统镜像后，桌面插件区域默认不勾选截图录屏
+app: deepin-screen-recorder
+description: '前置条件: 无
+
+  测试步骤:
+
+  1. 安装全新的镜像
+
+  2. 查看桌面右下角插件区域
+
+  预期结果:
+
+  1. 正常安装
+
+  2. 无截图录屏的应用
+
+  '
+module: 截图录屏/录屏
+feature: 入口插件
+tags:
+- L2
+vars:
+  xlsx_id: '1646101'
+  case_type: 功能测试
+steps: []
+skip: 跳过-需要全新系统镜像安装
+setup: []
+teardown: []

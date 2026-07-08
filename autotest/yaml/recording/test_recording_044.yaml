@@ -1,0 +1,28 @@
+name: '[core]录制视频时3D模式切换到2D模式'
+app: deepin-screen-recorder
+description: '前置条件: 无
+
+  测试步骤:
+
+  1. 启动截图录屏，录制MP4格式视屏
+
+  2. 设置-个性化关闭窗口特效
+
+  预期结果:
+
+  1. 录屏正常启动
+
+  2. 结束录屏，弹出提示框：因在录制过程中关闭了窗口特效，录屏已结束。
+
+  '
+module: 截图录屏/录屏
+feature: 3D模式
+tags:
+- L1
+vars:
+  xlsx_id: '1644895'
+  case_type: 功能测试
+steps: []
+teardown: []
+skip: 需要特殊环境或人工验证
+setup: []

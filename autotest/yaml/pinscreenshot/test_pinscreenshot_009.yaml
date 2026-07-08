@@ -1,0 +1,15 @@
+name: 贴图位置-多屏时截取屏幕中间，贴图位置与截图位置保持一致
+app: deepin-screen-recorder
+module: 截图录屏/贴图
+feature: 贴图位置
+tags:
+- L3
+vars:
+  xlsx_id: '1645521'
+  case_type: 功能测试
+description: "测试步骤:\n  1. 连接双屏显示器并设置为扩展模式\n  2. 打开截图录屏工具，进入截图模式\n  3. 截取两屏幕中间的区域\n\
+  \  4. 点击贴图按钮，生成贴图\n  5. 查看贴图的位置\n预期结果:\n  5. 与截图的位置保持一致，在两屏幕中间的位置\n"
+steps: []
+teardown: []
+skip: 需要特殊环境或人工验证
+setup: []

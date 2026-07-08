@@ -1,0 +1,60 @@
+name: 截图终端命令-截图快捷键-当前窗口截图命令
+app: deepin-screen-recorder
+description: '前置条件: 无
+
+  测试步骤:
+
+  1. 打开终端，键入命令deepin-screen-recorder -w回车
+
+  2. 打开终端，键入命令 deepin-screen-recorder --top-window 回车
+
+  预期结果:
+
+  1. 截取当前窗口，按预设保存方式进行保存
+
+  2. 截取当前窗口，按预设保存方式进行保存
+
+  '
+module: 截图录屏/工具栏
+feature: 命令行
+tags:
+- L3
+vars:
+  xlsx_id: '1644747'
+  case_type: 功能测试
+steps:
+- name: 打开终端
+  action: keyboard_hot_key
+  keys: ctrl,alt,t
+  wait: 1.0
+- name: 输入当前窗口截图命令-w
+  action: keyboard_type
+  keys: deepin-screen-recorder -w
+- name: 按回车执行当前窗口截图
+  action: keyboard_press
+  keys: Return
+  wait: 2.0
+- name: 验证当前窗口截图完成
+  action: screenshot
+- name: 关闭当前终端
+  action: keyboard_press
+  keys: ctrl,shift,w
+  wait: 0.3
+- name: 打开终端
+  action: keyboard_hot_key
+  keys: ctrl,alt,t
+  wait: 1.0
+- name: 输入当前窗口截图命令--top-window
+  action: keyboard_type
+  keys: deepin-screen-recorder --top-window
+- name: 按回车执行当前窗口截图
+  action: keyboard_press
+  keys: Return
+  wait: 2.0
+- name: 验证当前窗口截图完成
+  action: screenshot
+teardown: []
+setup:
+  - action: session_start
+    command: "deepin-screen-recorder"
+    wait: 3.0

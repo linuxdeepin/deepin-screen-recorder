@@ -1,0 +1,49 @@
+name: 显示按键选项-文案提示-显示按键
+app: deepin-screen-recorder
+description: |
+  前置条件: 无
+  测试步骤:
+  1. 鼠标移动到显示按键选项上
+  预期结果:
+  1. 文案提示"显示按键"
+module: 截图录屏/录屏
+feature: 显示按键
+tags:
+- L3
+vars:
+  xlsx_id: '1645217'
+  case_type: 功能测试
+steps:
+- name: "激活录屏模式"
+  action: keyboard_hot_key
+  keys: ctrl,alt,r
+  wait: 1.0
+- name: "框选录屏区域"
+  action: mouse_drag
+  ref: screen_center
+  wait: 0.5
+- name: "等待工具栏出现"
+  action: wait
+  wait: 1.0
+- name: "鼠标移动到显示按键按钮上"
+  action: element_action
+  ref: keyboard_button
+  do: hover
+  wait: 0.5
+- name: "验证tooltip提示文案为显示按键"
+  action: wait
+  wait: 0.3
+  assert:
+    - type: element_visible
+      selector:
+        name: keyboard_button
+    - type: screenshot
+      expected: "keyboard_button_tooltip"
+setup:
+  - action: session_start
+    command: "deepin-screen-recorder"
+    wait: 3.0
+teardown:
+- action: keyboard_press
+  keys: Escape
+  wait: 0.5

@@ -1,0 +1,77 @@
+name: "截图-启动录屏功能"
+description: |
+  前置条件: 桌面正常显示
+  测试步骤:
+  1. 截图模式下点击录屏按钮
+  2. 切换到录屏模式
+  3. 框选录屏区域
+  4. 开始录制
+  5. 停止录制
+  预期结果:
+  1. 成功切换到录屏模式
+  2. 录屏区域框选成功
+  3. 录屏开始
+  4. 录屏停止成功
+module: "截图录屏/录屏"
+feature: "启动录屏"
+tags:
+  - L0
+vars:
+  xlsx_id: "1644951"
+  case_type: "功能测试"
+steps:
+  - name: "激活截图模式"
+    action: keyboard_hot_key
+    keys: ctrl,alt,a
+    wait: 1.0
+  - name: "框选截图区域"
+    action: mouse_drag
+    ref: screen_center
+    wait: 0.5
+  - name: "等待工具栏出现"
+    action: wait
+    wait: 1.0
+  - name: "点击录屏按钮切换到录屏"
+    action: element_action
+    ref: recorder_button
+    do: click
+    wait: 0.5
+  - name: "等待录屏工具栏出现"
+    action: wait
+    wait: 1.0
+  - name: "验证录屏选项按钮可见"
+    action: wait
+    wait: 0.3
+    assert:
+      - type: element_visible
+        selector:
+          name: record_option_but
+  - name: "验证音频按钮可见"
+    action: wait
+    wait: 0.3
+    assert:
+      - type: element_visible
+        selector:
+          name: audio_button
+  - name: "验证开始录制"
+    action: keyboard_press
+    keys: Return
+    wait: 5.0
+  - name: "等待录制开始（3秒倒计时）"
+    action: wait
+    wait: 3.0
+  - name: "停止录制"
+    action: keyboard_hot_key
+    keys: ctrl,alt,r
+    wait: 1.0
+  - name: "等待保存"
+    action: wait
+    wait: 1.0
+setup:
+  - action: session_start
+    command: "deepin-screen-recorder"
+    wait: 3.0
+teardown:
+  - action: keyboard_press
+    keys: Escape
+    wait: 0.5

@@ -1,0 +1,72 @@
+name: 截取深色背景的图片，保存后颜色，边框正常
+app: deepin-screen-recorder
+module: 截图录屏/设置
+feature: 保存质量
+tags:
+- L2
+vars:
+  xlsx_id: '1645831'
+  case_type: 功能测试
+description: '前置条件: None
+
+  测试步骤:
+
+  1. 打开截图
+
+  2. 截取深色背景图片，比如pms的标题栏
+
+  3. 保存后查看图片颜色、边框、尺寸
+
+  预期结果:
+
+  1.
+
+  2.
+
+  3. 颜色符合截图颜色，默认无边框，尺寸等于截取区域尺寸
+
+  '
+steps:
+- name: 唤起截图模式
+  action: keyboard_hot_key
+  keys: ctrl,alt,a
+  wait: 1.0
+- name: 框选深色背景区域
+  action: mouse_drag
+  start:
+    x: 100
+    y: 100
+  end:
+    x: 600
+    y: 400
+  wait: 0.5
+- name: 等待工具栏出现
+  action: wait
+  wait: 1.0
+- name: 点击保存按钮打开菜单
+  action: element_action
+  ref: save_local_button
+  do: click
+  wait: 0.5
+- name: 等待菜单展开
+  action: wait
+  wait: 0.5
+- name: 选择保存到桌面
+  action: main_menu_comb
+  ref: save_menu_desktop
+  wait: 0.5
+- name: 按Enter完成截图
+  action: keyboard_press
+  keys: Return
+  wait: 2.0
+- name: 验证截图保存提示
+  action: screenshot
+teardown:
+- action: keyboard_press
+  keys: Escape
+  wait: 0.3
+skip: ''
+setup:
+  - action: session_start
+    command: "deepin-screen-recorder"
+    wait: 3.0

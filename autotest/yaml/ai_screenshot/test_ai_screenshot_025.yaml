@@ -1,0 +1,26 @@
+name: AI截图功能-新手引导中点击问问AI
+app: deepin-screen-recorder
+description: '前置条件: 打开UOS AI助手页面，处于新手引导状态
+
+  测试步骤:
+
+  1. 点击页面中的"问问AI"按钮
+
+  2. 检查UOS AI状态
+
+  预期结果:
+
+  2. 仅打开UOS AI界面，显示引导状态，不带入图片
+
+  '
+module: 截图录屏/AI截图
+feature: 问问AI
+tags:
+- L2
+vars:
+  xlsx_id: '1949907'
+  case_type: 功能测试
+steps: []
+skip: 跳过-需要新手引导状态
+setup: []
+teardown: []

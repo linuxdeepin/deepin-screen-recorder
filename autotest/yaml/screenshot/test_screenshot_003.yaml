@@ -1,0 +1,38 @@
+name: 延时截图时查看通知中心内容
+app: deepin-screen-recorder
+description: '前置条件: 无
+
+  测试步骤:
+
+  1. Ctrl+Printscreen截图
+
+  2. 查看通知中心内容
+
+  预期结果:
+
+  1. 截图成功
+
+  2. 内容正常展示
+
+  '
+module: 截图录屏/截图基础
+feature: 全屏截图
+tags:
+- L2
+vars:
+  xlsx_id: '1645833'
+  case_type: 功能测试
+steps:
+- name: 延时截图-按下PrintScreen
+  action: keyboard_hot_key
+  keys: ctrl,printscreen
+  wait: 1.0
+- name: 查看通知中心内容
+  action: screenshot
+setup:
+  - action: session_start
+    command: "deepin-screen-recorder"
+    wait: 3.0
+teardown:
+- action: wait
+  seconds: 2

@@ -1,0 +1,50 @@
+name: 区域大小-快捷键调整-向下扩大选取高度
+app: deepin-screen-recorder
+description: '前置条件: 无
+
+  测试步骤:
+
+  1. 按Ctrl+↓
+
+  预期结果:
+
+  1. 向下扩大选取高度，每次移动1px
+
+  '
+module: 截图录屏/工具栏
+feature: 快捷键
+tags:
+- L2
+vars:
+  xlsx_id: '1645139'
+  case_type: 功能测试
+steps:
+- name: 唤起截图模式
+  action: keyboard_hot_key
+  keys: ctrl,alt,a
+  wait: 0.5
+- name: 框选截图区域
+  action: mouse_drag
+  start: '@screen_top_left'
+  end:
+    x: 600
+    y: 400
+  wait: 0.5
+- name: 按Ctrl+向下箭头-向下扩大选取高度
+  action: keyboard_press
+  keys: ctrl,Down
+  wait: 0.3
+- name: 再次按Ctrl+向下箭头
+  action: keyboard_press
+  keys: ctrl,Down
+  wait: 0.3
+- name: 验证区域向下扩大
+  action: screenshot
+setup:
+  - action: session_start
+    command: "deepin-screen-recorder"
+    wait: 3.0
+teardown:
+- action: keyboard_press
+  keys: Escape
+  wait: 0.3

@@ -1,0 +1,70 @@
+name: '[core]OCR-图像预览区域-鼠标拖拽'
+app: deepin-screen-recorder
+module: 截图录屏/OCR
+feature: 图像预览
+tags:
+- L1
+vars:
+  xlsx_id: '1645957'
+  case_type: 功能测试
+description: '测试步骤: 1.通过截图录屏，框选1920*1080的图像 2.点击OCR按钮，进入OCR功能 3.在OCR左侧图像预览区域，使用鼠标滚轮放大图像
+  4.按住鼠标左键，拖拽图像
+
+  预期结果: 能正常进行拖动，鼠标变成抓手样式
+
+  '
+steps:
+- name: 唤起截图模式
+  action: keyboard_hot_key
+  keys: ctrl,alt,a
+  wait: 1.0
+- name: 框选截图区域
+  action: mouse_drag
+  start:
+    x: 400
+    y: 300
+  end:
+    x: 1400
+    y: 700
+  wait: 0.5
+- name: 等待工具栏出现
+  action: wait
+  wait: 1.0
+- name: 点击OCR按钮
+  action: element_action
+  ref: ocr_button
+  do: click
+  wait: 0.5
+- name: 等待OCR识别完成
+  action: wait
+  wait: 5.0
+- name: 鼠标移动到OCR左侧图像预览区域
+  action: mouse_click
+  x: 700
+  y: 500
+  wait: 0.5
+- name: 鼠标滚轮放大图像
+  action: mouse_scroll
+  x: 700
+  y: 500
+  delta: 5
+  wait: 0.5
+- name: 按住鼠标左键拖拽图像
+  action: mouse_drag
+  start:
+    x: 700
+    y: 500
+  end:
+    x: 500
+    y: 300
+  wait: 0.5
+- name: 验证拖拽状态
+  action: screenshot
+teardown:
+- action: keyboard_press
+  keys: Escape
+  wait: 0.3
+setup:
+  - action: session_start
+    command: "deepin-screen-recorder"
+    wait: 3.0

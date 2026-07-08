@@ -1,0 +1,93 @@
+name: 贴图大小-通过鼠标拖动浮窗边角可来回放大缩小浮窗，画面流畅
+app: deepin-screen-recorder
+module: 截图录屏/贴图
+feature: 贴图缩放
+tags:
+- L0
+vars:
+  xlsx_id: '1645471'
+  case_type: 功能测试
+description: "测试步骤:\n  1. 打开截图录屏工具，进入截图模式\n  2. 截取区域后点击贴图按钮，生成贴图\n  3. 使用鼠标拖动贴图浮窗边角至最大尺寸\n\
+  \  4. 再拖动至最小尺寸\n  5. 使用快捷键Alt+P再次创建贴图\n  6. 点击贴图按钮\n预期结果:\n  3. 过程中画面等比放大缩小，且画面流畅\n\
+  \  5. 快捷键生效，能触发操作\n  6. 贴图画面显示在当前页面上\n"
+steps:
+- name: 唤起截图模式
+  action: keyboard_hot_key
+  keys: ctrl,alt,a
+  wait: 1.0
+- name: 框选截图区域
+  action: mouse_drag
+  start:
+    x: 400
+    y: 300
+  end:
+    x: 800
+    y: 500
+  wait: 0.5
+- name: 等待工具栏出现
+  action: wait
+  wait: 1.0
+- name: 点击贴图按钮生成贴图
+  action: element_action
+  ref: pinscreenshots_button
+  do: click
+  wait: 1.0
+- name: 点击贴图激活
+  action: mouse_click
+  x: 600
+  y: 400
+  wait: 0.5
+- name: 拖动贴图右下角放大
+  action: mouse_drag
+  start:
+    x: 800
+    y: 500
+  end:
+    x: 1500
+    y: 900
+  wait: 0.5
+- name: 验证放大后状态
+  action: screenshot
+- name: 拖动贴图右下角缩小
+  action: mouse_drag
+  start:
+    x: 1500
+    y: 900
+  end:
+    x: 600
+    y: 380
+  wait: 0.5
+- name: 验证缩小后状态
+  action: screenshot
+- name: 唤起截图模式
+  action: keyboard_hot_key
+  keys: ctrl,alt,a
+  wait: 1.0
+- name: 框选截图区域
+  action: mouse_drag
+  start:
+    x: 400
+    y: 300
+  end:
+    x: 800
+    y: 500
+  wait: 0.5
+- name: 等待工具栏出现
+  action: wait
+  wait: 1.0
+- name: 点击贴图按钮
+  action: element_action
+  ref: pinscreenshots_button
+  do: click
+  wait: 1.0
+- name: 验证第二张贴图显示
+  action: screenshot
+teardown:
+- action: keyboard_press
+  keys: Escape
+  wait: 0.3
+skip: ''
+setup:
+  - action: session_start
+    command: "deepin-screen-recorder"
+    wait: 3.0

@@ -1,0 +1,40 @@
+name: 锁屏界面-录制-锁屏-解锁
+app: deepin-screen-recorder
+description: '前置条件: 无
+
+  测试步骤:
+
+  1. 点击录制按钮
+
+  2. 开始录制后点击锁屏
+
+  3. 5s后解锁屏幕
+
+  4. 保存视频
+
+  5. 查看视频
+
+  预期结果:
+
+  1. 开始录制
+
+  2. 锁屏成功
+
+  3. 解锁成功
+
+  4. 保存成功
+
+  5. 锁屏界面、桌面画面正常显示
+
+  '
+module: 截图录屏/录屏
+feature: 启动录屏
+tags:
+- L2
+vars:
+  xlsx_id: '1644585'
+  case_type: 功能测试
+steps: []
+skip: 跳过-需要锁屏解锁交互
+setup: []
+teardown: []

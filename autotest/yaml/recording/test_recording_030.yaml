@@ -1,0 +1,24 @@
+name: 开启摄像头选项-快捷键选择工具
+app: deepin-screen-recorder
+description: '前置条件: 无
+
+  测试步骤:
+
+  1. 按快捷键C
+
+  预期结果:
+
+  1. 显示摄像头选项被选中,呈现蓝白选中样式
+
+  '
+module: 截图录屏/录屏
+feature: 摄像头
+tags:
+- L3
+vars:
+  xlsx_id: '1645201'
+  case_type: 功能测试
+steps: []
+skip: 跳过-需要摄像头硬件
+setup: []
+teardown: []

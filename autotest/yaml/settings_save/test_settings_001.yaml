@@ -1,0 +1,72 @@
+name: 储存逻辑-设置界面ui更改验证
+app: deepin-screen-recorder
+module: 截图录屏/设置
+feature: 设置界面UI
+tags:
+- L0
+vars:
+  xlsx_id: '1915755'
+  case_type: 功能测试
+description: '前置条件: 1.系统已安装截图录屏且版本为最新；
+
+  测试步骤:
+
+  1. 启动截图工具并任意截取一个区域;
+
+  2. 点击设置按钮,观察设置菜单;
+
+  预期结果:
+
+  1. 可正常截取区域截图，弹出截图工具条;
+
+  2展开设置栏;
+
+  2. 设置栏ui布局已和需求文档内一致.显示无边框，投影，外边框，样机
+
+  '
+steps:
+- name: 唤起截图模式
+  action: keyboard_hot_key
+  keys: ctrl,alt,a
+  wait: 1.0
+- name: 框选截图区域
+  action: mouse_drag
+  start:
+    x: 200
+    y: 200
+  end:
+    x: 800
+    y: 600
+  wait: 0.5
+- name: 等待工具栏出现
+  action: wait
+  wait: 1.0
+- name: 点击截图选项按钮
+  action: element_action
+  ref: shot_option_button
+  do: click
+  wait: 1.0
+- name: 验证设置菜单UI布局
+  action: screenshot
+assert:
+- type: element_visible
+  selector:
+    name: pngAction
+- type: element_visible
+  selector:
+    name: jpgAction
+- type: element_visible
+  selector:
+    name: bmpAction
+- type: element_visible
+  selector:
+    name: saveCursorAction
+teardown:
+- action: keyboard_press
+  keys: Escape
+  wait: 0.3
+skip: ''
+setup:
+  - action: session_start
+    command: "deepin-screen-recorder"
+    wait: 3.0

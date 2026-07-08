@@ -1,0 +1,28 @@
+name: '[core]检查录制保存后视屏时长与录制显示时长差异'
+app: deepin-screen-recorder
+description: '前置条件: 无
+
+  测试步骤:
+
+  1. 录制3分钟视屏，保存
+
+  2. 使用影院打开视屏，查看视屏显示时长
+
+  预期结果:
+
+  1. 录制时长显示3分钟，视屏保存成功
+
+  2. 视屏播放时长显示为三分钟
+
+  '
+module: 截图录屏/录屏
+feature: 保存
+tags:
+- L1
+vars:
+  xlsx_id: '1644637'
+  case_type: 功能测试
+steps: []
+teardown: []
+skip: 需要特殊环境或人工验证
+setup: []

@@ -1,0 +1,111 @@
+name: 选项-记忆功能
+app: deepin-screen-recorder
+module: 截图录屏/设置
+feature: 格式记忆
+tags:
+- L2
+vars:
+  xlsx_id: '1645081'
+  case_type: 功能测试
+description: '前置条件: 无
+
+  测试步骤:
+
+  1. 点击选项录屏格式选择MP4，录屏帧数选择5fps
+
+  2. 按Esc退出录屏
+
+  3. 按Ctrl+alt+R启动录屏
+
+  4. 点击选项，查看选项
+
+  预期结果:
+
+  1.
+
+  2.
+
+  3.
+
+  4. 格式选择MP4，录屏帧数选择5fps
+
+  '
+steps:
+- name: 激活录屏模式
+  action: keyboard_hot_key
+  keys: ctrl,alt,r
+  wait: 1.0
+- name: 框选录屏区域
+  action: mouse_drag
+  ref: screen_center
+  wait: 0.5
+- name: 等待工具栏出现
+  action: wait
+  wait: 1.0
+- name: 打开录屏选项面板
+  action: element_action
+  ref: record_option_button
+  do: click
+  wait: 0.5
+- name: 等待菜单展开
+  action: wait
+  wait: 0.5
+- name: 选择MP4格式
+  action: element_action
+  ref: mp4_action
+  do: click
+  wait: 0.5
+- name: 打开录屏选项面板
+  action: element_action
+  ref: record_option_button
+  do: click
+  wait: 0.5
+- name: 等待菜单展开
+  action: wait
+  wait: 0.5
+- name: 选择5fps
+  action: element_action
+  ref: fps5_action
+  do: click
+  wait: 0.5
+- name: 退出录屏模式
+  action: keyboard_press
+  keys: Escape
+  wait: 0.5
+- name: 重新激活录屏模式
+  action: keyboard_hot_key
+  keys: ctrl,alt,r
+  wait: 1.0
+- name: 框选录屏区域
+  action: mouse_drag
+  ref: screen_center
+  wait: 0.5
+- name: 等待工具栏出现
+  action: wait
+  wait: 1.0
+- name: 打开录屏选项面板
+  action: element_action
+  ref: record_option_button
+  do: click
+  wait: 0.5
+- name: 等待菜单展开
+  action: wait
+  wait: 0.5
+- name: 验证记忆的格式和帧数
+  action: screenshot
+assert:
+- type: element_checked
+  selector:
+    name: mp4Action
+- type: element_checked
+  selector:
+    name: fps5Action
+teardown:
+- action: keyboard_press
+  keys: Escape
+  wait: 0.3
+skip: ''
+setup:
+  - action: session_start
+    command: "deepin-screen-recorder"
+    wait: 3.0

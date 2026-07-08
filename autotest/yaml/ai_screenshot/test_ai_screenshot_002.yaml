@@ -1,0 +1,61 @@
+name: AI截图功能-截图工具栏AI图标位置验证
+app: deepin-screen-recorder
+module: 截图录屏/AI截图
+feature: AI图标
+tags:
+- L0
+vars:
+  xlsx_id: '1949953'
+  case_type: 功能测试
+description: '前置条件: 已唤起截图录屏
+
+  测试步骤:
+
+  1. 查看截图工具栏中AI图标的位置，确认其处于"贴图"图标与"撤销"图标之间
+
+  预期结果:
+
+  1. 截图工具栏中AI图标位于"贴图"图标与"撤销"图标之间，样式与UI一致
+
+  '
+steps:
+- name: 唤起截图模式
+  action: keyboard_hot_key
+  keys: ctrl,alt,a
+  wait: 1.0
+- name: 框选截图区域
+  action: mouse_drag
+  start:
+    x: 400
+    y: 300
+  end:
+    x: 1400
+    y: 700
+  wait: 0.5
+- name: 等待工具栏出现
+  action: wait
+  wait: 1.0
+- name: 断言AI图标按钮存在
+  action: element_assert
+  ref: ai_assistant_button
+  assert:
+    - type: element_visible
+- name: 断言贴图按钮存在
+  action: element_assert
+  ref: pinscreenshots_button
+  assert:
+    - type: element_visible
+- name: 断言撤销按钮存在
+  action: element_assert
+  ref: undo_button
+  assert:
+    - type: element_visible
+teardown:
+- action: keyboard_press
+  keys: Escape
+  wait: 0.3
+skip: ''
+setup:
+  - action: session_start
+    command: "deepin-screen-recorder"
+    wait: 3.0

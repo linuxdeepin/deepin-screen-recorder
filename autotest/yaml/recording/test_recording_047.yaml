@@ -1,0 +1,24 @@
+name: '[core]通过远程控制软件，进行截图录屏操作'
+app: deepin-screen-recorder
+description: '前置条件: 无
+
+  测试步骤:
+
+  1. 触控屏设备，通过远程操控其他设备
+
+  预期结果:
+
+  1. 远程设备进行截图录屏操作时，可以正常使用
+
+  '
+module: 截图录屏/录屏
+feature: 启动录屏
+tags:
+- L1
+vars:
+  xlsx_id: '1644691'
+  case_type: 功能测试
+steps: []
+skip: 跳过-需要远程控制软件环境
+setup: []
+teardown: []

@@ -1,0 +1,58 @@
+name: 异常场景-当点击结束录屏时，在快速按esc,应用程序应正常结束
+app: deepin-screen-recorder
+description: '前置条件: 无
+
+  测试步骤:
+
+  1. 使用快捷键ctrl+alt+r，并进行任意录屏
+
+  2. 点击左下角的结束录屏按钮，同时，快速按esc
+
+  预期结果:
+
+  1. 正常进入录屏操作
+
+  2. 正常退出截图录屏，并下次还能正常使用
+
+  '
+module: 截图录屏/录屏
+feature: 启动录屏
+tags:
+- L2
+vars:
+  xlsx_id: '1646067'
+  case_type: 功能测试
+steps:
+- name: 进入录屏模式
+  action: keyboard_hot_key
+  keys: ctrl,alt,r
+  wait: 0.5
+- name: 框选录屏区域
+  action: mouse_drag
+  start: screen_top_left
+  end: screen_center
+  wait: 0.5
+- name: 开始录制
+  action: keyboard_press
+  keys: Return
+  wait: 4.0
+- name: 点击结束录屏按钮
+  action: keyboard_hot_key
+  keys: ctrl,alt,r
+  wait: 0.1
+- name: 快速按Escape键
+  action: keyboard_press
+  keys: Escape
+  wait: 1.0
+- name: 验证应用正常退出且可再次启动
+  action: keyboard_hot_key
+  keys: ctrl,alt,r
+  wait: 0.5
+setup:
+  - action: session_start
+    command: "deepin-screen-recorder"
+    wait: 3.0
+teardown:
+- action: keyboard_press
+  keys: Escape
+  wait: 0.3

@@ -1,0 +1,28 @@
+name: Treeland模式下AI截图及OCR选文字可用
+app: deepin-screen-recorder
+description: '前置条件: 切换系统环境为Treeland模式
+
+  测试步骤:
+
+  1. 唤起截图录屏，点击AI截图
+
+  2. 点击问问AI
+
+  预期结果:
+
+  1. 截图工具界面中显示"AI截图"相关选项，并且功能均能正常使用
+
+  2. 进入AI随航，OCR成功，uosai输入框带入识别成功的内容
+
+  '
+module: 截图录屏/AI截图
+feature: AI图标
+tags:
+- L0
+vars:
+  xlsx_id: '1949885'
+  case_type: 功能测试
+steps: []
+skip: 跳过-需要Treeland模式环境
+setup: []
+teardown: []

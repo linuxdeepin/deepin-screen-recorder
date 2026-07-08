@@ -1,0 +1,274 @@
+# Element aliases for deepin-screen-recorder (截图录屏)
+app: deepin-screen-recorder
+
+vars:
+  APP_PATH: "/usr/bin/deepin-screen-recorder"
+  DESKTOP_PATH: "${HOME}/Desktop"
+  PICTURES_PATH: "${HOME}/Pictures"
+  VIDEOS_PATH: "${HOME}/Videos"
+  DEFAULT_SAVE_DIR: "${HOME}/Desktop"
+
+elements:
+  # ==================== Main Window Buttons ====================
+  main_shot_btn:
+    name: "main_shot_but"
+  main_record_btn:
+    name: "main_record_but"
+  to_record_btn:
+    name: "to_record_but"
+  to_shot_btn:
+    name: "to_shot_but"
+
+  # ==================== Close Buttons ====================
+  toolbar_close_button:
+    name: "toolbar_close_button"
+  sidebar_close_button:
+    name: "sidebarclose_button"
+
+  # ==================== Recording Toolbar ====================
+  audio_button:
+    name: "audio_button"
+  keyboard_button:
+    name: "keyboard_button"
+  camera_button:
+    name: "camera_button"
+  mouse_button:
+    name: "mouse_button"
+  shot_button:
+    name: "shot_button"
+  record_option_button:
+    name: "record_option_but"
+
+  # ==================== Screenshot Toolbar ====================
+  pinscreenshots_button:
+    name: "pinscreenshots_button"
+  scrollshot_button:
+    name: "scrollshot_button"
+  ocr_button:
+    name: "orc_button"
+  gio_button:
+    name: "gio_button"
+  rect_button:
+    name: "rect_button"
+  circl_button:
+    name: "circl_button"
+  line_button:
+    name: "line_button"
+  pen_button:
+    name: "pen_button"
+  mosaic_button:
+    name: "mosaic_button"
+  text_button:
+    name: "text_button"
+  undo_button:
+    name: "undo_button"
+  recorder_button:
+    name: "recorder_button"
+  shot_option_button:
+    name: "shot_option_but"
+  save_local_button:
+    name: "save_local_button"
+  ai_assistant_button:
+    name: "ai_assistant_button"
+
+  # ==================== Sidebar - Rectangle Width ====================
+  thick_one_rect:
+    name: "thick_one_rect"
+  thick_two_rect:
+    name: "thick_two_rect"
+  thick_three_rect:
+    name: "thick_three_rect"
+  thick_blur_rect:
+    name: "thick_blur_rect"
+  thick_mosaic_rect:
+    name: "thick_mosaic_rect"
+
+  # ==================== Sidebar - Ellipse Width ====================
+  thick_one_circ:
+    name: "thick_one_circ"
+  thick_two_circ:
+    name: "thick_two_circ"
+  thick_three_circ:
+    name: "thick_three_circ"
+  thick_blur_circ:
+    name: "thick_blur_circ"
+  thick_mosaic_circ:
+    name: "thick_mosaic_circ"
+
+  # ==================== Sidebar - Line Options ====================
+  thick_one_line:
+    name: "thick_one_line"
+  thick_two_line:
+    name: "thick_two_line"
+  thick_three_line:
+    name: "thick_three_line"
+  thick_line_line:
+    name: "thick_line_line"
+  thick_arrow_line:
+    name: "thick_arrow_line"
+
+  # ==================== Sidebar - Pen Width ====================
+  thick_one_pen:
+    name: "thick_one_pen"
+  thick_two_pen:
+    name: "thick_two_pen"
+  thick_three_pen:
+    name: "thick_three_pen"
+
+  # ==================== Colors ====================
+  color_black:
+    name: "Black_button"
+  color_gray:
+    name: "Gray_button"
+  color_white:
+    name: "White_button"
+  color_red:
+    name: "Red_button"
+  color_orange:
+    name: "Orange_button"
+  color_yellow:
+    name: "Yellow_button"
+  color_lightlime:
+    name: "LightLime_button"
+  color_aquamarine:
+    name: "Aquamarine_button"
+  color_green:
+    name: "Green_button"
+  color_blue:
+    name: "Blue_button"
+  color_purple:
+    name: "Purple_button"
+  color_darkblue:
+    name: "DarkBlue_button"
+
+  # ==================== Font Size ====================
+  text_font_size:
+    name: "text_font_size"
+
+  # ==================== Right-click Menu ====================
+  menu_undo:
+    name: "menuUndo"
+  menu_save:
+    name: "menuSave"
+  menu_exit:
+    name: "menuExit"
+
+  # ==================== Recording Options Menu ====================
+  gif_action:
+    name: "gifAction"
+  mp4_action:
+    name: "mp4Action"
+  mkv_action:
+    name: "mkvAction"
+  fps5_action:
+    name: "fps5Action"
+  fps10_action:
+    name: "fps10Action"
+  fps20_action:
+    name: "fps20Action"
+  fps24_action:
+    name: "fps24Action"
+  fps30_action:
+    name: "fps30Action"
+
+  # ==================== Screenshot Options Menu ====================
+  png_action:
+    name: "pngAction"
+  jpg_action:
+    name: "jpgAction"
+  bmp_action:
+    name: "bmpAction"
+  save_cursor_action:
+    name: "saveCursorAction"
+
+  # ==================== AI Assistant ====================
+  ai_explain_button:
+    name: "explain"
+  ai_summarize_button:
+    name: "summarize"
+  ai_translate_button:
+    name: "translate"
+  ai_ask_button:
+    name: "askAI"
+
+  # ==================== Coordinate-based Elements ====================
+  screen_center:
+    x: 960
+    y: 540
+  screen_top_left:
+    x: 100
+    y: 100
+  screen_top_right:
+    x: 1820
+    y: 100
+  screen_bottom_left:
+    x: 100
+    y: 980
+  screen_bottom_right:
+    x: 1820
+    y: 980
+
+  # ==================== Menu Paths ====================
+  record_format_gif:
+    menu: ["Format", "GIF"]
+  record_format_mp4:
+    menu: ["Format", "MP4"]
+  record_format_mkv:
+    menu: ["Format", "MKV"]
+  record_fps_5:
+    menu: ["FPS", "5 fps"]
+  record_fps_10:
+    menu: ["FPS", "10 fps"]
+  record_fps_20:
+    menu: ["FPS", "20 fps"]
+  record_fps_24:
+    menu: ["FPS", "24 fps"]
+  record_fps_30:
+    menu: ["FPS", "30 fps"]
+  record_save_desktop:
+    menu: ["Save to", "Desktop"]
+  record_save_videos:
+    menu: ["Save to", "Videos"]
+  record_audio_mic:
+    menu: ["Sound", "Microphone"]
+  record_audio_system:
+    menu: ["Sound", "System Audio"]
+  record_option_show_cursor:
+    menu: ["Option", "Show Cursor"]
+  record_option_show_click:
+    menu: ["Option", "Show Mouse Click"]
+
+  shot_format_png:
+    menu: ["Format", "PNG"]
+  shot_format_jpg:
+    menu: ["Format", "JPG"]
+  shot_format_bmp:
+    menu: ["Format", "BMP"]
+
+  save_ask_each_time:
+    name: "askEachTimeAction"
+  save_specify_location:
+    name: "specifiedLocationAction"
+  save_desktop_item:
+    name: "desktopAction"
+  save_pictures_item:
+    name: "picturesAction"
+  save_choose_on_save:
+    name: "chooseOnSaveAction"
+  save_update_on_save:
+    name: "updateOnSaveAction"
+
+  save_menu_ask:
+    menu: ["Each inquiry"]
+  save_menu_desktop:
+    menu: ["Specified location", "Desktop"]
+  save_menu_pictures:
+    menu: ["Specified location", "Pictures"]
+  save_menu_choose:
+    menu: ["Specified location", "Select a location when saving"]
+  save_menu_update:
+    menu: ["Specified location", "Update the location when saving"]
+
+  dock_area:
+    x: 960
+    y: 1070

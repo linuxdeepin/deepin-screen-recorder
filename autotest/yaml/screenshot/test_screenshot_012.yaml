@@ -1,0 +1,85 @@
+name: 一指拖拽移动和调整选择框大小
+app: deepin-screen-recorder
+description: '前置条件: 无
+
+  测试步骤:
+
+  1. 在屏幕上滑动，框选区域
+
+  2. 拖拽选择框
+
+  3. 拖拽边框上的8个小点
+
+  预期结果:
+
+  1. 滑动区域出现蚂蚁线
+
+  2. 选择框跟随移动
+
+  3. 调整选择框大小
+
+  '
+module: 截图录屏/截图基础
+feature: 区域选择
+tags:
+- L0
+vars:
+  xlsx_id: '1644935'
+  case_type: 功能测试
+steps:
+- name: 唤起截图模式
+  action: keyboard_hot_key
+  keys: ctrl,alt,a
+  wait: 0.5
+- name: 鼠标拖拽框选截图区域
+  action: mouse_drag
+  start:
+    x: 400
+    y: 300
+  end:
+    x: 1400
+    y: 700
+  wait: 0.3
+- name: 验证蚂蚁线出现
+  action: screenshot
+- name: 拖拽选择框移动位置
+  action: mouse_drag
+  start:
+    x: 900
+    y: 500
+  end:
+    x: 700
+    y: 400
+  wait: 0.3
+- name: 验证选择框跟随移动
+  action: screenshot
+- name: 拖拽右下角调整大小
+  action: mouse_drag
+  start:
+    x: 1200
+    y: 600
+  end:
+    x: 1600
+    y: 800
+  wait: 0.3
+- name: 验证选择框大小调整
+  action: screenshot
+- name: 拖拽左上角调整大小
+  action: mouse_drag
+  start:
+    x: 500
+    y: 200
+  end:
+    x: 300
+    y: 100
+  wait: 0.3
+- name: 验证选择框左上角调整
+  action: screenshot
+setup:
+  - action: session_start
+    command: "deepin-screen-recorder"
+    wait: 3.0
+teardown:
+- action: keyboard_press
+  keys: Escape
+  wait: 0.3

@@ -1,0 +1,36 @@
+name: 箭头-在输入文字的过程中，切换输入法后，箭头旋转应正常
+app: deepin-screen-recorder
+description: '前置条件: 无
+
+  测试步骤:
+
+  1. 启动截图录屏
+
+  2. 输入字符
+
+  3. 按一下shift键
+
+  4. 点击箭头，并进行旋转
+
+  预期结果:
+
+  1. 正常启动截图录屏
+
+  2. 正常输入字符
+
+  3. 正常按下shift键
+
+  4. 可任意旋转箭头，并非只能90度
+
+  '
+module: 截图录屏/标注工具
+feature: 箭头旋转
+tags:
+- L2
+vars:
+  xlsx_id: '1646071'
+  case_type: 功能测试
+steps: []
+skip: 跳过-需要切换输入法操作
+setup: []
+teardown: []

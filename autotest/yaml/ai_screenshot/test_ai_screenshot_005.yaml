@@ -1,0 +1,59 @@
+name: AI截图功能-截图工具栏AI图标hover提示验证
+app: deepin-screen-recorder
+module: 截图录屏/AI截图
+feature: AI图标
+tags:
+- L1
+vars:
+  xlsx_id: '1949947'
+  case_type: 功能测试
+description: '前置条件: 已唤起截图录屏
+
+  测试步骤:
+
+  1. 将鼠标指针移动至截图工具栏的AI图标上并悬停
+
+  2. 查看悬浮提示文案内容
+
+  预期结果:
+
+  2. 悬浮提示文案为"AI截图（A）"
+
+  '
+steps:
+- name: 唤起截图模式
+  action: keyboard_hot_key
+  keys: ctrl,alt,a
+  wait: 1.0
+- name: 框选截图区域
+  action: mouse_drag
+  start:
+    x: 400
+    y: 300
+  end:
+    x: 1400
+    y: 700
+  wait: 0.5
+- name: 等待工具栏出现
+  action: wait
+  wait: 1.0
+- name: 将鼠标移动到AI图标按钮上
+  action: mouse_move
+  ref: ai_assistant_button
+  wait: 0.5
+- name: 断言tooltip显示AI截图提示
+  action: element_assert
+  ref: ai_assistant_button
+  assert:
+    - type: element_visible
+      selector:
+        name: 'AI截图 (A)'
+teardown:
+- action: keyboard_press
+  keys: Escape
+  wait: 0.3
+skip: ''
+setup:
+  - action: session_start
+    command: "deepin-screen-recorder"
+    wait: 3.0

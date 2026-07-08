@@ -1,0 +1,75 @@
+name: 截图终端命令-设置保存路径截图命令
+app: deepin-screen-recorder
+module: 截图录屏/设置
+feature: 终端命令
+tags:
+- L3
+vars:
+  xlsx_id: '1644743'
+  case_type: 功能测试
+description: '前置条件: None
+
+  测试步骤:
+
+  1. 打开终端，键入命令 deepin-screen-recorder -s ~/Desktop/1.png
+
+  2. 假如桌面上有一张图片a.png，此时再通过终端保存~/Desktop/1.png
+
+  预期结果:
+
+  1. 软件会保存图片到桌面上，截图名称为1.png
+
+  2. 软件会自动覆盖原来的图片
+
+  '
+steps:
+- name: 创建测试图片a.png
+  action: exec
+  command: touch ~/Desktop/1.png
+  wait: 0.3
+- name: 打开终端
+  action: keyboard_hot_key
+  keys: ctrl,alt,t
+  wait: 1.0
+- name: 输入截图保存命令
+  action: keyboard_type
+  keys: deepin-screen-recorder -s ~/Desktop/1.png
+- name: 按回车执行
+  action: keyboard_press
+  keys: Return
+  wait: 1.0
+- name: 框选截图区域
+  action: mouse_drag
+  start:
+    x: 200
+    y: 200
+  end:
+    x: 800
+    y: 600
+  wait: 0.5
+- name: 等待工具栏出现
+  action: wait
+  wait: 1.0
+- name: 按Enter完成截图
+  action: keyboard_press
+  keys: Return
+  wait: 2.0
+- name: 验证截图保存到桌面
+  action: exec
+  command: ls -la ~/Desktop/1.png
+  wait: 0.3
+- name: 验证截图结果
+  action: screenshot
+- name: 清理测试文件
+  action: exec
+  command: rm -f ~/Desktop/1.png
+  wait: 0.3
+teardown:
+- action: keyboard_press
+  keys: Escape
+  wait: 0.3
+skip: ''
+setup:
+  - action: session_start
+    command: "deepin-screen-recorder"
+    wait: 3.0

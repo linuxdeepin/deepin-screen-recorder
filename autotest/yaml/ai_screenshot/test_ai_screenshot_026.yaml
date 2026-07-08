@@ -1,0 +1,24 @@
+name: AI截图功能-未打开uosai点击问问AI
+app: deepin-screen-recorder
+module: 截图录屏/AI截图
+feature: 问问AI
+tags:
+- L2
+vars:
+  xlsx_id: '1949905'
+  case_type: 功能测试
+description: '前置条件: 未打开uosai助手，唤起截图录屏，点击AI截图
+
+  测试步骤:
+
+  1. 点击页面中的"问问AI"按钮
+
+  预期结果:
+
+  1. 静默打开uosai助手
+
+  '
+steps: []
+teardown: []
+skip: 需要特殊环境或人工验证
+setup: []

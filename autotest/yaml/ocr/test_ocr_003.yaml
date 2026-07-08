@@ -1,0 +1,49 @@
+name: '[core]OCR-文案检查-hover提示'
+app: deepin-screen-recorder
+module: 截图录屏/OCR
+feature: 入口检查
+tags:
+- L1
+vars:
+  xlsx_id: '1645883'
+  case_type: 功能测试
+description: '测试步骤: 移动鼠标悬停在识别文字按钮上方
+
+  预期结果: 展示"识别文字"的文案
+
+  '
+steps:
+- name: 唤起截图模式
+  action: keyboard_hot_key
+  keys: ctrl,alt,a
+  wait: 1.0
+- name: 框选截图区域
+  action: mouse_drag
+  start:
+    x: 400
+    y: 300
+  end:
+    x: 1400
+    y: 700
+  wait: 0.5
+- name: 等待工具栏出现
+  action: wait
+  wait: 1.0
+- name: 鼠标悬停在OCR按钮上
+  action: mouse_move
+  ref: ocr_button
+  wait: 1.0
+- name: 验证tooltip文案
+  action: screenshot
+  assert:
+  - type: element_visible
+    selector:
+      name: '识别文字 Alt+O'
+teardown:
+- action: keyboard_press
+  keys: Escape
+  wait: 0.3
+setup:
+  - action: session_start
+    command: "deepin-screen-recorder"
+    wait: 3.0

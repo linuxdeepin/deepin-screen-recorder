@@ -1,0 +1,27 @@
+name: 截长图-异常交互-滚动区内有视频
+app: deepin-screen-recorder
+description: '前置条件: 无
+
+  测试步骤:
+
+  1. 鼠标移至滚动区内
+
+  2. 鼠标单击滚动区域，滚动至视频位置
+
+  预期结果:
+
+  1. 滚动区高亮
+
+  2. 如果失败，提示："无法继续截图，查看帮助"
+
+  '
+module: 截图录屏/滚动截图
+feature: 异常交互
+tags:
+- L2
+skip: 跳过-需要特殊内容准备或人工验证
+vars:
+  xlsx_id: '1645705'
+  case_type: 功能测试
+steps: []
+teardown: []

@@ -1,0 +1,24 @@
+name: 【截图和录屏入口分开】任务栏快捷面板截图和录屏入口分别独立
+app: deepin-screen-recorder
+description: '前置条件: 无
+
+  测试步骤:
+
+  1. 点击任务栏快捷面板
+
+  预期结果:
+
+  1. 打开快捷面板，面板中显示独立的【截图】和【录屏】两个功能入口，且位置在一起
+
+  '
+module: 截图录屏/录屏
+feature: 入口插件
+tags:
+- L0
+vars:
+  xlsx_id: '1644507'
+  case_type: 功能测试
+steps: []
+skip: 需要特殊环境或人工验证
+setup: []
+teardown: []

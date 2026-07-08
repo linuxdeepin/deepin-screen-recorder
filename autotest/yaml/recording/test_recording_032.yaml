@@ -1,0 +1,28 @@
+name: 开启摄像头选项-调整摄像头画面边界
+app: deepin-screen-recorder
+description: '前置条件: 无
+
+  测试步骤:
+
+  1. 点击开启摄像头选项
+
+  2. 单击鼠标左键拖动摄像头画面至录屏区域外
+
+  预期结果:
+
+  1. 摄像头选项被选中
+
+  2. 画面依然在录屏区域内
+
+  '
+module: 截图录屏/录屏
+feature: 摄像头
+tags:
+- L3
+vars:
+  xlsx_id: '1645185'
+  case_type: 功能测试
+steps: []
+skip: 跳过-需要摄像头硬件
+setup: []
+teardown: []

@@ -1,0 +1,88 @@
+name: 全局验证-文案检查-中文环境AI工具栏文案
+app: deepin-screen-recorder
+description: '前置条件: 系统语言为中文
+
+  测试步骤:
+
+  1. 唤起截图录屏，点击AI截图
+
+  2. 查看AI工具栏中"解释"按钮的文案
+
+  3. 查看AI工具栏中"总结"按钮的文案
+
+  4. 查看AI工具栏中"翻译"按钮的文案
+
+  5. 查看AI工具栏中"问问AI"按钮的文案
+
+  预期结果:
+
+  1. 截图模式正常唤起
+
+  2. 按钮文案为"解释"
+
+  3. 按钮文案为"总结"
+
+  4. 按钮文案为"翻译"
+
+  5. 按钮文案为"问问AI"
+
+  '
+module: 截图录屏/标注工具
+feature: AI工具栏文案
+tags:
+- L2
+vars:
+  xlsx_id: '1949893'
+  case_type: 功能测试
+steps:
+- name: 唤起截图模式
+  action: keyboard_hot_key
+  keys: ctrl,alt,a
+  wait: 1.0
+- name: 框选截图区域
+  action: mouse_drag
+  start:
+    x: 400
+    y: 300
+  end:
+    x: 1400
+    y: 700
+  wait: 0.5
+- name: 等待工具栏出现
+  action: wait
+  wait: 1.0
+- name: 点击AI截图按钮
+  action: element_action
+  ref: ai_assistant_button
+  do: click
+  wait: 1.0
+- name: 验证解释按钮文案
+  action: element_action
+  ref: ai_explain_button
+  do: click
+  wait: 0.5
+- name: 验证总结按钮文案
+  action: element_action
+  ref: ai_summarize_button
+  do: click
+  wait: 0.5
+- name: 验证翻译按钮文案
+  action: element_action
+  ref: ai_translate_button
+  do: click
+  wait: 0.5
+- name: 验证问问AI按钮文案
+  action: element_action
+  ref: ai_ask_button
+  do: click
+  wait: 0.5
+- name: 验证AI工具栏整体截图
+  action: screenshot
+teardown:
+- action: keyboard_press
+  keys: Escape
+  wait: 0.3
+setup:
+  - action: session_start
+    command: "deepin-screen-recorder"
+    wait: 3.0

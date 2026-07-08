@@ -1,0 +1,68 @@
+name: '[core]OCR-交互操作-多次启动OCR识别'
+app: deepin-screen-recorder
+module: 截图录屏/OCR
+feature: 文字识别
+tags:
+- L1
+vars:
+  xlsx_id: '1646001'
+  case_type: 功能测试
+description: '测试步骤: 1.启动截图，框选任意区域，点击工具栏的识别文字按钮 2.再次启动截图，框选任意区域，使用快捷键Alt+O 3.重复步骤1-2
+
+  预期结果: 1.调起OCR识别窗口 2.调起OCR识别窗口，且与之前的OCR窗口不影响 3.参考预期1-2
+
+  '
+steps:
+- name: 第一次唤起截图模式
+  action: keyboard_hot_key
+  keys: ctrl,alt,a
+  wait: 1.0
+- name: 框选截图区域
+  action: mouse_drag
+  start:
+    x: 400
+    y: 300
+  end:
+    x: 1400
+    y: 700
+  wait: 0.5
+- name: 等待工具栏出现
+  action: wait
+  wait: 1.0
+- name: 点击工具栏OCR按钮
+  action: element_action
+  ref: ocr_button
+  do: click
+  wait: 3.0
+- name: 验证第一个OCR窗口
+  action: screenshot
+- name: 第二次唤起截图模式
+  action: keyboard_hot_key
+  keys: ctrl,alt,a
+  wait: 1.0
+- name: 框选截图区域
+  action: mouse_drag
+  start:
+    x: 300
+    y: 200
+  end:
+    x: 1200
+    y: 600
+  wait: 0.5
+- name: 等待工具栏出现
+  action: wait
+  wait: 1.0
+- name: 使用快捷键Alt+O启动OCR
+  action: keyboard_press
+  keys: alt,o
+  wait: 3.0
+- name: 验证第二个OCR窗口
+  action: screenshot
+teardown:
+- action: keyboard_press
+  keys: Escape
+  wait: 0.3
+setup:
+  - action: session_start
+    command: "deepin-screen-recorder"
+    wait: 3.0

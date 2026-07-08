@@ -1,0 +1,20 @@
+name: OCR-交互操作-40MB图片识别
+app: deepin-screen-recorder
+module: 截图录屏/OCR
+feature: 文字识别
+tags:
+- L2
+vars:
+  xlsx_id: '1646031'
+  case_type: 功能测试
+description: '测试步骤: 1.使用看图打开一张超过40MB且含有文字的图片 2.调用OCR进行图像识别 3.查看识别结果
+
+  预期结果: 能正常识别文字
+
+  注: 需要准备40MB以上大图片，当前为非自动化用例桩
+
+  '
+steps: []
+teardown: []
+skip: 标记-非自动化-需要40MB以上大图片
+setup: []

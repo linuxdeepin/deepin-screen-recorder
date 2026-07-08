@@ -1,0 +1,28 @@
+name: '[core]连接横屏竖屏显示器使用截图录屏'
+app: deepin-screen-recorder
+description: '前置条件: 无
+
+  测试步骤:
+
+  1. 使用截图核心功能
+
+  2. 使用录屏核心功能
+
+  预期结果:
+
+  1. 核心功能正常
+
+  2. 核心功能正常
+
+  '
+module: 截图录屏/录屏
+feature: 多屏
+tags:
+- L1
+vars:
+  xlsx_id: '1644919'
+  case_type: 功能测试
+steps: []
+skip: 跳过-需要横屏竖屏双屏硬件
+setup: []
+teardown: []

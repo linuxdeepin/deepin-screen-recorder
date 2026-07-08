@@ -1,0 +1,68 @@
+name: "录屏-切换格式GIF"
+description: |
+  前置条件: 桌面正常显示
+  测试步骤:
+  1. 启动录屏模式并框选区域
+  2. 打开设置面板
+  3. 选择GIF格式
+  4. 验证GIF格式已选中
+  5. 停止录制
+  预期结果:
+  1. 录屏模式启动
+  2. 设置面板展开
+  3. GIF格式可选
+  4. 格式切换为GIF
+  5. 录制停止
+module: "截图录屏/录屏"
+feature: "格式切换"
+tags:
+  - L1
+vars:
+  xlsx_id: "1645087"
+  case_type: "功能测试"
+steps:
+  - name: "激活录屏模式"
+    action: keyboard_hot_key
+    keys: ctrl,alt,r
+    wait: 1.0
+  - name: "框选录屏区域"
+    action: mouse_drag
+    ref: screen_center
+    wait: 0.5
+  - name: "等待工具栏出现"
+    action: wait
+    wait: 1.0
+  - name: "打开录屏选项面板"
+    action: element_action
+    ref: record_option_button
+    do: click
+    wait: 0.5
+  - name: "等待菜单展开"
+    action: wait
+    wait: 0.5
+  - name: "通过右键菜单选择GIF格式"
+    action: mouse_right_click
+    ref: record_option_button
+    wait: 0.3
+  - name: "选择GIF菜单项"
+    action: main_menu_comb
+    ref: record_format_gif
+    wait: 0.5
+  - name: "等待格式切换"
+    action: wait
+    wait: 0.3
+  - name: "停止录制"
+    action: keyboard_hot_key
+    keys: ctrl,alt,r
+    wait: 1.0
+  - name: "等待保存"
+    action: wait
+    wait: 1.0
+setup:
+  - action: session_start
+    command: "deepin-screen-recorder"
+    wait: 3.0
+teardown:
+  - action: keyboard_press
+    keys: Escape
+    wait: 0.5

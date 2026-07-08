@@ -1,0 +1,114 @@
+name: 截长图-自动滚动-滚动区外捕捉区内点击光标
+app: deepin-screen-recorder
+description: '前置条件: 无
+
+  测试步骤:
+
+  1. 鼠标单击滚动区域
+
+  2. 鼠标移动至滚动区域外捕捉区域内
+
+  3. 单击鼠标
+
+  4. 鼠标移动到滚动区域内
+
+  5. 鼠标移动至滚动区域外捕捉区域内
+
+  6. 单击鼠标
+
+  7. 鼠标移动至滚动区域内
+
+  预期结果:
+
+  1. 滚动区向上滚动，自动拼接图片
+
+  2. 如果异常，提示"已到滚动区域底部"
+
+  3. 暂停滚动截图
+
+  4. 仍然暂停滚动
+
+  5. 仍然暂停滚动
+
+  6. 单击鼠标后，如果异常，提示"已到滚动区域底部"
+
+  7. 滚动区向上滚动
+
+  '
+module: 截图录屏/滚动截图
+feature: 自动滚动
+tags:
+- L1
+vars:
+  xlsx_id: '1645661'
+  case_type: 功能测试
+steps:
+- name: 唤起截图模式
+  action: keyboard_hot_key
+  keys: ctrl,alt,a
+  wait: 1.0
+- name: 框选截图区域
+  action: mouse_drag
+  start:
+    x: 200
+    y: 200
+  end:
+    x: 1400
+    y: 900
+  wait: 0.5
+- name: 等待工具栏出现
+  action: wait
+  wait: 1.0
+- name: 点击滚动截图按钮
+  action: element_action
+  ref: scrollshot_button
+  do: click
+  wait: 1.0
+- name: 鼠标单击滚动区域开始自动滚动
+  action: mouse_click
+  x: 800
+  y: 400
+  wait: 3.0
+- name: 鼠标移动至滚动区域外捕捉区内
+  action: mouse_move
+  x: 300
+  y: 600
+  wait: 0.5
+- name: 单击鼠标暂停滚动
+  action: mouse_click
+  x: 300
+  y: 600
+  wait: 1.0
+- name: 验证暂停状态
+  action: screenshot
+- name: 鼠标移动到滚动区域内
+  action: mouse_move
+  x: 800
+  y: 400
+  wait: 0.5
+- name: 鼠标移动至滚动区域外捕捉区内
+  action: mouse_move
+  x: 300
+  y: 600
+  wait: 0.5
+- name: 单击鼠标
+  action: mouse_click
+  x: 300
+  y: 600
+  wait: 1.0
+- name: 鼠标移动至滚动区域内
+  action: mouse_move
+  x: 800
+  y: 400
+  wait: 2.0
+- name: 验证恢复滚动
+  action: screenshot
+teardown:
+- action: keyboard_press
+  keys: Escape
+  wait: 0.3
+skip: ''
+setup:
+  - action: session_start
+    command: "deepin-screen-recorder"
+    wait: 3.0

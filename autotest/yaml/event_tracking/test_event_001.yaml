@@ -1,0 +1,34 @@
+name: 【埋点检查】截全屏B1
+app: deepin-screen-recorder
+module: 截图录屏/埋点
+feature: 全屏截图埋点
+tags:
+- L2
+vars:
+  xlsx_id: '1996895'
+  case_type: 功能测试
+  startup_mode: B1
+description: "测试步骤:\n  1. 打开终端，cd /var/lib/deepin/event-log 目录，执行 ls 查看当前日志文件\n  2.\
+  \ 按快捷键 PrintScreen 执行全屏截图操作\n  3. 在终端执行 cat event_*.log 查看日志内容\n预期结果:\n  1. 成功进入\
+  \ event-log 目录，存在 event_xxxxxxx.log 文件\n  2. 截图操作正常执行\n  3. 日志中包含 JSON 数据，startup_mode\
+  \ 字段值为 \"B1\"，package 为 \"deepin-screen-recorder\"\n"
+setup:
+  - action: session_start
+    command: "deepin-screen-recorder"
+    wait: 3.0
+steps:
+  - name: "通过DBus调用全屏截图接口"
+    action: dbus_call
+    value:
+      bus_type: "session"
+      dbus_name: "com.deepin.Screenshot"
+      object_path: "/com/deepin/Screenshot"
+      interface: "com.deepin.Screenshot"
+      method: "FullscreenScreenshot"
+    wait: 1.0
+  - name: "等待截图操作完成"
+    action: wait
+    wait: 0.3
+teardown:
+  - action: keyboard_press
+    keys: "Escape"

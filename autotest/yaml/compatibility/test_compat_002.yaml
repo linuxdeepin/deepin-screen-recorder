@@ -1,0 +1,96 @@
+name: 兼容性测试-录屏工具
+app: deepin-screen-recorder
+module: 截图录屏/兼容性
+feature: 兼容性测试
+tags:
+- L0
+vars:
+  xlsx_id: '1644813'
+  case_type: 兼容性测试
+description: '测试步骤:
+
+  1. 使用快捷键Ctrl+Alt+R进入录屏模式
+
+  2. 选择录制声音和麦克风
+
+  3. 选择录制键盘
+
+  4. 选择录制摄像头
+
+  5. 选择显示光标及显示点击
+
+  6. 录制系统声音和麦克风声音，并且操作键盘，鼠标点击
+
+  预期结果:
+
+  1. 成功进入录屏模式
+
+  2. 选择成功
+
+  3. 选择成功
+
+  4. 选择成功
+
+  5. 选择成功
+
+  6. 系统声音、麦克风、摄像头、键盘显示、光标及光标点击均正常
+
+  '
+steps:
+- name: 唤起录屏模式
+  action: keyboard_hot_key
+  keys: ctrl,alt,r
+  wait: 1.0
+- name: 框选录屏区域
+  action: mouse_drag
+  start:
+    x: 400
+    y: 300
+  end:
+    x: 1400
+    y: 700
+  wait: 0.5
+- name: 等待工具栏出现
+  action: wait
+  wait: 1.0
+- name: 点击声音按钮
+  action: element_action
+  ref: audio_button
+  do: click
+  wait: 0.5
+- name: 点击按键按钮
+  action: element_action
+  ref: keyboard_button
+  do: click
+  wait: 0.5
+- name: 点击摄像头按钮
+  action: element_action
+  ref: camera_button
+  do: click
+  wait: 0.5
+- name: 点击鼠标按钮
+  action: element_action
+  ref: mouse_button
+  do: click
+  wait: 0.5
+- name: 点击录屏选项按钮
+  action: element_action
+  ref: record_option_button
+  do: click
+  wait: 0.5
+- name: 验证录屏工具栏整体
+  action: screenshot
+- name: 按Escape退出选项菜单
+  action: keyboard_press
+  keys: Escape
+  wait: 0.3
+- name: 验证录屏工具栏功能状态
+  action: screenshot
+teardown:
+- action: keyboard_press
+  keys: Escape
+  wait: 0.3
+setup:
+  - action: session_start
+    command: "deepin-screen-recorder"
+    wait: 3.0

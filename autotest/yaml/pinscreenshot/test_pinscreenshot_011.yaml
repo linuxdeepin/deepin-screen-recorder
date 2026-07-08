@@ -1,0 +1,54 @@
+name: 截图工具栏贴图入口位置
+app: deepin-screen-recorder
+module: 截图录屏/贴图
+feature: 贴图入口
+tags:
+- L2
+vars:
+  xlsx_id: '1645499'
+  case_type: UI测试
+description: "测试步骤:\n  1. 打开截图录屏工具，进入截图模式\n  2. 框选截图区域\n  3. 查看工具栏贴图按钮的位置\n预期结果:\n\
+  \  3. 工具栏新增贴图按钮，位置位于滚动截图左侧\n"
+steps:
+- name: 唤起截图模式
+  action: keyboard_hot_key
+  keys: ctrl,alt,a
+  wait: 1.0
+- name: 框选截图区域
+  action: mouse_drag
+  start:
+    x: 400
+    y: 300
+  end:
+    x: 1400
+    y: 700
+  wait: 0.5
+- name: 等待工具栏出现
+  action: wait
+  wait: 1.0
+- name: 断言贴图按钮存在
+  action: element_assert
+  ref: pinscreenshots_button
+  assert:
+    - type: element_visible
+- name: 断言滚动截图按钮存在
+  action: element_assert
+  ref: scrollshot_button
+  assert:
+    - type: element_visible
+- name: 断言贴图按钮tooltip正确
+  action: element_assert
+  ref: pinscreenshots_button
+  assert:
+    - type: element_visible
+      selector:
+        name: '贴图 Alt+P'
+teardown:
+- action: keyboard_press
+  keys: Escape
+  wait: 0.3
+skip: ''
+setup:
+  - action: session_start
+    command: "deepin-screen-recorder"
+    wait: 3.0

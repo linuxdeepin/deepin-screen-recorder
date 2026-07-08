@@ -1,0 +1,24 @@
+name: 储存逻辑-双屏下文管弹窗默认显示在主屏
+app: deepin-screen-recorder
+module: 截图录屏/设置
+feature: 双屏显示
+tags:
+- L3
+vars:
+  xlsx_id: '1915687'
+  case_type: 功能测试
+description: '前置条件: 1. 设备连接两个屏幕 1.截图工具已安装并启动 2. 准备任意截图文案（如桌面截图）
+
+  测试步骤:
+
+  1. 设置保存方式为每次询问/更新位置并点击保存
+
+  预期结果:
+
+  1. 弹出的文管弹窗默认显示在主屏
+
+  '
+steps: []
+skip: 跳过-需要特殊硬件或网络环境
+setup: []
+teardown: []

@@ -1,0 +1,20 @@
+name: OCR结果页-可准确识别各种图片
+app: deepin-screen-recorder
+module: 截图录屏/OCR
+feature: 文字识别
+tags:
+- L2
+vars:
+  xlsx_id: '1949895'
+  case_type: 功能测试
+description: '测试步骤: 1.唤起截图录屏，选择准备好的图片，点击AI截图，点击问问AI，进入AI随航OCR识别 2.获取OCR识别后的文字结果并记录
+
+  预期结果: 能准确识别图片的所有内容
+
+  注: 需要AI随航功能支持，当前为非自动化用例桩
+
+  '
+steps: []
+teardown: []
+skip: 标记-非自动化-需要AI随航和多种语言图片
+setup: []

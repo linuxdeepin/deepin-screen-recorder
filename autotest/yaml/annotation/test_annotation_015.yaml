@@ -1,0 +1,72 @@
+name: 工具栏-布局
+app: deepin-screen-recorder
+description: '前置条件: 无
+
+  测试步骤:
+
+  1. 查看工具栏选项
+
+  预期结果:
+
+  1. 从左到右展示：声音按钮、按键按钮、摄像头按钮、录制鼠标按钮、选项按钮、退出X按钮、开始录屏按钮
+
+  '
+module: 截图录屏/标注工具
+feature: 工具栏布局
+tags:
+- L2
+vars:
+  xlsx_id: '1645269'
+  case_type: 功能测试
+steps:
+- name: 唤起录屏模式
+  action: keyboard_hot_key
+  keys: ctrl,alt,r
+  wait: 1.0
+- name: 框选录屏区域
+  action: mouse_drag
+  start:
+    x: 400
+    y: 300
+  end:
+    x: 1400
+    y: 700
+  wait: 0.5
+- name: 等待工具栏出现
+  action: wait
+  wait: 1.0
+- name: 验证声音按钮可见
+  action: element_action
+  ref: audio_button
+  do: click
+  wait: 0.3
+- name: 验证按键按钮可见
+  action: element_action
+  ref: keyboard_button
+  do: click
+  wait: 0.3
+- name: 验证摄像头按钮可见
+  action: element_action
+  ref: camera_button
+  do: click
+  wait: 0.3
+- name: 验证录制鼠标按钮可见
+  action: element_action
+  ref: mouse_button
+  do: click
+  wait: 0.3
+- name: 验证录屏选项按钮可见
+  action: element_action
+  ref: record_option_button
+  do: click
+  wait: 0.3
+- name: 验证工具栏整体布局截图
+  action: screenshot
+teardown:
+- action: keyboard_press
+  keys: Escape
+  wait: 0.3
+setup:
+  - action: session_start
+    command: "deepin-screen-recorder"
+    wait: 3.0

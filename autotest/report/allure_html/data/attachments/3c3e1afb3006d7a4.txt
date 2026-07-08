@@ -1,0 +1,4 @@
+ERROR    root:__init__.py:354 [__init__]: ut006116 3093566  990233 32 16:49 ?        00:00:11 /home/ut006116@uos/AT_WorkSapce/deepin-screen-recorder/.venv/bin/python3 /home/ut006116@uos/AT_WorkSapce/deepin-screen-recorder/.venv/bin/youqu run
+ut006116 3093866 3093566  0 16:49 ?        00:00:00 /bin/bash -c ps -ef | grep deepin-screen-recorder
+ut006116 3093868 3093866  0 16:49 ?        00:00:00 grep deepin-screen-recorder
+ERROR    root:__init__.py:354 [__init__]: 应用程序未启动,deepin-screen-recorder

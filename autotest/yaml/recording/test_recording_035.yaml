@@ -1,0 +1,28 @@
+name: 截图录屏入口插件-录屏时点击插件右键菜单截图选项
+app: deepin-screen-recorder
+description: '前置条件: 无
+
+  测试步骤:
+
+  1. 鼠标右键单击截图录屏入口插件
+
+  2. 鼠标左键单击截图选项
+
+  预期结果:
+
+  1. 打开截图录屏插件右键菜单
+
+  2. 无响应
+
+  '
+module: 截图录屏/录屏
+feature: 入口插件
+tags:
+- L2
+vars:
+  xlsx_id: '1645097'
+  case_type: 功能测试
+steps: []
+teardown: []
+skip: 需要特殊环境或人工验证
+setup: []

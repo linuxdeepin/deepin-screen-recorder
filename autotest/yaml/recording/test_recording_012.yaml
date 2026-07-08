@@ -1,0 +1,28 @@
+name: 任务栏设置在侧边，进行录屏操作，任务栏图标正常显示
+app: deepin-screen-recorder
+description: '前置条件: 任务栏设置在侧边
+
+  测试步骤:
+
+  1. 启动录屏
+
+  2. 观察任务栏上图标
+
+  预期结果:
+
+  1. 开始录屏
+
+  2. 任务栏图标正常显示
+
+  '
+module: 截图录屏/录屏
+feature: 任务栏
+tags:
+- L2
+vars:
+  xlsx_id: '1646097'
+  case_type: 功能测试
+steps: []
+teardown: []
+skip: 需要特殊环境或人工验证
+setup: []

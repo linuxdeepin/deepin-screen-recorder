@@ -1,0 +1,92 @@
+name: 显示按键选项-显示按键时倒计时页面交互
+app: deepin-screen-recorder
+description: |
+  前置条件: 无
+  测试步骤:
+  1. 点击显示按键选项
+  2. 点击录制按钮
+  3. 3s倒计时内，点击ABCDEF
+  预期结果:
+  1. 显示按键选项被选中
+  2. 开始3s倒计时
+  3. 页面显示按键BCDEF
+module: 截图录屏/录屏
+feature: 显示按键
+tags:
+- L3
+vars:
+  xlsx_id: '1645209'
+  case_type: 功能测试
+steps:
+- name: "激活录屏模式"
+  action: keyboard_hot_key
+  keys: ctrl,alt,r
+  wait: 1.0
+- name: "框选录屏区域"
+  action: mouse_drag
+  ref: screen_center
+  wait: 0.5
+- name: "等待工具栏出现"
+  action: wait
+  wait: 1.0
+- name: "点击显示按键选项"
+  action: element_action
+  ref: keyboard_button
+  do: click
+  wait: 0.5
+- name: "验证显示按键选项被选中"
+  action: wait
+  wait: 0.3
+  assert:
+    - type: element_checked
+      selector:
+        name: keyboard_button
+- name: "开始录制（触发倒计时）"
+  action: keyboard_press
+  keys: Return
+  wait: 1.0
+- name: "倒计时中按下A键"
+  action: keyboard_press
+  keys: a
+  wait: 0.3
+- name: "倒计时中按下B键"
+  action: keyboard_press
+  keys: b
+  wait: 0.3
+- name: "倒计时中按下C键"
+  action: keyboard_press
+  keys: c
+  wait: 0.3
+- name: "倒计时中按下D键"
+  action: keyboard_press
+  keys: d
+  wait: 0.3
+- name: "倒计时中按下E键"
+  action: keyboard_press
+  keys: e
+  wait: 0.3
+- name: "倒计时中按下F键"
+  action: keyboard_press
+  keys: f
+  wait: 0.5
+- name: "验证倒计时页面显示按键"
+  action: wait
+  wait: 0.3
+  assert:
+    - type: screenshot
+      expected: "countdown_key_display"
+- name: "停止录制"
+  action: keyboard_hot_key
+  keys: ctrl,alt,r
+  wait: 1.0
+- name: "等待保存"
+  action: wait
+  wait: 1.0
+setup:
+  - action: session_start
+    command: "deepin-screen-recorder"
+    wait: 3.0
+teardown:
+- action: keyboard_press
+  keys: Escape
+  wait: 0.5

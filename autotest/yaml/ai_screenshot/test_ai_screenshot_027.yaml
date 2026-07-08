@@ -1,0 +1,28 @@
+name: AI截图功能-uosai未授权时点击问问AI
+app: deepin-screen-recorder
+description: '前置条件: uosai助手未授权，唤起截图录屏，点击AI截图
+
+  测试步骤:
+
+  1. 点击页面中的"问问AI"按钮
+
+  2. 检查uosai助手页面显示
+
+  预期结果:
+
+  1. 打开uosai页面
+
+  2. 跳转到uosai助手的welcome页面，页面展示UOS AI欢迎界面
+
+  '
+module: 截图录屏/AI截图
+feature: 问问AI
+tags:
+- L2
+vars:
+  xlsx_id: '1949903'
+  case_type: 功能测试
+steps: []
+skip: 跳过-需要uosai未授权状态
+setup: []
+teardown: []

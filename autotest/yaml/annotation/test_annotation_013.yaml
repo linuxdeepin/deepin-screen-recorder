@@ -1,0 +1,44 @@
+name: 工具栏-位置-屏幕左上角截图
+app: deepin-screen-recorder
+description: '前置条件: 无
+
+  测试步骤:
+
+  1. 移动截图区域至屏幕左上角
+
+  预期结果:
+
+  1. 工具栏展示在截图区域下方
+
+  '
+module: 截图录屏/标注工具
+feature: 工具栏位置
+tags:
+- L2
+vars:
+  xlsx_id: '1645813'
+  case_type: 功能测试
+steps:
+- name: 进入截图模式
+  action: keyboard_hot_key
+  keys: ctrl,alt,a
+  wait: 0.5
+- name: 在屏幕左上角框选截图区域
+  action: mouse_drag
+  start: '@screen_top_left'
+  end:
+    x: 400
+    y: 300
+  wait: 0.3
+- name: 验证工具栏展示在截图区域下方
+  action: screenshot
+- name: 截图验证
+  action: screenshot
+setup:
+  - action: session_start
+    command: "deepin-screen-recorder"
+    wait: 3.0
+teardown:
+- action: keyboard_press
+  keys: Escape
+  wait: 0.3

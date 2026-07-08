@@ -1,0 +1,45 @@
+name: "启动截图功能"
+description: |
+  前置条件: 桌面正常显示
+  测试步骤:
+  1. 快捷键Ctrl+Alt+A启动截图模式
+  2. 框选截图区域
+  3. 点击Enter完成截图
+  预期结果:
+  1. 截图模式启动成功
+  2. 选区显示
+  3. 截图完成并保存
+module: "截图录屏/截图基础"
+feature: "启动截图"
+tags:
+  - L0
+vars:
+  xlsx_id: "1644967"
+  case_type: "功能测试"
+steps:
+  - name: "激活截图模式"
+    action: keyboard_hot_key
+    keys: ctrl,alt,a
+    wait: 1.0
+  - name: "框选截图区域"
+    action: mouse_drag
+    ref: screen_top_left
+    wait: 0.5
+  - name: "等待工具栏出现"
+    action: wait
+    wait: 1.0
+  - name: "确认截图"
+    action: keyboard_press
+    keys: Return
+    wait: 1.0
+  - name: "验证截图完成（截图后剪贴板不为空）"
+    action: wait
+    wait: 0.5
+setup:
+  - action: session_start
+    command: "deepin-screen-recorder"
+    wait: 3.0
+teardown:
+  - action: keyboard_press
+    keys: Escape
+    wait: 0.5

@@ -1,0 +1,20 @@
+name: OCR-图像预览区域-触控屏缩放
+app: deepin-screen-recorder
+module: 截图录屏/OCR
+feature: 图像预览
+tags:
+- L2
+vars:
+  xlsx_id: '1645959'
+  case_type: 功能测试
+description: '测试步骤: 1.通过截图录屏，框选1920*1080的图像 2.点击OCR按钮，进入OCR功能 3.在触控屏使用二指张开/捏合进行缩放
+
+  预期结果: 能正常进行缩放，缩放时显示比例
+
+  注: 需要触控屏设备支持，当前为非自动化用例桩
+
+  '
+steps: []
+teardown: []
+skip: 标记-非自动化-需要触控屏设备
+setup: []

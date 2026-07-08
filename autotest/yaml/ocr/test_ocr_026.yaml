@@ -1,0 +1,49 @@
+name: OCR-交互操作-复杂背景图像文字识别
+app: deepin-screen-recorder
+module: 截图录屏/OCR
+feature: 文字识别
+tags:
+- L2
+vars:
+  xlsx_id: '1646037'
+  case_type: 功能测试
+description: '测试步骤: 1.使用看图打开一张有超过10种颜色背景且有文字的图片 2.调用OCR进行图像识别 3.查看识别结果
+
+  预期结果: 能正常识别文字
+
+  '
+steps:
+- name: 唤起截图模式
+  action: keyboard_hot_key
+  keys: ctrl,alt,a
+  wait: 1.0
+- name: 框选截图区域
+  action: mouse_drag
+  start:
+    x: 400
+    y: 300
+  end:
+    x: 1400
+    y: 700
+  wait: 0.5
+- name: 等待工具栏出现
+  action: wait
+  wait: 1.0
+- name: 点击OCR按钮
+  action: element_action
+  ref: ocr_button
+  do: click
+  wait: 0.5
+- name: 等待OCR识别完成
+  action: wait
+  wait: 5.0
+- name: 验证复杂背景文字识别结果
+  action: screenshot
+teardown:
+- action: keyboard_press
+  keys: Escape
+  wait: 0.3
+setup:
+  - action: session_start
+    command: "deepin-screen-recorder"
+    wait: 3.0

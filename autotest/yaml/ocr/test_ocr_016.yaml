@@ -1,0 +1,51 @@
+name: OCR-主界面-界面展示
+app: deepin-screen-recorder
+module: 截图录屏/OCR
+feature: 文字识别
+tags:
+- L2
+vars:
+  xlsx_id: '1645983'
+  case_type: 功能测试
+description: '测试步骤: 查看OCR界面展示
+
+  预期结果: 左上角展示OCR图标；右上角为最小化、最大化、还原、关闭按钮；右下角为复制、保存为TXT按钮；窗口左侧为识别图像区域；窗口右侧为文字展示区域；窗口下方为提示语
+
+  '
+steps:
+- name: 唤起截图模式
+  action: keyboard_hot_key
+  keys: ctrl,alt,a
+  wait: 1.0
+- name: 框选截图区域
+  action: mouse_drag
+  start:
+    x: 400
+    y: 300
+  end:
+    x: 1400
+    y: 700
+  wait: 0.5
+- name: 等待工具栏出现
+  action: wait
+  wait: 1.0
+- name: 点击OCR按钮
+  action: element_action
+  ref: ocr_button
+  do: click
+  wait: 0.5
+- name: 等待OCR识别完成
+  action: wait
+  wait: 5.0
+- name: 验证OCR主界面展示-左上角图标
+  action: screenshot
+- name: 验证OCR主界面展示-右侧按钮
+  action: screenshot
+teardown:
+- action: keyboard_press
+  keys: Escape
+  wait: 0.3
+setup:
+  - action: session_start
+    command: "deepin-screen-recorder"
+    wait: 3.0

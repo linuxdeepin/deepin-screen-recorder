@@ -1,0 +1,36 @@
+name: 【录制】录制不同格式与时段视频
+app: deepin-screen-recorder
+description: '前置条件:
+
+  1. 启动截图录屏快捷键（ctrl+alt+a）
+
+  2. 任意华为机型（L410/L420/W515/W525）
+
+  测试步骤:
+
+  1. 启动录屏，格式选择MP4，录制3分钟结束保存
+
+  2. 启动录屏，格式选择MKV，录制6分钟结束保存
+
+  3. 启动录屏，格式选择GIF，录制9分钟结束保存
+
+  预期结果:
+
+  1. 保存成功
+
+  2. 保存成功
+
+  3. 保存成功
+
+  '
+module: 截图录屏/录屏
+feature: 格式切换
+tags:
+- L1
+vars:
+  xlsx_id: '1644773'
+  case_type: 功能测试
+steps: []
+teardown: []
+skip: 需要特殊环境或人工验证
+setup: []

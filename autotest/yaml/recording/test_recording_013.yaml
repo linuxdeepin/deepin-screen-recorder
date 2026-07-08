@@ -1,0 +1,59 @@
+name: 保存优化-录屏工具栏选项具有保存到的功能
+app: deepin-screen-recorder
+description: |
+  前置条件: 无
+  测试步骤:
+  1. 使用快捷键Ctrl+Alt+r,启动截图录屏
+  2. 点击工具栏的选项按钮，查看选项
+  预期结果:
+  1. 正常启动录屏
+  2. 具有保存到的选项
+module: 截图录屏/录屏
+feature: 保存
+tags:
+- L3
+vars:
+  xlsx_id: '1646079'
+  case_type: 功能测试
+steps:
+- name: "激活录屏模式"
+  action: keyboard_hot_key
+  keys: ctrl,alt,r
+  wait: 1.0
+- name: "框选录屏区域"
+  action: mouse_drag
+  ref: screen_center
+  wait: 0.5
+- name: "等待工具栏出现"
+  action: wait
+  wait: 1.0
+- name: "打开录屏选项面板"
+  action: element_action
+  ref: record_option_button
+  do: click
+  wait: 0.5
+- name: "等待菜单展开"
+  action: wait
+  wait: 0.5
+- name: "验证菜单中存在保存到桌面选项"
+  action: wait
+  wait: 0.3
+  assert:
+    - type: element_visible
+      selector:
+        name: desktopAction
+- name: "验证菜单中存在保存到视频选项"
+  action: wait
+  wait: 0.3
+  assert:
+    - type: element_visible
+      selector:
+        name: videosAction
+setup:
+  - action: session_start
+    command: "deepin-screen-recorder"
+    wait: 3.0
+teardown:
+- action: keyboard_press
+  keys: Escape
+  wait: 0.5

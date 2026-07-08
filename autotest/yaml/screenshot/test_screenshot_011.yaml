@@ -1,0 +1,32 @@
+name: '[core]双屏扩展触控操作'
+app: deepin-screen-recorder
+description: '前置条件: 无
+
+  测试步骤:
+
+  1. 主屏截图和录屏操作
+
+  2. 副屏截图和录屏操作
+
+  3. 跨屏幕截图和录屏操作
+
+  预期结果:
+
+  1. 截图和录屏功能正常
+
+  2. 截图和录屏功能正常
+
+  3. 截图和录屏功能正常
+
+  '
+module: 截图录屏/截图基础
+feature: 区域选择
+tags:
+- L1
+vars:
+  xlsx_id: '1644961'
+  case_type: 功能测试
+steps: []
+skip: 跳过-需要双屏硬件环境
+setup: []
+teardown: []

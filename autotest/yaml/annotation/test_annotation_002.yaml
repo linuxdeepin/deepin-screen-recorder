@@ -1,0 +1,40 @@
+name: 全局验证-文案检查-英文环境AI工具栏文案
+app: deepin-screen-recorder
+description: '前置条件: 设置系统语言为英文
+
+  测试步骤:
+
+  1. 点击入口按钮打开AI工具栏
+
+  2. 查看AI工具栏中"Explain"按钮的文案
+
+  3. 查看AI工具栏中"Summary"按钮的文案
+
+  4. 查看AI工具栏中"Translate"按钮的文案
+
+  5. 查看AI工具栏中"Ask AI"按钮的文案
+
+  预期结果:
+
+  1. AI工具栏正常打开
+
+  2. 按钮文案为"Explain"
+
+  3. 按钮文案为"Summary"
+
+  4. 按钮文案为"Translate"
+
+  5. 按钮文案为"Ask AI"
+
+  '
+module: 截图录屏/标注工具
+feature: AI工具栏文案
+tags:
+- L2
+vars:
+  xlsx_id: '1949887'
+  case_type: 功能测试
+steps: []
+skip: 跳过-需要切换系统语言为英文
+setup: []
+teardown: []

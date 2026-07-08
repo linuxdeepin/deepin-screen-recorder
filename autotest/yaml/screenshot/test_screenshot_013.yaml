@@ -1,0 +1,65 @@
+name: "截图区域选择"
+description: |
+  前置条件: 桌面正常显示
+  测试步骤:
+  1. 快捷键Ctrl+Alt+A启动截图
+  2. 拖拽鼠标框选区域
+  3. 验证工具栏出现
+  4. 按Esc退出
+  预期结果:
+  1. 截图模式启动
+  2. 选区正确
+  3. 工具栏正确显示
+module: "截图录屏/截图基础"
+feature: "区域选择"
+tags:
+  - L1
+vars:
+  xlsx_id: "1644877"
+  case_type: "功能测试"
+steps:
+  - name: "激活截图模式"
+    action: keyboard_hot_key
+    keys: ctrl,alt,a
+    wait: 1.0
+  - name: "框选截图区域"
+    action: mouse_drag
+    ref: screen_center
+    wait: 0.5
+  - name: "等待工具栏出现并验证"
+    action: wait
+    wait: 1.0
+    assert:
+      - type: element_visible
+        selector:
+          name: toolbar_close_button
+  - name: "验证录屏按钮可见"
+    action: wait
+    wait: 0.3
+    assert:
+      - type: element_visible
+        selector:
+          name: recorder_button
+  - name: "验证截图工具按钮可见"
+    action: wait
+    wait: 0.3
+    assert:
+      - type: element_visible
+        selector:
+          name: rect_button
+  - name: "退出截图模式"
+    action: keyboard_press
+    keys: Escape
+    wait: 0.5
+    assert:
+      - type: element_not_visible
+        selector:
+          name: toolbar_close_button
+setup:
+  - action: session_start
+    command: "deepin-screen-recorder"
+    wait: 3.0
+teardown:
+  - action: keyboard_press
+    keys: Escape
+    wait: 0.5

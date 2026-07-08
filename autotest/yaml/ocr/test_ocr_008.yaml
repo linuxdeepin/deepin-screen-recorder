@@ -1,0 +1,58 @@
+name: OCR-保存为TXT按钮-识别后修改文件名称再保存
+app: deepin-screen-recorder
+module: 截图录屏/OCR
+feature: 复制保存
+tags:
+- L2
+vars:
+  xlsx_id: '1645893'
+  case_type: 功能测试
+description: '测试步骤: 1.通过看图打开一张图片 2.点击OCR按钮，进入OCR功能 3.在文件管理器中修改该图片名称 4.在OCR中点击保存为TXT按钮，在弹出的文管窗口中点击保存
+
+  预期结果: 保存后TXT文本名称为修改之前的图片名称
+
+  '
+steps:
+- name: 唤起截图模式
+  action: keyboard_hot_key
+  keys: ctrl,alt,a
+  wait: 1.0
+- name: 框选截图区域
+  action: mouse_drag
+  start:
+    x: 400
+    y: 300
+  end:
+    x: 1400
+    y: 700
+  wait: 0.5
+- name: 等待工具栏出现
+  action: wait
+  wait: 1.0
+- name: 点击OCR按钮
+  action: element_action
+  ref: ocr_button
+  do: click
+  wait: 0.5
+- name: 等待OCR识别完成
+  action: wait
+  wait: 5.0
+- name: 点击保存为TXT按钮
+  action: element_action
+  ref: ocr_save_txt_button
+  do: click
+  wait: 1.0
+- name: 在文件管理器弹窗中点击保存
+  action: keyboard_press
+  keys: Return
+  wait: 1.0
+- name: 验证保存成功
+  action: screenshot
+teardown:
+- action: keyboard_press
+  keys: Escape
+  wait: 0.3
+setup:
+  - action: session_start
+    command: "deepin-screen-recorder"
+    wait: 3.0

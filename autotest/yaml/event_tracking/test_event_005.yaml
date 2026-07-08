@@ -1,0 +1,37 @@
+name: 【埋点检查】滚动截图B5
+app: deepin-screen-recorder
+module: 截图录屏/埋点
+feature: 滚动截图埋点
+tags:
+- L1
+vars:
+  xlsx_id: '1996903'
+  case_type: 功能测试
+  startup_mode: B5
+description: "测试步骤:\n  1. 打开终端，cd /var/lib/deepin/event-log 目录，执行 ls 查看当前日志文件\n  2.\
+  \ 按快捷键 Ctrl+Alt+A 进入截图模式，框选区域后按 Alt+I 执行滚动截图\n  3. 在终端执行 cat event_*.log 查看日志内容\n\
+  预期结果:\n  1. 成功进入 event-log 目录，存在 event_xxxxxxx.log 文件\n  2. 滚动截图操作正常执行\n  3. 日志中包含\
+  \ JSON 数据，startup_mode 字段值为 \"B5\"，package 为 \"deepin-screen-recorder\"\n"
+setup:
+  - action: session_start
+    command: "deepin-screen-recorder"
+    wait: 3.0
+steps:
+  - name: "按快捷键Ctrl+Alt+A进入截图模式"
+    action: keyboard_press
+    keys: "ctrl+alt+A"
+    wait: 0.5
+  - name: "框选截图区域"
+    action: mouse_drag
+    ref: screen_bottom_right
+    wait: 0.5
+  - name: "按Alt+I执行滚动截图"
+    action: keyboard_press
+    keys: "alt+I"
+    wait: 1.0
+  - name: "等待滚动截图操作完成"
+    action: wait
+    wait: 0.3
+teardown:
+  - action: keyboard_press
+    keys: "Escape"

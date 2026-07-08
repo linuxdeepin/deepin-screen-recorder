@@ -1,0 +1,85 @@
+name: 声音选项记忆-记住上一次选择的麦克风状态
+app: deepin-screen-recorder
+description: |
+  前置条件:
+  1. 设备未进行过应用升级或重装
+  2. 录屏功能已安装且正常运行
+  测试步骤:
+  1. 打开录屏功能，进入录屏设置界面
+  2. 点击麦克风选项开关，关闭麦克风
+  3. 关闭录屏
+  4. 再次打开录屏功能，进入录屏设置界面
+  预期结果:
+  1. 成功进入录屏设置界面，麦克风选项显示为开启状态
+  2. 麦克风选项开关变为关闭状态
+  3. 可正常关闭
+  4. 成功进入录屏设置界面，麦克风选项保持关闭状态
+module: 截图录屏/录屏
+feature: 音频选项
+tags:
+- L3
+vars:
+  xlsx_id: '1915825'
+  case_type: 功能测试
+steps:
+- name: "激活录屏模式"
+  action: keyboard_hot_key
+  keys: ctrl,alt,r
+  wait: 1.0
+- name: "框选录屏区域"
+  action: mouse_drag
+  ref: screen_center
+  wait: 0.5
+- name: "等待工具栏出现"
+  action: wait
+  wait: 1.0
+- name: "打开录屏选项面板"
+  action: element_action
+  ref: record_option_button
+  do: click
+  wait: 0.5
+- name: "等待菜单展开"
+  action: wait
+  wait: 0.5
+- name: "取消勾选麦克风"
+  action: main_menu_comb
+  ref: record_audio_mic
+  wait: 0.5
+- name: "退出录屏模式"
+  action: keyboard_press
+  keys: Escape
+  wait: 0.5
+- name: "重新激活录屏模式"
+  action: keyboard_hot_key
+  keys: ctrl,alt,r
+  wait: 1.0
+- name: "框选录屏区域"
+  action: mouse_drag
+  ref: screen_center
+  wait: 0.5
+- name: "等待工具栏出现"
+  action: wait
+  wait: 1.0
+- name: "打开录屏选项面板"
+  action: element_action
+  ref: record_option_button
+  do: click
+  wait: 0.5
+- name: "等待菜单展开"
+  action: wait
+  wait: 0.5
+- name: "验证麦克风选项保持未勾选状态"
+  action: wait
+  wait: 0.3
+  assert:
+    - type: element_unchecked
+      selector:
+        name: micAction
+setup:
+  - action: session_start
+    command: "deepin-screen-recorder"
+    wait: 3.0
+teardown:
+- action: keyboard_press
+  keys: Escape
+  wait: 0.5

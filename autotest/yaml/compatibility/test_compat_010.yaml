@@ -1,0 +1,36 @@
+name: '[acp2][中台/沈阳市政府项目][截图录屏]截图后或者录屏时，在wps表格中进行编辑，切换输入法，检查切换和输入正常'
+app: deepin-screen-recorder
+module: 截图录屏/兼容性
+feature: 兼容性测试
+tags:
+- L2
+vars:
+  xlsx_id: '1644539'
+  case_type: 功能测试
+description: '前置条件: 已安装WPS表格
+
+  测试步骤:
+
+  1. 打开wps表格进行编辑，Ctrl+Alt+A调用截图，截图完成后，继续对wps表格进行编辑
+
+  2. 按对应快捷键（Shift或Ctrl+Shift）进行输入法切换
+
+  3. 打开录屏，开始录制后，继续对wps表格进行编辑
+
+  4. 按对应快捷键（Shift或Ctrl+Shift）进行输入法切换
+
+  预期结果:
+
+  1. wps表格编辑功能正常，可以正常输入
+
+  2. 输入法切换正常
+
+  3. wps表格编辑功能正常，可以正常输入
+
+  4. 输入法切换正常
+
+  '
+steps: []
+skip: 跳过-需要WPS表格环境及输入法切换验证
+setup: []
+teardown: []

@@ -1,0 +1,84 @@
+name: 启动录屏功能
+app: deepin-screen-recorder
+description: |
+  前置条件: 无
+  测试步骤:
+  1. 快捷键ctrl+alt+r
+  2. 快捷键ctrl+alt+a 启动截图后，一指单点录屏按钮
+  3. 点击保存到指定位置
+  4. 双击打开录屏文件
+  5. 对视频进行右键删除
+  预期结果:
+  1. 录屏功能正常启动
+  2. 录屏功能正常启动
+  3. 录屏保存到桌面
+  4. 视频打开成功
+  5. 删除成功
+module: 截图录屏/录屏
+feature: 启动录屏
+tags:
+- L3
+vars:
+  xlsx_id: '1644951'
+  case_type: 功能测试
+steps:
+- name: "通过快捷键Ctrl+Alt+R启动录屏"
+  action: keyboard_hot_key
+  keys: ctrl,alt,r
+  wait: 1.0
+- name: "框选录屏区域"
+  action: mouse_drag
+  ref: screen_center
+  wait: 0.5
+- name: "等待工具栏出现"
+  action: wait
+  wait: 1.0
+- name: "验证录屏工具栏可见"
+  action: wait
+  wait: 0.3
+  assert:
+    - type: element_visible
+      selector:
+        name: record_option_but
+- name: "退出当前录屏模式"
+  action: keyboard_press
+  keys: Escape
+  wait: 0.5
+- name: "通过Ctrl+Alt+A启动截图模式"
+  action: keyboard_hot_key
+  keys: ctrl,alt,a
+  wait: 1.0
+- name: "框选截图区域"
+  action: mouse_drag
+  ref: screen_center
+  wait: 0.5
+- name: "等待截图工具栏出现"
+  action: wait
+  wait: 1.0
+- name: "点击录屏按钮切换到录屏模式"
+  action: element_action
+  ref: recorder_button
+  do: click
+  wait: 0.5
+- name: "等待录屏工具栏出现"
+  action: wait
+  wait: 1.0
+- name: "验证录屏工具栏可见"
+  action: wait
+  wait: 0.3
+  assert:
+    - type: element_visible
+      selector:
+        name: audio_button
+- name: "退出录屏模式"
+  action: keyboard_press
+  keys: Escape
+  wait: 0.5
+setup:
+  - action: session_start
+    command: "deepin-screen-recorder"
+    wait: 3.0
+teardown:
+- action: keyboard_press
+  keys: Escape
+  wait: 0.5

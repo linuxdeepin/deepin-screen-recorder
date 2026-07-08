@@ -1,0 +1,68 @@
+name: '[core]OCR-多窗口支持-多窗口展示'
+app: deepin-screen-recorder
+module: 截图录屏/OCR
+feature: 多窗口
+tags:
+- L1
+vars:
+  xlsx_id: '1645979'
+  case_type: 功能测试
+description: '测试步骤: 1.打开一个OCR界面后，再使用截图录屏唤起OCR 2.打开一个OCR界面后，再使用看图唤起OCR 3.打开一个OCR界面后，再使用系统快捷键唤起OCR
+
+  预期结果: 1.能成功打开2个OCR窗口 2.能成功打开2个OCR窗口 3.能成功打开2个OCR窗口
+
+  '
+steps:
+- name: 第一次唤起截图模式
+  action: keyboard_hot_key
+  keys: ctrl,alt,a
+  wait: 1.0
+- name: 框选截图区域
+  action: mouse_drag
+  start:
+    x: 400
+    y: 300
+  end:
+    x: 1400
+    y: 700
+  wait: 0.5
+- name: 等待工具栏出现
+  action: wait
+  wait: 1.0
+- name: 点击OCR按钮启动第一个OCR窗口
+  action: element_action
+  ref: ocr_button
+  do: click
+  wait: 3.0
+- name: 验证第一个OCR窗口已打开
+  action: screenshot
+- name: 第二次唤起截图模式
+  action: keyboard_hot_key
+  keys: ctrl,alt,a
+  wait: 1.0
+- name: 框选截图区域
+  action: mouse_drag
+  start:
+    x: 300
+    y: 200
+  end:
+    x: 1200
+    y: 600
+  wait: 0.5
+- name: 等待工具栏出现
+  action: wait
+  wait: 1.0
+- name: 使用快捷键Alt+O启动第二个OCR窗口
+  action: keyboard_press
+  keys: alt,o
+  wait: 3.0
+- name: 验证两个OCR窗口已打开
+  action: screenshot
+teardown:
+- action: keyboard_press
+  keys: Escape
+  wait: 0.3
+setup:
+  - action: session_start
+    command: "deepin-screen-recorder"
+    wait: 3.0

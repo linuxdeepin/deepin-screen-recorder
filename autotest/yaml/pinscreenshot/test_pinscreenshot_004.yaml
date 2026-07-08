@@ -1,0 +1,62 @@
+name: 贴图工具条-鼠标悬停贴图区域工具条自动浮现
+app: deepin-screen-recorder
+module: 截图录屏/贴图
+feature: 贴图工具栏
+tags:
+- L1
+vars:
+  xlsx_id: '1915763'
+  case_type: 功能测试
+description: "测试步骤:\n  1. 打开截图录屏工具，进入截图模式\n  2. 截取区域后点击贴图按钮，创建1个贴图\n  3. 确认当前贴图工具条处于隐藏状态\n\
+  \  4. 将鼠标指针移动至贴图区域（覆盖贴图主体部分），停留1秒\n  5. 尝试点击工具条上的关闭按钮\n预期结果:\n  4. 贴图工具条自动从隐藏状态变为可见状态\n\
+  \  5. 按钮可正常响应（点击关闭按钮后贴图被移除）\n"
+steps:
+- name: 唤起截图模式
+  action: keyboard_hot_key
+  keys: ctrl,alt,a
+  wait: 1.0
+- name: 框选截图区域
+  action: mouse_drag
+  start:
+    x: 400
+    y: 300
+  end:
+    x: 800
+    y: 500
+  wait: 0.5
+- name: 等待工具栏出现
+  action: wait
+  wait: 1.0
+- name: 点击贴图按钮
+  action: element_action
+  ref: pinscreenshots_button
+  do: click
+  wait: 1.0
+- name: 将鼠标移至桌面空白处确保工具条隐藏
+  action: mouse_move
+  x: 1900
+  y: 1000
+  wait: 1.5
+- name: 鼠标悬停贴图主体区域
+  action: mouse_move
+  x: 600
+  y: 400
+  wait: 1.5
+- name: 验证工具条浮现
+  action: screenshot
+- name: 点击贴图工具条关闭按钮
+  action: mouse_click
+  x: 600
+  y: 295
+  wait: 1.0
+- name: 验证贴图已移除
+  action: screenshot
+teardown:
+- action: keyboard_press
+  keys: Escape
+  wait: 0.3
+skip: ''
+setup:
+  - action: session_start
+    command: "deepin-screen-recorder"
+    wait: 3.0

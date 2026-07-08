@@ -1,0 +1,27 @@
+name: 截长图-异常交互-窗口内有多个滚动区
+app: deepin-screen-recorder
+description: '前置条件: 无
+
+  测试步骤:
+
+  1. 鼠标移至滚动区内
+
+  2. 光标移动至正文内容，单击滚动区域
+
+  预期结果:
+
+  1. 滚动区高亮
+
+  2. 如果失败，提示："无法继续截图，查看帮助"
+
+  '
+module: 截图录屏/滚动截图
+feature: 异常交互
+tags:
+- L2
+skip: 跳过-需要多滚动区窗口环境
+vars:
+  xlsx_id: '1645693'
+  case_type: 功能测试
+steps: []
+teardown: []

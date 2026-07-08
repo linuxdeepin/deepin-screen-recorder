@@ -1,0 +1,32 @@
+name: 【截图和录屏入口分开】点击任务栏的录屏后，快捷键进行截图和录屏的唤起
+app: deepin-screen-recorder
+description: '前置条件: 截图和录屏插件已添加到任务栏
+
+  测试步骤:
+
+  1. 点击任务栏【录屏】插件
+
+  2. 按下截图的快捷键
+
+  3. 按下录屏的快捷键
+
+  预期结果:
+
+  1. 打开录屏控件
+
+  2. 无反应
+
+  3. 无反应
+
+  '
+module: 截图录屏/录屏
+feature: 入口插件
+tags:
+- L2
+vars:
+  xlsx_id: '1644471'
+  case_type: 功能测试
+steps: []
+teardown: []
+skip: 需要特殊环境或人工验证
+setup: []

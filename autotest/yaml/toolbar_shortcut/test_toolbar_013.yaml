@@ -1,0 +1,60 @@
+name: 截图终端命令-无提示信息截图命令
+app: deepin-screen-recorder
+description: '前置条件: 无
+
+  测试步骤:
+
+  1. 打开终端，键入命令 deepin-screen-recorder -n
+
+  2. 打开终端，键入命令 deepin-screen-recorder --no-notification
+
+  预期结果:
+
+  1. 截图会开启，点击截图按钮后，截图保存没有提示信息显示
+
+  2. 截图会开启，点击截图按钮后，截图保存但没有提示信息显示
+
+  '
+module: 截图录屏/工具栏
+feature: 命令行
+tags:
+- L3
+vars:
+  xlsx_id: '1644741'
+  case_type: 功能测试
+steps:
+- name: 打开终端
+  action: keyboard_hot_key
+  keys: ctrl,alt,t
+  wait: 1.0
+- name: 输入无提示信息截图命令-n
+  action: keyboard_type
+  keys: deepin-screen-recorder -n
+- name: 按回车执行无提示截图
+  action: keyboard_press
+  keys: Return
+  wait: 2.0
+- name: 验证截图完成无通知提示
+  action: screenshot
+- name: 关闭当前终端
+  action: keyboard_press
+  keys: ctrl,shift,w
+  wait: 0.3
+- name: 打开终端
+  action: keyboard_hot_key
+  keys: ctrl,alt,t
+  wait: 1.0
+- name: 输入无提示信息截图命令--no-notification
+  action: keyboard_type
+  keys: deepin-screen-recorder --no-notification
+- name: 按回车执行无提示截图
+  action: keyboard_press
+  keys: Return
+  wait: 2.0
+- name: 验证截图完成无通知提示
+  action: screenshot
+teardown: []
+setup:
+  - action: session_start
+    command: "deepin-screen-recorder"
+    wait: 3.0

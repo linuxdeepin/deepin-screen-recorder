@@ -1,0 +1,48 @@
+name: '[acp2][截图录屏]滚动截取长图&OCR识别成功'
+app: deepin-screen-recorder
+module: 截图录屏/兼容性
+feature: 兼容性测试
+tags:
+- L1
+vars:
+  xlsx_id: '1644529'
+  case_type: 功能测试
+description: '前置条件: 已准备test.docx文档(10页内容)
+
+  测试步骤:
+
+  1. 双击打开test.docx文档
+
+  2. 打开截图
+
+  3. 使用自动滚动截图功能截图
+
+  4. 点击OCR识别按钮
+
+  5. 保持截取的图片
+
+  6. 切换到test.docx文档首页，按下Ctrl+Alt+L
+
+  7. 点击OCR识别按钮
+
+  预期结果:
+
+  1. 文档打开成功
+
+  2. 截图正常打开
+
+  3. 成功截取10页的word文档内容
+
+  4. 识别结果与test.docx中的文字内容一致，识别时间不超过5分钟
+
+  5. 文件默认保存到图片/Screen Capture中
+
+  6. 成功截取10页的word文档内容
+
+  7. 识别结果与test.docx中的文字内容一致，识别时间不超过5分钟
+
+  '
+steps: []
+skip: 跳过-需要test.docx文档及滚动截图OCR结果验证
+setup: []
+teardown: []

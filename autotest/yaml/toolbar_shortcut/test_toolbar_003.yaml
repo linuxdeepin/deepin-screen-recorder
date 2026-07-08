@@ -1,0 +1,15 @@
+name: '[core]卸载-通过启动栏图标卸载'
+app: deepin-screen-recorder
+description: "前置条件: 无\n测试步骤:\n1. 启动器选中截图录屏图标\n2. 点击鼠标右键，点击卸载\n3. 启动栏查看截图录屏\n4. 重新安装\n\
+  预期结果:\n1. \n2. \n3. 无截图录屏图标\n4. 安装后可以打开 功能正常\n"
+module: 截图录屏/工具栏
+feature: 入口插件
+tags:
+- L1
+vars:
+  xlsx_id: '1645859'
+  case_type: 功能测试
+steps: []
+skip: 跳过-涉及应用卸载和重新安装操作
+setup: []
+teardown: []

@@ -1,0 +1,32 @@
+name: 在系统不同分辨率的下，进行截图录屏操作
+app: deepin-screen-recorder
+description: '前置条件: 无
+
+  测试步骤:
+
+  1. 启动截图录屏
+
+  2. 框选一个区域进行截图或者录屏
+
+  3. 检查工具栏功能和按钮显示
+
+  预期结果:
+
+  1. 截图录屏正常启动
+
+  2. 截图和录屏功能正常
+
+  3. 功能栏功能正常，按钮显示正常
+
+  '
+module: 截图录屏/录屏
+feature: 多屏
+tags:
+- L2
+vars:
+  xlsx_id: '1644685'
+  case_type: 功能测试
+steps: []
+teardown: []
+skip: 需要特殊环境或人工验证
+setup: []

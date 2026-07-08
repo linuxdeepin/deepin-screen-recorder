@@ -1,0 +1,72 @@
+name: 截长图-图像拼接-拼接固定区域占比正常
+app: deepin-screen-recorder
+description: '前置条件: 无
+
+  测试步骤:
+
+  1. 鼠标移至滚动区内
+
+  2. 鼠标单击捕捉区域
+
+  预期结果:
+
+  1. 滚动区高亮
+
+  2. 可以在上下固定区域之间成功拼接图片
+
+  '
+module: 截图录屏/滚动截图
+feature: 图像拼接
+tags:
+- L1
+vars:
+  xlsx_id: '1645657'
+  case_type: 功能测试
+steps:
+- name: 唤起截图模式
+  action: keyboard_hot_key
+  keys: ctrl,alt,a
+  wait: 1.0
+- name: 框选截图区域
+  action: mouse_drag
+  start:
+    x: 400
+    y: 200
+  end:
+    x: 1400
+    y: 800
+  wait: 0.5
+- name: 等待工具栏出现
+  action: wait
+  wait: 1.0
+- name: 点击滚动截图按钮
+  action: element_action
+  ref: scrollshot_button
+  do: click
+  wait: 1.0
+- name: 鼠标移至滚动区内
+  action: mouse_move
+  x: 800
+  y: 500
+  wait: 0.5
+- name: 鼠标单击捕捉区域开始滚动截图
+  action: mouse_click
+  x: 800
+  y: 500
+  wait: 5.0
+- name: 验证拼接正常
+  action: screenshot
+- name: 点击截图按钮完成
+  action: element_action
+  ref: shot_button
+  do: click
+  wait: 1.0
+teardown:
+- action: keyboard_press
+  keys: Escape
+  wait: 0.3
+skip: ''
+setup:
+  - action: session_start
+    command: "deepin-screen-recorder"
+    wait: 3.0

@@ -1,0 +1,26 @@
+name: 全局验证-文案检查-英文环境截图工具栏AI图标hover提示
+app: deepin-screen-recorder
+description: '前置条件: 设置系统语言为英文
+
+  测试步骤:
+
+  1. 将鼠标移动至截图工具栏中的AI图标上方
+
+  2. 查看hover时显示的提示文案
+
+  预期结果:
+
+  2. 提示文案为"AI Screenshot（A）"
+
+  '
+module: 截图录屏/AI截图
+feature: AI图标
+tags:
+- L2
+vars:
+  xlsx_id: '1949891'
+  case_type: 功能测试
+steps: []
+skip: 跳过-需要切换英文语言环境
+setup: []
+teardown: []

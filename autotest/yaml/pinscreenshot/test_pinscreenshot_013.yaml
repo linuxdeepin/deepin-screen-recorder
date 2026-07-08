@@ -1,0 +1,66 @@
+name: 贴图大小-通过鼠标滚轮放大缩小贴图时，以鼠标指针原点位置放大缩小
+app: deepin-screen-recorder
+module: 截图录屏/贴图
+feature: 贴图缩放
+tags:
+- L2
+vars:
+  xlsx_id: '1645455'
+  case_type: 功能测试
+description: "测试步骤:\n  1. 打开截图录屏工具，进入截图模式\n  2. 截取区域后点击贴图按钮，生成贴图\n  3. 点击贴图区域激活贴图\n\
+  \  4. 在贴图区域内，向上滚动鼠标滚轮\n  5. 在贴图区域内，向下滚动鼠标滚轮\n预期结果:\n  3. 激活贴图\n  4. 以鼠标指针位置为原点放大贴图\n\
+  \  5. 以鼠标指针位置为原点缩小贴图\n"
+steps:
+- name: 唤起截图模式
+  action: keyboard_hot_key
+  keys: ctrl,alt,a
+  wait: 1.0
+- name: 框选截图区域
+  action: mouse_drag
+  start:
+    x: 400
+    y: 300
+  end:
+    x: 800
+    y: 500
+  wait: 0.5
+- name: 等待工具栏出现
+  action: wait
+  wait: 1.0
+- name: 点击贴图按钮生成贴图
+  action: element_action
+  ref: pinscreenshots_button
+  do: click
+  wait: 1.0
+- name: 点击贴图区域激活贴图
+  action: mouse_click
+  x: 600
+  y: 400
+  wait: 0.5
+- name: 鼠标滚轮向上放大贴图
+  action: mouse_scroll
+  x: 600
+  y: 400
+  direction: up
+  clicks: 3
+  wait: 0.5
+- name: 验证放大后状态
+  action: screenshot
+- name: 鼠标滚轮向下缩小贴图
+  action: mouse_scroll
+  x: 600
+  y: 400
+  direction: down
+  clicks: 3
+  wait: 0.5
+- name: 验证缩小后状态
+  action: screenshot
+teardown:
+- action: keyboard_press
+  keys: Escape
+  wait: 0.3
+skip: ''
+setup:
+  - action: session_start
+    command: "deepin-screen-recorder"
+    wait: 3.0

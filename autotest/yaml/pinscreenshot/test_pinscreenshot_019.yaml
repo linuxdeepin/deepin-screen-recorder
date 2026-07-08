@@ -1,0 +1,55 @@
+name: 贴图功能栏-使用快捷键Esc，关闭贴图，不将贴图保存到剪切板
+app: deepin-screen-recorder
+module: 截图录屏/贴图
+feature: 贴图工具栏
+tags:
+- L2
+vars:
+  xlsx_id: '1645381'
+  case_type: 功能测试
+description: "测试步骤:\n  1. 创建贴图后点击贴图1\n  2. 按快捷键Esc\n  3. 使用Ctrl+Shift+V查看剪切板\n预期结果:\n\
+  \  1. 贴图1被激活\n  2. 退出贴图模式，贴图1消失\n  3. 剪切板仅有一张贴图1，此贴图为进入贴图模式时保存到剪切板，退出时不保存到剪切板\n"
+steps:
+- name: 唤起截图模式
+  action: keyboard_hot_key
+  keys: ctrl,alt,a
+  wait: 1.0
+- name: 框选截图区域
+  action: mouse_drag
+  start:
+    x: 400
+    y: 300
+  end:
+    x: 800
+    y: 500
+  wait: 0.5
+- name: 等待工具栏出现
+  action: wait
+  wait: 1.0
+- name: 点击贴图按钮生成贴图
+  action: element_action
+  ref: pinscreenshots_button
+  do: click
+  wait: 1.0
+- name: 点击贴图激活
+  action: mouse_click
+  x: 600
+  y: 400
+  wait: 0.5
+- name: 验证贴图已激活
+  action: screenshot
+- name: 按Esc关闭贴图
+  action: keyboard_press
+  keys: Escape
+  wait: 1.0
+- name: 验证贴图已关闭
+  action: screenshot
+teardown:
+- action: keyboard_press
+  keys: Escape
+  wait: 0.3
+skip: ''
+setup:
+  - action: session_start
+    command: "deepin-screen-recorder"
+    wait: 3.0

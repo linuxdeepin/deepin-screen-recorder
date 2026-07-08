@@ -1,0 +1,62 @@
+name: 贴图右键菜单-右键菜单保存功能验证
+app: deepin-screen-recorder
+module: 截图录屏/贴图
+feature: 贴图右键菜单
+tags:
+- L2
+vars:
+  xlsx_id: '1645325'
+  case_type: 功能测试
+description: "测试步骤:\n  1. 创建贴图后点击贴图1\n  2. 在贴图浮窗区域内点击鼠标右键\n  3. 点击右键菜单保存选项\n预期结果:\n\
+  \  1. 贴图1被激活\n  2. 打开贴图右键菜单\n  3. 成功保存贴图\n"
+steps:
+- name: 唤起截图模式
+  action: keyboard_hot_key
+  keys: ctrl,alt,a
+  wait: 1.0
+- name: 框选截图区域
+  action: mouse_drag
+  start:
+    x: 400
+    y: 300
+  end:
+    x: 800
+    y: 500
+  wait: 0.5
+- name: 等待工具栏出现
+  action: wait
+  wait: 1.0
+- name: 点击贴图按钮生成贴图
+  action: element_action
+  ref: pinscreenshots_button
+  do: click
+  wait: 1.0
+- name: 点击贴图激活
+  action: mouse_click
+  x: 600
+  y: 400
+  wait: 0.5
+- name: 在贴图区域右键
+  action: mouse_click
+  x: 600
+  y: 400
+  button: right
+  wait: 0.5
+- name: 验证右键菜单出现
+  action: screenshot
+- name: 点击右键菜单保存选项
+  action: element_action
+  ref: menu_save
+  do: click
+  wait: 2.0
+- name: 验证保存成功
+  action: screenshot
+teardown:
+- action: keyboard_press
+  keys: Escape
+  wait: 0.3
+skip: ''
+setup:
+  - action: session_start
+    command: "deepin-screen-recorder"
+    wait: 3.0

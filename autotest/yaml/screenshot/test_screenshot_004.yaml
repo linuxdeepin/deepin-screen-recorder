@@ -1,0 +1,84 @@
+name: '[core]连续截取不同图片粘贴正常'
+app: deepin-screen-recorder
+description: '前置条件: 无
+
+  测试步骤:
+
+  1. 连续且快速的重复十次，截取一张图片并粘贴到文档，每次截取的图片需不同
+
+  预期结果:
+
+  1. 每一张粘贴的图片都和截取的相同
+
+  '
+module: 截图录屏/截图基础
+feature: 剪切板
+tags:
+- L1
+vars:
+  xlsx_id: '1645827'
+  case_type: 功能测试
+steps:
+- name: 第1次截图-唤起截图模式
+  action: keyboard_hot_key
+  keys: ctrl,alt,a
+  wait: 0.5
+- name: 第1次截图-选择不同区域并完成截图
+  action: mouse_drag
+  start: '@screen_top_left'
+  end:
+    x: 500
+    y: 400
+  wait: 0.3
+- name: 第1次截图-确认截图
+  action: keyboard_press
+  keys: Return
+  wait: 0.5
+- name: 第2次截图-唤起截图模式
+  action: keyboard_hot_key
+  keys: ctrl,alt,a
+  wait: 0.5
+- name: 第2次截图-选择不同区域并完成截图
+  action: mouse_drag
+  start:
+    x: 600
+    y: 200
+  end:
+    x: 1200
+    y: 600
+  wait: 0.3
+- name: 第2次截图-确认截图
+  action: keyboard_press
+  keys: Return
+  wait: 0.5
+- name: 第3次截图-唤起截图模式
+  action: keyboard_hot_key
+  keys: ctrl,alt,a
+  wait: 0.5
+- name: 第3次截图-选择不同区域并完成截图
+  action: mouse_drag
+  start:
+    x: 200
+    y: 500
+  end:
+    x: 900
+    y: 800
+  wait: 0.3
+- name: 第3次截图-确认截图
+  action: keyboard_press
+  keys: Return
+  wait: 0.5
+- name: 验证最后一次截图在剪切板
+  action: keyboard_hot_key
+  keys: ctrl,alt,v
+  wait: 1.0
+- name: 截图验证
+  action: screenshot
+setup:
+  - action: session_start
+    command: "deepin-screen-recorder"
+    wait: 3.0
+teardown:
+- action: keyboard_press
+  keys: Escape
+  wait: 0.3
