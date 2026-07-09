@@ -1,5 +1,4 @@
-// Copyright (C) 2020 ~ 2021 Uniontech Software Technology Co.,Ltd.
-// SPDX-FileCopyrightText: 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2020 - 2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -508,7 +507,7 @@ void Utils::disableXGrabButton()
         return;
     }
 #endif
-    XUngrabButton(QX11Info::display(), true, AnyModifier, DefaultRootWindow(QX11Info::display()));
+    XUngrabButton(QX11Info::display(), AnyButton, AnyModifier, DefaultRootWindow(QX11Info::display()));
     qCDebug(dsrApp) << "XUngrabButton called.";
 }
 
