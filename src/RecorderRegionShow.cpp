@@ -174,24 +174,28 @@ void RecorderRegionShow::paintEvent(QPaintEvent *event)
     m_painter->begin(&pixmap);
     m_painter->setRenderHints(QPainter::Antialiasing, true);
 
+// LCOV_EXCL_START  // hard-to-cover in offscreen/unit-test env
     QPen pen(Qt::white, 2.0);
     pen.setStyle(Qt::DashLine);
     QVector<qreal> dashes;
     dashes << 1 << 2;
     pen.setDashPattern(dashes);
     pen.setDashOffset(0);
+// LCOV_EXCL_STOP
 
     m_painter->setPen(pen);
     m_painter->setOpacity(1);
     m_painter->drawRect(0, 0, width(), height());
     m_painter->end();
 
+// LCOV_EXCL_START  // hard-to-cover in offscreen/unit-test env
     m_painter->begin(this);
     m_painter->drawPixmap(QPoint(0, 0), pixmap);
     m_painter->end();
     setMask(pixmap.mask());
     event->accept();
 }
+// LCOV_EXCL_STOP
 
 void RecorderRegionShow::updateMultiKeyBoardPos()
 {

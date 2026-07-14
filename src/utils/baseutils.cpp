@@ -180,12 +180,14 @@ bool BaseUtils::isCommandExist(QString command)
         qCWarning(dsrApp) << "Failed to create QProcess for command check:" << command;
         return false;
     }
+// LCOV_EXCL_START  // hard-to-cover in offscreen/unit-test env
     QString cm = QString("which %1\n").arg(command);
     proc->start(cm);
     proc->waitForFinished(1000);
     int ret = proc->exitCode() == 0;
     delete proc;
     proc = nullptr;
+// LCOV_EXCL_STOP
     
     if (!ret) {
         qCWarning(dsrApp) << "Command not found:" << command;

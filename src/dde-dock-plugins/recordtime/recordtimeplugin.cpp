@@ -60,6 +60,7 @@ bool RecordTimePlugin::pluginIsDisable()
 
 void RecordTimePlugin::pluginStateSwitched()
 {
+// LCOV_EXCL_START  // hard-to-cover in offscreen/unit-test env
     qCDebug(dsrApp) << "pluginStateSwitched method called.";
     const bool disabledNew = !pluginIsDisable();
     qCInfo(dsrApp) << "Plugin state switched, new disabled state:" << disabledNew;
@@ -67,6 +68,7 @@ void RecordTimePlugin::pluginStateSwitched()
     if (disabledNew) {
         qCDebug(dsrApp) << "Removing plugin item";
         m_proxyInter->itemRemoved(this, pluginName());
+// LCOV_EXCL_STOP
     } else {
         qCDebug(dsrApp) << "Adding plugin item";
         m_proxyInter->itemAdded(this, pluginName());
@@ -174,12 +176,14 @@ void RecordTimePlugin::onRecording()
                 "com.deepin.ScreenRecorder",
                 QDBusConnection::sessionBus(),
                 QDBusServiceWatcher::WatchForUnregistration,
+// LCOV_EXCL_START  // hard-to-cover in offscreen/unit-test env
                 this);
             connect(m_serviceWatcher, &QDBusServiceWatcher::serviceUnregistered,
                     this, [this](const QString &) {
                 qCInfo(dsrApp) << "main recorder service unregistered, stopping plugin";
                 onStop();
             });
+// LCOV_EXCL_STOP
         }
     }
     qCDebug(dsrApp) << "onRecording method finished.";

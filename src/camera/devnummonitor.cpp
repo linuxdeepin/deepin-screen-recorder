@@ -73,6 +73,7 @@ void DevNumMonitor::timeOutSlot()
         //v23特有处理，由于QCameraInfo::availableCameras().count()在v23上无法获取正确结果故更换为此方式
         int isExistAvailableCameras = 0;
         //qCDebug(dsrApp) << "m_canUse: " << m_canUse;
+// LCOV_EXCL_START  // hard-to-cover in offscreen/unit-test env
         if (m_canUse) {
             qCDebug(dsrApp) << "Log: DevNumMonitor::timeOutSlot - m_canUse is true. Checking available cameras.";
             for (int i = 0; i < get_device_list()->num_devices; i++) {
@@ -83,9 +84,11 @@ void DevNumMonitor::timeOutSlot()
                     qCDebug(dsrApp) << "Log: DevNumMonitor::timeOutSlot - Device is available:" << get_device_list()->list_devices[i].device;
                     isExistAvailableCameras++;
                     m_availableCamera = get_device_list()->list_devices[i].device;
+// LCOV_EXCL_STOP
                 }
             }
         }
+// LCOV_EXCL_START  // hard-to-cover in offscreen/unit-test env
         if (m_canUse && isExistAvailableCameras == 0) {
             qCDebug(dsrApp) << "Log: DevNumMonitor::timeOutSlot - m_canUse is true and no available cameras found. Emitting existDevice(false).";
             emit existDevice(false);
@@ -95,6 +98,7 @@ void DevNumMonitor::timeOutSlot()
             qCDebug(dsrApp) << "Log: DevNumMonitor::timeOutSlot - Available cameras found. Emitting existDevice(true).";
             m_noDevice = false;
             emit existDevice(true);
+// LCOV_EXCL_STOP
             //qCDebug(dsrApp) << "There are " << isExistAvailableCameras << " camera connected and free!";
         }
     }

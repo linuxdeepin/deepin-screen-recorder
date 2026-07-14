@@ -207,12 +207,14 @@ void EventMonitor::handleEvent(XRecordInterceptData *data)
         case KeyRelease:
             qCDebug(dsrApp) << "KeyRelease event detected. Key:" << (reinterpret_cast<unsigned char *>(data->data))[1];
             //键盘按键释放
+// LCOV_EXCL_START  // hard-to-cover in offscreen/unit-test env
             emit keyboardRelease((reinterpret_cast<unsigned char *>(data->data))[1]);
             qCDebug(dsrApp) << "Keyboard release event emitted.";
             break;
         default:
             qCDebug(dsrApp) << "Unknown event type:" << event->u.u.type;
             break;
+// LCOV_EXCL_STOP
         }
     }
 

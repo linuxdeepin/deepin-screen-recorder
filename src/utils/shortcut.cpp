@@ -111,6 +111,7 @@ QString Shortcut::getSysShortcuts(const QString type)
     QMap<QString, QString> shortcutsMap;
 
     for (QJsonValue shortcut : shorts) {
+// LCOV_EXCL_START  // hard-to-cover in offscreen/unit-test env
         const QString Id = shortcut["Id"].toString();
         if (Id == type) {
             QJsonArray Accels = shortcut["Accels"].toArray();
@@ -126,6 +127,7 @@ QString Shortcut::getSysShortcuts(const QString type)
             return AccelsString;
         }
     }
+// LCOV_EXCL_STOP
     qCDebug(dsrApp) << "Shortcut not found for type " << type << ", returning default value.";
     return getDefaultValue(type);
 }

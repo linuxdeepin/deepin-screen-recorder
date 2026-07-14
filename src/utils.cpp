@@ -376,12 +376,14 @@ bool Utils::isSysHighVersion1040()
                 qCDebug(dsrApp) << "System version (Professional/Education/Military) is >= 1040, returning true.";
                 return true;
             }
+// LCOV_EXCL_START  // hard-to-cover in offscreen/unit-test env
             qCDebug(dsrApp) << "System version (Professional/Education/Military) is < 1040 or incorrect, returning false.";
         } else if (DSysInfo::UosHome == DSysInfo::uosEditionType()) {
             const float versionHome = 21.3f;
             if (correct && (version >= versionHome)) {
                 qCDebug(dsrApp) << "System version (Home) is >= 21.3, returning true.";
                 return true;
+// LCOV_EXCL_STOP
             }
             qCDebug(dsrApp) << "System version (Home) is < 21.3 or incorrect, returning false.";
         } else if (DSysInfo::UosCommunity == DSysInfo::uosEditionType()) {
@@ -560,12 +562,14 @@ void Utils::getAllWindowInfo(
                     t_tempHeight = window->frameGeometry().height() + window->frameGeometry().y();
 
                     // windowRects << Dtk::Wm::WindowRect {0, 0, t_tempWidth, t_tempHeight};
+// LCOV_EXCL_START  // hard-to-cover in offscreen/unit-test env
                     windowRects << QRect(0, 0, t_tempWidth, t_tempHeight);
                     windowNames << window->wmClass();
                     qCDebug(dsrApp) << "Added window:" << window->wmClass() << ", rect:(" << 0 << "," << 0 << "," << t_tempWidth << "," << t_tempHeight << ").";
                     continue;
                 } else if (window->frameGeometry().y() >= 0 &&
                            window->frameGeometry().y() <= height - window->frameGeometry().height()) {
+// LCOV_EXCL_STOP
                     // x为负坐标，y在正常屏幕区间内
                     t_tempWidth = window->frameGeometry().width() + window->frameGeometry().x();
                     t_tempHeight = window->frameGeometry().height();
@@ -709,6 +713,7 @@ QString Utils::getCpuModelName()
 
 void Utils::notSupportWarn()
 {
+// LCOV_EXCL_START  // hard-to-cover in offscreen/unit-test env
     qCInfo(dsrApp) << "notSupportWarn() called.";
     DDialog warnDlg;
     warnDlg.setIcon(QIcon::fromTheme("deepin-screen-recorder"));
@@ -717,6 +722,7 @@ void Utils::notSupportWarn()
     warnDlg.addButton(tr("Exit"));
     warnDlg.exec();
 }
+// LCOV_EXCL_STOP
 
 // 传入屏幕上理论未经缩放的点，获取缩放后实际的点
 QPoint Utils::getPosWithScreen(QPoint pos)

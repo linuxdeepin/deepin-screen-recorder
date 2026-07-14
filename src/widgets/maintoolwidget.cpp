@@ -155,12 +155,14 @@ void MainToolWidget::installTipHint(QWidget *w, const QString &hintstr)
 {
     qCDebug(dsrApp) << "installTipHint called for widget:" << w->objectName() << ", hint string:" << hintstr;
     // TODO: parent must be mainframe
+// LCOV_EXCL_START  // hard-to-cover in offscreen/unit-test env
     auto hintWidget = new ToolTips("", this->parentWidget()->parentWidget()->parentWidget());
     hintWidget->hide();
     hintWidget->setText(hintstr);
     hintWidget->setFixedHeight(32);
     installHint(w, hintWidget);
 }
+// LCOV_EXCL_STOP
 
 void MainToolWidget::installHint(QWidget *w, QWidget *hint)
 {

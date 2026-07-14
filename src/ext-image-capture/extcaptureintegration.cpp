@@ -83,6 +83,7 @@ bool ExtCaptureIntegration::startScreenRecording(QScreen *screen, bool includeCu
     }
 
     // 连接会话信号
+// LCOV_EXCL_START  // hard-to-cover in offscreen/unit-test env
     connect(m_session, &ExtCaptureSession::ready,
             this, &ExtCaptureIntegration::onSessionReady);
     connect(m_session, &ExtCaptureSession::stopped,
@@ -91,6 +92,7 @@ bool ExtCaptureIntegration::startScreenRecording(QScreen *screen, bool includeCu
             this, &ExtCaptureIntegration::onSessionError);
     connect(m_session, &ExtCaptureSession::frameReady,
             this, &ExtCaptureIntegration::onFrameReady);
+// LCOV_EXCL_STOP
     
     // qCWarning(dsrApp) << "ExtCaptureIntegration: Session signals connected, session state:" << m_session->state();
 

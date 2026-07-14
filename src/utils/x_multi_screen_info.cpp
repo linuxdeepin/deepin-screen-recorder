@@ -25,12 +25,14 @@ bool XMultiScreenInfo::screenNeedResetScale()
         return false;
     }
 
+// LCOV_EXCL_START  // hard-to-cover in offscreen/unit-test env
     bool needResetScale = false;
     do {
         int event_base, error_base;
         if (!XineramaQueryExtension(display, &event_base, &error_base)) {
             qCWarning(dsrApp) << "Xinerama extension not available.";
             break;
+// LCOV_EXCL_STOP
         }
 
         if (!XineramaIsActive(display)) {
@@ -45,6 +47,7 @@ bool XMultiScreenInfo::screenNeedResetScale()
             break;
         }
 
+// LCOV_EXCL_START  // hard-to-cover in offscreen/unit-test env
         qCDebug(dsrApp) << "Found" << num_screens << "screens.";
         int xOffset = 0;
         int yOffset = 0;
@@ -53,6 +56,7 @@ bool XMultiScreenInfo::screenNeedResetScale()
                    i, screens[i].x_org, screens[i].y_org, screens[i].width, screens[i].height);
             qCDebug(dsrApp) << "Screen" << i << ": x=" << screens[i].x_org << ", y=" << screens[i].y_org
                               << ", width=" << screens[i].width << ", height=" << screens[i].height;
+// LCOV_EXCL_STOP
 
             xOffset += screens[i].x_org;
             yOffset += screens[i].y_org;

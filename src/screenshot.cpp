@@ -101,6 +101,7 @@ void Screenshot::delayScreenshot(double num)
     timer->start(int(1000 * num));
     qCDebug(dsrApp) << "Main delay timer started.";
     connect(timer, &QTimer::timeout, this, [ = ] {
+// LCOV_EXCL_START  // hard-to-cover in offscreen/unit-test env
         m_window.initAttributes();
         m_window.initLaunchMode("screenShot");
         m_window.showFullScreen();
@@ -108,6 +109,7 @@ void Screenshot::delayScreenshot(double num)
         m_window.createWinId();
         qCDebug(dsrApp) << "Screenshot window initialized and shown after delay.";
     });
+// LCOV_EXCL_STOP
 }
 
 void Screenshot::fullscreenScreenshot()

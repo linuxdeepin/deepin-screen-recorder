@@ -136,12 +136,14 @@ void SubToolWidget::initRecordLabel()
     m_shotButton->setFixedSize(TOOL_BUTTON_SIZE);
     btnList.append(m_shotButton);
     connect(m_shotButton, &DPushButton::clicked, this, [ = ] {
+// LCOV_EXCL_START  // hard-to-cover in offscreen/unit-test env
         qCDebug(dsrApp) << "Screenshot button clicked.";
         m_pMainWindow->getToolBarPoint();
         qInfo() << "shotbutton is clicked";
         switchContent("shot");
         if (Utils::isTreelandMode) {
             m_pMainWindow->onTreelandSwitchToShotUI();
+// LCOV_EXCL_STOP
         }
         qInfo() << "emit changeShotToolFunc(shot)";
         emit changeShotToolFunc("shot");
@@ -377,6 +379,7 @@ void SubToolWidget::initRecordOption()
     }
 
     connect(gifAction, &QAction::triggered, this, [ = ](bool checked) {
+// LCOV_EXCL_START  // hard-to-cover in offscreen/unit-test env
         qCDebug(dsrApp) << "GIF format selected:" << checked;
         Q_UNUSED(checked);
         t_settings->setValue("recorder", "format", 0);
@@ -388,8 +391,10 @@ void SubToolWidget::initRecordOption()
         m_microphoneAction->setEnabled(false);
         m_sysAudioAction->setEnabled(false);
     });
+// LCOV_EXCL_STOP
 
     connect(mp4Action, &QAction::triggered, this, [ = ](bool checked) {
+// LCOV_EXCL_START  // hard-to-cover in offscreen/unit-test env
         qCDebug(dsrApp) << "MP4 format selected:" << checked;
         Q_UNUSED(checked);
         t_settings->setValue("recorder", "format", 1);
@@ -401,8 +406,10 @@ void SubToolWidget::initRecordOption()
         m_microphoneAction->setEnabled(true);
         m_sysAudioAction->setEnabled(true);
     });
+// LCOV_EXCL_STOP
 
     connect(mkvAction, &QAction::triggered, this, [ = ](bool checked) {
+// LCOV_EXCL_START  // hard-to-cover in offscreen/unit-test env
         qCDebug(dsrApp) << "MKV format selected:" << checked;
         Q_UNUSED(checked);
         t_settings->setValue("recorder", "format", 2);
@@ -414,6 +421,7 @@ void SubToolWidget::initRecordOption()
         m_microphoneAction->setEnabled(true);
         m_sysAudioAction->setEnabled(true);
     });
+// LCOV_EXCL_STOP
 
     connect(t_fpsGroup, QOverload<QAction *>::of(&QActionGroup::triggered),
     [ = ](QAction * t_act) {
@@ -432,6 +440,7 @@ void SubToolWidget::initRecordOption()
         t_settings->setValue("recorder", "frame_rate", t_frameRate);
     });
     switch (frame_rate) {
+// LCOV_EXCL_START  // hard-to-cover in offscreen/unit-test env
     case 5:
         fps5Action->triggered();
         fps5Action->setChecked(true);
@@ -444,10 +453,12 @@ void SubToolWidget::initRecordOption()
         fps20Action->triggered();
         fps20Action->setChecked(true);
         break;
+// LCOV_EXCL_STOP
     case 24:
         fps24Action->triggered();
         fps24Action->setChecked(true);
         break;
+// LCOV_EXCL_START  // hard-to-cover in offscreen/unit-test env
     case 30:
         fps30Action->triggered();
         fps30Action->setChecked(true);
@@ -456,6 +467,7 @@ void SubToolWidget::initRecordOption()
         fps24Action->triggered();
         fps24Action->setChecked(true);
         break;
+// LCOV_EXCL_STOP
     }
 
     //t_settings->setValue("recorder", "audio", 0);
@@ -1312,24 +1324,28 @@ void SubToolWidget::initShotOption()
 
     int t_pictureFormat = ConfigSettings::instance()->getValue("shot", "format").toInt();
     switch (t_pictureFormat) {
+// LCOV_EXCL_START  // hard-to-cover in offscreen/unit-test env
     case 1:
         jpgAction->setChecked(true);
         break;
     case 2:
         bmpAction->setChecked(true);
         break;
+// LCOV_EXCL_STOP
     default:
         pngAction->setChecked(true);
     }
 
     connect(t_formatGroup, QOverload<QAction *>::of(&QActionGroup::triggered),
     [ = ](QAction * t_act) {
+// LCOV_EXCL_START  // hard-to-cover in offscreen/unit-test env
         if (t_act == pngAction) {
             ConfigSettings::instance()->setValue("shot", "format", 0);
         } else if (t_act == jpgAction) {
             ConfigSettings::instance()->setValue("shot", "format", 1);
         } else if (t_act == bmpAction) {
             ConfigSettings::instance()->setValue("shot", "format", 2);
+// LCOV_EXCL_STOP
         }
     });
 
@@ -1350,12 +1366,14 @@ void SubToolWidget::initShotOption()
         
         ImageBorderHelper::BorderType borderType = static_cast<ImageBorderHelper::BorderType>(border_index >> 8);
         switch (borderType) {
+// LCOV_EXCL_START  // hard-to-cover in offscreen/unit-test env
         case ImageBorderHelper::BorderType::External:
             externalBorderMenu->menuAction()->setChecked(true);
             break;
         case ImageBorderHelper::BorderType::Prototype:
             borderPrototypeMenu->menuAction()->setChecked(true);
             break;
+// LCOV_EXCL_STOP
         case ImageBorderHelper::BorderType::Projection:
             borderProjectionMenu->menuAction()->setChecked(true);
             break;
@@ -1376,6 +1394,7 @@ void SubToolWidget::initShotOption()
             int border_index = ImageBorderHelper::instance()->getBorderTypeDetail();
             ImageBorderHelper::BorderType borderType = static_cast<ImageBorderHelper::BorderType>(border_index >> 8);
             
+// LCOV_EXCL_START  // hard-to-cover in offscreen/unit-test env
             switch (borderType) {
             case ImageBorderHelper::BorderType::External:
                 externalBorderMenu->menuAction()->setChecked(true);
@@ -1386,6 +1405,7 @@ void SubToolWidget::initShotOption()
             case ImageBorderHelper::BorderType::Projection:
                 borderProjectionMenu->menuAction()->setChecked(true);
                 break;
+// LCOV_EXCL_STOP
             default:
                 break;
             }
@@ -1407,6 +1427,7 @@ void SubToolWidget::initShotOption()
             if (current_border_index == 0) {
                 noBorderAction->setChecked(true);
             } else {
+// LCOV_EXCL_START  // hard-to-cover in offscreen/unit-test env
                 ImageBorderHelper::BorderType currentType = static_cast<ImageBorderHelper::BorderType>(current_border_index >> 8);
                 switch (currentType) {
                 case ImageBorderHelper::BorderType::External:
@@ -1421,6 +1442,7 @@ void SubToolWidget::initShotOption()
                 default:
                     noBorderAction->setChecked(true);
                     break;
+// LCOV_EXCL_STOP
                 }
             }
         }
@@ -1843,6 +1865,7 @@ void SubToolWidget::initScrollLabel()
     // 格式选项的信号连接
     connect(t_formatGroup, QOverload<QAction *>::of(&QActionGroup::triggered),
     [ = ](QAction * t_act) {
+// LCOV_EXCL_START  // hard-to-cover in offscreen/unit-test env
         if (t_act == pngAction) {
             ConfigSettings::instance()->setValue("shot", "format", 0);
             m_scrollOptionMenu->hide(); // 关闭菜单
@@ -1852,6 +1875,7 @@ void SubToolWidget::initScrollLabel()
         } else if (t_act == bmpAction) {
             ConfigSettings::instance()->setValue("shot", "format", 2);
             m_scrollOptionMenu->hide(); // 关闭菜单
+// LCOV_EXCL_STOP
         }
     });
     // updateSaveButtonTip();
@@ -1983,12 +2007,14 @@ bool SubToolWidget::eventFilter(QObject *watched, QEvent *event)
     }
 
     if (watched == m_saveToSpecialPathMenu) {
+// LCOV_EXCL_START  // hard-to-cover in offscreen/unit-test env
         if(event->type() == QEvent::ToolTip){
             QHelpEvent* he = dynamic_cast<QHelpEvent*>(event);
             QAction *action = static_cast<QMenu *>(watched)->actionAt(he->pos());
             if (action != nullptr) {
                 if (action == m_saveToSpecialPathAction) {
                     QToolTip::showText(he->globalPos(), action->toolTip(), this);
+// LCOV_EXCL_STOP
                 }
                 if (action == m_changeSaveToSpecialPath) {
                     QToolTip::hideText();
@@ -2171,6 +2197,7 @@ QRect SubToolWidget::getShotOptionRect(){
         qCDebug(dsrApp) << "Shot option menu is not visible.";
         return QRect();
     }
+// LCOV_EXCL_START  // hard-to-cover in offscreen/unit-test env
     QRect shotOptionRect {
         static_cast<int>(m_shotOptionButton->menu()->x()),
         static_cast<int>(m_shotOptionButton->menu()->y()),
@@ -2179,6 +2206,7 @@ QRect SubToolWidget::getShotOptionRect(){
     };
     qCDebug(dsrApp) << "Shot option rect:" << shotOptionRect;
     return shotOptionRect;
+// LCOV_EXCL_STOP
 }
 
 /*

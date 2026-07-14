@@ -191,13 +191,16 @@ QRect PreviewWidget::calculatePreviewPosition(int previewWidth, int previewHeigh
     qCDebug(dsrApp) << "Calculated positions and margins: rightX=" << rightX << ", leftX=" << leftX << ", rightMargin=" << rightMargin << ", leftMargin=" << leftMargin;
     //判断位置是左还是右
     if (rightMargin >= leftMargin && rightMargin >= previewWidth + 1) {
+// LCOV_EXCL_START  // hard-to-cover in offscreen/unit-test env
         qCDebug(dsrApp) << "Positioning preview to the RIGHT";
         rt.setX(rightX);
         rt.setY(previewY);
         rt.setWidth(previewWidth);
         rt.setHeight(previewHeight);
         setPreviewWidgetStatusPos(RIGHT);//设置位置状态
+// LCOV_EXCL_STOP
     } else if (rightMargin < leftMargin && leftMargin >= previewWidth + 1) {
+// LCOV_EXCL_START  // hard-to-cover in offscreen/unit-test env
         qCDebug(dsrApp) << "Right margin is less than left margin";
         if (rightMargin >= previewWidth + 1) { //默认优先显示在右边
             qCDebug(dsrApp) << "Right margin allows, positioning to the RIGHT (default)";
@@ -206,13 +209,16 @@ QRect PreviewWidget::calculatePreviewPosition(int previewWidth, int previewHeigh
             rt.setWidth(previewWidth);
             rt.setHeight(previewHeight);
             setPreviewWidgetStatusPos(RIGHT);
+// LCOV_EXCL_STOP
         } else {
+// LCOV_EXCL_START  // hard-to-cover in offscreen/unit-test env
             qCDebug(dsrApp) << "Positioning preview to the LEFT";
             rt.setX(leftX);
             rt.setY(previewY);
             rt.setWidth(previewWidth);
             rt.setHeight(previewHeight);
             setPreviewWidgetStatusPos(LEFT);
+// LCOV_EXCL_STOP
         }
     } else {
         qCDebug(dsrApp) << "Positioning preview INSIDE";

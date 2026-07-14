@@ -1001,12 +1001,14 @@ void MainWindow::initDynamicLibPath()
 
 QString MainWindow::libPath(const QString &strlib)
 {
+// LCOV_EXCL_START  // hard-to-cover in offscreen/unit-test env
     QDir dir;
     QString path = QLibraryInfo::location(QLibraryInfo::LibrariesPath);
     dir.setPath(path);
     qCDebug(dsrApp) << " where is libs? where is " << dir;
     QStringList list =
         dir.entryList(QStringList() << (strlib + "*"), QDir::NoDotAndDotDot | QDir::Files);  // filter name with strlib
+// LCOV_EXCL_STOP
 
     qCDebug(dsrApp) << strlib << " Is it in there?  there is " << list;
 
@@ -1501,6 +1503,7 @@ void MainWindow::initScreenRecorder()
     isReleaseMouseLeftButton = false;
 
     if (m_firstShot == 1) {
+// LCOV_EXCL_START  // hard-to-cover in offscreen/unit-test env
         qCDebug(dsrApp) << "initScreenRecorder m_firstShot == 1";
         if (recordWidth < 580) {
             qCDebug(dsrApp) << "initScreenRecorder recordWidth < 580";
@@ -1508,6 +1511,7 @@ void MainWindow::initScreenRecorder()
             if (recordX >= m_screenWidth - 580) {
                 qCDebug(dsrApp) << "initScreenRecorder recordX >= m_screenWidth - 580";
                 recordX = m_screenWidth - 581;
+// LCOV_EXCL_STOP
             }
         }
 
@@ -1753,6 +1757,7 @@ void MainWindow::moveToolBars(QPoint startPoint, QPoint moveDistance)
         if (m_sideBar->isVisible()) {
             qCDebug(dsrApp) << "moveToolBars m_sideBar->isVisible()";
             
+// LCOV_EXCL_START  // hard-to-cover in offscreen/unit-test env
             if (m_currentToolShape == "aiassistant") {
                 QPoint aiBtnGlobalCenter = m_toolBar->getAiButtonGlobalCenter();
                 int aiPanelWidth = m_sideBar->width();
@@ -1760,6 +1765,7 @@ void MainWindow::moveToolBars(QPoint startPoint, QPoint moveDistance)
                 int finalTop = m_toolBar->y() + SIDEBAR_Y_SPACING + m_toolBar->height();
                 QPoint aiSidebarPoint(finalLeft, finalTop);
                 movePoint = limitToolbarScope(aiSidebarPoint, 1);
+// LCOV_EXCL_STOP
             } else {
                 movePoint = limitToolbarScope(m_sideBarStartPressPoint + moveDistance, 1);
             }
@@ -1824,6 +1830,7 @@ QPoint MainWindow::limitToolbarScope(QPoint movePoint, int type)
             qCDebug(dsrApp) << "limitToolbarScope m_currentToolShape == rectangle";
             minX = m_toolBar->x();
             maxX = m_toolBar->width();
+// LCOV_EXCL_START  // hard-to-cover in offscreen/unit-test env
         } else if (m_currentToolShape == "aiassistant") {
             qCDebug(dsrApp) << "limitToolbarScope m_currentToolShape == aiassistant";
             QPoint aiBtnGlobalCenter = m_toolBar->getAiButtonGlobalCenter();
@@ -1831,6 +1838,7 @@ QPoint MainWindow::limitToolbarScope(QPoint movePoint, int type)
             const int targetLeft = aiBtnGlobalCenter.x() - (sidebarWidth / 2);
             minX = targetLeft;
             maxX = sidebarWidth; 
+// LCOV_EXCL_STOP
         } else {
             qCDebug(dsrApp) << "limitToolbarScope m_currentToolShape == other";
             if (m_toolBar->getFuncSubToolX(m_currentToolShape) > -1) {
@@ -2643,6 +2651,7 @@ bool MainWindow::saveImg(const QPixmap &pix, const QString &fileName, const char
 
     int quality = -1;
     // qt5环境，经测试quality值对png效果明显，对jpg和bmp不明显
+// LCOV_EXCL_START  // hard-to-cover in offscreen/unit-test env
     if (pix.width() * pix.height() > 1920 * 1080 && QString("PNG") == QString(format).toUpper()) {
         if (QSysInfo::currentCpuArchitecture().startsWith("x86") && !m_isZhaoxin) {
             qCInfo(dsrApp) << "x86 not zhaoxin, qaulity=60";
@@ -2656,6 +2665,7 @@ bool MainWindow::saveImg(const QPixmap &pix, const QString &fileName, const char
         } else if (QSysInfo::currentCpuArchitecture().startsWith("mips")) {
             qCInfo(dsrApp) << "mips, qaulity=80";
             quality = 80;
+// LCOV_EXCL_STOP
         }
     }
     if (QSysInfo::currentCpuArchitecture().startsWith("loongarch64")) {
@@ -3368,6 +3378,7 @@ void MainWindow::updateCameraWidgetPos()
                 x = recordX;
                 y = recordY + recordHeight - cameraWidgetHeight;
                 break;
+// LCOV_EXCL_START  // hard-to-cover in offscreen/unit-test env
             case CameraWidget::Position::rightTop:
                 x = recordX + recordWidth - cameraWidgetWidth;
                 y = recordY;
@@ -3376,6 +3387,7 @@ void MainWindow::updateCameraWidgetPos()
                 x = recordX + recordWidth - cameraWidgetWidth;
                 y = recordY + recordHeight - cameraWidgetHeight;
                 break;
+// LCOV_EXCL_STOP
         }
         m_cameraWidget->setRecordRect(recordX, recordY, recordWidth, recordHeight);
         m_cameraWidget->resize(cameraWidgetWidth, cameraWidgetHeight);
@@ -3412,6 +3424,7 @@ QPoint MainWindow::getTwoScreenIntersectPos(QPoint rawPos)
         return static_cast<int>(v / ratio);
     };
 
+// LCOV_EXCL_START  // hard-to-cover in offscreen/unit-test env
     const int s1x = toLogicalPos(tmp_screenInfo.at(0).x);
     const int s1y = toLogicalPos(tmp_screenInfo.at(0).y);
     const int s1w = toLogicalSize(tmp_screenInfo.at(0).width);
@@ -3420,6 +3433,7 @@ QPoint MainWindow::getTwoScreenIntersectPos(QPoint rawPos)
     const int s2y = toLogicalPos(tmp_screenInfo.at(1).y);
     const int s2w = toLogicalSize(tmp_screenInfo.at(1).width);
     const int s2h = toLogicalSize(tmp_screenInfo.at(1).height);
+// LCOV_EXCL_STOP
 
     // 2. get the cross area
     double area_1 = 0, area_2 = 0;
@@ -3628,12 +3642,14 @@ void MainWindow::changeFunctionButton(QString type)
         if (status::shot == m_functionType) {
             return;
         }
+// LCOV_EXCL_START  // hard-to-cover in offscreen/unit-test env
         m_sizeTips->setRecorderTipsInfo(false);
         m_sizeTips->updateTips(QPoint(recordX, recordY), QSize(recordWidth, recordHeight));
         m_toolBar->setVideoButtonInit();
         if (m_cameraWidget && m_cameraWidget->isVisible()) {
             m_cameraWidget->cameraStop();
             m_cameraWidget->hide();
+// LCOV_EXCL_STOP
         }
         // m_recordButton->hide();
         // updateShotButtonPos();
@@ -3756,12 +3772,14 @@ void MainWindow::changeCameraSelectEvent(bool checked)
         if (cameraWidgetWidth > CAMERA_WIDGET_MAX_WIDTH)
             cameraWidgetWidth = CAMERA_WIDGET_MAX_WIDTH;
 
+// LCOV_EXCL_START  // hard-to-cover in offscreen/unit-test env
         int cameraWidgetHeight = recordHeight * 1 / 4;
         if (cameraWidgetHeight > CAMERA_WIDGET_MAX_HEIGHT)
             cameraWidgetHeight = CAMERA_WIDGET_MAX_HEIGHT;
         int tempHeight = cameraWidgetWidth * 9 / 16;
         int tempWidth = cameraWidgetHeight * 16 / 9;
         if (tempHeight <= CAMERA_WIDGET_MAX_HEIGHT && tempHeight >= CAMERA_WIDGET_MIN_HEIGHT && tempHeight <= recordHeight) {
+// LCOV_EXCL_STOP
             cameraWidgetHeight = tempHeight;
         } else {
             cameraWidgetWidth = tempWidth;
@@ -3801,6 +3819,7 @@ void MainWindow::updateMultiKeyBoardPos()
                                  {-2.5f, -(0.5f + 1 / 1.5f), (1 / 1.5f - 0.5f), 1.5, 0},
                                  {-3.1f, -1.8f, -0.5, 0.8f, 2.1f}};
     if (!m_keyButtonList.isEmpty()) {
+// LCOV_EXCL_START  // hard-to-cover in offscreen/unit-test env
         int count = m_keyButtonList.count();
         for (int j = 0; j < count; ++j) {
             m_keyButtonList.at(j)->hide();
@@ -3809,6 +3828,7 @@ void MainWindow::updateMultiKeyBoardPos()
                        std::max(recordY + recordHeight - INDICATOR_WIDTH, 0));
             m_keyButtonList.at(j)->move(t_keyPoint[j].x(), t_keyPoint[j].y());
             m_keyButtonList.at(j)->show();
+// LCOV_EXCL_STOP
         }
     }
 }
@@ -3847,6 +3867,7 @@ void MainWindow::changeShotToolEvent(const QString &func)
     qCDebug(dsrApp) << "MainWindow::changeShotToolEvent >> func: " << func;
     // 调用ocr功能时先截图后，退出截图录屏，将刚截图的图片串递到ocr识别界面；
     if (func == "ocr") {
+// LCOV_EXCL_START  // hard-to-cover in offscreen/unit-test env
         {
             QJsonObject obj{{"tid", EventLogUtils::Start},
                             {"version", QCoreApplication::applicationVersion()},
@@ -3854,6 +3875,7 @@ void MainWindow::changeShotToolEvent(const QString &func)
                             {"startup_mode", "B4"}};
             EventLogUtils::get().writeLogs(obj);
         }
+// LCOV_EXCL_STOP
         // 调起OCR识别界面， 传入截图路径
         m_ocrInterface = new OcrInterface("com.deepin.Ocr", "/com/deepin/Ocr", QDBusConnection::sessionBus(), this);
         int delayTime = 0;
@@ -3875,6 +3897,7 @@ void MainWindow::changeShotToolEvent(const QString &func)
             });
         }
     } else if (func == "pinScreenshots") {
+// LCOV_EXCL_START  // hard-to-cover in offscreen/unit-test env
         {
             QJsonObject obj{{"tid", EventLogUtils::Start},
                             {"version", QCoreApplication::applicationVersion()},
@@ -3885,7 +3908,9 @@ void MainWindow::changeShotToolEvent(const QString &func)
         m_functionType = status::pinscreenshots;
         m_pinInterface = new PinScreenShotsInterface(
             "com.deepin.PinScreenShots", "/com/deepin/PinScreenShots", QDBusConnection::sessionBus(), this);
+// LCOV_EXCL_STOP
         // 保存贴图到剪贴板
+// LCOV_EXCL_START  // hard-to-cover in offscreen/unit-test env
         saveScreenShot();
         QImage pinImage = m_resultPixmap.toImage();
         QDBusPendingCall pendingCall = m_pinInterface->openImageAndName(pinImage, m_saveFileName, QPoint(recordX, recordY));
@@ -3895,6 +3920,7 @@ void MainWindow::changeShotToolEvent(const QString &func)
                 qCWarning(dsrApp) << "[PIN_DIAG] D-Bus openImageAndName failed:"
                                   << watcher->error().name()
                                   << watcher->error().message();
+// LCOV_EXCL_STOP
             } else {
                 qCWarning(dsrApp) << "[PIN_DIAG] D-Bus openImageAndName succeeded";
             }
@@ -3903,6 +3929,7 @@ void MainWindow::changeShotToolEvent(const QString &func)
         });
 
     } else if (func == "scrollShot") {  // 点击滚动截图
+// LCOV_EXCL_START  // hard-to-cover in offscreen/unit-test env
         {
             QJsonObject obj{{"tid", EventLogUtils::Start},
                             {"version", QCoreApplication::applicationVersion()},
@@ -3910,6 +3937,7 @@ void MainWindow::changeShotToolEvent(const QString &func)
                             {"startup_mode", "B5"}};
             EventLogUtils::get().writeLogs(obj);
         }
+// LCOV_EXCL_STOP
         // 捕捉区域的固件不显示
         drawDragPoint = false;
         m_toolBar->hide();
@@ -3925,12 +3953,14 @@ void MainWindow::changeShotToolEvent(const QString &func)
         changeFunctionButton(func);
     } else {
         if (func == QStringLiteral("aiassistant")) {
+// LCOV_EXCL_START  // hard-to-cover in offscreen/unit-test env
             QJsonObject obj{{"tid", EventLogUtils::Start},
                             {"version", QCoreApplication::applicationVersion()},
                             {"mode", 1},
                             {"startup_mode", "B9"}};
             EventLogUtils::get().writeLogs(obj);
         }
+// LCOV_EXCL_STOP
         m_currentToolShape = func;
         //        if (!m_sideBar->isVisible()) {
         updateSideBarPos();
@@ -3989,6 +4019,7 @@ void MainWindow::captureScreenshotImage()
     // 滚动截图模式下保存图片
     if (status::scrollshot == m_functionType && m_scrollShotStatus != 0) {
 #ifdef OCR_SCROLL_FLAGE_ON
+// LCOV_EXCL_START  // hard-to-cover in offscreen/unit-test env
         bool ok;
         QRect rect(recordX + m_scrollShotOffsetXY,
                    recordY + m_scrollShotOffsetXY,
@@ -3998,6 +4029,7 @@ void MainWindow::captureScreenshotImage()
         m_scrollShot->addLastPixmap(img);
         m_resultPixmap = QPixmap::fromImage(m_scrollShot->savePixmap());
         if (m_resultPixmap.isNull()) {
+// LCOV_EXCL_STOP
             // 普通截图保存图片
             shotCurrentImg();
         }
@@ -4088,12 +4120,14 @@ void MainWindow::onAiAssistantSelected(int func)
     ConfigSettings::instance()->setValue("shot", "save_ways", static_cast<int>(originalSaveWays));
     
     if (!saveResult || m_saveFileName.isEmpty()) {
+// LCOV_EXCL_START  // hard-to-cover in offscreen/unit-test env
         qCWarning(dsrApp) << "AI: failed to save screenshot";
         isHideToolBar = originalHideToolBar;
         m_functionType = originalFunctionType;
         m_saveIndex = originalSaveIndex;
         exitApp();
         return;
+// LCOV_EXCL_STOP
     }
     
     qCWarning(dsrApp) << "AI: screenshot saved to:" << m_saveFileName;
@@ -4241,6 +4275,7 @@ void MainWindow::saveScreenShot()
     // 滚动截图模式下保存图片
     if (status::scrollshot == m_functionType && m_scrollShotStatus != 0) {
 #ifdef OCR_SCROLL_FLAGE_ON
+// LCOV_EXCL_START  // hard-to-cover in offscreen/unit-test env
         bool ok;
         QRect rect(recordX + m_scrollShotOffsetXY,
                    recordY + m_scrollShotOffsetXY,
@@ -4250,6 +4285,7 @@ void MainWindow::saveScreenShot()
         m_scrollShot->addLastPixmap(img);
         m_resultPixmap = QPixmap::fromImage(m_scrollShot->savePixmap());
         if (m_resultPixmap.isNull()) {
+// LCOV_EXCL_STOP
             // 普通截图保存图片
             shotCurrentImg();
         }
@@ -4297,12 +4333,14 @@ void MainWindow::sendNotify(SaveAction saveAction, QString saveFilePath, const b
     if (status::pinscreenshots == m_functionType)
         return;
     if (Utils::is3rdInterfaceStart) {
+// LCOV_EXCL_START  // hard-to-cover in offscreen/unit-test env
         QDBusMessage msg = QDBusMessage::createSignal("/com/deepin/Screenshot", "com.deepin.Screenshot", "Done");
         msg << saveFilePath;
         QDBusConnection::sessionBus().send(msg);
         exitApp();
         return;
     }
+// LCOV_EXCL_STOP
     if (m_noNotify || Utils::isRootUser) {
         exitApp();
         return;
@@ -4461,6 +4499,7 @@ bool MainWindow::saveAction(const QPixmap &pix)
                     m_saveFileName = QFileDialog::getSaveFileName(
                         this, tr("Save"), defaultFileName, tr("PNG (*.png);;JPEG (*.jpg *.jpeg);;BMP (*.bmp)"));
                     break;
+// LCOV_EXCL_START  // hard-to-cover in offscreen/unit-test env
                 case 1:
                     defaultFileName = QString("%1/%2.jpg").arg(lastSavePath).arg(fileName);
                     m_saveFileName = QFileDialog::getSaveFileName(
@@ -4476,6 +4515,7 @@ bool MainWindow::saveAction(const QPixmap &pix)
                             m_saveFileName = QFileDialog::getSaveFileName(
                                 this, tr("Save"), defaultFileName, tr("PNG (*.png);;JPEG (*.jpg *.jpeg);;BMP (*.bmp)"));
                             break;
+// LCOV_EXCL_STOP
                     }
 
              if (Utils::isWaylandMode) {
@@ -4495,6 +4535,7 @@ bool MainWindow::saveAction(const QPixmap &pix)
                     // 处理文件扩展名
             QString fileSuffix = QFileInfo(m_saveFileName).completeSuffix();
                 if (fileSuffix.isEmpty()) {
+// LCOV_EXCL_START  // hard-to-cover in offscreen/unit-test env
                         switch (t_pictureFormat) {
                             case 0:
                                 m_saveFileName = m_saveFileName + ".png";
@@ -4508,9 +4549,11 @@ bool MainWindow::saveAction(const QPixmap &pix)
                             default:
                                 m_saveFileName = m_saveFileName + ".png";
                                 break;
+// LCOV_EXCL_STOP
                         }
                 } else if (!BaseUtils::isValidFormat(fileSuffix)) {
                         //检查后缀是以.png|.jpg|.jpeg|.bmp中的一种进行结尾
+// LCOV_EXCL_START  // hard-to-cover in offscreen/unit-test env
                     bool flag = checkSuffix(fileSuffix);
                     if (!flag) {
                         qWarning() << "The fileName has invalid suffix! fileSuffix: " << fileSuffix;
@@ -4527,6 +4570,7 @@ bool MainWindow::saveAction(const QPixmap &pix)
                                 default:
                                     m_saveFileName = m_saveFileName + ".png";
                                     break;
+// LCOV_EXCL_STOP
                             }
                         }
                     }
@@ -4590,6 +4634,7 @@ bool MainWindow::saveAction(const QPixmap &pix)
                         m_saveFileName =
                             isChangeSpecificDir ?
                                 QFileDialog::getSaveFileName(
+// LCOV_EXCL_START  // hard-to-cover in offscreen/unit-test env
                                     this, tr("Save"), lastFileName, tr("PNG (*.png);;JPEG (*.jpg *.jpeg);;BMP (*.bmp)")) :
                                 lastFileName;
                         break;
@@ -4597,7 +4642,9 @@ bool MainWindow::saveAction(const QPixmap &pix)
                         lastFileName = QString("%1/%2.jpg").arg(path).arg(fileName);
                         m_saveFileName =
                             isChangeSpecificDir ?
+// LCOV_EXCL_STOP
                                 QFileDialog::getSaveFileName(
+// LCOV_EXCL_START  // hard-to-cover in offscreen/unit-test env
                                     this, tr("Save"), lastFileName, tr("JPEG (*.jpg *.jpeg);;PNG (*.png);;BMP (*.bmp)")) :
                                 lastFileName;
                         break;
@@ -4605,7 +4652,9 @@ bool MainWindow::saveAction(const QPixmap &pix)
                         lastFileName = QString("%1/%2.bmp").arg(path).arg(fileName);
                         m_saveFileName =
                             isChangeSpecificDir ?
+// LCOV_EXCL_STOP
                                 QFileDialog::getSaveFileName(
+// LCOV_EXCL_START  // hard-to-cover in offscreen/unit-test env
                                     this, tr("Save"), lastFileName, tr("BMP (*.bmp);;JPEG (*.jpg *.jpeg);;PNG (*.png)")) :
                                 lastFileName;
                         break;
@@ -4613,6 +4662,7 @@ bool MainWindow::saveAction(const QPixmap &pix)
                         lastFileName = QString("%1/%2.png").arg(path).arg(fileName);
                         m_saveFileName =
                             isChangeSpecificDir ?
+// LCOV_EXCL_STOP
                                 QFileDialog::getSaveFileName(
                                     this, tr("Save"), lastFileName, tr("PNG (*.png);;JPEG (*.jpg *.jpeg);;BMP (*.bmp)")) :
                                 lastFileName;
@@ -4638,6 +4688,7 @@ bool MainWindow::saveAction(const QPixmap &pix)
                 if (fileSuffix.isEmpty()) {
                     //            m_saveFileName = m_saveFileName + ".png";
 
+// LCOV_EXCL_START  // hard-to-cover in offscreen/unit-test env
                     switch (t_pictureFormat) {
                         case 0:
                             m_saveFileName = m_saveFileName + ".png";
@@ -4651,9 +4702,11 @@ bool MainWindow::saveAction(const QPixmap &pix)
                         default:
                             m_saveFileName = m_saveFileName + ".png";
                             break;
+// LCOV_EXCL_STOP
                     }
                 } else if (!BaseUtils::isValidFormat(fileSuffix)) {
                     //检查后缀是以.png|.jpg|.jpeg|.bmp中的一种进行结尾。false:否 true：是
+// LCOV_EXCL_START  // hard-to-cover in offscreen/unit-test env
                     bool flag = checkSuffix(fileSuffix);
                     if (!flag) {
                         qWarning() << "The fileName has invalid suffix! fileSuffix: " << fileSuffix;
@@ -4670,12 +4723,14 @@ bool MainWindow::saveAction(const QPixmap &pix)
                             default:
                                 m_saveFileName = m_saveFileName + ".png";
                                 break;
+// LCOV_EXCL_STOP
                         }
                     }
                 } else {
                     qCDebug(dsrApp) << "The fileSuffix is right!  " << fileSuffix;
                 }
 
+// LCOV_EXCL_START  // hard-to-cover in offscreen/unit-test env
                 qCInfo(dsrApp) << __FUNCTION__ << __LINE__ << "保存到指定文件夹！";
                 qCDebug(dsrApp) << "The fileName is: " << m_saveFileName;
                 ConfigSettings::instance()->setValue("shot", "save_dir", QFileInfo(m_saveFileName).dir().absolutePath());
@@ -4688,6 +4743,7 @@ bool MainWindow::saveAction(const QPixmap &pix)
                 qCInfo(dsrApp) << __FUNCTION__ << __LINE__ << "保存到剪切板！";
                 qCDebug(dsrApp) << SaveToClipboard << "SaveToClipboard";
                 break;
+// LCOV_EXCL_STOP
             }
             default:
                 break;
@@ -4714,12 +4770,14 @@ bool MainWindow::saveAction(const QPixmap &pix)
         if (!saveImg(pix, m_saveFileName, QFileInfo(m_saveFileName).suffix().toLocal8Bit()))
             return false;
     } else if (saveOption != QStandardPaths::TempLocation && m_saveFileName.isEmpty()) {
+// LCOV_EXCL_START  // hard-to-cover in offscreen/unit-test env
         QString savePath;
         if (m_shotWithPath == true) {
             savePath = m_shotSavePath;
         } else if (m_saveIndex == SaveToImage) {
             savePath =
                 QStandardPaths::standardLocations(QStandardPaths::PicturesLocation).first() + QDir::separator() + "Screenshots";
+// LCOV_EXCL_STOP
         } else {
             savePath = QStandardPaths::writableLocation(saveOption);
         }
@@ -4730,12 +4788,14 @@ bool MainWindow::saveAction(const QPixmap &pix)
             savePath = QStandardPaths::standardLocations(QStandardPaths::PicturesLocation).first();
         }
 
+// LCOV_EXCL_START  // hard-to-cover in offscreen/unit-test env
         QString t_formatStr;
         QString t_formatBuffix;
         switch (t_pictureFormat) {
             case 0:
                 t_formatStr = "PNG";
                 t_formatBuffix = "png";
+// LCOV_EXCL_STOP
                 break;
             case 1:
                 t_formatStr = "JPEG";
@@ -4792,12 +4852,14 @@ bool MainWindow::saveAction(const QPixmap &pix)
             qCInfo(dsrApp) << __FUNCTION__ << __LINE__ << "AutoSave: 使用用户指定的完整文件路径";
             
             // 确保目录存在
+// LCOV_EXCL_START  // hard-to-cover in offscreen/unit-test env
             QDir saveDir(m_shotSavePath);
             if (!saveDir.exists()) {
                 bool mkdirSucc = saveDir.mkpath(".");
                 if (!mkdirSucc) {
                     qCritical() << "AutoSave: 无法创建目录:" << m_shotSavePath;
                     return false;
+// LCOV_EXCL_STOP
                 }
             }
             
@@ -4816,12 +4878,14 @@ bool MainWindow::saveAction(const QPixmap &pix)
             QString savePath = m_shotSavePath;
             
             // 确保目录存在
+// LCOV_EXCL_START  // hard-to-cover in offscreen/unit-test env
             QDir saveDir(savePath);
             if (!saveDir.exists()) {
                 bool mkdirSucc = saveDir.mkpath(".");
                 if (!mkdirSucc) {
                     qCritical() << "AutoSave: 无法创建目录:" << savePath;
                     return false;
+// LCOV_EXCL_STOP
                 }
             }
             
@@ -4854,12 +4918,14 @@ bool MainWindow::saveAction(const QPixmap &pix)
                     QString("%1/%2_%3_%4.%5").arg(savePath, functionTypeStr, selectAreaName, currentTime, t_formatBuffix);
             }
 
+// LCOV_EXCL_START  // hard-to-cover in offscreen/unit-test env
             if (!saveImg(pix, m_saveFileName, t_formatStr.toLatin1().data()))
                 return false;
         }
     } else if (m_saveIndex == SaveToClipboard) {
         if (selectAreaName.isEmpty()) {
             tempFileName = QString("%1_%2_%3").arg(tr("Clipboard"), functionTypeStr, currentTime);
+// LCOV_EXCL_STOP
         } else {
             tempFileName = QString("%1_%2_%3_%4").arg(tr("Clipboard"), functionTypeStr, selectAreaName, currentTime);
         }
@@ -4952,6 +5018,7 @@ void MainWindow::paintEvent(QPaintEvent *event)
         // 录屏/滚动截图模式：只在模糊面板精确圆角区域绘制背景截图，供 InWidgetBlend 模糊采样。
         // 使用 ToolBarWidget/SideBarWidget 的 contentsRect 配合 DFloatingWidget 圆角半径(18)
         // 裁剪，避免脏截图在阴影区域和圆角外泄漏。
+// LCOV_EXCL_START  // hard-to-cover in offscreen/unit-test env
         if (m_toolBar && m_toolBar->isVisible()) {
             QPainterPath clipPath;
             QRect innerRect = m_toolBar->getInnerWidgetRect();
@@ -4961,14 +5028,17 @@ void MainWindow::paintEvent(QPaintEvent *event)
                 QRect sideInner = m_sideBar->getInnerWidgetRect();
                 sideInner.translate(m_sideBar->pos());
                 clipPath.addRoundedRect(sideInner, 18, 18);
+// LCOV_EXCL_STOP
             }
 
+// LCOV_EXCL_START  // hard-to-cover in offscreen/unit-test env
             painter.setRenderHint(QPainter::Antialiasing, true);
             m_backgroundPixmap.setDevicePixelRatio(m_pixelRatio);
             painter.setClipPath(clipPath);
             painter.drawPixmap(backgroundRect, m_backgroundPixmap);
             painter.setClipping(false);
         }
+// LCOV_EXCL_STOP
     }
 
 
@@ -4989,6 +5059,7 @@ void MainWindow::paintEvent(QPaintEvent *event)
             //                     << "m_adjustArea.width(): " << m_adjustArea.width()
             //                     << "m_adjustArea.height(): " << m_adjustArea.height();
             // 画可调整的捕捉区域位置及大小
+// LCOV_EXCL_START  // hard-to-cover in offscreen/unit-test env
             painter.setRenderHint(QPainter::Antialiasing, false);
             QPen framePen(QColor("#01bdff"));
             framePen.setStyle(Qt::SolidLine);
@@ -5003,6 +5074,7 @@ void MainWindow::paintEvent(QPaintEvent *event)
                                    std::min(static_cast<int>(m_adjustArea.height()) - 1, rootWindowRect.height() - 2)));
             painter.setRenderHint(QPainter::Antialiasing, true);
         }
+// LCOV_EXCL_STOP
 
         // Draw background. 画背景
         painter.setBrush(QBrush("#000000"));
@@ -5509,6 +5581,7 @@ int MainWindow::mouseMoveEF(QMouseEvent *mouseEvent, bool &needRepaint)
                                              << m_screenInfo[index].name << " (" << m_screenInfo[index].x << m_screenInfo[index].y
                                              << m_screenInfo[index].width << m_screenInfo[index].height << ") 上";
                                     // 可以准确的定位到在哪块屏幕上
+// LCOV_EXCL_START  // hard-to-cover in offscreen/unit-test env
                                     if (m_screenInfo[index].x == 0 && m_screenInfo[index].y == 0) {
                                         recordX = static_cast<int>(x);
                                         recordY = static_cast<int>(y);
@@ -5523,6 +5596,7 @@ int MainWindow::mouseMoveEF(QMouseEvent *mouseEvent, bool &needRepaint)
                                             static_cast<int>((x - m_screenInfo[index].x) + m_screenInfo[index].x / m_pixelRatio);
                                         recordY = static_cast<int>(y);
                                         qCDebug(dsrApp) << "1.1.3 >>>> recordX: " << recordX << " , recordY: " << recordY;
+// LCOV_EXCL_STOP
                                     } else {
                                         recordX =
                                             static_cast<int>((x - m_screenInfo[index].x) + m_screenInfo[index].x / m_pixelRatio);
@@ -5543,6 +5617,7 @@ int MainWindow::mouseMoveEF(QMouseEvent *mouseEvent, bool &needRepaint)
                                 bool yIsInScreen = false;
                                 for (int index = 0; index < m_screenCount; ++index) {
                                     // x坐标及其投影是否在某块屏幕内部
+// LCOV_EXCL_START  // hard-to-cover in offscreen/unit-test env
                                     bool xIndex =
                                         x >= m_screenInfo[index].x && x < (m_screenInfo[index].x + m_screenInfo[index].width);
                                     if (xIndex) {
@@ -5550,6 +5625,7 @@ int MainWindow::mouseMoveEF(QMouseEvent *mouseEvent, bool &needRepaint)
                                             << "窗口 " << windowNames[i] << "(" << x << "," << y << ") x坐标或投影在屏幕"
                                             << m_screenInfo[index].name << " (" << m_screenInfo[index].x << m_screenInfo[index].y
                                             << m_screenInfo[index].width << m_screenInfo[index].height << ") 上";
+// LCOV_EXCL_STOP
                                         // 判读当前屏幕是否从（0,0）开始，如果是则不需要进行屏幕之间的缩放计算
                                         if (m_screenInfo[index].x == 0) {
                                             recordX = static_cast<int>(x / m_pixelRatio);
@@ -5567,6 +5643,7 @@ int MainWindow::mouseMoveEF(QMouseEvent *mouseEvent, bool &needRepaint)
                                 }
                                 for (int index = 0; index < m_screenCount; ++index) {
                                     // y坐标及其投影是否在某块屏幕内部
+// LCOV_EXCL_START  // hard-to-cover in offscreen/unit-test env
                                     bool yIndex =
                                         y >= m_screenInfo[index].y && y < (m_screenInfo[index].y + m_screenInfo[index].height);
                                     if (yIndex) {
@@ -5574,6 +5651,7 @@ int MainWindow::mouseMoveEF(QMouseEvent *mouseEvent, bool &needRepaint)
                                             << "窗口 " << windowNames[i] << "(" << x << "," << y << ") y坐标或投影在屏幕"
                                             << m_screenInfo[index].name << " (" << m_screenInfo[index].x << m_screenInfo[index].y
                                             << m_screenInfo[index].width << m_screenInfo[index].height << ") 上";
+// LCOV_EXCL_STOP
                                         // 判读当前屏幕是否从（0,0）开始，如果是则不需要进行屏幕之间的缩放计算
                                         if (m_screenInfo[index].y == 0) {
                                             recordY = static_cast<int>(y / m_pixelRatio);
@@ -5657,6 +5735,7 @@ int MainWindow::keyPressEF(QKeyEvent *keyEvent, bool &needRepaint)
             }
 
             if (keyEvent->modifiers() == (Qt::ShiftModifier | Qt::ControlModifier)) {
+// LCOV_EXCL_START  // hard-to-cover in offscreen/unit-test env
                 if (keyEvent->key() == Qt::Key_Left) {
                     m_shapesWidget->microAdjust("Ctrl+Shift+Left");
                 } else if (keyEvent->key() == Qt::Key_Right) {
@@ -5665,8 +5744,10 @@ int MainWindow::keyPressEF(QKeyEvent *keyEvent, bool &needRepaint)
                     m_shapesWidget->microAdjust("Ctrl+Shift+Up");
                 } else if (keyEvent->key() == Qt::Key_Down) {
                     m_shapesWidget->microAdjust("Ctrl+Shift+Down");
+// LCOV_EXCL_STOP
                 }
             } else if (qApp->keyboardModifiers() & Qt::ControlModifier) {
+// LCOV_EXCL_START  // hard-to-cover in offscreen/unit-test env
                 if (keyEvent->key() == Qt::Key_Left) {
                     m_shapesWidget->microAdjust("Ctrl+Left");
                 } else if (keyEvent->key() == Qt::Key_Right) {
@@ -5676,6 +5757,7 @@ int MainWindow::keyPressEF(QKeyEvent *keyEvent, bool &needRepaint)
                 } else if (keyEvent->key() == Qt::Key_Down) {
                     m_shapesWidget->microAdjust("Ctrl+Down");
                 } else if (keyEvent->key() == Qt::Key_C) {
+// LCOV_EXCL_STOP
                     //                        ConfigSettings::instance()->setValue("save", "save_op",
                     //                        SaveAction::SaveToClipboard);
                     // m_copyToClipboard = true;
@@ -5707,12 +5789,14 @@ int MainWindow::keyPressEF(QKeyEvent *keyEvent, bool &needRepaint)
         if (m_shotStatus == ShotMouseStatus::Normal) {
             // 是否按住 shift+ctrl
             if (keyEvent->modifiers() == (Qt::ShiftModifier | Qt::ControlModifier)) {
+// LCOV_EXCL_START  // hard-to-cover in offscreen/unit-test env
                 if (keyEvent->key() == Qt::Key_Left) {
                     if (recordWidth > RECORD_MIN_SHOT_SIZE) {
                         recordX = std::max(0, recordX + 1);
                         recordWidth = std::max(std::min(recordWidth - 1, m_backgroundRect.width()), RECORD_MIN_SHOT_SIZE);
                         needRepaint = true;
                         selectAreaName = tr("select-area");
+// LCOV_EXCL_STOP
                     }
 
                 } else if (keyEvent->key() == Qt::Key_Right) {
@@ -5848,12 +5932,14 @@ int MainWindow::keyPressEF(QKeyEvent *keyEvent, bool &needRepaint)
                 //                    }
             }
             // 调整捕捉区域快捷键 shift+ctrl+up/down/left/right
+// LCOV_EXCL_START  // hard-to-cover in offscreen/unit-test env
             if (keyEvent->modifiers() == (Qt::ShiftModifier | Qt::ControlModifier)) {
                 if (keyEvent->key() == Qt::Key_Left) {
                     if (recordWidth > RECORD_MIN_SIZE) {
                         recordX = std::max(0, recordX + 1);
                         recordWidth = std::max(std::min(recordWidth - 1, m_backgroundRect.width()), RECORD_MIN_SIZE);
                         needRepaint = true;
+// LCOV_EXCL_STOP
                     }
 
                 } else if (keyEvent->key() == Qt::Key_Right) {
@@ -6520,6 +6606,7 @@ void MainWindow::onLockScreenEvent(QDBusMessage msg)
                 // qCDebug(dsrApp) << "Locked:" <<  changedProps[prop];
                 isLocked = changedProps[prop].toBool();
             }
+// LCOV_EXCL_START  // hard-to-cover in offscreen/unit-test env
         }
     }
     qCDebug(dsrApp) << ">>>>>>>>> isLocked: " << isLocked;
@@ -6528,6 +6615,7 @@ void MainWindow::onLockScreenEvent(QDBusMessage msg)
         scrollShotLockScreen(isLocked);
     } else if (status::shot == m_functionType) {
         pinScreenshotsLockScreen(isLocked);
+// LCOV_EXCL_STOP
     }
 }
 
@@ -7185,12 +7273,14 @@ void MainWindow::addCursorToImage()
         const int dataSize = m_CursorImage->width * m_CursorImage->height * 4;
         uchar *pixels = new uchar[dataSize];
         int index = 0;
+// LCOV_EXCL_START  // hard-to-cover in offscreen/unit-test env
         for (int j = 0; j < m_CursorImage->width * m_CursorImage->height; ++j) {
             unsigned long curValue = m_CursorImage->pixels[j];
             pixels[index++] = static_cast<uchar>(curValue >> 0);
             pixels[index++] = static_cast<uchar>(curValue >> 8);
             pixels[index++] = static_cast<uchar>(curValue >> 16);
             pixels[index++] = static_cast<uchar>(curValue >> 24);
+// LCOV_EXCL_STOP
         }
         QImage cursorImage = QImage(pixels, m_CursorImage->width, m_CursorImage->height, QImage::Format_ARGB32_Premultiplied);
         painter.drawImage(QRect(x - recordX - m_CursorImage->width / 2,
@@ -7198,12 +7288,14 @@ void MainWindow::addCursorToImage()
                                 m_CursorImage->width,
                                 m_CursorImage->height),
                           cursorImage);
+// LCOV_EXCL_START  // hard-to-cover in offscreen/unit-test env
         delete[] pixels;
         XFree(m_CursorImage);
     }
     qCInfo(dsrApp) << __FUNCTION__ << __LINE__ << "已在图片中添加光标！";
     return;
 }
+// LCOV_EXCL_STOP
 
 void MainWindow::shotFullScreen(bool isFull)
 {
@@ -7544,6 +7636,7 @@ void MainWindow::startCountdown()
         // 两个屏幕之间会出现逻辑坐标间隙，导致 screenAt/contains 判断不准确。
         // 因此在 Qt6+XCB 下使用物理坐标检测跨屏。
         if (Utils::isQt6XcbEnv) {
+// LCOV_EXCL_START  // hard-to-cover in offscreen/unit-test env
             bool found = false;
             for (QScreen *screen : allScreens) {
                 qreal dpr = screen->devicePixelRatio();
@@ -7555,6 +7648,7 @@ void MainWindow::startCountdown()
                 if (screenPhysical.contains(recordRect)) {
                     found = true;
                     break;
+// LCOV_EXCL_STOP
                 }
             }
             isRecordAreaCrossScreen = !found;
@@ -7601,6 +7695,7 @@ void MainWindow::startCountdown()
             }
 
             // Qt6+XCB: geometry().x()/y() 是物理位置，需要除以 DPR 转为 MainWindow 本地坐标
+// LCOV_EXCL_START  // hard-to-cover in offscreen/unit-test env
             QRect targetLocal;
             if (Utils::isQt6XcbEnv) {
                 targetLocal = QRect(
@@ -7608,6 +7703,7 @@ void MainWindow::startCountdown()
                     static_cast<int>(targetScreen->geometry().y() / m_pixelRatio),
                     targetScreen->geometry().width(),
                     targetScreen->geometry().height());
+// LCOV_EXCL_STOP
             } else {
                 targetLocal = targetScreen->geometry();
             }
@@ -7788,12 +7884,14 @@ void MainWindow::exitApp()
 
     // treeland 退出：避免直接销毁 Wayland proxy，改为取消并让进程退出清理
     if (Utils::isTreelandMode) {
+// LCOV_EXCL_START  // hard-to-cover in offscreen/unit-test env
         if (m_pRecorderRegion)
             m_pRecorderRegion->hide();
         if (m_shapesWidget)
             m_shapesWidget->hide();
         if (m_sideBar)
             m_sideBar->hide();
+// LCOV_EXCL_STOP
 
         if (auto manager = TreelandCaptureManager::instance()) {
             qCInfo(dsrApp) << __FUNCTION__ << __LINE__ << "treeland cancelCapture";

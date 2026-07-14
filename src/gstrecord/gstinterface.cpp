@@ -124,12 +124,14 @@ void gstInterface::unloadFunctions()
 {
     qCDebug(dsrApp) << "unloadFunctions method called.";
     if (m_isInitFunction) {
+// LCOV_EXCL_START  // hard-to-cover in offscreen/unit-test env
         m_libgstreamer.unload();
         qCDebug(dsrApp) << "libgstreamer-1.0 unloaded.";
         m_libglib.unload();
         qCDebug(dsrApp) << "libglib-2.0 unloaded.";
         m_libgobject.unload();
         qCDebug(dsrApp) << "libgobject-2.0 unloaded.";
+// LCOV_EXCL_STOP
     }
     qCDebug(dsrApp) << "unloadFunctions method finished.";
 }

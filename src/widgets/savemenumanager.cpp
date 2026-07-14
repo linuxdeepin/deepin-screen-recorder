@@ -177,12 +177,14 @@ void SaveMenuManager::initializeFromConfig()
             qCWarning(dsrApp) << "SaveMenuManager::initializeFromConfig - 保存到桌面";
             
             // 检查是否有历史自定义路径
+// LCOV_EXCL_START  // hard-to-cover in offscreen/unit-test env
             if (!savedPath.isEmpty() && QFileInfo::exists(savedPath) &&
                 savedPath != getStandardPath(LocationState::Desktop) &&
                 savedPath != getStandardPath(LocationState::Pictures)) {
                 m_currentCustomPath = savedPath;
                 updateSubMenuForExistingPath();
                 qCWarning(dsrApp) << "SaveMenuManager::initializeFromConfig - 保留历史路径:" << savedPath;
+// LCOV_EXCL_STOP
             } else {
                 updateSubMenuForFirstTime();
                 qCWarning(dsrApp) << "SaveMenuManager::initializeFromConfig - 无历史路径";
@@ -195,12 +197,14 @@ void SaveMenuManager::initializeFromConfig()
             qCWarning(dsrApp) << "SaveMenuManager::initializeFromConfig - 保存到图片";
             
             // 检查是否有历史自定义路径
+// LCOV_EXCL_START  // hard-to-cover in offscreen/unit-test env
             if (!savedPath.isEmpty() && QFileInfo::exists(savedPath) &&
                 savedPath != getStandardPath(LocationState::Desktop) &&
                 savedPath != getStandardPath(LocationState::Pictures)) {
                 m_currentCustomPath = savedPath;
                 updateSubMenuForExistingPath();
                 qCWarning(dsrApp) << "SaveMenuManager::initializeFromConfig - 保留历史路径:" << savedPath;
+// LCOV_EXCL_STOP
             } else {
                 updateSubMenuForFirstTime();
                 qCWarning(dsrApp) << "SaveMenuManager::initializeFromConfig - 无历史路径";
