@@ -126,8 +126,8 @@ Name[ug]=Deepin ئېكراننى رەسىم تۇتۇش، سىنغا ئېلىش
 Name[uk]=Записувач з екрана Deepin
 Name[lo]=Deepin ບັນທຶກໜ້າຈໍ
 Name[zh_CN]=截图录屏
-Name[zh_HK]=Deepin 螢幕錄影
-Name[zh_TW]=Deepin 螢幕錄影
+Name[zh_HK]=螢幕錄影
+Name[zh_TW]=螢幕錄影
 
 [Desktop Action FullScreenShot]
 Exec=dbus-send --print-reply --dest=com.deepin.Screenshot /com/deepin/Screenshot com.deepin.Screenshot.FullscreenScreenshot
