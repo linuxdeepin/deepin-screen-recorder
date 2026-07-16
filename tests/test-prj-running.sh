@@ -60,10 +60,12 @@ if [ -x "$SSR_BIN" ]; then
         /^[A-Za-z0-9_]+.*\.$/{s=$0; sub(/\.$/, "", s)}
         /^  [A-Za-z0-9_]+/{gsub(/^ +/, ""); print s"."$0}')
     ssr_ok=0; ssr_bad=0
-    # 用 offscreen：native(dxcb)平台下大量 GUI 用例(MainWindow 构造/paint/cursor 路径)
-    # 会 ASan abort，逐用例隔离运行时整用例丢覆盖。offscreen 为纯软件平台，用例稳定运行。
+    # native 平台运行（环境有真实屏幕+摄像头）：offscreen 会让 MainWindow/
+    # ShapesWidget 的 paint/cursor/事件路径、camera、screengrab 跑不全，覆盖偏低。
+    # ASAN 已关闭(TSAN_TOOL_ENABLE=false)，native 不会因 UAF abort；逐用例隔离
+    # 保证偶发崩/hang 只丢自己那份 gcda。
     for t in "${SSR_TESTS[@]}"; do
-        ( cd "$SSR_DIR" && DISPLAY=:0 QT_QPA_PLATFORM=offscreen QT_LOGGING_RULES="*=false" \
+        ( cd "$SSR_DIR" && DISPLAY=:0 QT_LOGGING_RULES="*=false" \
           ASAN_OPTIONS=fast_unwind_on_malloc=1:detect_leaks=0 \
           timeout "$SSR_TEST_TIMEOUT" ./ut_screen_shot_recorder --gtest_filter="$t" >/dev/null 2>&1 )
         case $? in 0|1) ssr_ok=$((ssr_ok+1));; *) ssr_bad=$((ssr_bad+1));; esac

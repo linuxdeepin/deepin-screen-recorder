@@ -97,6 +97,7 @@
 #include "ut_main_window_cov.h"
 #include "ut_main_window_ef_state_cov.h"
 #include "ut_main_window_cov4.h"
+#include "ut_main_window_cov5.h"
 #include "ut_dbus_name.h"
 #include "ut_constant.h"
 #include "ut_utils_ext2.h"
@@ -169,6 +170,7 @@
 #include "ut_camera_cov.h"
 #include "dbusinterface/ut_dbusinterface_cov.h"
 #include "ut_misc_cov2.h"
+#include "ut_resid_cov.h"
 //#include "ut_protocols_extimg_cov2.h"  // ACCESS_PRIVATE_STATIC_FUN macro can't handle QtWayland:: namespaced classes
 // ut_wayland_stub.h: Qt 的 QWaylandClientExtension 生成的 wrapper 方法在 manager
 // 未绑定真实合成器时于 Qt6Core 内部 SEGV(T3)，宏守卫+wl 桩均无法绕过，已禁用。
