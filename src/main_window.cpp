@@ -21,6 +21,7 @@
 #include "utils/configsettings.h"
 #include "utils/shortcut.h"
 #include "utils/screengrabber.h"
+#include "utils/treelandtoolbarplacement.h"
 #include "utils/log.h"
 #include "camera_process.h"
 #include "widgets/tooltips.h"
@@ -8081,7 +8082,24 @@ void MainWindow::updateCaptureRegion()
     recordHeight = region.height();
 
     m_toolBar->showWidget();
-    const QPoint pos(region.x(), qMin(region.bottom(), height() - 2 * m_toolBar->height()));
+    m_toolBar->adjustSize();
+
+    QList<QRect> screens;
+    const auto qScreens = QGuiApplication::screens();
+    screens.reserve(qScreens.size());
+    for (const QScreen *screen : qScreens) {
+        if (screen) {
+            screens.append(screen->geometry());
+        }
+    }
+    QRect fallback = geometry();
+    if (fallback.isEmpty() && QGuiApplication::primaryScreen()) {
+        fallback = QGuiApplication::primaryScreen()->geometry();
+    }
+    const QRect screenGeom =
+        TreelandToolBarPlacement::pickScreenGeometry(region, screens, fallback);
+    const QPoint pos = TreelandToolBarPlacement::placeToolBar(
+        region, m_toolBar->size(), screenGeom, TOOLBAR_Y_SPACING);
     m_toolBar->showAt(pos);
 
     if (windowHandle() && m_toolBar->windowHandle()
@@ -8289,21 +8307,48 @@ void MainWindow::onTreelandSwitchToShotUI()
         m_toolBar->setFocusPolicy(Qt::NoFocus);
         m_toolBar->setWindowFlags(m_toolBar->windowFlags() | Qt::Tool | Qt::WindowStaysOnTopHint | Qt::FramelessWindowHint);
 
-#if (QT_VERSION_MAJOR == 5)
-        const QRect scr = QApplication::desktop()->screenGeometry();
-#elif (QT_VERSION_MAJOR == 6)
-        const QRect scr = QGuiApplication::primaryScreen() ? QGuiApplication::primaryScreen()->geometry() : this->geometry();
-#endif
-        QPoint targetPos;
-        if (m_hasLastTreelandShotToolBarPos) {
-            targetPos = m_lastTreelandShotToolBarPos;
-        } else {
-            targetPos = QPoint(scr.x() + scr.width() / 2 - m_toolBar->width() / 2,
-                               scr.y() + scr.height() / 2 - m_toolBar->height() / 2);
+        QList<QRect> screens;
+        const auto qScreens = QGuiApplication::screens();
+        screens.reserve(qScreens.size());
+        for (const QScreen *screen : qScreens) {
+            if (screen) {
+                screens.append(screen->geometry());
+            }
         }
+        QRect fallback = geometry();
+#if (QT_VERSION_MAJOR == 5)
+        if (fallback.isEmpty()) {
+            fallback = QApplication::desktop()->screenGeometry();
+        }
+#elif (QT_VERSION_MAJOR == 6)
+        if (fallback.isEmpty() && QGuiApplication::primaryScreen()) {
+            fallback = QGuiApplication::primaryScreen()->geometry();
+        }
+#endif
+        const QRect restoreRegion = m_hasLastTreelandShotRegion
+            ? m_lastTreelandShotRegion
+            : QRect(recordX, recordY, recordWidth, recordHeight);
+        const QRect screenGeom =
+            TreelandToolBarPlacement::pickScreenGeometry(restoreRegion, screens, fallback);
+
         m_toolBar->hide();
         m_toolBar->showWidget();
         m_toolBar->adjustSize();
+
+        QPoint targetPos;
+        if (m_hasLastTreelandShotToolBarPos) {
+            targetPos = TreelandToolBarPlacement::clampToScreen(
+                m_lastTreelandShotToolBarPos, m_toolBar->size(), screenGeom);
+        } else if (!restoreRegion.isEmpty() && restoreRegion.isValid()) {
+            targetPos = TreelandToolBarPlacement::placeToolBar(
+                restoreRegion, m_toolBar->size(), screenGeom, TOOLBAR_Y_SPACING);
+        } else {
+            targetPos = TreelandToolBarPlacement::clampToScreen(
+                QPoint(screenGeom.x() + screenGeom.width() / 2 - m_toolBar->width() / 2,
+                       screenGeom.y() + screenGeom.height() / 2 - m_toolBar->height() / 2),
+                m_toolBar->size(),
+                screenGeom);
+        }
         m_toolBar->showAt(targetPos);
         m_toolBar->raise();
         m_toolBar->show();
@@ -8354,4 +8399,3 @@ void MainWindow::initAudioAndCameraWatchers()
         qCDebug(dsrApp) << "摄像头监视器初始化完成";
     }
 }
-
