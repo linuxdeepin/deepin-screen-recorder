@@ -13,6 +13,7 @@ Type=Application
 X-Deepin-ManualID=deepin-screen-recorder
 X-Deepin-Vendor=deepin
 X-Deepin-TurboType=dtkwidget
+X-Deepin-Singleton=true
 NotShowIn=DeepinTablet
 
 # Translations:
