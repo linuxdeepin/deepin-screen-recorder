@@ -21,6 +21,7 @@
 #include "utils/configsettings.h"
 #include "utils/shortcut.h"
 #include "utils/screengrabber.h"
+#include "utils/treelandfullscreengrabber.h"
 #include "utils/log.h"
 #include "camera_process.h"
 #include "widgets/tooltips.h"
@@ -2226,6 +2227,12 @@ void MainWindow::initLaunchMode(const QString &launchMode)
 void MainWindow::fullScreenshot()
 {
     qCDebug(dsrApp) << "fullScreenshot";
+    // Treeland: legacy shotFullScreen copies an empty m_backgroundPixmap.
+    // Grab outputs noninteractively via ext-image-copy-capture instead.
+    if (Utils::isTreelandMode && !Utils::isWaylandMode) {
+        fullScreenshotTreeland();
+        return;
+    }
     // DDesktopServices::playSystemSoundEffect(DDesktopServices::SEE_Screenshot);
     this->initAttributes();
     this->initLaunchMode("screenShot");
@@ -2265,8 +2272,8 @@ void MainWindow::fullScreenshot()
     qCDebug(dsrApp) << "fullScreenshot sendNotify";
     save2Clipboard(m_resultPixmap);
 
-    if (Utils::isWaylandMode) {
-        qCDebug(dsrApp) << "fullScreenshot Utils::isWaylandMode";
+    if (Utils::isWaylandMode || Utils::isTreelandMode) {
+        qCDebug(dsrApp) << "fullScreenshot immediate exit (wayland/treeland)";
         exitApp();
     } else {
         qCDebug(dsrApp) << "fullScreenshot Utils::isWaylandMode false";
@@ -2802,7 +2809,10 @@ void MainWindow::save2Clipboard(const QPixmap &pix)
             qCDebug(dsrApp) << "Whether the data passed to the clipboard is empty? " << t_imageData->imageData().isNull();
         }
 
-        if (hasClipboardDaemon) {
+        // Treeland: dataComing handshake never completes here, so the
+        // size-based wait (e.g. 6s at 1440p) always burns the full timeout and
+        // delays notify when clipboard runs first. Pin path already skips clipboard.
+        if (hasClipboardDaemon && !Utils::isTreelandMode) {
             if (!Utils::isWaylandMode) {
                 this->hide();  // 隐藏主界面
             }
@@ -2829,6 +2839,8 @@ void MainWindow::save2Clipboard(const QPixmap &pix)
                 }
                 QCoreApplication::processEvents(QEventLoop::AllEvents, 100);
             }
+        } else if (Utils::isTreelandMode) {
+            qCInfo(dsrApp) << "Treeland: skip clipboard-daemon wait (notify must not block)";
         }
     }
     qCInfo(dsrApp) << __FUNCTION__ << __LINE__ << "已保存到剪贴板！";
@@ -4386,7 +4398,9 @@ void MainWindow::sendNotify(SaveAction saveAction, QString saveFilePath, const b
     notification.callWithArgumentList(QDBus::AutoDetect, "Notify", arg);  // timeout
 
     qCInfo(dsrApp) << __FUNCTION__ << __LINE__ << "send notify finished!";
-    if (Utils::isWaylandMode) {
+    // Treeland sets isWaylandMode=false (TreeLand special-case) but must still
+    // exit immediately — delayed exit leaves the process holding m_singleInstance.
+    if (Utils::isWaylandMode || Utils::isTreelandMode) {
         exitApp();
     } else {
         QTimer::singleShot(10, [=] { exitApp(); });
@@ -7874,9 +7888,63 @@ void MainWindow::setupConnections()
             this, &MainWindow::onFinishClicked);
 }
 
+
+void MainWindow::fullScreenshotTreeland()
+{
+    qCInfo(dsrApp) << __FUNCTION__ << __LINE__ << "treeland fullscreen capture start";
+    m_functionType = status::shot;
+    m_needSaveScreenshot = true;
+    m_treelandNonInteractiveFullscreen = true;
+    if (auto *manager = TreelandCaptureManager::instance()) {
+        disconnect(manager, &TreelandCaptureManager::activeChanged,
+                   this, &MainWindow::initializeCapture);
+    }
+
+    TreelandFullScreenGrabber grabber;
+    QImage image = grabber.grab();
+    if (image.isNull()) {
+        qCWarning(dsrApp) << "treeland fullscreen grab null, retrying once";
+        image = grabber.grab();
+    }
+    if (image.isNull()) {
+        qCWarning(dsrApp) << "treeland fullscreen capture failed, refusing to save an empty image";
+        DBusNotify shotFailedNotify;
+        shotFailedNotify.Notify(Utils::appName,
+                                0,
+                                "deepin-screen-recorder",
+                                QString(),
+                                tr("Screenshot failed."),
+                                QStringList(),
+                                QVariantMap(),
+                                5000);
+        _exit(1);
+    }
+
+    m_resultPixmap = QPixmap::fromImage(image);
+    const QScreen *primaryScreen = QGuiApplication::primaryScreen();
+    if (primaryScreen && primaryScreen->virtualGeometry().width() > 0) {
+        m_resultPixmap.setDevicePixelRatio(qreal(image.width())
+                                           / primaryScreen->virtualGeometry().width());
+    }
+
+    TempFile::instance()->setFullScreenPixmap(m_resultPixmap);
+    const bool saved = saveAction(m_resultPixmap);
+    // Clipboard best-effort; Treeland skips the daemon wait. Notify right after.
+    save2Clipboard(m_resultPixmap);
+    QCoreApplication::processEvents(QEventLoop::ExcludeUserInputEvents, 50);
+    qCInfo(dsrApp) << __FUNCTION__ << __LINE__ << "fullscreen save done:" << saved
+                   << "size:" << image.size();
+    sendNotify(m_saveIndex, m_saveFileName, saved);
+}
+
 void MainWindow::initializeCapture()
 {
 #ifndef ENABLE_UNIT_TEST
+    // Noninteractive fullscreen (Print) must not drive the Treeland selector.
+    if (m_treelandNonInteractiveFullscreen) {
+        return;
+    }
+
     auto manager = TreelandCaptureManager::instance();
     auto captureContext = manager->ensureContext();
 
@@ -7890,6 +7958,9 @@ void MainWindow::initializeCapture()
         qCWarning(dsrApp) << "Window handle not available, cannot initialize capture";
         // 如果窗口句柄还未创建，延迟初始化
         // 等待窗口创建完成后再初始化
+        if (m_treelandNonInteractiveFullscreen) {
+            return;
+        }
         QTimer::singleShot(100, this, &MainWindow::initializeCapture);
         return;
     }
