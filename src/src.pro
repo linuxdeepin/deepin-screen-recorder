@@ -216,6 +216,7 @@ HEADERS += main_window.h \
     widgets/tooltips.h \
     widgets/filter.h \
     utils/screengrabber.h \
+    utils/treelandtoolbarplacement.h \
     RecorderRegionShow.h \
     recordertablet.h \
     dbusinterface/ocrinterface.h \
@@ -312,6 +313,7 @@ SOURCES += main.cpp \
     widgets/tooltips.cpp \
     widgets/filter.cpp \
     utils/screengrabber.cpp \
+    utils/treelandtoolbarplacement.cpp \
     RecorderRegionShow.cpp \
     recordertablet.cpp \
     dbusinterface/ocrinterface.cpp \
