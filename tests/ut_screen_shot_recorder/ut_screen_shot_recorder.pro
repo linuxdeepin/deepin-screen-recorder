@@ -104,7 +104,6 @@ HEADERS += test_all_interfaces.h \
            ut_screenshot.h \
            ut_settings.h \
            ut_show_buttons.h \
-           ut_utils.h \
            dbusinterface/ut_dbusnotify.h \
            dbusinterface/ut_ocrinterface.h \
            menucontroller/ut_menucontroller.h \
