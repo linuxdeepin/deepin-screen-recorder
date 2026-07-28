@@ -36,7 +36,6 @@
 #include "ut_countdown_tooltip.h"
 #include "ut_settings.h"
 #include "ut_show_buttons.h"
-#include "ut_utils.h"
 #include "ut_button_feedback.h"
 #include "ut_record_process.h"
 #include "ut_screenshot.h"
