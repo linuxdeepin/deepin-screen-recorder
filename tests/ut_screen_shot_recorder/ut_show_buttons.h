@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2022-2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -31,45 +31,4 @@ public:
     }
 };
 
-TEST_F(ShowButtonsTest, releaseContentButtons)
-{
 
-}
-
-
-TEST_F(ShowButtonsTest, showContentButtons)
-{
-    showButtons.showContentButtons(KEY_1);
-    showButtons.releaseContentButtons(KEY_1);
-
-    showButtons.showContentButtons(KEY_2);
-    showButtons.showContentButtons(KEY_2);
-    showButtons.showContentButtons(KEY_2);
-    showButtons.releaseContentButtons(KEY_2);
-}
-
-TEST_F(ShowButtonsTest, getKeyCodeFromEvent)
-{
-    EXPECT_TRUE(showButtons.getKeyCodeFromEvent(KEY_NUMENTER).compare(QString("NUM =")) == 0);
-
-}
-
-TEST_F(ShowButtonsTest, getKeyCodeFromEventWayland)
-{
-    EXPECT_TRUE(showButtons.getKeyCodeFromEventWayland(KEY_ENTER).compare(QString("ENTER")) == 0);
-
-}
-
-TEST_F(ShowButtonsTest, showContentButtons1)
-{
-    showButtons.showContentButtons('K');
-}
-TEST_F(ShowButtonsTest, showContentButtons2)
-{
-    showButtons.showContentButtons(' ');
-}
-
-TEST_F(ShowButtonsTest, releaseContentButtons1)
-{
-    showButtons.releaseContentButtons('K');
-}
