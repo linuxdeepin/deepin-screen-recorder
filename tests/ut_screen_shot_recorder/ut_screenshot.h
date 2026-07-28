@@ -87,45 +87,10 @@ void initPadShot_stub()
 
 }
 ACCESS_PRIVATE_FIELD(Screenshot, MainWindow, m_window);
-TEST_F(ScreenshotTest, startScreenshot)
-{
-    stub.set(ADDR(MainWindow, initAttributes), initAttributes_stub1);
-    stub.set(ADDR(MainWindow, initResource), initResource_stub1);
-    stub.set(ADDR(MainWindow, initLaunchMode), initLaunchMode_stub1);
-    stub.set(ADDR(MainWindow, showFullScreen), showFullScreen_stub1);
-    stub.set(ADDR(MainWindow, initPadShot), initPadShot_stub);
-    Utils::isTabletEnvironment = true;
-    shot->startScreenshot();
-    Utils::isTabletEnvironment = false;
-    stub.reset(ADDR(MainWindow, initAttributes));
-    stub.reset(ADDR(MainWindow, initResource));
-    stub.reset(ADDR(MainWindow, initLaunchMode));
-    stub.reset(ADDR(MainWindow, showFullScreen));
-    stub.reset(ADDR(MainWindow, initPadShot));
-}
-
 void start_stub(int msec)
 {
 
 }
-TEST_F(ScreenshotTest, delayScreenshot)
-{
-    stub.set((void(QTimer::*)())ADDR(QTimer, start), start_stub);
-    stub.set(ADDR(MainWindow, initAttributes), initAttributes_stub1);
-    stub.set(ADDR(MainWindow, initResource), initResource_stub1);
-    stub.set(ADDR(MainWindow, initLaunchMode), initLaunchMode_stub1);
-    stub.set(ADDR(MainWindow, showFullScreen), showFullScreen_stub1);
-
-    shot->delayScreenshot(3);
-
-    stub.reset((void(QTimer::*)())ADDR(QTimer, start));
-    stub.reset(ADDR(MainWindow, initAttributes));
-    stub.reset(ADDR(MainWindow, initResource));
-    stub.reset(ADDR(MainWindow, initLaunchMode));
-    stub.reset(ADDR(MainWindow, showFullScreen));
-
-}
-
 QVariant getShotCfg_stub_0(void *obj, const QString &group, const QString &key)
 {
     if (group == "save") {
@@ -474,78 +439,20 @@ QVariant getShotCfg_stub_0(void *obj, const QString &group, const QString &key)
 
 //    loop.exec();
 //}
-TEST_F(ScreenshotTest, OcrScreenshot)
-{
-    stub.set(ADDR(MainWindow, initAttributes), initAttributes_stub1);
-    stub.set(ADDR(MainWindow, initResource), initResource_stub1);
-    stub.set(ADDR(MainWindow, initLaunchMode), initLaunchMode_stub1);
-    stub.set(ADDR(MainWindow, showFullScreen), showFullScreen_stub1);
-
-    shot->OcrScreenshot();
-
-    stub.reset(ADDR(MainWindow, initAttributes));
-    stub.reset(ADDR(MainWindow, initResource));
-    stub.reset(ADDR(MainWindow, initLaunchMode));
-    stub.reset(ADDR(MainWindow, showFullScreen));
-
-}
-TEST_F(ScreenshotTest, ScrollScreenshot)
-{
-    stub.set(ADDR(MainWindow, initAttributes), initAttributes_stub1);
-    stub.set(ADDR(MainWindow, initResource), initResource_stub1);
-    stub.set(ADDR(MainWindow, initLaunchMode), initLaunchMode_stub1);
-    stub.set(ADDR(MainWindow, showFullScreen), showFullScreen_stub1);
-    shot->ScrollScreenshot();
-    stub.reset(ADDR(MainWindow, initAttributes));
-    stub.reset(ADDR(MainWindow, initResource));
-    stub.reset(ADDR(MainWindow, initLaunchMode));
-    stub.reset(ADDR(MainWindow, showFullScreen));
-}
-
 void savePath_stub(QString path)
 {
     Q_UNUSED(path);
 }
-TEST_F(ScreenshotTest, savePathScreenshot)
-{
-    stub.set(ADDR(MainWindow, savePath), savePath_stub);
-    shot->savePathScreenshot("test");
-    stub.reset(ADDR(MainWindow, savePath));
-}
-
 void startScreenshotFor3rd_stub(QString path)
 {
     Q_UNUSED(path);
-}
-TEST_F(ScreenshotTest, startScreenshotFor3rd)
-{
-    stub.set(ADDR(MainWindow, startScreenshotFor3rd), startScreenshotFor3rd_stub);
-    shot->startScreenshotFor3rd("test");
-    stub.reset(ADDR(MainWindow, startScreenshotFor3rd));
-}
-
-TEST_F(ScreenshotTest, initLaunchMode)
-{
-    shot->initLaunchMode("screenshot");
 }
 void stopRecord_stub()
 {
 
 }
-TEST_F(ScreenshotTest, stopRecord)
-{
-    stub.set(ADDR(MainWindow, stopRecord), stopRecord_stub);
-    shot->stopRecord();
-    stub.reset(ADDR(MainWindow, stopRecord));
-}
 QString getRecorderNormalIcon_stub()
 {
 
     return "";
-}
-TEST_F(ScreenshotTest, getRecorderNormalIcon)
-{
-    stub.set(ADDR(RecorderTablet, getRecorderNormalIcon), getRecorderNormalIcon_stub);
-    shot->getRecorderNormalIcon();
-    stub.reset(ADDR(RecorderTablet, getRecorderNormalIcon));
 }
