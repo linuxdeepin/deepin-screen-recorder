@@ -210,6 +210,13 @@ QPixmap ScreenGrabber::grabPrimaryScreenFallback(bool &ok, const QRect &rect, co
  */
 QPixmap ScreenGrabber::grabSingleScreen(bool &ok, const QRect &rect, QScreen *screen, const qreal devicePixelRatio)
 {
+    // screen 由调用方传入，可能为 nullptr（例如无头环境或屏幕查找失败），
+    // 直接访问会段错误，需提前返回空图并标记失败。
+    if (!screen) {
+        qCWarning(dsrApp) << "grabSingleScreen: screen is null, returning empty pixmap.";
+        ok = false;
+        return {};
+    }
     qCDebug(dsrApp) << "Grabbing single screen:" << screen->name() << " for rect:" << rect;
     Q_UNUSED(ok)
     

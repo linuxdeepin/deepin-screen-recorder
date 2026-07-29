@@ -224,6 +224,12 @@ void Utils::passInputEvent(int wid)
         return;
     }
 #endif
+    // 非 X11 平台（如 offscreen/纯 Wayland）下 QX11Info::display() 返回 nullptr，
+    // 直接传给 X11 调用会段错误，需提前返回。
+    if (!QX11Info::display()) {
+        qCWarning(dsrApp) << "passInputEvent: no X11 connection, skipping.";
+        return;
+    }
 
     XRectangle *reponseArea = new XRectangle;
     reponseArea->x = 0;
@@ -286,6 +292,10 @@ void Utils::getInputEvent(const int wid, const short x, const short y, const uns
         return;
     }
 #endif
+    if (!QX11Info::display()) {
+        qCWarning(dsrApp) << "getInputEvent: no X11 connection, skipping.";
+        return;
+    }
     XRectangle *reponseArea = new XRectangle;
     reponseArea->x = x;
     reponseArea->y = y;
@@ -319,6 +329,10 @@ void Utils::cancelInputEvent(const int wid, const short x, const short y, const 
         return;
     }
 #endif
+    if (!QX11Info::display()) {
+        qCWarning(dsrApp) << "cancelInputEvent: no X11 connection, skipping.";
+        return;
+    }
     XRectangle *reponseArea = new XRectangle;
     reponseArea->x = x;
     reponseArea->y = y;
@@ -344,6 +358,10 @@ void Utils::cancelInputEvent1(
         return;
     }
 #endif
+    if (!QX11Info::display()) {
+        qCWarning(dsrApp) << "cancelInputEvent1: no X11 connection, skipping.";
+        return;
+    }
     XRectangle *reponseArea = new XRectangle;
     reponseArea->x = x;
     reponseArea->y = y;
@@ -451,6 +469,10 @@ void Utils::enableXGrabButton()
         return;
     }
 #endif
+    if (!QX11Info::display()) {
+        qCWarning(dsrApp) << "enableXGrabButton: no X11 connection, skipping.";
+        return;
+    }
     // extern int XGrabButton(
     //     Display *      /* display */,
     //     unsigned int  /* button */,
@@ -507,6 +529,10 @@ void Utils::disableXGrabButton()
         return;
     }
 #endif
+    if (!QX11Info::display()) {
+        qCWarning(dsrApp) << "disableXGrabButton: no X11 connection, skipping.";
+        return;
+    }
     XUngrabButton(QX11Info::display(), AnyButton, AnyModifier, DefaultRootWindow(QX11Info::display()));
     qCDebug(dsrApp) << "XUngrabButton called.";
 }
