@@ -2604,7 +2604,10 @@ void ShapesWidget::updateCursorShape()
             setCursorValue = BaseUtils::setCursorShape(m_currentType);
         }
         // 避免相同的光标样式重复设置
-        if (*qApp->overrideCursor() != setCursorValue) {
+        // qApp->overrideCursor() 在未设置任何 override cursor 时返回 nullptr，
+        // 直接解引用会段错误，需先判空。
+        const QCursor *currentOverride = qApp->overrideCursor();
+        if (currentOverride == nullptr || *currentOverride != setCursorValue) {
             qApp->changeOverrideCursor(setCursorValue);
         }
     }
