@@ -311,8 +311,9 @@ TEST_F(EventMonitorCov2Test, callbackWithNullData)
     // Passing nullptr crashes (dereferences data->category); skip direct call.
     // Instead, call handleEvent with a synthetic XRecordInterceptData whose
     // category is NOT XRecordFromServer, exercising the early-return path.
+    // 注意：XRecordFromServer 的值是 0，所以必须用非 0 值才能走到 early-return。
     XRecordInterceptData fake;
-    fake.category = 0; // not XRecordFromServer
+    fake.category = 1; // not XRecordFromServer (which is 0)
     fake.data = nullptr;
     fake.data_len = 0;
     EXPECT_NO_FATAL_FAILURE(m_mon->handleEvent(&fake));

@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2022-2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -13,11 +13,9 @@
 
 using namespace testing;
 
-ACCESS_PRIVATE_FIELD(ColorToolWidget, ToolButton*, m_redBtn);
-ACCESS_PRIVATE_FIELD(ColorToolWidget, ToolButton*, m_yellowBtn);
-ACCESS_PRIVATE_FIELD(ColorToolWidget, ToolButton*, m_blueBtn);
-ACCESS_PRIVATE_FIELD(ColorToolWidget, ToolButton*, m_greenBtn);
-
+// 原先通过 ACCESS_PRIVATE_FIELD 直接读取 m_redBtn/m_yellowBtn/... 等成员，
+// 但这些成员在源码中从未被赋值（已作为死代码移除），读取到的是垃圾指针。
+// 改为通过 QButtonGroup 暴露的按钮列表获取真正的 ToolButton 实例。
 class ColorToolWidgetTest:public testing::Test, public QObject{
 
 public:
@@ -38,19 +36,16 @@ public slots:
 };
 TEST_F(ColorToolWidgetTest, colorChecked)
 {
+    // 通过子对象查找真实存在的 ToolButton 实例（由 initColorLabel 创建）
+    auto buttons = widget->findChildren<ToolButton *>();
+    ASSERT_FALSE(buttons.isEmpty());
 
-    ToolButton* red = access_private_field::ColorToolWidgetm_redBtn(*widget);
-    ToolButton* yellow = access_private_field::ColorToolWidgetm_yellowBtn(*widget);
-    ToolButton* blue = access_private_field::ColorToolWidgetm_blueBtn(*widget);
-    ToolButton* green = access_private_field::ColorToolWidgetm_greenBtn(*widget);
-    curColor = "red";
-    QTest::mouseClick(red, Qt::MouseButton::LeftButton);
-    curColor = "yellow";
-    QTest::mouseClick(yellow, Qt::MouseButton::LeftButton);
-    curColor = "blue";
-    QTest::mouseClick(blue, Qt::MouseButton::LeftButton);
-    curColor = "green";
-    QTest::mouseClick(green, Qt::MouseButton::LeftButton);
+    // 依次点击所有颜色按钮，覆盖 colorChecked 信号路径
+    for (ToolButton *btn : buttons) {
+        ASSERT_NE(btn, nullptr);
+        curColor = btn->property("name").toString();
+        QTest::mouseClick(btn, Qt::MouseButton::LeftButton);
+    }
 }
 void ColorToolWidgetTest::OnColorChecked(QString color)
 {

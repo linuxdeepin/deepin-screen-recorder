@@ -1016,8 +1016,13 @@ QString MainWindow::libPath(const QString &strlib)
     if (list.contains(strlib))
         return strlib;
 
+    // 列表为空时 list.last() 是未定义行为（断言在 release 构建中被禁用），
+    // 早期这里直接 Q_ASSERT + list.last()，会在缺库环境（如 CI/测试沙箱）崩溃。
+    if (list.isEmpty()) {
+        qCWarning(dsrApp) << "libPath: no candidate for" << strlib << ", fallback to input.";
+        return strlib;
+    }
     list.sort();
-    Q_ASSERT(list.size() > 0);
     return list.last();
 }
 
@@ -1880,6 +1885,11 @@ QPoint MainWindow::getScrollShotTipPosition()
     // LCOV_EXCL_START
     qCDebug(dsrApp) << "getScrollShotTipPosition";
 #ifdef OCR_SCROLL_FLAGE_ON
+    // m_scrollShotTip 依赖 initScrollShot 完整初始化，否则 width()/height() 段错误。
+    if (!m_scrollShotTip) {
+        qCWarning(dsrApp) << "getScrollShotTipPosition: m_scrollShotTip is null, return (0,0).";
+        return {};
+    }
     // const QPoint topLeft = geometry().topLeft();
     QRect recordRect{static_cast<int>(recordX * m_pixelRatio),
                      static_cast<int>(recordY * m_pixelRatio),
@@ -1961,6 +1971,11 @@ void MainWindow::showScrollShot()
 {
     // LCOV_EXCL_START
 #ifdef OCR_SCROLL_FLAGE_ON
+    // m_previewWidget 依赖 initScrollShot 完整初始化，否则 updateImage() 段错误。
+    if (!m_previewWidget) {
+        qCWarning(dsrApp) << "showScrollShot: m_previewWidget is null, abort.";
+        return;
+    }
     qCInfo(dsrApp) << "初始化滚动截图时，显示滚动截图中的一些公共部件、例如工具栏、提示、图片大小、第一张预览图 start";
     bool ok;
     QRect rect(recordX + m_scrollShotOffsetXY,
@@ -2000,6 +2015,11 @@ void MainWindow::handleManualScrollShot(int mouseTime, int direction)
 {
     // LCOV_EXCL_START
 #ifdef OCR_SCROLL_FLAGE_ON
+    // m_scrollShotTip 依赖 initScrollShot 完整初始化，否则 hide() 段错误。
+    if (!m_scrollShotTip) {
+        qCWarning(dsrApp) << "handleManualScrollShot: m_scrollShotTip is null, abort.";
+        return;
+    }
     qCDebug(dsrApp) << "handleManualScrollShot";
     if (m_tipShowtimer != nullptr) {
         qCDebug(dsrApp) << "showScrollShot m_tipShowtimer != nullptr";
@@ -2025,6 +2045,11 @@ void MainWindow::handleManualScrollShot(int mouseTime, int direction)
 void MainWindow::showAdjustArea()
 {
 #ifdef OCR_SCROLL_FLAGE_ON
+    // m_scrollShot 依赖 initScrollShot 完整初始化，否则 getInvalidArea() 段错误。
+    if (!m_scrollShot) {
+        qCWarning(dsrApp) << "showAdjustArea: m_scrollShot is null, abort.";
+        return;
+    }
     qCDebug(dsrApp) << "showAdjustArea";
     // 获取可调整的捕捉区域大小及位置
     QRect adjustArea = m_scrollShot->getInvalidArea();
@@ -2155,6 +2180,11 @@ void MainWindow::showPreviewWidgetImage(QImage img)
 {
     qCDebug(dsrApp) << "showPreviewWidgetImage";
 #ifdef OCR_SCROLL_FLAGE_ON
+    // m_scrollShotSizeTips / m_previewWidget 依赖 initScrollShot 完整初始化。
+    if (!m_scrollShotSizeTips || !m_previewWidget) {
+        qCWarning(dsrApp) << "showPreviewWidgetImage: scroll-shot widgets null, abort.";
+        return;
+    }
     if (m_isSaveScrollShot) {
         qCDebug(dsrApp) << "showPreviewWidgetImage m_isSaveScrollShot";
         return;
@@ -2429,6 +2459,14 @@ void MainWindow::saveTopWindow()
 #endif
     if (topWindowIndex < 0) {
         topWindowIndex = 0;
+    }
+    // windowNames / windowRects 可能为空或元素少于计算出的索引（测试或异常调用顺序），
+    // 越界访问返回的 QString 引用无效，sanitizeFileName 内 trimmed() 段错误。
+    if (topWindowIndex >= windowNames.size() || topWindowIndex >= windowRects.size()) {
+        qCWarning(dsrApp) << "saveTopWindow: topWindowIndex" << topWindowIndex
+                          << "out of bounds (windowNames:" << windowNames.size()
+                          << "windowRects:" << windowRects.size() << "), abort.";
+        return;
     }
     selectAreaName = BaseUtils::sanitizeFileName(windowNames[topWindowIndex]);
     recordX = windowRects[topWindowIndex].x();
@@ -3394,6 +3432,13 @@ QPoint MainWindow::getTwoScreenIntersectPos(QPoint rawPos)
     QList<ScreenInfo> tmp_screenInfo;
     QPoint toolbarPoint = rawPos;
 
+    // 本函数假设恰好两块屏幕；不足两块时（无头/单屏/未初始化）直接返回原始坐标，
+    // 否则 m_screenInfo.at(1) 越界访问引发段错误。
+    if (m_screenInfo.size() < 2) {
+        qCWarning(dsrApp) << "getTwoScreenIntersectPos: m_screenInfo.size() =" << m_screenInfo.size()
+                          << "< 2, returning raw pos.";
+        return rawPos;
+    }
     if (m_screenInfo.at(0).x == 0) {
         tmp_screenInfo.append(m_screenInfo.at(0));
         tmp_screenInfo.append(m_screenInfo.at(1));
@@ -6583,6 +6628,11 @@ void MainWindow::onAdjustCaptureArea()
 {
     // LCOV_EXCL_START
 #ifdef OCR_SCROLL_FLAGE_ON
+    // m_scrollShotTip 依赖 initScrollShot 完整初始化，否则 hide() 段错误。
+    if (!m_scrollShotTip) {
+        qCWarning(dsrApp) << "onAdjustCaptureArea: m_scrollShotTip is null, abort.";
+        return;
+    }
     qCDebug(dsrApp) << "function: " << __func__ << " ,line: " << __LINE__;
     if (m_tipShowtimer != nullptr) {
         m_tipShowtimer->stop();
@@ -6734,6 +6784,12 @@ void MainWindow::onScrollShotMerageImgState(PixMergeThread::MergeErrorValue stat
 
 void MainWindow::initPadShot()
 {
+    // m_toolBar 由 initAttributes/initObjects 创建，若未走完整初始化流程则为 nullptr，
+    // 直接 width()/showAt() 会段错误（测试或非常规调用顺序下可能发生）。
+    if (!m_toolBar) {
+        qCWarning(dsrApp) << "initPadShot: m_toolBar is null, abort.";
+        return;
+    }
     recordX = 0;
     recordY = 0;
     QScreen *primaryScreen = QGuiApplication::primaryScreen();
@@ -6925,6 +6981,12 @@ void MainWindow::startAutoScrollShot()
 {
     // LCOV_EXCL_START
 #ifdef OCR_SCROLL_FLAGE_ON
+    // 滚动截图未初始化（例如测试中只调用本槽而未走 initScrollShot 流程）时
+    // m_scrollShot 为 nullptr，直接访问会段错误，提前返回。
+    if (!m_scrollShot) {
+        qCWarning(dsrApp) << "startAutoScrollShot: m_scrollShot is null, abort.";
+        return;
+    }
     // 自动滚动模式已启动
     m_isAutoScrollShotStart = true;
     // 自动调整捕捉区域不显示
@@ -6958,6 +7020,11 @@ void MainWindow::pauseAutoScrollShot()
 {
     // LCOV_EXCL_START
 #ifdef OCR_SCROLL_FLAGE_ON
+    // m_scrollShot 可能为 nullptr（未走完整初始化流程），提前返回。
+    if (!m_scrollShot) {
+        qCWarning(dsrApp) << "pauseAutoScrollShot: m_scrollShot is null, abort.";
+        return;
+    }
     qCDebug(dsrApp) << "function:" << __func__ << " ,line: " << __LINE__ << " 暂停自动滚动截图!";
     // 自动滚动截图改变状态，暂停自动滚动
     m_scrollShot->changeState(true);
@@ -6970,6 +7037,11 @@ void MainWindow::continueAutoScrollShot()
 {
     // LCOV_EXCL_START
 #ifdef OCR_SCROLL_FLAGE_ON
+    // m_scrollShotTip / m_scrollShot 依赖 initScrollShot 完整初始化，否则段错误。
+    if (!m_scrollShotTip || !m_scrollShot) {
+        qCWarning(dsrApp) << "continueAutoScrollShot: scroll-shot members null, abort.";
+        return;
+    }
     qCDebug(dsrApp) << "function:" << __func__ << " ,line: " << __LINE__ << " 继续自动滚动截图!";
     if (m_tipShowtimer != nullptr) {
         m_tipShowtimer->stop();
@@ -6990,6 +7062,11 @@ void MainWindow::startManualScrollShot()
 {
     // LCOV_EXCL_START
 #ifdef OCR_SCROLL_FLAGE_ON
+    // m_scrollShot 可能为 nullptr（未走完整初始化流程），提前返回。
+    if (!m_scrollShot) {
+        qCWarning(dsrApp) << "startManualScrollShot: m_scrollShot is null, abort.";
+        return;
+    }
     // 自动调整捕捉区域不显示
     m_isAdjustArea = false;
     qCDebug(dsrApp) << "开始手动滚动截图！";

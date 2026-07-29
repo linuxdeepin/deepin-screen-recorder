@@ -42,6 +42,10 @@ QT += concurrent openglwidgets
 QT += svg
 QT += waylandclient-private
 LIBS += -lX11 -lXext -lXtst -lXfixes -lXcursor -lgtest -lopencv_small -lavcodec -lavdevice -lavfilter -lavformat -lavutil -lswscale -lswresample -lepoxy -lKWaylandClient -lgbm -lXinerama -ludev -lv4l2 -lv4lconvert -lv4l1
+# libcam 静态库内部引用 udev_* / v4l2_* 符号，但本二进制没有直接引用，
+# 默认 --as-needed 链接会丢弃 libudev/libv4l2.so 导致运行时 undefined symbol
+# 段错误。强制 --no-as-needed 保留这些 NEEDED 条目。
+QMAKE_LFLAGS += -Wl,--no-as-needed
 
 CONFIG += link_pkgconfig
 CONFIG += c++17

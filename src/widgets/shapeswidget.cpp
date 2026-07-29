@@ -1,5 +1,5 @@
 // Copyright (C) 2020 ~ 2021 Uniontech Software Technology Co.,Ltd.
-// SPDX-FileCopyrightText: 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2022-2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -226,11 +226,18 @@ void ShapesWidget::setNoChangedTextEditRemove()
     for (int i = 0; i < m_shapes.length(); i++) {
         if (m_shapes[i].type == "text") {
             int t_tempIndex = m_shapes[i].index;
-            if (m_editMap.value(t_tempIndex)->document()->toPlainText() == QString(tr("Input text here"))
-                    || m_editMap.value(t_tempIndex)->document()->toPlainText().isEmpty()) {
+            // m_editMap.value() 在 key 不存在时返回 nullptr（QMap 的默认构造指针），
+            // 后续 ->document() 会段错误，需提前判空。
+            QPlainTextEdit *edit = m_editMap.value(t_tempIndex);
+            if (!edit) {
+                qCWarning(dsrApp) << "setNoChangedTextEditRemove: edit for index" << t_tempIndex << "is null, skip.";
+                continue;
+            }
+            if (edit->document()->toPlainText() == QString(tr("Input text here"))
+                    || edit->document()->toPlainText().isEmpty()) {
                 qCDebug(dsrApp) << "Removing empty text edit at index:" << t_tempIndex;
                 m_shapes.removeAt(i);
-                m_editMap.value(t_tempIndex)->clear();
+                edit->clear();
                 m_editMap.remove(t_tempIndex);
 
                 break;
