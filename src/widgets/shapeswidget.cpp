@@ -2627,4 +2627,39 @@ void ShapesWidget::setGlobalRect(QRect rect)
     m_globalRect = rect;
 }
 
+void ShapesWidget::translateShapes(const QPointF &delta)
+{
+    // 控件原点移动 delta，图形局部坐标补偿 -delta 以保持屏幕坐标不变。
+    // effect（模糊/马赛克）按方案回滚点暂不平移，其取样刷新留待 T3 实测后纳入。
+    for (int i = 0; i < m_shapes.length(); ++i) {
+        Toolshape &shape = m_shapes[i];
+        if (shape.type == "effect") {
+            continue;
+        }
+        for (int j = 0; j < shape.mainPoints.length(); ++j) {
+            shape.mainPoints[j] -= delta;
+        }
+        for (int j = 0; j < shape.points.length(); ++j) {
+            shape.points[j] -= delta;
+        }
+    }
+
+    // 同步当前选中的图形副本
+    if (m_selectedOrder >= 0 && m_selectedOrder < m_shapes.length()
+            && m_shapes[m_selectedOrder].type != "effect") {
+        m_selectedShape.mainPoints = m_shapes[m_selectedOrder].mainPoints;
+        m_selectedShape.points = m_shapes[m_selectedOrder].points;
+    }
+
+    // 同步文本编辑控件几何，保持文字屏幕位置不变
+    QMap<int, TextEdit *>::iterator it = m_editMap.begin();
+    while (it != m_editMap.end()) {
+        TextEdit *edit = it.value();
+        edit->move(edit->pos() - delta.toPoint());
+        ++it;
+    }
+
+    update();
+}
+
 

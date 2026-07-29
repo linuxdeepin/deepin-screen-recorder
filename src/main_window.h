@@ -811,6 +811,34 @@ protected:
     void keyReleaseEvent(QKeyEvent *event) override;
 
     int getAction(QEvent *event);
+    /**
+     * @brief getActionAt: 给定 MainWindow 坐标判定框选边缘动作（八方向 + MOVE）
+     * @param pos MainWindow 局部坐标
+     * @return 与 getAction 相同的 ACTION_* 常量
+     */
+    int getActionAt(const QPoint &pos) const;
+    /**
+     * @brief updateShapesWidgetGeometry: 框选变更后同步 ShapesWidget 几何，并对图形做补偿平移
+     * 保持标注图形屏幕坐标不变（D4①），effect 图形按回滚点暂随控件移动
+     */
+    void updateShapesWidgetGeometry();
+    /**
+     * @brief beginSelectionDrag: 记录拖拽起始动作与基线框选几何
+     */
+    void beginSelectionDrag(QMouseEvent *mouseEvent);
+    /**
+     * @brief doSelectionDrag: 按 dragAction 应用框选移动/缩放（标注前与标注态共用）
+     */
+    void doSelectionDrag(QMouseEvent *mouseEvent);
+    /**
+     * @brief finishSelectionDrag: 拖拽结束约束最小尺寸/边界并刷新提示与工具栏
+     */
+    void finishSelectionDrag();
+    /**
+     * @brief adjustSelectionByKey: 键盘（方向键/Ctrl/Shift+Ctrl）调整框选区域
+     * @return 是否处理了该按键
+     */
+    bool adjustSelectionByKey(QKeyEvent *keyEvent, bool &needRepaint);
 
 
     /**

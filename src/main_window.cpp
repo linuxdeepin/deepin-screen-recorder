@@ -5075,6 +5075,52 @@ bool MainWindow::eventFilter(QObject *obj, QEvent *event)
     if (Utils::isTreelandMode)
         return DWidget::eventFilter(obj,event);
 
+    // 标注态下拦截 ShapesWidget 上的边缘命中鼠标事件，用于调整框选区域；
+    // 内部命中或正在绘制图形时放行给 ShapesWidget 处理标注（D2①）。
+    if (m_isShapesWidgetExist && obj == m_shapesWidget
+            && status::shot == m_functionType
+            && recordButtonStatus == RECORD_BUTTON_NORMAL) {
+        QEvent::Type t = event->type();
+        if (t == QEvent::MouseButtonPress || t == QEvent::MouseMove
+                || t == QEvent::MouseButtonRelease) {
+            QMouseEvent *swEvent = static_cast<QMouseEvent *>(event);
+            // 将 ShapesWidget 局部坐标转换为 MainWindow 坐标
+            QPoint mainPos = m_shapesWidget->mapToParent(swEvent->pos());
+            int action = getActionAt(mainPos);
+            bool routing = false;
+            if (t == QEvent::MouseButtonPress) {
+                routing = (action != ACTION_MOVE
+                           && swEvent->button() == Qt::LeftButton
+                           && !m_shapesWidget->isPressed());
+            } else if (t == QEvent::MouseButtonRelease) {
+                routing = (isPressMouseLeftButton
+                           && swEvent->button() == Qt::LeftButton);
+            } else { // MouseMove
+                routing = isPressMouseLeftButton
+                          || (action != ACTION_MOVE
+                              && !m_shapesWidget->isPressed());
+            }
+            if (routing) {
+                QMouseEvent mappedEvent(t, QPointF(mainPos), swEvent->button(),
+                                        swEvent->buttons(), swEvent->modifiers());
+                bool localRepaint = false;
+                if (t == QEvent::MouseButtonPress) {
+                    mousePressEF(&mappedEvent, localRepaint);
+                } else if (t == QEvent::MouseMove) {
+                    mouseMoveEF(&mappedEvent, localRepaint);
+                } else {
+                    mouseReleaseEF(&mappedEvent, localRepaint);
+                }
+                if (localRepaint) {
+                    update();
+                }
+                return true;
+            }
+            return false; // 内部命中或正在绘制：放行给 ShapesWidget
+        }
+        return false; // 非鼠标事件：放行给 ShapesWidget
+    }
+
     bool needRepaint = false;
 
 #undef KeyPress
@@ -5197,12 +5243,7 @@ int MainWindow::mousePressEF(QMouseEvent *mouseEvent, bool &needRepaint)
                 isFirstPressButton = true;
             } else {
                 // qCDebug(dsrApp) << ">>>>>>>>>> isFirstPressButton 2" << isFirstPressButton;
-                dragAction = getAction(mouseEvent);
-
-                dragRecordX = recordX;
-                dragRecordY = recordY;
-                dragRecordWidth = recordWidth;
-                dragRecordHeight = recordHeight;
+                beginSelectionDrag(mouseEvent);
 
                 if (recordButtonStatus == RECORD_BUTTON_NORMAL) {
                     // hideRecordButton();
@@ -5234,6 +5275,18 @@ int MainWindow::mousePressEF(QMouseEvent *mouseEvent, bool &needRepaint)
                     connect(m_menuController, &MenuController::closeAction, this, &MainWindow::exitApp);
                 }
                 m_menuController->showMenu(QPoint(mapToGlobal(mouseEvent->pos())));
+            }
+        }
+    } else if (m_isShapesWidgetExist && status::shot == m_functionType
+               && recordButtonStatus == RECORD_BUTTON_NORMAL) {
+        // 进入标注编辑后，鼠标命中框选边缘时开始拖拽调整框选区域（D2①）
+        if (mouseEvent->button() == Qt::LeftButton) {
+            dragStartX = mouseEvent->x();
+            dragStartY = mouseEvent->y();
+            beginSelectionDrag(mouseEvent);
+            if (dragAction != ACTION_MOVE) {
+                isPressMouseLeftButton = true;
+                isReleaseMouseLeftButton = false;
             }
         }
     }
@@ -5334,6 +5387,15 @@ int MainWindow::mouseReleaseEF(QMouseEvent *mouseEvent, bool &needRepaint)
 
             needRepaint = true;
         }
+    } else if (m_isShapesWidgetExist && status::shot == m_functionType
+               && recordButtonStatus == RECORD_BUTTON_NORMAL
+               && isPressMouseLeftButton) {
+        // 进入标注编辑后，框选拖拽释放：约束最小尺寸/边界并同步 ShapesWidget 几何
+        finishSelectionDrag();
+        updateShapesWidgetGeometry();
+        isPressMouseLeftButton = false;
+        isReleaseMouseLeftButton = true;
+        needRepaint = true;
     }
     return 1;
 }
@@ -5436,32 +5498,7 @@ int MainWindow::mouseMoveEF(QMouseEvent *mouseEvent, bool &needRepaint)
                 }
             } else if (isPressMouseLeftButton) {
                 if (recordButtonStatus == RECORD_BUTTON_NORMAL && dragRecordX >= 0 && dragRecordY >= 0) {
-                    if (dragAction == ACTION_MOVE) {
-                        recordX = std::max(
-                            std::min(dragRecordX + mouseEvent->x() - dragStartX, m_backgroundRect.width() - recordWidth), 0);
-                        recordY = std::max(
-                            std::min(dragRecordY + mouseEvent->y() - dragStartY, m_backgroundRect.height() - recordHeight), 0);
-                    } else if (dragAction == ACTION_RESIZE_TOP_LEFT) {
-                        resizeTop(mouseEvent);
-                        resizeLeft(mouseEvent);
-                    } else if (dragAction == ACTION_RESIZE_TOP_RIGHT) {
-                        resizeTop(mouseEvent);
-                        resizeRight(mouseEvent);
-                    } else if (dragAction == ACTION_RESIZE_BOTTOM_LEFT) {
-                        resizeBottom(mouseEvent);
-                        resizeLeft(mouseEvent);
-                    } else if (dragAction == ACTION_RESIZE_BOTTOM_RIGHT) {
-                        resizeBottom(mouseEvent);
-                        resizeRight(mouseEvent);
-                    } else if (dragAction == ACTION_RESIZE_TOP) {
-                        resizeTop(mouseEvent);
-                    } else if (dragAction == ACTION_RESIZE_BOTTOM) {
-                        resizeBottom(mouseEvent);
-                    } else if (dragAction == ACTION_RESIZE_LEFT) {
-                        resizeLeft(mouseEvent);
-                    } else if (dragAction == ACTION_RESIZE_RIGHT) {
-                        resizeRight(mouseEvent);
-                    }
+                    doSelectionDrag(mouseEvent);
 
                     needRepaint = true;
                 }
@@ -5629,8 +5666,34 @@ int MainWindow::mouseMoveEF(QMouseEvent *mouseEvent, bool &needRepaint)
         t_rect.setWidth(recordWidth);
         t_rect.setHeight(recordHeight);
 
-        if (!t_rect.contains(mouseEvent->x(), mouseEvent->y())) {
-            qApp->setOverrideCursor(Qt::ArrowCursor);
+        if (status::shot == m_functionType && recordButtonStatus == RECORD_BUTTON_NORMAL) {
+            // 进入标注编辑后，边缘命中时调整框选区域并显示手柄（D2①）
+            if (isPressMouseLeftButton) {
+                doSelectionDrag(mouseEvent);
+                updateShapesWidgetGeometry();
+                needRepaint = true;
+            }
+            updateCursor(mouseEvent);
+            int action = getAction(mouseEvent);
+            bool drawPoint = action != ACTION_MOVE;
+            if (drawPoint != drawDragPoint) {
+                drawDragPoint = drawPoint;
+                needRepaint = true;
+            }
+            if (m_toolBar && m_toolBar->isVisible()) {
+                updateToolBarPos();
+            }
+            if (!t_rect.contains(mouseEvent->x(), mouseEvent->y()) && !isPressMouseLeftButton) {
+                qApp->setOverrideCursor(Qt::ArrowCursor);
+                if (drawDragPoint) {
+                    drawDragPoint = false;
+                    needRepaint = true;
+                }
+            }
+        } else {
+            if (!t_rect.contains(mouseEvent->x(), mouseEvent->y())) {
+                qApp->setOverrideCursor(Qt::ArrowCursor);
+            }
         }
     }
     if (m_shotflag == 0) {
@@ -5656,43 +5719,51 @@ int MainWindow::keyPressEF(QKeyEvent *keyEvent, bool &needRepaint)
                 m_shapesWidget->setShiftKeyPressed(m_isShiftPressed);
             }
 
-            if (keyEvent->modifiers() == (Qt::ShiftModifier | Qt::ControlModifier)) {
-                if (keyEvent->key() == Qt::Key_Left) {
-                    m_shapesWidget->microAdjust("Ctrl+Shift+Left");
-                } else if (keyEvent->key() == Qt::Key_Right) {
-                    m_shapesWidget->microAdjust("Ctrl+Shift+Right");
-                } else if (keyEvent->key() == Qt::Key_Up) {
-                    m_shapesWidget->microAdjust("Ctrl+Shift+Up");
-                } else if (keyEvent->key() == Qt::Key_Down) {
-                    m_shapesWidget->microAdjust("Ctrl+Shift+Down");
-                }
-            } else if (qApp->keyboardModifiers() & Qt::ControlModifier) {
-                if (keyEvent->key() == Qt::Key_Left) {
-                    m_shapesWidget->microAdjust("Ctrl+Left");
-                } else if (keyEvent->key() == Qt::Key_Right) {
-                    m_shapesWidget->microAdjust("Ctrl+Right");
-                } else if (keyEvent->key() == Qt::Key_Up) {
-                    m_shapesWidget->microAdjust("Ctrl+Up");
-                } else if (keyEvent->key() == Qt::Key_Down) {
-                    m_shapesWidget->microAdjust("Ctrl+Down");
-                } else if (keyEvent->key() == Qt::Key_C) {
-                    //                        ConfigSettings::instance()->setValue("save", "save_op",
-                    //                        SaveAction::SaveToClipboard);
-                    // m_copyToClipboard = true;
-                    // saveScreenShot();
-                } else if (keyEvent->key() == Qt::Key_S) {
-                    //                        expressSaveScreenshot();
-                    saveScreenShot();
+            if (m_shapesWidget->selectedIndex() == -1) {
+                // 无选中图形：方向键/Ctrl/Shift+Ctrl 调整框选区域（D3①）
+                if (adjustSelectionByKey(keyEvent, needRepaint)) {
+                    updateShapesWidgetGeometry();
                 }
             } else {
-                if (keyEvent->key() == Qt::Key_Left) {
-                    m_shapesWidget->microAdjust("Left");
-                } else if (keyEvent->key() == Qt::Key_Right) {
-                    m_shapesWidget->microAdjust("Right");
-                } else if (keyEvent->key() == Qt::Key_Up) {
-                    m_shapesWidget->microAdjust("Up");
-                } else if (keyEvent->key() == Qt::Key_Down) {
-                    m_shapesWidget->microAdjust("Down");
+                // 有选中图形：维持 microAdjust 微调图形（原逻辑不变）
+                if (keyEvent->modifiers() == (Qt::ShiftModifier | Qt::ControlModifier)) {
+                    if (keyEvent->key() == Qt::Key_Left) {
+                        m_shapesWidget->microAdjust("Ctrl+Shift+Left");
+                    } else if (keyEvent->key() == Qt::Key_Right) {
+                        m_shapesWidget->microAdjust("Ctrl+Shift+Right");
+                    } else if (keyEvent->key() == Qt::Key_Up) {
+                        m_shapesWidget->microAdjust("Ctrl+Shift+Up");
+                    } else if (keyEvent->key() == Qt::Key_Down) {
+                        m_shapesWidget->microAdjust("Ctrl+Shift+Down");
+                    }
+                } else if (qApp->keyboardModifiers() & Qt::ControlModifier) {
+                    if (keyEvent->key() == Qt::Key_Left) {
+                        m_shapesWidget->microAdjust("Ctrl+Left");
+                    } else if (keyEvent->key() == Qt::Key_Right) {
+                        m_shapesWidget->microAdjust("Ctrl+Right");
+                    } else if (keyEvent->key() == Qt::Key_Up) {
+                        m_shapesWidget->microAdjust("Ctrl+Up");
+                    } else if (keyEvent->key() == Qt::Key_Down) {
+                        m_shapesWidget->microAdjust("Ctrl+Down");
+                    } else if (keyEvent->key() == Qt::Key_C) {
+                        //                        ConfigSettings::instance()->setValue("save", "save_op",
+                        //                        SaveAction::SaveToClipboard);
+                        // m_copyToClipboard = true;
+                        // saveScreenShot();
+                    } else if (keyEvent->key() == Qt::Key_S) {
+                        //                        expressSaveScreenshot();
+                        saveScreenShot();
+                    }
+                } else {
+                    if (keyEvent->key() == Qt::Key_Left) {
+                        m_shapesWidget->microAdjust("Left");
+                    } else if (keyEvent->key() == Qt::Key_Right) {
+                        m_shapesWidget->microAdjust("Right");
+                    } else if (keyEvent->key() == Qt::Key_Up) {
+                        m_shapesWidget->microAdjust("Up");
+                    } else if (keyEvent->key() == Qt::Key_Down) {
+                        m_shapesWidget->microAdjust("Down");
+                    }
                 }
             }
 
@@ -5701,134 +5772,15 @@ int MainWindow::keyPressEF(QKeyEvent *keyEvent, bool &needRepaint)
             } else {
                 qCDebug(dsrApp) << "ShapeWidget Exist keyEvent:" << keyEvent->key();
             }
+            if (needRepaint) {
+                update();
+            }
             return 0;
         }
 
         if (m_shotStatus == ShotMouseStatus::Normal) {
-            // 是否按住 shift+ctrl
-            if (keyEvent->modifiers() == (Qt::ShiftModifier | Qt::ControlModifier)) {
-                if (keyEvent->key() == Qt::Key_Left) {
-                    if (recordWidth > RECORD_MIN_SHOT_SIZE) {
-                        recordX = std::max(0, recordX + 1);
-                        recordWidth = std::max(std::min(recordWidth - 1, m_backgroundRect.width()), RECORD_MIN_SHOT_SIZE);
-                        needRepaint = true;
-                        selectAreaName = tr("select-area");
-                    }
-
-                } else if (keyEvent->key() == Qt::Key_Right) {
-                    if (recordWidth > RECORD_MIN_SHOT_SIZE) {
-                        recordWidth = std::max(std::min(recordWidth - 1, m_backgroundRect.width()), RECORD_MIN_SHOT_SIZE);
-                        needRepaint = true;
-                        selectAreaName = tr("select-area");
-                    }
-                } else if (keyEvent->key() == Qt::Key_Up) {
-                    if (recordHeight > RECORD_MIN_SHOT_SIZE) {
-                        recordY = std::max(0, recordY + 1);
-
-                        recordHeight = std::max(std::min(recordHeight - 1, m_backgroundRect.height()), RECORD_MIN_SHOT_SIZE);
-                        needRepaint = true;
-                        selectAreaName = tr("select-area");
-                    }
-                } else if (keyEvent->key() == Qt::Key_Down) {
-                    if (recordHeight > RECORD_MIN_SHOT_SIZE) {
-                        recordHeight = std::max(std::min(recordHeight - 1, m_backgroundRect.height()), RECORD_MIN_SHOT_SIZE);
-                        needRepaint = true;
-                        selectAreaName = tr("select-area");
-                    }
-                }
-            }
-            // 是否只按住 ctrl
-            else if ((qApp->keyboardModifiers() == Qt::ControlModifier)) {
-                if (keyEvent->key() == Qt::Key_S) {
-                    //                        expressSaveScreenshot();
-                    saveScreenShot();
-                }
-
-                if (keyEvent->key() == Qt::Key_C) {
-                    //                        ConfigSettings::instance()->setValue("save", "save_op",
-                    //                        SaveAction::SaveToClipboard);
-                    // m_copyToClipboard = true;
-                    //                        saveScreenshot();
-                    // saveScreenShot();
-                }
-                if (keyEvent->key() == Qt::Key_Left) {
-                    recordX = std::max(0, recordX - 1);
-                    recordWidth = std::min(recordWidth + 1, rootWindowRect.width());
-
-                    needRepaint = true;
-                    selectAreaName = tr("select-area");
-                } else if (keyEvent->key() == Qt::Key_Right) {
-                    if (recordX + recordWidth + 1 >= m_screenWidth) {
-                        recordX = std::max(0, recordX - 1);
-                    }
-                    recordWidth = std::min(recordWidth + 1, rootWindowRect.width());
-
-                    needRepaint = true;
-                    selectAreaName = tr("select-area");
-                } else if (keyEvent->key() == Qt::Key_Up) {
-                    recordY = std::max(0, recordY - 1);
-                    recordHeight = std::min(recordHeight + 1, rootWindowRect.height());
-
-                    needRepaint = true;
-                    selectAreaName = tr("select-area");
-                } else if (keyEvent->key() == Qt::Key_Down) {
-                    if (recordY + recordHeight + 1 >= m_screenHeight) {
-                        recordY = std::max(0, recordY - 1);
-                    }
-                    recordHeight = std::min(recordHeight + 1, rootWindowRect.height());
-
-                    needRepaint = true;
-                    selectAreaName = tr("select-area");
-                }
-            } else {
-                // 鼠标已经按下过但当前未按下时
-                if (!isPressMouseLeftButton && qApp->keyboardModifiers() == Qt::NoModifier) {
-                    if (keyEvent->key() == Qt::Key_Left || keyEvent->key() == Qt::Key_A) {
-                        recordX = std::max(0, recordX - 1);
-                        needRepaint = true;
-                        selectAreaName = tr("select-area");
-                    } else if (keyEvent->key() == Qt::Key_Right || keyEvent->key() == Qt::Key_D) {
-                        recordX = std::min(m_backgroundRect.width() - recordWidth, recordX + 1);
-
-                        needRepaint = true;
-                        selectAreaName = tr("select-area");
-                    } else if (keyEvent->key() == Qt::Key_Up || keyEvent->key() == Qt::Key_W) {
-                        recordY = std::max(0, recordY - 1);
-
-                        needRepaint = true;
-                        selectAreaName = tr("select-area");
-                    } else if (keyEvent->key() == Qt::Key_Down || keyEvent->key() == Qt::Key_S) {
-                        recordY = std::min(m_backgroundRect.height() - recordHeight, recordY + 1);
-
-                        needRepaint = true;
-                        selectAreaName = tr("select-area");
-                    }
-                }
-            }
-
-            if (!m_needSaveScreenshot) {
-                m_sizeTips->updateTips(QPoint(recordX, recordY), QSize(recordWidth, recordHeight));
-                if (m_toolBar->isVisible()) {
-                    updateToolBarPos();
-                }
-                // if (m_recordButton->isVisible()) {
-                // updateRecordButtonPos();
-                // }
-
-                if (m_sideBar->isVisible()) {
-                    updateSideBarPos();
-                }
-
-                // if (m_shotButton->isVisible()) {
-                // updateShotButtonPos();
-                // }
-
-                if (m_cameraWidget && m_cameraWidget->isVisible()) {
-                    updateCameraWidgetPos();
-                }
-            }
+            adjustSelectionByKey(keyEvent, needRepaint);
         }
-
         if (needRepaint) {
             update();
         }
@@ -7297,11 +7249,10 @@ void MainWindow::resizeRight(QMouseEvent *mouseEvent)
     }
 }
 
-int MainWindow::getAction(QEvent *event)
+int MainWindow::getActionAt(const QPoint &pos) const
 {
-    QMouseEvent *mouseEvent = static_cast<QMouseEvent *>(event);
-    int cursorX = mouseEvent->x();
-    int cursorY = mouseEvent->y();
+    int cursorX = pos.x();
+    int cursorY = pos.y();
 
     if (cursorX > recordX - m_cursorBound && cursorX < recordX + m_cursorBound && cursorY > recordY - m_cursorBound &&
         cursorY < recordY + m_cursorBound) {
@@ -7334,6 +7285,236 @@ int MainWindow::getAction(QEvent *event)
     } else {
         return ACTION_MOVE;
     }
+}
+
+int MainWindow::getAction(QEvent *event)
+{
+    QMouseEvent *mouseEvent = static_cast<QMouseEvent *>(event);
+    return getActionAt(QPoint(mouseEvent->x(), mouseEvent->y()));
+}
+
+void MainWindow::beginSelectionDrag(QMouseEvent *mouseEvent)
+{
+    dragAction = getAction(mouseEvent);
+    dragRecordX = recordX;
+    dragRecordY = recordY;
+    dragRecordWidth = recordWidth;
+    dragRecordHeight = recordHeight;
+}
+
+void MainWindow::doSelectionDrag(QMouseEvent *mouseEvent)
+{
+    if (dragAction == ACTION_MOVE) {
+        recordX = std::max(
+            std::min(dragRecordX + mouseEvent->x() - dragStartX, m_backgroundRect.width() - recordWidth), 0);
+        recordY = std::max(
+            std::min(dragRecordY + mouseEvent->y() - dragStartY, m_backgroundRect.height() - recordHeight), 0);
+    } else if (dragAction == ACTION_RESIZE_TOP_LEFT) {
+        resizeTop(mouseEvent);
+        resizeLeft(mouseEvent);
+    } else if (dragAction == ACTION_RESIZE_TOP_RIGHT) {
+        resizeTop(mouseEvent);
+        resizeRight(mouseEvent);
+    } else if (dragAction == ACTION_RESIZE_BOTTOM_LEFT) {
+        resizeBottom(mouseEvent);
+        resizeLeft(mouseEvent);
+    } else if (dragAction == ACTION_RESIZE_BOTTOM_RIGHT) {
+        resizeBottom(mouseEvent);
+        resizeRight(mouseEvent);
+    } else if (dragAction == ACTION_RESIZE_TOP) {
+        resizeTop(mouseEvent);
+    } else if (dragAction == ACTION_RESIZE_BOTTOM) {
+        resizeBottom(mouseEvent);
+    } else if (dragAction == ACTION_RESIZE_LEFT) {
+        resizeLeft(mouseEvent);
+    } else if (dragAction == ACTION_RESIZE_RIGHT) {
+        resizeRight(mouseEvent);
+    }
+}
+
+void MainWindow::finishSelectionDrag()
+{
+    // 约束最小尺寸与屏幕边界（截图走 RECORD_MIN_SHOT_SIZE / m_backgroundRect）
+    recordWidth = recordWidth < RECORD_MIN_SHOT_SIZE ? RECORD_MIN_SHOT_SIZE : recordWidth;
+    recordHeight = recordHeight < RECORD_MIN_SHOT_SIZE ? RECORD_MIN_SHOT_SIZE : recordHeight;
+
+    if (recordX + recordWidth > m_backgroundRect.width()) {
+        recordX = m_backgroundRect.width() - recordWidth;
+    }
+    if (recordY + recordHeight > m_backgroundRect.height()) {
+        recordY = m_backgroundRect.height() - recordHeight;
+    }
+    if (recordX < 0) recordX = 0;
+    if (recordY < 0) recordY = 0;
+
+    if (status::scrollshot != m_functionType) {
+        m_sizeTips->updateTips(QPoint(recordX, recordY), QSize(recordWidth, recordHeight));
+    }
+    updateToolBarPos();
+    if (status::shot == m_functionType && m_sideBar->isVisible()) {
+        updateSideBarPos();
+    }
+}
+
+void MainWindow::updateShapesWidgetGeometry()
+{
+    if (!m_shapesWidget) {
+        return;
+    }
+    // 记录旧原点（控件当前几何即旧框选位置）
+    QRect oldGeo = m_shapesWidget->geometry();
+    int oldX = oldGeo.x() - 2;
+    int oldY = oldGeo.y() - 2;
+
+    m_shapesWidget->setFixedSize(recordWidth - 4, recordHeight - 4);
+    m_shapesWidget->move(recordX + 2, recordY + 2);
+
+    QRect t_rect;
+    t_rect.setX(recordX);
+    t_rect.setY(recordY);
+    t_rect.setWidth(recordWidth);
+    t_rect.setHeight(recordHeight);
+    m_shapesWidget->setGlobalRect(t_rect);
+
+    // 原点位移时对图形做补偿平移，保持屏幕坐标不变（D4①）
+    int dx = recordX - oldX;
+    int dy = recordY - oldY;
+    if (dx != 0 || dy != 0) {
+        m_shapesWidget->translateShapes(QPointF(dx, dy));
+    }
+}
+
+bool MainWindow::adjustSelectionByKey(QKeyEvent *keyEvent, bool &needRepaint)
+{
+    // 返回 true 表示处理了方向键框选调整。
+    bool handledArrow = false;
+    // 是否按住 shift+ctrl
+    if (keyEvent->modifiers() == (Qt::ShiftModifier | Qt::ControlModifier)) {
+        if (keyEvent->key() == Qt::Key_Left) {
+            if (recordWidth > RECORD_MIN_SHOT_SIZE) {
+                recordX = std::max(0, recordX + 1);
+                recordWidth = std::max(std::min(recordWidth - 1, m_backgroundRect.width()), RECORD_MIN_SHOT_SIZE);
+                needRepaint = true;
+                selectAreaName = tr("select-area");
+            }
+            handledArrow = true;
+
+        } else if (keyEvent->key() == Qt::Key_Right) {
+            if (recordWidth > RECORD_MIN_SHOT_SIZE) {
+                recordWidth = std::max(std::min(recordWidth - 1, m_backgroundRect.width()), RECORD_MIN_SHOT_SIZE);
+                needRepaint = true;
+                selectAreaName = tr("select-area");
+            }
+            handledArrow = true;
+        } else if (keyEvent->key() == Qt::Key_Up) {
+            if (recordHeight > RECORD_MIN_SHOT_SIZE) {
+                recordY = std::max(0, recordY + 1);
+
+                recordHeight = std::max(std::min(recordHeight - 1, m_backgroundRect.height()), RECORD_MIN_SHOT_SIZE);
+                needRepaint = true;
+                selectAreaName = tr("select-area");
+            }
+            handledArrow = true;
+        } else if (keyEvent->key() == Qt::Key_Down) {
+            if (recordHeight > RECORD_MIN_SHOT_SIZE) {
+                recordHeight = std::max(std::min(recordHeight - 1, m_backgroundRect.height()), RECORD_MIN_SHOT_SIZE);
+                needRepaint = true;
+                selectAreaName = tr("select-area");
+            }
+            handledArrow = true;
+        }
+    }
+    // 是否只按住 ctrl
+    else if ((qApp->keyboardModifiers() == Qt::ControlModifier)) {
+        if (keyEvent->key() == Qt::Key_S) {
+            //                        expressSaveScreenshot();
+            saveScreenShot();
+        }
+
+        if (keyEvent->key() == Qt::Key_C) {
+            //                        ConfigSettings::instance()->setValue("save", "save_op",
+            //                        SaveAction::SaveToClipboard);
+            // m_copyToClipboard = true;
+            //                        saveScreenshot();
+            // saveScreenShot();
+        }
+        if (keyEvent->key() == Qt::Key_Left) {
+            recordX = std::max(0, recordX - 1);
+            recordWidth = std::min(recordWidth + 1, rootWindowRect.width());
+
+            needRepaint = true;
+            selectAreaName = tr("select-area");
+            handledArrow = true;
+        } else if (keyEvent->key() == Qt::Key_Right) {
+            if (recordX + recordWidth + 1 >= m_screenWidth) {
+                recordX = std::max(0, recordX - 1);
+            }
+            recordWidth = std::min(recordWidth + 1, rootWindowRect.width());
+
+            needRepaint = true;
+            selectAreaName = tr("select-area");
+            handledArrow = true;
+        } else if (keyEvent->key() == Qt::Key_Up) {
+            recordY = std::max(0, recordY - 1);
+            recordHeight = std::min(recordHeight + 1, rootWindowRect.height());
+
+            needRepaint = true;
+            selectAreaName = tr("select-area");
+            handledArrow = true;
+        } else if (keyEvent->key() == Qt::Key_Down) {
+            if (recordY + recordHeight + 1 >= m_screenHeight) {
+                recordY = std::max(0, recordY - 1);
+            }
+            recordHeight = std::min(recordHeight + 1, rootWindowRect.height());
+
+            needRepaint = true;
+            selectAreaName = tr("select-area");
+            handledArrow = true;
+        }
+    } else {
+        // 鼠标已经按下过但当前未按下时
+        if (!isPressMouseLeftButton && qApp->keyboardModifiers() == Qt::NoModifier) {
+            if (keyEvent->key() == Qt::Key_Left || keyEvent->key() == Qt::Key_A) {
+                recordX = std::max(0, recordX - 1);
+                needRepaint = true;
+                selectAreaName = tr("select-area");
+                handledArrow = true;
+            } else if (keyEvent->key() == Qt::Key_Right || keyEvent->key() == Qt::Key_D) {
+                recordX = std::min(m_backgroundRect.width() - recordWidth, recordX + 1);
+
+                needRepaint = true;
+                selectAreaName = tr("select-area");
+                handledArrow = true;
+            } else if (keyEvent->key() == Qt::Key_Up || keyEvent->key() == Qt::Key_W) {
+                recordY = std::max(0, recordY - 1);
+
+                needRepaint = true;
+                selectAreaName = tr("select-area");
+                handledArrow = true;
+            } else if (keyEvent->key() == Qt::Key_Down || keyEvent->key() == Qt::Key_S) {
+                recordY = std::min(m_backgroundRect.height() - recordHeight, recordY + 1);
+
+                needRepaint = true;
+                selectAreaName = tr("select-area");
+                handledArrow = true;
+            }
+        }
+    }
+
+    if (!m_needSaveScreenshot) {
+        m_sizeTips->updateTips(QPoint(recordX, recordY), QSize(recordWidth, recordHeight));
+        if (m_toolBar->isVisible()) {
+            updateToolBarPos();
+        }
+        if (m_sideBar->isVisible()) {
+            updateSideBarPos();
+        }
+        if (m_cameraWidget && m_cameraWidget->isVisible()) {
+            updateCameraWidgetPos();
+        }
+    }
+
+    return handledArrow;
 }
 
 void MainWindow::updateCursor(QEvent *event)
@@ -7738,6 +7919,8 @@ void MainWindow::initShapeWidget(QString type)
     } else {
         m_shapesWidget->setFixedSize(recordWidth - 4, recordHeight - 4);
         m_shapesWidget->move(recordX + 2, recordY + 2);
+        // 安装事件过滤器，使 MainWindow 能在标注态拦截 ShapesWidget 上的边缘命中鼠标事件（T1 依赖）
+        m_shapesWidget->installEventFilter(this);
     }
 
     QRect t_rect;

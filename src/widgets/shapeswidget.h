@@ -178,6 +178,23 @@ public slots:
     void setGlobalRect(QRect rect);
 
     /**
+     * @brief translateShapes: 平移全部标注图形坐标，保持其屏幕坐标不变
+     * @param delta 控件原点位移（recordX/Y 的变化量），图形局部坐标补偿 -delta
+     * @note effect（模糊/马赛克）图形按方案回滚点暂不平移，随控件移动
+     */
+    void translateShapes(const QPointF &delta);
+    /**
+     * @brief selectedIndex: 当前选中的标注图形索引
+     * @return m_selectedIndex，-1 表示无选中图形
+     */
+    int selectedIndex() const { return m_selectedIndex; }
+    /**
+     * @brief isPressed: 控件是否处于鼠标按下状态（正在绘制/拖拽图形）
+     * @return m_isPressed
+     */
+    bool isPressed() const { return m_isPressed; }
+
+    /**
      * @brief paintImage: 绘制图片
      * 将编辑的内容绘制到图片上
      */

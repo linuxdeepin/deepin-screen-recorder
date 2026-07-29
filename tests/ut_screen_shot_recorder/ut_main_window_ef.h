@@ -34,6 +34,12 @@ ACCESS_PRIVATE_FUN(MainWindow, int(QMouseEvent *, bool &), mouseMoveEF);
 ACCESS_PRIVATE_FUN(MainWindow, int(QKeyEvent *, bool &), keyPressEF);
 ACCESS_PRIVATE_FUN(MainWindow, int(QKeyEvent *, bool &), keyReleaseEF);
 ACCESS_PRIVATE_FUN(MainWindow, int(QWheelEvent *, bool &), wheelEF);
+ACCESS_PRIVATE_FUN(MainWindow, int(const QPoint &) const, getActionAt);
+ACCESS_PRIVATE_FUN(MainWindow, bool(QKeyEvent *, bool &), adjustSelectionByKey);
+ACCESS_PRIVATE_FIELD(MainWindow, int, m_cursorBound);
+ACCESS_PRIVATE_FIELD(MainWindow, QRect, m_backgroundRect);
+ACCESS_PRIVATE_FIELD(MainWindow, QRect, rootWindowRect);
+ACCESS_PRIVATE_FIELD(MainWindow, bool, m_needSaveScreenshot);
 
 class MainWindowEFTest : public Test
 {
@@ -153,4 +159,60 @@ TEST_F(MainWindowEFTest, wheelEFVertical)
         Qt::NoButton, Qt::NoModifier, Qt::NoScrollPhase, false);
     bool needRepaint = false;
     EXPECT_NO_FATAL_FAILURE(call_private_fun::MainWindowwheelEF(*m_w, &wheelEvent, needRepaint));
+}
+
+// ===================== 框选区域调整（V-628）单测 =====================
+
+// getActionAt：八方向边缘命中与内部判定
+TEST_F(MainWindowEFTest, getActionAtEdgeAndInterior)
+{
+    access_private_field::MainWindowrecordX(*m_w) = 100;
+    access_private_field::MainWindowrecordY(*m_w) = 100;
+    access_private_field::MainWindowrecordWidth(*m_w) = 200;
+    access_private_field::MainWindowrecordHeight(*m_w) = 150;
+    access_private_field::MainWindowm_cursorBound(*m_w) = 20;
+    // ACTION_RESIZE_TOP_LEFT=1, ACTION_RESIZE_LEFT=7, ACTION_MOVE=0, ACTION_RESIZE_BOTTOM_RIGHT=4
+    EXPECT_EQ(call_private_fun::MainWindowgetActionAt(*m_w, QPoint(100, 100)), 1);
+    EXPECT_EQ(call_private_fun::MainWindowgetActionAt(*m_w, QPoint(95, 175)), 7);
+    EXPECT_EQ(call_private_fun::MainWindowgetActionAt(*m_w, QPoint(200, 175)), 0);
+    EXPECT_EQ(call_private_fun::MainWindowgetActionAt(*m_w, QPoint(295, 245)), 4);
+}
+
+// adjustSelectionByKey：无修饰方向键平移框选区域
+TEST_F(MainWindowEFTest, adjustSelectionByKeyArrowMovesSelection)
+{
+    access_private_field::MainWindowrecordX(*m_w) = 100;
+    access_private_field::MainWindowrecordY(*m_w) = 100;
+    access_private_field::MainWindowrecordWidth(*m_w) = 200;
+    access_private_field::MainWindowrecordHeight(*m_w) = 150;
+    access_private_field::MainWindowm_backgroundRect(*m_w) = QRect(0, 0, 1920, 1080);
+    access_private_field::MainWindowrootWindowRect(*m_w) = QRect(0, 0, 1920, 1080);
+    access_private_field::MainWindowm_needSaveScreenshot(*m_w) = false;
+
+    QKeyEvent keyEvent(QEvent::KeyPress, Qt::Key_Right, Qt::NoModifier);
+    bool needRepaint = false;
+    EXPECT_NO_FATAL_FAILURE(call_private_fun::MainWindowadjustSelectionByKey(*m_w, &keyEvent, needRepaint));
+    EXPECT_EQ(access_private_field::MainWindowrecordX(*m_w), 101);
+}
+
+// keyPressEF：标注态无选中图形时方向键调框选（D3①）
+TEST_F(MainWindowEFTest, keyPressEFAnnotNoSelectionAdjustsSelection)
+{
+    access_private_field::MainWindowrecordX(*m_w) = 100;
+    access_private_field::MainWindowrecordY(*m_w) = 100;
+    access_private_field::MainWindowrecordWidth(*m_w) = 200;
+    access_private_field::MainWindowrecordHeight(*m_w) = 150;
+    access_private_field::MainWindowm_backgroundRect(*m_w) = QRect(0, 0, 1920, 1080);
+    access_private_field::MainWindowrootWindowRect(*m_w) = QRect(0, 0, 1920, 1080);
+    access_private_field::MainWindowm_needSaveScreenshot(*m_w) = false;
+    access_private_field::MainWindowm_isShapesWidgetExist(*m_w) = true;
+
+    // 无选中图形（selectedIndex() == -1）
+    ShapesWidget *sw = new ShapesWidget(m_w);
+    access_private_field::MainWindowm_shapesWidget(*m_w) = sw;
+
+    QKeyEvent keyEvent(QEvent::KeyPress, Qt::Key_Right, Qt::NoModifier);
+    bool needRepaint = false;
+    EXPECT_NO_FATAL_FAILURE(call_private_fun::MainWindowkeyPressEF(*m_w, &keyEvent, needRepaint));
+    EXPECT_EQ(access_private_field::MainWindowrecordX(*m_w), 101);
 }

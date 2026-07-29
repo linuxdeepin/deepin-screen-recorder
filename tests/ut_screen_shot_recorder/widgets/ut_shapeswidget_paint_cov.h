@@ -110,3 +110,53 @@ TEST_F(ShapesWidgetPaintCovTest, paintEmpty)
 {
     EXPECT_NO_FATAL_FAILURE(paintOnce());
 }
+
+// ===================== translateShapes（V-628 T3）=====================
+
+TEST_F(ShapesWidgetPaintCovTest, translateShapesShiftsNonEffectShapes)
+{
+    Toolshape rect;
+    rect.type = "rectangle";
+    rect.mainPoints = { QPointF(10, 10), QPointF(10, 50), QPointF(50, 10), QPointF(50, 50) };
+    rect.points = { QPointF(20, 20), QPointF(30, 30) };
+
+    access_private_field::ShapesWidgetm_shapes(*m_w) = { rect };
+
+    m_w->translateShapes(QPointF(5, 7));
+
+    const Toolshapes &shapes = access_private_field::ShapesWidgetm_shapes(*m_w);
+    EXPECT_EQ(shapes[0].mainPoints[0], QPointF(5, 3));
+    EXPECT_EQ(shapes[0].mainPoints[3], QPointF(45, 43));
+    EXPECT_EQ(shapes[0].points[0], QPointF(15, 13));
+    EXPECT_EQ(shapes[0].points[1], QPointF(25, 23));
+}
+
+TEST_F(ShapesWidgetPaintCovTest, translateShapesSkipsEffectShapes)
+{
+    Toolshape eff;
+    eff.type = "effect";
+    eff.mainPoints = { QPointF(10, 10), QPointF(10, 50), QPointF(50, 10), QPointF(50, 50) };
+
+    access_private_field::ShapesWidgetm_shapes(*m_w) = { eff };
+
+    m_w->translateShapes(QPointF(5, 7));
+
+    const Toolshapes &shapes = access_private_field::ShapesWidgetm_shapes(*m_w);
+    EXPECT_EQ(shapes[0].mainPoints[0], QPointF(10, 10));
+    EXPECT_EQ(shapes[0].mainPoints[3], QPointF(50, 50));
+}
+
+TEST_F(ShapesWidgetPaintCovTest, translateShapesZeroDeltaNoChange)
+{
+    Toolshape rect;
+    rect.type = "rectangle";
+    rect.mainPoints = { QPointF(10, 10), QPointF(10, 50), QPointF(50, 10), QPointF(50, 50) };
+
+    access_private_field::ShapesWidgetm_shapes(*m_w) = { rect };
+
+    m_w->translateShapes(QPointF(0, 0));
+
+    const Toolshapes &shapes = access_private_field::ShapesWidgetm_shapes(*m_w);
+    EXPECT_EQ(shapes[0].mainPoints[0], QPointF(10, 10));
+    EXPECT_EQ(shapes[0].mainPoints[3], QPointF(50, 50));
+}
