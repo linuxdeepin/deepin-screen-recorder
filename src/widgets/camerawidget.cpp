@@ -1,5 +1,5 @@
 // Copyright (C) 2020 ~ 2021 Uniontech Software Technology Co.,Ltd.
-// SPDX-FileCopyrightText: 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2022-2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -208,7 +208,10 @@ void CameraWidget::restartDevices()
 void CameraWidget::cameraStop()
 {
     qCDebug(dsrApp) << "cameraStop called";
-    m_cameraUI->clear();
+    // m_cameraUI 可能为 nullptr（未走完整初始化或测试场景），clear() 会段错误。
+    if (m_cameraUI) {
+        m_cameraUI->clear();
+    }
 
     if (m_imgPrcThread != nullptr) {
         qCDebug(dsrApp) << "Stopping image processing thread";

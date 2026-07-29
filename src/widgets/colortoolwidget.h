@@ -1,5 +1,5 @@
 // Copyright (C) 2020 ~ 2021 Uniontech Software Technology Co.,Ltd.
-// SPDX-FileCopyrightText: 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2022-2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -39,10 +39,10 @@ private:
     QGridLayout *m_baseLayout;
     bool m_isChecked;
     QString m_function;
-    ToolButton *m_redBtn;
-    ToolButton *m_yellowBtn;
-    ToolButton *m_blueBtn;
-    ToolButton *m_greenBtn;
+    // 注意：原 m_redBtn/m_yellowBtn/m_blueBtn/m_greenBtn 成员自首次提交以来从未在
+    // colortoolwidget.cpp 中赋值或使用，属于死代码。未初始化的裸指针会被单元测试
+    // 通过 ACCESS_PRIVATE_FIELD 读取到垃圾值并解引用导致段错误。这些字段已在
+    // initColorLabel() 中由 m_colorButtonGroup 统一管理，此处删除以免误用。
     /**
      * @brief 颜色按钮：key:颜色名称 value:按钮对象
      */

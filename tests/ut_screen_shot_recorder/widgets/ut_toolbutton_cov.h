@@ -10,6 +10,7 @@
 #include <QMoveEvent>
 #include <QResizeEvent>
 #include <QMenu>
+#include <QTimer>
 #include <QSignalSpy>
 #include <QImage>
 #include <QPainter>
@@ -126,7 +127,9 @@ TEST_F(ToolButtonCovTest, mousePressReleaseWithMenu)
     EXPECT_NO_FATAL_FAILURE(QApplication::sendEvent(m_btn, &press));
     QMouseEvent release(QEvent::MouseButtonRelease, QPointF(5, 5),
                         Qt::LeftButton, Qt::LeftButton, Qt::NoModifier);
-    // showMenu() is invoked; hide immediately to avoid blocking
+    // offscreen 平台下 setMenu + 鼠标释放会触发 showMenu() 的模态事件循环，
+    // 无真实用户输入时会无限 hang。提前用 0 延迟定时器关闭菜单打破阻塞。
+    QTimer::singleShot(0, &menu, &QMenu::hide);
     EXPECT_NO_FATAL_FAILURE(QApplication::sendEvent(m_btn, &release));
     if (menu.isVisible()) {
         menu.hide();

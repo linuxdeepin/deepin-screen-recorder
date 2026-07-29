@@ -142,13 +142,11 @@ TEST_F(UtilsCov2Test, isSysGreatEqualV23IsCallable)
 
 static void waitForFinished_stub(QProcess *) { return; }
 static QByteArray readAllStandardOutput_stub() { return QByteArray("Vendor ID: GenuineIntel\n"); }
-static void close_stub(QProcess *) { return; }
 
 TEST_F(UtilsCov2Test, checkCpuIsZhaoxinNoCentaurReturnsFalse)
 {
     stub.set(ADDR(QProcess, waitForFinished), waitForFinished_stub);
     stub.set(ADDR(QProcess, readAllStandardOutput), readAllStandardOutput_stub);
-    stub.set(ADDR(QProcess, close), close_stub);
     bool v = true;
     EXPECT_NO_FATAL_FAILURE(v = Utils::checkCpuIsZhaoxin());
     EXPECT_FALSE(v);
@@ -160,7 +158,6 @@ TEST_F(UtilsCov2Test, checkCpuIsZhaoxinWithCentaurReturnsTrue)
 {
     stub.set(ADDR(QProcess, waitForFinished), waitForFinished_stub);
     stub.set(ADDR(QProcess, readAllStandardOutput), readAllZhaoxin_stub);
-    stub.set(ADDR(QProcess, close), close_stub);
     bool v = false;
     EXPECT_NO_FATAL_FAILURE(v = Utils::checkCpuIsZhaoxin());
     EXPECT_TRUE(v);

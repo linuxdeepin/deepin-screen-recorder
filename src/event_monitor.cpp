@@ -1,5 +1,5 @@
 // Copyright (C) 2020 ~ 2021 Uniontech Software Technology Co.,Ltd.
-// SPDX-FileCopyrightText: 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2022-2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -132,14 +132,31 @@ void EventMonitor::callback(XPointer ptr, XRecordInterceptData *data)
     qCDebug(dsrApp) << "callback method called.";
     (reinterpret_cast<EventMonitor *>(ptr))->handleEvent(data);
     qCDebug(dsrApp) << "handleEvent called from callback.";
+    // XRecord 交给 callback 的 data 由 XRecord 库分配，需在此释放。
+    // 注意：原先 XRecordFreeData 放在 handleEvent 末尾，但 handleEvent 也会被
+    // 测试直接用栈上结构体调用，导致 munmap_chunk() 崩溃。移到 callback 这里
+    // 确保只有 XRecord 库分配的数据才被释放。
+    XRecordFreeData(data);
+    qCDebug(dsrApp) << "XRecord data freed.";
 }
 
 void EventMonitor::handleEvent(XRecordInterceptData *data)
 {
     qCDebug(dsrApp) << "handleEvent method called.";
+    // data 可能为 nullptr（测试或异常回调），后续解引用会段错误。
+    if (!data) {
+        qCWarning(dsrApp) << "handleEvent: data is null, abort.";
+        return;
+    }
     if (data->category == XRecordFromServer) {
         qCDebug(dsrApp) << "Event received from server.";
 
+        // data->data 在异常/测试场景下可能为 nullptr，后续 reinterpret_cast 后
+        // 解引用 event->u.u.type 会段错误，需提前判空。
+        if (!data->data) {
+            qCWarning(dsrApp) << "handleEvent: data->data is null, abort.";
+            return;
+        }
         xEvent *event = reinterpret_cast<xEvent *>(data->data);
         switch (event->u.u.type) {
         case ButtonPress:
@@ -217,8 +234,8 @@ void EventMonitor::handleEvent(XRecordInterceptData *data)
     }
 
     fflush(stdout);
-    XRecordFreeData(data);
-    qCDebug(dsrApp) << "XRecord data freed.";
+    // XRecordFreeData 已移至 callback()：handleEvent 也会被测试直接用栈上
+    // 结构体调用，在这里释放会触发 munmap_chunk() 崩溃。
     qCDebug(dsrApp) << "handleEvent method finished.";
 }
 
