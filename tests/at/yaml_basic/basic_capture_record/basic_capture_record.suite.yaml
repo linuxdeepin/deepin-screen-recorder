@@ -1,0 +1,488 @@
+name: basic_capture_record_suite
+app: deepin-screen-recorder
+description: 截图录屏基础可用性：快捷键启动截图、框选区域、工具栏保存文件
+module: basic_capture_record
+tags:
+- at
+- basic
+- screenshot
+fast_fail: true
+env_check: []
+setup:
+- action: session_start
+  command: |
+    bash -lc 'rm -rf /tmp/youqu_dsr_basic; mkdir -p /tmp/youqu_dsr_basic/out; rm -f /tmp/youqu_dsr_basic_*.ok;
+    cat > /tmp/youqu_dsr_basic/click_at_name.py <<"PY"
+    import gi, re, subprocess, sys, time
+    gi.require_version("Atspi", "2.0")
+    from gi.repository import Atspi
+    name=sys.argv[1]
+    def dpi_scale():
+        try:
+            out=subprocess.check_output(["xrdb", "-query"], text=True)
+            m=re.search(r"Xft\.dpi:\s*([0-9.]+)", out)
+            return float(m.group(1))/96.0 if m else 1.0
+        except Exception:
+            return 1.0
+    def find_by_name(target_name):
+        desktop=Atspi.get_desktop(0)
+        stack=[desktop]
+        while stack:
+            o=stack.pop()
+            try:
+                if (o.get_name() or "") == target_name:
+                    return o
+                for i in range(o.get_child_count()):
+                    stack.append(o.get_child_at_index(i))
+            except Exception:
+                pass
+        return None
+    target=None
+    for _ in range(20):
+        target=find_by_name(name)
+        if target:
+            break
+        time.sleep(0.3)
+    assert target is not None, name + " did not appear"
+    e=target.get_extents(Atspi.CoordType.SCREEN)
+    scale=dpi_scale()
+    x=int(round((e.x + e.width / 2) * scale))
+    y=int(round((e.y + e.height / 2) * scale))
+    subprocess.check_call(["xdotool", "mousemove", str(x), str(y), "click", "1"])
+    PY
+    cat > /tmp/youqu_dsr_basic/assert_at_name.py <<"PY"
+    import gi, sys, time
+    gi.require_version("Atspi", "2.0")
+    from gi.repository import Atspi
+    name=sys.argv[1]
+    def find_by_name(target_name):
+        desktop=Atspi.get_desktop(0)
+        stack=[desktop]
+        while stack:
+            o=stack.pop()
+            try:
+                if (o.get_name() or "") == target_name:
+                    return True
+                for i in range(o.get_child_count()):
+                    stack.append(o.get_child_at_index(i))
+            except Exception:
+                pass
+        return False
+    for _ in range(20):
+        if find_by_name(name):
+            sys.exit(0)
+        time.sleep(0.3)
+    raise AssertionError(name + " did not appear")
+    PY
+    cat > /tmp/youqu_dsr_basic/check_clipboard_image.py <<"PY"
+    import ctypes, os, time
+    from ctypes import c_char_p, c_int, c_uint, c_ulong, c_long, c_ubyte, c_void_p, POINTER, byref
+    lib=ctypes.cdll.LoadLibrary("libX11.so.6")
+    Display_p=c_void_p; Window=c_ulong; Atom=c_ulong
+    class XSelectionEvent(ctypes.Structure):
+        _fields_=[("type", c_int), ("serial", c_ulong), ("send_event", c_int), ("display", Display_p), ("requestor", Window), ("selection", Atom), ("target", Atom), ("property", Atom), ("time", c_ulong)]
+    class XEvent(ctypes.Union):
+        _fields_=[("type", c_int), ("xselection", XSelectionEvent), ("pad", c_long*24)]
+    lib.XOpenDisplay.argtypes=[c_char_p]; lib.XOpenDisplay.restype=Display_p
+    lib.XDefaultRootWindow.argtypes=[Display_p]; lib.XDefaultRootWindow.restype=Window
+    lib.XCreateSimpleWindow.argtypes=[Display_p, Window, c_int, c_int, c_uint, c_uint, c_uint, c_ulong, c_ulong]; lib.XCreateSimpleWindow.restype=Window
+    lib.XInternAtom.argtypes=[Display_p, c_char_p, c_int]; lib.XInternAtom.restype=Atom
+    lib.XConvertSelection.argtypes=[Display_p, Atom, Atom, Atom, Window, c_ulong]
+    lib.XFlush.argtypes=[Display_p]
+    lib.XPending.argtypes=[Display_p]; lib.XPending.restype=c_int
+    lib.XNextEvent.argtypes=[Display_p, POINTER(XEvent)]
+    lib.XGetWindowProperty.argtypes=[Display_p, Window, Atom, c_long, c_long, c_int, Atom, POINTER(Atom), POINTER(c_int), POINTER(c_ulong), POINTER(c_ulong), POINTER(POINTER(c_ubyte))]
+    lib.XGetWindowProperty.restype=c_int
+    lib.XGetAtomName.argtypes=[Display_p, Atom]; lib.XGetAtomName.restype=c_char_p
+    lib.XFree.argtypes=[c_void_p]
+    d=lib.XOpenDisplay(os.environ.get("DISPLAY", ":0").encode()); assert d, "cannot open X display"
+    root=lib.XDefaultRootWindow(d); win=lib.XCreateSimpleWindow(d, root, 0, 0, 1, 1, 0, 0, 0)
+    clipboard=lib.XInternAtom(d, b"CLIPBOARD", 0); targets=lib.XInternAtom(d, b"TARGETS", 0); prop=lib.XInternAtom(d, b"YOUQU_CLIPBOARD_TARGETS", 0)
+    lib.XConvertSelection(d, clipboard, targets, prop, win, 0); lib.XFlush(d)
+    ev=XEvent(); deadline=time.time()+5
+    while time.time() < deadline:
+        if lib.XPending(d):
+            lib.XNextEvent(d, byref(ev))
+            if ev.type == 31:
+                break
+        time.sleep(0.05)
+    else:
+        raise AssertionError("no SelectionNotify from system clipboard")
+    assert ev.xselection.property != 0, "clipboard refused TARGETS conversion"
+    actual_type=Atom(); actual_format=c_int(); nitems=c_ulong(); bytes_after=c_ulong(); data=POINTER(c_ubyte)()
+    rc=lib.XGetWindowProperty(d, win, prop, 0, 4096, 0, 0, byref(actual_type), byref(actual_format), byref(nitems), byref(bytes_after), byref(data))
+    assert rc == 0 and nitems.value > 0 and actual_format.value == 32, f"cannot read clipboard TARGETS: rc={rc}, type={actual_type.value}, fmt={actual_format.value}, n={nitems.value}"
+    atoms=(Atom*nitems.value).from_address(ctypes.addressof(data.contents))
+    names=[]
+    for a in atoms:
+        n=lib.XGetAtomName(d, a)
+        if n:
+            names.append(n.decode(errors="replace"))
+    lib.XFree(data)
+    wanted={"image/png", "image/bmp", "image/jpeg", "application/x-qt-image", "application/octet-stream"}
+    assert any(n in wanted or n.startswith("image/") for n in names), "clipboard has no image target: " + ",".join(names)
+    open(os.environ.get("YOUQU_CLIPBOARD_MARKER", "/tmp/youqu_dsr_basic_clipboard.ok"), "w").write("\n".join(names))
+    PY'
+  wait: 0.5
+suites:
+- id: basic_hotkey_select_region_toolbar_save_button
+  name: Ctrl+Alt+A 启动截图并框选后工具栏显示保存按钮
+  tags:
+  - screenshot
+  - toolbar
+  steps:
+  - action: session_start
+    command: |
+      bash -lc 'export DISPLAY=${DISPLAY:-:0}; export XAUTHORITY=${XAUTHORITY:-$HOME/.Xauthority};
+      rm -f /tmp/youqu_dsr_basic_toolbar.ok;
+      gdbus call --session --dest com.deepin.ScreenRecorder --object-path /com/deepin/ScreenRecorder --method com.deepin.ScreenRecorder.stopApp >/dev/null 2>&1 || true;
+      sleep 0.5;
+      xdotool key --clearmodifiers ctrl+alt+a;
+      sleep 1.2;
+      xdotool mousemove 320 220 mousedown 1;
+      sleep 0.1;
+      xdotool mousemove 920 620 mouseup 1;
+      sleep 1.0;
+      python3 /tmp/youqu_dsr_basic/assert_at_name.py save_local_button;
+      touch /tmp/youqu_dsr_basic_toolbar.ok'
+    wait: 10.0
+  assert_steps:
+  - action: assert_file_exists
+    path: /tmp/youqu_dsr_basic_toolbar.ok
+  - action: keyboard_press
+    key: escape
+    wait: 0.3
+
+- id: basic_hotkey_select_region_save_file
+  name: Ctrl+Alt+A 启动截图，框选区域后点击工具栏保存并生成图片
+  tags:
+  - screenshot
+  - toolbar
+  - save
+  steps:
+  - action: session_start
+    command: |
+      bash -lc 'export DISPLAY=${DISPLAY:-:0}; export XAUTHORITY=${XAUTHORITY:-$HOME/.Xauthority};
+      rm -f /tmp/youqu_dsr_basic_region_save.ok;
+      rm -f /tmp/youqu_dsr_basic/out/*;
+      python3 <<"PY"
+      import configparser, os, shutil
+      p=os.path.expanduser("~/.config/deepin/deepin-screen-recorder/deepin-screen-recorder.conf")
+      bak="/tmp/youqu_dsr_basic/deepin-screen-recorder.conf.bak"
+      os.makedirs(os.path.dirname(bak), exist_ok=True)
+      if os.path.exists(p):
+          shutil.copy2(p, bak)
+      c=configparser.ConfigParser()
+      c.read(p)
+      if not c.has_section("shot"):
+          c.add_section("shot")
+      c.set("shot", "save_ways", "1")
+      c.set("shot", "save_op", "3")
+      c.set("shot", "save_dir", "/tmp/youqu_dsr_basic/out")
+      c.set("shot", "save_dir_change", "false")
+      c.set("shot", "format", "0")
+      with open(p, "w") as f:
+          c.write(f)
+      PY
+      gdbus call --session --dest com.deepin.ScreenRecorder --object-path /com/deepin/ScreenRecorder --method com.deepin.ScreenRecorder.stopApp >/dev/null 2>&1 || true;
+      sleep 0.5;
+      xdotool key --clearmodifiers ctrl+alt+a;
+      sleep 1.2;
+      xdotool mousemove 320 220 mousedown 1;
+      sleep 0.1;
+      xdotool mousemove 920 620 mouseup 1;
+      sleep 1.0;
+      python3 <<"PY"
+      import gi, os, re, subprocess, time
+      gi.require_version("Atspi", "2.0")
+      from gi.repository import Atspi
+
+      def dpi_scale():
+          try:
+              out=subprocess.check_output(["xrdb", "-query"], text=True)
+              m=re.search(r"Xft\.dpi:\s*([0-9.]+)", out)
+              return float(m.group(1))/96.0 if m else 1.0
+          except Exception:
+              return 1.0
+
+      def find_by_name(name):
+          desktop=Atspi.get_desktop(0)
+          stack=[desktop]
+          while stack:
+              o=stack.pop()
+              try:
+                  if (o.get_name() or "") == name:
+                      return o
+                  for i in range(o.get_child_count()):
+                      stack.append(o.get_child_at_index(i))
+              except Exception:
+                  pass
+          return None
+
+      target=None
+      for _ in range(20):
+          target=find_by_name("save_local_button")
+          if target:
+              break
+          time.sleep(0.3)
+      assert target is not None, "screenshot toolbar save button did not appear"
+      e=target.get_extents(Atspi.CoordType.SCREEN)
+      scale=dpi_scale()
+      x=int(round((e.x + e.width / 2) * scale))
+      y=int(round((e.y + e.height / 2) * scale))
+      subprocess.check_call(["xdotool", "mousemove", str(x), str(y), "click", "1"])
+      PY
+      for i in $(seq 1 110); do
+        f=$(find /tmp/youqu_dsr_basic/out -type f \( -name "*.png" -o -name "*.jpg" -o -name "*.jpeg" \) | head -n 1);
+        if [ -n "$f" ] && [ -s "$f" ]; then
+          python3 - "$f" <<"PY"
+      import sys
+      from PIL import Image
+      p=sys.argv[1]
+      img=Image.open(p)
+      assert img.width > 10 and img.height > 10, (img.width, img.height)
+      open("/tmp/youqu_dsr_basic_region_save.ok", "w").write(p)
+      PY
+          exit 0;
+        fi;
+        sleep 0.5;
+      done;
+      exit 1'
+    wait: 45.0
+  assert_steps:
+  - action: assert_file_exists
+    path: /tmp/youqu_dsr_basic_region_save.ok
+
+- id: basic_hotkey_select_region_autoname_twice
+  name: 指定目录连续保存两次截图会生成两个有效图片文件
+  tags:
+  - screenshot
+  - save
+  - filename
+  steps:
+  - action: session_start
+    command: |
+      bash -lc 'export DISPLAY=${DISPLAY:-:0}; export XAUTHORITY=${XAUTHORITY:-$HOME/.Xauthority};
+      rm -f /tmp/youqu_dsr_basic_autoname.ok;
+      rm -rf /tmp/youqu_dsr_basic/autoname; mkdir -p /tmp/youqu_dsr_basic/autoname;
+      python3 -c "import configparser, os, shutil; p=os.path.expanduser(\"~/.config/deepin/deepin-screen-recorder/deepin-screen-recorder.conf\"); bak=\"/tmp/youqu_dsr_basic/deepin-screen-recorder.conf.bak\"; os.makedirs(os.path.dirname(bak), exist_ok=True); (os.path.exists(p) and not os.path.exists(bak)) and shutil.copy2(p,bak); c=configparser.ConfigParser(); c.read(p); (not c.has_section(\"shot\")) and c.add_section(\"shot\"); c.set(\"shot\",\"save_ways\",\"1\"); c.set(\"shot\",\"save_op\",\"3\"); c.set(\"shot\",\"save_dir\",\"/tmp/youqu_dsr_basic/autoname\"); c.set(\"shot\",\"save_dir_change\",\"false\"); c.set(\"shot\",\"format\",\"0\"); open(p,\"w\").write(\"\".join([\"[\"+s+\"]\\n\"+\"\".join(k+\"=\"+v+\"\\n\" for k,v in c[s].items())+\"\\n\" for s in c.sections()]))";
+      for n in 1 2; do
+        gdbus call --session --dest com.deepin.ScreenRecorder --object-path /com/deepin/ScreenRecorder --method com.deepin.ScreenRecorder.stopApp >/dev/null 2>&1 || true;
+        sleep 0.5;
+        xdotool key --clearmodifiers ctrl+alt+a;
+        sleep 1.2;
+        xdotool mousemove $((320+n*20)) $((220+n*20)) mousedown 1;
+        sleep 0.1;
+        xdotool mousemove $((880+n*20)) $((580+n*20)) mouseup 1;
+        sleep 1.0;
+        python3 /tmp/youqu_dsr_basic/click_at_name.py save_local_button;
+        sleep 1.0;
+      done;
+      python3 <<"PY"
+      import pathlib
+      from PIL import Image
+      files=sorted([p for p in pathlib.Path("/tmp/youqu_dsr_basic/autoname").iterdir() if p.suffix.lower() in (".png", ".jpg", ".jpeg")])
+      assert len(files) >= 2, files
+      names={p.name for p in files}
+      assert len(names) >= 2, names
+      for p in files[:2]:
+          img=Image.open(p)
+          assert img.width > 10 and img.height > 10, (p, img.width, img.height)
+      open("/tmp/youqu_dsr_basic_autoname.ok", "w").write("\n".join(str(p) for p in files[:2]))
+      PY'
+    wait: 35.0
+  assert_steps:
+  - action: assert_file_exists
+    path: /tmp/youqu_dsr_basic_autoname.ok
+
+- id: basic_hotkey_select_region_save_format_png
+  name: 指定目录保存 PNG 格式截图
+  tags:
+  - screenshot
+  - save
+  - format
+  - png
+  steps:
+  - action: session_start
+    command: |
+      bash -lc 'export DISPLAY=${DISPLAY:-:0}; export XAUTHORITY=${XAUTHORITY:-$HOME/.Xauthority};
+      rm -f /tmp/youqu_dsr_basic_format_png.ok; outdir=/tmp/youqu_dsr_basic/formats/png; rm -rf "$outdir"; mkdir -p "$outdir";
+      python3 -c "import configparser, os, shutil, sys; p=os.path.expanduser(\"~/.config/deepin/deepin-screen-recorder/deepin-screen-recorder.conf\"); bak=\"/tmp/youqu_dsr_basic/deepin-screen-recorder.conf.bak\"; os.makedirs(os.path.dirname(bak), exist_ok=True); (os.path.exists(p) and not os.path.exists(bak)) and shutil.copy2(p,bak); c=configparser.ConfigParser(); c.read(p); (not c.has_section(\"shot\")) and c.add_section(\"shot\"); c.set(\"shot\",\"save_ways\",\"1\"); c.set(\"shot\",\"save_op\",\"3\"); c.set(\"shot\",\"save_dir\",sys.argv[1]); c.set(\"shot\",\"save_dir_change\",\"false\"); c.set(\"shot\",\"format\",\"0\"); open(p,\"w\").write(\"\".join([\"[\"+s+\"]\\n\"+\"\".join(k+\"=\"+v+\"\\n\" for k,v in c[s].items())+\"\\n\" for s in c.sections()]))" "$outdir";
+      gdbus call --session --dest com.deepin.ScreenRecorder --object-path /com/deepin/ScreenRecorder --method com.deepin.ScreenRecorder.stopApp >/dev/null 2>&1 || true; sleep 0.5;
+      xdotool key --clearmodifiers ctrl+alt+a; sleep 1.2; xdotool mousemove 340 240 mousedown 1; sleep 0.1; xdotool mousemove 900 600 mouseup 1; sleep 1.0;
+      python3 /tmp/youqu_dsr_basic/click_at_name.py save_local_button; sleep 1.0;
+      f=$(find "$outdir" -type f -name "*.png" | head -n 1); [ -n "$f" ] && [ -s "$f" ] || exit 1;
+      python3 -c "import sys; from PIL import Image; img=Image.open(sys.argv[1]); assert img.width > 10 and img.height > 10; assert img.format == \"PNG\"; open(\"/tmp/youqu_dsr_basic_format_png.ok\", \"w\").write(sys.argv[1])" "$f"'
+    wait: 45.0
+  assert_steps:
+  - action: assert_file_exists
+    path: /tmp/youqu_dsr_basic_format_png.ok
+
+- id: basic_hotkey_select_region_save_format_jpg
+  name: 指定目录保存 JPG 格式截图
+  tags:
+  - screenshot
+  - save
+  - format
+  - jpg
+  steps:
+  - action: session_start
+    command: |
+      bash -lc 'export DISPLAY=${DISPLAY:-:0}; export XAUTHORITY=${XAUTHORITY:-$HOME/.Xauthority};
+      rm -f /tmp/youqu_dsr_basic_format_jpg.ok; outdir=/tmp/youqu_dsr_basic/formats/jpg; rm -rf "$outdir"; mkdir -p "$outdir";
+      python3 -c "import configparser, os, shutil, sys; p=os.path.expanduser(\"~/.config/deepin/deepin-screen-recorder/deepin-screen-recorder.conf\"); bak=\"/tmp/youqu_dsr_basic/deepin-screen-recorder.conf.bak\"; os.makedirs(os.path.dirname(bak), exist_ok=True); (os.path.exists(p) and not os.path.exists(bak)) and shutil.copy2(p,bak); c=configparser.ConfigParser(); c.read(p); (not c.has_section(\"shot\")) and c.add_section(\"shot\"); c.set(\"shot\",\"save_ways\",\"1\"); c.set(\"shot\",\"save_op\",\"3\"); c.set(\"shot\",\"save_dir\",sys.argv[1]); c.set(\"shot\",\"save_dir_change\",\"false\"); c.set(\"shot\",\"format\",\"1\"); open(p,\"w\").write(\"\".join([\"[\"+s+\"]\\n\"+\"\".join(k+\"=\"+v+\"\\n\" for k,v in c[s].items())+\"\\n\" for s in c.sections()]))" "$outdir";
+      gdbus call --session --dest com.deepin.ScreenRecorder --object-path /com/deepin/ScreenRecorder --method com.deepin.ScreenRecorder.stopApp >/dev/null 2>&1 || true; sleep 0.5;
+      xdotool key --clearmodifiers ctrl+alt+a; sleep 1.2; xdotool mousemove 340 240 mousedown 1; sleep 0.1; xdotool mousemove 900 600 mouseup 1; sleep 1.0;
+      python3 /tmp/youqu_dsr_basic/click_at_name.py save_local_button; sleep 1.0;
+      f=$(find "$outdir" -type f -name "*.jpg" | head -n 1); [ -n "$f" ] && [ -s "$f" ] || exit 1;
+      python3 -c "import sys; from PIL import Image; img=Image.open(sys.argv[1]); assert img.width > 10 and img.height > 10; assert img.format == \"JPEG\"; open(\"/tmp/youqu_dsr_basic_format_jpg.ok\", \"w\").write(sys.argv[1])" "$f"'
+    wait: 45.0
+  assert_steps:
+  - action: assert_file_exists
+    path: /tmp/youqu_dsr_basic_format_jpg.ok
+
+- id: basic_hotkey_select_region_save_format_bmp
+  name: 指定目录保存 BMP 格式截图
+  tags:
+  - screenshot
+  - save
+  - format
+  - bmp
+  steps:
+  - action: session_start
+    command: |
+      bash -lc 'export DISPLAY=${DISPLAY:-:0}; export XAUTHORITY=${XAUTHORITY:-$HOME/.Xauthority};
+      rm -f /tmp/youqu_dsr_basic_format_bmp.ok; outdir=/tmp/youqu_dsr_basic/formats/bmp; rm -rf "$outdir"; mkdir -p "$outdir";
+      python3 -c "import configparser, os, shutil, sys; p=os.path.expanduser(\"~/.config/deepin/deepin-screen-recorder/deepin-screen-recorder.conf\"); bak=\"/tmp/youqu_dsr_basic/deepin-screen-recorder.conf.bak\"; os.makedirs(os.path.dirname(bak), exist_ok=True); (os.path.exists(p) and not os.path.exists(bak)) and shutil.copy2(p,bak); c=configparser.ConfigParser(); c.read(p); (not c.has_section(\"shot\")) and c.add_section(\"shot\"); c.set(\"shot\",\"save_ways\",\"1\"); c.set(\"shot\",\"save_op\",\"3\"); c.set(\"shot\",\"save_dir\",sys.argv[1]); c.set(\"shot\",\"save_dir_change\",\"false\"); c.set(\"shot\",\"format\",\"2\"); open(p,\"w\").write(\"\".join([\"[\"+s+\"]\\n\"+\"\".join(k+\"=\"+v+\"\\n\" for k,v in c[s].items())+\"\\n\" for s in c.sections()]))" "$outdir";
+      gdbus call --session --dest com.deepin.ScreenRecorder --object-path /com/deepin/ScreenRecorder --method com.deepin.ScreenRecorder.stopApp >/dev/null 2>&1 || true; sleep 0.5;
+      xdotool key --clearmodifiers ctrl+alt+a; sleep 1.2; xdotool mousemove 340 240 mousedown 1; sleep 0.1; xdotool mousemove 900 600 mouseup 1; sleep 1.0;
+      python3 /tmp/youqu_dsr_basic/click_at_name.py save_local_button; sleep 1.0;
+      f=$(find "$outdir" -type f -name "*.bmp" | head -n 1); [ -n "$f" ] && [ -s "$f" ] || exit 1;
+      python3 -c "import sys; from PIL import Image; img=Image.open(sys.argv[1]); assert img.width > 10 and img.height > 10; assert img.format == \"BMP\"; open(\"/tmp/youqu_dsr_basic_format_bmp.ok\", \"w\").write(sys.argv[1])" "$f"'
+    wait: 45.0
+  assert_steps:
+  - action: assert_file_exists
+    path: /tmp/youqu_dsr_basic_format_bmp.ok
+
+- id: basic_hotkey_select_region_enter_copy_clipboard
+  name: Ctrl+Alt+A 启动截图，框选区域后按 Enter 复制到系统剪贴板
+  tags:
+  - screenshot
+  - clipboard
+  - keyboard
+  steps:
+  - action: session_start
+    command: |
+      bash -lc 'export DISPLAY=${DISPLAY:-:0}; export XAUTHORITY=${XAUTHORITY:-$HOME/.Xauthority};
+      rm -f /tmp/youqu_dsr_basic_enter_clipboard.ok;
+      python3 -c "import configparser, os, shutil; p=os.path.expanduser(\"~/.config/deepin/deepin-screen-recorder/deepin-screen-recorder.conf\"); bak=\"/tmp/youqu_dsr_basic/deepin-screen-recorder.conf.bak\"; os.makedirs(os.path.dirname(bak), exist_ok=True); (os.path.exists(p) and not os.path.exists(bak)) and shutil.copy2(p,bak); c=configparser.ConfigParser(); c.read(p); (not c.has_section(\"shot\")) and c.add_section(\"shot\"); c.set(\"shot\",\"save_ways\",\"1\"); c.set(\"shot\",\"save_op\",\"0\"); c.set(\"shot\",\"save_dir_change\",\"false\"); c.set(\"shot\",\"format\",\"0\"); open(p,\"w\").write(\"\".join([\"[\"+s+\"]\\n\"+\"\".join(k+\"=\"+v+\"\\n\" for k,v in c[s].items())+\"\\n\" for s in c.sections()]))";
+      gdbus call --session --dest com.deepin.ScreenRecorder --object-path /com/deepin/ScreenRecorder --method com.deepin.ScreenRecorder.stopApp >/dev/null 2>&1 || true;
+      sleep 0.5;
+      xdotool key --clearmodifiers ctrl+alt+a;
+      sleep 1.2;
+      xdotool mousemove 330 230 mousedown 1;
+      sleep 0.1;
+      xdotool mousemove 900 600 mouseup 1;
+      sleep 1.0;
+      python3 /tmp/youqu_dsr_basic/assert_at_name.py save_local_button;
+      xdotool key --clearmodifiers Return;
+      sleep 1.5;
+      YOUQU_CLIPBOARD_MARKER=/tmp/youqu_dsr_basic_enter_clipboard.ok python3 /tmp/youqu_dsr_basic/check_clipboard_image.py'
+    wait: 45.0
+  assert_steps:
+  - action: assert_file_exists
+    path: /tmp/youqu_dsr_basic_enter_clipboard.ok
+
+- id: basic_hotkey_select_region_double_click_copy_clipboard
+  name: Ctrl+Alt+A 启动截图，框选区域后双击选区复制到系统剪贴板
+  tags:
+  - screenshot
+  - clipboard
+  - mouse
+  steps:
+  - action: session_start
+    command: |
+      bash -lc 'export DISPLAY=${DISPLAY:-:0}; export XAUTHORITY=${XAUTHORITY:-$HOME/.Xauthority};
+      rm -f /tmp/youqu_dsr_basic_double_click_clipboard.ok;
+      python3 -c "import configparser, os, shutil; p=os.path.expanduser(\"~/.config/deepin/deepin-screen-recorder/deepin-screen-recorder.conf\"); bak=\"/tmp/youqu_dsr_basic/deepin-screen-recorder.conf.bak\"; os.makedirs(os.path.dirname(bak), exist_ok=True); (os.path.exists(p) and not os.path.exists(bak)) and shutil.copy2(p,bak); c=configparser.ConfigParser(); c.read(p); (not c.has_section(\"shot\")) and c.add_section(\"shot\"); c.set(\"shot\",\"save_ways\",\"1\"); c.set(\"shot\",\"save_op\",\"0\"); c.set(\"shot\",\"save_dir_change\",\"false\"); c.set(\"shot\",\"format\",\"0\"); open(p,\"w\").write(\"\".join([\"[\"+s+\"]\\n\"+\"\".join(k+\"=\"+v+\"\\n\" for k,v in c[s].items())+\"\\n\" for s in c.sections()]))";
+      gdbus call --session --dest com.deepin.ScreenRecorder --object-path /com/deepin/ScreenRecorder --method com.deepin.ScreenRecorder.stopApp >/dev/null 2>&1 || true;
+      sleep 0.5;
+      xdotool key --clearmodifiers ctrl+alt+a;
+      sleep 1.2;
+      xdotool mousemove 330 230 mousedown 1;
+      sleep 0.1;
+      xdotool mousemove 900 600 mouseup 1;
+      sleep 1.0;
+      python3 /tmp/youqu_dsr_basic/assert_at_name.py save_local_button;
+      xdotool mousemove 610 415 click --repeat 2 --delay 120 1;
+      sleep 1.5;
+      YOUQU_CLIPBOARD_MARKER=/tmp/youqu_dsr_basic_double_click_clipboard.ok python3 /tmp/youqu_dsr_basic/check_clipboard_image.py'
+    wait: 45.0
+  assert_steps:
+  - action: assert_file_exists
+    path: /tmp/youqu_dsr_basic_double_click_clipboard.ok
+
+- id: basic_record_region_save_mp4
+  name: Ctrl+Alt+R 启动录屏，框选区域后按 Enter 开始录制，再按 Ctrl+Alt+R 停止并生成 MP4 文件
+  tags:
+  - record
+  - mp4
+  - save
+  steps:
+  - action: session_start
+    command: |
+      bash -lc 'export DISPLAY=${DISPLAY:-:0}; export XAUTHORITY=${XAUTHORITY:-$HOME/.Xauthority};
+      rm -f /tmp/youqu_dsr_basic_record_mp4.ok;
+      rm -rf /tmp/youqu_dsr_basic/record; mkdir -p /tmp/youqu_dsr_basic/record;
+      python3 -c "import configparser, os, shutil; p=os.path.expanduser(\"~/.config/deepin/deepin-screen-recorder/deepin-screen-recorder.conf\"); bak=\"/tmp/youqu_dsr_basic/deepin-screen-recorder.conf.bak\"; os.makedirs(os.path.dirname(bak), exist_ok=True); (os.path.exists(p) and not os.path.exists(bak)) and shutil.copy2(p,bak); c=configparser.ConfigParser(); c.read(p); (not c.has_section(\"recorder\")) and c.add_section(\"recorder\"); c.set(\"recorder\",\"format\",\"1\"); c.set(\"recorder\",\"frame_rate\",\"5\"); c.set(\"recorder\",\"save_op\",\"0\"); c.set(\"recorder\",\"save_dir\",\"/tmp/youqu_dsr_basic/record\"); c.set(\"recorder\",\"audio\",\"0\"); c.set(\"recorder\",\"cursor\",\"0\"); open(p,\"w\").write(\"\".join([\"[\"+s+\"]\\n\"+\"\".join(k+\"=\"+v+\"\\n\" for k,v in c[s].items())+\"\\n\" for s in c.sections()]))";
+      gdbus call --session --dest com.deepin.ScreenRecorder --object-path /com/deepin/ScreenRecorder --method com.deepin.ScreenRecorder.stopRecord >/dev/null 2>&1 || true;
+      gdbus call --session --dest com.deepin.ScreenRecorder --object-path /com/deepin/ScreenRecorder --method com.deepin.ScreenRecorder.stopApp >/dev/null 2>&1 || true;
+      sleep 0.5'
+    wait: 2.0
+  - action: session_start
+    command: |
+      bash -lc 'export DISPLAY=${DISPLAY:-:0}; export XAUTHORITY=${XAUTHORITY:-$HOME/.Xauthority}; xdotool key --clearmodifiers ctrl+alt+r'
+    wait: 1.5
+  - action: session_start
+    command: |
+      bash -lc 'export DISPLAY=${DISPLAY:-:0}; export XAUTHORITY=${XAUTHORITY:-$HOME/.Xauthority};
+      xdotool mousemove 360 260 mousedown 1;
+      sleep 0.1;
+      xdotool mousemove 660 500 mouseup 1'
+    wait: 1.5
+  - action: session_start
+    command: |
+      bash -lc 'export DISPLAY=${DISPLAY:-:0}; export XAUTHORITY=${XAUTHORITY:-$HOME/.Xauthority}; xdotool key --clearmodifiers Return'
+    wait: 10.0
+  - action: session_start
+    command: |
+      bash -lc 'export DISPLAY=${DISPLAY:-:0}; export XAUTHORITY=${XAUTHORITY:-$HOME/.Xauthority}; xdotool key --clearmodifiers ctrl+alt+r'
+    wait: 2.0
+  assert_steps:
+  - action: session_start
+    command: |
+      bash -lc 'for i in $(seq 1 60); do
+        if ! pgrep -f "ffmpeg.*x11grab|ffmpeg.*Screen Recordings" >/dev/null 2>&1; then
+          f=$(find "/tmp/youqu_dsr_basic/record/Screen Recordings" -type f -name "*.mp4" 2>/dev/null | head -n 1);
+          if [ -n "$f" ] && [ -s "$f" ]; then echo "$f" > /tmp/youqu_dsr_basic_record_mp4.ok; exit 0; fi;
+        fi;
+        sleep 0.5;
+      done;
+      f=$(find "/tmp/youqu_dsr_basic/record/Screen Recordings" -type f -name "*.mp4" 2>/dev/null | head -n 1);
+      [ -n "$f" ] && [ -s "$f" ] && echo "$f" > /tmp/youqu_dsr_basic_record_mp4.ok'
+    wait: 35.0
+  - action: assert_file_exists
+    path: /tmp/youqu_dsr_basic_record_mp4.ok
+
+teardown:
+- action: session_start
+  command: |
+    bash -lc 'export DISPLAY=${DISPLAY:-:0}; export XAUTHORITY=${XAUTHORITY:-$HOME/.Xauthority};
+    if [ -f /tmp/youqu_dsr_basic/deepin-screen-recorder.conf.bak ]; then
+      mkdir -p "$HOME/.config/deepin/deepin-screen-recorder";
+      cp /tmp/youqu_dsr_basic/deepin-screen-recorder.conf.bak "$HOME/.config/deepin/deepin-screen-recorder/deepin-screen-recorder.conf";
+    fi;
+    xdotool key --clearmodifiers Escape >/dev/null 2>&1 || true;
+    gdbus call --session --dest com.deepin.ScreenRecorder --object-path /com/deepin/ScreenRecorder --method com.deepin.ScreenRecorder.stopApp >/dev/null 2>&1 || true'
+  wait: 0.5
+- action: session_stop
