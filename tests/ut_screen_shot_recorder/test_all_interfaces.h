@@ -3,12 +3,6 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 
 #pragma once
-//#include "waylandrecord/ut_avinputstream.h"
-//#include "waylandrecord/ut_avoutputstream.h"
-//#include "waylandrecord/ut_recordadmin.h"
-//#include "waylandrecord/ut_waylandintegration.h"
-//#include "waylandrecord/ut_waylandintegration_p.h"
-//#include "waylandrecord/ut_writeframethread.h"
 //#include "widgets/ut_shapeswidget.h" // API drift: paintRect/paintEllipse
 // signatures now take an extra `int radius`, paintText is overloaded, and the
 // test references a non-existent Toolshape::isStraight field. Re-enable after
