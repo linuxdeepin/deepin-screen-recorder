@@ -175,13 +175,6 @@ HEADERS += test_all_interfaces.h \
         #../../src/lib/GifH/gif.h \
         #../../src/xgifrecord.h \
         ../../src/recordertablet.h \
-     #../../src/waylandrecord/writeframethread.h \
-     #../../src/waylandrecord/waylandintegration.h \
-     #../../src/waylandrecord/waylandintegration_p.h \
-     #../../src/waylandrecord/recordadmin.h \
-     #../../src/waylandrecord/avoutputstream.h \
-     #../../src/waylandrecord/avinputstream.h \
-     #../../src/waylandrecord/avlibinterface.h \
         widgets/ut_shapeswidget.h \
         widgets/ut_toptips.h \
         widgets/ut_camerawidget.h \
@@ -202,12 +195,6 @@ HEADERS += test_all_interfaces.h \
     widgets/ut_scrollshottip.h \
     utils/ut_pixmergethread.h \
     utils/ut_scrollScreenshot.h \
-    #waylandrecord/ut_avinputstream.h \
-    #waylandrecord/ut_avoutputstream.h \
-    #waylandrecord/ut_recordadmin.h \
-    #waylandrecord/ut_waylandintegration_p.h \
-    #waylandrecord/ut_waylandintegration.h \
-    #waylandrecord/ut_writeframethread.h \
     utils/ut_voiceVolumeWatcher.h \
     utils/ut_WaylandScrollMonitor.h \
     ext-image-capture/ut_extcaptureframebuffer.h \
@@ -382,12 +369,6 @@ SOURCES += main.cpp \
     ../../src/ext-image-capture/manager/extcapturemanager.cpp \
     ../../src/ext-image-capture/manager/extoutputsourcemanager.cpp \
     ../../src/ext-image-capture/session/extcapturesession.cpp \
-    #../../src/waylandrecord/writeframethread.cpp \
-    #../../src/waylandrecord/waylandintegration.cpp \
-    #../../src/waylandrecord/recordadmin.cpp \
-    #../../src/waylandrecord/avinputstream.cpp \
-    #../../src/waylandrecord/avoutputstream.cpp \
-    #../../src/waylandrecord/avlibinterface.cpp \
     ../../src/menucontroller/menucontroller.cpp \
     ../../src/dbusinterface/dbusnotify.cpp \
     ../../src/dbusinterface/ocrinterface.cpp \
