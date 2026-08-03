@@ -41,7 +41,7 @@ QT += multimediawidgets
 QT += concurrent openglwidgets
 QT += svg
 QT += waylandclient-private
-LIBS += -lX11 -lXext -lXtst -lXfixes -lXcursor -lgtest -lopencv_small -lavcodec -lavdevice -lavfilter -lavformat -lavutil -lswscale -lswresample -lepoxy -lKWaylandClient -lgbm -lXinerama -ludev -lv4l2 -lv4lconvert -lv4l1
+LIBS += -lX11 -lXext -lXtst -lXfixes -lXcursor -lgtest -lopencv_small -lavcodec -lavdevice -lavfilter -lavformat -lavutil -lswscale -lswresample -lepoxy -lKWaylandClient -lgbm -lXinerama -ludev -lv4l2 -lv4lconvert -lv4l1 -lgobject-2.0
 # libcam 静态库内部引用 udev_* / v4l2_* 符号，但本二进制没有直接引用，
 # 默认 --as-needed 链接会丢弃 libudev/libv4l2.so 导致运行时 undefined symbol
 # 段错误。强制 --no-as-needed 保留这些 NEEDED 条目。
@@ -312,7 +312,12 @@ HEADERS += test_all_interfaces.h \
     ut_show_buttons_cov.h \
     ut_recordertablet_cov.h \
     menucontroller/ut_menucontroller_cov.h \
-    dbusinterface/ut_dbusinterface_cov.h
+    dbusinterface/ut_dbusinterface_cov.h \
+    # --- P1: 启用孤儿测试头 ---
+    widgets/ut_colorbutton.h \
+    gstrecord/ut_gstrecordx.h \
+    # --- P1: 补入对应源码头（moc）---
+    ../../src/widgets/colorbutton.h
 
 
 SOURCES += main.cpp \
@@ -410,4 +415,6 @@ SOURCES += main.cpp \
     ../../src/utils/proxyaudioport.cpp \
     ../../src/utils/x_multi_screen_info.cpp \
     ../../src/dbusservice/dbusscreenshot.cpp \
-    ../../src/dbusservice/dbusscreenshotservice.cpp
+    ../../src/dbusservice/dbusscreenshotservice.cpp \
+    # --- P1: 启用孤儿测试，补入对应源文件 ---
+    ../../src/widgets/colorbutton.cpp

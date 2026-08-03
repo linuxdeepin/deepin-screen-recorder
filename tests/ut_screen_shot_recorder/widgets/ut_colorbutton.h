@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2022-2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -7,7 +7,7 @@
 #include <QColor>
 #include <QDebug>
 #include <gtest/gtest.h>
-#include "../widgets/colorbutton.h"
+#include "../../src/widgets/colorbutton.h"
 
 
 using namespace testing;

@@ -165,4 +165,11 @@
 //#include "ut_protocols_extimg_cov2.h"  // ACCESS_PRIVATE_STATIC_FUN macro can't handle QtWayland:: namespaced classes
 // ut_wayland_stub.h: Qt 的 QWaylandClientExtension 生成的 wrapper 方法在 manager
 // 未绑定真实合成器时于 Qt6Core 内部 SEGV(T3)，宏守卫+wl 桩均无法绕过，已禁用。
+// --- P1: 启用孤儿测试 ---
+#include "widgets/ut_colorbutton.h"
+#include "gstrecord/ut_gstrecordx.h"
+// 以下孤儿测试已删除（测试对应的源码类在主项目中已无任何外部引用，属历史遗留
+// 死代码，且源码自身存在 ConfigSettings::value/drawTooltipBackground 等 API 漂移）：
+// widgets/ut_majtoolbar.h / widgets/ut_subtoolbar.h / ut_record_option_panel.h
+// utils/ut_screenutils.h / ut_process_tree_ext.h
 
