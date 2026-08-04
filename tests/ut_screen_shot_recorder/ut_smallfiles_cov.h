@@ -44,6 +44,18 @@ TEST(ZoomIndicatorGLCovTest, constructAndShow)
     }
 }
 
+// ZoomIndicatorGL 析构函数：堆分配后 delete 触发 deleting destructor (D0)。
+// 既有用例只构造不析构，这里补上析构覆盖。
+TEST(ZoomIndicatorGLCovTest, heapDestructor)
+{
+    ZoomIndicatorGL *g = nullptr;
+    EXPECT_NO_FATAL_FAILURE(g = new ZoomIndicatorGL());
+    if (g) {
+        EXPECT_NO_FATAL_FAILURE(g->hide());
+        EXPECT_NO_FATAL_FAILURE(delete g);
+    }
+}
+
 // ---------- AiAssistantInterface (0%) ----------
 TEST(AiAssistantInterfaceCovTest, constructAndCall)
 {
@@ -148,4 +160,19 @@ TEST(AIAssistantWidgetCovTest, onToolButtonClickedEmitsSignal)
     }
     EXPECT_GE(spy.count(), 4);
     delete w;
+}
+
+// ---------- voicevolumewatcher_interface destructor (0%) ----------
+// voicevolumewatcher_interface is a QDBusAbstractInterface subclass.
+// Heap-allocate + delete to trigger the deleting destructor (D0).
+TEST(VoiceVolumeWatcherInterfaceCovTest, heapDestructor)
+{
+    voicevolumewatcher_interface *iface = nullptr;
+    EXPECT_NO_FATAL_FAILURE(iface = new voicevolumewatcher_interface(
+        QStringLiteral("com.deepin.daemon.Audio"),
+        QStringLiteral("/com/deepin/daemon/Audio"),
+        QDBusConnection::sessionBus()));
+    if (iface) {
+        EXPECT_NO_FATAL_FAILURE(delete iface);
+    }
 }
