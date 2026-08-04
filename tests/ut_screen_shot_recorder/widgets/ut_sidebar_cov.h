@@ -187,3 +187,15 @@ TEST_F(SideBarCovTest, isAIModeReflectsCurrentFunc)
     }
     SUCCEED();
 }
+
+// SideBarWidget::paintEvent: public override that delegates to
+// DFloatingWidget::paintEvent(e). Trigger via show() + repaint().
+TEST_F(SideBarCovTest, sideBarWidgetPaintEventRunsClean)
+{
+    SideBarWidget *inner = m_bar->findChild<SideBarWidget *>();
+    ASSERT_NE(inner, nullptr);
+    inner->resize(100, 50);
+    inner->show();
+    EXPECT_NO_FATAL_FAILURE(inner->repaint());
+    inner->hide();
+}
