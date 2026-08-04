@@ -130,3 +130,13 @@ TEST_F(ScrollScreenshotTest, ScrollScreenshotOthers)
     m_ScrollScreenshot->getInvalidArea();
     m_ScrollScreenshot->setTimeAndCalculateTimeDiff(77942255);
 }
+
+// addLastPixmap: 滚动截图添加最后一张图片，调用 setTimeAndCalculateTimeDiff
+// 并设置 isLastImg 标记。传入有效 QPixmap 应正常返回。
+TEST_F(ScrollScreenshotTest, addLastPixmapRunsClean)
+{
+    QPixmap pix(10, 10);
+    pix.fill(Qt::blue);
+    m_ScrollScreenshot->setScrollModel(false);
+    EXPECT_NO_FATAL_FAILURE(m_ScrollScreenshot->addLastPixmap(pix));
+}

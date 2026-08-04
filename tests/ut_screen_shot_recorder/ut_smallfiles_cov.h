@@ -81,6 +81,23 @@ TEST(SliderCovTest, construct)
     delete s;
 }
 
+// Slider 析构函数（inline）与 enterEvent 覆盖。
+// 源码缺陷：leaveEvent 解引用 m_lastCursorShape->shape()，当 qApp->overrideCursor()
+// 为空时空指针解引用崩溃（leaveEvent 无空指针保护）。
+// 本用例仅覆盖 enterEvent 与析构函数，避免 leaveEvent 崩溃。
+TEST(SliderCovTest, enterEventAndDestructor)
+{
+    qApp->setOverrideCursor(Qt::IBeamCursor);
+    Slider *s = new Slider(nullptr);
+    s->resize(50, 50);
+    QEnterEvent enter(QPointF(5, 5), QPointF(5, 5), QPointF(5, 5));
+    EXPECT_NO_FATAL_FAILURE(qApp->sendEvent(s, &enter));
+    EXPECT_NO_FATAL_FAILURE(delete s);
+    while (qApp->overrideCursor()) {
+        qApp->restoreOverrideCursor();
+    }
+}
+
 // ---------- utils_interface (3.1%) ----------
 TEST(UtilsInterfaceCovTest, constructAndProps)
 {

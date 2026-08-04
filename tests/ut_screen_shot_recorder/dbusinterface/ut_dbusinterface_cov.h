@@ -135,3 +135,14 @@ TEST_F(DBusInterfaceCovTest, notifyStaticInterfaceNameAndClose)
     EXPECT_STREQ(DBusNotify::staticInterfaceName(), "org.freedesktop.Notifications");
     EXPECT_NO_FATAL_FAILURE(notify.CloseNotification(7u));
 }
+
+// PinScreenShotsInterface 析构函数覆盖：堆分配后 delete 触发 deleting destructor (D0)。
+// 既有用例都是栈对象，只走 base-object destructor (D2)。
+TEST_F(DBusInterfaceCovTest, pinScreenshotsHeapDestructor)
+{
+    PinScreenShotsInterface *p = new PinScreenShotsInterface(
+        QStringLiteral("com.deepin.PinScreenShots"),
+        QStringLiteral("/com/deepin/PinScreenShots"),
+        QDBusConnection::sessionBus());
+    EXPECT_NO_FATAL_FAILURE(delete p);
+}
