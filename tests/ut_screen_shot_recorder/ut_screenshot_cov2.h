@@ -237,3 +237,15 @@ TEST_F(ScreenShotCov2Test, delayScreenshotTimerLambdasFire)
         loop.exec();
     }
 }
+
+// ScrollScreenshot: 检查 DWindowManagerHelper::hasBlurWindow。
+// 如果 hasBlurWindow 返回 true，调用 MainWindow 入口点（已 stub）。
+// 如果返回 false，调用 qApp->quit() — 不安全。
+// stub hasBlurWindow 返回 true 使其走 true 分支。
+static bool hasBlurWindow_stub() { return true; }
+TEST_F(ScreenShotCov2Test, scrollScreenshotWithBlurWindow)
+{
+    Stub localStub;
+    localStub.set(ADDR(DWindowManagerHelper, hasBlurWindow), hasBlurWindow_stub);
+    EXPECT_NO_FATAL_FAILURE(m_shot->ScrollScreenshot());
+}

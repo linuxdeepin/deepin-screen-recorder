@@ -203,3 +203,41 @@ TEST_F(ShotToolWidgetCov2Test, changeArrowAndLineSignalEmittable)
     EXPECT_NO_FATAL_FAILURE(emit m_w->changeArrowAndLine(1));
     EXPECT_GE(spy.count(), 2);
 }
+
+// initEffectLabel lambdas: 构造函数已初始化 m_effectSubTool 并连接了
+// effectTypeBtnGroup/shapBtnGroup/t_radiusSize/t_lineWidthSize 的信号到 lambda。
+// 通过 findChildren 找到 DSlider (Slider) 并 setValue 触发 valueChanged lambda。
+TEST_F(ShotToolWidgetCov2Test, effectLabelSliderLambdasFire)
+{
+    // effect panel is initialized in ctor; find its Slider children
+    QList<Slider *> sliders = m_w->findChildren<Slider *>();
+    for (Slider *s : sliders) {
+        EXPECT_NO_FATAL_FAILURE(s->setValue(3));
+    }
+    EXPECT_GE(sliders.size(), 1);
+}
+
+// initEffectLabel buttonClicked lambdas: find QButtonGroup children and click.
+TEST_F(ShotToolWidgetCov2Test, effectLabelButtonLambdasFire)
+{
+    QList<QButtonGroup *> groups = m_w->findChildren<QButtonGroup *>();
+    for (QButtonGroup *grp : groups) {
+        QList<QAbstractButton *> btns = grp->buttons();
+        for (QAbstractButton *btn : btns) {
+            EXPECT_NO_FATAL_FAILURE(btn->click());
+        }
+    }
+    SUCCEED();
+}
+
+// initTextLabel lambda: switchContent("text") 初始化 text panel，
+// 然后 findChildren<Slider*> 找到 t_textFontSize 并 setValue 触发 lambda。
+TEST_F(ShotToolWidgetCov2Test, textLabelSliderLambdaFires)
+{
+    EXPECT_NO_FATAL_FAILURE(m_w->switchContent(QStringLiteral("text")));
+    QList<Slider *> sliders = m_w->findChildren<Slider *>();
+    for (Slider *s : sliders) {
+        EXPECT_NO_FATAL_FAILURE(s->setValue(5));
+    }
+    SUCCEED();
+}

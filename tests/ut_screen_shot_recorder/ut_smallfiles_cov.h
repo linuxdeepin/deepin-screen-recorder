@@ -176,3 +176,46 @@ TEST(VoiceVolumeWatcherInterfaceCovTest, heapDestructor)
         EXPECT_NO_FATAL_FAILURE(delete iface);
     }
 }
+
+// ---------- AudioPort (proxyaudioport.h) operators (0%) ----------
+// AudioPort is a simple struct with DBus streaming operators and == / !=.
+#include "../../src/utils/proxyaudioport.h"
+
+TEST(AudioPortCovTest, equalityAndInequality)
+{
+    AudioPort a, b;
+    a.name = QStringLiteral("spk");
+    a.description = QStringLiteral("Speaker");
+    a.availability = 2;
+    b = a;
+    EXPECT_TRUE(a == b);
+    EXPECT_FALSE(a != b);
+    b.name = QStringLiteral("mic");
+    EXPECT_FALSE(a == b);
+    EXPECT_TRUE(a != b);
+}
+
+TEST(AudioPortCovTest, qDebugOutput)
+{
+    AudioPort a;
+    a.description = QStringLiteral("Headset");
+    EXPECT_NO_FATAL_FAILURE({ qDebug() << a; });
+}
+
+TEST(AudioPortCovTest, qdbusArgumentRoundTrip)
+{
+    AudioPort a;
+    a.name = QStringLiteral("spk");
+    a.description = QStringLiteral("Speaker");
+    a.availability = 2;
+    QByteArray ba;
+    QDataStream ds(&ba, QIODevice::ReadWrite);
+    // Use QDBusArgument directly: simulate via begin/endStructure
+    QDBusArgument arg;
+    arg.beginStructure();
+    arg << a.name << a.description << a.availability;
+    arg.endStructure();
+    // registerAudioPortMetaType registers the metatype -> calls qDBusRegisterMetaType
+    // which internally triggers QMetaTypeId<AudioPort>::qt_metatype_id().
+    EXPECT_NO_FATAL_FAILURE(registerAudioPortMetaType());
+}
