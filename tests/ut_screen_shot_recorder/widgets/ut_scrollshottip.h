@@ -167,5 +167,12 @@ TEST_F(ScrollShotTipTest, drawTooltipBackground)
     qreal opacity = 0.3;
     int radius = 20;
     call_private_fun::ScrollShotTipdrawTooltipBackground(*scrollShotTip, painter, rect, textColor, opacity, radius);
+}
 
+// setBackgroundPixmap: public method，将 pixmap 赋值给 m_backgroundPixmap。
+TEST_F(ScrollShotTipTest, setBackgroundPixmapStoresValue)
+{
+    QPixmap pix(100, 100);
+    pix.fill(Qt::green);
+    EXPECT_NO_FATAL_FAILURE(scrollShotTip->setBackgroundPixmap(pix));
 }
