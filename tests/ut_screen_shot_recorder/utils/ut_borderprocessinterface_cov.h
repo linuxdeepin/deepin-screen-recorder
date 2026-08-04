@@ -188,3 +188,30 @@ TEST_F(BorderProcessCovTest, shadowLargeImageBlurPath)
     EXPECT_NO_FATAL_FAILURE(out = p.getPixmapAddBorder(makePix(200, 200)));
     EXPECT_FALSE(out.isNull());
 }
+
+// === 析构函数覆盖：通过基类指针 delete 触发 deleting destructor (D0) ===
+// 栈对象只走 base-object destructor (D2)，堆对象经基类指针 delete 才触发 D0。
+
+TEST_F(BorderProcessCovTest, deleteBaseInterfaceTriggersDestructor)
+{
+    BorderProcessInterface *p = new ExternalBorderProcess();
+    EXPECT_NO_FATAL_FAILURE(delete p);
+}
+
+TEST_F(BorderProcessCovTest, deleteExternalTriggersDestructor)
+{
+    BorderProcessInterface *p = new ExternalBorderProcess();
+    EXPECT_NO_FATAL_FAILURE(delete p);
+}
+
+TEST_F(BorderProcessCovTest, deletePrototypeTriggersDestructor)
+{
+    BorderProcessInterface *p = new PrototypeBorderProcess();
+    EXPECT_NO_FATAL_FAILURE(delete p);
+}
+
+TEST_F(BorderProcessCovTest, deleteShadowTriggersDestructor)
+{
+    BorderProcessInterface *p = new ShadowBorderProcess();
+    EXPECT_NO_FATAL_FAILURE(delete p);
+}
