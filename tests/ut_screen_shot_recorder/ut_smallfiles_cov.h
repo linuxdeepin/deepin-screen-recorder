@@ -130,3 +130,22 @@ TEST(UtilsInterfaceCovTest, constructAndProps)
         EXPECT_NO_FATAL_FAILURE(iface->SetPortEnabled(0, QStringLiteral("p"), true));
     }
 }
+
+// ---------- AIAssistantWidget::onToolButtonClicked (0%) ----------
+// onToolButtonClicked is a private slot that emits functionSelected(AIFunction).
+// It's invokable via QMetaObject::invokeMethod with the slot name. Cover all 4 enum values.
+#include "../../src/widgets/aiassistantwidget.h"
+TEST(AIAssistantWidgetCovTest, onToolButtonClickedEmitsSignal)
+{
+    AIAssistantWidget *w = nullptr;
+    EXPECT_NO_FATAL_FAILURE(w = new AIAssistantWidget());
+    if (!w) { GTEST_SKIP() << "AIAssistantWidget construction failed"; }
+    QSignalSpy spy(w, &AIAssistantWidget::functionSelected);
+    for (int i = 0; i < 4; ++i) {
+        EXPECT_NO_FATAL_FAILURE(
+            QMetaObject::invokeMethod(w, "onToolButtonClicked",
+                                       Qt::DirectConnection, Q_ARG(int, i)));
+    }
+    EXPECT_GE(spy.count(), 4);
+    delete w;
+}

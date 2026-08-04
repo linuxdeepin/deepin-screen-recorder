@@ -82,3 +82,13 @@ TEST_F(RecorderRegionShowExtTest, RepeatedSetDeviceNameDoesNotLeak)
         EXPECT_NO_FATAL_FAILURE(m_region->setDevcieName(QString::number(i)));
     }
 }
+
+// paintEvent: show() + repaint() 在 offscreen 平台触发 paintEvent。
+// m_painter->begin(this) 在已显示的 widget 上应能获取 paint device。
+TEST_F(RecorderRegionShowExtTest, paintEventViaShowAndRepaint)
+{
+    m_region->resize(100, 100);
+    m_region->show();
+    EXPECT_NO_FATAL_FAILURE(m_region->repaint());
+    m_region->hide();
+}

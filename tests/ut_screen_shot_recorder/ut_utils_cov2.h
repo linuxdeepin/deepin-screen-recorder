@@ -206,11 +206,12 @@ TEST_F(UtilsCov2Test, instanceReturnsNonNull)
 
 static int exec_stub(DDialog *) { return 0; }
 
-#if 0 // DISABLED-BLOCK
+#if 0 // DISABLED-BLOCK — DDialog constructor crashes in offscreen mode
 TEST_F(UtilsCov2Test, notSupportWarnIsCrashFreeWithStubbedExec)
 {
-    stub.set(ADDR(DDialog, exec), exec_stub);
-    // FIX-COMMENTED: EXPECT_NO_FATAL_FAILURE(call_private_fun::UtilsnotSupportWarn());
+    Stub localStub;
+    localStub.set(ADDR(DDialog, exec), exec_stub);
+    EXPECT_NO_FATAL_FAILURE(Utils::notSupportWarn());
 }
 #endif
 
