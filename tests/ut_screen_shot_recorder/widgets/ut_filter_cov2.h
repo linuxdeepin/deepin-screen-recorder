@@ -84,6 +84,13 @@ TEST_F(FilterCov2Test, hintFilterEnterWithHintWidgetNoDelay)
     m_w->setProperty("HintWidget", QVariant::fromValue<QWidget *>(hint));
     QEvent ev(QEvent::Enter);
     EXPECT_NO_FATAL_FAILURE(m_hint->eventFilter(m_w, &ev));
+    // Flush the TimerSingleShot(10ms) callback before deleting hint to avoid
+    // a use-after-free when a later test spins the event loop.
+    {
+        QEventLoop loop;
+        QTimer::singleShot(50, &loop, &QEventLoop::quit);
+        loop.exec();
+    }
     delete hint;
 }
 
@@ -94,6 +101,13 @@ TEST_F(FilterCov2Test, hintFilterEnterWithHintWidgetDelay)
     m_w->setProperty("HintWidget", QVariant::fromValue<QWidget *>(hint));
     QEvent ev(QEvent::Enter);
     EXPECT_NO_FATAL_FAILURE(m_hint->eventFilter(m_w, &ev));
+    // Flush the delayShowTimer(1000ms) callback before deleting hint to avoid
+    // a use-after-free when a later test spins the event loop.
+    {
+        QEventLoop loop;
+        QTimer::singleShot(1100, &loop, &QEventLoop::quit);
+        loop.exec();
+    }
     delete hint;
 }
 
@@ -201,4 +215,41 @@ TEST_F(FilterCov2Test, repeatedConstructDestruct)
         delete hf;
     }
     SUCCEED();
+}
+
+// Lambda #1: showHint 中的 DUtil::TimerSingleShot(10, lambda) 回调。
+// 触发路径: Enter 事件 + NoDelayShow=true -> showHint(d->hintWidget) -> TimerSingleShot。
+// 需 spin 事件循环 >10ms 以触发异步 lambda。
+TEST_F(FilterCov2Test, hintFilterShowHintTimerLambdaFires)
+{
+    QWidget *hint = new QWidget;
+    hint->setProperty("NoDelayShow", true);
+    m_w->setProperty("HintWidget", QVariant::fromValue<QWidget *>(hint));
+    QEvent enter(QEvent::Enter);
+    EXPECT_NO_FATAL_FAILURE(m_hint->eventFilter(m_w, &enter));
+    // spin event loop to let TimerSingleShot(10ms) fire
+    {
+        QEventLoop loop;
+        QTimer::singleShot(50, &loop, &QEventLoop::quit);
+        loop.exec();
+    }
+    delete hint;
+}
+
+// Lambda #2: HintFilter 构造函数中 delayShowTimer->timeout 连接的 lambda。
+// 触发路径: Enter 事件 + NoDelayShow=false -> delayShowTimer->start() -> timeout lambda。
+// delayShowTimer interval = 1000ms; spin event loop >1s 以触发。
+TEST_F(FilterCov2Test, hintFilterDelayShowTimerLambdaFires)
+{
+    QWidget *hint = new QWidget;
+    m_w->setProperty("HintWidget", QVariant::fromValue<QWidget *>(hint));
+    QEvent enter(QEvent::Enter);
+    EXPECT_NO_FATAL_FAILURE(m_hint->eventFilter(m_w, &enter));
+    // spin event loop for >1s to fire the 1000ms delayShowTimer
+    {
+        QEventLoop loop;
+        QTimer::singleShot(1100, &loop, &QEventLoop::quit);
+        loop.exec();
+    }
+    delete hint;
 }

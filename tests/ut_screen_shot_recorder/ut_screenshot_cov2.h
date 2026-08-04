@@ -36,6 +36,7 @@ using namespace testing;
 
 // DEDUP-REMOVED: ACCESS_PRIVATE_FIELD(Screenshot, MainWindow, m_window);
 ACCESS_PRIVATE_FUN(Screenshot, bool() const, isRecording);
+ACCESS_PRIVATE_FIELD(Screenshot, bool, m_isCustomScreenshot);
 
 class ScreenShotCov2Test : public Test
 {
@@ -188,4 +189,30 @@ TEST_F(ScreenShotCov2Test, getRecorderNormalIconReturnsString)
     QString r;
     EXPECT_NO_FATAL_FAILURE(r = m_shot->getRecorderNormalIcon());
     EXPECT_TRUE(r.isEmpty() || !r.isEmpty()); // exercise only
+}
+
+// ---------- ctor lambda #1: screenshotSaved signal handler ----------
+// Screenshot ctor connects MainWindow::screenshotSaved to a lambda that emits
+// Screenshot::screenshotSaved when m_isCustomScreenshot is true. Trigger via
+// QMetaObject::invokeMethod on m_window.
+TEST_F(ScreenShotCov2Test, ctorLambdaScreenshotSavedFires)
+{
+    access_private_field::Screenshotm_isCustomScreenshot(*m_shot) = true;
+    MainWindow &mw = access_private_field::Screenshotm_window(*m_shot);
+    EXPECT_NO_FATAL_FAILURE({
+        QMetaObject::invokeMethod(&mw, "screenshotSaved",
+                                  Qt::DirectConnection,
+                                  Q_ARG(QString, QStringLiteral("ut_path")));
+    });
+}
+
+// ---------- ctor lambda #2: recording state callback ----------
+// Screenshot ctor sets a recording-state callback on m_window via
+// setRecordingStateCallback. Trigger it by calling MainWindow::onRecordingStarted
+// and onRecordingStopped, which invoke m_recordingStateCallback(true/false).
+TEST_F(ScreenShotCov2Test, ctorLambdaRecordingStateCallbackFires)
+{
+    MainWindow &mw = access_private_field::Screenshotm_window(*m_shot);
+    EXPECT_NO_FATAL_FAILURE(mw.onRecordingStarted());
+    EXPECT_NO_FATAL_FAILURE(mw.onRecordingStopped());
 }

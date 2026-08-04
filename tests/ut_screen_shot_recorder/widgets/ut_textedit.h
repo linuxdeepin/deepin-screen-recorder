@@ -167,3 +167,12 @@ TEST_F(TextEditTest, updateContentSize)
 {
     m_textEdit->updateContentSize(QString("在此处添加文本"));
 }
+
+// 触发构造函数中 contentsChanged 信号连接的 lambda（L62）。
+// setReadOnly(false) + setPlainText 后 document 会发出 contentsChanged。
+TEST_F(TextEditTest, insertTextTriggersContentsChangedLambda)
+{
+    m_textEdit->setReadOnly(false);
+    EXPECT_NO_FATAL_FAILURE(m_textEdit->setPlainText(QStringLiteral("hello")));
+    EXPECT_FALSE(m_textEdit->toPlainText().isEmpty());
+}
