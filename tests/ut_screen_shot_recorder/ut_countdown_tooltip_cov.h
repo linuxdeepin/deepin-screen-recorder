@@ -117,3 +117,13 @@ TEST_F(CountdownTooltipCovTest, constructLightTheme)
     Utils::themeType = saved;
     SUCCEED();
 }
+
+// paintRect: 受保护的绘制工具条方法。ACCESS_PRIVATE_FUN 已在 ut_countdown_tooltip.h
+// 中声明。这里直接用 QPainter + QPixmap 调用以覆盖函数体。
+TEST_F(CountdownTooltipCovTest, paintRectDrawsPathAndPixmap)
+{
+    QPixmap pm(20, 20);
+    pm.fill(Qt::blue);
+    QPainter painter(m_t);
+    EXPECT_NO_FATAL_FAILURE(call_private_fun::CountdownTooltippaintRect(*m_t, painter, pm));
+}

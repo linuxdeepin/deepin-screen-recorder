@@ -102,6 +102,19 @@ TEST_F(PreviewWidgetTest, paintEventRunsClean)
     m_pw->hide();
 }
 
+// paintEvent 是 public override，直接调用以触发 QPainter 路径。
+TEST_F(PreviewWidgetTest, paintEventDirectCall)
+{
+    QImage img(100, 100, QImage::Format_ARGB32);
+    img.fill(Qt::white);
+    m_pw->updateImage(img);
+    m_pw->resize(100, 100);
+    m_pw->show();
+    QPaintEvent pe(QRect(0, 0, 100, 100));
+    EXPECT_NO_FATAL_FAILURE(m_pw->paintEvent(&pe));
+    m_pw->hide();
+}
+
 TEST_F(PreviewWidgetTest, destructorSafe)
 {
     PreviewWidget *tmp = new PreviewWidget(QRect(0, 0, 1280, 720));
