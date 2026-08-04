@@ -29,6 +29,18 @@ SSR_TEST_TIMEOUT="${SSR_TEST_TIMEOUT:-75}"
 # QApplication 构造依赖 X，否则 --gtest_list_tests 即崩、收集到 0 个用例。
 export DISPLAY="${DISPLAY:-:0}"
 
+# 确保 DBus 会话总线可用。AudioUtils / voiceVolumeWatcher / Shortcut 等用例在
+# 构造 QDBusInterface 时，若 DBUS_SESSION_BUS_ADDRESS 为空，Qt 会尝试 autolaunch
+# 阻塞 dbus-launch，导致 AudioUtilsCovTest / VoiceVolumeWatcherCovTest /
+# ShortcutTest / ShortcutCovTest 整组 hang（被 SSR_TEST_TIMEOUT 杀掉，覆盖率归零）。
+# CI 通常已注入会话总线；仅在缺失时本地拉起一个私有 dbus-daemon，跑完回收。
+SSR_OWN_DBUS_PID=""
+if [ -z "${DBUS_SESSION_BUS_ADDRESS:-}" ] && command -v dbus-launch >/dev/null 2>&1; then
+    eval "$(dbus-launch --sh-syntax 2>/dev/null)" 2>/dev/null || true
+    SSR_OWN_DBUS_PID="${DBUS_SESSION_BUS_PID:-}"
+fi
+trap 'if [ -n "$SSR_OWN_DBUS_PID" ]; then kill "$SSR_OWN_DBUS_PID" 2>/dev/null; fi' EXIT
+
 rm -rf "$OUT"
 mkdir -p "$OUT/report" "$OUT/html"
 

@@ -24,6 +24,7 @@ using namespace testing;
 // orchestrator includes the base file before _cov files (same convention as
 // ut_screengrabber.h -> ut_screengrabber_ext.h).
 ACCESS_PRIVATE_FUN(voiceVolumeWatcher, bool(const QString &) const, isMicrophoneAvail);
+ACCESS_PRIVATE_FUN(voiceVolumeWatcher, void(), initV20DeviceWatcher);
 
 class VoiceVolumeWatcherCovTest : public testing::Test
 {
@@ -132,4 +133,11 @@ TEST_F(VoiceVolumeWatcherCovTest, onCardsChangedValidJson)
         "]}]");
     EXPECT_NO_FATAL_FAILURE(
         call_private_fun::voiceVolumeWatcheronCardsChanged(*w, cards));
+}
+
+// initV20DeviceWatcher: Qt6 下函数体仅输出一条 critical 日志，调用不应崩溃
+// （覆盖之前因套件 hang 而缺失的函数）。
+TEST_F(VoiceVolumeWatcherCovTest, initV20DeviceWatcherQt6NoCrash)
+{
+    EXPECT_NO_FATAL_FAILURE(call_private_fun::voiceVolumeWatcherinitV20DeviceWatcher(*w));
 }

@@ -144,3 +144,21 @@ TEST_F(DBusNameTest, namingConventionConsistency)
     EXPECT_STRNE(dbus_name_get_name(DBUS_NOTIFICATION), dbus_name_get_name(DBUS_AUDIO));
     EXPECT_STRNE(dbus_name_get_path(DBUS_NOTIFICATION), dbus_name_get_path(DBUS_AUDIO));
 }
+
+// dbus_name_get_name_list() 内部根据 DSysInfo::majorVersion() 只会调用 _v20 或
+// _v23 其中之一，另一支函数体不会被间接覆盖。两函数均为外部链接，直接调用
+// 以覆盖另一分支。DBusNameItem 是 dbus_name.cpp 内部结构体，前向声明即可调用
+// 返回指针的函数（指针比较无需完整类型）。
+struct DBusNameItem;
+DBusNameItem *dbus_name_get_name_list_v20();
+DBusNameItem *dbus_name_get_name_list_v23();
+
+TEST_F(DBusNameTest, v20NameListDirectIsUsable)
+{
+    EXPECT_NE(dbus_name_get_name_list_v20(), nullptr);
+}
+
+TEST_F(DBusNameTest, v23NameListDirectIsUsable)
+{
+    EXPECT_NE(dbus_name_get_name_list_v23(), nullptr);
+}

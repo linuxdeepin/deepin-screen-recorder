@@ -6,9 +6,13 @@
 #include <QDebug>
 #include <QSignalSpy>
 #include <gtest/gtest.h>
+#include "addr_pri.h"
 #include "../../src/utils/configsettings.h"
 
 using namespace testing;
+
+// keys() 为 private 方法，经 ACCESS_PRIVATE_FUN 访问以绕过访问控制。
+ACCESS_PRIVATE_FUN(ConfigSettings, QStringList(const QString &), keys);
 
 // Coverage tests for ConfigSettings. The existing ut_configsettings.h covers
 // getValue/setValue on the "common" group and the constructor via instance().
@@ -100,4 +104,24 @@ TEST_F(ConfigSettingsCovTest, setValueGetValueRoundTripString)
     QVariant got = cs->getValue("shape", "current");
     EXPECT_EQ(newVal.toString(), got.toString());
     cs->setValue("shape", "current", QVariant(QStringLiteral("rectangle")));
+}
+
+// keys():返回某分组下已持久化的子键名列表。写入后该键应出现在 keys() 结果中。
+TEST_F(ConfigSettingsCovTest, keysReturnsPersistedChildKeys)
+{
+    cs->setValue("rectangle", "color_index", QVariant(3));
+    QStringList ks = call_private_fun::ConfigSettingskeys(*cs, QStringLiteral("rectangle"));
+    EXPECT_TRUE(ks.contains(QStringLiteral("color_index")));
+
+    // shot 分组存在多个默认键，写入后 keys() 也应返回它们。
+    cs->setValue("shot", "format", QVariant(0));
+    QStringList shotKeys = call_private_fun::ConfigSettingskeys(*cs, QStringLiteral("shot"));
+    EXPECT_TRUE(shotKeys.contains(QStringLiteral("format")));
+}
+
+// keys():不存在的分组返回空列表（不报错）。
+TEST_F(ConfigSettingsCovTest, keysForUnknownGroupIsEmpty)
+{
+    QStringList ks = call_private_fun::ConfigSettingskeys(*cs, QStringLiteral("definitely_not_a_group"));
+    EXPECT_TRUE(ks.isEmpty());
 }
