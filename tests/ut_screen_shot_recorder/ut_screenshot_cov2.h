@@ -216,3 +216,24 @@ TEST_F(ScreenShotCov2Test, ctorLambdaRecordingStateCallbackFires)
     EXPECT_NO_FATAL_FAILURE(mw.onRecordingStarted());
     EXPECT_NO_FATAL_FAILURE(mw.onRecordingStopped());
 }
+
+// OcrScreenshot: public method，启用 OCR 时调用 m_window 的多个入口（均已 stub）。
+// OCR_SCROLL_FLAGE_ON 已定义，走 #if 分支调用 MainWindow 方法（全被 stub）。安全。
+TEST_F(ScreenShotCov2Test, ocrScreenshotDelegatesToMainWindow)
+{
+    EXPECT_NO_FATAL_FAILURE(m_shot->OcrScreenshot());
+}
+
+// delayScreenshot 两个 lambda：timerNoti(50ms) 与 timer(100ms) 的 timeout 回调。
+// delayScreenshot(0.1) => timerNoti->start(50), timer->start(100)。
+// spin event loop >100ms 触发两个 lambda。MainWindow 方法均已 stub。
+TEST_F(ScreenShotCov2Test, delayScreenshotTimerLambdasFire)
+{
+    EXPECT_NO_FATAL_FAILURE(m_shot->delayScreenshot(0.1));
+    // spin event loop >100ms to fire both timer callbacks
+    {
+        QEventLoop loop;
+        QTimer::singleShot(200, &loop, &QEventLoop::quit);
+        loop.exec();
+    }
+}
