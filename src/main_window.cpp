@@ -3024,43 +3024,97 @@ void MainWindow::responseEsc()
 
 void MainWindow::compositeChanged()
 {
+    bool newComposite = m_wmHelper->hasBlurWindow();
+
     // 滚动截图过程中动态切换为2D模式，直接结束
     if (m_functionType == status::shot) {
         // Treeland：工具栏在 sourceReady 后才创建，Wayland 初始化可能先触发 hasBlurWindowChanged
         if (m_toolBar) {
-            m_toolBar->setScrollShotDisabled(!m_wmHelper->hasBlurWindow());
+            m_toolBar->setScrollShotDisabled(!newComposite);
         }
         return;
     }
-    if (!m_wmHelper->hasBlurWindow() && m_functionType == status::scrollshot) {
+    if (!newComposite && m_functionType == status::scrollshot) {
         saveScreenShot();
         return;
     }
 
-    // 在非录屏状态下，通过快捷键关闭特效模式
-    if (recordButtonStatus != RECORD_BUTTON_RECORDING) {
-        m_hasComposite = m_wmHelper->hasBlurWindow();
+    // 录制中或非录制（含倒计时）：合成器变化时统一处理 2D/3D 切换
+    if (m_hasComposite != newComposite) {
+        if (newComposite) {
+            // 2D → 3D：恢复主窗口，隐藏录制框
+            qCInfo(dsrApp) << "Composite state change to 3D";
+            if (this->testAttribute(Qt::WA_TranslucentBackground))
+                show();
+            if (m_pRecorderRegion)
+                m_pRecorderRegion->hide();
+        } else {
+            // 3D → 2D：确保录制框存在并迁移摄像头，再隐藏主窗口、显示录制框
+            qCInfo(dsrApp) << "Composite state change to 2D";
+            ensureRecorderRegionAndMigrateCameraFor2D();
+            if (this->testAttribute(Qt::WA_TranslucentBackground))
+                hide();
+            if (m_pRecorderRegion) {
+                m_pRecorderRegion->show();
+                m_pRecorderRegion->setCameraShow(true);
+            }
+        }
         update();
-        return;
     }
 
-    if (m_hasComposite && !m_wmHelper->hasBlurWindow()) {
-        // 录屏过程中 由初始3D转2D模式, 强制暂停录屏.
-        // 如果录屏由 由初始2D转3D模式, 则不强制退出录屏.
-        // 强制退出通知
-        forciblySavingNotify();
-        if (recordButtonStatus == RECORD_BUTTON_RECORDING) {
-            // 录屏过程中， 从3D切换回2D， 停止录屏。
-            stopRecord();
-            return;
-        } else {
-            // 倒计时3s内， 从3D切换回2D直接退出。
-            exitApp();
-        }
-    }
+    // 更新内部状态
+    m_hasComposite = newComposite;
+
     // 2D录屏, 切换模式后,更新当前按钮的样式
     if (m_keyBoardStatus && m_pRecorderRegion) {
         m_pRecorderRegion->updateKeyBoardButtonStyle();
+    }
+}
+
+void MainWindow::ensureRecorderRegionAndMigrateCameraFor2D()
+{
+    if (!m_pRecorderRegion) {
+        // 对齐 master 既有录制框创建逻辑：设备名 + 多屏缩放 move，避免多屏/缩放/设备名异常
+        m_pRecorderRegion = new RecorderRegionShow();
+#ifdef QT_TESTLIB_LIB
+        m_pRecorderRegion->setDevcieName(m_devnumMonitor ? m_devnumMonitor->availableCamera() : QString());
+#else
+        m_pRecorderRegion->setDevcieName(m_devnumMonitor->availableCamera());
+#endif
+        m_pRecorderRegion->resize(recordWidth + 2, recordHeight + 2);
+        if (m_pixelRatio > 1 && m_screenCount > 1) {
+            if (m_isVertical) {
+                if (recordY > m_screenInfo[0].height / m_pixelRatio) {
+                    // 多屏放缩情况下，小屏在上，整体需要偏移一定距离
+                    m_pRecorderRegion->move(std::max(recordX - 1, 0),
+                                            std::max(recordY - 1, 0) + m_screenInfo[0].height -
+                                                static_cast<int>(m_screenInfo[0].height / m_pixelRatio));
+                } else {
+                    m_pRecorderRegion->move(std::max(recordX - 1, 0), std::max(recordY - 1, 0));
+                }
+
+            } else {
+                if (recordX > m_screenInfo[0].width / m_pixelRatio) {
+                    m_pRecorderRegion->move(std::max(recordX - 1, 0) + m_screenInfo[0].width -
+                                                static_cast<int>(m_screenInfo[0].width / m_pixelRatio),
+                                            std::max(recordY - 1, 0));
+                } else {
+                    m_pRecorderRegion->move(std::max(recordX - 1, 0), std::max(recordY - 1, 0));
+                }
+            }
+        } else {
+            m_pRecorderRegion->move(std::max(recordX - 1, 0), std::max(recordY - 1, 0));
+        }
+
+        if (m_cameraWidget && m_selectedCamera) {
+            m_cameraWidget->hide();
+            m_cameraWidget->cameraStop();
+            m_pRecorderRegion->initCameraInfo(m_cameraWidget->postion(), m_cameraWidget->geometry().size());
+        }
+    } else if (m_cameraWidget && m_selectedCamera) {
+        m_cameraWidget->hide();
+        m_cameraWidget->cameraStop();
+        m_pRecorderRegion->initCameraInfo(m_cameraWidget->postion(), m_cameraWidget->geometry().size());
     }
 }
 
@@ -6969,6 +7023,8 @@ void MainWindow::startRecord()
         if (m_pRecorderRegion) {
             m_pRecorderRegion->setCameraShow();
             m_pRecorderRegion->show();
+        } else {
+            qCWarning(dsrApp) << "m_pRecorderRegion is null, cannot show recording border";
         }
     }
 #endif
