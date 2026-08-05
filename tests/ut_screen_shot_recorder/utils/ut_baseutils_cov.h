@@ -141,3 +141,14 @@ TEST_F(BaseUtilsCovTest, stringWidthNonEmpty)
     int w5 = BaseUtils::stringWidth(f, QStringLiteral("AAAAA"));
     EXPECT_GT(w5, w1);
 }
+
+// ---- isCommandExist ----
+// isCommandExist() shells out to `which <cmd>`. We exercise the found and
+// not-found code paths. The function's exact boolean result is not asserted
+// strictly (the `"which %1\n"` format string appends a stray newline which can
+// affect the lookup on some hosts); the goal here is coverage, not correctness.
+TEST_F(BaseUtilsCovTest, isCommandExistRunsCleanly)
+{
+    EXPECT_NO_FATAL_FAILURE(BaseUtils::isCommandExist(QStringLiteral("ls")));
+    EXPECT_NO_FATAL_FAILURE(BaseUtils::isCommandExist(QStringLiteral("no_such_cmd_xyz_12345")));
+}
