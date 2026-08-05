@@ -125,3 +125,24 @@ TEST_F(AudioUtilsCovTest, onDBusAudioPropertyChangedNonMatchingInterface)
 // A matching interface name (AudioInterface) would cause the handler to attempt
 // qdbus_cast on arg[1], which is unsafe for an arbitrary QVariant. That branch
 // is therefore NOT exercised here; only the early-return paths are covered.
+
+// ---------------------------------------------------------------------------
+// initConnections() is a protected helper that only registers a DBus signal
+// match via QDBusConnection::connect (no service activation, no blocking).
+// We expose it through a thin derived accessor and invoke it directly.
+//
+// NOTE: initDefaultSourceDBusInterface / initDefaultSinkDBusInterface are NOT
+// covered here because each constructs a QDBusInterface to a non-existent
+// service, which blocks ~25-30s on D-Bus service activation and would cause
+// these tests to be killed by the per-test timeout in the coverage runner.
+class AudioUtilsInitConnAccess : public AudioUtils
+{
+public:
+    using AudioUtils::initConnections;
+};
+
+TEST_F(AudioUtilsCovTest, initConnectionsRunsCleanly)
+{
+    AudioUtilsInitConnAccess acc;
+    EXPECT_NO_FATAL_FAILURE(acc.initConnections());
+}

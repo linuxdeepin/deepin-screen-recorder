@@ -76,3 +76,19 @@ TEST_F(UtilsCovTest, cursorMoveUnknownKeyIsNoop)
     EXPECT_NO_FATAL_FAILURE(Utils::cursorMove(pos, &other));
     SUCCEED();
 }
+
+// ---------- X11 early-return branches of grab / input helpers ----------
+// In the unit-test build (ENABLE_UNIT_TEST) the Wayland/Treeland early-return
+// guards in enableXGrabButton / cancelInputEvent1 are compiled out, so the
+// functions fall through to `if (!QX11Info::display()) return;`. Under the
+// offscreen Qt platform QX11Info::display() is null, so both functions take
+// that safe early-return branch without touching the real X server.
+TEST_F(UtilsCovTest, enableXGrabButtonNoX11EarlyReturn)
+{
+    EXPECT_NO_FATAL_FAILURE(Utils::enableXGrabButton());
+}
+
+TEST_F(UtilsCovTest, cancelInputEvent1NoX11EarlyReturn)
+{
+    EXPECT_NO_FATAL_FAILURE(Utils::cancelInputEvent1(0, 0, 0, 0, 0));
+}
