@@ -66,6 +66,14 @@ RecorderRegionShow::~RecorderRegionShow()
 void RecorderRegionShow::initCameraInfo(const CameraWidget::Position position, const QSize size)
 {
     qCDebug(dsrApp) << "Entry. Position:" << position << ", Size:" << size;
+    // 清理已存在的摄像头实例，避免重复初始化导致资源泄漏
+    if (m_cameraWidget) {
+        if (m_cameraWidget->getCameraStatus()) {
+            m_cameraWidget->cameraStop();
+        }
+        delete m_cameraWidget;
+        m_cameraWidget = nullptr;
+    }
     m_cameraWidget = new CameraWidget();
 
     QRect r = this->geometry();
