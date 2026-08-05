@@ -21,7 +21,7 @@ executable=ut_record_time #可执行程序的文件名
 
 #下面是覆盖率目录操作，一种正向操作，一种逆向操作
 extract_info="*/dde-dock-plugins/*" #针对当前目录进行覆盖率操作
-remove_info="*tests* *build-ut*" #排除当前目录进行覆盖率操作
+remove_info="*/ut_record_time/* *build-ut*"  # 精确匹配测试目录，避免误删路径含 tests 的源码
 
 build_dir=$workdir
 result_coverage_dir=$build_dir/html
