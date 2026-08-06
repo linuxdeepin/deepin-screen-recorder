@@ -1,3 +1,24 @@
+deepin-screen-recorder (6.6.39) unstable; urgency=medium
+
+  * test: add basic screenshot and recording AT suite
+  * [skip CI] Translate deepin-screen-recorder.ts in pt_BR
+  * test: remove invalid and obsolete unit test files
+  * test: enable viable orphan tests and drop dead-code ones
+  * test: add autotests for deepin-screen-recorder (7/7 classes)
+  * test: add autotests for deepin-screen-recorder (5/5 classes)
+  * test: add autotests for deepin-screen-recorder (4/4 classes)
+  * test: add autotests for deepin-screen-recorder (4/4 classes)
+  * test: add autotests for deepin-screen-recorder (2/2 classes)
+  * test: add autotests for deepin-screen-recorder (3/3 classes)
+  * test: add autotests for deepin-screen-recorder (1/1 classes)
+  * fix(ut): fix record_time coverage wiped when worktree path contains
+    "tests"
+  * test: add unit tests for 5 previously-uncovered functions
+  * fix: [record] allow recording across compositor switch and fix
+    camera in 2D
+
+ -- liuzheng <liuzheng@uniontech.com>  Thu, 06 Aug 2026 10:12:04 +0800
+
 deepin-screen-recorder (6.6.38) unstable; urgency=medium
 
   * chore: Update version to 6.6.38
