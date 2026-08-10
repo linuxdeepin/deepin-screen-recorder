@@ -168,6 +168,8 @@
 // --- P1: 启用孤儿测试 ---
 #include "widgets/ut_colorbutton.h"
 #include "gstrecord/ut_gstrecordx.h"
+// --- 批次8: voicevolumewatcher_interface 全量属性/异步方法覆盖 (21 funcs, 0% -> covered) ---
+#include "ut_voicevolumewatcher_interface_cov.h"
 // 以下孤儿测试已删除（测试对应的源码类在主项目中已无任何外部引用，属历史遗留
 // 死代码，且源码自身存在 ConfigSettings::value/drawTooltipBackground 等 API 漂移）：
 // widgets/ut_majtoolbar.h / widgets/ut_subtoolbar.h / ut_record_option_panel.h
