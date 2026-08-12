@@ -29,7 +29,9 @@ equals(TSAN_TOOL_ENABLE, true ){
 
 HEADERS += \
     ut_mock_pluginproxyinterface.h \
+    ../../../src/dbus_name.h \
     ../../../src/dde-dock-plugins/shotstart/iconwidget.h \
+    ../../../src/dde-dock-plugins/shotstart/iconwidget_interface.h \
     ../../../src/dde-dock-plugins/shotstart/shotstartplugin.h \
     ../../../src/dde-dock-plugins/shotstart/tipswidget.h \
     ../../../src/dde-dock-plugins/shotstart/quickpanelwidget.h \
@@ -37,7 +39,9 @@ HEADERS += \
 
 SOURCES += \
     main.cpp \
+    ../../../src/dbus_name.cpp \
     ../../../src/dde-dock-plugins/shotstart/iconwidget.cpp \
+    ../../../src/dde-dock-plugins/shotstart/iconwidget_interface.cpp \
     ../../../src/dde-dock-plugins/shotstart/shotstartplugin.cpp \
     ../../../src/dde-dock-plugins/shotstart/tipswidget.cpp \
     ../../../src/dde-dock-plugins/shotstart/quickpanelwidget.cpp \

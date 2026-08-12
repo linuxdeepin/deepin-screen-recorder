@@ -72,21 +72,112 @@ if [ -x "$SSR_BIN" ]; then
         /^[A-Za-z0-9_]+.*\.$/{s=$0; sub(/\.$/, "", s)}
         /^  [A-Za-z0-9_]+/{gsub(/^ +/, ""); print s"."$0}')
     ssr_ok=0; ssr_bad=0
+    # 逐用例生成 JUnit XML 报告（供 CI 统计用例数）；崩/hang 用例无 XML，合并时标记为 error。
+    mkdir -p "$SSR_DIR/report_individual"
+    : > "$SSR_DIR/ssr_results.tsv"
     # 用 offscreen：native(dxcb)平台下大量 GUI 用例(MainWindow 构造/paint/cursor 路径)
     # 会 ASan abort，逐用例隔离运行时整用例丢覆盖。offscreen 为纯软件平台，用例稳定运行。
     for t in "${SSR_TESTS[@]}"; do
+        safe_name="${t//[^A-Za-z0-9_]/_}"
+        xml_path="report_individual/${safe_name}.xml"
         ( cd "$SSR_DIR" && DISPLAY=:0 QT_QPA_PLATFORM=offscreen QT_LOGGING_RULES="*=false" \
           ASAN_OPTIONS=fast_unwind_on_malloc=1:detect_leaks=0 \
-          timeout "$SSR_TEST_TIMEOUT" ./ut_screen_shot_recorder --gtest_filter="$t" >/dev/null 2>&1 )
-        case $? in 0|1) ssr_ok=$((ssr_ok+1));; *) ssr_bad=$((ssr_bad+1));; esac
+          timeout "$SSR_TEST_TIMEOUT" ./ut_screen_shot_recorder --gtest_filter="$t" \
+          --gtest_output=xml:"$xml_path" >/dev/null 2>&1 )
+        rc=$?
+        case $rc in 0|1) ssr_ok=$((ssr_ok+1));; *) ssr_bad=$((ssr_bad+1));; esac
+        printf '%s\t%d\n' "$t" "$rc" >> "$SSR_DIR/ssr_results.tsv"
     done
     echo "[INFO] ssr 逐用例：$ssr_ok 正常退出，$ssr_bad 崩/hang 跳过（共 ${#SSR_TESTS[@]} 个）。"
+
+    # 合并逐用例 XML 报告为单一 JUnit XML（供 CI 统计全部用例数）。
+    # 崩/hang 用例无 XML，按退出码标记为 error，确保用例总数完整。
+    python3 - "$SSR_DIR/report_individual" "$SSR_DIR/ssr_results.tsv" \
+             "$OUT/report/report_ut_screen_shot_recorder.xml" <<'PYEOF'
+import os, sys
+from xml.etree import ElementTree as ET
+
+indiv_dir, results_path, out_path = sys.argv[1], sys.argv[2], sys.argv[3]
+
+# Read per-test exit codes
+exit_codes = {}
+with open(results_path) as f:
+    for line in f:
+        parts = line.rstrip('\n').split('\t')
+        if len(parts) == 2:
+            exit_codes[parts[0]] = int(parts[1])
+
+# Collect per-test XML results (pass/fail with detail)
+xml_results = {}
+if os.path.isdir(indiv_dir):
+    for fn in os.listdir(indiv_dir):
+        if not fn.endswith('.xml'):
+            continue
+        try:
+            tree = ET.parse(os.path.join(indiv_dir, fn))
+        except ET.ParseError:
+            continue
+        for tc in tree.iter('testcase'):
+            full = f"{tc.get('classname','')}.{tc.get('name','')}"
+            fails = tc.findall('failure')
+            if fails:
+                xml_results[full] = ('fail', tc.get('time','0'), fails[0].get('message',''))
+            elif tc.findall('error'):
+                xml_results[full] = ('error', tc.get('time','0'), '')
+            else:
+                xml_results[full] = ('pass', tc.get('time','0'), '')
+
+# Build merged JUnit XML: all tests from exit_codes, enriched by XML where available
+suites = {}
+for full_name, rc in exit_codes.items():
+    if '.' not in full_name:
+        continue
+    suite, tname = full_name.rsplit('.', 1)
+    if full_name in xml_results:
+        st, tm, msg = xml_results[full_name]
+    elif rc == 0:
+        st, tm, msg = 'pass', '0', ''
+    elif rc == 1:
+        st, tm, msg = 'fail', '0', 'gtest assertion failure'
+    else:
+        st, tm, msg = 'error', '0', f'crashed/hang (exit {rc})'
+    suites.setdefault(suite, []).append((tname, st, tm, msg))
+
+root = ET.Element('testsuites')
+total = sum(len(ts) for ts in suites.values())
+total_fail = sum(1 for ts in suites.values() for _, st, _, _ in ts if st == 'fail')
+total_err = sum(1 for ts in suites.values() for _, st, _, _ in ts if st == 'error')
+root.set('tests', str(total)); root.set('failures', str(total_fail))
+root.set('errors', str(total_err)); root.set('disabled', '0')
+root.set('name', 'ut_screen_shot_recorder')
+
+for sname, tests in sorted(suites.items()):
+    ts = ET.SubElement(root, 'testsuite')
+    ts.set('name', sname); ts.set('tests', str(len(tests)))
+    ts.set('failures', str(sum(1 for _, st, _, _ in tests if st == 'fail')))
+    ts.set('errors', str(sum(1 for _, st, _, _ in tests if st == 'error')))
+    ts.set('disabled', '0')
+    for tname, st, tm, msg in tests:
+        tc = ET.SubElement(ts, 'testcase')
+        tc.set('name', tname); tc.set('classname', sname)
+        tc.set('status', 'run'); tc.set('time', tm)
+        if st == 'fail':
+            ET.SubElement(tc, 'failure').set('message', msg)
+        elif st == 'error':
+            ET.SubElement(tc, 'error').set('message', msg)
+
+ET.ElementTree(root).write(out_path, encoding='UTF-8', xml_declaration=True)
+print(f"[INFO] 合并 ssr 报告：{total} 用例，{total_fail} 失败，{total_err} 错误 -> {out_path}")
+PYEOF
 else
     echo "[WARN] ssr 二进制不存在，跳过其运行（仅 recordtime 覆盖）。"
 fi
 
-# 2) 编译 + 运行 ut_record_time（真实覆盖率）
+# 2) 编译 + 运行 dock 插件测试（ut_record_time + ut_shot_start + ut_shot_start_record）
 "$HERE/ut_dde_dock_plugins/build_run_ut.sh"
+
+# 2.5) 编译 + 运行 ut_pin_screenshots（贴图模块单元测试）
+"$HERE/ut_pin_screenshots/build_run_ut.sh" || echo "[WARN] ut_pin_screenshots 运行失败，继续。"
 
 # 3) 聚合覆盖率（ssr 基线 + ssr 运行时 + recordtime）
 RT_DIR="$HERE/ut_dde_dock_plugins/ut_record_time/build-ut"
