@@ -317,7 +317,10 @@ HEADERS += test_all_interfaces.h \
     widgets/ut_colorbutton.h \
     gstrecord/ut_gstrecordx.h \
     # --- P1: 补入对应源码头（moc）---
-    ../../src/widgets/colorbutton.h
+    ../../src/widgets/colorbutton.h \
+    # --- 覆盖率补全：可单测的未覆盖函数入口 ---
+    ut_coverage_gaps.h \
+    ut_coverage_gaps2.h
 
 
 SOURCES += main.cpp \
