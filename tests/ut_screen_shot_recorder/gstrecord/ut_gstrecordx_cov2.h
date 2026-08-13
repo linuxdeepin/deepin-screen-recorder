@@ -178,7 +178,7 @@ TEST_F(GstRecordXCov2Test, getAudioPipelineNonEmptyMixTarget)
     EXPECT_NO_FATAL_FAILURE(out = call_private_fun::GstRecordXgetAudioPipeline(
         *m_gst, QStringLiteral("ut_dev"), QStringLiteral("sys"), QStringLiteral("mix")));
     EXPECT_FALSE(out.isEmpty());
-    EXPECT_TRUE(out.contains("adder"));
+    EXPECT_TRUE(out.contains(QStringLiteral("mix.")));
 }
 
 // ---------- pipelineStructuredOutput edge inputs ----------

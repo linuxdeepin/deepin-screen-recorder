@@ -22,7 +22,7 @@
 using namespace testing;
 
 // ---------- KeyButtonWidget (0%) ----------
-TEST(KeyButtonWidgetCovTest, constructAndSet)
+TEST(KeyButtonWidgetCovLegacyTest, constructAndSet)
 {
     KeyButtonWidget *w = nullptr;
     EXPECT_NO_FATAL_FAILURE(w = new KeyButtonWidget());
@@ -89,7 +89,7 @@ TEST(AiAssistantInterfaceCovTest, heapDestructor)
 }
 
 // ---------- XMultiScreenInfo (7.7%) ----------
-TEST(XMultiScreenInfoCovTest, constructAndQuery)
+TEST(XMultiScreenInfoCovLegacyTest, constructAndQuery)
 {
     XMultiScreenInfo *info = nullptr;
     bool ret = false;

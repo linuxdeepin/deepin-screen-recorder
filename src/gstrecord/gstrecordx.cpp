@@ -1,5 +1,5 @@
 // Copyright (C) 2020 ~ now Uniontech Software Technology Co.,Ltd.
-// SPDX-FileCopyrightText: 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2022-2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -68,6 +68,7 @@ void GstRecordX::initMemberVariables()
 {
     qCDebug(dsrApp) << "initMemberVariables called.";
     m_pipeline = nullptr;
+    m_gloop = nullptr;
     m_audioType = AudioType::None;
     m_videoType = VideoType::webm;
     m_sysDevcieName = "";

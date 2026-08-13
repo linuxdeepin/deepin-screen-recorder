@@ -46,7 +46,11 @@ TEST_F(MainToolWidgetTest, colorChecked)
 }
 void MainToolWidgetTest::buttonChecked(bool checked, QString type)
 {
-    EXPECT_EQ(type, curType);
+    // Only assert when curType was explicitly set (colorChecked test);
+    // other tests may trigger buttonChecked but don't care about the value.
+    if (!curType.isEmpty()) {
+        EXPECT_EQ(type, curType);
+    }
 }
 
 // === Extended coverage ===

@@ -8,14 +8,27 @@
 #include <QAction>
 #include <QMetaObject>
 #include "../../src/widgets/savemenumanager.h"
+#include "../../src/utils/configsettings.h"
 
 using namespace testing;
+
+// Helper: reset the ConfigSettings "shot" group to defaults so each test
+// starts from a known state (ConfigSettings is a process-wide singleton).
+static void resetShotConfig()
+{
+    ConfigSettings *cs = ConfigSettings::instance();
+    cs->setValue("shot", "save_ways", 0);
+    cs->setValue("shot", "save_op", 0);
+    cs->setValue("shot", "location_state", 0);
+    cs->setValue("shot", "save_dir", QString());
+    cs->setValue("shot", "save_dir_change", false);
+}
 
 class SaveMenuManagerExtTest : public Test
 {
 public:
     SaveMenuManager *m_m;
-    void SetUp() override { m_m = new SaveMenuManager; }
+    void SetUp() override { resetShotConfig(); m_m = new SaveMenuManager; }
     void TearDown() override { delete m_m; }
 };
 
@@ -37,11 +50,12 @@ TEST_F(SaveMenuManagerExtTest, updateCustomPath)
 {
     QSignalSpy optSpy(m_m, &SaveMenuManager::saveOptionChanged);
     QSignalSpy pathSpy(m_m, &SaveMenuManager::customPathChanged);
-    EXPECT_NO_FATAL_FAILURE(m_m->updateCustomPath(QStringLiteral("/home/uos/Desktop")));
+    // updateCustomPath requires the path to exist on the filesystem.
+    QDir().mkpath(QStringLiteral("/tmp/dsr_ext_desk"));
+    EXPECT_NO_FATAL_FAILURE(m_m->updateCustomPath(QStringLiteral("/tmp/dsr_ext_desk")));
     EXPECT_FALSE(m_m->getCurrentCustomPath().isEmpty());
-    // 桌面路径 -> LocationState::Desktop
-    EXPECT_NO_FATAL_FAILURE(m_m->updateCustomPath(QStringLiteral("/home/uos/Pictures")));
-    EXPECT_NO_FATAL_FAILURE(m_m->updateCustomPath(QStringLiteral("/some/random/path")));
+    // Non-existent paths are silently ignored
+    EXPECT_NO_FATAL_FAILURE(m_m->updateCustomPath(QStringLiteral("/no/such/random/path")));
     EXPECT_GE(pathSpy.count(), 1);
 }
 

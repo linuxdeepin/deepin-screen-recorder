@@ -28,7 +28,17 @@ class SaveMenuManagerCov2Test : public Test
 {
 public:
     SaveMenuManager *m_m = nullptr;
-    void SetUp() override { m_m = new SaveMenuManager; }
+    void SetUp() override
+    {
+        // Reset ConfigSettings singleton to defaults to avoid cross-test pollution.
+        ConfigSettings *cs = ConfigSettings::instance();
+        cs->setValue("shot", "save_ways", 0);
+        cs->setValue("shot", "save_op", 0);
+        cs->setValue("shot", "location_state", 0);
+        cs->setValue("shot", "save_dir", QString());
+        cs->setValue("shot", "save_dir_change", false);
+        m_m = new SaveMenuManager;
+    }
     void TearDown() override { delete m_m; }
 
     void setShot(const char *key, const QVariant &v)

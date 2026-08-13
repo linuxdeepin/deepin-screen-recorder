@@ -109,9 +109,11 @@ TEST_F(MultiScreenFrameCompositorCovTest, getLatestTimestampPicksMax)
     // 这里仅验证单屏的时间戳透传
     DmaFrameInfo f = makeEmptyFrame(screen, QRect(0, 0, 8, 8), 8, 8, 4242);
     ASSERT_TRUE(m_c->addScreenFrame(f));
-    // addScreenFrame 在全部就绪时会排队 performComposition，及时排空避免跨测试干扰
-    QCoreApplication::processEvents(QEventLoop::AllEvents, 50);
+    // Check timestamp BEFORE processEvents: addScreenFrame marks ready=true,
+    // but the queued performComposition will reset ready flags after composing.
     EXPECT_EQ(call_private_fun::MultiScreenFrameCompositorgetLatestTimestamp(*m_c), 4242ull);
+    // 排空 addScreenFrame 排队的 performComposition，避免跨测试干扰
+    QCoreApplication::processEvents(QEventLoop::AllEvents, 50);
 }
 
 // resetFrameReadyFlags：清空所有 ready 标记
