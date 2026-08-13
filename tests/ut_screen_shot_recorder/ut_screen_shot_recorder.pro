@@ -23,7 +23,11 @@ INCLUDEPATH += . ../../src/ \
 DEFINES += DDE_START_FLAGE_ON
 DEFINES += OCR_SCROLL_FLAGE_ON
 DEFINES += ENABLE_UNIT_TEST
-# KF5_WAYLAND_FLAGE_ON disabled: KF6 KWayland lacks ClientManagement and the
+contains(DEFINES, KF5_WAYLAND_FLAGE_ON) {
+    LIBS += -lKWaylandClient
+}
+# waylandscrollmonitor.cpp / waylandmousesimulator.cpp 硬依赖 KWaylandClient，
+# 仅在 KF5_WAYLAND_FLAGE_ON 启用时编译；本地缺 -dev 包时跳过。
 # waylandrecord module depends on removed ffmpeg 5.x APIs (AVPicture,
 # AVStream::codec, avcodec_decode_audio4). Re-enabling requires porting both
 # KWayland::Client::ClientManagement and the waylandrecord ffmpeg layer.
@@ -41,7 +45,7 @@ QT += multimediawidgets
 QT += concurrent openglwidgets
 QT += svg
 QT += waylandclient-private
-LIBS += -lX11 -lXext -lXtst -lXfixes -lXcursor -lgtest -lopencv_small -lavcodec -lavdevice -lavfilter -lavformat -lavutil -lswscale -lswresample -lepoxy -lKWaylandClient -lgbm -lXinerama -ludev -lv4l2 -lv4lconvert -lv4l1 -lgobject-2.0
+LIBS += -lX11 -lXext -lXtst -lXfixes -lXcursor -lgtest -lopencv_small -lavcodec -lavdevice -lavfilter -lavformat -lavutil -lswscale -lswresample -lepoxy -lgbm -lXinerama -ludev -lv4l2 -lv4lconvert -lv4l1 -lgobject-2.0
 # libcam 静态库内部引用 udev_* / v4l2_* 符号，但本二进制没有直接引用，
 # 默认 --as-needed 链接会丢弃 libudev/libv4l2.so 导致运行时 undefined symbol
 # 段错误。强制 --no-as-needed 保留这些 NEEDED 条目。
@@ -339,7 +343,8 @@ SOURCES += main.cpp \
     ../../src/utils/voicevolumewatcher_interface.cpp \
     ../../src/utils/pixmergethread.cpp \
     ../../src/utils/scrollScreenshot.cpp \
-    ../../src/utils/waylandscrollmonitor.cpp \
+    #../../src/utils/waylandscrollmonitor.cpp \
+    # waylandscrollmonitor.cpp excluded: requires -lKWaylandClient (not available without -dev package)
     ../../src/widgets/scrollshottip.cpp \
     ../../src/widgets/colortoolwidget.cpp \
     ../../src/widgets/keybuttonwidget.cpp \
