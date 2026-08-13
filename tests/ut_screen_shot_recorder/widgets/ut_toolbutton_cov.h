@@ -236,7 +236,12 @@ TEST_F(ToolButtonCovTest, drawRedDotAndBadgeDirect)
 
 TEST_F(ToolButtonCovTest, tintIconByBackgroundBranches)
 {
-    QIcon ic = QIcon::fromTheme(QStringLiteral("edit-copy"));
+    // Use a guaranteed non-null icon (fromTheme may return null in headless CI).
+    QPixmap srcPix(16, 16);
+    srcPix.fill(Qt::blue);
+    QIcon ic(srcPix);
+    ASSERT_FALSE(ic.isNull());
+
     // no background -> returns input icon
     QIcon out1 = call_private_fun::ToolButtontintIconByBackground(*m_btn, ic, QSize(16, 16));
     EXPECT_FALSE(out1.isNull());

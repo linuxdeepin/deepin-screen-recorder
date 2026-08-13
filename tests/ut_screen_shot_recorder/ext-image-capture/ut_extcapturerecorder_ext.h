@@ -129,11 +129,15 @@ TEST_F(ExtCaptureRecorderExtTest, adjustDurationSkipWhenDeviationSmall)
 {
     access_private_field::ExtCaptureRecorderm_frameCount(*m_rec) = 30;
     access_private_field::ExtCaptureRecorderm_frameRate(*m_rec) = 30;
-    // 理论编码时长 = 30/30 = 1s；构造实际总时长 ~1s（偏差 <3%）
-    // intervalNs = last-first；选 last 使 (interval + avgInterval) 接近 1s
+    // 理论编码时长 = frameCount/frameRate = 1s
+    // actualTotalDuration = actualDurationSec + avgInterval
+    //   = (intervalNs/1e9) + (intervalNs/1e9)/(frameCount-1)
+    //   = (intervalNs/1e9) * frameCount/(frameCount-1)
+    // 设 actualTotalDuration = encodedDuration =>
+    //   intervalNs/1e9 = (frameCount-1)/frameRate
+    //   intervalNs = 1e9 * 29/30
     access_private_field::ExtCaptureRecorderm_firstFrameTimestampNs(*m_rec) = 0;
-    // 29 帧间隔 * (1/29)s ≈ 0.966s；avgInterval ≈ 0.0333s；total ≈ 0.9994s ~ 1s
-    qint64 nsPerFrame = static_cast<qint64>(1e9 / 29.0);
+    qint64 nsPerFrame = static_cast<qint64>(1e9 / 30.0); // 1/frameRate
     access_private_field::ExtCaptureRecorderm_lastFrameTimestampNs(*m_rec) = nsPerFrame * 29;
     EXPECT_TRUE(call_private_fun::ExtCaptureRecorderadjustVideoDurationIfNeeded(*m_rec));
 }

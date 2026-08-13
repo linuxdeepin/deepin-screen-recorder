@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2022-2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -25,47 +25,84 @@ public:
 
 TEST_F(Baseutils_Test, colorIndexOf)
 {
-    QColor color = BaseUtils::colorIndexOf(0); // QColor("#fflc49")
     int a, r, g, b;
+    QColor color;
 
+    // Index 0: Black   #000000
+    color = BaseUtils::colorIndexOf(0);
     color.getRgb(&r, &g, &b, &a);
-    EXPECT_EQ(0xff, r);
-    EXPECT_EQ(0x1c, g);
-    EXPECT_EQ(0x49, b);
+    EXPECT_EQ(0x00, r);
+    EXPECT_EQ(0x00, g);
+    EXPECT_EQ(0x00, b);
 
-    color = BaseUtils::colorIndexOf(1); //  QColor("#ffd903")
+    // Index 1: Gray    #7D7D7D
+    color = BaseUtils::colorIndexOf(1);
     color.getRgb(&r, &g, &b, &a);
-    EXPECT_EQ(0xff, r);
-    EXPECT_EQ(0xd9, g);
-    EXPECT_EQ(0x03, b);
+    EXPECT_EQ(0x7D, r);
+    EXPECT_EQ(0x7D, g);
+    EXPECT_EQ(0x7D, b);
 
-    color = BaseUtils::colorIndexOf(2); //  QColor("#ffd903")
+    // Index 2: White   #FFFFFF
+    color = BaseUtils::colorIndexOf(2);
+    color.getRgb(&r, &g, &b, &a);
+    EXPECT_EQ(0xFF, r);
+    EXPECT_EQ(0xFF, g);
+    EXPECT_EQ(0xFF, b);
+
+    // Index 3: Red     #F82A2A
+    color = BaseUtils::colorIndexOf(3);
+    color.getRgb(&r, &g, &b, &a);
+    EXPECT_EQ(0xF8, r);
+    EXPECT_EQ(0x2A, g);
+    EXPECT_EQ(0x2A, b);
+
+    // Index 4: Orange  #FF8100
+    color = BaseUtils::colorIndexOf(4);
+    color.getRgb(&r, &g, &b, &a);
+    EXPECT_EQ(0xFF, r);
+    EXPECT_EQ(0x81, g);
+    EXPECT_EQ(0x00, b);
+
+    // Index 5: Yellow  #FFF100
+    color = BaseUtils::colorIndexOf(5);
+    color.getRgb(&r, &g, &b, &a);
+    EXPECT_EQ(0xFF, r);
+    EXPECT_EQ(0xF1, g);
+    EXPECT_EQ(0x00, b);
+
+    // Index 9: Blue    #0089F7
+    color = BaseUtils::colorIndexOf(9);
     color.getRgb(&r, &g, &b, &a);
     EXPECT_EQ(0x00, r);
     EXPECT_EQ(0x89, g);
     EXPECT_EQ(0xF7, b);
 
-
-    color = BaseUtils::colorIndexOf(3); //  QColor("#ffd903")
+    // Index 11: DarkBlue #0C00A0
+    color = BaseUtils::colorIndexOf(11);
     color.getRgb(&r, &g, &b, &a);
-    EXPECT_EQ(0x08, r);
-    EXPECT_EQ(0xff, g);
-    EXPECT_EQ(0x77, b);
-
-    color = BaseUtils::colorIndexOf(4); //  QColor("#ffd903")
-    color.getRgb(&r, &g, &b, &a);
-    EXPECT_EQ(0xff, r);
-    EXPECT_EQ(0x1c, g);
-    EXPECT_EQ(0x49, b);
+    EXPECT_EQ(0x0C, r);
+    EXPECT_EQ(0x00, g);
+    EXPECT_EQ(0xA0, b);
 }
 
 TEST_F(Baseutils_Test, colorIndex)
 {
-    int index = BaseUtils::colorIndex(QColor("#ff1c49"));
+    // Valid colors from the current color list
+    int index = BaseUtils::colorIndex(QColor("#000000"));
     EXPECT_EQ(0, index);
 
-    index = BaseUtils::colorIndex(QColor("#ff3305"));
+    index = BaseUtils::colorIndex(QColor("#FF8100"));
+    EXPECT_EQ(4, index);
+
+    index = BaseUtils::colorIndex(QColor("#FFF100"));
     EXPECT_EQ(5, index);
+
+    index = BaseUtils::colorIndex(QColor("#0089F7"));
+    EXPECT_EQ(9, index);
+
+    // A color not in the list -> index == -1
+    index = BaseUtils::colorIndex(QColor("#123456"));
+    EXPECT_EQ(-1, index);
 }
 TEST_F(Baseutils_Test, isValidFormat)
 {
