@@ -34,14 +34,11 @@ lcov --extract ./${executable}_coverage.info ${extract_info} --output-file  ${ex
 
 lcov --list-full-path -e ${executable}_coverage.info –o ./coverage-stripped.info
 
-genhtml -o ./html  ${executable}_coverage.info
-
-mv ./html/index.html ./html/cov_${executable}.html
-mv asan_${executable}.log* asan_${executable}.log
-
-cp -r ./html/ ../../../../build-ut
-cp -r ./report/ ../../../../build-ut
-cp ./asan_${executable}.log ../../../../build-ut
+# genhtml 和 cp 由主脚本 test-prj-running.sh 统一处理（合并所有模块 .info 后生成一份整体 HTML 报告），
+# 此处仅复制 JUnit XML 报告供 CI 统计用例数。
+cp -r ./report/ ../../../../build-ut 2>/dev/null || true
+# 收集 ASAN 日志（若存在）
+cp ./asan_${executable}.log ../../../../build-ut 2>/dev/null || true
 
 exit 0
 

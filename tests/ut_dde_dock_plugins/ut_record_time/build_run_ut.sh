@@ -34,9 +34,9 @@ lcov -d $build_dir -c -o $build_dir/coverage.info
 lcov --extract $build_dir/coverage.info $extract_info --output-file  $build_dir/coverage.info
 lcov --remove $build_dir/coverage.info $remove_info --output-file $build_dir/coverage.info
 
-genhtml -o $result_coverage_dir $build_dir/coverage.info
-
-cp $build_dir/report/report_ut_record_time.xml ../../../../build-ut/report/report_ut_record_time.xml
-cp $build_dir/html/index.html ../../../../build-ut/html/cov_ut_record_time.html
-cp $build_dir/asan_ut_record_time.log.* ../../../../build-ut/asan_ut_record_time.log  
+# genhtml 和 cp 由主脚本 test-prj-running.sh 统一处理（合并所有模块 .info 后生成一份整体 HTML 报告），
+# 此处仅复制 JUnit XML 报告供 CI 统计用例数。
+cp $build_dir/report/report_ut_record_time.xml ../../../../build-ut/report/report_ut_record_time.xml 2>/dev/null || true
+# 收集 ASAN 日志（若存在）
+cp $build_dir/asan_ut_record_time.log.* ../../../../build-ut/asan_ut_record_time.log 2>/dev/null || true  
 exit 0

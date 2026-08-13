@@ -29,9 +29,8 @@ lcov -d . -c -o ${executable}_coverage.info 2>/dev/null || true
 lcov --extract ./${executable}_coverage.info $extract_info --output-file ${executable}_coverage.info 2>/dev/null || true
 lcov --remove ./${executable}_coverage.info $remove_info --output-file ${executable}_coverage.info 2>/dev/null || true
 
-genhtml -o ./html ${executable}_coverage.info 2>/dev/null || true
-
+# genhtml 和 cp 由主脚本 test-prj-running.sh 统一处理（合并所有模块 .info 后生成一份整体 HTML 报告），
+# 此处仅复制 JUnit XML 报告供 CI 统计用例数。
 cp ./report/report_${executable}.xml ../../../build-ut/report/ 2>/dev/null || true
-cp ./html/index.html ../../../build-ut/html/cov_${executable}.html 2>/dev/null || true
 
 exit 0
