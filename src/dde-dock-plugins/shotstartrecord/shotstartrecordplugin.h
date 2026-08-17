@@ -75,6 +75,7 @@ private:
     int m_count = 0;       // 用来判断录屏是否正在进行中
     bool m_bDockQuickPanel;              // 兼容性适配，老版的dock不支持快捷面板
     bool m_bPreviousIsVisable = false;  // 记录前置状态是否为禁止使能状态
+    bool m_bReHiddenDuringRecording = false;  // 录屏中是否已被动重隐过（限制每轮录屏仅重隐一次）
 };
 
 #endif  // RECORDTIME_H
