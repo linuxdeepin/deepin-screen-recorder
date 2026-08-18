@@ -2485,52 +2485,49 @@ void MainWindow::updateToolBarPos()
     //qDebug() << "工具栏坐标: " << toolbarPoint.x() << toolbarPoint.y() ;
 
     bool toolIsInScreen = false; //
-    QRect tempScreen ;//捕捉区域所在的屏幕，以捕捉区域左上角为准
+    QRect tempScreen ;//捕捉区域所在的屏幕（逻辑坐标），以捕捉区域左上角为准
     // 根据屏幕的具体实际坐标修正Y值
     // 多屏情况下，横向，有可能在屏幕外面。
+    // 注意：m_screenInfo 中 x/y 为逻辑原点，width/height 为物理尺寸（构造时乘了 m_pixelRatio），
+    // 故此处统一换算为逻辑 QRect 再做归属判定，避免逻辑/物理坐标混用导致出屏。
     if (m_isScreenVertical == false && m_screenInfo.size() >= 2) {
         for (int i = 0; i < m_screenInfo.size(); ++i) {
             //qDebug() << "屏幕: " << m_screenInfo[i].name <<  m_screenInfo[i].x << m_screenInfo[i].y << m_screenInfo[i].width << m_screenInfo[i].height;
+            //当前屏幕的逻辑 QRect（toolbarPoint/recordX/recordY 均为逻辑坐标，同空间比较）
+            QRect screenRect(m_screenInfo[i].x, m_screenInfo[i].y,
+                             static_cast<int>(m_screenInfo[i].width / m_pixelRatio),
+                             static_cast<int>(m_screenInfo[i].height / m_pixelRatio));
             //工具栏是否在屏幕内
-            toolIsInScreen = toolbarPoint.x() * m_pixelRatio >= m_screenInfo[i].x &&
-                             toolbarPoint.x() * m_pixelRatio  < (m_screenInfo[i].x + m_screenInfo[i].width) &&
-                             (toolbarPoint.y() - m_screenInfo[i].height) / m_pixelRatio + m_screenInfo[i].height >= m_screenInfo[i].y &&
-                             (toolbarPoint.y() - m_screenInfo[i].height) / m_pixelRatio + m_screenInfo[i].height < (m_screenInfo[i].y + m_screenInfo[i].height);
-            bool recordIsInScreen =  recordX * m_pixelRatio >= m_screenInfo[i].x &&
-                                     recordX * m_pixelRatio < (m_screenInfo[i].x + m_screenInfo[i].width) &&
-                                     recordY * m_pixelRatio >= m_screenInfo[i].y - 1 &&
-                                     recordY * m_pixelRatio < (m_screenInfo[i].y + m_screenInfo[i].height);
+            toolIsInScreen = screenRect.contains(toolbarPoint);
+            bool recordIsInScreen =  screenRect.contains(QPoint(recordX, recordY));
             //qDebug() << "工具栏是否在屏幕（"<< m_screenInfo[i].name<<"）内 ? " << toolIsInScreen;
             //qDebug() << "捕捉区域是否在屏幕（"<< m_screenInfo[i].name<<"）内 ? " << recordIsInScreen;
             //取出捕捉区域所在的屏幕
             if (recordIsInScreen) {
-                tempScreen.setX(m_screenInfo[i].x);
-                tempScreen.setY(m_screenInfo[i].y);
-                tempScreen.setWidth(m_screenInfo[i].width);
-                tempScreen.setHeight(m_screenInfo[i].height);
+                tempScreen = screenRect;
             }
             //判断工具栏左上角在哪块屏幕上
             if (toolIsInScreen) {
                 //qDebug() << "工具栏是否在屏幕（"<< m_screenInfo[i].name<<"）内 ? " << toolIsInScreen;
                 //qDebug() << "屏幕: " << m_screenInfo[i].name <<  m_screenInfo[i].x << m_screenInfo[i].y << m_screenInfo[i].width<<m_screenInfo[i].height;
 
-                if (toolbarPoint.y() < m_screenInfo[i].y + TOOLBAR_Y_SPACING) {
+                if (toolbarPoint.y() < screenRect.y() + TOOLBAR_Y_SPACING) {
                     // 屏幕上超出
                     toolbarPoint.setY(recordY + TOOLBAR_Y_SPACING);
-                    //toolbarPoint.setY(m_screenInfo[i].y + TOOLBAR_Y_SPACING);
+                    //toolbarPoint.setY(screenRect.y() + TOOLBAR_Y_SPACING);
                     //qDebug() << "工具栏位置超出屏幕上边缘，已矫正 >>> toolbarPoint: " << toolbarPoint;
-                } else if (toolbarPoint.y() > m_screenInfo[i].y / m_pixelRatio + m_screenInfo[i].height / m_pixelRatio - m_toolBar->height() - TOOLBAR_Y_SPACING) {
+                } else if (toolbarPoint.y() > screenRect.bottom() - m_toolBar->height() - TOOLBAR_Y_SPACING) {
                     // 屏幕下超出
                     int y = std::max(recordY - m_toolBar->height() - TOOLBAR_Y_SPACING, 0);
                     //qDebug() << ">>> y: " << y;
-                    if (y > m_screenInfo[i].y + m_screenInfo[i].height / m_pixelRatio - m_toolBar->height() - TOOLBAR_Y_SPACING)
-                        y = m_screenInfo[i].y + static_cast<int>(m_screenInfo[i].height / m_pixelRatio) - m_toolBar->height() - TOOLBAR_Y_SPACING;
+                    if (y > screenRect.bottom() - m_toolBar->height() - TOOLBAR_Y_SPACING)
+                        y = screenRect.bottom() - m_toolBar->height() - TOOLBAR_Y_SPACING;
 
                     //已经调整工具栏位置之后，发现工具栏位置超出屏幕上边缘
-                    if (y < m_screenInfo[i].y) {
+                    if (y < screenRect.y()) {
                         y = recordY + TOOLBAR_Y_SPACING;
                     }
-                    if (recordY - m_screenInfo[i].y < m_toolBar->height() + TOOLBAR_Y_SPACING) {
+                    if (recordY - screenRect.y() < m_toolBar->height() + TOOLBAR_Y_SPACING) {
                         y = recordY + TOOLBAR_Y_SPACING;
                     }
                     toolbarPoint.setY(y);
@@ -2556,6 +2553,17 @@ void MainWindow::updateToolBarPos()
             } else {
                 toolbarPoint.setX(m_toolbarLastPoint.x());
                 toolbarPoint.setY(m_toolbarLastPoint.y());
+            }
+            // 兜底：将工具栏双向钳制到捕捉区域所在屏幕（逻辑边界）内，避免出屏
+            if (!tempScreen.isNull()) {
+                int minX = tempScreen.x() + TOOLBAR_Y_SPACING;
+                int maxX = tempScreen.right() - m_toolBar->width() - TOOLBAR_Y_SPACING;
+                int minY = tempScreen.y() + TOOLBAR_Y_SPACING;
+                int maxY = tempScreen.bottom() - m_toolBar->height() - TOOLBAR_Y_SPACING;
+                if (minX <= maxX)
+                    toolbarPoint.setX(qBound(minX, toolbarPoint.x(), maxX));
+                if (minY <= maxY)
+                    toolbarPoint.setY(qBound(minY, toolbarPoint.y(), maxY));
             }
         }
     }
@@ -2609,11 +2617,12 @@ void MainWindow::updateSideBarPos()
                 if (m_screenCount > 1) {
                     int i = 0;
                     for (; i < m_screenCount; ++i) {
-                        if (m_screenInfo[i].x <= sidebarPoint.x() && m_screenInfo[i].x + m_screenInfo[i].width >= sidebarPoint.x()) {
+                        // sidebarPoint 为逻辑坐标，屏幕右边界用逻辑宽（物理宽 / m_pixelRatio）
+                        if (m_screenInfo[i].x <= sidebarPoint.x() && m_screenInfo[i].x + static_cast<int>(m_screenInfo[i].width / m_pixelRatio) >= sidebarPoint.x()) {
                             break;
                         }
                     }
-                    curCurScreenH = m_screenInfo[i].height;
+                    curCurScreenH = static_cast<int>(m_screenInfo[i].height / m_pixelRatio);
                 }
                 if (sidebarPoint.y() + m_sideBar->height() > curCurScreenH) {
                     sidebarPoint.setX(recordX - m_sideBar->width() - SIDEBAR_X_SPACING);
@@ -2698,14 +2707,18 @@ void MainWindow::updateSideBarPos()
 
     // 根据屏幕的具体实际坐标修正Y值
     // 多屏情况下， 右下角有可能在屏幕外面。
+    // sidebarPoint 为逻辑坐标，屏幕边界统一用逻辑宽高（物理 / m_pixelRatio）。
     for (int i = 0; i < m_screenInfo.size(); ++i) {
-        if (sidebarPoint.x() + m_sideBar->width() >= m_screenInfo[i].x && sidebarPoint.x() + m_sideBar->width() <= m_screenInfo[i].x + m_screenInfo[i].width) {
-            if (sidebarPoint.y() < m_screenInfo[i].y + TOOLBAR_Y_SPACING) {
+        QRect screenRect(m_screenInfo[i].x, m_screenInfo[i].y,
+                         static_cast<int>(m_screenInfo[i].width / m_pixelRatio),
+                         static_cast<int>(m_screenInfo[i].height / m_pixelRatio));
+        if (sidebarPoint.x() + m_sideBar->width() >= screenRect.x() && sidebarPoint.x() + m_sideBar->width() <= screenRect.right()) {
+            if (sidebarPoint.y() < screenRect.y() + TOOLBAR_Y_SPACING) {
                 // 屏幕上超出
-                sidebarPoint.setY(m_screenInfo[i].y + TOOLBAR_Y_SPACING);
-            } else if (sidebarPoint.y() > m_screenInfo[i].y + m_screenInfo[i].height - m_sideBar->height() - TOOLBAR_Y_SPACING) {
+                sidebarPoint.setY(screenRect.y() + TOOLBAR_Y_SPACING);
+            } else if (sidebarPoint.y() > screenRect.bottom() - m_sideBar->height() - TOOLBAR_Y_SPACING) {
                 // 屏幕下超出
-                sidebarPoint.setY(m_screenInfo[i].y + m_screenInfo[i].height - m_sideBar->height() - TOOLBAR_Y_SPACING);
+                sidebarPoint.setY(screenRect.bottom() - m_sideBar->height() - TOOLBAR_Y_SPACING);
             }
             break;
         }
@@ -2877,15 +2890,24 @@ void MainWindow::updateCameraWidgetPos()
 QPoint MainWindow::getTwoScreenIntersectPos(QPoint rawPos)
 {
     // 1. fix the error screen list
+    // 注意：m_screenInfo 的 width/height 为物理尺寸（构造时乘了 m_pixelRatio），x/y 为逻辑原点。
+    // 本函数全程在逻辑坐标空间运算（recordX/Y/W/H、toolbar、m_toolBar 尺寸均为逻辑），
+    // 故此处将 tmp_screenInfo 的 width/height 换算为逻辑，避免逻辑/物理坐标混用导致出屏。
+    auto logicalScreenInfo = [this](const ScreenInfo &info) {
+        ScreenInfo logical = info;
+        logical.width = static_cast<int>(info.width / m_pixelRatio);
+        logical.height = static_cast<int>(info.height / m_pixelRatio);
+        return logical;
+    };
     QList<ScreenInfo> tmp_screenInfo;
     QPoint toolbarPoint = rawPos;
 
     if (m_screenInfo.at(0).x == 0) {
-        tmp_screenInfo.append(m_screenInfo.at(0));
-        tmp_screenInfo.append(m_screenInfo.at(1));
+        tmp_screenInfo.append(logicalScreenInfo(m_screenInfo.at(0)));
+        tmp_screenInfo.append(logicalScreenInfo(m_screenInfo.at(1)));
     } else {
-        tmp_screenInfo.append(m_screenInfo.at(1));
-        tmp_screenInfo.append(m_screenInfo.at(0));
+        tmp_screenInfo.append(logicalScreenInfo(m_screenInfo.at(1)));
+        tmp_screenInfo.append(logicalScreenInfo(m_screenInfo.at(0)));
     }
 
     // 2. get the cross area
