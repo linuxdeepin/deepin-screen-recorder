@@ -1368,7 +1368,10 @@ void SubToolWidget::initShotOption()
         ConfigSettings::instance()->setValue("shot", "save_cursor", m_saveCursorAction->isChecked() ? 1 : 0);
     });
 
-    connect(ImageBorderHelper::instance(), &ImageBorderHelper::updateBorderState, [ = ](bool hasBorderChecked) {
+    // pass "this" as the context object so the connection is disconnected
+    // automatically when this widget is destroyed; otherwise the singleton
+    // sender outlives the lambda and dereferences dangling QAction pointers
+    connect(ImageBorderHelper::instance(), &ImageBorderHelper::updateBorderState, this, [ = ](bool hasBorderChecked) {
         noBorderAction->setChecked(!hasBorderChecked);
         
         // 当有边框被选中时，选中对应的顶级菜单

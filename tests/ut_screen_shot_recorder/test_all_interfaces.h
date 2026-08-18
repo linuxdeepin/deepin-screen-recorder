@@ -107,6 +107,7 @@
 #include "utils/ut_shortcut_cov.h"
 #include "utils/ut_tempfile_cov.h"
 #include "utils/ut_voicevolumewatcher_cov.h"
+#include "utils/ut_voicevolumewatcher_interface_cov.h"
 #include "utils/ut_x_multi_screen_info_cov.h"
 // --- 覆盖率提升：ext-image-capture _cov.h（须在对应 base 头之后）---
 #include "ext-image-capture/ut_extcaptureframebuffer_cov.h"
@@ -172,4 +173,9 @@
 // 死代码，且源码自身存在 ConfigSettings::value/drawTooltipBackground 等 API 漂移）：
 // widgets/ut_majtoolbar.h / widgets/ut_subtoolbar.h / ut_record_option_panel.h
 // utils/ut_screenutils.h / ut_process_tree_ext.h
+#include "ut_widgets_cov_final.h"
+#include "ut_main_window_cov_final.h"
+#include "ut_misc_cov_final.h"
+#include "ut_ext_capture_cov_final.h"
+#include "ut_record_process_cov_final.h"
 
