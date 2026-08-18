@@ -195,7 +195,9 @@ TEST(AIAssistantWidgetCovTest, onToolButtonClickedEmitsSignal)
 // ---------- voicevolumewatcher_interface destructor (0%) ----------
 // voicevolumewatcher_interface is a QDBusAbstractInterface subclass.
 // Heap-allocate + delete to trigger the deleting destructor (D0).
-TEST(VoiceVolumeWatcherInterfaceCovTest, heapDestructor)
+// NOTE: suite name differs from utils/ut_voicevolumewatcher_interface_cov.h
+// on purpose: gtest forbids mixing TEST and TEST_F within one suite.
+TEST(VoiceVolumeWatcherIfaceHeapCovTest, heapDestructor)
 {
     voicevolumewatcher_interface *iface = nullptr;
     EXPECT_NO_FATAL_FAILURE(iface = new voicevolumewatcher_interface(
