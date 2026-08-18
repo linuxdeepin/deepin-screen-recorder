@@ -48,7 +48,10 @@ SOURCES += \
     ../../../src/dde-dock-plugins/shotstartrecord/commoniconbutton.cpp \
     ut_tipswidget.cpp \
     ut_shotstartrecordplugin.cpp \
-    ut_recordiconwidget.cpp
+    ut_recordiconwidget.cpp \
+    ut_recordiconwidget_interface.cpp \
+    ut_commoniconbutton_cov.cpp \
+    ut_shot_start_record_cov2.cpp
 
 INCLUDEPATH += /usr/include/dde-dock
 include(../../../3rdparty/googletest/gtest_dependency.pri)
