@@ -92,3 +92,7 @@ License: GPL-2.0-or-later
 Files: 3rdparty/stub_linux/*
 Copyright: None
 License: GPL-2.0-or-later
+# tests/at
+Files: tests/at/*
+Copyright: UnionTech Software Technology Co., Ltd.
+License: GPL-3.0-or-later
