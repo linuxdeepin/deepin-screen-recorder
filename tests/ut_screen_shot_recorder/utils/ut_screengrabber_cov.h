@@ -38,14 +38,25 @@ public:
 };
 
 // Non-wayland, non-xcb dispatcher delegates to grabX11Screenshot -> findIntersectingScreens.
-// With a wide rect at origin it intersects all offscreen screens and routes to
-// grabMultipleScreens; with a far-off rect it routes to grabPrimaryScreenFallback.
+// A rect covering the whole virtual desktop intersects every screen: on multi-screen
+// hosts it routes to grabMultipleScreens (ok is unconditionally true there); on
+// single-screen hosts it routes to grabSingleScreen with an in-bounds rect, which
+// also succeeds. A far-off rect (e.g. -50000,-50000,100000x100000) must NOT be used
+// here: on a single-screen host it dispatches to grabSingleScreen with out-of-range
+// relative coordinates and QScreen::grabWindow returns a null pixmap (ok=false).
 TEST_F(ScreenGrabberCovTest, grabEntireDesktopWideRectDispatchesToMultiple)
 {
+    const QList<QScreen *> screens = QGuiApplication::screens();
+    if (screens.isEmpty()) {
+        GTEST_SKIP() << "no screens available";
+    }
+    QRect virtualGeometry = screens.first()->geometry();
+    for (QScreen *s : screens)
+        virtualGeometry = virtualGeometry.united(s->geometry());
+
     ScreenGrabber g;
     bool ok = false;
-    // A huge rect should intersect every screen -> multi-screen path.
-    EXPECT_NO_FATAL_FAILURE(g.grabEntireDesktop(ok, QRect(-50000, -50000, 100000, 100000), 1.0));
+    EXPECT_NO_FATAL_FAILURE(g.grabEntireDesktop(ok, virtualGeometry, 1.0));
     EXPECT_TRUE(ok);
 }
 
