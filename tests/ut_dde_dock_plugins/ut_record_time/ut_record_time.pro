@@ -40,7 +40,9 @@ SOURCES += \
     ../../../src/dde-dock-plugins/recordtime/dbusservice.cpp \
     ut_mock_stub_recordtimeplugin.cpp \
     ut_timewidget.cpp \
-    ut_dbusservice.cpp
+    ut_timewidget_interface.cpp \
+    ut_dbusservice.cpp \
+    ut_record_time_cov2.cpp
 
 INCLUDEPATH += /usr/include/dde-dock
 include(../../../3rdparty/googletest/gtest_dependency.pri)

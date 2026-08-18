@@ -7,7 +7,7 @@ include(../../../3rdparty/stub_linux/stub.pri)
 
 TARGET = ut_shot_start
 
-QMAKE_CXXFLAGS += -g -Wno-error=deprecated-declarations -Wno-deprecated-declarations -Wall -fprofile-arcs -ftest-coverage -O0
+QMAKE_CXXFLAGS += -g -Wno-error=deprecated-declarations -Wno-deprecated-declarations -Wall -fprofile-arcs -ftest-coverage -O0 -fno-access-control
 QMAKE_LFLAGS += -g -Wall -fprofile-arcs -ftest-coverage  -O0
 
 #内存检测标签
@@ -47,8 +47,11 @@ SOURCES += \
     ../../../src/dde-dock-plugins/shotstart/quickpanelwidget.cpp \
     ../../../src/dde-dock-plugins/shotstart/commoniconbutton.cpp \
     ut_iconwidget.cpp \
+    ut_iconwidget_interface.cpp \
+    ut_commoniconbutton_cov.cpp \
     ut_shotstartplugin.cpp \
-    ut_tipswidget.cpp
+    ut_tipswidget.cpp \
+    ut_shot_start_cov2.cpp
 
 INCLUDEPATH += /usr/include/dde-dock
 include(../../../3rdparty/googletest/gtest_dependency.pri)
