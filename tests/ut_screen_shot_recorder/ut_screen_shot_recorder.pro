@@ -286,6 +286,7 @@ HEADERS += test_all_interfaces.h \
     utils/ut_shortcut_cov.h \
     utils/ut_tempfile_cov.h \
     utils/ut_voicevolumewatcher_cov.h \
+    utils/ut_voicevolumewatcher_interface_cov.h \
     utils/ut_x_multi_screen_info_cov.h \
     ext-image-capture/ut_extcaptureframebuffer_cov.h \
     ext-image-capture/ut_extcapturerecorder_cov.h \
@@ -321,7 +322,13 @@ HEADERS += test_all_interfaces.h \
     widgets/ut_colorbutton.h \
     gstrecord/ut_gstrecordx.h \
     # --- P1: 补入对应源码头（moc）---
-    ../../src/widgets/colorbutton.h
+    ../../src/widgets/colorbutton.h \
+    ut_widgets_cov_final.h \
+    ut_main_window_cov_final.h \
+    ut_misc_cov_final.h \
+    ut_ext_capture_cov_final.h \
+    ut_record_process_cov_final.h \
+    ut_scope_guard.h
 
 
 SOURCES += main.cpp \
@@ -422,4 +429,5 @@ SOURCES += main.cpp \
     ../../src/dbusservice/dbusscreenshot.cpp \
     ../../src/dbusservice/dbusscreenshotservice.cpp \
     # --- P1: 启用孤儿测试，补入对应源文件 ---
-    ../../src/widgets/colorbutton.cpp
+    ../../src/widgets/colorbutton.cpp \
+    coverage_final.cpp
