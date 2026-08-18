@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2022 - 2026 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2022-2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -226,6 +226,8 @@ void SubToolWidget::initRecordOption()
     //QAction *notAudio = new QAction(tr("Not Audio"), m_recordOptionMenu);
     m_microphoneAction = new QAction(tr("Microphone"), m_recordOptionMenu);
     m_sysAudioAction = new QAction(tr("System audio"), m_recordOptionMenu);
+    Utils::setAccessibility(m_microphoneAction, "microphoneAction");
+    Utils::setAccessibility(m_sysAudioAction, "sysAudioAction");
     // 选项
     QAction *mouseInfo = new QAction(tr("Options"), m_recordOptionMenu);
     mouseInfo->setFont(titleActionFont);

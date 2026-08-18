@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2022-2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -48,6 +48,15 @@
 #define AC_SUBTOOLWIDGET_SAVETOLOCAL_BUTTON "save_local_button"// 截图 保存按钮
 #define AC_SUBTOOLWIDGET_AI_ASSISTANT_BUTTON "ai_assistant_button"// 截图 AI助手按钮
 
+// AI 助手功能按钮
+#define AC_AIASSISTANTWIDGET_EXPLAIN_BUTTON "ai_assistant_explain_button"// AI 助手 解释按钮
+#define AC_AIASSISTANTWIDGET_SUMMARIZE_BUTTON "ai_assistant_summarize_button"// AI 助手 总结按钮
+#define AC_AIASSISTANTWIDGET_TRANSLATE_BUTTON "ai_assistant_translate_button"// AI 助手 翻译按钮
+#define AC_AIASSISTANTWIDGET_ASKAI_BUTTON "ai_assistant_askai_button"// AI 助手 提问按钮
+
+// 滚动截图提示按钮
+#define AC_SCROLLSHOTTIP_HELP_BUTTON "scrollshot_tip_help_button"// 滚动截图 帮助按钮
+#define AC_SCROLLSHOTTIP_ADJUST_BUTTON "scrollshot_tip_adjust_button"// 滚动截图 调整捕获区域按钮
 
 // 边侧工具栏按钮
 #define AC_SHOTTOOLWIDGET_THICK_ONE_RECT "thick_one_rect" // 矩形宽度1
