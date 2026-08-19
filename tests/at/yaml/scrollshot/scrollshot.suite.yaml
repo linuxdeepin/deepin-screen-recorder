@@ -1,0 +1,41 @@
+name: scrollshot_suite
+app: deepin-screen-recorder
+description: ''
+module: scrollshot
+tags: []
+fast_fail: false
+env_check: []
+setup:
+- action: session_start
+  command: deepin-screen-recorder
+  wait: 3.0
+suites:
+- id: scrollshot_start_hotkey_s1
+  name: 截长图-系统快捷键启动
+  description: ''
+  tags: []
+  steps:
+  - action: keyboard_hot_key
+    key: ctrl+alt+i
+  assert_steps:
+  - action: assert_element
+    selector:
+      name: scrollshot_button
+      role: Button
+- id: scrollshot_scroll_bottom_s1
+  name: 截长图-手动向下滚动到底部
+  description: ''
+  tags: []
+  steps:
+  - action: keyboard_hot_key
+    key: ctrl+alt+i
+  - action: mouse_click
+  - action: mouse_scroll
+    value: -3
+  assert_steps:
+  - action: assert_element
+    selector:
+      name: scrollshot_button
+      role: Button
+teardown:
+- action: session_stop

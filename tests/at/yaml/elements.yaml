@@ -1,0 +1,247 @@
+elements:
+  to_shot_but:
+    name: to_shot_but
+    role: Button
+  toolbar_close_button:
+    name: toolbar_close_button
+    role: Button
+  line_button:
+    name: line_button
+    role: Button
+  rectangle_button:
+    name: rectangle_button
+    role: Button
+  rect_thicknessBtn:
+    name: rect_thicknessBtn
+    role: Button
+  oval_button:
+    name: oval_button
+    role: Button
+  text_button:
+    name: text_button
+    role: Button
+  to_record_but:
+    name: to_record_but
+    role: Button
+  record_option_but:
+    name: record_option_but
+    role: Button
+  gifAction:
+    name: gifAction
+    role: Button
+  fps24Action:
+    name: fps24Action
+    role: Button
+  mp4Action:
+    name: mp4Action
+    role: Button
+  fps30Action:
+    name: fps30Action
+    role: Button
+  pinscreenshots_button:
+    name: pinscreenshots_button
+    role: Button
+  pin_save_but:
+    name: pin_save_but
+    role: Button
+  pin_close_but:
+    name: pin_close_but
+    role: Button
+  scrollshot_button:
+    name: scrollshot_button
+    role: Button
+  orc_button:
+    name: orc_button
+    role: Button
+  n1000:
+    name: to_record_but
+    role: push button
+  n1001:
+    name: to_shot_but
+    role: push button
+  n1002:
+    name: toolbar_close_button
+    role: push button
+  n1003:
+    name: keyboard_button
+    role: push button
+  n1004:
+    name: camera_button
+    role: push button
+  n1005:
+    name: shot_button
+    role: push button
+  n1006:
+    name: record_option_but
+    role: push button
+  n1007:
+    name: gio_button
+    role: push button
+  n1008:
+    name: line_button
+    role: push button
+  n1009:
+    name: pen_button
+    role: push button
+  n1010:
+    name: mosaic_button
+    role: push button
+  n1011:
+    name: text_button
+    role: push button
+  n1012:
+    name: scrollshot_button
+    role: push button
+  n1013:
+    name: orc_button
+    role: push button
+  n1014:
+    name: pinscreenshots_button
+    role: push button
+  n1015:
+    name: ai_assistant_button
+    role: push button
+  n1016:
+    name: undo_button
+    role: push button
+  n1017:
+    name: recorder_button
+    role: push button
+  n1018:
+    name: shot_option_but
+    role: push button
+  n1019:
+    name: save_local_button
+    role: push button
+  n1020:
+    name: Black_button
+    role: push button
+  n1021:
+    name: Gray_button
+    role: push button
+  n1022:
+    name: White_button
+    role: push button
+  n1023:
+    name: Red_button
+    role: push button
+  n1024:
+    name: Orange_button
+    role: push button
+  n1025:
+    name: Yellow_button
+    role: push button
+  n1026:
+    name: LightLime_button
+    role: push button
+  n1027:
+    name: Aquamarine_button
+    role: push button
+  n1028:
+    name: Green_button
+    role: push button
+  n1029:
+    name: Blue_button
+    role: push button
+  n1030:
+    name: Purple_button
+    role: push button
+  n1031:
+    name: DarkBlue_button
+    role: push button
+  n1032:
+    name: rect_thicknessBtn
+    role: push button
+  n1033:
+    name: rectangle_button
+    role: push button
+  n1034:
+    name: oval_button
+    role: push button
+  n1035:
+    name: menuUndo
+    role: menu item
+  n1036:
+    name: menuSave
+    role: menu item
+  n1037:
+    name: menuExit
+    role: menu item
+  n1038:
+    name: gifAction
+    role: menu item
+  n1039:
+    name: mp4Action
+    role: menu item
+  n1040:
+    name: mkvAction
+    role: menu item
+  n1041:
+    name: fps5Action
+    role: menu item
+  n1042:
+    name: fps10Action
+    role: menu item
+  n1043:
+    name: fps20Action
+    role: menu item
+  n1044:
+    name: fps24Action
+    role: menu item
+  n1045:
+    name: fps30Action
+    role: menu item
+  n1046:
+    name: pngAction
+    role: menu item
+  n1047:
+    name: jpgAction
+    role: menu item
+  n1048:
+    name: bmpAction
+    role: menu item
+  n1049:
+    name: saveCursorAction
+    role: menu item
+  n1050:
+    name: pin_close_but
+    role: push button
+  n1051:
+    name: pin_save_but
+    role: push button
+  n1052:
+    name: pin_ocr_but
+    role: push button
+  n1053:
+    name: pin_option_but
+    role: push button
+  n1054:
+    name: pin_save_local_but
+    role: push button
+  n1055:
+    name: IconButton
+    role: push button
+  n1056:
+    name: RecordButton
+    role: push button
+  n1057:
+    name: RecordOptionPanel
+    role: push button
+  n1058:
+    name: ai_assistant_explain_button
+    role: push button
+  n1059:
+    name: ai_assistant_summarize_button
+    role: push button
+  n1060:
+    name: ai_assistant_translate_button
+    role: push button
+  n1061:
+    name: ai_assistant_askai_button
+    role: push button
+  n1062:
+    name: microphoneAction
+    role: menu item
+  n1063:
+    name: sysAudioAction
+    role: menu item

@@ -1,0 +1,99 @@
+name: record-options_suite
+app: deepin-screen-recorder
+description: ''
+module: record-options
+tags: []
+fast_fail: false
+env_check: []
+setup:
+- action: session_start
+  command: deepin-screen-recorder
+  wait: 3.0
+suites:
+- id: record_options_default_s1
+  name: 录屏选项-默认选项
+  description: ''
+  tags: []
+  steps:
+  - action: element_action
+    selector:
+      name: to_record_but
+      role: Button
+    do: click
+  - action: keyboard_hot_key
+    key: ctrl+alt+r
+  - action: element_action
+    selector:
+      name: record_option_but
+      role: Button
+    do: click
+  assert_steps:
+  - action: assert_element
+    selector:
+      name: gifAction
+      role: Button
+  - action: assert_element
+    selector:
+      name: fps24Action
+      role: Button
+- id: record_options_format_s1
+  name: 录屏选项-格式选择交互
+  description: ''
+  tags: []
+  steps:
+  - action: keyboard_hot_key
+    key: ctrl+alt+r
+  - action: element_action
+    selector:
+      name: record_option_but
+      role: Button
+    do: click
+  - action: element_action
+    selector:
+      name: mp4Action
+      role: Button
+    do: click
+  assert_steps:
+  - action: assert_element
+    selector:
+      name: mp4Action
+      role: Button
+  - action: assert_window
+- id: record_options_fps_s1
+  name: 录屏选项-帧数选择交互
+  description: ''
+  tags: []
+  steps:
+  - action: keyboard_hot_key
+    key: ctrl+alt+r
+  - action: element_action
+    selector:
+      name: record_option_but
+      role: Button
+    do: click
+  - action: element_action
+    selector:
+      name: fps30Action
+      role: Button
+    do: click
+  assert_steps:
+  - action: assert_window
+- id: record_options_gif_audio_s1
+  name: 录屏-GIF禁用录制音频
+  description: ''
+  tags: []
+  steps:
+  - action: keyboard_hot_key
+    key: ctrl+alt+r
+  - action: element_action
+    selector:
+      name: gifAction
+      role: Button
+    do: click
+  assert_steps:
+  - action: assert_element
+    selector:
+      name: record_option_but
+      role: Button
+teardown:
+- action: session_stop

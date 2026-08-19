@@ -1,0 +1,616 @@
+# === 格式范例 ===
+# metadata:
+#   generated_at: "2024-01-01T00:00:00"
+#   source: "input.xlsx"
+# cases:
+#   - id: "suite-id"
+#     name: "Suite name"
+#     module: "module-name"
+#     status: "active"
+#     annotation:
+#       测试界面: "主窗口"
+#       测试功能: "工具栏操作"
+#       前置条件: "应用已启动"
+#       AT元素引用: ["open_button"]
+#     steps:
+#       - step_type: "action"
+#         description: "启动应用"
+#         action: "session_start"
+#         command: "deepin-screen-recorder"
+#       - step_type: "action"
+#         description: "点击打开按钮"
+#         action: "element_action"
+#         selector: {name: "打开", role: "push button"}
+#         do: "click"
+#       - step_type: "assert"
+#         description: "验证文件已打开"
+#         action: "assert_element"
+#         selector: {name: "文件内容", role: "text"}
+# === 格式范例结束 ===
+
+metadata:
+  generated_at: "2026-08-19T00:00:00"
+  source: "统信桌面操作系统-V25-用例-截图录屏.xlsx"
+
+cases:
+  # =====================================================================
+  # 模块：截图-基础捕获（截取/剪切板/保存）
+  # =====================================================================
+  - id: "screenshot_capture"
+    name: "截图基础捕获流程"
+    module: "screenshot-capture"
+    status: "active"
+    annotation:
+      测试界面: "截图录屏主界面-截图模式"
+      测试功能: "基础截图流程（窗口截图/剪切板验证/区域截图）"
+      前置条件: "deepin-screen-recorder 已安装，桌面环境可用"
+      AT元素引用: ["to_shot_but", "to_record_but", "toolbar_close_button", "save_local_button"]
+    steps:
+      - step_type: "action"
+        description: "启动截图录屏"
+        action: "session_start"
+        command: "deepin-screen-recorder"
+        wait: 3.0
+      - step_type: "action"
+        description: "鼠标光标停留在桌面窗口上"
+        action: "element_action"
+        selector: {name: "to_shot_but", role: "Button"}
+        do: "click"
+        note: "确保处于截图模式"
+      - step_type: "action"
+        description: "点击快捷键Alt+PrintScreen"
+        action: "keyboard_hot_key"
+        key: "alt+Print"
+      - step_type: "assert"
+        description: "应用窗口有光标显示（截取光标所在窗口）"
+        action: "assert_element"
+        selector: {name: "toolbar_close_button", role: "Button"}
+
+  - id: "screenshot_clipboard"
+    name: "截图后剪切板验证"
+    module: "screenshot-capture"
+    status: "active"
+    annotation:
+      测试界面: "截图录屏主界面-截图模式"
+      测试功能: "截图后通过剪切板粘贴验证截图内容"
+      前置条件: "deepin-screen-recorder 已安装"
+      AT元素引用: ["save_local_button"]
+    steps:
+      - step_type: "action"
+        description: "启动截图录屏"
+        action: "session_start"
+        command: "deepin-screen-recorder"
+        wait: 3.0
+      - step_type: "action"
+        description: "点击键盘ctrl+alt+a 调起区域选择框"
+        action: "keyboard_hot_key"
+        key: "ctrl+alt+a"
+      - step_type: "assert"
+        description: "调起截图区域选择框"
+        action: "assert_element"
+        selector: {name: "toolbar_close_button", role: "Button"}
+      - step_type: "action"
+        description: "选择区域后点击截屏按钮"
+        action: "keyboard_press"
+        key: "enter"
+      - step_type: "assert"
+        description: "截屏成功，截图已复制到剪切板"
+        action: "assert_window"
+        name_pattern: "deepin-screen-recorder"
+
+  # =====================================================================
+  # 模块：截图-工具栏绘图工具
+  # =====================================================================
+  - id: "screenshot_toolbar_geometry"
+    name: "几何工具默认选中矩形"
+    module: "screenshot-toolbar"
+    status: "active"
+    annotation:
+      测试界面: "截图模式工具栏-几何工具"
+      测试功能: "几何工具默认选中矩形，含描边粗细和颜色选择控件"
+      前置条件: "启动截图录屏并框选区域"
+      AT元素引用: ["rectangle_button", "oval_button", "rect_thicknessBtn", "line_button"]
+    steps:
+      - step_type: "action"
+        description: "启动截图录屏"
+        action: "session_start"
+        command: "deepin-screen-recorder"
+        wait: 3.0
+      - step_type: "action"
+        description: "框选任意区域"
+        action: "keyboard_hot_key"
+        key: "ctrl+alt+a"
+      - step_type: "assert"
+        description: "截图工具栏打开"
+        action: "assert_element"
+        selector: {name: "line_button", role: "Button"}
+      - step_type: "action"
+        description: "点击截图工具栏的几何工具图标"
+        action: "element_action"
+        selector: {name: "rectangle_button", role: "Button"}
+        do: "click"
+      - step_type: "assert"
+        description: "矩形工具为默认选中状态，包含描边粗细控件"
+        action: "assert_element"
+        selector: {name: "rect_thicknessBtn", role: "Button"}
+      - step_type: "action"
+        description: "切换为圆形工具"
+        action: "element_action"
+        selector: {name: "oval_button", role: "Button"}
+        do: "click"
+      - step_type: "assert"
+        description: "圆形工具包含描边粗细和颜色选择控件"
+        action: "assert_element"
+        selector: {name: "rect_thicknessBtn", role: "Button"}
+
+  - id: "screenshot_toolbar_text"
+    name: "文字工具-鼠标调整光标位置"
+    module: "screenshot-toolbar"
+    status: "active"
+    annotation:
+      测试界面: "截图模式工具栏-文字工具"
+      测试功能: "文字工具输入并调整光标位置"
+      前置条件: "启动截图录屏并框选区域，工具栏文字工具可用"
+      AT元素引用: ["text_button"]
+    steps:
+      - step_type: "action"
+        description: "启动截图录屏"
+        action: "session_start"
+        command: "deepin-screen-recorder"
+        wait: 3.0
+      - step_type: "action"
+        description: "框选任意区域"
+        action: "keyboard_hot_key"
+        key: "ctrl+alt+a"
+      - step_type: "action"
+        description: "点击文字工具"
+        action: "element_action"
+        selector: {name: "text_button", role: "Button"}
+        do: "click"
+      - step_type: "action"
+        description: "鼠标点击行尾"
+        action: "mouse_click"
+        x: 660
+        y: 420
+      - step_type: "assert"
+        description: "光标在行尾，文字工具选中"
+        action: "assert_element"
+        selector: {name: "text_button", role: "Button"}
+
+  # =====================================================================
+  # 模块：录屏-选项设置（格式/帧数/声音/按键/鼠标）
+  # =====================================================================
+  - id: "record_options_default"
+    name: "录屏选项-默认选项"
+    module: "record-options"
+    status: "active"
+    annotation:
+      测试界面: "录屏模式-录屏选项面板"
+      测试功能: "选项面板默认格式GIF、默认帧数24fps"
+      前置条件: "启动截图录屏并切换到录屏模式"
+      AT元素引用: ["to_record_but", "record_option_but", "gifAction", "fps24Action"]
+    steps:
+      - step_type: "action"
+        description: "启动截图录屏"
+        action: "session_start"
+        command: "deepin-screen-recorder"
+        wait: 3.0
+      - step_type: "action"
+        description: "切换到录屏模式"
+        action: "element_action"
+        selector: {name: "to_record_but", role: "Button"}
+        do: "click"
+      - step_type: "action"
+        description: "框选录屏区域"
+        action: "keyboard_hot_key"
+        key: "ctrl+alt+r"
+      - step_type: "action"
+        description: "点击录屏选项按钮"
+        action: "element_action"
+        selector: {name: "record_option_but", role: "Button"}
+        do: "click"
+      - step_type: "assert"
+        description: "展开选项列表，格式默认选择GIF"
+        action: "assert_element"
+        selector: {name: "gifAction", role: "Button"}
+      - step_type: "assert"
+        description: "帧数默认选择24fps"
+        action: "assert_element"
+        selector: {name: "fps24Action", role: "Button"}
+
+  - id: "record_options_format"
+    name: "录屏选项-格式选择交互"
+    module: "record-options"
+    status: "active"
+    annotation:
+      测试界面: "录屏模式-录屏选项面板"
+      测试功能: "选择MP4格式后收起选项栏"
+      前置条件: "启动截图录屏并切换到录屏模式"
+      AT元素引用: ["record_option_but", "mp4Action", "gifAction", "mkvAction"]
+    steps:
+      - step_type: "action"
+        description: "启动截图录屏"
+        action: "session_start"
+        command: "deepin-screen-recorder"
+        wait: 3.0
+      - step_type: "action"
+        description: "切换到录屏模式，框选区域"
+        action: "keyboard_hot_key"
+        key: "ctrl+alt+r"
+      - step_type: "action"
+        description: "点击录屏选项按钮"
+        action: "element_action"
+        selector: {name: "record_option_but", role: "Button"}
+        do: "click"
+      - step_type: "assert"
+        description: "格式选项有GIF、MP4、MKV展示"
+        action: "assert_element"
+        selector: {name: "mp4Action", role: "Button"}
+      - step_type: "action"
+        description: "点击MP4格式"
+        action: "element_action"
+        selector: {name: "mp4Action", role: "Button"}
+        do: "click"
+      - step_type: "assert"
+        description: "选择MP4选项，收起选项栏"
+        action: "assert_window"
+        name_pattern: "deepin-screen-recorder"
+
+  - id: "record_options_fps"
+    name: "录屏选项-帧数选择交互"
+    module: "record-options"
+    status: "active"
+    annotation:
+      测试界面: "录屏模式-录屏选项面板"
+      测试功能: "选择30fps帧数后收起选项栏"
+      前置条件: "启动截图录屏并切换到录屏模式"
+      AT元素引用: ["record_option_but", "fps30Action"]
+    steps:
+      - step_type: "action"
+        description: "启动截图录屏"
+        action: "session_start"
+        command: "deepin-screen-recorder"
+        wait: 3.0
+      - step_type: "action"
+        description: "切换到录屏模式，框选区域"
+        action: "keyboard_hot_key"
+        key: "ctrl+alt+r"
+      - step_type: "action"
+        description: "点击选项按钮，帧数选择30fps"
+        action: "element_action"
+        selector: {name: "record_option_but", role: "Button"}
+        do: "click"
+      - step_type: "action"
+        description: "点击30fps帧数选项"
+        action: "element_action"
+        selector: {name: "fps30Action", role: "Button"}
+        do: "click"
+      - step_type: "assert"
+        description: "选择30fps选项，收起选项栏"
+        action: "assert_window"
+        name_pattern: "deepin-screen-recorder"
+
+  - id: "record_options_gif_audio"
+    name: "录屏-GIF禁用录制音频"
+    module: "record-options"
+    status: "active"
+    annotation:
+      测试界面: "录屏模式-录屏选项面板"
+      测试功能: "GIF格式下声音选项置灰，不可选择"
+      前置条件: "启动截图录屏并切换到录屏模式"
+      AT元素引用: ["to_record_but", "record_option_but", "gifAction", "microphoneAction", "sysAudioAction"]
+    steps:
+      - step_type: "action"
+        description: "启动截图录屏"
+        action: "session_start"
+        command: "deepin-screen-recorder"
+        wait: 3.0
+      - step_type: "action"
+        description: "框选录屏窗口大小，点击设置/F3"
+        action: "keyboard_hot_key"
+        key: "ctrl+alt+r"
+      - step_type: "action"
+        description: "选择GIF格式"
+        action: "element_action"
+        selector: {name: "gifAction", role: "Button"}
+        do: "click"
+      - step_type: "assert"
+        description: "录屏窗口激活，可选择格式、声音、帧数、选项、保存方式"
+        action: "assert_element"
+        selector: {name: "record_option_but", role: "Button"}
+
+  # =====================================================================
+  # 模块：录屏-区域大小
+  # =====================================================================
+  - id: "record_region_min"
+    name: "录屏最小区域尺寸"
+    module: "record-region"
+    status: "active"
+    annotation:
+      测试界面: "录屏模式-区域选择框"
+      测试功能: "框选录屏最小区域，尺寸为580*280"
+      前置条件: "启动截图录屏并切换到录屏模式"
+      AT元素引用: ["to_record_but", "toolbar_close_button"]
+    steps:
+      - step_type: "action"
+        description: "启动截图录屏"
+        action: "session_start"
+        command: "deepin-screen-recorder"
+        wait: 3.0
+      - step_type: "action"
+        description: "Ctrl+Alt+R启动录屏，框选录屏最小区域"
+        action: "keyboard_hot_key"
+        key: "ctrl+alt+r"
+      - step_type: "assert"
+        description: "录屏区域选择框打开"
+        action: "assert_element"
+        selector: {name: "toolbar_close_button", role: "Button"}
+
+  - id: "record_region_resize"
+    name: "录屏区域大小-调整"
+    module: "record-region"
+    status: "active"
+    annotation:
+      测试界面: "录屏模式-区域选择框"
+      测试功能: "通过方向键调整区域大小（向下扩大/向右缩小等）"
+      前置条件: "启动截图录屏并框选录屏区域"
+      AT元素引用: ["to_record_but", "toolbar_close_button"]
+    steps:
+      - step_type: "action"
+        description: "启动截图录屏"
+        action: "session_start"
+        command: "deepin-screen-recorder"
+        wait: 3.0
+      - step_type: "action"
+        description: "框选录屏区域"
+        action: "keyboard_hot_key"
+        key: "ctrl+alt+r"
+      - step_type: "action"
+        description: "按方向键向下扩大区域"
+        action: "keyboard_press"
+        key: "down"
+      - step_type: "assert"
+        description: "区域选择框保持打开且尺寸有变化"
+        action: "assert_element"
+        selector: {name: "toolbar_close_button", role: "Button"}
+
+  # =====================================================================
+  # 模块：贴图（截图固定）
+  # =====================================================================
+  - id: "pin_save_clipboard"
+    name: "贴图功能栏-保存到剪切板通知"
+    module: "pin"
+    status: "active"
+    annotation:
+      测试界面: "贴图功能栏"
+      测试功能: "贴图后保存到剪切板并弹通知"
+      前置条件: "启动截图录屏，已进入贴图模式"
+      AT元素引用: ["pinscreenshots_button", "pin_save_but", "pin_close_but"]
+    steps:
+      - step_type: "action"
+        description: "启动截图录屏"
+        action: "session_start"
+        command: "deepin-screen-recorder"
+        wait: 3.0
+      - step_type: "action"
+        description: "打开截图，选择截图区域"
+        action: "keyboard_hot_key"
+        key: "ctrl+alt+a"
+      - step_type: "action"
+        description: "点击截图功能栏贴图按钮进入贴图模式"
+        action: "element_action"
+        selector: {name: "pinscreenshots_button", role: "Button"}
+        do: "click"
+      - step_type: "assert"
+        description: "进入贴图模式，贴图功能栏打开"
+        action: "assert_element"
+        selector: {name: "pin_save_but", role: "Button"}
+      - step_type: "action"
+        description: "点击贴图功能栏保存按钮"
+        action: "element_action"
+        selector: {name: "pin_save_but", role: "Button"}
+        do: "click"
+      - step_type: "assert"
+        description: "贴图保存成功保存到剪切板"
+        action: "assert_window"
+        name_pattern: "deepin-screen-recorder"
+
+  - id: "pin_close_esc"
+    name: "贴图功能栏-Esc关闭贴图"
+    module: "pin"
+    status: "active"
+    annotation:
+      测试界面: "贴图功能栏"
+      测试功能: "按Esc关闭贴图且不额外保存到剪切板"
+      前置条件: "启动截图录屏，已进入贴图模式并激活贴图1"
+      AT元素引用: ["pinscreenshots_button", "pin_close_but"]
+    steps:
+      - step_type: "action"
+        description: "启动截图录屏"
+        action: "session_start"
+        command: "deepin-screen-recorder"
+        wait: 3.0
+      - step_type: "action"
+        description: "打开截图并进入贴图模式"
+        action: "element_action"
+        selector: {name: "pinscreenshots_button", role: "Button"}
+        do: "click"
+      - step_type: "action"
+        description: "按快捷键Esc关闭贴图"
+        action: "keyboard_press"
+        key: "escape"
+      - step_type: "assert"
+        description: "退出贴图模式，贴图1消失"
+        action: "assert_not_exists"
+        selector: {name: "pin_close_but", role: "Button"}
+    reason: ""
+
+  - id: "pin_contextmenu_save"
+    name: "贴图右键菜单-保存功能"
+    module: "pin"
+    status: "active"
+    annotation:
+      测试界面: "贴图浮窗-右键菜单"
+      测试功能: "贴图浮窗右键菜单保存"
+      前置条件: "启动截图录屏，已进入贴图模式并激活贴图1"
+      AT元素引用: ["pinscreenshots_button", "pin_close_but"]
+    steps:
+      - step_type: "action"
+        description: "启动截图录屏"
+        action: "session_start"
+        command: "deepin-screen-recorder"
+        wait: 3.0
+      - step_type: "action"
+        description: "打开截图并进入贴图模式"
+        action: "element_action"
+        selector: {name: "pinscreenshots_button", role: "Button"}
+        do: "click"
+      - step_type: "assert"
+        description: "贴图功能栏打开"
+        action: "assert_element"
+        selector: {name: "pin_close_but", role: "Button"}
+
+  # =====================================================================
+  # 模块：滚动截图/截长图
+  # =====================================================================
+  - id: "scrollshot_start_hotkey"
+    name: "截长图-系统快捷键启动"
+    module: "scrollshot"
+    status: "active"
+    annotation:
+      测试界面: "滚动截图（截长图）"
+      测试功能: "通过系统快捷键Ctrl+Alt+I进入滚动截图"
+      前置条件: "deepin-screen-recorder 已安装"
+      AT元素引用: ["scrollshot_button"]
+    steps:
+      - step_type: "action"
+        description: "启动截图录屏"
+        action: "session_start"
+        command: "deepin-screen-recorder"
+        wait: 3.0
+      - step_type: "action"
+        description: "按Ctrl+Alt+I进入滚动截图"
+        action: "keyboard_hot_key"
+        key: "ctrl+alt+i"
+      - step_type: "assert"
+        description: "进入滚动截长图界面"
+        action: "assert_element"
+        selector: {name: "scrollshot_button", role: "Button"}
+
+  - id: "scrollshot_scroll_bottom"
+    name: "截长图-手动向下滚动到底部"
+    module: "scrollshot"
+    status: "active"
+    annotation:
+      测试界面: "滚动截图（截长图）"
+      测试功能: "手动滚动到底部无异常提示"
+      前置条件: "进入滚动截图模式，捕捉区已选定"
+      AT元素引用: ["scrollshot_button"]
+    steps:
+      - step_type: "action"
+        description: "启动截图录屏"
+        action: "session_start"
+        command: "deepin-screen-recorder"
+        wait: 3.0
+      - step_type: "action"
+        description: "进入滚动截长图"
+        action: "keyboard_hot_key"
+        key: "ctrl+alt+i"
+      - step_type: "action"
+        description: "光标移动至捕捉区内"
+        action: "mouse_click"
+        x: 640
+        y: 400
+      - step_type: "action"
+        description: "向后滚动鼠标滚轮至滚动区底部"
+        action: "mouse_scroll"
+        value: -5
+      - step_type: "assert"
+        description: "滚动到底部无异常提示"
+        action: "assert_element"
+        selector: {name: "scrollshot_button", role: "Button"}
+
+  # =====================================================================
+  # 模块：文字识别 OCR
+  # =====================================================================
+  - id: "ocr_start_hotkey"
+    name: "OCR-快捷键启动"
+    module: "ocr"
+    status: "active"
+    annotation:
+      测试界面: "OCR 文字识别窗口"
+      测试功能: "通过Alt+O快捷键启动OCR识别窗口"
+      前置条件: "deepin-screen-recorder 已安装"
+      AT元素引用: ["orc_button"]
+    steps:
+      - step_type: "action"
+        description: "启动截图录屏"
+        action: "session_start"
+        command: "deepin-screen-recorder"
+        wait: 3.0
+      - step_type: "action"
+        description: "使用快捷键Alt+O调起OCR识别窗口"
+        action: "keyboard_hot_key"
+        key: "alt+o"
+      - step_type: "assert"
+        description: "调起OCR识别窗口"
+        action: "assert_element"
+        selector: {name: "orc_button", role: "Button"}
+
+  # =====================================================================
+  # 模块：保存/存储逻辑
+  # =====================================================================
+  - id: "save_clipboard_enter"
+    name: "保存逻辑-按回车复制到剪切板"
+    module: "save-storage"
+    status: "active"
+    annotation:
+      测试界面: "截图保存逻辑"
+      测试功能: "截图后按回车将图片复制到剪切板"
+      前置条件: "启动截图录屏并框选截图区域"
+      AT元素引用: ["save_local_button", "toolbar_close_button"]
+    steps:
+      - step_type: "action"
+        description: "启动截图录屏"
+        action: "session_start"
+        command: "deepin-screen-recorder"
+        wait: 3.0
+      - step_type: "action"
+        description: "框选任意截图区域"
+        action: "keyboard_hot_key"
+        key: "ctrl+alt+a"
+      - step_type: "action"
+        description: "按回车复制到剪切板"
+        action: "keyboard_press"
+        key: "enter"
+      - step_type: "assert"
+        description: "截图成功并复制到剪切板"
+        action: "assert_window"
+        name_pattern: "deepin-screen-recorder"
+
+  # =====================================================================
+  # 模块：快捷键/入口
+  # =====================================================================
+  - id: "hotkey_panel"
+    name: "快捷键面板-OCR/Ctrl+Shift+?预览"
+    module: "hotkey"
+    status: "active"
+    annotation:
+      测试界面: "快捷键提示预览面板"
+      测试功能: "Ctrl+Shift+?调起快捷键预览窗口，展示识别文字Alt+O"
+      前置条件: "deepin-screen-recorder 已安装"
+      AT元素引用: ["orc_button", "scrollshot_button"]
+    steps:
+      - step_type: "action"
+        description: "启动截图录屏"
+        action: "session_start"
+        command: "deepin-screen-recorder"
+        wait: 3.0
+      - step_type: "action"
+        description: "使用快捷键Ctrl+Shift+?调起快捷键预览窗口"
+        action: "keyboard_hot_key"
+        key: "ctrl+shift+?"
+      - step_type: "assert"
+        description: "工具菜单最下方增加识别文字Alt+O文案"
+        action: "assert_element"
+        selector: {name: "orc_button", role: "Button"}

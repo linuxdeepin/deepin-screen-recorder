@@ -1,0 +1,25 @@
+name: save-storage_suite
+app: deepin-screen-recorder
+description: ''
+module: save-storage
+tags: []
+fast_fail: false
+env_check: []
+setup:
+- action: session_start
+  command: deepin-screen-recorder
+  wait: 3.0
+suites:
+- id: save_clipboard_enter_s1
+  name: 保存逻辑-按回车复制到剪切板
+  description: ''
+  tags: []
+  steps:
+  - action: keyboard_hot_key
+    key: ctrl+alt+a
+  - action: keyboard_press
+    key: enter
+  assert_steps:
+  - action: assert_window
+teardown:
+- action: session_stop

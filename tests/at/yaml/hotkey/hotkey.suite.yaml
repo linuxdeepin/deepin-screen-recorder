@@ -1,0 +1,26 @@
+name: hotkey_suite
+app: deepin-screen-recorder
+description: ''
+module: hotkey
+tags: []
+fast_fail: false
+env_check: []
+setup:
+- action: session_start
+  command: deepin-screen-recorder
+  wait: 3.0
+suites:
+- id: hotkey_panel_s1
+  name: 快捷键面板-OCR/Ctrl+Shift+?预览
+  description: ''
+  tags: []
+  steps:
+  - action: keyboard_hot_key
+    key: ctrl+shift+?
+  assert_steps:
+  - action: assert_element
+    selector:
+      name: orc_button
+      role: Button
+teardown:
+- action: session_stop

@@ -1,0 +1,26 @@
+name: ocr_suite
+app: deepin-screen-recorder
+description: ''
+module: ocr
+tags: []
+fast_fail: false
+env_check: []
+setup:
+- action: session_start
+  command: deepin-screen-recorder
+  wait: 3.0
+suites:
+- id: ocr_start_hotkey_s1
+  name: OCR-快捷键启动
+  description: ''
+  tags: []
+  steps:
+  - action: keyboard_hot_key
+    key: alt+o
+  assert_steps:
+  - action: assert_element
+    selector:
+      name: orc_button
+      role: Button
+teardown:
+- action: session_stop
