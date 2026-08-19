@@ -302,6 +302,22 @@ def wait_mp4(directory, marker):
     raise AssertionError(f"no mp4 generated in {directory}")
 
 
+def set_opts(section, pairs):
+    update_config(section, pairs)
+
+
+def parse_key_vals(args):
+    pairs = {}
+    for item in args:
+        key, _, value = item.partition("=")
+        try:
+            value = int(value)
+        except ValueError:
+            pass
+        pairs[key] = value
+    return pairs
+
+
 def main():
     command = sys.argv[1]
     root = ensure_root(clean=command == "init")
@@ -310,6 +326,10 @@ def main():
         return
     if command == "root":
         print(root)
+    elif command == "set-shot-opts":
+        set_opts("shot", parse_key_vals(sys.argv[2:]))
+    elif command == "set-recorder-opts":
+        set_opts("recorder", parse_key_vals(sys.argv[2:]))
     elif command == "clear-marker":
         clear_marker(sys.argv[2])
     elif command == "mark":

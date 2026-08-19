@@ -1,0 +1,456 @@
+# === 格式范例 ===
+# metadata:
+#   generated_at: "2025-08-19T00:00:00"
+#   source: "input.xlsx"
+# cases:
+#   - id: "suite-id"
+#     name: "Suite name"
+#     module: "module-name"
+#     status: "active"
+#     annotation:
+#       测试界面: "主窗口"
+#       测试功能: "工具栏操作"
+#       前置条件: "应用已启动"
+#       AT元素引用: ["open_button"]
+#     steps:
+#       - step_type: "action"
+#         action: "session_start"
+#         command: "deepin-screen-recorder"
+#       - step_type: "action"
+#         action: "mouse_click"
+#         selector: {name: "保存", role: "push button"}
+#       - step_type: "assert"
+#         action: "assert_element"
+#         selector: {name: "文件内容", role: "text"}
+# === 格式范例结束 ===
+
+metadata:
+  generated_at: "2025-08-19T00:00:00"
+  source: "统信桌面操作系统-V25-用例-截图录屏.xlsx"
+  total_mapped_suites: 16
+  total_unsupported_suites: 9
+
+cases:
+  - id: suite_screenshot_tools_color
+    name: "截图工具栏-颜色选择"
+    module: "screenshot_tools"
+    status: "active"
+    annotation:
+      测试界面: "截图工具栏-颜色按钮"
+      测试功能: "颜色按钮切换"
+      前置条件: "截图工具栏已显示"
+      AT元素引用: ["Black_button", "Gray_button", "White_button", "Red_button", "Orange_button", "Yellow_button", "LightLime_button", "Aquamarine_button", "Green_button", "Blue_button", "Purple_button", "DarkBlue_button"]
+    steps:
+      - step_type: "action"
+        description: "框选区域后点击颜色按钮切换颜色"
+        action: "element_action"
+        selector: {name: "Red_button", role: "push button"}
+        do: "click"
+      - step_type: "assert"
+        description: "检查颜色切换成功（需AT-SPI元素）"
+        action: "assert_element"
+        selector: {name: "Red_button", role: "push button"}
+
+  - id: suite_screenshot_tools_geometric
+    name: "截图工具栏-几何工具"
+    module: "screenshot_tools"
+    status: "active"
+    annotation:
+      测试界面: "截图工具栏-几何工具子面板"
+      测试功能: "几何工具切换、描边粗细、颜色选择"
+      前置条件: "截图工具栏已显示"
+      AT元素引用: ["rectangle_button", "oval_button", "rect_thicknessBtn", "Red_button", "Blue_button"]
+    steps:
+      - step_type: "action"
+        description: "点击矩形工具"
+        action: "element_action"
+        selector: {name: "rectangle_button", role: "push button"}
+        do: "click"
+      - step_type: "action"
+        description: "切换到圆形工具"
+        action: "element_action"
+        selector: {name: "oval_button", role: "push button"}
+        do: "click"
+      - step_type: "action"
+        description: "修改颜色为红色"
+        action: "element_action"
+        selector: {name: "Red_button", role: "push button"}
+        do: "click"
+      - step_type: "assert"
+        description: "验证几何工具选项可用"
+        action: "assert_element"
+        selector: {name: "rect_thicknessBtn", role: "push button"}
+
+  - id: suite_screenshot_tools_shape
+    name: "截图工具栏-形状工具"
+    module: "screenshot_tools"
+    status: "active"
+    annotation:
+      测试界面: "截图工具栏-形状工具"
+      测试功能: "矩形/椭圆形工具切换"
+      前置条件: "截图工具栏已显示"
+      AT元素引用: ["rectangle_button", "oval_button", "rect_thicknessBtn"]
+    steps:
+      - step_type: "action"
+        description: "点击矩形工具"
+        action: "element_action"
+        selector: {name: "rectangle_button", role: "push button"}
+        do: "click"
+      - step_type: "action"
+        description: "点击椭圆形工具"
+        action: "element_action"
+        selector: {name: "oval_button", role: "push button"}
+        do: "click"
+      - step_type: "assert"
+        description: "验证描边粗细控件存在"
+        action: "assert_element"
+        selector: {name: "rect_thicknessBtn", role: "push button"}
+
+  - id: suite_screenshot_tools_save
+    name: "截图工具栏-保存操作"
+    module: "screenshot_tools"
+    status: "active"
+    annotation:
+      测试界面: "截图工具栏-保存按钮"
+      测试功能: "工具栏保存按钮"
+      前置条件: "截图已完成框选"
+      AT元素引用: ["save_local_button", "menuSave"]
+    steps:
+      - step_type: "action"
+        description: "点击保存按钮"
+        action: "element_action"
+        selector: {name: "save_local_button", role: "push button"}
+        do: "click"
+      - step_type: "assert"
+        description: "验证保存操作成功"
+        action: "assert_element"
+        selector: {name: "save_local_button", role: "push button"}
+
+  - id: suite_screenshot_tools_undo
+    name: "截图工具栏-撤销操作"
+    module: "screenshot_tools"
+    status: "active"
+    annotation:
+      测试界面: "截图工具栏-撤销按钮"
+      测试功能: "撤销操作"
+      前置条件: "截图工具栏已显示，已执行编辑操作"
+      AT元素引用: ["undo_button", "menuUndo"]
+    steps:
+      - step_type: "action"
+        description: "点击撤销按钮"
+        action: "element_action"
+        selector: {name: "undo_button", role: "push button"}
+        do: "click"
+      - step_type: "assert"
+        description: "验证撤销成功"
+        action: "assert_element"
+        selector: {name: "undo_button", role: "push button"}
+
+  - id: suite_record_options_format
+    name: "录屏选项-格式选择"
+    module: "record_options"
+    status: "active"
+    annotation:
+      测试界面: "录屏选项面板"
+      测试功能: "录制格式切换（GIF/MP4/MKV）"
+      前置条件: "Ctrl+Alt+R 启动录屏，框选区域后按 F3 打开选项"
+      AT元素引用: ["record_option_but", "gifAction", "mp4Action", "mkvAction"]
+    steps:
+      - step_type: "action"
+        description: "按 F3 打开录屏选项"
+        action: "keyboard_press"
+        key: "f3"
+      - step_type: "action"
+        description: "选择 GIF 格式"
+        action: "dtk_main_menu"
+        items: ["GIF"]
+      - step_type: "action"
+        description: "选择 MP4 格式"
+        action: "dtk_main_menu"
+        items: ["MP4"]
+      - step_type: "action"
+        description: "选择 MKV 格式"
+        action: "dtk_main_menu"
+        items: ["MKV"]
+      - step_type: "assert"
+        description: "验证录屏选项按钮存在"
+        action: "assert_element"
+        selector: {name: "record_option_but", role: "push button"}
+
+  - id: suite_record_options_fps
+    name: "录屏选项-帧数选择"
+    module: "record_options"
+    status: "active"
+    annotation:
+      测试界面: "录屏选项面板-帧数"
+      测试功能: "帧数切换"
+      前置条件: "录屏选项已打开"
+      AT元素引用: ["record_option_but", "fps5Action", "fps10Action", "fps20Action", "fps24Action", "fps30Action"]
+    steps:
+      - step_type: "action"
+        description: "按 F3 打开录屏选项"
+        action: "keyboard_press"
+        key: "f3"
+      - step_type: "action"
+        description: "选择 5fps"
+        action: "dtk_main_menu"
+        items: ["5FPS"]
+      - step_type: "action"
+        description: "选择 30fps"
+        action: "dtk_main_menu"
+        items: ["30FPS"]
+      - step_type: "assert"
+        description: "验证录屏选项按钮存在"
+        action: "assert_element"
+        selector: {name: "record_option_but", role: "push button"}
+
+  - id: suite_record_options_audio
+    name: "录屏选项-音频选项"
+    module: "record_options"
+    status: "active"
+    annotation:
+      测试界面: "录屏选项面板-音频"
+      测试功能: "麦克风/系统音频切换"
+      前置条件: "录屏选项已打开"
+      AT元素引用: ["microphoneAction", "sysAudioAction"]
+    steps:
+      - step_type: "action"
+        description: "按 F3 打开录屏选项，勾选麦克风"
+        action: "dtk_main_menu"
+        items: ["Sound", "Microphone"]
+      - step_type: "action"
+        description: "勾选系统音频"
+        action: "dtk_main_menu"
+        items: ["Sound", "System audio"]
+      - step_type: "assert"
+        description: "验证录屏选项按钮存在"
+        action: "assert_element"
+        selector: {name: "record_option_but", role: "push button"}
+
+  - id: suite_record_options_memory
+    name: "录屏选项-记忆功能"
+    module: "record_options"
+    status: "active"
+    annotation:
+      测试界面: "录屏选项面板"
+      测试功能: "格式/帧数设置记忆"
+      前置条件: "录屏选项已打开"
+      AT元素引用: ["record_option_but"]
+    steps:
+      - step_type: "action"
+        description: "按 F3 打开录屏选项选择 MP4 和 5fps"
+        action: "dtk_main_menu"
+        items: ["MP4"]
+      - step_type: "action"
+        description: "按 F3 打开录屏选项选择 5fps"
+        action: "dtk_main_menu"
+        items: ["5FPS"]
+      - step_type: "action"
+        description: "按 Esc 退出录屏"
+        action: "keyboard_press"
+        key: "escape"
+      - step_type: "action"
+        description: "重新启动录屏并打开选项"
+        action: "keyboard_hot_key"
+        key: "ctrl+shift+r"
+      - step_type: "assert"
+        description: "验证录屏选项按钮存在"
+        action: "assert_element"
+        selector: {name: "record_option_but", role: "push button"}
+
+  - id: suite_record_basic_mp4
+    name: "录屏-录制MP4格式"
+    module: "recording"
+    status: "active"
+    annotation:
+      测试界面: "录屏区域"
+      测试功能: "MP4格式录制与保存"
+      前置条件: "Ctrl+Alt+R 启动录屏"
+      AT元素引用: ["to_record_but"]
+    steps:
+      - step_type: "action"
+        description: "启动录屏，框选区域，按 Enter 开始录制，再按 Ctrl+Alt+R 停止"
+        action: "session_start"
+        command: "bash -lc 'xdotool key --clearmodifiers ctrl+alt+r; sleep 1.2; xdotool mousemove 360 260 mousedown 1; sleep 0.1; xdotool mousemove 660 500 mouseup 1; sleep 1.0; xdotool key --clearmodifiers Return; sleep 1.0; xdotool key --clearmodifiers ctrl+alt+r'"
+      - step_type: "assert"
+        description: "验证 MP4 录制生成"
+        action: "assert_element"
+        selector: {name: "to_record_but", role: "push button"}
+
+  - id: suite_mode_switch
+    name: "截图/录屏模式切换"
+    module: "mode_switch"
+    status: "active"
+    annotation:
+      测试界面: "截图/录屏工具栏"
+      测试功能: "截图/录屏模式切换"
+      前置条件: "Ctrl+Alt+A 或 Ctrl+Alt+R 启动"
+      AT元素引用: ["to_record_but", "to_shot_but"]
+    steps:
+      - step_type: "action"
+        description: "启动截图，点击录屏按钮切换到录屏模式"
+        action: "element_action"
+        selector: {name: "to_record_but", role: "push button"}
+        do: "click"
+      - step_type: "action"
+        description: "点击截图按钮切换回截图模式"
+        action: "element_action"
+        selector: {name: "to_shot_but", role: "push button"}
+        do: "click"
+      - step_type: "assert"
+        description: "验证录屏模式切换按钮存在"
+        action: "assert_element"
+        selector: {name: "to_record_but", role: "push button"}
+
+  - id: suite_pin_basic
+    name: "贴图-基本功能"
+    module: "pin_screenshots"
+    status: "active"
+    annotation:
+      测试界面: "贴图工具栏"
+      测试功能: "贴图保存、关闭、OCR"
+      前置条件: "快捷键 Alt+P 启动贴图"
+      AT元素引用: ["pin_save_but", "pin_close_but", "pin_ocr_but", "pinscreenshots_button"]
+    steps:
+      - step_type: "action"
+        description: "启动截图，点击贴图按钮"
+        action: "element_action"
+        selector: {name: "pinscreenshots_button", role: "push button"}
+        do: "click"
+      - step_type: "action"
+        description: "点击贴图保存按钮"
+        action: "element_action"
+        selector: {name: "pin_save_but", role: "push button"}
+        do: "click"
+      - step_type: "assert"
+        description: "验证贴图保存按钮存在"
+        action: "assert_element"
+        selector: {name: "pin_save_but", role: "push button"}
+
+  - id: suite_scrollshot_basic
+    name: "截长图-基本功能"
+    module: "scrollshot"
+    status: "active"
+    annotation:
+      测试界面: "截图工具栏-滚动截图"
+      测试功能: "滚动截图启动与保存"
+      前置条件: "Ctrl+Alt+A 启动截图，框选区域"
+      AT元素引用: ["scrollshot_button", "scrollshot_tip_help_button", "adjust_button"]
+    steps:
+      - step_type: "action"
+        description: "点击滚动截图按钮"
+        action: "element_action"
+        selector: {name: "scrollshot_button", role: "push button"}
+        do: "click"
+      - step_type: "assert"
+        description: "验证滚动截图帮助按钮存在"
+        action: "assert_element"
+        selector: {name: "scrollshot_tip_help_button", role: "push button"}
+
+  - id: suite_hotkey_panel
+    name: "快捷键面板"
+    module: "hotkey_panel"
+    status: "active"
+    annotation:
+      测试界面: "快捷键面板"
+      测试功能: "快捷键面板显示与关闭"
+      前置条件: "截图工具栏已显示"
+      AT元素引用: ["shot_option_but"]
+    steps:
+      - step_type: "action"
+        description: "点击选项按钮打开快捷键面板"
+        action: "element_action"
+        selector: {name: "shot_option_but", role: "push button"}
+        do: "click"
+      - step_type: "assert"
+        description: "验证选项按钮存在"
+        action: "assert_element"
+        selector: {name: "shot_option_but", role: "push button"}
+
+  - id: suite_non_gui_event_log
+    name: "埋点检查"
+    module: "non_gui"
+    status: "non_gui"
+    reason: "终端命令：cd /var/lib/deepin/event-log + cat event_xxx.log 检查 JSON 埋点"
+    annotation:
+      测试界面: "终端"
+      测试功能: "埋点数据检查"
+      前置条件: "无"
+      AT元素引用: []
+    steps:
+      - step_type: "action"
+        description: "终端执行 event-log 检查"
+        action: "UNSUPPORTED"
+        selector: {}
+
+  - id: suite_unsupported_touchscreen
+    name: "触控屏/多屏/旋转屏"
+    module: "unsupported"
+    status: "unsupported"
+    reason: "需要特定硬件环境（触控屏、多显示器）"
+    annotation:
+      测试界面: "多屏/触控屏环境"
+      测试功能: "多屏/触控屏截图录屏"
+      前置条件: "特定硬件环境"
+      AT元素引用: []
+    steps: []
+
+  - id: suite_unsupported_lockscreen
+    name: "锁屏界面截图录屏"
+    module: "unsupported"
+    status: "unsupported"
+    reason: "锁屏界面无法通过自动化操作"
+    annotation:
+      测试界面: "锁屏界面"
+      测试功能: "锁屏截图录屏"
+      前置条件: "系统已锁屏"
+      AT元素引用: []
+    steps: []
+
+  - id: suite_unsupported_terminal_command
+    name: "截图终端命令"
+    module: "unsupported"
+    status: "unsupported"
+    reason: "终端命令测试不适合桌面 GUI 自动化框架"
+    annotation:
+      测试界面: "终端"
+      测试功能: "终端命令参数"
+      前置条件: "终端已打开"
+      AT元素引用: []
+    steps: []
+
+  - id: suite_unsupported_3d_mode
+    name: "2D/3D 模式切换录屏"
+    module: "unsupported"
+    status: "unsupported"
+    reason: "需要系统级显示模式切换，自动化环境无法控制"
+    annotation:
+      测试界面: "系统设置"
+      测试功能: "2D/3D模式切换"
+      前置条件: "系统设置可访问"
+      AT元素引用: []
+    steps: []
+
+  - id: suite_unsupported_uosai
+    name: "UOS AI 功能"
+    module: "unsupported"
+    status: "unsupported"
+    reason: "需要 UOS AI 服务在线且授权，自动化环境不可控"
+    annotation:
+      测试界面: "UOS AI 设置"
+      测试功能: "AI截图/AI助手功能"
+      前置条件: "UOS AI 服务在线"
+      AT元素引用: ["ai_assistant_button"]
+    steps: []
+
+  - id: suite_unsupported_human_judgment
+    name: "纯视觉验证"
+    module: "unsupported"
+    status: "unsupported"
+    reason: "文字文案、样式、动画流畅度等需要 human judgment"
+    annotation:
+      测试界面: "各界面"
+      测试功能: "视觉验证"
+      前置条件: "各界面已显示"
+      AT元素引用: []
+    steps: []
