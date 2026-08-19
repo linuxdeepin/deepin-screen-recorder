@@ -1,0 +1,709 @@
+app: deepin-screen-recorder
+created_at: '2026-08-19T10:07:53.498865'
+modules:
+- slug: v25_2500_测试部专用_b类解耦商店应用_截图录屏_110591
+  name: /V25_2500（测试部专用）/B类解耦商店应用/截图录屏(#110591)
+  case_count: 1
+  case_ids:
+  - case_2002119
+  recording_guide: "模块: /V25_2500（测试部专用）/B类解耦商店应用/截图录屏(#110591)\n用例数: 1\n\n操作指引 (来自帮助手册):\n\
+    # 截图\n\n在截图模式下，单击工具栏上的按钮，您可以在截图区域进行图形绘制、文字批注等操作，并可以识别图中文字、将图片置顶贴在桌面上、使用**AI截图**对截图内容进行解释、总结、翻译等。\n\
+    \n\n![0|截图工具栏](fig/capturebar.png)\n\n<table class=\"block1\">\n    <caption>工具栏说明</caption>\n\
+    \    <tbody>\n        <tr>\n            <td style=\"text-align:center;\"><img\
+    \ src=\"../common/bar_geometric.svg\" alt=\"几何工具\" class=\"inline\" /></td>\n\
+    \            <td>几何工具</td>\n            <td style=\"text-align:center;\"><img\
+    \ src=\"../common/line_mouse.svg\" alt=\"直线\" class=\"inline\" /></td>\n     \
+    \       <td>直线</td>\n            <td style=\"text-align:center;\"><img src=\"\
+    ../common/Arrow_normal.svg\" alt=\"箭头\" class=\"inline\" /></td>\n           \
+    \ <td>箭头</td>\n        </tr>\n        <tr>\n            <td style=\"text-align:center;\"\
+    ><img src=\"../common/Combined_Shape.svg\" alt=\"画笔\" class=\"inline\" /></td>\n\
+    \            <td>画笔</td>\n            <td style=\"text-align:center;\"><img src=\"\
+    ../common/Mosaic_normal.svg\" alt=\"模糊\" class=\"inline\" /></td>\n          \
+    \  <td>模糊</td>\n            <td style=\"text-align:center;\"><img src=\"../common/text_normal.svg\"\
+    \ alt=\"文字\" class=\"inline\" /></td>\n            <td>文字</td>\n        </tr>\n\
+    \        <tr>\n            <td style=\"text-align:center;\"><img src=\"../common/scrollshot.svg\"\
+    \ alt=\"滚动截图\" class=\"inline\" /></td>\n            <td>滚动截图</td>\n         \
+    \   <td style=\"text-align:center;\"><img src=\"../common/ocr.svg\" alt=\"识别文字\"\
+    \ class=\"inline\" /></td>\n            <td>识别文字</td>\n            <td style=\"\
+    text-align:center;\"><img src=\"../common/pin.svg\" alt=\"贴图\" class=\"inline\"\
+    \ /></td>\n            <td>贴图</td>\n        </tr>\n        <tr>\n            <td\
+    \ style=\"text-align:center;\"><img src=\"../common/bar_ai.svg\" alt=\"AI截图\"\
+    \ class=\"inline\" /></td>\n            <td>AI截图</td>\n            <td style=\"\
+    text-align:center;\"><img src=\"../common/bar_settings.svg\" alt=\"设置\" class=\"\
+    inline\" /></td>\n            <td>设置</td>\n            <td style=\"text-align:center;\"\
+    ><img src=\"../common/bar_save.svg\" alt=\"保存到本地\" class=\"inline\" /></td>\n\
+    \            <td>保存到本地</td>            \n        </tr>\n        <tr>\n       \
+    \     <td style=\"text-align:center;\"><img src=\"../common/close.svg\" alt=\"\
+    关闭\" class=\"inline\" /></td>\n            <td>关闭</td>\n            <td style=\"\
+    text-align:center;\"><img src=\"../common/done.svg\" alt=\"复制到剪贴板\" class=\"inline\"\
+    \ /></td>\n            <td>复制到剪贴板</td>            \n        </tr>\n    </tbody>\n\
+    </table>\n\n\n> ![notes](../common/notes.svg) 说明：如果您已经对工具栏和属性栏中如线条粗细、字体大小等进行了选择，截图录屏会保存设置，再次启动截图录屏，将默认使用该设置，您也可以重新进行选择。\n\
+    \n### 绘制图形\n\n通过截图工具栏上的**几何工具**、**直线**、**箭头**、**画笔**按钮可以绘制简单的图形，并支持设置线条的粗细和颜色。\n\
+    \n![1|绘制图形](fig/ellipsetool.png)\n\n### 修改图形\n\n如果您在截图中绘制了图形，可以对图形进行修改和移动。\n\n\
+    \n#### 编辑图形\n\n1. 将鼠标指针置于图形的边线上，此时鼠标指针变为 ![手指](fig/fingers.png)。\n2. 单击鼠标左键，进入图形的编辑模式，您可以：\n\
+    \   - 按下键盘上的 **Delete** 键，删除图形。\n   - 将鼠标指针置于编辑框上，此时鼠标指针变成 ![双箭头](../common/Mouse_Arrow.svg)，通过拖动鼠标指针，来放大或缩小图形区域。\n\
+    \   - 将鼠标指针置于编辑框的 ![旋转](../common/icon_rotate.svg) 上，此时鼠标指针变成 ![旋转](../common/rotate_mouse.svg)，通过拖动鼠标指针，来旋转图形。\n\
+    3. 在编辑框外单击鼠标左键，退出编辑模式。\n\n#### 移动图形\n\n1. 将鼠标指针置于图形的边线上，此时鼠标指针变为 ![手指](fig/fingers.png)。\n\
+    2. 按住鼠标左键不放，将图形移动到截图区域的任何位置。\n\n### 模糊工具\n\n1. 在截图工具栏中，单击 ![模糊](../common/Mosaic_normal.svg)。\n\
+    2. 在工具栏展开的面板中，可以选择模糊的样式，默认为![模糊](../common/Mosaic_normal.svg)马赛克样式，亦或是![模糊](../common/vague_normal.svg)高斯模糊样式。\n\
+    3. 可以选择绘制的方式，如![模糊](../common/rectangle_normal.svg)矩形框选，![模糊](../common/oval_normal.svg)椭圆形框选，![模糊](../common/brush.svg)自由涂抹。\n\
+    4. 工具栏展开的面板的最右侧，可以左右拖动，选择模糊的强度。\n5. 与其他图形一样，绘制的模糊图形也支持修改和移动。\n\n### 添加文字批注\n\n\
+    对截取的图片进行文字补充和说明，帮助他人更清晰地了解截取的图片。&nbsp;&nbsp;\n\n1. 在截图工具栏中，单击 ![文字](../common/text_normal.svg)。\n\
+    2. 在工具栏展开的面板中，选择字号和颜色，有四种颜色可供选择。\n3. 将鼠标指针置于截取的图片上，此时鼠标指针变为 ![文字指针](../common/text_mouse.svg)。\n\
+    4. 单击要添加批注的地方，将出现一个待输入的文本框。\n5. 在文本框中输入文字。\n\n\n### 修改文字批注\n\n如果您已经添加了文字批注，可以对文字批注进行修改和移动。\n\
+    \n#### 移动文字批注\n\n1. 将鼠标指针置于文字上，此时鼠标指针变为 ![手指](fig/fingers.png)。\n2. 按住鼠标左键不放，将文字移到截图区域的任何位置。\n\
+    \n#### 编辑文字批注\n\n1. 将鼠标指针置于文字上，此时鼠标指针变为 ![手指](fig/fingers.png)。\n2. 双击鼠标左键，进入文字编辑模式，您可以：\n\
+    \   - 按下键盘上的 **Delete** 键，删除文字批注。\n   - 在文本框内，修改文字信息。\n3. 在文本框外单击鼠标左键，退出编辑模式。\n\
+    \n### 滚动截图\n\n滚动截图功能不仅可以截取屏幕内可见的内容，还能截取超过屏幕外的内容，满足一次性截取长图的需求。\n\n前提条件： **控制中心\
+    \ > 个性化** 中的窗口特效功能已开启。\n\n1. 选择截图区域后，单击工具栏上的滚动截图按钮 ![icon](../common/scrollshot.svg)。\n\
+    2. 请将鼠标光标保持在滚动区域内，您可以使用自动滚动或手动滚动截图，也可以交替使用两种方式：\n\n   - **自动滚动**：在截图区域中单击鼠标左键，光标所在的截图区域自动向上滚动，此时截取的图片会拼接为一张完整的长图。自动滚动过程中，在截图区域内单击鼠标左键，或者将光标移出截图区域，暂停截图；再次单击截图区域，继续截图。\n\
+    \n   - **手动滚动**：将鼠标光标置于截图区域中，向上或者向下滚动鼠标滚轮截取图片。停止滚动鼠标滚轮，暂停截图；再次滚动鼠标滚轮，继续截图。\n\n\
+    3. 单击工具栏中的截图按钮 ![icon](../common/done.svg) 保存长图。\n\n注意事项：\n- 截图区域尽量不超出滚动范围，避免框选整个窗口、全屏等。\n\
+    - 截图区域不宜过小，建议高度大于等于50px。\n- 截图区域中尽量避免存在多个滚动区域。\n- 滚动截图区域中尽量不包含大量重复内容，如空白区域、相同颜色、大段相同文字等。\n\
+    - 滚动截图区域中尽量不包含动图、视频、水印、纯色背景等信息。\n- 滚动操作时保持垂直方向偏移，避免滑动滚动条。\n- 滚动操作时尽量不要切换窗口。\n\
+    - 滚动操作速度不宜过快。\n\n\n### 识别文字\n\n对于截图区域中无法复制的内容，可以使用识别文字功能提取文字。\n\n1. 选择截图区域后，单击工具栏上的文字识别按钮\
+    \ ![ocr](../common/ocr.svg)，弹出图文识别窗口，识别图片中的文字。\n2. 您可以对识别出的文字进行编辑、复制或保存为TXT等操作。\n\
+    \n![ocr](fig/ocr.png)\n\n### 贴图\n\n通过贴图功能将截图变为桌面浮窗，方便您快速查阅、对比和梳理信息。\n\n选择需要截取的区域后，单击工具栏上的贴图按钮\
+    \ ![icon](../common/pin.svg)，截图浮于桌面上即为贴图，您可以对贴图进行如下操作：\n\n- 通过鼠标移动图片的位置。\n- 将鼠标指针置于图片上，向上或向下滚动鼠标滚轮等比缩放图片。\n\
+    - 单击按钮 ![icon](../common/done.svg) 保存图片。\n\n![0|贴图](fig/pin_pic.png)\n\n### AI截图\n\
+    \n在截图工具栏中，单击按钮<img src=\"../common/bar_ai.svg\" alt=\"AI截图\" class=\"inline\"\
+    \ />展开AI菜单，您可以：\n\n- 选择 **解释**，让**AI随航**为您解释截图中的文字；\n- 选择 **总结**，让**AI随航**为您总结截图中的文字；\n\
+    - 选择 **翻译**，让**AI随航**为您翻译截图中的文字；\n- 选择 **问问AI**，直接唤起**小U助手**并将截图发送至对话框，以进行更深入的对话。\n\
+    \n![0|AI截图](fig/ai_tools.png)\n\n### 延时截图\n\n您可以通过延时截图功能，捕捉特定状态或时间下的屏幕内容。\n\n\
+    - 使用快捷键 **Ctrl** + ![icon](../common/Print.svg)，启动延时截图。\n- 在终端中执行命令 “deepin-screen-recorder\
+    \ -d n”，其中n表示以秒为单位的延时时长。 \n\n### 设置\n\n您还可以在截图工具栏中，单击按钮<img src=\"../common/bar_settings.svg\"\
+    \ alt=\"设置\" class=\"inline\" />，展开设置菜单：\n\n![0|option](fig/screen_setting.png)\n\
+    \n- 选择**无边框/投影/外边框/样机**，设置图片边框效果。\n- 选择 **PNG/JPG/BMP**，设置图片格式。\n- 选择 **显示光标**，光标在截图区域内，截图生成图片时会同时显示光标所在的位置和样式。\n\
+    \n### 保存截图\n\n单击工具栏中的按钮![icon](../common/bar_save.svg)或单击鼠标右键选择 **保存**，可将截图保存在本地，单击该按钮右侧的小图标![icon](../common/dropdown.svg)展开选项可设置保存规则。\n\
+    \n- 选择 **每次询问**，可在每次点击保存按钮后选择保存路径。\n- 选择 **指定位置** > **桌面**，将图片保存到桌面。\n- 选择 **指定位置**\
+    \ > **图片**，截图文件自动保存到图片文件夹目录下。\n- 选择 **指定位置** > **保存时选择位置**，可在本次点击保存按钮后选择保存路径，下次截图保存时会默认保存至该路径，除非另行设置。\n\
+    \n### 复制到剪贴板\n\n单击工具栏中的按钮 ![icon](../common/done.svg)，或双击鼠标左键，或使用快捷键 **Ctrl +\
+    \ S**，将图片保存到剪贴板中。\n\n录制提示: 打开应用 → 按用例步骤操作 → 每个操作后等待界面稳定 → 完成后按 q 结束"
+  status: pending
+- slug: v25_2500_测试部专用_b类解耦商店应用_截图录屏_ai全量_128873
+  name: /V25_2500（测试部专用）/B类解耦商店应用/截图录屏/AI全量(#128873)
+  case_count: 189
+  case_ids:
+  - case_1998327
+  - case_1646101
+  - case_1646097
+  - case_1646095
+  - case_1646091
+  - case_1646085
+  - case_1646083
+  - case_1646079
+  - case_1646077
+  - case_1646073
+  - case_1646071
+  - case_1646067
+  - case_1646037
+  - case_1646035
+  - case_1646031
+  - case_1646029
+  - case_1646023
+  - case_1646017
+  - case_1646011
+  - case_1646007
+  - case_1646001
+  - case_1645985
+  - case_1645983
+  - case_1645979
+  - case_1645965
+  - case_1645959
+  - case_1645957
+  - case_1645943
+  - case_1645933
+  - case_1645929
+  - case_1645915
+  - case_1645899
+  - case_1645893
+  - case_1645889
+  - case_1645883
+  - case_1645881
+  - case_1645879
+  - case_1645875
+  - case_1645859
+  - case_1645835
+  - case_1645833
+  - case_1645831
+  - case_1645827
+  - case_1645825
+  - case_1645819
+  - case_1645817
+  - case_1645813
+  - case_1645807
+  - case_1645805
+  - case_1645781
+  - case_1645755
+  - case_1645715
+  - case_1645705
+  - case_1645693
+  - case_1645683
+  - case_1645661
+  - case_1645657
+  - case_1645649
+  - case_1645643
+  - case_1645641
+  - case_1645629
+  - case_1645615
+  - case_1645611
+  - case_1645597
+  - case_1645565
+  - case_1645561
+  - case_1645523
+  - case_1645521
+  - case_1645515
+  - case_1645499
+  - case_1645471
+  - case_1645455
+  - case_1645447
+  - case_1645435
+  - case_1645433
+  - case_1645429
+  - case_1645401
+  - case_1645385
+  - case_1645381
+  - case_1645379
+  - case_1645367
+  - case_1645339
+  - case_1645337
+  - case_1645325
+  - case_1645319
+  - case_1645317
+  - case_1645307
+  - case_1645287
+  - case_1645283
+  - case_1645279
+  - case_1645275
+  - case_1645269
+  - case_1645259
+  - case_1645257
+  - case_1645255
+  - case_1645249
+  - case_1645227
+  - case_1645219
+  - case_1645217
+  - case_1645209
+  - case_1645201
+  - case_1645195
+  - case_1645185
+  - case_1645183
+  - case_1645173
+  - case_1645149
+  - case_1645147
+  - case_1645139
+  - case_1645127
+  - case_1645117
+  - case_1645105
+  - case_1645097
+  - case_1645091
+  - case_1645089
+  - case_1645087
+  - case_1645083
+  - case_1645081
+  - case_1645007
+  - case_1644985
+  - case_1644979
+  - case_1644967
+  - case_1644961
+  - case_1644957
+  - case_1644951
+  - case_1644935
+  - case_1644923
+  - case_1644921
+  - case_1644919
+  - case_1644915
+  - case_1644913
+  - case_1644905
+  - case_1644897
+  - case_1644895
+  - case_1644877
+  - case_1644819
+  - case_1644813
+  - case_1644803
+  - case_1644791
+  - case_1644789
+  - case_1644785
+  - case_1644783
+  - case_1644779
+  - case_1644777
+  - case_1644773
+  - case_1644771
+  - case_1644767
+  - case_1644765
+  - case_1644759
+  - case_1644755
+  - case_1644753
+  - case_1644749
+  - case_1644747
+  - case_1644743
+  - case_1644741
+  - case_1644733
+  - case_1644703
+  - case_1644691
+  - case_1644685
+  - case_1644673
+  - case_1644659
+  - case_1644657
+  - case_1644645
+  - case_1644643
+  - case_1644639
+  - case_1644637
+  - case_1644633
+  - case_1644631
+  - case_1644599
+  - case_1644585
+  - case_1644583
+  - case_1644565
+  - case_1644559
+  - case_1644557
+  - case_1644551
+  - case_1644539
+  - case_1644535
+  - case_1644533
+  - case_1644529
+  - case_1644525
+  - case_1644523
+  - case_1644519
+  - case_1644515
+  - case_1644513
+  - case_1644509
+  - case_1644507
+  - case_1644503
+  - case_1644501
+  - case_1644479
+  - case_1644471
+  recording_guide: "模块: /V25_2500（测试部专用）/B类解耦商店应用/截图录屏/AI全量(#128873)\n用例数: 189\n\n\
+    操作指引 (来自帮助手册):\n# 截图\n\n在截图模式下，单击工具栏上的按钮，您可以在截图区域进行图形绘制、文字批注等操作，并可以识别图中文字、将图片置顶贴在桌面上、使用**AI截图**对截图内容进行解释、总结、翻译等。\n\
+    \n\n![0|截图工具栏](fig/capturebar.png)\n\n<table class=\"block1\">\n    <caption>工具栏说明</caption>\n\
+    \    <tbody>\n        <tr>\n            <td style=\"text-align:center;\"><img\
+    \ src=\"../common/bar_geometric.svg\" alt=\"几何工具\" class=\"inline\" /></td>\n\
+    \            <td>几何工具</td>\n            <td style=\"text-align:center;\"><img\
+    \ src=\"../common/line_mouse.svg\" alt=\"直线\" class=\"inline\" /></td>\n     \
+    \       <td>直线</td>\n            <td style=\"text-align:center;\"><img src=\"\
+    ../common/Arrow_normal.svg\" alt=\"箭头\" class=\"inline\" /></td>\n           \
+    \ <td>箭头</td>\n        </tr>\n        <tr>\n            <td style=\"text-align:center;\"\
+    ><img src=\"../common/Combined_Shape.svg\" alt=\"画笔\" class=\"inline\" /></td>\n\
+    \            <td>画笔</td>\n            <td style=\"text-align:center;\"><img src=\"\
+    ../common/Mosaic_normal.svg\" alt=\"模糊\" class=\"inline\" /></td>\n          \
+    \  <td>模糊</td>\n            <td style=\"text-align:center;\"><img src=\"../common/text_normal.svg\"\
+    \ alt=\"文字\" class=\"inline\" /></td>\n            <td>文字</td>\n        </tr>\n\
+    \        <tr>\n            <td style=\"text-align:center;\"><img src=\"../common/scrollshot.svg\"\
+    \ alt=\"滚动截图\" class=\"inline\" /></td>\n            <td>滚动截图</td>\n         \
+    \   <td style=\"text-align:center;\"><img src=\"../common/ocr.svg\" alt=\"识别文字\"\
+    \ class=\"inline\" /></td>\n            <td>识别文字</td>\n            <td style=\"\
+    text-align:center;\"><img src=\"../common/pin.svg\" alt=\"贴图\" class=\"inline\"\
+    \ /></td>\n            <td>贴图</td>\n        </tr>\n        <tr>\n            <td\
+    \ style=\"text-align:center;\"><img src=\"../common/bar_ai.svg\" alt=\"AI截图\"\
+    \ class=\"inline\" /></td>\n            <td>AI截图</td>\n            <td style=\"\
+    text-align:center;\"><img src=\"../common/bar_settings.svg\" alt=\"设置\" class=\"\
+    inline\" /></td>\n            <td>设置</td>\n            <td style=\"text-align:center;\"\
+    ><img src=\"../common/bar_save.svg\" alt=\"保存到本地\" class=\"inline\" /></td>\n\
+    \            <td>保存到本地</td>            \n        </tr>\n        <tr>\n       \
+    \     <td style=\"text-align:center;\"><img src=\"../common/close.svg\" alt=\"\
+    关闭\" class=\"inline\" /></td>\n            <td>关闭</td>\n            <td style=\"\
+    text-align:center;\"><img src=\"../common/done.svg\" alt=\"复制到剪贴板\" class=\"inline\"\
+    \ /></td>\n            <td>复制到剪贴板</td>            \n        </tr>\n    </tbody>\n\
+    </table>\n\n\n> ![notes](../common/notes.svg) 说明：如果您已经对工具栏和属性栏中如线条粗细、字体大小等进行了选择，截图录屏会保存设置，再次启动截图录屏，将默认使用该设置，您也可以重新进行选择。\n\
+    \n### 绘制图形\n\n通过截图工具栏上的**几何工具**、**直线**、**箭头**、**画笔**按钮可以绘制简单的图形，并支持设置线条的粗细和颜色。\n\
+    \n![1|绘制图形](fig/ellipsetool.png)\n\n### 修改图形\n\n如果您在截图中绘制了图形，可以对图形进行修改和移动。\n\n\
+    \n#### 编辑图形\n\n1. 将鼠标指针置于图形的边线上，此时鼠标指针变为 ![手指](fig/fingers.png)。\n2. 单击鼠标左键，进入图形的编辑模式，您可以：\n\
+    \   - 按下键盘上的 **Delete** 键，删除图形。\n   - 将鼠标指针置于编辑框上，此时鼠标指针变成 ![双箭头](../common/Mouse_Arrow.svg)，通过拖动鼠标指针，来放大或缩小图形区域。\n\
+    \   - 将鼠标指针置于编辑框的 ![旋转](../common/icon_rotate.svg) 上，此时鼠标指针变成 ![旋转](../common/rotate_mouse.svg)，通过拖动鼠标指针，来旋转图形。\n\
+    3. 在编辑框外单击鼠标左键，退出编辑模式。\n\n#### 移动图形\n\n1. 将鼠标指针置于图形的边线上，此时鼠标指针变为 ![手指](fig/fingers.png)。\n\
+    2. 按住鼠标左键不放，将图形移动到截图区域的任何位置。\n\n### 模糊工具\n\n1. 在截图工具栏中，单击 ![模糊](../common/Mosaic_normal.svg)。\n\
+    2. 在工具栏展开的面板中，可以选择模糊的样式，默认为![模糊](../common/Mosaic_normal.svg)马赛克样式，亦或是![模糊](../common/vague_normal.svg)高斯模糊样式。\n\
+    3. 可以选择绘制的方式，如![模糊](../common/rectangle_normal.svg)矩形框选，![模糊](../common/oval_normal.svg)椭圆形框选，![模糊](../common/brush.svg)自由涂抹。\n\
+    4. 工具栏展开的面板的最右侧，可以左右拖动，选择模糊的强度。\n5. 与其他图形一样，绘制的模糊图形也支持修改和移动。\n\n### 添加文字批注\n\n\
+    对截取的图片进行文字补充和说明，帮助他人更清晰地了解截取的图片。&nbsp;&nbsp;\n\n1. 在截图工具栏中，单击 ![文字](../common/text_normal.svg)。\n\
+    2. 在工具栏展开的面板中，选择字号和颜色，有四种颜色可供选择。\n3. 将鼠标指针置于截取的图片上，此时鼠标指针变为 ![文字指针](../common/text_mouse.svg)。\n\
+    4. 单击要添加批注的地方，将出现一个待输入的文本框。\n5. 在文本框中输入文字。\n\n\n### 修改文字批注\n\n如果您已经添加了文字批注，可以对文字批注进行修改和移动。\n\
+    \n#### 移动文字批注\n\n1. 将鼠标指针置于文字上，此时鼠标指针变为 ![手指](fig/fingers.png)。\n2. 按住鼠标左键不放，将文字移到截图区域的任何位置。\n\
+    \n#### 编辑文字批注\n\n1. 将鼠标指针置于文字上，此时鼠标指针变为 ![手指](fig/fingers.png)。\n2. 双击鼠标左键，进入文字编辑模式，您可以：\n\
+    \   - 按下键盘上的 **Delete** 键，删除文字批注。\n   - 在文本框内，修改文字信息。\n3. 在文本框外单击鼠标左键，退出编辑模式。\n\
+    \n### 滚动截图\n\n滚动截图功能不仅可以截取屏幕内可见的内容，还能截取超过屏幕外的内容，满足一次性截取长图的需求。\n\n前提条件： **控制中心\
+    \ > 个性化** 中的窗口特效功能已开启。\n\n1. 选择截图区域后，单击工具栏上的滚动截图按钮 ![icon](../common/scrollshot.svg)。\n\
+    2. 请将鼠标光标保持在滚动区域内，您可以使用自动滚动或手动滚动截图，也可以交替使用两种方式：\n\n   - **自动滚动**：在截图区域中单击鼠标左键，光标所在的截图区域自动向上滚动，此时截取的图片会拼接为一张完整的长图。自动滚动过程中，在截图区域内单击鼠标左键，或者将光标移出截图区域，暂停截图；再次单击截图区域，继续截图。\n\
+    \n   - **手动滚动**：将鼠标光标置于截图区域中，向上或者向下滚动鼠标滚轮截取图片。停止滚动鼠标滚轮，暂停截图；再次滚动鼠标滚轮，继续截图。\n\n\
+    3. 单击工具栏中的截图按钮 ![icon](../common/done.svg) 保存长图。\n\n注意事项：\n- 截图区域尽量不超出滚动范围，避免框选整个窗口、全屏等。\n\
+    - 截图区域不宜过小，建议高度大于等于50px。\n- 截图区域中尽量避免存在多个滚动区域。\n- 滚动截图区域中尽量不包含大量重复内容，如空白区域、相同颜色、大段相同文字等。\n\
+    - 滚动截图区域中尽量不包含动图、视频、水印、纯色背景等信息。\n- 滚动操作时保持垂直方向偏移，避免滑动滚动条。\n- 滚动操作时尽量不要切换窗口。\n\
+    - 滚动操作速度不宜过快。\n\n\n### 识别文字\n\n对于截图区域中无法复制的内容，可以使用识别文字功能提取文字。\n\n1. 选择截图区域后，单击工具栏上的文字识别按钮\
+    \ ![ocr](../common/ocr.svg)，弹出图文识别窗口，识别图片中的文字。\n2. 您可以对识别出的文字进行编辑、复制或保存为TXT等操作。\n\
+    \n![ocr](fig/ocr.png)\n\n### 贴图\n\n通过贴图功能将截图变为桌面浮窗，方便您快速查阅、对比和梳理信息。\n\n选择需要截取的区域后，单击工具栏上的贴图按钮\
+    \ ![icon](../common/pin.svg)，截图浮于桌面上即为贴图，您可以对贴图进行如下操作：\n\n- 通过鼠标移动图片的位置。\n- 将鼠标指针置于图片上，向上或向下滚动鼠标滚轮等比缩放图片。\n\
+    - 单击按钮 ![icon](../common/done.svg) 保存图片。\n\n![0|贴图](fig/pin_pic.png)\n\n### AI截图\n\
+    \n在截图工具栏中，单击按钮<img src=\"../common/bar_ai.svg\" alt=\"AI截图\" class=\"inline\"\
+    \ />展开AI菜单，您可以：\n\n- 选择 **解释**，让**AI随航**为您解释截图中的文字；\n- 选择 **总结**，让**AI随航**为您总结截图中的文字；\n\
+    - 选择 **翻译**，让**AI随航**为您翻译截图中的文字；\n- 选择 **问问AI**，直接唤起**小U助手**并将截图发送至对话框，以进行更深入的对话。\n\
+    \n![0|AI截图](fig/ai_tools.png)\n\n### 延时截图\n\n您可以通过延时截图功能，捕捉特定状态或时间下的屏幕内容。\n\n\
+    - 使用快捷键 **Ctrl** + ![icon](../common/Print.svg)，启动延时截图。\n- 在终端中执行命令 “deepin-screen-recorder\
+    \ -d n”，其中n表示以秒为单位的延时时长。 \n\n### 设置\n\n您还可以在截图工具栏中，单击按钮<img src=\"../common/bar_settings.svg\"\
+    \ alt=\"设置\" class=\"inline\" />，展开设置菜单：\n\n![0|option](fig/screen_setting.png)\n\
+    \n- 选择**无边框/投影/外边框/样机**，设置图片边框效果。\n- 选择 **PNG/JPG/BMP**，设置图片格式。\n- 选择 **显示光标**，光标在截图区域内，截图生成图片时会同时显示光标所在的位置和样式。\n\
+    \n### 保存截图\n\n单击工具栏中的按钮![icon](../common/bar_save.svg)或单击鼠标右键选择 **保存**，可将截图保存在本地，单击该按钮右侧的小图标![icon](../common/dropdown.svg)展开选项可设置保存规则。\n\
+    \n- 选择 **每次询问**，可在每次点击保存按钮后选择保存路径。\n- 选择 **指定位置** > **桌面**，将图片保存到桌面。\n- 选择 **指定位置**\
+    \ > **图片**，截图文件自动保存到图片文件夹目录下。\n- 选择 **指定位置** > **保存时选择位置**，可在本次点击保存按钮后选择保存路径，下次截图保存时会默认保存至该路径，除非另行设置。\n\
+    \n### 复制到剪贴板\n\n单击工具栏中的按钮 ![icon](../common/done.svg)，或双击鼠标左键，或使用快捷键 **Ctrl +\
+    \ S**，将图片保存到剪贴板中。\n\n录制提示: 打开应用 → 按用例步骤操作 → 每个操作后等待界面稳定 → 完成后按 q 结束"
+  status: pending
+- slug: v25_2500_测试部专用_b类解耦商店应用_截图录屏_1070-新需求_115917
+  name: /V25_2500（测试部专用）/B类解耦商店应用/截图录屏/1070-新需求(#115917)
+  case_count: 9
+  case_ids:
+  - case_1996911
+  - case_1996909
+  - case_1996907
+  - case_1996905
+  - case_1996903
+  - case_1996901
+  - case_1996899
+  - case_1996897
+  - case_1996895
+  recording_guide: "模块: /V25_2500（测试部专用）/B类解耦商店应用/截图录屏/1070-新需求(#115917)\n用例数: 9\n\
+    \n操作指引 (来自帮助手册):\n# 截图\n\n在截图模式下，单击工具栏上的按钮，您可以在截图区域进行图形绘制、文字批注等操作，并可以识别图中文字、将图片置顶贴在桌面上、使用**AI截图**对截图内容进行解释、总结、翻译等。\n\
+    \n\n![0|截图工具栏](fig/capturebar.png)\n\n<table class=\"block1\">\n    <caption>工具栏说明</caption>\n\
+    \    <tbody>\n        <tr>\n            <td style=\"text-align:center;\"><img\
+    \ src=\"../common/bar_geometric.svg\" alt=\"几何工具\" class=\"inline\" /></td>\n\
+    \            <td>几何工具</td>\n            <td style=\"text-align:center;\"><img\
+    \ src=\"../common/line_mouse.svg\" alt=\"直线\" class=\"inline\" /></td>\n     \
+    \       <td>直线</td>\n            <td style=\"text-align:center;\"><img src=\"\
+    ../common/Arrow_normal.svg\" alt=\"箭头\" class=\"inline\" /></td>\n           \
+    \ <td>箭头</td>\n        </tr>\n        <tr>\n            <td style=\"text-align:center;\"\
+    ><img src=\"../common/Combined_Shape.svg\" alt=\"画笔\" class=\"inline\" /></td>\n\
+    \            <td>画笔</td>\n            <td style=\"text-align:center;\"><img src=\"\
+    ../common/Mosaic_normal.svg\" alt=\"模糊\" class=\"inline\" /></td>\n          \
+    \  <td>模糊</td>\n            <td style=\"text-align:center;\"><img src=\"../common/text_normal.svg\"\
+    \ alt=\"文字\" class=\"inline\" /></td>\n            <td>文字</td>\n        </tr>\n\
+    \        <tr>\n            <td style=\"text-align:center;\"><img src=\"../common/scrollshot.svg\"\
+    \ alt=\"滚动截图\" class=\"inline\" /></td>\n            <td>滚动截图</td>\n         \
+    \   <td style=\"text-align:center;\"><img src=\"../common/ocr.svg\" alt=\"识别文字\"\
+    \ class=\"inline\" /></td>\n            <td>识别文字</td>\n            <td style=\"\
+    text-align:center;\"><img src=\"../common/pin.svg\" alt=\"贴图\" class=\"inline\"\
+    \ /></td>\n            <td>贴图</td>\n        </tr>\n        <tr>\n            <td\
+    \ style=\"text-align:center;\"><img src=\"../common/bar_ai.svg\" alt=\"AI截图\"\
+    \ class=\"inline\" /></td>\n            <td>AI截图</td>\n            <td style=\"\
+    text-align:center;\"><img src=\"../common/bar_settings.svg\" alt=\"设置\" class=\"\
+    inline\" /></td>\n            <td>设置</td>\n            <td style=\"text-align:center;\"\
+    ><img src=\"../common/bar_save.svg\" alt=\"保存到本地\" class=\"inline\" /></td>\n\
+    \            <td>保存到本地</td>            \n        </tr>\n        <tr>\n       \
+    \     <td style=\"text-align:center;\"><img src=\"../common/close.svg\" alt=\"\
+    关闭\" class=\"inline\" /></td>\n            <td>关闭</td>\n            <td style=\"\
+    text-align:center;\"><img src=\"../common/done.svg\" alt=\"复制到剪贴板\" class=\"inline\"\
+    \ /></td>\n            <td>复制到剪贴板</td>            \n        </tr>\n    </tbody>\n\
+    </table>\n\n\n> ![notes](../common/notes.svg) 说明：如果您已经对工具栏和属性栏中如线条粗细、字体大小等进行了选择，截图录屏会保存设置，再次启动截图录屏，将默认使用该设置，您也可以重新进行选择。\n\
+    \n### 绘制图形\n\n通过截图工具栏上的**几何工具**、**直线**、**箭头**、**画笔**按钮可以绘制简单的图形，并支持设置线条的粗细和颜色。\n\
+    \n![1|绘制图形](fig/ellipsetool.png)\n\n### 修改图形\n\n如果您在截图中绘制了图形，可以对图形进行修改和移动。\n\n\
+    \n#### 编辑图形\n\n1. 将鼠标指针置于图形的边线上，此时鼠标指针变为 ![手指](fig/fingers.png)。\n2. 单击鼠标左键，进入图形的编辑模式，您可以：\n\
+    \   - 按下键盘上的 **Delete** 键，删除图形。\n   - 将鼠标指针置于编辑框上，此时鼠标指针变成 ![双箭头](../common/Mouse_Arrow.svg)，通过拖动鼠标指针，来放大或缩小图形区域。\n\
+    \   - 将鼠标指针置于编辑框的 ![旋转](../common/icon_rotate.svg) 上，此时鼠标指针变成 ![旋转](../common/rotate_mouse.svg)，通过拖动鼠标指针，来旋转图形。\n\
+    3. 在编辑框外单击鼠标左键，退出编辑模式。\n\n#### 移动图形\n\n1. 将鼠标指针置于图形的边线上，此时鼠标指针变为 ![手指](fig/fingers.png)。\n\
+    2. 按住鼠标左键不放，将图形移动到截图区域的任何位置。\n\n### 模糊工具\n\n1. 在截图工具栏中，单击 ![模糊](../common/Mosaic_normal.svg)。\n\
+    2. 在工具栏展开的面板中，可以选择模糊的样式，默认为![模糊](../common/Mosaic_normal.svg)马赛克样式，亦或是![模糊](../common/vague_normal.svg)高斯模糊样式。\n\
+    3. 可以选择绘制的方式，如![模糊](../common/rectangle_normal.svg)矩形框选，![模糊](../common/oval_normal.svg)椭圆形框选，![模糊](../common/brush.svg)自由涂抹。\n\
+    4. 工具栏展开的面板的最右侧，可以左右拖动，选择模糊的强度。\n5. 与其他图形一样，绘制的模糊图形也支持修改和移动。\n\n### 添加文字批注\n\n\
+    对截取的图片进行文字补充和说明，帮助他人更清晰地了解截取的图片。&nbsp;&nbsp;\n\n1. 在截图工具栏中，单击 ![文字](../common/text_normal.svg)。\n\
+    2. 在工具栏展开的面板中，选择字号和颜色，有四种颜色可供选择。\n3. 将鼠标指针置于截取的图片上，此时鼠标指针变为 ![文字指针](../common/text_mouse.svg)。\n\
+    4. 单击要添加批注的地方，将出现一个待输入的文本框。\n5. 在文本框中输入文字。\n\n\n### 修改文字批注\n\n如果您已经添加了文字批注，可以对文字批注进行修改和移动。\n\
+    \n#### 移动文字批注\n\n1. 将鼠标指针置于文字上，此时鼠标指针变为 ![手指](fig/fingers.png)。\n2. 按住鼠标左键不放，将文字移到截图区域的任何位置。\n\
+    \n#### 编辑文字批注\n\n1. 将鼠标指针置于文字上，此时鼠标指针变为 ![手指](fig/fingers.png)。\n2. 双击鼠标左键，进入文字编辑模式，您可以：\n\
+    \   - 按下键盘上的 **Delete** 键，删除文字批注。\n   - 在文本框内，修改文字信息。\n3. 在文本框外单击鼠标左键，退出编辑模式。\n\
+    \n### 滚动截图\n\n滚动截图功能不仅可以截取屏幕内可见的内容，还能截取超过屏幕外的内容，满足一次性截取长图的需求。\n\n前提条件： **控制中心\
+    \ > 个性化** 中的窗口特效功能已开启。\n\n1. 选择截图区域后，单击工具栏上的滚动截图按钮 ![icon](../common/scrollshot.svg)。\n\
+    2. 请将鼠标光标保持在滚动区域内，您可以使用自动滚动或手动滚动截图，也可以交替使用两种方式：\n\n   - **自动滚动**：在截图区域中单击鼠标左键，光标所在的截图区域自动向上滚动，此时截取的图片会拼接为一张完整的长图。自动滚动过程中，在截图区域内单击鼠标左键，或者将光标移出截图区域，暂停截图；再次单击截图区域，继续截图。\n\
+    \n   - **手动滚动**：将鼠标光标置于截图区域中，向上或者向下滚动鼠标滚轮截取图片。停止滚动鼠标滚轮，暂停截图；再次滚动鼠标滚轮，继续截图。\n\n\
+    3. 单击工具栏中的截图按钮 ![icon](../common/done.svg) 保存长图。\n\n注意事项：\n- 截图区域尽量不超出滚动范围，避免框选整个窗口、全屏等。\n\
+    - 截图区域不宜过小，建议高度大于等于50px。\n- 截图区域中尽量避免存在多个滚动区域。\n- 滚动截图区域中尽量不包含大量重复内容，如空白区域、相同颜色、大段相同文字等。\n\
+    - 滚动截图区域中尽量不包含动图、视频、水印、纯色背景等信息。\n- 滚动操作时保持垂直方向偏移，避免滑动滚动条。\n- 滚动操作时尽量不要切换窗口。\n\
+    - 滚动操作速度不宜过快。\n\n\n### 识别文字\n\n对于截图区域中无法复制的内容，可以使用识别文字功能提取文字。\n\n1. 选择截图区域后，单击工具栏上的文字识别按钮\
+    \ ![ocr](../common/ocr.svg)，弹出图文识别窗口，识别图片中的文字。\n2. 您可以对识别出的文字进行编辑、复制或保存为TXT等操作。\n\
+    \n![ocr](fig/ocr.png)\n\n### 贴图\n\n通过贴图功能将截图变为桌面浮窗，方便您快速查阅、对比和梳理信息。\n\n选择需要截取的区域后，单击工具栏上的贴图按钮\
+    \ ![icon](../common/pin.svg)，截图浮于桌面上即为贴图，您可以对贴图进行如下操作：\n\n- 通过鼠标移动图片的位置。\n- 将鼠标指针置于图片上，向上或向下滚动鼠标滚轮等比缩放图片。\n\
+    - 单击按钮 ![icon](../common/done.svg) 保存图片。\n\n![0|贴图](fig/pin_pic.png)\n\n### AI截图\n\
+    \n在截图工具栏中，单击按钮<img src=\"../common/bar_ai.svg\" alt=\"AI截图\" class=\"inline\"\
+    \ />展开AI菜单，您可以：\n\n- 选择 **解释**，让**AI随航**为您解释截图中的文字；\n- 选择 **总结**，让**AI随航**为您总结截图中的文字；\n\
+    - 选择 **翻译**，让**AI随航**为您翻译截图中的文字；\n- 选择 **问问AI**，直接唤起**小U助手**并将截图发送至对话框，以进行更深入的对话。\n\
+    \n![0|AI截图](fig/ai_tools.png)\n\n### 延时截图\n\n您可以通过延时截图功能，捕捉特定状态或时间下的屏幕内容。\n\n\
+    - 使用快捷键 **Ctrl** + ![icon](../common/Print.svg)，启动延时截图。\n- 在终端中执行命令 “deepin-screen-recorder\
+    \ -d n”，其中n表示以秒为单位的延时时长。 \n\n### 设置\n\n您还可以在截图工具栏中，单击按钮<img src=\"../common/bar_settings.svg\"\
+    \ alt=\"设置\" class=\"inline\" />，展开设置菜单：\n\n![0|option](fig/screen_setting.png)\n\
+    \n- 选择**无边框/投影/外边框/样机**，设置图片边框效果。\n- 选择 **PNG/JPG/BMP**，设置图片格式。\n- 选择 **显示光标**，光标在截图区域内，截图生成图片时会同时显示光标所在的位置和样式。\n\
+    \n### 保存截图\n\n单击工具栏中的按钮![icon](../common/bar_save.svg)或单击鼠标右键选择 **保存**，可将截图保存在本地，单击该按钮右侧的小图标![icon](../common/dropdown.svg)展开选项可设置保存规则。\n\
+    \n- 选择 **每次询问**，可在每次点击保存按钮后选择保存路径。\n- 选择 **指定位置** > **桌面**，将图片保存到桌面。\n- 选择 **指定位置**\
+    \ > **图片**，截图文件自动保存到图片文件夹目录下。\n- 选择 **指定位置** > **保存时选择位置**，可在本次点击保存按钮后选择保存路径，下次截图保存时会默认保存至该路径，除非另行设置。\n\
+    \n### 复制到剪贴板\n\n单击工具栏中的按钮 ![icon](../common/done.svg)，或双击鼠标左键，或使用快捷键 **Ctrl +\
+    \ S**，将图片保存到剪贴板中。\n\n录制提示: 打开应用 → 按用例步骤操作 → 每个操作后等待界面稳定 → 完成后按 q 结束"
+  status: pending
+- slug: v25_2500_测试部专用_b类解耦商店应用_截图录屏_1060_基线_截图_截图区域选择_115943
+  name: /V25_2500（测试部专用）/B类解耦商店应用/截图录屏/1060（基线）/截图/截图区域选择(#115943)
+  case_count: 1
+  case_ids:
+  - case_1970405
+  recording_guide: "模块: /V25_2500（测试部专用）/B类解耦商店应用/截图录屏/1060（基线）/截图/截图区域选择(#115943)\n\
+    用例数: 1\n\n操作指引 (来自帮助手册):\n# 截图\n\n在截图模式下，单击工具栏上的按钮，您可以在截图区域进行图形绘制、文字批注等操作，并可以识别图中文字、将图片置顶贴在桌面上、使用**AI截图**对截图内容进行解释、总结、翻译等。\n\
+    \n\n![0|截图工具栏](fig/capturebar.png)\n\n<table class=\"block1\">\n    <caption>工具栏说明</caption>\n\
+    \    <tbody>\n        <tr>\n            <td style=\"text-align:center;\"><img\
+    \ src=\"../common/bar_geometric.svg\" alt=\"几何工具\" class=\"inline\" /></td>\n\
+    \            <td>几何工具</td>\n            <td style=\"text-align:center;\"><img\
+    \ src=\"../common/line_mouse.svg\" alt=\"直线\" class=\"inline\" /></td>\n     \
+    \       <td>直线</td>\n            <td style=\"text-align:center;\"><img src=\"\
+    ../common/Arrow_normal.svg\" alt=\"箭头\" class=\"inline\" /></td>\n           \
+    \ <td>箭头</td>\n        </tr>\n        <tr>\n            <td style=\"text-align:center;\"\
+    ><img src=\"../common/Combined_Shape.svg\" alt=\"画笔\" class=\"inline\" /></td>\n\
+    \            <td>画笔</td>\n            <td style=\"text-align:center;\"><img src=\"\
+    ../common/Mosaic_normal.svg\" alt=\"模糊\" class=\"inline\" /></td>\n          \
+    \  <td>模糊</td>\n            <td style=\"text-align:center;\"><img src=\"../common/text_normal.svg\"\
+    \ alt=\"文字\" class=\"inline\" /></td>\n            <td>文字</td>\n        </tr>\n\
+    \        <tr>\n            <td style=\"text-align:center;\"><img src=\"../common/scrollshot.svg\"\
+    \ alt=\"滚动截图\" class=\"inline\" /></td>\n            <td>滚动截图</td>\n         \
+    \   <td style=\"text-align:center;\"><img src=\"../common/ocr.svg\" alt=\"识别文字\"\
+    \ class=\"inline\" /></td>\n            <td>识别文字</td>\n            <td style=\"\
+    text-align:center;\"><img src=\"../common/pin.svg\" alt=\"贴图\" class=\"inline\"\
+    \ /></td>\n            <td>贴图</td>\n        </tr>\n        <tr>\n            <td\
+    \ style=\"text-align:center;\"><img src=\"../common/bar_ai.svg\" alt=\"AI截图\"\
+    \ class=\"inline\" /></td>\n            <td>AI截图</td>\n            <td style=\"\
+    text-align:center;\"><img src=\"../common/bar_settings.svg\" alt=\"设置\" class=\"\
+    inline\" /></td>\n            <td>设置</td>\n            <td style=\"text-align:center;\"\
+    ><img src=\"../common/bar_save.svg\" alt=\"保存到本地\" class=\"inline\" /></td>\n\
+    \            <td>保存到本地</td>            \n        </tr>\n        <tr>\n       \
+    \     <td style=\"text-align:center;\"><img src=\"../common/close.svg\" alt=\"\
+    关闭\" class=\"inline\" /></td>\n            <td>关闭</td>\n            <td style=\"\
+    text-align:center;\"><img src=\"../common/done.svg\" alt=\"复制到剪贴板\" class=\"inline\"\
+    \ /></td>\n            <td>复制到剪贴板</td>            \n        </tr>\n    </tbody>\n\
+    </table>\n\n\n> ![notes](../common/notes.svg) 说明：如果您已经对工具栏和属性栏中如线条粗细、字体大小等进行了选择，截图录屏会保存设置，再次启动截图录屏，将默认使用该设置，您也可以重新进行选择。\n\
+    \n### 绘制图形\n\n通过截图工具栏上的**几何工具**、**直线**、**箭头**、**画笔**按钮可以绘制简单的图形，并支持设置线条的粗细和颜色。\n\
+    \n![1|绘制图形](fig/ellipsetool.png)\n\n### 修改图形\n\n如果您在截图中绘制了图形，可以对图形进行修改和移动。\n\n\
+    \n#### 编辑图形\n\n1. 将鼠标指针置于图形的边线上，此时鼠标指针变为 ![手指](fig/fingers.png)。\n2. 单击鼠标左键，进入图形的编辑模式，您可以：\n\
+    \   - 按下键盘上的 **Delete** 键，删除图形。\n   - 将鼠标指针置于编辑框上，此时鼠标指针变成 ![双箭头](../common/Mouse_Arrow.svg)，通过拖动鼠标指针，来放大或缩小图形区域。\n\
+    \   - 将鼠标指针置于编辑框的 ![旋转](../common/icon_rotate.svg) 上，此时鼠标指针变成 ![旋转](../common/rotate_mouse.svg)，通过拖动鼠标指针，来旋转图形。\n\
+    3. 在编辑框外单击鼠标左键，退出编辑模式。\n\n#### 移动图形\n\n1. 将鼠标指针置于图形的边线上，此时鼠标指针变为 ![手指](fig/fingers.png)。\n\
+    2. 按住鼠标左键不放，将图形移动到截图区域的任何位置。\n\n### 模糊工具\n\n1. 在截图工具栏中，单击 ![模糊](../common/Mosaic_normal.svg)。\n\
+    2. 在工具栏展开的面板中，可以选择模糊的样式，默认为![模糊](../common/Mosaic_normal.svg)马赛克样式，亦或是![模糊](../common/vague_normal.svg)高斯模糊样式。\n\
+    3. 可以选择绘制的方式，如![模糊](../common/rectangle_normal.svg)矩形框选，![模糊](../common/oval_normal.svg)椭圆形框选，![模糊](../common/brush.svg)自由涂抹。\n\
+    4. 工具栏展开的面板的最右侧，可以左右拖动，选择模糊的强度。\n5. 与其他图形一样，绘制的模糊图形也支持修改和移动。\n\n### 添加文字批注\n\n\
+    对截取的图片进行文字补充和说明，帮助他人更清晰地了解截取的图片。&nbsp;&nbsp;\n\n1. 在截图工具栏中，单击 ![文字](../common/text_normal.svg)。\n\
+    2. 在工具栏展开的面板中，选择字号和颜色，有四种颜色可供选择。\n3. 将鼠标指针置于截取的图片上，此时鼠标指针变为 ![文字指针](../common/text_mouse.svg)。\n\
+    4. 单击要添加批注的地方，将出现一个待输入的文本框。\n5. 在文本框中输入文字。\n\n\n### 修改文字批注\n\n如果您已经添加了文字批注，可以对文字批注进行修改和移动。\n\
+    \n#### 移动文字批注\n\n1. 将鼠标指针置于文字上，此时鼠标指针变为 ![手指](fig/fingers.png)。\n2. 按住鼠标左键不放，将文字移到截图区域的任何位置。\n\
+    \n#### 编辑文字批注\n\n1. 将鼠标指针置于文字上，此时鼠标指针变为 ![手指](fig/fingers.png)。\n2. 双击鼠标左键，进入文字编辑模式，您可以：\n\
+    \   - 按下键盘上的 **Delete** 键，删除文字批注。\n   - 在文本框内，修改文字信息。\n3. 在文本框外单击鼠标左键，退出编辑模式。\n\
+    \n### 滚动截图\n\n滚动截图功能不仅可以截取屏幕内可见的内容，还能截取超过屏幕外的内容，满足一次性截取长图的需求。\n\n前提条件： **控制中心\
+    \ > 个性化** 中的窗口特效功能已开启。\n\n1. 选择截图区域后，单击工具栏上的滚动截图按钮 ![icon](../common/scrollshot.svg)。\n\
+    2. 请将鼠标光标保持在滚动区域内，您可以使用自动滚动或手动滚动截图，也可以交替使用两种方式：\n\n   - **自动滚动**：在截图区域中单击鼠标左键，光标所在的截图区域自动向上滚动，此时截取的图片会拼接为一张完整的长图。自动滚动过程中，在截图区域内单击鼠标左键，或者将光标移出截图区域，暂停截图；再次单击截图区域，继续截图。\n\
+    \n   - **手动滚动**：将鼠标光标置于截图区域中，向上或者向下滚动鼠标滚轮截取图片。停止滚动鼠标滚轮，暂停截图；再次滚动鼠标滚轮，继续截图。\n\n\
+    3. 单击工具栏中的截图按钮 ![icon](../common/done.svg) 保存长图。\n\n注意事项：\n- 截图区域尽量不超出滚动范围，避免框选整个窗口、全屏等。\n\
+    - 截图区域不宜过小，建议高度大于等于50px。\n- 截图区域中尽量避免存在多个滚动区域。\n- 滚动截图区域中尽量不包含大量重复内容，如空白区域、相同颜色、大段相同文字等。\n\
+    - 滚动截图区域中尽量不包含动图、视频、水印、纯色背景等信息。\n- 滚动操作时保持垂直方向偏移，避免滑动滚动条。\n- 滚动操作时尽量不要切换窗口。\n\
+    - 滚动操作速度不宜过快。\n\n\n### 识别文字\n\n对于截图区域中无法复制的内容，可以使用识别文字功能提取文字。\n\n1. 选择截图区域后，单击工具栏上的文字识别按钮\
+    \ ![ocr](../common/ocr.svg)，弹出图文识别窗口，识别图片中的文字。\n2. 您可以对识别出的文字进行编辑、复制或保存为TXT等操作。\n\
+    \n![ocr](fig/ocr.png)\n\n### 贴图\n\n通过贴图功能将截图变为桌面浮窗，方便您快速查阅、对比和梳理信息。\n\n选择需要截取的区域后，单击工具栏上的贴图按钮\
+    \ ![icon](../common/pin.svg)，截图浮于桌面上即为贴图，您可以对贴图进行如下操作：\n\n- 通过鼠标移动图片的位置。\n- 将鼠标指针置于图片上，向上或向下滚动鼠标滚轮等比缩放图片。\n\
+    - 单击按钮 ![icon](../common/done.svg) 保存图片。\n\n![0|贴图](fig/pin_pic.png)\n\n### AI截图\n\
+    \n在截图工具栏中，单击按钮<img src=\"../common/bar_ai.svg\" alt=\"AI截图\" class=\"inline\"\
+    \ />展开AI菜单，您可以：\n\n- 选择 **解释**，让**AI随航**为您解释截图中的文字；\n- 选择 **总结**，让**AI随航**为您总结截图中的文字；\n\
+    - 选择 **翻译**，让**AI随航**为您翻译截图中的文字；\n- 选择 **问问AI**，直接唤起**小U助手**并将截图发送至对话框，以进行更深入的对话。\n\
+    \n![0|AI截图](fig/ai_tools.png)\n\n### 延时截图\n\n您可以通过延时截图功能，捕捉特定状态或时间下的屏幕内容。\n\n\
+    - 使用快捷键 **Ctrl** + ![icon](../common/Print.svg)，启动延时截图。\n- 在终端中执行命令 “deepin-screen-recorder\
+    \ -d n”，其中n表示以秒为单位的延时时长。 \n\n### 设置\n\n您还可以在截图工具栏中，单击按钮<img src=\"../common/bar_settings.svg\"\
+    \ alt=\"设置\" class=\"inline\" />，展开设置菜单：\n\n![0|option](fig/screen_setting.png)\n\
+    \n- 选择**无边框/投影/外边框/样机**，设置图片边框效果。\n- 选择 **PNG/JPG/BMP**，设置图片格式。\n- 选择 **显示光标**，光标在截图区域内，截图生成图片时会同时显示光标所在的位置和样式。\n\
+    \n### 保存截图\n\n单击工具栏中的按钮![icon](../common/bar_save.svg)或单击鼠标右键选择 **保存**，可将截图保存在本地，单击该按钮右侧的小图标![icon](../common/dropdown.svg)展开选项可设置保存规则。\n\
+    \n- 选择 **每次询问**，可在每次点击保存按钮后选择保存路径。\n- 选择 **指定位置** > **桌面**，将图片保存到桌面。\n- 选择 **指定位置**\
+    \ > **图片**，截图文件自动保存到图片文件夹目录下。\n- 选择 **指定位置** > **保存时选择位置**，可在本次点击保存按钮后选择保存路径，下次截图保存时会默认保存至该路径，除非另行设置。\n\
+    \n### 复制到剪贴板\n\n单击工具栏中的按钮 ![icon](../common/done.svg)，或双击鼠标左键，或使用快捷键 **Ctrl +\
+    \ S**，将图片保存到剪贴板中。\n\n录制提示: 打开应用 → 按用例步骤操作 → 每个操作后等待界面稳定 → 完成后按 q 结束"
+  status: pending
+- slug: v25_2500_测试部专用_b类解耦商店应用_截图录屏_v25新需求_129855
+  name: /V25_2500（测试部专用）/B类解耦商店应用/截图录屏/V25新需求(#129855)
+  case_count: 116
+  case_ids:
+  - case_1949955
+  - case_1949953
+  - case_1949951
+  - case_1949949
+  - case_1949947
+  - case_1949945
+  - case_1949943
+  - case_1949941
+  - case_1949939
+  - case_1949937
+  - case_1949935
+  - case_1949933
+  - case_1949931
+  - case_1949929
+  - case_1949927
+  - case_1949925
+  - case_1949923
+  - case_1949921
+  - case_1949919
+  - case_1949917
+  - case_1949915
+  - case_1949913
+  - case_1949911
+  - case_1949909
+  - case_1949907
+  - case_1949905
+  - case_1949903
+  - case_1949901
+  - case_1949899
+  - case_1949897
+  - case_1949895
+  - case_1949893
+  - case_1949891
+  - case_1949889
+  - case_1949887
+  - case_1949885
+  - case_1915827
+  - case_1915825
+  - case_1915823
+  - case_1915821
+  - case_1915819
+  - case_1915817
+  - case_1915815
+  - case_1915813
+  - case_1915811
+  - case_1915809
+  - case_1915807
+  - case_1915805
+  - case_1915803
+  - case_1915801
+  - case_1915799
+  - case_1915797
+  - case_1915795
+  - case_1915793
+  - case_1915791
+  - case_1915789
+  - case_1915787
+  - case_1915785
+  - case_1915783
+  - case_1915781
+  - case_1915779
+  - case_1915777
+  - case_1915775
+  - case_1915773
+  - case_1915771
+  - case_1915769
+  - case_1915767
+  - case_1915765
+  - case_1915763
+  - case_1915761
+  - case_1915759
+  - case_1915757
+  - case_1915755
+  - case_1915753
+  - case_1915751
+  - case_1915749
+  - case_1915747
+  - case_1915745
+  - case_1915743
+  - case_1915741
+  - case_1915739
+  - case_1915737
+  - case_1915735
+  - case_1915733
+  - case_1915731
+  - case_1915729
+  - case_1915727
+  - case_1915725
+  - case_1915723
+  - case_1915721
+  - case_1915719
+  - case_1915717
+  - case_1915715
+  - case_1915713
+  - case_1915711
+  - case_1915709
+  - case_1915707
+  - case_1915705
+  - case_1915703
+  - case_1915701
+  - case_1915699
+  - case_1915697
+  - case_1915695
+  - case_1915693
+  - case_1915691
+  - case_1915689
+  - case_1915687
+  - case_1915685
+  - case_1915683
+  - case_1915681
+  - case_1915679
+  - case_1915677
+  - case_1915675
+  - case_1915673
+  - case_1915671
+  - case_1915669
+  recording_guide: "模块: /V25_2500（测试部专用）/B类解耦商店应用/截图录屏/V25新需求(#129855)\n用例数: 116\n\
+    \n操作指引 (来自帮助手册):\n# 截图\n\n在截图模式下，单击工具栏上的按钮，您可以在截图区域进行图形绘制、文字批注等操作，并可以识别图中文字、将图片置顶贴在桌面上、使用**AI截图**对截图内容进行解释、总结、翻译等。\n\
+    \n\n![0|截图工具栏](fig/capturebar.png)\n\n<table class=\"block1\">\n    <caption>工具栏说明</caption>\n\
+    \    <tbody>\n        <tr>\n            <td style=\"text-align:center;\"><img\
+    \ src=\"../common/bar_geometric.svg\" alt=\"几何工具\" class=\"inline\" /></td>\n\
+    \            <td>几何工具</td>\n            <td style=\"text-align:center;\"><img\
+    \ src=\"../common/line_mouse.svg\" alt=\"直线\" class=\"inline\" /></td>\n     \
+    \       <td>直线</td>\n            <td style=\"text-align:center;\"><img src=\"\
+    ../common/Arrow_normal.svg\" alt=\"箭头\" class=\"inline\" /></td>\n           \
+    \ <td>箭头</td>\n        </tr>\n        <tr>\n            <td style=\"text-align:center;\"\
+    ><img src=\"../common/Combined_Shape.svg\" alt=\"画笔\" class=\"inline\" /></td>\n\
+    \            <td>画笔</td>\n            <td style=\"text-align:center;\"><img src=\"\
+    ../common/Mosaic_normal.svg\" alt=\"模糊\" class=\"inline\" /></td>\n          \
+    \  <td>模糊</td>\n            <td style=\"text-align:center;\"><img src=\"../common/text_normal.svg\"\
+    \ alt=\"文字\" class=\"inline\" /></td>\n            <td>文字</td>\n        </tr>\n\
+    \        <tr>\n            <td style=\"text-align:center;\"><img src=\"../common/scrollshot.svg\"\
+    \ alt=\"滚动截图\" class=\"inline\" /></td>\n            <td>滚动截图</td>\n         \
+    \   <td style=\"text-align:center;\"><img src=\"../common/ocr.svg\" alt=\"识别文字\"\
+    \ class=\"inline\" /></td>\n            <td>识别文字</td>\n            <td style=\"\
+    text-align:center;\"><img src=\"../common/pin.svg\" alt=\"贴图\" class=\"inline\"\
+    \ /></td>\n            <td>贴图</td>\n        </tr>\n        <tr>\n            <td\
+    \ style=\"text-align:center;\"><img src=\"../common/bar_ai.svg\" alt=\"AI截图\"\
+    \ class=\"inline\" /></td>\n            <td>AI截图</td>\n            <td style=\"\
+    text-align:center;\"><img src=\"../common/bar_settings.svg\" alt=\"设置\" class=\"\
+    inline\" /></td>\n            <td>设置</td>\n            <td style=\"text-align:center;\"\
+    ><img src=\"../common/bar_save.svg\" alt=\"保存到本地\" class=\"inline\" /></td>\n\
+    \            <td>保存到本地</td>            \n        </tr>\n        <tr>\n       \
+    \     <td style=\"text-align:center;\"><img src=\"../common/close.svg\" alt=\"\
+    关闭\" class=\"inline\" /></td>\n            <td>关闭</td>\n            <td style=\"\
+    text-align:center;\"><img src=\"../common/done.svg\" alt=\"复制到剪贴板\" class=\"inline\"\
+    \ /></td>\n            <td>复制到剪贴板</td>            \n        </tr>\n    </tbody>\n\
+    </table>\n\n\n> ![notes](../common/notes.svg) 说明：如果您已经对工具栏和属性栏中如线条粗细、字体大小等进行了选择，截图录屏会保存设置，再次启动截图录屏，将默认使用该设置，您也可以重新进行选择。\n\
+    \n### 绘制图形\n\n通过截图工具栏上的**几何工具**、**直线**、**箭头**、**画笔**按钮可以绘制简单的图形，并支持设置线条的粗细和颜色。\n\
+    \n![1|绘制图形](fig/ellipsetool.png)\n\n### 修改图形\n\n如果您在截图中绘制了图形，可以对图形进行修改和移动。\n\n\
+    \n#### 编辑图形\n\n1. 将鼠标指针置于图形的边线上，此时鼠标指针变为 ![手指](fig/fingers.png)。\n2. 单击鼠标左键，进入图形的编辑模式，您可以：\n\
+    \   - 按下键盘上的 **Delete** 键，删除图形。\n   - 将鼠标指针置于编辑框上，此时鼠标指针变成 ![双箭头](../common/Mouse_Arrow.svg)，通过拖动鼠标指针，来放大或缩小图形区域。\n\
+    \   - 将鼠标指针置于编辑框的 ![旋转](../common/icon_rotate.svg) 上，此时鼠标指针变成 ![旋转](../common/rotate_mouse.svg)，通过拖动鼠标指针，来旋转图形。\n\
+    3. 在编辑框外单击鼠标左键，退出编辑模式。\n\n#### 移动图形\n\n1. 将鼠标指针置于图形的边线上，此时鼠标指针变为 ![手指](fig/fingers.png)。\n\
+    2. 按住鼠标左键不放，将图形移动到截图区域的任何位置。\n\n### 模糊工具\n\n1. 在截图工具栏中，单击 ![模糊](../common/Mosaic_normal.svg)。\n\
+    2. 在工具栏展开的面板中，可以选择模糊的样式，默认为![模糊](../common/Mosaic_normal.svg)马赛克样式，亦或是![模糊](../common/vague_normal.svg)高斯模糊样式。\n\
+    3. 可以选择绘制的方式，如![模糊](../common/rectangle_normal.svg)矩形框选，![模糊](../common/oval_normal.svg)椭圆形框选，![模糊](../common/brush.svg)自由涂抹。\n\
+    4. 工具栏展开的面板的最右侧，可以左右拖动，选择模糊的强度。\n5. 与其他图形一样，绘制的模糊图形也支持修改和移动。\n\n### 添加文字批注\n\n\
+    对截取的图片进行文字补充和说明，帮助他人更清晰地了解截取的图片。&nbsp;&nbsp;\n\n1. 在截图工具栏中，单击 ![文字](../common/text_normal.svg)。\n\
+    2. 在工具栏展开的面板中，选择字号和颜色，有四种颜色可供选择。\n3. 将鼠标指针置于截取的图片上，此时鼠标指针变为 ![文字指针](../common/text_mouse.svg)。\n\
+    4. 单击要添加批注的地方，将出现一个待输入的文本框。\n5. 在文本框中输入文字。\n\n\n### 修改文字批注\n\n如果您已经添加了文字批注，可以对文字批注进行修改和移动。\n\
+    \n#### 移动文字批注\n\n1. 将鼠标指针置于文字上，此时鼠标指针变为 ![手指](fig/fingers.png)。\n2. 按住鼠标左键不放，将文字移到截图区域的任何位置。\n\
+    \n#### 编辑文字批注\n\n1. 将鼠标指针置于文字上，此时鼠标指针变为 ![手指](fig/fingers.png)。\n2. 双击鼠标左键，进入文字编辑模式，您可以：\n\
+    \   - 按下键盘上的 **Delete** 键，删除文字批注。\n   - 在文本框内，修改文字信息。\n3. 在文本框外单击鼠标左键，退出编辑模式。\n\
+    \n### 滚动截图\n\n滚动截图功能不仅可以截取屏幕内可见的内容，还能截取超过屏幕外的内容，满足一次性截取长图的需求。\n\n前提条件： **控制中心\
+    \ > 个性化** 中的窗口特效功能已开启。\n\n1. 选择截图区域后，单击工具栏上的滚动截图按钮 ![icon](../common/scrollshot.svg)。\n\
+    2. 请将鼠标光标保持在滚动区域内，您可以使用自动滚动或手动滚动截图，也可以交替使用两种方式：\n\n   - **自动滚动**：在截图区域中单击鼠标左键，光标所在的截图区域自动向上滚动，此时截取的图片会拼接为一张完整的长图。自动滚动过程中，在截图区域内单击鼠标左键，或者将光标移出截图区域，暂停截图；再次单击截图区域，继续截图。\n\
+    \n   - **手动滚动**：将鼠标光标置于截图区域中，向上或者向下滚动鼠标滚轮截取图片。停止滚动鼠标滚轮，暂停截图；再次滚动鼠标滚轮，继续截图。\n\n\
+    3. 单击工具栏中的截图按钮 ![icon](../common/done.svg) 保存长图。\n\n注意事项：\n- 截图区域尽量不超出滚动范围，避免框选整个窗口、全屏等。\n\
+    - 截图区域不宜过小，建议高度大于等于50px。\n- 截图区域中尽量避免存在多个滚动区域。\n- 滚动截图区域中尽量不包含大量重复内容，如空白区域、相同颜色、大段相同文字等。\n\
+    - 滚动截图区域中尽量不包含动图、视频、水印、纯色背景等信息。\n- 滚动操作时保持垂直方向偏移，避免滑动滚动条。\n- 滚动操作时尽量不要切换窗口。\n\
+    - 滚动操作速度不宜过快。\n\n\n### 识别文字\n\n对于截图区域中无法复制的内容，可以使用识别文字功能提取文字。\n\n1. 选择截图区域后，单击工具栏上的文字识别按钮\
+    \ ![ocr](../common/ocr.svg)，弹出图文识别窗口，识别图片中的文字。\n2. 您可以对识别出的文字进行编辑、复制或保存为TXT等操作。\n\
+    \n![ocr](fig/ocr.png)\n\n### 贴图\n\n通过贴图功能将截图变为桌面浮窗，方便您快速查阅、对比和梳理信息。\n\n选择需要截取的区域后，单击工具栏上的贴图按钮\
+    \ ![icon](../common/pin.svg)，截图浮于桌面上即为贴图，您可以对贴图进行如下操作：\n\n- 通过鼠标移动图片的位置。\n- 将鼠标指针置于图片上，向上或向下滚动鼠标滚轮等比缩放图片。\n\
+    - 单击按钮 ![icon](../common/done.svg) 保存图片。\n\n![0|贴图](fig/pin_pic.png)\n\n### AI截图\n\
+    \n在截图工具栏中，单击按钮<img src=\"../common/bar_ai.svg\" alt=\"AI截图\" class=\"inline\"\
+    \ />展开AI菜单，您可以：\n\n- 选择 **解释**，让**AI随航**为您解释截图中的文字；\n- 选择 **总结**，让**AI随航**为您总结截图中的文字；\n\
+    - 选择 **翻译**，让**AI随航**为您翻译截图中的文字；\n- 选择 **问问AI**，直接唤起**小U助手**并将截图发送至对话框，以进行更深入的对话。\n\
+    \n![0|AI截图](fig/ai_tools.png)\n\n### 延时截图\n\n您可以通过延时截图功能，捕捉特定状态或时间下的屏幕内容。\n\n\
+    - 使用快捷键 **Ctrl** + ![icon](../common/Print.svg)，启动延时截图。\n- 在终端中执行命令 “deepin-screen-recorder\
+    \ -d n”，其中n表示以秒为单位的延时时长。 \n\n### 设置\n\n您还可以在截图工具栏中，单击按钮<img src=\"../common/bar_settings.svg\"\
+    \ alt=\"设置\" class=\"inline\" />，展开设置菜单：\n\n![0|option](fig/screen_setting.png)\n\
+    \n- 选择**无边框/投影/外边框/样机**，设置图片边框效果。\n- 选择 **PNG/JPG/BMP**，设置图片格式。\n- 选择 **显示光标**，光标在截图区域内，截图生成图片时会同时显示光标所在的位置和样式。\n\
+    \n### 保存截图\n\n单击工具栏中的按钮![icon](../common/bar_save.svg)或单击鼠标右键选择 **保存**，可将截图保存在本地，单击该按钮右侧的小图标![icon](../common/dropdown.svg)展开选项可设置保存规则。\n\
+    \n- 选择 **每次询问**，可在每次点击保存按钮后选择保存路径。\n- 选择 **指定位置** > **桌面**，将图片保存到桌面。\n- 选择 **指定位置**\
+    \ > **图片**，截图文件自动保存到图片文件夹目录下。\n- 选择 **指定位置** > **保存时选择位置**，可在本次点击保存按钮后选择保存路径，下次截图保存时会默认保存至该路径，除非另行设置。\n\
+    \n### 复制到剪贴板\n\n单击工具栏中的按钮 ![icon](../common/done.svg)，或双击鼠标左键，或使用快捷键 **Ctrl +\
+    \ S**，将图片保存到剪贴板中。\n\n录制提示: 打开应用 → 按用例步骤操作 → 每个操作后等待界面稳定 → 完成后按 q 结束"
+  status: pending

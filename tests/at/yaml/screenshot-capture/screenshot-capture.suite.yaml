@@ -1,0 +1,46 @@
+name: screenshot-capture_suite
+app: deepin-screen-recorder
+description: ''
+module: screenshot-capture
+tags: []
+fast_fail: false
+env_check: []
+setup:
+- action: session_start
+  command: deepin-screen-recorder
+  wait: 3.0
+suites:
+- id: screenshot_capture_s1
+  name: 截图基础捕获流程
+  description: ''
+  tags: []
+  steps:
+  - action: element_action
+    selector:
+      name: to_shot_but
+      role: Button
+    do: click
+  - action: keyboard_hot_key
+    key: alt+Print
+  assert_steps:
+  - action: assert_element
+    selector:
+      name: toolbar_close_button
+      role: Button
+- id: screenshot_clipboard_s1
+  name: 截图后剪切板验证
+  description: ''
+  tags: []
+  steps:
+  - action: keyboard_hot_key
+    key: ctrl+alt+a
+  - action: keyboard_press
+    key: enter
+  assert_steps:
+  - action: assert_element
+    selector:
+      name: toolbar_close_button
+      role: Button
+  - action: assert_window
+teardown:
+- action: session_stop

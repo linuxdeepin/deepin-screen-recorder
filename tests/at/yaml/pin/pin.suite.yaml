@@ -1,0 +1,69 @@
+name: pin_suite
+app: deepin-screen-recorder
+description: ''
+module: pin
+tags: []
+fast_fail: false
+env_check: []
+setup:
+- action: session_start
+  command: deepin-screen-recorder
+  wait: 3.0
+suites:
+- id: pin_save_clipboard_s1
+  name: 贴图功能栏-保存到剪切板通知
+  description: ''
+  tags: []
+  steps:
+  - action: keyboard_hot_key
+    key: ctrl+alt+a
+  - action: element_action
+    selector:
+      name: pinscreenshots_button
+      role: Button
+    do: click
+  - action: element_action
+    selector:
+      name: pin_save_but
+      role: Button
+    do: click
+  assert_steps:
+  - action: assert_element
+    selector:
+      name: pin_save_but
+      role: Button
+  - action: assert_window
+- id: pin_close_esc_s1
+  name: 贴图功能栏-Esc关闭贴图
+  description: ''
+  tags: []
+  steps:
+  - action: element_action
+    selector:
+      name: pinscreenshots_button
+      role: Button
+    do: click
+  - action: keyboard_press
+    key: escape
+  assert_steps:
+  - action: assert_not_exists
+    selector:
+      name: pin_close_but
+      role: Button
+- id: pin_contextmenu_save_s1
+  name: 贴图右键菜单-保存功能
+  description: ''
+  tags: []
+  steps:
+  - action: element_action
+    selector:
+      name: pinscreenshots_button
+      role: Button
+    do: click
+  assert_steps:
+  - action: assert_element
+    selector:
+      name: pin_close_but
+      role: Button
+teardown:
+- action: session_stop

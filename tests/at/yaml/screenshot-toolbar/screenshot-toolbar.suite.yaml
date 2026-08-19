@@ -1,0 +1,62 @@
+name: screenshot-toolbar_suite
+app: deepin-screen-recorder
+description: ''
+module: screenshot-toolbar
+tags: []
+fast_fail: false
+env_check: []
+setup:
+- action: session_start
+  command: deepin-screen-recorder
+  wait: 3.0
+suites:
+- id: screenshot_toolbar_geometry_s1
+  name: 几何工具默认选中矩形
+  description: ''
+  tags: []
+  steps:
+  - action: keyboard_hot_key
+    key: ctrl+alt+a
+  - action: element_action
+    selector:
+      name: rectangle_button
+      role: Button
+    do: click
+  - action: element_action
+    selector:
+      name: oval_button
+      role: Button
+    do: click
+  assert_steps:
+  - action: assert_element
+    selector:
+      name: line_button
+      role: Button
+  - action: assert_element
+    selector:
+      name: rect_thicknessBtn
+      role: Button
+  - action: assert_element
+    selector:
+      name: rect_thicknessBtn
+      role: Button
+- id: screenshot_toolbar_text_s1
+  name: 文字工具-鼠标调整光标位置
+  description: ''
+  tags: []
+  steps:
+  - action: keyboard_hot_key
+    key: ctrl+alt+a
+  - action: element_action
+    selector:
+      name: text_button
+      role: Button
+    do: click
+  - action: mouse_click
+  assert_steps:
+  - action: assert_element
+    selector:
+      name: text_button
+      role: Button
+teardown:
+- action: session_stop

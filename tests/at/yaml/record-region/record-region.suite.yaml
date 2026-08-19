@@ -1,0 +1,40 @@
+name: record-region_suite
+app: deepin-screen-recorder
+description: ''
+module: record-region
+tags: []
+fast_fail: false
+env_check: []
+setup:
+- action: session_start
+  command: deepin-screen-recorder
+  wait: 3.0
+suites:
+- id: record_region_min_s1
+  name: 录屏最小区域尺寸
+  description: ''
+  tags: []
+  steps:
+  - action: keyboard_hot_key
+    key: ctrl+alt+r
+  assert_steps:
+  - action: assert_element
+    selector:
+      name: toolbar_close_button
+      role: Button
+- id: record_region_resize_s1
+  name: 录屏区域大小-调整
+  description: ''
+  tags: []
+  steps:
+  - action: keyboard_hot_key
+    key: ctrl+alt+r
+  - action: keyboard_press
+    key: down
+  assert_steps:
+  - action: assert_element
+    selector:
+      name: toolbar_close_button
+      role: Button
+teardown:
+- action: session_stop

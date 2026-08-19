@@ -1,0 +1,928 @@
+version: '1.0'
+tree:
+- id: ''
+  role: panel
+  name: CommonIconButton
+  object_name: CommonIconButton
+  accessible_id: ''
+  classification: container
+  comment: ''
+  annotation_status: draft
+- id: ''
+  role: panel
+  name: FontSizeWidget
+  object_name: ''
+  accessible_id: ''
+  classification: container
+  comment: ''
+  annotation_status: draft
+  children:
+  - id: ''
+    role: panel
+    name: AddSizeBtn
+    object_name: AddSizeBtn
+    accessible_id: ''
+    classification: container
+    comment: ''
+    annotation_status: draft
+  - id: ''
+    role: panel
+    name: FontSizeEdit
+    object_name: FontSizeEdit
+    accessible_id: ''
+    classification: container
+    comment: ''
+    annotation_status: draft
+  - id: ''
+    role: panel
+    name: FontSizeWidget
+    object_name: FontSizeWidget
+    accessible_id: ''
+    classification: container
+    comment: ''
+    annotation_status: draft
+  - id: ''
+    role: panel
+    name: ReduceSizeBtn
+    object_name: ReduceSizeBtn
+    accessible_id: ''
+    classification: container
+    comment: ''
+    annotation_status: draft
+- id: ''
+  role: panel
+  name: MajToolBar
+  object_name: ''
+  accessible_id: ''
+  classification: container
+  comment: ''
+  annotation_status: draft
+  children:
+  - id: ''
+    role: panel
+    name: ArrowBtn
+    object_name: ArrowBtn
+    accessible_id: ''
+    classification: container
+    comment: ''
+    annotation_status: draft
+  - id: ''
+    role: panel
+    name: CloseBtn
+    object_name: CloseBtn
+    accessible_id: ''
+    classification: container
+    comment: ''
+    annotation_status: draft
+  - id: ''
+    role: panel
+    name: ColorBtn
+    object_name: ColorBtn
+    accessible_id: ''
+    classification: container
+    comment: ''
+    annotation_status: draft
+  - id: ''
+    role: panel
+    name: ListBtn
+    object_name: ListBtn
+    accessible_id: ''
+    classification: container
+    comment: ''
+    annotation_status: draft
+  - id: ''
+    role: panel
+    name: OkBtn
+    object_name: OkBtn
+    accessible_id: ''
+    classification: container
+    comment: ''
+    annotation_status: draft
+  - id: ''
+    role: panel
+    name: OvalBtn
+    object_name: OvalBtn
+    accessible_id: ''
+    classification: container
+    comment: ''
+    annotation_status: draft
+  - id: ''
+    role: panel
+    name: PenBtn
+    object_name: PenBtn
+    accessible_id: ''
+    classification: container
+    comment: ''
+    annotation_status: draft
+  - id: ''
+    role: panel
+    name: RectBtn
+    object_name: RectBtn
+    accessible_id: ''
+    classification: container
+    comment: ''
+    annotation_status: draft
+  - id: ''
+    role: panel
+    name: SaveBtn
+    object_name: SaveBtn
+    accessible_id: ''
+    classification: container
+    comment: ''
+    annotation_status: draft
+  - id: ''
+    role: panel
+    name: StraightLineBtn
+    object_name: StraightLineBtn
+    accessible_id: ''
+    classification: container
+    comment: ''
+    annotation_status: draft
+  - id: ''
+    role: panel
+    name: TextBtn
+    object_name: TextBtn
+    accessible_id: ''
+    classification: container
+    comment: ''
+    annotation_status: draft
+- id: ''
+  role: panel
+  name: ScrollShotTip
+  object_name: ''
+  accessible_id: ''
+  classification: container
+  comment: ''
+  annotation_status: draft
+  children:
+  - id: ''
+    role: panel
+    name: TipText
+    object_name: TipText
+    accessible_id: ''
+    classification: container
+    comment: ''
+    annotation_status: draft
+  - id: ''
+    role: panel
+    name: scrollshot_tip_adjust_button
+    object_name: scrollshot_tip_adjust_button
+    accessible_id: ''
+    classification: container
+    comment: ''
+    annotation_status: draft
+  - id: ''
+    role: panel
+    name: scrollshot_tip_help_button
+    object_name: scrollshot_tip_help_button
+    accessible_id: ''
+    classification: container
+    comment: ''
+    annotation_status: draft
+- id: ''
+  role: panel
+  name: SubToolBar
+  object_name: ''
+  accessible_id: ''
+  classification: container
+  comment: ''
+  annotation_status: draft
+  children:
+  - id: ''
+    role: panel
+    name: ArrowBtn
+    object_name: ArrowBtn
+    accessible_id: ''
+    classification: container
+    comment: ''
+    annotation_status: draft
+  - id: ''
+    role: panel
+    name: ArrowFine
+    object_name: ArrowFine
+    accessible_id: ''
+    classification: container
+    comment: ''
+    annotation_status: draft
+  - id: ''
+    role: panel
+    name: ArrowFineLine
+    object_name: ArrowFineLine
+    accessible_id: ''
+    classification: container
+    comment: ''
+    annotation_status: draft
+  - id: ''
+    role: panel
+    name: ArrowMedium
+    object_name: ArrowMedium
+    accessible_id: ''
+    classification: container
+    comment: ''
+    annotation_status: draft
+  - id: ''
+    role: panel
+    name: ArrowMediumLine
+    object_name: ArrowMediumLine
+    accessible_id: ''
+    classification: container
+    comment: ''
+    annotation_status: draft
+  - id: ''
+    role: panel
+    name: ArrowThick
+    object_name: ArrowThick
+    accessible_id: ''
+    classification: container
+    comment: ''
+    annotation_status: draft
+  - id: ''
+    role: panel
+    name: ArrowThickLine
+    object_name: ArrowThickLine
+    accessible_id: ''
+    classification: container
+    comment: ''
+    annotation_status: draft
+  - id: ''
+    role: panel
+    name: BlurBtn
+    object_name: BlurBtn
+    accessible_id: ''
+    classification: container
+    comment: ''
+    annotation_status: draft
+  - id: ''
+    role: panel
+    name: ColorBtn%1
+    object_name: ColorBtn%1
+    accessible_id: ''
+    classification: container
+    comment: ''
+    annotation_status: draft
+  - id: ''
+    role: panel
+    name: FineLine
+    object_name: FineLine
+    accessible_id: ''
+    classification: container
+    comment: ''
+    annotation_status: draft
+  - id: ''
+    role: panel
+    name: HighQualityLabel
+    object_name: HighQualityLabel
+    accessible_id: ''
+    classification: container
+    comment: ''
+    annotation_status: draft
+  - id: ''
+    role: panel
+    name: LineBtn
+    object_name: LineBtn
+    accessible_id: ''
+    classification: container
+    comment: ''
+    annotation_status: draft
+  - id: ''
+    role: panel
+    name: LowQualityLabel
+    object_name: LowQualityLabel
+    accessible_id: ''
+    classification: container
+    comment: ''
+    annotation_status: draft
+  - id: ''
+    role: panel
+    name: MediumLine
+    object_name: MediumLine
+    accessible_id: ''
+    classification: container
+    comment: ''
+    annotation_status: draft
+  - id: ''
+    role: panel
+    name: MosaicBtn
+    object_name: MosaicBtn
+    accessible_id: ''
+    classification: container
+    comment: ''
+    annotation_status: draft
+  - id: ''
+    role: panel
+    name: SaveToAutoClipboard
+    object_name: SaveToAutoClipboard
+    accessible_id: ''
+    classification: container
+    comment: ''
+    annotation_status: draft
+  - id: ''
+    role: panel
+    name: SaveToClipboard
+    object_name: SaveToClipboard
+    accessible_id: ''
+    classification: container
+    comment: ''
+    annotation_status: draft
+  - id: ''
+    role: panel
+    name: SaveToDesktop
+    object_name: SaveToDesktop
+    accessible_id: ''
+    classification: container
+    comment: ''
+    annotation_status: draft
+  - id: ''
+    role: panel
+    name: SaveToPictureDir
+    object_name: SaveToPictureDir
+    accessible_id: ''
+    classification: container
+    comment: ''
+    annotation_status: draft
+  - id: ''
+    role: panel
+    name: SaveToSpecificDir
+    object_name: SaveToSpecificDir
+    accessible_id: ''
+    classification: container
+    comment: ''
+    annotation_status: draft
+  - id: ''
+    role: panel
+    name: ThickLine
+    object_name: ThickLine
+    accessible_id: ''
+    classification: container
+    comment: ''
+    annotation_status: draft
+  - id: ''
+    role: panel
+    name: VerticalSeparatorLine
+    object_name: VerticalSeparatorLine
+    accessible_id: ''
+    classification: container
+    comment: ''
+    annotation_status: draft
+- id: ''
+  role: panel
+  name: TextButton
+  object_name: TextButton
+  accessible_id: ''
+  classification: container
+  comment: ''
+  annotation_status: draft
+- id: ''
+  role: panel
+  name: ToolBarWidget
+  object_name: ''
+  accessible_id: ''
+  classification: container
+  comment: ''
+  annotation_status: draft
+  children:
+  - id: ''
+    role: panel
+    name: HorSeparatorLine
+    object_name: HorSeparatorLine
+    accessible_id: ''
+    classification: container
+    comment: ''
+    annotation_status: draft
+- id: ''
+  role: panel
+  name: ToolTips
+  object_name: ''
+  accessible_id: ''
+  classification: container
+  comment: ''
+  annotation_status: draft
+  children:
+  - id: ''
+    role: panel
+    name: TipText
+    object_name: TipText
+    accessible_id: ''
+    classification: container
+    comment: ''
+    annotation_status: draft
+  - id: ''
+    role: panel
+    name: ToolTips
+    object_name: ToolTips
+    accessible_id: ''
+    classification: container
+    comment: ''
+    annotation_status: draft
+- id: n1000
+  role: push button
+  name: to_record_but
+  object_name: to_record_but
+  accessible_id: ''
+  classification: interactive
+  comment: 'GUI位置: 主工具栏 | 功能: 切换到录屏功能按钮'
+  annotation_status: draft
+- id: n1001
+  role: push button
+  name: to_shot_but
+  object_name: to_shot_but
+  accessible_id: ''
+  classification: interactive
+  comment: 'GUI位置: 主工具栏 | 功能: 切换到截图功能按钮'
+  annotation_status: draft
+- id: n1002
+  role: push button
+  name: toolbar_close_button
+  object_name: toolbar_close_button
+  accessible_id: ''
+  classification: interactive
+  comment: 'GUI位置: 主工具栏 | 功能: 关闭按钮'
+  annotation_status: draft
+- id: n1003
+  role: push button
+  name: keyboard_button
+  object_name: keyboard_button
+  accessible_id: ''
+  classification: interactive
+  comment: 'GUI位置: 主工具栏 | 功能: 显示按键按钮'
+  annotation_status: draft
+- id: n1004
+  role: push button
+  name: camera_button
+  object_name: camera_button
+  accessible_id: ''
+  classification: interactive
+  comment: 'GUI位置: 主工具栏 | 功能: 摄像头按钮'
+  annotation_status: draft
+- id: n1005
+  role: push button
+  name: shot_button
+  object_name: shot_button
+  accessible_id: ''
+  classification: interactive
+  comment: 'GUI位置: 主工具栏 | 功能: 截图按钮(录屏模式)'
+  annotation_status: draft
+- id: n1006
+  role: push button
+  name: record_option_but
+  object_name: record_option_but
+  accessible_id: ''
+  classification: interactive
+  comment: 'GUI位置: 截图/录屏工具栏 | 功能: 录屏选项按钮'
+  annotation_status: draft
+- id: n1007
+  role: push button
+  name: gio_button
+  object_name: gio_button
+  accessible_id: ''
+  classification: interactive
+  comment: 'GUI位置: 主工具栏 | 功能: 几何图形工具按钮'
+  annotation_status: draft
+- id: n1008
+  role: push button
+  name: line_button
+  object_name: line_button
+  accessible_id: ''
+  classification: interactive
+  comment: 'GUI位置: 主工具栏 | 功能: 直线按钮'
+  annotation_status: draft
+- id: n1009
+  role: push button
+  name: pen_button
+  object_name: pen_button
+  accessible_id: ''
+  classification: interactive
+  comment: 'GUI位置: 主工具栏 | 功能: 画笔按钮'
+  annotation_status: draft
+- id: n1010
+  role: push button
+  name: mosaic_button
+  object_name: mosaic_button
+  accessible_id: ''
+  classification: interactive
+  comment: 'GUI位置: 主工具栏 | 功能: 模糊按钮'
+  annotation_status: draft
+- id: n1011
+  role: push button
+  name: text_button
+  object_name: text_button
+  accessible_id: ''
+  classification: interactive
+  comment: 'GUI位置: 主工具栏 | 功能: 文本按钮'
+  annotation_status: draft
+- id: n1012
+  role: push button
+  name: scrollshot_button
+  object_name: scrollshot_button
+  accessible_id: ''
+  classification: interactive
+  comment: 'GUI位置: 主工具栏 | 功能: 滚动截图按钮'
+  annotation_status: draft
+- id: n1013
+  role: push button
+  name: orc_button
+  object_name: orc_button
+  accessible_id: ''
+  classification: interactive
+  comment: 'GUI位置: 主工具栏 | 功能: 文字识别按钮'
+  annotation_status: draft
+- id: n1014
+  role: push button
+  name: pinscreenshots_button
+  object_name: pinscreenshots_button
+  accessible_id: ''
+  classification: interactive
+  comment: 'GUI位置: 主工具栏 | 功能: 贴图工具按钮'
+  annotation_status: draft
+- id: n1015
+  role: push button
+  name: ai_assistant_button
+  object_name: ai_assistant_button
+  accessible_id: ''
+  classification: interactive
+  comment: 'GUI位置: 主工具栏 | 功能: AI助手按钮'
+  annotation_status: draft
+- id: n1016
+  role: push button
+  name: undo_button
+  object_name: undo_button
+  accessible_id: ''
+  classification: interactive
+  comment: 'GUI位置: 主工具栏 | 功能: 撤销按钮'
+  annotation_status: draft
+- id: n1017
+  role: push button
+  name: recorder_button
+  object_name: recorder_button
+  accessible_id: ''
+  classification: interactive
+  comment: 'GUI位置: 主工具栏 | 功能: 录屏按钮(截图模式)'
+  annotation_status: draft
+- id: n1018
+  role: push button
+  name: shot_option_but
+  object_name: shot_option_but
+  accessible_id: ''
+  classification: interactive
+  comment: 'GUI位置: 截图/录屏工具栏 | 功能: 选项按钮(截图模式)'
+  annotation_status: draft
+- id: n1019
+  role: push button
+  name: save_local_button
+  object_name: save_local_button
+  accessible_id: ''
+  classification: interactive
+  comment: 'GUI位置: 主工具栏 | 功能: 保存按钮'
+  annotation_status: draft
+- id: n1020
+  role: push button
+  name: Black_button
+  object_name: Black_button
+  accessible_id: ''
+  classification: interactive
+  comment: 'GUI位置: 主工具栏 | 功能: 黑色按钮'
+  annotation_status: draft
+- id: n1021
+  role: push button
+  name: Gray_button
+  object_name: Gray_button
+  accessible_id: ''
+  classification: interactive
+  comment: 'GUI位置: 主工具栏 | 功能: 灰色按钮'
+  annotation_status: draft
+- id: n1022
+  role: push button
+  name: White_button
+  object_name: White_button
+  accessible_id: ''
+  classification: interactive
+  comment: 'GUI位置: 主工具栏 | 功能: 白色按钮'
+  annotation_status: draft
+- id: n1023
+  role: push button
+  name: Red_button
+  object_name: Red_button
+  accessible_id: ''
+  classification: interactive
+  comment: 'GUI位置: 主工具栏 | 功能: 红色按钮'
+  annotation_status: draft
+- id: n1024
+  role: push button
+  name: Orange_button
+  object_name: Orange_button
+  accessible_id: ''
+  classification: interactive
+  comment: 'GUI位置: 主工具栏 | 功能: 橙色按钮'
+  annotation_status: draft
+- id: n1025
+  role: push button
+  name: Yellow_button
+  object_name: Yellow_button
+  accessible_id: ''
+  classification: interactive
+  comment: 'GUI位置: 主工具栏 | 功能: 黄色按钮'
+  annotation_status: draft
+- id: n1026
+  role: push button
+  name: LightLime_button
+  object_name: LightLime_button
+  accessible_id: ''
+  classification: interactive
+  comment: 'GUI位置: 主工具栏 | 功能: 亮柠檬绿按钮'
+  annotation_status: draft
+- id: n1027
+  role: push button
+  name: Aquamarine_button
+  object_name: Aquamarine_button
+  accessible_id: ''
+  classification: interactive
+  comment: 'GUI位置: 主工具栏 | 功能: 碧蓝色按钮'
+  annotation_status: draft
+- id: n1028
+  role: push button
+  name: Green_button
+  object_name: Green_button
+  accessible_id: ''
+  classification: interactive
+  comment: 'GUI位置: 主工具栏 | 功能: 绿色按钮'
+  annotation_status: draft
+- id: n1029
+  role: push button
+  name: Blue_button
+  object_name: Blue_button
+  accessible_id: ''
+  classification: interactive
+  comment: 'GUI位置: 主工具栏 | 功能: 蓝色按钮'
+  annotation_status: draft
+- id: n1030
+  role: push button
+  name: Purple_button
+  object_name: Purple_button
+  accessible_id: ''
+  classification: interactive
+  comment: 'GUI位置: 主工具栏 | 功能: 紫色按钮'
+  annotation_status: draft
+- id: n1031
+  role: push button
+  name: DarkBlue_button
+  object_name: DarkBlue_button
+  accessible_id: ''
+  classification: interactive
+  comment: 'GUI位置: 主工具栏 | 功能: 深蓝按钮'
+  annotation_status: draft
+- id: n1032
+  role: push button
+  name: rect_thicknessBtn
+  object_name: rect_thicknessBtn
+  accessible_id: ''
+  classification: interactive
+  comment: 'GUI位置: 截图/录屏工具栏 | 功能: 矩形宽度选择按钮'
+  annotation_status: draft
+- id: n1033
+  role: push button
+  name: rectangle_button
+  object_name: rectangle_button
+  accessible_id: ''
+  classification: interactive
+  comment: 'GUI位置: 主工具栏 | 功能: 矩形工具按钮'
+  annotation_status: draft
+- id: n1034
+  role: push button
+  name: oval_button
+  object_name: oval_button
+  accessible_id: ''
+  classification: interactive
+  comment: 'GUI位置: 主工具栏 | 功能: 椭圆工具按钮'
+  annotation_status: draft
+- id: n1035
+  role: menu item
+  name: menuUndo
+  object_name: menuUndo
+  accessible_id: ''
+  classification: interactive
+  comment: 'GUI位置: 截图/录屏工具栏 | 功能: 撤销菜单项'
+  annotation_status: draft
+- id: n1036
+  role: menu item
+  name: menuSave
+  object_name: menuSave
+  accessible_id: ''
+  classification: interactive
+  comment: 'GUI位置: 截图/录屏工具栏 | 功能: 保存菜单项'
+  annotation_status: draft
+- id: n1037
+  role: menu item
+  name: menuExit
+  object_name: menuExit
+  accessible_id: ''
+  classification: interactive
+  comment: 'GUI位置: 截图/录屏工具栏 | 功能: 退出菜单项'
+  annotation_status: draft
+- id: n1038
+  role: menu item
+  name: gifAction
+  object_name: gifAction
+  accessible_id: ''
+  classification: interactive
+  comment: 'GUI位置: 截图/录屏工具栏 | 功能: GIF格式选项'
+  annotation_status: draft
+- id: n1039
+  role: menu item
+  name: mp4Action
+  object_name: mp4Action
+  accessible_id: ''
+  classification: interactive
+  comment: 'GUI位置: 截图/录屏工具栏 | 功能: MP4格式选项'
+  annotation_status: draft
+- id: n1040
+  role: menu item
+  name: mkvAction
+  object_name: mkvAction
+  accessible_id: ''
+  classification: interactive
+  comment: 'GUI位置: 截图/录屏工具栏 | 功能: MKV格式选项'
+  annotation_status: draft
+- id: n1041
+  role: menu item
+  name: fps5Action
+  object_name: fps5Action
+  accessible_id: ''
+  classification: interactive
+  comment: 'GUI位置: 截图/录屏工具栏 | 功能: 5fps选项'
+  annotation_status: draft
+- id: n1042
+  role: menu item
+  name: fps10Action
+  object_name: fps10Action
+  accessible_id: ''
+  classification: interactive
+  comment: 'GUI位置: 截图/录屏工具栏 | 功能: 10fps选项'
+  annotation_status: draft
+- id: n1043
+  role: menu item
+  name: fps20Action
+  object_name: fps20Action
+  accessible_id: ''
+  classification: interactive
+  comment: 'GUI位置: 截图/录屏工具栏 | 功能: 20fps选项'
+  annotation_status: draft
+- id: n1044
+  role: menu item
+  name: fps24Action
+  object_name: fps24Action
+  accessible_id: ''
+  classification: interactive
+  comment: 'GUI位置: 截图/录屏工具栏 | 功能: 24fps选项'
+  annotation_status: draft
+- id: n1045
+  role: menu item
+  name: fps30Action
+  object_name: fps30Action
+  accessible_id: ''
+  classification: interactive
+  comment: 'GUI位置: 截图/录屏工具栏 | 功能: 30fps选项'
+  annotation_status: draft
+- id: n1046
+  role: menu item
+  name: pngAction
+  object_name: pngAction
+  accessible_id: ''
+  classification: interactive
+  comment: 'GUI位置: 截图/录屏工具栏 | 功能: PNG格式选项'
+  annotation_status: draft
+- id: n1047
+  role: menu item
+  name: jpgAction
+  object_name: jpgAction
+  accessible_id: ''
+  classification: interactive
+  comment: 'GUI位置: 截图/录屏工具栏 | 功能: JPG格式选项'
+  annotation_status: draft
+- id: n1048
+  role: menu item
+  name: bmpAction
+  object_name: bmpAction
+  accessible_id: ''
+  classification: interactive
+  comment: 'GUI位置: 截图/录屏工具栏 | 功能: BMP格式选项'
+  annotation_status: draft
+- id: n1049
+  role: menu item
+  name: saveCursorAction
+  object_name: saveCursorAction
+  accessible_id: ''
+  classification: interactive
+  comment: 'GUI位置: 截图/录屏工具栏 | 功能: 保存光标位置选项'
+  annotation_status: draft
+- id: n1050
+  role: push button
+  name: pin_close_but
+  object_name: pin_close_but
+  accessible_id: ''
+  classification: interactive
+  comment: 'GUI位置: 截图/录屏工具栏 | 功能: 贴图关闭按钮'
+  annotation_status: draft
+- id: n1051
+  role: push button
+  name: pin_save_but
+  object_name: pin_save_but
+  accessible_id: ''
+  classification: interactive
+  comment: 'GUI位置: 截图/录屏工具栏 | 功能: 贴图保存按钮'
+  annotation_status: draft
+- id: n1052
+  role: push button
+  name: pin_ocr_but
+  object_name: pin_ocr_but
+  accessible_id: ''
+  classification: interactive
+  comment: 'GUI位置: 截图/录屏工具栏 | 功能: 贴图文字识别按钮'
+  annotation_status: draft
+- id: n1053
+  role: push button
+  name: pin_option_but
+  object_name: pin_option_but
+  accessible_id: ''
+  classification: interactive
+  comment: 'GUI位置: 截图/录屏工具栏 | 功能: 贴图选项按钮'
+  annotation_status: draft
+- id: n1054
+  role: push button
+  name: pin_save_local_but
+  object_name: pin_save_local_but
+  accessible_id: ''
+  classification: interactive
+  comment: 'GUI位置: 截图/录屏工具栏 | 功能: 贴图保存到本地按钮'
+  annotation_status: draft
+- id: n1055
+  role: push button
+  name: IconButton
+  object_name: IconButton
+  accessible_id: ''
+  classification: interactive
+  comment: 'GUI位置: 截图/录屏工具栏 | 功能: 截图录屏启动插件按钮'
+  annotation_status: draft
+- id: n1056
+  role: push button
+  name: RecordButton
+  object_name: RecordButton
+  accessible_id: ''
+  classification: interactive
+  comment: 'GUI位置: 截图/录屏工具栏 | 功能: 录屏按钮(自定义绘制)'
+  annotation_status: draft
+- id: n1057
+  role: push button
+  name: RecordOptionPanel
+  object_name: RecordOptionPanel
+  accessible_id: ''
+  classification: interactive
+  comment: 'GUI位置: 截图/录屏工具栏 | 功能: 录屏格式选项面板'
+  annotation_status: draft
+- id: n1058
+  role: push button
+  name: ai_assistant_explain_button
+  object_name: ai_assistant_explain_button
+  accessible_id: ''
+  classification: interactive
+  comment: 'GUI位置: 主工具栏 | 功能: AI助手-解释按钮'
+  annotation_status: draft
+- id: n1059
+  role: push button
+  name: ai_assistant_summarize_button
+  object_name: ai_assistant_summarize_button
+  accessible_id: ''
+  classification: interactive
+  comment: 'GUI位置: 主工具栏 | 功能: AI助手-总结按钮'
+  annotation_status: draft
+- id: n1060
+  role: push button
+  name: ai_assistant_translate_button
+  object_name: ai_assistant_translate_button
+  accessible_id: ''
+  classification: interactive
+  comment: 'GUI位置: 主工具栏 | 功能: AI助手-翻译按钮'
+  annotation_status: draft
+- id: n1061
+  role: push button
+  name: ai_assistant_askai_button
+  object_name: ai_assistant_askai_button
+  accessible_id: ''
+  classification: interactive
+  comment: 'GUI位置: 主工具栏 | 功能: AI助手-提问按钮'
+  annotation_status: draft
+- id: n1062
+  role: menu item
+  name: microphoneAction
+  object_name: microphoneAction
+  accessible_id: ''
+  classification: interactive
+  comment: 'GUI位置: 截图/录屏工具栏 | 功能: 录音源-麦克风选项'
+  annotation_status: draft
+- id: n1063
+  role: menu item
+  name: sysAudioAction
+  object_name: sysAudioAction
+  accessible_id: ''
+  classification: interactive
+  comment: 'GUI位置: 截图/录屏工具栏 | 功能: 录音源-系统声音选项'
+  annotation_status: draft
