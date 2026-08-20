@@ -2423,16 +2423,10 @@ void MainWindow::topWindow()
 
     // this->hide();
     qCDebug(dsrApp) << "topWindow QRect target";
-   
-    int adjustedX = std::max(recordX, 1);
-    int adjustedY = std::max(recordY, 1);
-    int adjustedWidth = std::min(recordWidth - 2, m_backgroundRect.width() - 2);
-    int adjustedHeight = std::min(recordHeight - 1, m_backgroundRect.height() - 2);
-    
-    QRect target(static_cast<int>(adjustedX * m_pixelRatio),
-                 static_cast<int>(adjustedY * m_pixelRatio),
-                 static_cast<int>(adjustedWidth * m_pixelRatio),
-                 static_cast<int>(adjustedHeight * m_pixelRatio));
+    QRect target(static_cast<int>(recordX * m_pixelRatio),
+                 static_cast<int>(recordY * m_pixelRatio),
+                 static_cast<int>(recordWidth * m_pixelRatio),
+                 static_cast<int>(recordHeight * m_pixelRatio));
     //    using namespace utils;
     QPixmap screenShotPix = m_backgroundPixmap.copy(target);
     qCDebug(dsrApp) << "topWindow grabImage is null:" << m_backgroundPixmap.isNull()
@@ -7202,23 +7196,18 @@ void MainWindow::shotCurrentImg()
             m_resultPixmap = paintImage();
         } else {
             shotFullScreen();
-            // 修正方案：对逻辑坐标进行相同的边界调整，然后转换为物理坐标
-            int adjustedX = std::max(recordX, 1);
-            int adjustedY = std::max(recordY, 1);
-            int adjustedWidth = std::min(recordWidth - 2, m_backgroundRect.width() - 2);
-            int adjustedHeight = std::min(recordHeight - 1, m_backgroundRect.height() - 2);
-
-            QRect target(static_cast<int>(adjustedX * m_pixelRatio),
-                         static_cast<int>(adjustedY * m_pixelRatio),
-                         static_cast<int>(adjustedWidth * m_pixelRatio),
-                         static_cast<int>(adjustedHeight * m_pixelRatio));
-
-            qCWarning(dsrApp) << "=== 截图区域计算调试 (onExit) 修正后 ===";
-            qCWarning(dsrApp) << "原始区域: x=" << recordX << "y=" << recordY << "width=" << recordWidth << "height=" << recordHeight;
-            qCWarning(dsrApp) << "调整后逻辑坐标: x=" << adjustedX << "y=" << adjustedY << "width=" << adjustedWidth << "height=" << adjustedHeight;
-            qCWarning(dsrApp) << "物理像素target:" << target;
-            qCWarning(dsrApp) << "截图右边界:" << (target.x() + target.width()) << "截图下边界:" << (target.y() + target.height());
-
+            // 当选区右/下边界接近背景图边界时补满到边缘
+            int cropX = static_cast<int>(recordX * m_pixelRatio);
+            int cropY = static_cast<int>(recordY * m_pixelRatio);
+            int cropW = static_cast<int>(recordWidth * m_pixelRatio);
+            int cropH = static_cast<int>(recordHeight * m_pixelRatio);
+            if (recordX + recordWidth >= m_backgroundRect.width() - 3) {
+                cropW = m_resultPixmap.width() - cropX;
+            }
+            if (recordY + recordHeight >= m_backgroundRect.height() - 3) {
+                cropH = m_resultPixmap.height() - cropY;
+            }
+            QRect target(cropX, cropY, cropW, cropH);
             m_resultPixmap = m_resultPixmap.copy(target);
         }
     } else {
@@ -7265,18 +7254,19 @@ QPixmap MainWindow::paintImage()
     if (Utils::isTreelandMode) {
         saveImage = backgroundImage;
     } else {
-        // 修正方案：对逻辑坐标进行相同的边界调整，然后转换为物理坐标
-        // 虚线绘制的调整逻辑：x=max(x,1), y=max(y,1), width=min(width-2, maxWidth-2), height=min(height-1, maxHeight-2)
-        int adjustedX = std::max(recordX, 1);
-        int adjustedY = std::max(recordY, 1);
-        int adjustedWidth = std::min(recordWidth - 2, m_backgroundRect.width() - 2);
-        int adjustedHeight = std::min(recordHeight - 1, m_backgroundRect.height() - 2);
-
-        QRect target(static_cast<int>(adjustedX * m_pixelRatio),
-                     static_cast<int>(adjustedY * m_pixelRatio),
-                     static_cast<int>(adjustedWidth * m_pixelRatio),
-                     static_cast<int>(adjustedHeight * m_pixelRatio));
-
+        // 当选区右/下边界接近背景图边界（差 ≤ 1px）时，补满到背景图边缘，
+        // 避免因鼠标坐标无法覆盖到窗口边界导致截图丢失 1-2 像素
+        int cropX = static_cast<int>(recordX * m_pixelRatio);
+        int cropY = static_cast<int>(recordY * m_pixelRatio);
+        int cropW = static_cast<int>(recordWidth * m_pixelRatio);
+        int cropH = static_cast<int>(recordHeight * m_pixelRatio);
+        if (recordX + recordWidth >= m_backgroundRect.width() - 3) {
+            cropW = backgroundImage.width() - cropX;
+        }
+        if (recordY + recordHeight >= m_backgroundRect.height() - 3) {
+            cropH = backgroundImage.height() - cropY;
+        }
+        QRect target(cropX, cropY, cropW, cropH);
         saveImage = backgroundImage.copy(target);
     }
     if (m_shapesWidget)
