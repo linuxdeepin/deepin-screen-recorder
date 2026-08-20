@@ -127,6 +127,8 @@ public:
      */
     bool isNotAudioFifoEmty();
 private:
+    bool shouldUseSingleThread(int width, int height);
+
     /**
      * @brief 电脑类型
      */
