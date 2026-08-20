@@ -1,5 +1,5 @@
-// Copyright (C) 2020 ~ 2021 Uniontech Software Technology Co.,Ltd.
-// SPDX-FileCopyrightText: 2022 UnionTech Software Technology Co., Ltd.
+// Copyright (C) 2020 - 2021 Uniontech Software Technology Co.,Ltd.
+// SPDX-FileCopyrightText: 2022 - 2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -22,6 +22,8 @@
 #include <QMetaType>
 #include <QClipboard>
 #include <QUrl>
+#include <QPointer>
+#include <QtConcurrent>
 #include <dlfcn.h>
 #include <signal.h>
 
@@ -134,33 +136,66 @@ void RecordProcess::setRecordInfo(const QRect &recordRect, const QString &filena
 //开始将mp4视频转码成gif
 void RecordProcess::onStartTranscode()
 {
-    qInfo() << __LINE__ << __func__ << "正在转码视频(mp4 to gif)...";
-    QProcess *transcodeProcess = new QProcess(this);
-    connect(transcodeProcess, QOverload<QProcess::ProcessError>::of(&QProcess::error),
-    [ = ](QProcess::ProcessError processError) {
-        qDebug() << "processError: " << processError;
+    QString captureTempDir = saveTempDir;
+    QString captureSavePath = savePath;
+    QPointer<RecordProcess> guard(this);
+
+    QtConcurrent::run([captureTempDir, captureSavePath, guard](){
+        QString cachePalette = captureTempDir + QDir::separator() + "deepin_screen_recorder_palette.png";
+        QProcess paletteProcess;
+        paletteProcess.start("ffmpeg", {"-i", captureSavePath, "-vf", "select=not(mod(n\\,30)),palettegen=stats_mode=diff", cachePalette, "-y"});
+
+        if (!paletteProcess.waitForFinished(2 * 60 * 1000)) {
+            qWarning() << "Convert palette failed!" << paletteProcess.errorString()
+                       << "\nStderr:" << paletteProcess.readAllStandardError();
+            cachePalette.clear();
+        }
+
+        if (guard) {
+            QMetaObject::invokeMethod(guard, [guard, cachePalette](){
+                if (guard) {
+                    guard->onTranscodePaletteFinished(cachePalette);
+                }
+            }, Qt::QueuedConnection);
+        }
     });
+}
+
+void RecordProcess::onTranscodePaletteFinished(const QString &palettePng)
+{
+    QProcess *transcodeProcess = new QProcess(this);
     connect(transcodeProcess, QOverload<int, QProcess::ExitStatus>::of(&QProcess::finished),
-    [ = ](int exitCode, QProcess::ExitStatus exitStatus) {
+    [this, transcodeProcess](int exitCode, QProcess::ExitStatus exitStatus) {
         qDebug() << "exitCode: " << exitCode << "  exitStatus: " << exitStatus;
-        //转换进程是否正常退出
         if (exitStatus == QProcess::ExitStatus::NormalExit) {
             onTranscodeFinish();
         } else {
             qDebug() << "m_pTranscodeProcess is CrashExit:!";
         }
+        transcodeProcess->deleteLater();
     });
-    //connect(m_pTranscodeProcess, SIGNAL(finished(int)), this, SLOT(onTranscodeFinish()));
-    //connect(m_pTranscodeProcess, SIGNAL(finished(int)), m_pTranscodeProcess, SLOT(deleteLater()));
-    QString path = savePath;
+
+    connect(transcodeProcess, &QProcess::errorOccurred, [transcodeProcess](QProcess::ProcessError processError) {
+        qWarning() << "transcodeProcess error:" << processError << transcodeProcess->errorString();
+        transcodeProcess->deleteLater();
+    });
+
     QStringList arg;
-    arg << "-i";
-    arg << savePath;
-    arg << "-r";
-    arg << "12";
-    arg << path.replace("mp4", "gif");
+    arg << "-i" << savePath;
+
+    if (!palettePng.isEmpty()) {
+        arg << "-i" << palettePng;
+        arg << "-filter_complex";
+        arg << "fps=12,paletteuse=dither=none:diff_mode=rectangle";
+    } else {
+        arg << "-r" << "12";
+    }
+
+    QFileInfo fileInfo(savePath);
+    QString gifPath = fileInfo.absolutePath() + QDir::separator() + fileInfo.completeBaseName() + ".gif";
+    arg << gifPath;
+
     transcodeProcess->start("ffmpeg", arg);
-    //部分hw arm架构的机型需要这样设置
 #if defined(__aarch64__)
     if (Utils::isWaylandMode) {
         qDebug() << "watting transcode gif end!";
@@ -173,9 +208,11 @@ void RecordProcess::onStartTranscode()
 void RecordProcess::onTranscodeFinish()
 {
     qInfo() << __LINE__ << __func__ << "已完成转码";
-    QString path = savePath;
-    QString gifOldPath = path.replace("mp4", "gif");
-    QString gifNewPath = QDir(saveDir).filePath(saveBaseName).replace(QString("mp4"), QString("gif"));
+    // 安全地修改文件后缀名，避免目录名包含 mp4 时被误伤
+    QFileInfo oldFileInfo(savePath);
+    QString gifOldPath = oldFileInfo.absolutePath() + QDir::separator() + oldFileInfo.completeBaseName() + ".gif";
+    QFileInfo newFileInfo(QDir(saveDir).filePath(saveBaseName));
+    QString gifNewPath = newFileInfo.absolutePath() + QDir::separator() + newFileInfo.completeBaseName() + ".gif";
     qDebug() << "" << savePath << gifOldPath << gifNewPath;
     QFile::rename(gifOldPath, gifNewPath);
     exitRecord(gifNewPath);
