@@ -209,14 +209,21 @@ void ShotStartRecordPlugin::invokedMenuItem(const QString &, const QString &, co
    @brief 录屏开始，隐藏任务栏托盘图标，快捷面板切换录制中
         任务栏"录制中"图标由recordtime插件提供
    @return 是否启动成功
+   @note setTrayIconVisible(false) 实际经 dde-dock setPluginVisible 切换插件的
+         驻留状态（持久化 disabled 配置并 itemRemoved），而非纯显隐。这是
+         PMS 250827 双录屏入口根因的耦合点；完整修复需 dde-dock 提供与驻留
+         状态无关的纯显隐接口（计划 1071 由 DDE 支持）。
  */
 bool ShotStartRecordPlugin::onStart()
 {
     m_bPreviousIsVisable = getTrayIconVisible();
     if (m_bPreviousIsVisable) {
-        // 仅隐藏任务栏图标
+        // 经 setPluginVisible 隐藏任务栏入口图标（副作用：同时取消驻留）
         setTrayIconVisible(false);
     }
+
+    // 重置本轮录屏的被动重隐标记
+    m_bReHiddenDuringRecording = false;
 
     qCDebug(RECORD_LOG) << "Start The Clock!";
     m_isRecording = true;
@@ -232,11 +239,12 @@ bool ShotStartRecordPlugin::onStart()
 void ShotStartRecordPlugin::onStop()
 {
     if (m_bPreviousIsVisable) {
-        // 恢复显示任务栏图标
+        // 恢复显示任务栏图标（经 setPluginVisible 恢复驻留）
         setTrayIconVisible(true);
     }
 
     m_isRecording = false;
+    m_bReHiddenDuringRecording = false;
     m_quickPanelWidget->stop();
     qCDebug(RECORD_LOG) << "(onStop) Is Recording? " << m_isRecording;
     m_quickPanelWidget->changeType(QuickPanelWidget::RECORD);
@@ -271,6 +279,23 @@ void ShotStartRecordPlugin::onRecording()
 
     if (m_checkTimer && !m_checkTimer->isActive()) {
         m_checkTimer->start(DETECT_SERV_INTERVAL);
+    }
+
+    // [PMS 250827 权宜缓解，非根治] 录屏中若用户经快捷面板右键再次驻留本插件，
+    // dde-dock 会把入口图标重新加到任务栏，与 recordtime 录制中计时图标并存，
+    // 形成双录屏入口。此处检测到入口重新可见时再次隐藏。
+    //
+    // 根因：dde-dock 的 setPluginVisible 实为驻留状态切换（非纯显隐），录屏中
+    // 隐藏入口会改写驻留态为「未驻留」，快捷面板因此显示「驻留任务栏」而非
+    // 「从任务栏移除」。完整根治需 dde-dock 新增与驻留无关的纯显隐接口
+    // （方案 9.1，计划 1071 由 DDE 支持），就绪后应切换到该方案并废弃本权宜代码。
+    //
+    // 限制：每轮录屏仅被动重隐一次，避免「驻留-被隐-再驻留」无限循环和
+    // 过度写持久化配置导致的视觉抖动；用户再次驻留后双入口仍可能出现（体验折损）。
+    if (m_isRecording && !m_bReHiddenDuringRecording && getTrayIconVisible()) {
+        qCWarning(RECORD_LOG) << "Record entry re-shown during recording, hide it again (PMS 250827 workaround)";
+        setTrayIconVisible(false);
+        m_bReHiddenDuringRecording = true;
     }
 }
 
