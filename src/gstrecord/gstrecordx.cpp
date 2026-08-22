@@ -77,7 +77,7 @@ void GstRecordX::x11GstStartRecord()
     //这里录制区域有个ximagesrc的bug，endx或者endy只要有一个的大小为显示屏的大小。录制的视频最终结果都是全屏。因此需要减一个像素
     areaList << "ximagesrc"
              << "display-name=" + qgetenv("DISPLAY")
-             << "use-damage=false"
+             << "use-damage=true"
              << "show-pointer=" + m_isRecordMouse //是否录制光标
              << "startx=" + QString::number(m_recordArea.x())
              << "starty=" + QString::number(m_recordArea.y())
