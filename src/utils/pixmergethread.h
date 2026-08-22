@@ -30,6 +30,7 @@ public:
         MaxHeight,      // 最大高度
         InvalidArea,    //无效区域，点击调整捕捉区域
         RoollingTooFast, //滚动速度过快
+        ScrollNoMove,   // 自动滚动未使页面产生位移（合成滚轮事件未被目标窗口响应）
     };
 
     enum PictureDirection {//滚动方向

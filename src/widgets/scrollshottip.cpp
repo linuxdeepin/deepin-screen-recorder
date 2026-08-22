@@ -103,6 +103,9 @@ void ScrollShotTip::showTip(TipType tipType)
     case TipType::InvalidAreaShotTip:
         showInvalidAreaShotTip();
         break;
+    case TipType::ScrollNoMoveTip:
+        showScrollNoMoveTip();
+        break;
     }
 
 }
@@ -330,6 +333,23 @@ void ScrollShotTip::showInvalidAreaShotTip()
     //qDebug() << "1111 >> m_tipTextLable->width(): " << m_tipTextLable->width() <<"m_tipTextLable->height(): " << m_tipTextLable->height() ;
     //qDebug() << "1111 >> m_scrollShotAdjust->width(): " << m_scrollShotAdjust->width() <<"m_scrollShotAdjust->height(): " << m_scrollShotAdjust->height() ;
     //qDebug() << "1111 >> this->width(): " << this->width() <<"this->height(): " << this->height() ;
+}
+
+void ScrollShotTip::showScrollNoMoveTip()
+{
+    m_tipText = tr("Auto scroll failed to move the page, please try manual scroll");
+    int width = 0;
+    m_tipTextLable->setText(m_tipText);
+    QFontMetrics labFontMetrics(m_tipTextLable->font());
+    m_tipTextLable->resize(labFontMetrics.width(m_tipTextLable->text()), m_tipTextLable->height());
+    m_warmingIconButton->show();
+    QFontMetrics helpFontMetrics(m_scrollShotHelp->font());
+    m_scrollShotHelp->resize(helpFontMetrics.width(m_scrollShotHelp->text()), m_scrollShotHelp->height());
+    m_scrollShotHelp->show();
+    m_scrollShotAdjust->hide();
+    width = m_warmingIconButton->width() + 10 + m_tipTextLable->width() + 30 + m_scrollShotHelp->width();
+    setFixedSize(width, TIP_HEIGHT);
+    update();
 }
 
 ScrollShotTip::~ScrollShotTip()

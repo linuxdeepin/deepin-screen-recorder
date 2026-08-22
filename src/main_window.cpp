@@ -5588,6 +5588,10 @@ void MainWindow::onScrollShotMerageImgState(PixMergeThread::MergeErrorValue stat
         //拼接失败立即保存当前的截图
         //saveScreenShot();
     }
+    //state = 0: 自动滚动未使页面产生位移
+    else if (state == PixMergeThread::MergeErrorValue::ScrollNoMove) {
+        m_scrollShotTip->showTip(TipType::ScrollNoMoveTip);
+    }
     //state = 2：滚动到底部
     else if (state == PixMergeThread::MergeErrorValue::ReachBottom) {
         m_scrollShotTip->showTip(TipType::EndScrollShotTip);

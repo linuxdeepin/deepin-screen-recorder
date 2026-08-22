@@ -23,7 +23,8 @@ enum TipType {
     EndScrollShotTip,     //滚动截图到底部出现的提示
     QuickScrollShotTip,    //滚动速度过快出现的提示
     MaxLengthScrollShotTip,  //滚动截图拼接已到达最大长度
-    InvalidAreaShotTip      //无效区域,点击调整捕捉区域
+    InvalidAreaShotTip,      //无效区域,点击调整捕捉区域
+    ScrollNoMoveTip          //自动滚动未使页面滚动，提示切换手动模式
 };
 
 /**
@@ -102,6 +103,7 @@ protected:
      * @brief 显示无效区域,调整捕捉区域提示
      */
     void showInvalidAreaShotTip();
+    void showScrollNoMoveTip();
 
     void paintEvent(QPaintEvent *event);
 

@@ -28,10 +28,18 @@ ScrollScreenshot::ScrollScreenshot(QObject *parent)  : QObject(parent)
         {
             // 发送滚轮事件， 自动滚动
             static Display *m_display = XOpenDisplay(nullptr);
-            XTestFakeButtonEvent(m_display, Button5, 1, CurrentTime);
-            XFlush(m_display);
-            XTestFakeButtonEvent(m_display, Button5, 0, CurrentTime);
-            XFlush(m_display);
+            if (!m_display) {
+                qWarning() << "scrollScreenshot: XOpenDisplay failed, cannot inject wheel events";
+            } else {
+                if (!XTestFakeButtonEvent(m_display, Button5, 1, CurrentTime)) {
+                    qWarning() << "scrollScreenshot: XTestFakeButtonEvent press failed";
+                }
+                XFlush(m_display);
+                if (!XTestFakeButtonEvent(m_display, Button5, 0, CurrentTime)) {
+                    qWarning() << "scrollScreenshot: XTestFakeButtonEvent release failed";
+                }
+                XFlush(m_display);
+            }
         } else
         {
 #ifdef KF5_WAYLAND_FLAGE_ON
