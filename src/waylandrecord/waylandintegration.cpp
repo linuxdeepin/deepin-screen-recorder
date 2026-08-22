@@ -960,7 +960,7 @@ void WaylandIntegration::WaylandIntegrationPrivate::gstWriteVideoFrame()
                 qWarning() << "m_gstRecordX is nullptr!";
             }
         } else {
-            //qDebug() << "视频缓冲区无数据！";
+            QThread::msleep(10);
         }
     }
     //等待wayland视频环形队列中的视频帧，全部写入管道
@@ -1282,7 +1282,6 @@ void WaylandIntegration::WaylandIntegrationPrivate::appendBuffer(unsigned char *
         //先进先出
         //取队首
         waylandFrame wFrame = m_waylandList.first();
-        memset(wFrame._frame, 0, static_cast<size_t>(size));
         //拷贝当前帧
         memcpy(wFrame._frame, frame, static_cast<size_t>(size));
         wFrame._time = time;
@@ -1306,7 +1305,6 @@ void WaylandIntegration::WaylandIntegrationPrivate::appendBuffer(unsigned char *
             wFrame._index = 0;
             //分配空闲内存
             wFrame._frame = m_freeList.first();
-            memset(wFrame._frame, 0, static_cast<size_t>(size));
             //拷贝wayland推送的视频帧
             memcpy(wFrame._frame, frame, static_cast<size_t>(size));
             m_waylandList.append(wFrame);
