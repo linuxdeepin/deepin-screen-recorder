@@ -364,7 +364,7 @@ bool PixMergeThread::splicePictureDown(const cv::Mat &image)
     if (!m_isManualScrollModel && m_MeragerCount == 1 && maxVal >= thresholdv && maxLoc.y == 0) {
         if (++m_firstFrameRetryCount > FIRST_FRAME_RETRY_LIMIT) {
             qDebug() << "2 自动滚动首帧多次未产生位移";
-            emit merageError(Failed);
+            emit merageError(ScrollNoMove);
         } else {
             qDebug() << "2 自动滚动首帧未产生位移，等待下一次滚动";
         }

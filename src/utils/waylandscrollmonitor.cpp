@@ -51,10 +51,14 @@ void WaylandScrollMonitor::setupRegistry()
 // 初始化Fakeinput
 void WaylandScrollMonitor::setupFakeinput(quint32 name, quint32 version)
 {
+    qDebug() << "waylandscrollmonitor: FakeInput announced, name=" << name << "version=" << version;
     if (m_fakeinput == nullptr) {
         m_fakeinput = new KWayland::Client::FakeInput(this);
         m_fakeinput->setup(m_registry->bindFakeInput(name, version));
         m_fakeinput->authenticate(qAppName(), "wayland scroll monitor");
+        qDebug() << "waylandscrollmonitor: FakeInput setup complete, authenticate requested";
+    } else {
+        qDebug() << "waylandscrollmonitor: FakeInput already initialized";
     }
 }
 
@@ -116,5 +120,7 @@ void WaylandScrollMonitor::doWaylandAutoScroll()
     if (m_fakeinput != nullptr) {
         // Qt::Vertical 垂直滚动，正值代表向下滚动
         m_fakeinput->requestPointerAxisForCapture(Qt::Vertical, SCROLL_DOWN);
+    } else {
+        qWarning() << "waylandscrollmonitor: FakeInput not available (compositor did not announce it), auto scroll will have no effect";
     }
 }
