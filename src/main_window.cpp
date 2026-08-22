@@ -5038,7 +5038,7 @@ void MainWindow::onMouseMove(int x, int y)
     //启动截图或者录屏后第一次鼠标移动时需要通过此方法，后面都不会在进入此方法
     if (!isFirstMove) {
         QMouseEvent *mouseMove;
-        mouseMove = new QMouseEvent(QEvent::MouseMove, QPoint(x, y), Qt::LeftButton, Qt::LeftButton, Qt::NoModifier);
+        mouseMove = new QMouseEvent(QEvent::MouseMove, QPoint(int(x / m_pixelRatio), int(y / m_pixelRatio)), Qt::LeftButton, Qt::LeftButton, Qt::NoModifier);
         QApplication::sendEvent(QWidget::focusWidget(), mouseMove);
     }
 }
