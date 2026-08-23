@@ -379,7 +379,7 @@ clique no ícone da bandeja ou pressione o atalho novamente</translation>
     <message>
         <location filename="../src/utils/shortcut.cpp" line="36"/>
         <source>Full screenshot</source>
-        <translation>Capturar a tela inteira</translation>
+        <translation>Capturar tela inteira</translation>
     </message>
     <message>
         <location filename="../src/utils/shortcut.cpp" line="37"/>
