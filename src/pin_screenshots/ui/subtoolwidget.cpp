@@ -82,6 +82,8 @@ void SubToolWidget::initShotLable()
 
     // 选项菜单
     m_optionMenu = new DMenu(this);
+    m_optionMenu->setObjectName("OptionMenu");
+    m_optionMenu->setAccessibleName("OptionMenu");
     qCDebug(dsrApp) << "Options menu created.";
     DFontSizeManager::instance()->bind(m_optionMenu, DFontSizeManager::T6);
     connect(m_optionMenu, &DMenu::aboutToShow, this, &SubToolWidget::updateOptionChecked);
@@ -184,6 +186,8 @@ void SubToolWidget::initChangeSaveToSpecialAction(const QString specialPath)
     m_saveToSpecialPathAction->setCheckable(true);
     m_saveToSpecialPathMenu->insertAction(m_changeSaveToSpecialPath, m_saveToSpecialPathAction);
     m_saveGroup->addAction(m_saveToSpecialPathAction);
+    m_saveGroup->setObjectName("SaveGroup");
+    m_saveToSpecialPathAction->setObjectName("SaveToSpecialPathAction");
     m_SavePathActions.insert(FOLDER, m_saveToSpecialPathAction);
 }
 

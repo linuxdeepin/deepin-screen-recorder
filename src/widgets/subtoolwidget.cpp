@@ -80,6 +80,8 @@ void SubToolWidget::initRecordLabel()
 
     //添加显示键盘按钮
     m_keyBoardButton = new ToolButton();
+    m_keyBoardButton->setObjectName("KeyBoardButton");
+    m_keyBoardButton->setAccessibleName("KeyBoardButton");
     Utils::setAccessibility(m_keyBoardButton, AC_SUBTOOLWIDGET_KEYBOARD_BUTTON);
     m_keyBoardButton->setIconSize(TOOL_ICON_SIZE);
     installTipHint(m_keyBoardButton, tr("Show keystroke (K)"));
@@ -103,6 +105,8 @@ void SubToolWidget::initRecordLabel()
 
     //添加摄像头显示按钮
     m_cameraButton = new ToolButton();
+    m_cameraButton->setObjectName("CameraButton");
+    m_cameraButton->setAccessibleName("CameraButton");
     m_cameraButton->setDisabled(QMediaDevices::videoInputs().isEmpty());
     Utils::setAccessibility(m_cameraButton, AC_SUBTOOLWIDGET_CAMERA_BUTTON);
     m_cameraButton->setIconSize(TOOL_ICON_SIZE);
@@ -128,6 +132,8 @@ void SubToolWidget::initRecordLabel()
 
 
     m_shotButton = new ToolButton();
+    m_shotButton->setObjectName("ShotButton");
+    m_shotButton->setAccessibleName("ShotButton");
     m_shotButton->setCheckable(false);
     Utils::setAccessibility(m_shotButton, AC_SUBTOOLWIDGET_SHOT_BUTTON);
     m_shotButton->setIconSize(TOOL_ICON_SIZE);
@@ -149,6 +155,8 @@ void SubToolWidget::initRecordLabel()
 
     //添加录屏选项按钮
     m_optionButton = new ToolButton();
+    m_optionButton->setObjectName("OptionButton");
+    m_optionButton->setAccessibleName("OptionButton");
     m_optionButton->setCheckable(false);
     m_optionButton->setIconSize(QSize(24,24));
     m_optionButton->setFixedSize(TOOL_BUTTON_SIZE);
@@ -199,6 +207,8 @@ void SubToolWidget::initRecordOption()
     t_mouseInfoGroup->setExclusive(false);
     t_saveGroup->setExclusive(true);
     m_recordOptionMenu = new DMenu(this);
+    m_recordOptionMenu->setObjectName("RecordOptionMenu");
+    m_recordOptionMenu->setAccessibleName("RecordOptionMenu");
     m_recordOptionMenu->installEventFilter(this);
     DFontSizeManager::instance()->bind(m_recordOptionMenu, DFontSizeManager::T6);
     // 保存格式
@@ -225,7 +235,9 @@ void SubToolWidget::initRecordOption()
     audio->setFont(titleActionFont);
     //QAction *notAudio = new QAction(tr("Not Audio"), m_recordOptionMenu);
     m_microphoneAction = new QAction(tr("Microphone"), m_recordOptionMenu);
+    m_microphoneAction->setObjectName("MicrophoneAction");
     m_sysAudioAction = new QAction(tr("System audio"), m_recordOptionMenu);
+    m_sysAudioAction->setObjectName("SysAudioAction");
     Utils::setAccessibility(m_microphoneAction, "microphoneAction");
     Utils::setAccessibility(m_sysAudioAction, "sysAudioAction");
     // 选项
@@ -556,12 +568,15 @@ void SubToolWidget::initShotLabel()
     qCDebug(dsrApp) << "SubToolWidget::initShotLabel called (initializing screenshot toolbar UI).";
     m_shotSubTool = new DLabel(this);
     m_shotBtnGroup = new QButtonGroup(this);
+    m_shotBtnGroup->setObjectName("ShotBtnGroup");
     m_shotBtnGroup->setExclusive(true);
 
     QList<ToolButton *> btnList;
 
     //添加几何图形按钮
     m_gioButton = new ToolButton();
+    m_gioButton->setObjectName("GioButton");
+    m_gioButton->setAccessibleName("GioButton");
     m_gioButton->setIconSize(TOOL_ICON_SIZE);
     m_gioButton->setIcon(QIcon::fromTheme("gioshape"));
     Utils::setAccessibility(m_gioButton, AC_SUBTOOLWIDGET_GIO_BUTTON);
@@ -572,6 +587,8 @@ void SubToolWidget::initShotLabel()
 
     //添加直线按钮
     m_lineButton = new ToolButton();
+    m_lineButton->setObjectName("LineButton");
+    m_lineButton->setAccessibleName("LineButton");
     m_lineButton->setIconSize(TOOL_ICON_SIZE);
     installTipHint(m_lineButton, tr("Line (L)\nPress and hold Shift to draw a vertical or horizontal line"));
     m_lineButton->setIcon(QIcon::fromTheme("line-normal"));
@@ -582,6 +599,8 @@ void SubToolWidget::initShotLabel()
 
     //添加箭头按钮
     m_arrowButton = new ToolButton();
+    m_arrowButton->setObjectName("ArrowButton");
+    m_arrowButton->setAccessibleName("ArrowButton");
     m_arrowButton->setIconSize(TOOL_ICON_SIZE);
     installTipHint(m_arrowButton, tr("Arrow (X)\nPress and hold Shift to draw a vertical or horizontal arrow"));
     m_arrowButton->setIcon(QIcon::fromTheme("Arrow-normal"));
@@ -592,6 +611,8 @@ void SubToolWidget::initShotLabel()
 
     //添加画笔按钮
     m_penButton = new ToolButton();
+    m_penButton->setObjectName("PenButton");
+    m_penButton->setAccessibleName("PenButton");
     m_penButton->setIconSize(TOOL_ICON_SIZE);
     installTipHint(m_penButton, tr("Pencil (P)"));
     m_penButton->setIcon(QIcon::fromTheme("Combined Shape-normal"));
@@ -602,6 +623,8 @@ void SubToolWidget::initShotLabel()
 
     //添加模糊按钮
     m_mosaicButton = new ToolButton();
+    m_mosaicButton->setObjectName("MosaicButton");
+    m_mosaicButton->setAccessibleName("MosaicButton");
     m_mosaicButton->setIconSize(TOOL_ICON_SIZE);
     installTipHint(m_mosaicButton, tr("Blur (B)"));
     m_mosaicButton->setIcon(QIcon::fromTheme("Mosaic_normal"));
@@ -614,6 +637,8 @@ void SubToolWidget::initShotLabel()
 
     //添加文字按钮
     m_textButton = new ToolButton();
+    m_textButton->setObjectName("TextButton");
+    m_textButton->setAccessibleName("TextButton");
     m_textButton->setIconSize(TOOL_ICON_SIZE);
     m_textButton->setIcon(QIcon::fromTheme("text"));
     installTipHint(m_textButton, tr("Text (T)"));
@@ -624,6 +649,8 @@ void SubToolWidget::initShotLabel()
 
     //添加滚动截图按钮
     m_scrollShotButton = new ToolButton();
+    m_scrollShotButton->setObjectName("ScrollShotButton");
+    m_scrollShotButton->setAccessibleName("ScrollShotButton");
     m_scrollShotButton->setCheckable(false);
     m_scrollShotButton->setIconSize(TOOL_ICON_SIZE);
     m_scrollShotButton->setIcon(QIcon::fromTheme("scrollShot"));
@@ -642,6 +669,8 @@ void SubToolWidget::initShotLabel()
     });
     //添加ocr图文识别按钮
     m_ocrButton = new ToolButton();
+    m_ocrButton->setObjectName("OcrButton");
+    m_ocrButton->setAccessibleName("OcrButton");
     m_ocrButton->setCheckable(false);
     m_ocrButton->setIconSize(TOOL_ICON_SIZE);
     m_ocrButton->setIcon(QIcon::fromTheme("ocr-normal"));
@@ -661,6 +690,8 @@ void SubToolWidget::initShotLabel()
 
     //添加贴图按钮
     m_pinButton = new ToolButton();
+    m_pinButton->setObjectName("PinButton");
+    m_pinButton->setAccessibleName("PinButton");
     m_pinButton->setCheckable(false);
     m_pinButton->setIconSize(TOOL_ICON_SIZE);
     m_pinButton->setIcon(QIcon::fromTheme("pinscreenshots"));
@@ -674,6 +705,8 @@ void SubToolWidget::initShotLabel()
     btnList.append(m_pinButton);
 
     m_aiAssistantButton = new ToolButton();
+    m_aiAssistantButton->setObjectName("AiAssistantButton");
+    m_aiAssistantButton->setAccessibleName("AiAssistantButton");
     m_aiAssistantButton->setIconSize(SMALL_TOOL_ICON_SIZE);
     m_aiAssistantButton->setIcon(QIcon::fromTheme("ai_assistant"));
     bool aiAssistantUsed = ConfigSettings::instance()->getValue("shot", "ai_assistant_used").toBool();
@@ -699,6 +732,8 @@ void SubToolWidget::initShotLabel()
 
     // 撤销按钮
     m_cancelButton = new ToolButton();
+    m_cancelButton->setObjectName("CancelButton");
+    m_cancelButton->setAccessibleName("CancelButton");
     m_cancelButton->setUndoButtonFlag(true);
     m_cancelButton->setCheckable(false);
     m_cancelButton->setIconSize(TOOL_ICON_SIZE);
@@ -717,6 +752,8 @@ void SubToolWidget::initShotLabel()
     //切换到录屏按钮
     // TODO:treeland暂时屏蔽录屏功能
     m_recorderButton = new ToolButton();
+    m_recorderButton->setObjectName("RecorderButton");
+    m_recorderButton->setAccessibleName("RecorderButton");
     m_recorderButton->setCheckable(false);
     m_recorderButton->setIconSize(TOOL_ICON_SIZE);
     m_recorderButton->setIcon(QIcon::fromTheme("recorder"));
@@ -736,6 +773,8 @@ void SubToolWidget::initShotLabel()
         });
 
     m_shotOptionButton = new ToolButton();
+    m_shotOptionButton->setObjectName("ShotOptionButton");
+    m_shotOptionButton->setAccessibleName("ShotOptionButton");
     m_shotOptionButton->setCheckable(false);
     m_shotOptionButton->setIconSize(QSize(24,24));
     m_shotOptionButton->setFixedSize(TOOL_BUTTON_SIZE);
@@ -936,6 +975,8 @@ void SubToolWidget::initShotOption()
     t_formatGroup->setExclusive(true);
 
     m_optionMenu = new DMenu(this);
+    m_optionMenu->setObjectName("OptionMenu");
+    m_optionMenu->setAccessibleName("OptionMenu");
     m_optionMenu->installEventFilter(this);
     //系统级别为 T6 的字体大小, 默认是14 px
     DFontSizeManager::instance()->bind(m_optionMenu, DFontSizeManager::T6);
@@ -957,6 +998,8 @@ void SubToolWidget::initShotOption()
     
     // 创建自定义位置子菜单
     // m_saveToSpecialPathMenu = new DMenu(specifiedLocationMenu);
+    // m_saveToSpecialPathMenu->setObjectName("SaveToSpecialPathMenu");
+    // m_saveToSpecialPathMenu->setAccessibleName("SaveToSpecialPathMenu");
     // m_saveToSpecialPathMenu->installEventFilter(this);
     // m_saveToSpecialPathMenu->setTitle(tr("Custom Location"));
     // m_saveToSpecialPathMenu->setToolTipsVisible(true);
@@ -971,10 +1014,12 @@ void SubToolWidget::initShotOption()
     
     // 上次保存位置
     // m_saveToSpecialPathAction = new QAction(m_saveToSpecialPathMenu);
+    // m_saveToSpecialPathAction->setObjectName("SaveToSpecialPathAction");
     // m_saveToSpecialPathAction->setCheckable(true);
     
     // 保存时更新位置
     // m_changeSaveToSpecialPath = new QAction(m_saveToSpecialPathMenu);
+    // m_changeSaveToSpecialPath->setObjectName("ChangeSaveToSpecialPath");
     // m_changeSaveToSpecialPath->setCheckable(true);
     
     // if (specialPath.isEmpty() || !QFileInfo::exists(specialPath)) {
@@ -1454,6 +1499,8 @@ void SubToolWidget::initScrollLabel()
 
     // AI 助手（滚动截图工具栏首位）
     m_aiAssistantScrollButton = new ToolButton();
+    m_aiAssistantScrollButton->setObjectName("AiAssistantScrollButton");
+    m_aiAssistantScrollButton->setAccessibleName("AiAssistantScrollButton");
     m_aiAssistantScrollButton->setIconSize(SMALL_TOOL_ICON_SIZE);
     m_aiAssistantScrollButton->setIcon(QIcon::fromTheme("ai_assistant"));
     // 设置常驻的 AI Icon 角标
@@ -1474,6 +1521,8 @@ void SubToolWidget::initScrollLabel()
 
     //文字识别按钮
     m_ocrScrollButton = new ToolButton();
+    m_ocrScrollButton->setObjectName("OcrScrollButton");
+    m_ocrScrollButton->setAccessibleName("OcrScrollButton");
     Utils::setAccessibility(m_ocrScrollButton, AC_SUBTOOLWIDGET_KEYBOARD_BUTTON);
     m_ocrScrollButton->setIconSize(TOOL_ICON_SIZE);
     installTipHint(m_ocrScrollButton,  tr("Extract Text"));
@@ -1486,6 +1535,8 @@ void SubToolWidget::initScrollLabel()
 
     //滚动截图选项
     m_scrollOptionButton = new ToolButton();
+    m_scrollOptionButton->setObjectName("ScrollOptionButton");
+    m_scrollOptionButton->setAccessibleName("ScrollOptionButton");
     m_scrollOptionButton->setCheckable(false);
     m_scrollOptionButton->setIconSize(QSize(24,24));
     m_scrollOptionButton->setFixedSize(TOOL_BUTTON_SIZE);
@@ -1552,6 +1603,8 @@ void SubToolWidget::initScrollLabel()
     t_formatGroup->setExclusive(true);
 
     m_scrollOptionMenu = new DMenu(this);
+    m_scrollOptionMenu->setObjectName("ScrollOptionMenu");
+    m_scrollOptionMenu->setAccessibleName("ScrollOptionMenu");
     m_scrollOptionMenu->installEventFilter(this);
     DFontSizeManager::instance()->bind(m_scrollOptionMenu, DFontSizeManager::T6);
 
@@ -1574,6 +1627,8 @@ void SubToolWidget::initScrollLabel()
     
     // 创建自定义位置子菜单
     // m_scrollSaveToSpecialPathMenu = new DMenu(specifiedLocationMenu);
+    // m_scrollSaveToSpecialPathMenu->setObjectName("ScrollSaveToSpecialPathMenu");
+    // m_scrollSaveToSpecialPathMenu->setAccessibleName("ScrollSaveToSpecialPathMenu");
     // m_scrollSaveToSpecialPathMenu->installEventFilter(this);
     // m_scrollSaveToSpecialPathMenu->setTitle(tr("Custom Location"));
     // m_scrollSaveToSpecialPathMenu->setToolTipsVisible(true);
@@ -1588,10 +1643,12 @@ void SubToolWidget::initScrollLabel()
     
     // 上次保存位置
     // m_scrollSaveToSpecialPathAction = new QAction(m_scrollSaveToSpecialPathMenu);
+    // m_scrollSaveToSpecialPathAction->setObjectName("ScrollSaveToSpecialPathAction");
     // m_scrollSaveToSpecialPathAction->setCheckable(true);
     
     // 保存时更新位置
     // m_scrollChangeSaveToSpecialPath = new QAction(tr("Set a path on save"), m_scrollSaveToSpecialPathMenu);
+    // m_scrollChangeSaveToSpecialPath->setObjectName("ScrollChangeSaveToSpecialPath");
     // m_scrollChangeSaveToSpecialPath->setCheckable(true);
     
     // 如果有保存路径，显示上次保存位置

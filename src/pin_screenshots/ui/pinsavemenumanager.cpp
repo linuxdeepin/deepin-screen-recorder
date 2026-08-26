@@ -45,6 +45,8 @@ PinSaveMenuManager::~PinSaveMenuManager()
 void PinSaveMenuManager::createMenu()
 {
     m_saveMenu = new DMenu(qobject_cast<QWidget*>(parent()));
+    m_saveMenu->setObjectName("SaveMenu");
+    m_saveMenu->setAccessibleName("SaveMenu");
     DFontSizeManager::instance()->bind(m_saveMenu, DFontSizeManager::T6);
     
     createSaveOptionActions();
@@ -54,13 +56,16 @@ void PinSaveMenuManager::createMenu()
 void PinSaveMenuManager::createSaveOptionActions()
 {
     m_saveOptionGroup = new QActionGroup(this);
+    m_saveOptionGroup->setObjectName("SaveOptionGroup");
     m_saveOptionGroup->setExclusive(true);
     
     m_askEveryTimeAction = new QAction(tr("Each inquiry"), m_saveMenu);
+    m_askEveryTimeAction->setObjectName("AskEveryTimeAction");
     m_askEveryTimeAction->setCheckable(true);
     m_saveOptionGroup->addAction(m_askEveryTimeAction);
     
     m_specifiedLocationAction = new QAction(tr("Specified Location"), m_saveMenu);
+    m_specifiedLocationAction->setObjectName("SpecifiedLocationAction");
     m_specifiedLocationAction->setCheckable(true);
     m_saveOptionGroup->addAction(m_specifiedLocationAction);
     
@@ -73,34 +78,41 @@ void PinSaveMenuManager::createLocationActions()
 {
     qCWarning(dsrApp) << "createLocationActions called";
     m_specifiedLocationSubMenu = new DMenu(tr("Specified Location"), m_saveMenu);
+    m_specifiedLocationSubMenu->setObjectName("SpecifiedLocationSubMenu");
+    m_specifiedLocationSubMenu->setAccessibleName("SpecifiedLocationSubMenu");
     DFontSizeManager::instance()->bind(m_specifiedLocationSubMenu, DFontSizeManager::T6);
     m_specifiedLocationSubMenu->menuAction()->setCheckable(true);
     m_saveOptionGroup->addAction(m_specifiedLocationSubMenu->menuAction());
     
     // 创建自定义位置选项组
     m_customLocationGroup = new QActionGroup(this);
+    m_customLocationGroup->setObjectName("CustomLocationGroup");
     m_customLocationGroup->setExclusive(true);
     
     // 保存到桌面
     m_desktopAction = new QAction(tr("Desktop"), m_specifiedLocationSubMenu);
+    m_desktopAction->setObjectName("DesktopAction");
     m_desktopAction->setCheckable(true);
     m_customLocationGroup->addAction(m_desktopAction);
     m_specifiedLocationSubMenu->addAction(m_desktopAction);
     
     // 保存到图片
     m_picturesAction = new QAction(tr("Pictures"), m_specifiedLocationSubMenu);
+    m_picturesAction->setObjectName("PicturesAction");
     m_picturesAction->setCheckable(true);
     m_customLocationGroup->addAction(m_picturesAction);
     m_specifiedLocationSubMenu->addAction(m_picturesAction);
     
     // 保存时选择位置
     m_changeSaveToSpecialPath = new QAction(tr("Set a path on save"), m_specifiedLocationSubMenu);
+    m_changeSaveToSpecialPath->setObjectName("ChangeSaveToSpecialPath");
     m_changeSaveToSpecialPath->setCheckable(true);
     m_customLocationGroup->addAction(m_changeSaveToSpecialPath);
     m_specifiedLocationSubMenu->addAction(m_changeSaveToSpecialPath);
     
     // 历史路径选项
     m_saveToSpecialPathAction = new QAction(m_specifiedLocationSubMenu);
+    m_saveToSpecialPathAction->setObjectName("SaveToSpecialPathAction");
     m_saveToSpecialPathAction->setCheckable(true);
     m_customLocationGroup->addAction(m_saveToSpecialPathAction);
     

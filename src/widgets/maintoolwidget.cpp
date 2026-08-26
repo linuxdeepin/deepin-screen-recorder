@@ -72,6 +72,8 @@ void MainToolWidget::initMainLabel()
     //    QString record_button_style = "DPushButton:press{QIcon(:/image/newUI/press/screencap-press.svg)}";
 
     m_recordBtn = new ToolButton();
+    m_recordBtn->setObjectName("RecordBtn");
+    m_recordBtn->setAccessibleName("RecordBtn");
     if (Utils::isTabletEnvironment || Utils::is3rdInterfaceStart) {
         qCDebug(dsrApp) << "Hiding record button in tablet environment or 3rd interface mode";
         m_recordBtn->hide();
@@ -87,6 +89,8 @@ void MainToolWidget::initMainLabel()
 
 
     m_shotBtn = new ToolButton();
+    m_shotBtn->setObjectName("ShotBtn");
+    m_shotBtn->setAccessibleName("ShotBtn");
     if (Utils::isTabletEnvironment) {
         qCDebug(dsrApp) << "Hiding screenshot button in tablet environment";
         m_shotBtn->hide();

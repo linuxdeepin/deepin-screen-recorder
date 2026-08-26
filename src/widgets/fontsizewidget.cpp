@@ -1,4 +1,4 @@
-// Copyright (C) 2017 ~ 2018 Deepin Technology Co., Ltd.
+// Copyright (C) 2017 ~ 2026 Deepin Technology Co., Ltd.
 // SPDX-FileCopyrightText: 2022 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
@@ -41,6 +41,7 @@ void FontSizeWidget::initWidget()
 //    setStyleSheet(getFileContent(":/resources/qss/fontsizewidget.qss"));
     setFixedSize(86, 18);
     m_fontSizeEdit = new DLineEdit(this);
+    m_fontSizeEdit->setAccessibleName("FontSizeEdit");
     m_fontSizeEdit->setObjectName("FontSizeEdit");
     m_fontSizeEdit->setFixedSize(LINE_EDIT_SIZE);
 
@@ -48,9 +49,11 @@ void FontSizeWidget::initWidget()
     qCDebug(dsrApp) << "Retrieved initial font size:" << m_fontSize;
     m_fontSizeEdit->setText(QString("%1").arg(m_fontSize));
     m_addSizeBtn = new DPushButton(this);
+    m_addSizeBtn->setAccessibleName("AddSizeBtn");
     m_addSizeBtn->setObjectName("AddSizeBtn");
     m_addSizeBtn->setFixedSize(BUTTON_SIZE);
     m_reduceSizeBtn = new DPushButton(this);
+    m_reduceSizeBtn->setAccessibleName("ReduceSizeBtn");
     m_reduceSizeBtn->setObjectName("ReduceSizeBtn");
     m_reduceSizeBtn->setFixedSize(BUTTON_SIZE);
 
