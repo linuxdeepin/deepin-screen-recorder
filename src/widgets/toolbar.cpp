@@ -57,8 +57,12 @@ ToolBarWidget::ToolBarWidget(MainWindow *pMainwindow, DWidget *parent, bool hide
     // m_subTool->setVisible(false);
     //关闭按钮
     m_closeButton = new ToolButton(this);
+    m_closeButton->setObjectName("CloseButton");
+    m_closeButton->setAccessibleName("CloseButton");
     m_closeButton->setCheckable(false);
     m_confirmButton = new ToolButton(this);
+    m_confirmButton->setObjectName("ConfirmButton");
+    m_confirmButton->setAccessibleName("ConfirmButton");
     m_confirmButton->setCheckable(false);
 
     m_closeButton->setIconSize(QSize(36, 36));

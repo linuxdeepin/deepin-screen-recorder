@@ -25,6 +25,7 @@ ImageMenu::ImageMenu(ImageBorderHelper::BorderType type, QString title, QWidget 
     qCDebug(dsrApp) << "ImageMenu constructor entered with type:" << type << ", title:" << title;
     m_borderType = type;
     m_actionGroup = new QButtonGroup(this);
+    m_actionGroup->setObjectName("ActionGroup");
     m_actionGroup->setExclusive(false);
     if (m_borderType == ImageBorderHelper::BorderType::Prototype) {
         qCDebug(dsrApp) << "Initializing Prototype border type actions";

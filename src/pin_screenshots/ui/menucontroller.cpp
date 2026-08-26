@@ -24,15 +24,19 @@ void MenuController::initMenuController()
 {
     qCDebug(dsrApp) << "Initializing MenuController.";
     m_menu = new DMenu();
+    m_menu->setObjectName("Menu");
+    m_menu->setAccessibleName("Menu");
     qCDebug(dsrApp) << "DMenu object created.";
     m_menu->setFocusPolicy(Qt::StrongFocus);
     m_saveAct = new QAction(tr("Save"), this);
+    m_saveAct->setObjectName("SaveAct");
     connect(m_saveAct, &QAction::triggered, [ = ] {
         qCDebug(dsrApp) << "Save action triggered.";
         emit saveAction();
     });
 
     m_closeAct = new QAction(tr("Exit"), this);
+    m_closeAct->setObjectName("CloseAct");
     connect(m_closeAct, &QAction::triggered, [ = ] {
         qCDebug(dsrApp) << "Exit action triggered.";
         emit closeAction();

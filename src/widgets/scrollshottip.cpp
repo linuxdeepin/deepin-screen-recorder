@@ -41,6 +41,8 @@ ScrollShotTip::ScrollShotTip(DWidget *parent) : DWidget(parent)
     this->setMinimumSize(100, TIP_HEIGHT);
 
     m_warmingIconButton = new DIconButton(this);
+    m_warmingIconButton->setObjectName("WarmingIconButton");
+    m_warmingIconButton->setAccessibleName("WarmingIconButton");
     m_warmingIconButton->setIcon(warmingImg);
     m_warmingIconButton->setIconSize(QSize(26, 26));
     m_warmingIconButton->setFlat(true);

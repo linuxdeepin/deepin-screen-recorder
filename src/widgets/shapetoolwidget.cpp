@@ -65,10 +65,13 @@ void ShapeToolWidget::initShapeButtons()
     setFixedSize(78,50);
     // 创建按钮组
     m_shapeBtnGroup = new QButtonGroup(this);
+    m_shapeBtnGroup->setObjectName("ShapeBtnGroup");
     m_shapeBtnGroup->setExclusive(true);
     
     // 创建矩形按钮
     m_rectButton = new ToolButton(this);
+    m_rectButton->setObjectName("RectButton");
+    m_rectButton->setAccessibleName("RectButton");
     m_rectButton->setFixedSize(TOOL_BUTTON_SIZE);
     m_rectButton->setIconSize(TOOL_ICON_SIZE);
     m_rectButton->setIcon(QIcon::fromTheme(QString("rectangle-normal")));
@@ -77,6 +80,8 @@ void ShapeToolWidget::initShapeButtons()
     
     // 创建椭圆按钮
     m_ovalButton = new ToolButton(this);
+    m_ovalButton->setObjectName("OvalButton");
+    m_ovalButton->setAccessibleName("OvalButton");
     m_ovalButton->setFixedSize(TOOL_BUTTON_SIZE);
     m_ovalButton->setIconSize(TOOL_ICON_SIZE);
     m_ovalButton->setIcon(QIcon::fromTheme(QString("oval-normal")));

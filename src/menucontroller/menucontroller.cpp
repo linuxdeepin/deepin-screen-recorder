@@ -22,6 +22,8 @@ MenuController::MenuController(QObject *parent)
 {
     qCDebug(dsrApp) << "MenuController constructor called.";
     m_menu = new DMenu();
+    m_menu->setObjectName("Menu");
+    m_menu->setAccessibleName("Menu");
     qCDebug(dsrApp) << "DMenu object created.";
     m_menu->setFocusPolicy(Qt::StrongFocus);
     //for test
@@ -73,6 +75,7 @@ MenuController::MenuController(QObject *parent)
 //    unDoIcon.addFile(":/image/menu_icons/undo-menu-hover.svg", MENU_ICON_SIZE, QIcon::Active);
 //    QAction *unDoAct = new QAction(unDoIcon, tr("Undo"), this);
     m_unDoAct = new QAction(tr("Undo"), this);
+    m_unDoAct->setObjectName("UnDoAct");
     Utils::setAccessibility(m_unDoAct, "menuUndo");
     qCDebug(dsrApp) << "Created Undo action";
     connect(m_unDoAct, &QAction::triggered, [ = ] {
@@ -82,6 +85,7 @@ MenuController::MenuController(QObject *parent)
 
     //QAction *saveAct = new QAction(tr("Save"), this);
     m_saveAct = new QAction(tr("Save"), this);
+    m_saveAct->setObjectName("SaveAct");
     Utils::setAccessibility(m_saveAct, "menuSave");
     qCDebug(dsrApp) << "Created Save action";
     connect(m_saveAct, &QAction::triggered, [ = ] {
@@ -91,6 +95,7 @@ MenuController::MenuController(QObject *parent)
 
     //QAction *closeAct = new QAction(tr("Exit"), this);
     m_closeAct = new QAction(tr("Exit"), this);
+    m_closeAct->setObjectName("CloseAct");
     Utils::setAccessibility(m_closeAct, "menuExit");
     qCDebug(dsrApp) << "Created Exit action";
     connect(m_closeAct, &QAction::triggered, [ = ] {
