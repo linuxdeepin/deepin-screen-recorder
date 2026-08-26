@@ -46,6 +46,8 @@ AIAssistantWidget::AIAssistantWidget(QWidget *parent) : DWidget(parent)
     
     
     m_explainButton = new ToolButton(this);
+    m_explainButton->setObjectName("ExplainButton");
+    m_explainButton->setAccessibleName("ExplainButton");
     Utils::setAccessibility(m_explainButton, AC_AIASSISTANTWIDGET_EXPLAIN_BUTTON);
     m_explainButton->setText(tr("Explain"));
     m_explainButton->setIcon(QIcon::fromTheme("explain"));
@@ -55,6 +57,8 @@ AIAssistantWidget::AIAssistantWidget(QWidget *parent) : DWidget(parent)
     m_explainButton->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Fixed);
     
     m_summarizeButton = new ToolButton(this);
+    m_summarizeButton->setObjectName("SummarizeButton");
+    m_summarizeButton->setAccessibleName("SummarizeButton");
     Utils::setAccessibility(m_summarizeButton, AC_AIASSISTANTWIDGET_SUMMARIZE_BUTTON);
     m_summarizeButton->setText(tr("Summary"));
     m_summarizeButton->setIcon(QIcon::fromTheme("summary"));
@@ -64,6 +68,8 @@ AIAssistantWidget::AIAssistantWidget(QWidget *parent) : DWidget(parent)
     m_summarizeButton->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Fixed);
     
     m_translateButton = new ToolButton(this);
+    m_translateButton->setObjectName("TranslateButton");
+    m_translateButton->setAccessibleName("TranslateButton");
     Utils::setAccessibility(m_translateButton, AC_AIASSISTANTWIDGET_TRANSLATE_BUTTON);
     m_translateButton->setText(tr("Translate"));
     m_translateButton->setIcon(QIcon::fromTheme("translate"));
@@ -73,6 +79,8 @@ AIAssistantWidget::AIAssistantWidget(QWidget *parent) : DWidget(parent)
     m_translateButton->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Fixed);
     
     m_askAIButton = new ToolButton(this);
+    m_askAIButton->setObjectName("AskAibutton");
+    m_askAIButton->setAccessibleName("AskAibutton");
     Utils::setAccessibility(m_askAIButton, AC_AIASSISTANTWIDGET_ASKAI_BUTTON);
     m_askAIButton->setText(tr("Ask AI"));
     m_askAIButton->setIcon(QIcon::fromTheme("askai"));

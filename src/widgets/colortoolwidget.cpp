@@ -55,6 +55,7 @@ void ColorToolWidget::initColorLabel()
 {
     //颜色按钮租
     m_colorButtonGroup = new QButtonGroup(this);
+    m_colorButtonGroup->setObjectName("ColorButtonGroup");
     m_colorButtonGroup->setExclusive(true);
 
     //主布局

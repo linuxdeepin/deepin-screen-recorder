@@ -358,6 +358,7 @@ void ShotToolWidget::initThicknessLabel()
     m_thicknessLabel = new DLabel(this);
     //粗细按钮组
     m_thicknessBtnGroup = new QButtonGroup(this);
+    m_thicknessBtnGroup->setObjectName("ThicknessBtnGroup");
     m_thicknessBtnGroup->setExclusive(true);
 
     //水平布局

@@ -48,6 +48,8 @@ SaveMenuManager::~SaveMenuManager()
 void SaveMenuManager::createMenu()
 {
     m_saveMenu = new DMenu(qobject_cast<QWidget*>(parent()));
+    m_saveMenu->setObjectName("SaveMenu");
+    m_saveMenu->setAccessibleName("SaveMenu");
     DFontSizeManager::instance()->bind(m_saveMenu, DFontSizeManager::T6);
     
     createSaveOptionActions();
@@ -58,15 +60,18 @@ void SaveMenuManager::createSaveOptionActions()
 {
     // 创建保存选项组 - 包含"每次询问"和"指定位置"，实现互斥
     m_saveOptionGroup = new QActionGroup(this);
+    m_saveOptionGroup->setObjectName("SaveOptionGroup");
     m_saveOptionGroup->setExclusive(true);
     
     // 每次询问选项
     m_askEachTimeAction = new QAction(tr("Each inquiry"), m_saveMenu);
+    m_askEachTimeAction->setObjectName("AskEachTimeAction");
     m_askEachTimeAction->setCheckable(true);
     m_saveOptionGroup->addAction(m_askEachTimeAction);
     
     // 指定位置选项 - 需要设置为checkable以参与互斥，同时还有子菜单
     m_specifiedLocationAction = new QAction(tr("Specified location"), m_saveMenu);
+    m_specifiedLocationAction->setObjectName("SpecifiedLocationAction");
     m_specifiedLocationAction->setCheckable(true);
     m_saveOptionGroup->addAction(m_specifiedLocationAction);
     
@@ -79,26 +84,32 @@ void SaveMenuManager::createLocationActions()
 {
     // 创建指定位置子菜单，设置给"指定位置"Action
     m_specifiedLocationSubMenu = new DMenu(tr("Specified location"), m_saveMenu);
+    m_specifiedLocationSubMenu->setObjectName("SpecifiedLocationSubMenu");
+    m_specifiedLocationSubMenu->setAccessibleName("SpecifiedLocationSubMenu");
     DFontSizeManager::instance()->bind(m_specifiedLocationSubMenu, DFontSizeManager::T6);
     
     // 创建位置选项组
     m_locationGroup = new QActionGroup(this);
+    m_locationGroup->setObjectName("LocationGroup");
     m_locationGroup->setExclusive(true);
     
     // "保存到桌面"
     m_desktopAction = new QAction(tr("Desktop"), m_specifiedLocationSubMenu);
+    m_desktopAction->setObjectName("DesktopAction");
     m_desktopAction->setCheckable(true);
     m_locationGroup->addAction(m_desktopAction);
     m_specifiedLocationSubMenu->addAction(m_desktopAction);
     
     // "保存到图片" 
     m_picturesAction = new QAction(tr("Pictures"), m_specifiedLocationSubMenu);
+    m_picturesAction->setObjectName("PicturesAction");
     m_picturesAction->setCheckable(true);
     m_locationGroup->addAction(m_picturesAction);
     m_specifiedLocationSubMenu->addAction(m_picturesAction);
     
     // "保存时选择位置"
     m_chooseOnSaveAction = new QAction(tr("Select a location when saving"), m_specifiedLocationSubMenu);
+    m_chooseOnSaveAction->setObjectName("ChooseOnSaveAction");
     m_chooseOnSaveAction->setCheckable(true);
     m_chooseOnSaveAction->setChecked(true); // 默认选中
     m_locationGroup->addAction(m_chooseOnSaveAction);
@@ -106,6 +117,7 @@ void SaveMenuManager::createLocationActions()
     
     // 自定义路径选项 - 当有路径时显示
     m_customPathAction = new QAction("", m_specifiedLocationSubMenu);
+    m_customPathAction->setObjectName("CustomPathAction");
     m_customPathAction->setCheckable(true);
     m_customPathAction->setVisible(false); // 默认隐藏，有路径时才显示
     m_locationGroup->addAction(m_customPathAction);
@@ -113,6 +125,7 @@ void SaveMenuManager::createLocationActions()
     
     // "保存时更新位置" - 当有路径时显示
     m_updateOnSaveAction = new QAction(tr("Update the location when saving"), m_specifiedLocationSubMenu);
+    m_updateOnSaveAction->setObjectName("UpdateOnSaveAction");
     m_updateOnSaveAction->setCheckable(true);
     m_updateOnSaveAction->setVisible(false); // 默认隐藏，有路径时才显示
     m_locationGroup->addAction(m_updateOnSaveAction);
