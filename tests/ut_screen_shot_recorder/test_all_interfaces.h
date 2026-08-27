@@ -164,6 +164,7 @@
 #include "dbusinterface/ut_dbusinterface_cov.h"
 #include "ut_misc_cov2.h"
 //#include "ut_protocols_extimg_cov2.h"  // ACCESS_PRIVATE_STATIC_FUN macro can't handle QtWayland:: namespaced classes
+#include "ut_protocols_full_cov.h"  // Replaces extimg_cov2: custom macro for NS classes + wl_proxy stubs for marshal methods
 // ut_wayland_stub.h: Qt 的 QWaylandClientExtension 生成的 wrapper 方法在 manager
 // 未绑定真实合成器时于 Qt6Core 内部 SEGV(T3)，宏守卫+wl 桩均无法绕过，已禁用。
 // --- P1: 启用孤儿测试 ---
