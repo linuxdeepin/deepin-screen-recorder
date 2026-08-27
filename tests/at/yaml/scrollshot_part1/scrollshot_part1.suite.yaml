@@ -1,0 +1,315 @@
+name: scrollshot_part1_suite
+app: deepin-screen-recorder
+module: scrollshot_part1
+setup:
+- action: session_start
+  command: deepin-screen-recorder
+  wait: 3.0
+suites:
+- id: suite_scrollshot_part1_002_s1
+  name: AI截图功能-未安装uosai时AI图标显示验证
+  description: ''
+  steps:
+  - action: keyboard_hot_key
+    key: ctrl+alt+i
+  - action: wait
+  assert_steps:
+  - action: assert_element
+    selector:
+      name: ScrollShotTip
+      role: panel
+  - action: assert_not_exists
+    selector:
+      name: AiAssistantScrollButton
+      role: panel
+- id: suite_scrollshot_part1_003_s1
+  name: AI截图功能-滚动截图工具栏AI图标位置验证
+  description: ''
+  steps:
+  - action: keyboard_hot_key
+    key: ctrl+alt+i
+  - action: wait
+  assert_steps:
+  - action: assert_element
+    selector:
+      name: ScrollShotTip
+      role: panel
+  - action: assert_element
+    selector:
+      name: AiAssistantScrollButton
+      role: panel
+- id: suite_scrollshot_part1_005_s1
+  name: AI截图功能-滚动截取复杂长图选择解释/总结/翻译后OCR识别验证
+  description: ''
+  steps:
+  - action: keyboard_hot_key
+    key: ctrl+alt+i
+  - action: wait
+  - action: mouse_scroll
+    selector:
+      name: ScrollShotTip
+      role: panel
+    x: 400
+    y: 400
+    value: 5
+  - action: wait
+  - action: mouse_click
+    selector:
+      name: AiAssistantScrollButton
+      role: panel
+  - action: wait
+  - action: mouse_click
+    selector:
+      name: ExplainButton
+      role: panel
+  - action: wait
+  assert_steps:
+  - action: assert_element
+    selector:
+      name: ScrollShotTip
+      role: panel
+  - action: assert_element
+    selector:
+      name: AIAssistantWidget
+      role: panel
+  - action: assert_ocr_exists
+- id: suite_scrollshot_part1_008_s1
+  name: 储存逻辑-首次使用时默认存储路径为桌面
+  description: ''
+  steps:
+  - action: keyboard_hot_key
+    key: ctrl+alt+a
+  - action: wait
+  - action: mouse_drag
+    x: 100
+    y: 100
+  - action: wait
+  - action: mouse_click
+    selector:
+      name: SaveBtn
+      role: panel
+  - action: wait
+  - action: mouse_click
+    selector:
+      name: SpecifiedLocationAction
+      role: panel
+  - action: wait
+  - action: mouse_click
+    selector:
+      name: AskEachTimeAction
+      role: panel
+  - action: wait
+  - action: mouse_click
+    selector:
+      name: SaveBtn
+      role: panel
+  - action: wait
+  assert_steps:
+  - action: assert_element
+    selector:
+      name: MajToolBar
+      role: panel
+  - action: assert_element
+    selector:
+      name: SaveMenu
+      role: panel
+  - action: assert_element
+    selector:
+      name: SpecifiedLocationSubMenu
+      role: panel
+  - action: assert_element
+    selector:
+      name: DesktopAction
+      role: panel
+- id: suite_scrollshot_part1_010_s1
+  name: 滚动截图-滚动截图后OCR识别正常
+  description: ''
+  steps:
+  - action: keyboard_hot_key
+    key: ctrl+alt+i
+  - action: wait
+  - action: mouse_scroll
+    selector:
+      name: ScrollShotTip
+      role: panel
+    x: 400
+    y: 400
+    value: 5
+  - action: wait
+  - action: mouse_click
+    selector:
+      name: OcrScrollButton
+      role: panel
+  - action: wait
+  assert_steps:
+  - action: assert_element
+    selector:
+      name: ScrollShotTip
+      role: panel
+  - action: assert_ocr_exists
+- id: suite_scrollshot_part1_011_s1
+  name: 滚动截图-滚动截图日历到底部提示请放慢滚动速度
+  description: ''
+  steps:
+  - action: keyboard_hot_key
+    key: ctrl+alt+i
+  - action: wait
+  - action: mouse_scroll
+    selector:
+      name: ScrollShotTip
+      role: panel
+    x: 400
+    y: 400
+    value: 20
+  - action: wait
+  assert_steps:
+  - action: assert_element
+    selector:
+      name: ScrollShotTip
+      role: panel
+  - action: assert_text
+    selector:
+      name: TipText
+      role: panel
+- id: suite_scrollshot_part1_013_s1
+  name: 截长图-自动滚动-滚动到底部停止
+  description: ''
+  steps:
+  - action: keyboard_hot_key
+    key: ctrl+alt+i
+  - action: wait
+  - action: mouse_click
+    selector:
+      name: ScrollShotTip
+      role: panel
+    x: 400
+    y: 400
+  - action: wait
+  - action: wait
+  assert_steps:
+  - action: assert_element
+    selector:
+      name: ScrollShotTip
+      role: panel
+  - action: assert_text
+    selector:
+      name: TipText
+      role: panel
+  - action: assert_not_exists
+    selector:
+      name: TipText
+      role: panel
+- id: suite_scrollshot_part1_014_s1
+  name: 截长图-异常交互-提示
+  description: ''
+  steps:
+  - action: keyboard_hot_key
+    key: ctrl+alt+i
+  - action: wait
+  - action: mouse_click
+    selector:
+      name: ScrollShotTip
+      role: panel
+    x: 400
+    y: 400
+  - action: wait
+  - action: wait
+  assert_steps:
+  - action: assert_element
+    selector:
+      name: ScrollShotTip
+      role: panel
+  - action: assert_element
+    selector:
+      name: WarmingIconButton
+      role: panel
+  - action: assert_not_exists
+    selector:
+      name: WarmingIconButton
+      role: panel
+- id: suite_scrollshot_part1_015_s1
+  name: 截长图-异常交互-滚动区内有视频
+  description: ''
+  steps:
+  - action: keyboard_hot_key
+    key: ctrl+alt+i
+  - action: wait
+  - action: mouse_scroll
+    selector:
+      name: ScrollShotTip
+      role: panel
+    x: 400
+    y: 400
+    value: 10
+  - action: wait
+  assert_steps:
+  - action: assert_element
+    selector:
+      name: ScrollShotTip
+      role: panel
+  - action: assert_element
+    selector:
+      name: scrollshot_tip_help_button
+      role: panel
+- id: suite_scrollshot_part1_020_s1
+  name: 截长图-控制中心-自然滚动
+  description: ''
+  steps:
+  - action: keyboard_hot_key
+    key: ctrl+alt+i
+  - action: wait
+  - action: mouse_scroll
+    selector:
+      name: ScrollShotTip
+      role: panel
+    x: 400
+    y: 400
+    value: 5
+  - action: wait
+  - action: mouse_scroll
+    selector:
+      name: ScrollShotTip
+      role: panel
+    x: 400
+    y: 400
+    value: -5
+  - action: wait
+  assert_steps:
+  - action: assert_element
+    selector:
+      name: ScrollShotTip
+      role: panel
+  - action: assert_element
+    selector:
+      name: ScrollShotTip
+      role: panel
+  - action: assert_element
+    selector:
+      name: ScrollShotTip
+      role: panel
+- id: suite_scrollshot_part1_021_s1
+  name: 截长图-手动滚动-向上滚动到顶部
+  description: ''
+  steps:
+  - action: keyboard_hot_key
+    key: ctrl+alt+i
+  - action: wait
+  - action: mouse_scroll
+    selector:
+      name: ScrollShotTip
+      role: panel
+    x: 400
+    y: 400
+    value: -10
+  - action: wait
+  assert_steps:
+  - action: assert_element
+    selector:
+      name: ScrollShotTip
+      role: panel
+  - action: assert_not_exists
+    selector:
+      name: WarmingIconButton
+      role: panel
+teardown:
+- action: session_stop

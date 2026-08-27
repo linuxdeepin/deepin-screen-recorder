@@ -1,0 +1,207 @@
+name: pin_screenshots_part1_suite
+app: deepin-screen-recorder
+module: pin_screenshots_part1
+setup:
+- action: session_start
+  command: deepin-screen-recorder
+  wait: 3.0
+suites:
+- id: suite_pin_screenshots_part1_002_s1
+  name: AI截图功能-截图工具栏AI图标位置验证
+  description: ''
+  steps:
+  - action: keyboard_hot_key
+    key: ctrl+alt+a
+  - action: wait
+  - action: mouse_drag
+    x: 300
+    y: 300
+  - action: wait
+  assert_steps:
+  - action: assert_element
+    selector:
+      name: MajToolBar
+      role: panel
+  - action: assert_element
+    selector:
+      name: SubToolWidget
+      role: panel
+  - action: assert_element
+    selector:
+      name: AiAssistantButton
+      role: panel
+  - action: assert_element
+    selector:
+      name: PinButton
+      role: panel
+- id: suite_pin_screenshots_part1_010_s1
+  name: 储存逻辑-点击'√'按钮触发复制到粘贴板
+  description: ''
+  steps:
+  - action: keyboard_hot_key
+    key: ctrl+alt+a
+  - action: wait
+  - action: mouse_drag
+    x: 300
+    y: 300
+  - action: wait
+  - action: mouse_click
+    selector:
+      name: OkBtn
+      role: panel
+  - action: wait
+  assert_steps:
+  - action: assert_element
+    selector:
+      name: MajToolBar
+      role: panel
+  - action: assert_not_exists
+    selector:
+      name: MajToolBar
+      role: panel
+- id: suite_pin_screenshots_part1_011_s1
+  name: 储存逻辑-双击截图区域触发复制到粘贴板
+  description: ''
+  steps:
+  - action: keyboard_hot_key
+    key: ctrl+alt+a
+  - action: wait
+  - action: mouse_drag
+    x: 300
+    y: 300
+  - action: wait
+  - action: mouse_click
+    x: 200
+    y: 200
+  - action: mouse_click
+    x: 200
+    y: 200
+  - action: wait
+  assert_steps:
+  - action: assert_element
+    selector:
+      name: MajToolBar
+      role: panel
+  - action: assert_not_exists
+    selector:
+      name: MajToolBar
+      role: panel
+- id: suite_pin_screenshots_part1_012_s1
+  name: 储存逻辑-按回车触发复制到粘贴板
+  description: ''
+  steps:
+  - action: keyboard_hot_key
+    key: ctrl+alt+a
+  - action: wait
+  - action: mouse_drag
+    x: 300
+    y: 300
+  - action: wait
+  - action: keyboard_press
+    key: return
+  - action: wait
+  assert_steps:
+  - action: assert_element
+    selector:
+      name: MajToolBar
+      role: panel
+  - action: assert_not_exists
+    selector:
+      name: MajToolBar
+      role: panel
+- id: suite_pin_screenshots_part1_016_s1
+  name: 贴图大小-通过鼠标拖动浮窗边角可来回放大缩小浮窗
+  description: ''
+  steps:
+  - action: keyboard_hot_key
+    key: ctrl+alt+a
+  - action: wait
+  - action: mouse_drag
+    x: 300
+    y: 300
+  - action: wait
+  - action: mouse_click
+    selector:
+      name: PinButton
+      role: panel
+  - action: wait
+  - action: mouse_drag
+    x: 600
+    y: 600
+  - action: wait
+  - action: mouse_drag
+    x: 200
+    y: 200
+  - action: wait
+  assert_steps:
+  - action: assert_element
+    selector:
+      name: MajToolBar
+      role: panel
+  - action: assert_not_exists
+    selector:
+      name: MajToolBar
+      role: panel
+- id: suite_pin_screenshots_part1_023_s1
+  name: 贴图功能栏-使用快捷键Esc关闭贴图
+  description: ''
+  steps:
+  - action: keyboard_hot_key
+    key: ctrl+alt+a
+  - action: wait
+  - action: mouse_drag
+    x: 300
+    y: 300
+  - action: wait
+  - action: mouse_click
+    selector:
+      name: PinButton
+      role: panel
+  - action: wait
+  - action: keyboard_press
+    key: escape
+  - action: wait
+  assert_steps:
+  - action: assert_element
+    selector:
+      name: MajToolBar
+      role: panel
+  - action: assert_not_exists
+    selector:
+      name: MajToolBar
+      role: panel
+  - action: assert_process
+- id: suite_pin_screenshots_part1_024_s1
+  name: 贴图功能栏-快捷键打开、收起功能栏选项列表
+  description: ''
+  steps:
+  - action: keyboard_hot_key
+    key: ctrl+alt+a
+  - action: wait
+  - action: mouse_drag
+    x: 300
+    y: 300
+  - action: wait
+  - action: mouse_click
+    selector:
+      name: PinButton
+      role: panel
+  - action: wait
+  - action: keyboard_press
+    key: f3
+  - action: wait
+  - action: keyboard_press
+    key: escape
+  - action: wait
+  assert_steps:
+  - action: assert_element
+    selector:
+      name: MajToolBar
+      role: panel
+  - action: assert_not_exists
+    selector:
+      name: MajToolBar
+      role: panel
+  - action: assert_process
+teardown:
+- action: session_stop

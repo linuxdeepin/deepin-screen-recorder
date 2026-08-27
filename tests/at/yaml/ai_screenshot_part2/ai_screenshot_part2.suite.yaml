@@ -1,0 +1,170 @@
+name: ai_screenshot_part2_suite
+app: deepin-screen-recorder
+module: ai_screenshot_part2
+setup:
+- action: session_start
+  command: deepin-screen-recorder
+  wait: 3.0
+suites:
+- id: suite_ai_screenshot_part2_004_s1
+  name: AI助手-正常截图确认后文案同步至输入框
+  description: ''
+  steps:
+  - action: keyboard_hot_key
+    key: ctrl+alt+q
+  - action: mouse_drag
+    selector:
+      name: ToolBarWidget
+      role: panel
+    wait: 1
+  - action: mouse_click
+    selector:
+      name: ConfirmButton
+      role: panel
+  assert_steps:
+  - action: assert_element
+    selector:
+      name: ToolBarWidget
+      role: panel
+  - action: assert_element
+    selector:
+      name: CloseButton
+      role: panel
+  - action: assert_element
+    selector:
+      name: ConfirmButton
+      role: panel
+  - action: assert_not_exists
+    selector:
+      name: MajToolBar
+      role: panel
+  - action: assert_not_exists
+    selector:
+      name: ToolBarWidget
+      role: panel
+- id: suite_ai_screenshot_part2_005_s1
+  name: AI助手-正常截图取消后自动返回UOSAI页面
+  description: ''
+  steps:
+  - action: keyboard_hot_key
+    key: ctrl+alt+q
+  - action: mouse_drag
+    selector:
+      name: ToolBarWidget
+      role: panel
+    wait: 1
+  - action: mouse_click
+    selector:
+      name: CloseButton
+      role: panel
+  assert_steps:
+  - action: assert_element
+    selector:
+      name: ToolBarWidget
+      role: panel
+  - action: assert_element
+    selector:
+      name: CloseButton
+      role: panel
+  - action: assert_element
+    selector:
+      name: ConfirmButton
+      role: panel
+  - action: assert_not_exists
+    selector:
+      name: ToolBarWidget
+      role: panel
+- id: suite_ai_screenshot_part2_007_s1
+  name: AI助手-唤起界面仅显示【x】和【√】按钮
+  description: ''
+  steps:
+  - action: keyboard_hot_key
+    key: ctrl+alt+q
+  - action: mouse_drag
+    selector:
+      name: ToolBarWidget
+      role: panel
+    wait: 1
+  - action: keyboard_hot_key
+    key: p
+  assert_steps:
+  - action: assert_element
+    selector:
+      name: ToolBarWidget
+      role: panel
+  - action: assert_element
+    selector:
+      name: CloseButton
+      role: panel
+  - action: assert_element
+    selector:
+      name: ConfirmButton
+      role: panel
+  - action: assert_not_exists
+    selector:
+      name: MajToolBar
+      role: panel
+  - action: assert_not_exists
+    selector:
+      name: SubToolBar
+      role: panel
+  - action: assert_not_exists
+    selector:
+      name: MajToolBar
+      role: panel
+  - action: assert_element
+    selector:
+      name: ToolBarWidget
+      role: panel
+- id: suite_ai_screenshot_part2_012_s1
+  name: AI助手-双屏场景下可正常截图
+  description: ''
+  steps:
+  - action: keyboard_hot_key
+    key: ctrl+alt+q
+  - action: mouse_drag
+    selector:
+      name: ToolBarWidget
+      role: panel
+    wait: 1
+  - action: mouse_click
+    selector:
+      name: ConfirmButton
+      role: panel
+  assert_steps:
+  - action: assert_element
+    selector:
+      name: ToolBarWidget
+      role: panel
+  - action: assert_not_exists
+    selector:
+      name: ToolBarWidget
+      role: panel
+- id: suite_ai_screenshot_part2_014_s1
+  name: AI助手-唤起ai截图后尝试使用系统截图录屏
+  description: ''
+  steps:
+  - action: keyboard_hot_key
+    key: ctrl+alt+q
+  - action: mouse_drag
+    selector:
+      name: ToolBarWidget
+      role: panel
+    wait: 1
+  - action: keyboard_hot_key
+    key: ctrl+alt+a
+  assert_steps:
+  - action: assert_element
+    selector:
+      name: ToolBarWidget
+      role: panel
+  - action: assert_not_exists
+    selector:
+      name: MajToolBar
+      role: panel
+  - action: assert_element
+    selector:
+      name: ToolBarWidget
+      role: panel
+teardown:
+- action: session_stop

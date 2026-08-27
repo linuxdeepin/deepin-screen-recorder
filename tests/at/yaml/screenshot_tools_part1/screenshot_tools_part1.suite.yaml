@@ -1,0 +1,261 @@
+name: screenshot_tools_part1_suite
+app: deepin-screen-recorder
+module: screenshot_tools_part1
+setup:
+- action: session_start
+  command: deepin-screen-recorder
+  wait: 3.0
+suites:
+- id: suite_screenshot_tools_part1_005_s1
+  name: 几何工具-切换图形并修改参数再切换图形
+  description: ''
+  steps:
+  - action: keyboard_hot_key
+    key: ctrl+alt+a
+  - action: mouse_drag
+    selector:
+      name: MajToolBar
+      role: panel
+    wait: 1
+  - action: mouse_click
+    selector:
+      name: RectBtn
+      role: panel
+    wait: 1
+  - action: mouse_click
+    selector:
+      name: OvalButton
+      role: panel
+    wait: 1
+  - action: mouse_click
+    selector:
+      name: ColorBtn
+      role: panel
+    wait: 1
+  - action: mouse_click
+    selector:
+      name: RectButton
+      role: panel
+    wait: 1
+  assert_steps:
+  - action: assert_element
+    selector:
+      name: ShapeToolWidget
+      role: panel
+  - action: assert_element
+    selector:
+      name: RectButton
+      role: panel
+- id: suite_screenshot_tools_part1_008_s1
+  name: 几何工具-非首次使用时默认沿用最后一次使用时的选择
+  description: ''
+  steps:
+  - action: keyboard_hot_key
+    key: ctrl+alt+a
+  - action: mouse_drag
+    selector:
+      name: MajToolBar
+      role: panel
+    wait: 1
+  - action: mouse_click
+    selector:
+      name: RectBtn
+      role: panel
+    wait: 1
+  assert_steps:
+  - action: assert_element
+    selector:
+      name: ShapeToolWidget
+      role: panel
+- id: suite_screenshot_tools_part1_009_s1
+  name: 几何工具-切换图形时沿用记忆的粗细与颜色
+  description: ''
+  steps:
+  - action: keyboard_hot_key
+    key: ctrl+alt+a
+  - action: mouse_drag
+    selector:
+      name: MajToolBar
+      role: panel
+    wait: 1
+  - action: mouse_click
+    selector:
+      name: RectBtn
+      role: panel
+    wait: 1
+  - action: mouse_click
+    selector:
+      name: OvalButton
+      role: panel
+    wait: 1
+  - action: mouse_click
+    selector:
+      name: RectButton
+      role: panel
+    wait: 1
+  assert_steps:
+  - action: assert_element
+    selector:
+      name: ShapeToolWidget
+      role: panel
+  - action: assert_element
+    selector:
+      name: OvalButton
+      role: panel
+  - action: assert_element
+    selector:
+      name: RectButton
+      role: panel
+- id: suite_screenshot_tools_part1_010_s1
+  name: 几何工具-默认选中矩形
+  description: ''
+  steps:
+  - action: keyboard_hot_key
+    key: ctrl+alt+a
+  - action: mouse_drag
+    selector:
+      name: MajToolBar
+      role: panel
+    wait: 1
+  - action: mouse_click
+    selector:
+      name: RectBtn
+      role: panel
+    wait: 1
+  assert_steps:
+  - action: assert_element
+    selector:
+      name: ShapeToolWidget
+      role: panel
+  - action: assert_element
+    selector:
+      name: RectButton
+      role: panel
+- id: suite_screenshot_tools_part1_014_s1
+  name: 箭头-在输入文字的过程中，切换输入法后，箭头旋转应正常
+  description: ''
+  steps:
+  - action: keyboard_hot_key
+    key: ctrl+alt+a
+  - action: mouse_drag
+    selector:
+      name: MajToolBar
+      role: panel
+    wait: 1
+  - action: mouse_click
+    selector:
+      name: TextBtn
+      role: panel
+    wait: 1
+  - action: keyboard_type
+    text: 测试
+  - action: keyboard_hot_key
+    key: shift
+  - action: mouse_click
+    selector:
+      name: ArrowBtn
+      role: panel
+    wait: 1
+  assert_steps:
+  - action: assert_element
+    selector:
+      name: ArrowBtn
+      role: panel
+- id: suite_screenshot_tools_part1_015_s1
+  name: 截取深色背景的图片，保存后颜色，边框正常
+  description: ''
+  steps:
+  - action: keyboard_hot_key
+    key: ctrl+alt+a
+  - action: mouse_drag
+    selector:
+      name: MajToolBar
+      role: panel
+    wait: 1
+  - action: mouse_click
+    selector:
+      name: SaveBtn
+      role: panel
+    wait: 1
+  - action: mouse_click
+    selector:
+      name: DesktopAction
+      role: panel
+    wait: 1
+  assert_steps:
+  - action: assert_not_exists
+    selector:
+      name: MajToolBar
+      role: panel
+- id: suite_screenshot_tools_part1_017_s1
+  name: 工具栏-位置-屏幕边界时截图-屏幕右上角
+  description: ''
+  steps:
+  - action: keyboard_hot_key
+    key: ctrl+alt+a
+  - action: mouse_drag
+    selector:
+      name: MajToolBar
+      role: panel
+    wait: 1
+  assert_steps:
+  - action: assert_element
+    selector:
+      name: MajToolBar
+      role: panel
+- id: suite_screenshot_tools_part1_021_s1
+  name: 截长图-工具栏-选项切换
+  description: ''
+  steps:
+  - action: keyboard_hot_key
+    key: ctrl+alt+a
+  - action: mouse_drag
+    selector:
+      name: MajToolBar
+      role: panel
+    wait: 1
+  - action: mouse_click
+    selector:
+      name: ScrollShotButton
+      role: panel
+    wait: 1
+  - action: mouse_click
+    selector:
+      name: ScrollOptionButton
+      role: panel
+    wait: 1
+  assert_steps:
+  - action: assert_element
+    selector:
+      name: ScrollOptionMenu
+      role: panel
+- id: suite_screenshot_tools_part1_022_s1
+  name: 工具栏-布局
+  description: ''
+  steps:
+  - action: keyboard_hot_key
+    key: ctrl+alt+r
+  - action: mouse_drag
+    selector:
+      name: SubToolWidget
+      role: panel
+    wait: 1
+  assert_steps:
+  - action: assert_element
+    selector:
+      name: SubToolWidget
+      role: panel
+  - action: assert_element
+    selector:
+      name: KeyBoardButton
+      role: panel
+  - action: assert_element
+    selector:
+      name: CameraButton
+      role: panel
+  - action: assert_element
+    selector:
+      name: RecorderButton
+      role: panel
+teardown:
+- action: session_stop

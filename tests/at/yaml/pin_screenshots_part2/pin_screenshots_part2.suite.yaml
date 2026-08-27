@@ -1,0 +1,48 @@
+name: pin_screenshots_part2_suite
+app: deepin-screen-recorder
+module: pin_screenshots_part2
+setup:
+- action: session_start
+  command: deepin-screen-recorder
+  wait: 3.0
+suites:
+- id: suite_pin_screenshots_part2_004_s1
+  name: 贴图右键菜单-右键菜单保存功能验证
+  description: ''
+  steps:
+  - action: keyboard_hot_key
+    key: ctrl+alt+a
+  - action: wait
+  - action: mouse_drag
+    x: 300
+    y: 300
+  - action: wait
+  - action: mouse_click
+    selector:
+      name: PinButton
+      role: panel
+  - action: wait
+  - action: mouse_right_click
+    x: 350
+    y: 350
+  - action: wait
+  - action: mouse_click
+    selector:
+      name: SaveAct
+      role: panel
+  - action: wait
+  assert_steps:
+  - action: assert_element
+    selector:
+      name: MajToolBar
+      role: panel
+  - action: assert_element
+    selector:
+      name: MenuController
+      role: panel
+  - action: assert_not_exists
+    selector:
+      name: MenuController
+      role: panel
+teardown:
+- action: session_stop

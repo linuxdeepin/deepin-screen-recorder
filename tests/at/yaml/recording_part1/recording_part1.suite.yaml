@@ -1,0 +1,134 @@
+name: recording_part1_suite
+app: deepin-screen-recorder
+module: recording_part1
+setup:
+- action: session_start
+  command: deepin-screen-recorder
+  wait: 3.0
+suites:
+- id: suite_recording_part1_001_s1
+  name: 快捷键Alt+PrintScreen截取窗口
+  description: ''
+  steps:
+  - action: keyboard_hot_key
+    key: alt+print
+    wait: 1
+  assert_steps:
+  - action: assert_element
+    selector:
+      name: MajToolBar
+      role: panel
+- id: suite_recording_part1_006_s1
+  name: 结束录屏时快速按esc应用正常退出
+  description: ''
+  steps:
+  - action: keyboard_hot_key
+    key: ctrl+alt+r
+    wait: 1
+  - action: mouse_click
+    selector:
+      name: RecorderButton
+      role: panel
+    wait: 2
+  - action: keyboard_press
+    key: escape
+  assert_steps:
+  - action: assert_process
+- id: suite_recording_part1_011_s1
+  name: 录屏保存路径视频文件夹无权限时提示保存失败
+  description: ''
+  steps:
+  - action: keyboard_hot_key
+    key: ctrl+alt+r
+    wait: 1
+  - action: mouse_click
+    selector:
+      name: RecorderButton
+      role: panel
+    wait: 3
+  - action: mouse_click
+    selector:
+      name: RecorderButton
+      role: panel
+    wait: 1
+  assert_steps:
+  - action: assert_process
+- id: suite_recording_part1_013_s1
+  name: 显示按键选项时倒计时页面显示按键
+  description: ''
+  steps:
+  - action: keyboard_hot_key
+    key: ctrl+alt+r
+    wait: 1
+  - action: mouse_click
+    selector:
+      name: KeyBoardButton
+      role: panel
+    wait: 1
+  - action: mouse_click
+    selector:
+      name: RecorderButton
+      role: panel
+    wait: 1
+  - action: keyboard_type
+    text: BCDEF
+  assert_steps:
+  - action: assert_element
+    selector:
+      name: KeyBoardButton
+      role: panel
+- id: suite_recording_part1_014_s1
+  name: 开启摄像头选项并调整摄像头画面边界
+  description: ''
+  steps:
+  - action: keyboard_hot_key
+    key: ctrl+alt+r
+    wait: 1
+  - action: mouse_click
+    selector:
+      name: CameraButton
+      role: panel
+    wait: 1
+  assert_steps:
+  - action: assert_element
+    selector:
+      name: CameraButton
+      role: panel
+- id: suite_recording_part1_015_s1
+  name: 录屏区域大小调整后尺寸增大
+  description: ''
+  steps:
+  - action: keyboard_hot_key
+    key: ctrl+alt+r
+    wait: 1
+  - action: mouse_drag
+    x: 100
+    y: 100
+    wait: 1
+  assert_steps:
+  - action: assert_element
+    selector:
+      name: SubToolWidget
+      role: panel
+- id: suite_recording_part1_017_s1
+  name: 录屏时点击插件右键菜单截图选项无响应
+  description: ''
+  steps:
+  - action: keyboard_hot_key
+    key: ctrl+alt+r
+    wait: 1
+  - action: mouse_right_click
+    selector:
+      name: CommonIconButton
+      role: panel
+    wait: 1
+  - action: dtk_context_menu
+    items:
+    - 截图
+  assert_steps:
+  - action: assert_element
+    selector:
+      name: SubToolWidget
+      role: panel
+teardown:
+- action: session_stop

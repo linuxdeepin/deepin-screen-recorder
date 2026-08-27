@@ -1,0 +1,74 @@
+name: hotkey_panel_suite
+app: deepin-screen-recorder
+module: hotkey_panel
+setup:
+- action: session_start
+  command: deepin-screen-recorder
+  wait: 3.0
+suites:
+- id: suite_hotkey_panel_005_s1
+  name: 显示按键选项-快捷键选择工具
+  description: ''
+  steps:
+  - action: keyboard_hot_key
+    key: ctrl+alt+r
+  - action: wait
+  - action: mouse_drag
+    x: 600
+    y: 400
+    wait: 1
+  - action: keyboard_hot_key
+    key: k
+  assert_steps:
+  - action: assert_element
+    selector:
+      name: KeyBoardButton
+      role: panel
+- id: suite_hotkey_panel_006_s1
+  name: 显示按键选项-鼠标取消选择工具
+  description: ''
+  steps:
+  - action: keyboard_hot_key
+    key: ctrl+alt+r
+  - action: wait
+  - action: mouse_drag
+    x: 600
+    y: 400
+    wait: 1
+  - action: mouse_click
+    selector:
+      name: KeyBoardButton
+      role: panel
+  - action: wait
+  - action: mouse_click
+    selector:
+      name: KeyBoardButton
+      role: panel
+  assert_steps:
+  - action: assert_element
+    selector:
+      name: KeyBoardButton
+      role: panel
+- id: suite_hotkey_panel_012_s1
+  name: 完成截图
+  description: ''
+  steps:
+  - action: keyboard_hot_key
+    key: ctrl+alt+a
+  - action: wait
+  - action: mouse_drag
+    x: 600
+    y: 400
+    wait: 1
+  - action: mouse_click
+    selector:
+      name: ShotButton
+      role: panel
+  - action: wait
+  assert_steps:
+  - action: assert_not_exists
+    selector:
+      name: MajToolBar
+      role: panel
+teardown:
+- action: session_stop

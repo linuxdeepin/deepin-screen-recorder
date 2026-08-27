@@ -1,0 +1,39 @@
+name: ocr_part1_suite
+app: deepin-screen-recorder
+module: ocr_part1
+setup:
+- action: session_start
+  command: deepin-screen-recorder
+  wait: 3.0
+suites:
+- id: suite_ocr_part1_001_s1
+  name: AI截图功能-AI截图选择解释/总结/翻译后，OCR识别中显示验证
+  description: ''
+  steps:
+  - action: keyboard_hot_key
+    key: ctrl+alt+a
+  - action: mouse_drag
+    x: 100
+    y: 100
+    wait: 1
+  - action: mouse_click
+    selector:
+      name: AiAssistantButton
+      role: panel
+    wait: 1
+  - action: mouse_click
+    selector:
+      name: ExplainButton
+      role: panel
+    wait: 2
+  assert_steps:
+  - action: assert_element
+    selector:
+      name: SubToolWidget
+      role: panel
+  - action: assert_element
+    selector:
+      name: AIAssistantWidget
+      role: panel
+teardown:
+- action: session_stop

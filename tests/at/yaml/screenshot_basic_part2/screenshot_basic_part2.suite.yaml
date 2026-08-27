@@ -1,0 +1,125 @@
+name: screenshot_basic_part2_suite
+app: deepin-screen-recorder
+module: screenshot_basic_part2
+setup:
+- action: session_start
+  command: deepin-screen-recorder
+  wait: 3.0
+suites:
+- id: suite_screenshot_basic_part2_001_s1
+  name: 储存逻辑-每次询问时，保存时，修改路径为U盘/光驱
+  description: ''
+  steps:
+  - action: keyboard_hot_key
+    key: ctrl+alt+a
+  - action: mouse_drag
+    x: 300
+    y: 300
+  - action: mouse_click
+    selector:
+      name: SaveBtn
+      role: panel
+  - action: mouse_click
+    selector:
+      name: ChooseOnSaveAction
+      role: panel
+  - action: file_dialog_select
+    path: /media/usb/screenshot.png
+  assert_steps:
+  - action: assert_element
+    selector:
+      name: MajToolBar
+      role: panel
+  - action: assert_element
+    selector:
+      name: SaveMenuManager
+      role: panel
+  - action: assert_file_exists
+    path: /media/usb/screenshot.png
+- id: suite_screenshot_basic_part2_006_s1
+  name: 延时截图时查看通知中心内容
+  description: ''
+  steps:
+  - action: keyboard_hot_key
+    key: ctrl+print
+  - action: wait
+  assert_steps:
+  - action: assert_element
+    selector:
+      name: MajToolBar
+      role: panel
+- id: suite_screenshot_basic_part2_008_s1
+  name: '[core]截图区域选择'
+  description: ''
+  steps:
+  - action: keyboard_hot_key
+    key: ctrl+alt+a
+  - action: mouse_drag
+    x: 200
+    y: 200
+  assert_steps:
+  - action: assert_element
+    selector:
+      name: MajToolBar
+      role: panel
+- id: suite_screenshot_basic_part2_009_s1
+  name: 【截图】截图后剪切板验证
+  description: ''
+  steps:
+  - action: keyboard_hot_key
+    key: ctrl+alt+a
+  - action: mouse_drag
+    x: 300
+    y: 300
+  - action: mouse_click
+    selector:
+      name: ShotButton
+      role: panel
+  - action: keyboard_hot_key
+    key: ctrl+alt+v
+  assert_steps:
+  - action: assert_element
+    selector:
+      name: MajToolBar
+      role: panel
+  - action: assert_not_exists
+    selector:
+      name: MajToolBar
+      role: panel
+- id: suite_screenshot_basic_part2_010_s1
+  name: 【截图】截图添加多行文字，文字左对齐
+  description: ''
+  steps:
+  - action: keyboard_hot_key
+    key: ctrl+alt+a
+  - action: mouse_drag
+    x: 300
+    y: 300
+  - action: mouse_click
+    selector:
+      name: TextBtn
+      role: panel
+  - action: mouse_click
+    x: 350
+    y: 350
+  - action: keyboard_type
+    text: '第一行文字
+
+      第二行文字
+
+      第三行文字'
+  - action: mouse_click
+    selector:
+      name: OkBtn
+      role: panel
+  assert_steps:
+  - action: assert_element
+    selector:
+      name: MajToolBar
+      role: panel
+  - action: assert_not_exists
+    selector:
+      name: MajToolBar
+      role: panel
+teardown:
+- action: session_stop
