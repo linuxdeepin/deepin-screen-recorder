@@ -430,4 +430,7 @@ SOURCES += main.cpp \
     ../../src/dbusservice/dbusscreenshotservice.cpp \
     # --- P1: 启用孤儿测试，补入对应源文件 ---
     ../../src/widgets/colorbutton.cpp \
-    coverage_final.cpp
+    coverage_final.cpp \
+    protocols_handle_cov.cpp \
+    remaining_cov.cpp \
+    remaining_private_cov.cpp

@@ -40,7 +40,8 @@ ASAN_OPTIONS="fast_unwind_on_malloc=1:disable_coredump=1:abort_on_error=0"
 # but still counted in the report (marked as error).
 test_list=$build_dir/${executable}_tests.txt
 $build_dir/$executable --gtest_list_tests > $test_list 2>/dev/null
-SKIP_TESTS="screenShotShapes screenShot screenRecord scrollShot fullScreenshot fullScreenRecord startRecord stopRecord startAutoScrollShot startManualScrollShot pauseAutoScrollShot continueAutoScrollShot handleManualScrollShot initPadShot delayScreenshot onHelp onViewShortcut fullScreenRecord_screenshotOnly shotCurrentImg shotFullScreen saveTopWindow topWindow initScreenRecorder initScrollShot initBackground setupRegistry waylandwindowinfo"
+# 所有原先的过滤规则（SKIP_TESTS 跳过清单）已移除：每个用例都实际执行，
+# 崩/hang 的用例由 per-case timeout 兜底，不再以 skip(77) 方式过滤。
 # 逐用例生成 JUnit XML 报告（供 CI 统计用例数）；崩/hang 用例无 XML，合并时标记为 error。
 mkdir -p "$build_dir/report_individual"
 : > "$build_dir/ssr_results.tsv"
@@ -51,12 +52,6 @@ while IFS= read -r line; do
       tname="${line#"${line%%[![:space:]]*}"}"
       tname="${last_suite}${tname}"
       base="${tname##*.}"
-      skip=0
-      for s in $SKIP_TESTS; do [ "$base" = "$s" ] && skip=1 && break; done
-      if [ "$skip" = "1" ]; then
-        printf '%s\t77\n' "$tname" >> "$build_dir/ssr_results.tsv"
-        continue
-      fi
       safe_name="${tname//[^A-Za-z0-9_]/_}"
       timeout 25 $build_dir/$executable --gtest_filter="$tname" \
         --gtest_output=xml:"report_individual/${safe_name}.xml" >/dev/null 2>&1
@@ -151,19 +146,11 @@ lcov -d $build_dir -c -o $build_dir/coverage.info
 
 lcov --extract $build_dir/coverage.info $extract_info --output-file  $build_dir/coverage.info
 lcov --remove $build_dir/coverage.info $remove_info --output-file $build_dir/coverage.info
-# Exclude Wayland/hardware-only source files that cannot be exercised offscreen
-# (generated protocol wrappers, TreelandCapture Wayland, ext-image-capture Wayland,
-#  GStreamer/v4l2 record pipeline, camera, audio, screen-grab, X11/Wayland event
-#  monitor). lcov 1.14 + gcov 12 cannot reliably honor in-source LCOV_EXCL markers,
-# so whole hardware/wayland files are excluded here at measurement time.
-lcov --remove $build_dir/coverage.info \
-  '*/src/protocols/*' '*/src/qwayland-*' '*/src/capture.cpp' \
-  '*/src/ext-image-capture/*' '*/src/gstrecord/*' '*/src/record_process.cpp' \
-  '*/src/camera/*' \
-  '*/utils/screengrabber*' '*/utils/voicevolumewatcher*' '*/utils/audioutils*' \
-  '*/utils/proxyaudioport*' '*/utils/camerawatcher*' '*/src/event_monitor.cpp' \
-  --output-file $build_dir/coverage.info
-
+# 原先的硬件/Wayland 源码排除规则（protocols/qwayland/capture/ext-image-capture/
+# gstrecord/record_process/camera/screengrabber/voicevolumewatcher/audioutils/
+# proxyaudioport/camerawatcher/event_monitor 等整文件排除）已全部移除。
+# 现在覆盖率统计覆盖 src/ 下全部源码，不再过滤任何生产源码文件，
+# 以真实反映函数覆盖率，驱动补全单测达成 100% 函数覆盖目标。
 lcov --list-full-path -e $build_dir/coverage.info –o $build_dir/coverage-stripped.info
 
 genhtml -o $result_coverage_dir $build_dir/coverage.info
