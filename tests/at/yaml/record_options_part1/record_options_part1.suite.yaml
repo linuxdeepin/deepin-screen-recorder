@@ -1,0 +1,281 @@
+name: record_options_part1_suite
+app: deepin-screen-recorder
+module: record_options_part1
+setup:
+- action: session_start
+  command: deepin-screen-recorder
+  wait: 3.0
+suites:
+- id: suite_record_options_part1_001_s1
+  name: 录屏-GIF 禁用录制音频
+  description: ''
+  steps:
+  - action: keyboard_hot_key
+    key: ctrl+alt+r
+  - action: wait
+  - action: mouse_click
+    selector:
+      name: OptionButton
+      role: panel
+  - action: mouse_click
+    selector:
+      name: GioButton
+      role: panel
+  assert_steps:
+  - action: assert_element
+    selector:
+      name: SubToolWidget
+      role: panel
+  - action: assert_element
+    selector:
+      name: RecordOptionMenu
+      role: panel
+  - action: assert_element
+    selector:
+      name: GioButton
+      role: panel
+- id: suite_record_options_part1_003_s1
+  name: 声音选项记忆-记住上一次选择的麦克风状态
+  description: ''
+  steps:
+  - action: keyboard_hot_key
+    key: ctrl+alt+r
+  - action: wait
+  - action: mouse_click
+    selector:
+      name: OptionButton
+      role: panel
+  - action: mouse_click
+    selector:
+      name: MicrophoneAction
+      role: panel
+  - action: keyboard_press
+    key: esc
+  - action: keyboard_hot_key
+    key: ctrl+alt+r
+  - action: wait
+  - action: mouse_click
+    selector:
+      name: OptionButton
+      role: panel
+  assert_steps:
+  - action: assert_element
+    selector:
+      name: SubToolWidget
+      role: panel
+  - action: assert_element
+    selector:
+      name: RecordOptionMenu
+      role: panel
+  - action: assert_element
+    selector:
+      name: MicrophoneAction
+      role: panel
+- id: suite_record_options_part1_014_s1
+  name: 声音选项-有声音输入输出时选项
+  description: ''
+  steps:
+  - action: keyboard_hot_key
+    key: ctrl+alt+r
+  - action: wait
+  - action: mouse_click
+    selector:
+      name: OptionButton
+      role: panel
+  assert_steps:
+  - action: assert_element
+    selector:
+      name: SubToolWidget
+      role: panel
+  - action: assert_element
+    selector:
+      name: RecordOptionMenu
+      role: panel
+  - action: assert_element
+    selector:
+      name: MicrophoneAction
+      role: panel
+  - action: assert_element
+    selector:
+      name: SysAudioAction
+      role: panel
+- id: suite_record_options_part1_015_s1
+  name: 声音选项-快捷键选择工具
+  description: ''
+  steps:
+  - action: keyboard_hot_key
+    key: ctrl+alt+r
+  - action: wait
+  - action: keyboard_press
+    key: s
+  - action: keyboard_press
+    key: down
+  - action: keyboard_press
+    key: enter
+  assert_steps:
+  - action: assert_element
+    selector:
+      name: SubToolWidget
+      role: panel
+  - action: assert_element
+    selector:
+      name: MicrophoneAction
+      role: panel
+- id: suite_record_options_part1_016_s1
+  name: 选项-默认选项
+  description: ''
+  steps:
+  - action: keyboard_hot_key
+    key: ctrl+alt+r
+  - action: wait
+  - action: mouse_click
+    selector:
+      name: OptionButton
+      role: panel
+  assert_steps:
+  - action: assert_element
+    selector:
+      name: SubToolWidget
+      role: panel
+  - action: assert_element
+    selector:
+      name: RecordOptionMenu
+      role: panel
+  - action: assert_element
+    selector:
+      name: GioButton
+      role: panel
+- id: suite_record_options_part1_017_s1
+  name: 选项-格式选择交互
+  description: ''
+  steps:
+  - action: keyboard_hot_key
+    key: ctrl+alt+r
+  - action: wait
+  - action: mouse_click
+    selector:
+      name: OptionButton
+      role: panel
+  - action: mouse_click
+    selector:
+      name: GioButton
+      role: panel
+  assert_steps:
+  - action: assert_element
+    selector:
+      name: SubToolWidget
+      role: panel
+  - action: assert_element
+    selector:
+      name: RecordOptionMenu
+      role: panel
+  - action: assert_not_exists
+    selector:
+      name: RecordOptionMenu
+      role: panel
+- id: suite_record_options_part1_018_s1
+  name: 选项-帧数选择交互
+  description: ''
+  steps:
+  - action: keyboard_hot_key
+    key: ctrl+alt+r
+  - action: wait
+  - action: mouse_click
+    selector:
+      name: OptionButton
+      role: panel
+  assert_steps:
+  - action: assert_element
+    selector:
+      name: SubToolWidget
+      role: panel
+  - action: assert_element
+    selector:
+      name: RecordOptionMenu
+      role: panel
+  - action: assert_not_exists
+    selector:
+      name: RecordOptionMenu
+      role: panel
+- id: suite_record_options_part1_021_s1
+  name: 2D模式开启摄像头录制视屏
+  description: ''
+  steps:
+  - action: keyboard_hot_key
+    key: ctrl+alt+r
+  - action: wait
+  - action: mouse_click
+    selector:
+      name: OptionButton
+      role: panel
+  - action: mouse_click
+    selector:
+      name: GioButton
+      role: panel
+  - action: mouse_click
+    selector:
+      name: CameraButton
+      role: panel
+  - action: mouse_click
+    selector:
+      name: RecorderButton
+      role: panel
+  assert_steps:
+  - action: assert_element
+    selector:
+      name: SubToolWidget
+      role: panel
+  - action: assert_element
+    selector:
+      name: RecordOptionMenu
+      role: panel
+  - action: assert_element
+    selector:
+      name: RecorderButton
+      role: panel
+- id: suite_record_options_part1_024_s1
+  name: 兼容性测试-录屏工具
+  description: ''
+  steps:
+  - action: keyboard_hot_key
+    key: ctrl+alt+r
+  - action: wait
+  - action: mouse_click
+    selector:
+      name: OptionButton
+      role: panel
+  - action: mouse_click
+    selector:
+      name: MicrophoneAction
+      role: panel
+  - action: mouse_click
+    selector:
+      name: SysAudioAction
+      role: panel
+  - action: mouse_click
+    selector:
+      name: KeyBoardButton
+      role: panel
+  - action: mouse_click
+    selector:
+      name: CameraButton
+      role: panel
+  - action: mouse_click
+    selector:
+      name: RecorderButton
+      role: panel
+  assert_steps:
+  - action: assert_element
+    selector:
+      name: SubToolWidget
+      role: panel
+  - action: assert_element
+    selector:
+      name: RecordOptionMenu
+      role: panel
+  - action: assert_element
+    selector:
+      name: RecorderButton
+      role: panel
+teardown:
+- action: session_stop

@@ -1,0 +1,235 @@
+name: screenshot_tools_part2_suite
+app: deepin-screen-recorder
+module: screenshot_tools_part2
+setup:
+- action: session_start
+  command: deepin-screen-recorder
+  wait: 3.0
+suites:
+- id: suite_screenshot_tools_part2_001_s1
+  name: 录制鼠标选项-图标交互-勾选显示光标和点击
+  description: ''
+  steps:
+  - action: keyboard_hot_key
+    key: ctrl+alt+r
+  - action: mouse_drag
+    selector:
+      name: SubToolWidget
+      role: panel
+    wait: 1
+  - action: mouse_click
+    selector:
+      name: OptionButton
+      role: panel
+    wait: 1
+  assert_steps:
+  - action: assert_element
+    selector:
+      name: RecordOptionMenu
+      role: panel
+  - action: assert_element
+    selector:
+      name: OptionButton
+      role: panel
+- id: suite_screenshot_tools_part2_003_s1
+  name: '[core]一指单点工具栏'
+  description: ''
+  steps:
+  - action: keyboard_hot_key
+    key: ctrl+alt+r
+  - action: mouse_drag
+    selector:
+      name: SubToolWidget
+      role: panel
+    wait: 1
+  - action: mouse_click
+    selector:
+      name: RecorderButton
+      role: panel
+  - action: mouse_click
+    selector:
+      name: KeyBoardButton
+      role: panel
+  - action: mouse_click
+    selector:
+      name: CameraButton
+      role: panel
+  - action: mouse_click
+    selector:
+      name: OptionButton
+      role: panel
+  assert_steps:
+  - action: assert_element
+    selector:
+      name: SubToolWidget
+      role: panel
+- id: suite_screenshot_tools_part2_005_s1
+  name: 在系统不同分辨率的下，进行截图录屏操作
+  description: ''
+  steps:
+  - action: keyboard_hot_key
+    key: ctrl+alt+a
+  - action: mouse_drag
+    selector:
+      name: MajToolBar
+      role: panel
+    wait: 1
+  - action: keyboard_hot_key
+    key: ctrl+alt+r
+  - action: mouse_drag
+    selector:
+      name: SubToolWidget
+      role: panel
+    wait: 1
+  assert_steps:
+  - action: assert_element
+    selector:
+      name: MajToolBar
+      role: panel
+  - action: assert_element
+    selector:
+      name: SubToolWidget
+      role: panel
+- id: suite_screenshot_tools_part2_006_s1
+  name: 截图-锁屏界面-文字工具按钮显示
+  description: ''
+  steps:
+  - action: keyboard_hot_key
+    key: ctrl+alt+a
+  - action: mouse_drag
+    selector:
+      name: MajToolBar
+      role: panel
+    wait: 1
+  assert_steps:
+  - action: assert_element
+    selector:
+      name: MajToolBar
+      role: panel
+  - action: assert_element
+    selector:
+      name: TextBtn
+      role: panel
+- id: suite_screenshot_tools_part2_008_s1
+  name: '[acp2][截图]检查截图工具条功能'
+  description: ''
+  steps:
+  - action: keyboard_hot_key
+    key: ctrl+alt+a
+  - action: mouse_drag
+    selector:
+      name: MajToolBar
+      role: panel
+    wait: 1
+  - action: mouse_click
+    selector:
+      name: RectBtn
+      role: panel
+  - action: mouse_click
+    selector:
+      name: OvalBtn
+      role: panel
+  - action: mouse_click
+    selector:
+      name: ArrowBtn
+      role: panel
+  - action: mouse_click
+    selector:
+      name: TextBtn
+      role: panel
+  - action: mouse_click
+    selector:
+      name: ColorBtn
+      role: panel
+  assert_steps:
+  - action: assert_element
+    selector:
+      name: MajToolBar
+      role: panel
+- id: suite_screenshot_tools_part2_009_s1
+  name: '[acp2][截图]检查截图识别区域功能'
+  description: ''
+  steps:
+  - action: keyboard_hot_key
+    key: ctrl+alt+a
+  - action: mouse_click
+    selector:
+      name: ShotButton
+      role: panel
+    wait: 1
+  - action: mouse_drag
+    selector:
+      name: MajToolBar
+      role: panel
+    wait: 1
+  - action: mouse_click
+    selector:
+      name: OptionButton
+      role: panel
+    wait: 1
+  assert_steps:
+  - action: assert_element
+    selector:
+      name: OptionMenu
+      role: panel
+- id: suite_screenshot_tools_part2_010_s1
+  name: '[acp2][录屏]检查录屏功能'
+  description: ''
+  steps:
+  - action: keyboard_hot_key
+    key: ctrl+alt+r
+  - action: mouse_click
+    selector:
+      name: ShotButton
+      role: panel
+    wait: 1
+  - action: mouse_drag
+    selector:
+      name: SubToolWidget
+      role: panel
+    wait: 1
+  - action: mouse_click
+    selector:
+      name: OptionButton
+      role: panel
+    wait: 1
+  - action: mouse_click
+    selector:
+      name: RecorderButton
+      role: panel
+    wait: 2
+  assert_steps:
+  - action: assert_element
+    selector:
+      name: RecordOptionMenu
+      role: panel
+  - action: assert_element
+    selector:
+      name: RecorderButton
+      role: panel
+- id: suite_screenshot_tools_part2_011_s1
+  name: '[acp2][录屏]检查录屏工具栏功能'
+  description: ''
+  steps:
+  - action: keyboard_hot_key
+    key: ctrl+alt+r
+  - action: mouse_drag
+    selector:
+      name: SubToolWidget
+      role: panel
+    wait: 1
+  - action: mouse_click
+    selector:
+      name: CameraButton
+      role: panel
+  - action: mouse_click
+    selector:
+      name: KeyBoardButton
+      role: panel
+  assert_steps:
+  - action: assert_element
+    selector:
+      name: SubToolWidget
+      role: panel
+teardown:
+- action: session_stop

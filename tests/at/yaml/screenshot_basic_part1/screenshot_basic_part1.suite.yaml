@@ -1,0 +1,91 @@
+name: screenshot_basic_part1_suite
+app: deepin-screen-recorder
+module: screenshot_basic_part1
+setup:
+- action: session_start
+  command: deepin-screen-recorder
+  wait: 3.0
+suites:
+- id: suite_screenshot_basic_part1_001_s1
+  name: 储存逻辑-设置界面ui更改验证
+  description: ''
+  steps:
+  - action: keyboard_hot_key
+    key: ctrl+alt+a
+  - action: mouse_drag
+    x: 300
+    y: 300
+    selector:
+      name: MajToolBar
+      role: panel
+  - action: mouse_click
+    selector:
+      name: ListBtn
+      role: panel
+  assert_steps:
+  - action: assert_element
+    selector:
+      name: MajToolBar
+      role: panel
+  - action: assert_element
+    selector:
+      name: OptionMenu
+      role: panel
+- id: suite_screenshot_basic_part1_002_s1
+  name: 储存逻辑-自动生成文件名
+  description: ''
+  steps:
+  - action: keyboard_hot_key
+    key: ctrl+alt+a
+  - action: mouse_drag
+    x: 300
+    y: 300
+    selector:
+      name: MajToolBar
+      role: panel
+  - action: mouse_click
+    selector:
+      name: SaveBtn
+      role: panel
+  - action: mouse_click
+    selector:
+      name: DesktopAction
+      role: panel
+  assert_steps:
+  - action: assert_element
+    selector:
+      name: MajToolBar
+      role: panel
+  - action: assert_file_exists
+    path: ~/Desktop
+- id: suite_screenshot_basic_part1_003_s1
+  name: 储存逻辑-自定义路径包含特殊字符
+  description: ''
+  steps:
+  - action: keyboard_hot_key
+    key: ctrl+alt+a
+  - action: mouse_drag
+    x: 300
+    y: 300
+    selector:
+      name: MajToolBar
+      role: panel
+  - action: mouse_click
+    selector:
+      name: SaveBtn
+      role: panel
+  - action: mouse_click
+    selector:
+      name: AskEachTimeAction
+      role: panel
+  - action: file_dialog_select
+    path: ${TEST_FILES_DIR}/tes!@#^&文件夹222
+  assert_steps:
+  - action: assert_element
+    selector:
+      name: MajToolBar
+      role: panel
+  - action: assert_file_exists
+    path: tes!@#^&文件夹222
+teardown:
+- action: session_stop
