@@ -1,5 +1,5 @@
 // Copyright (C) 2020 ~ 2021 Uniontech Software Technology Co.,Ltd.
-// SPDX-FileCopyrightText: 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2022-2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -843,6 +843,13 @@ protected:
     void hideAllWidget();
     void adjustLayout(QVBoxLayout *layout, int layoutWidth, int layoutHeight);
     void initShapeWidget(QString type);
+    QPoint mousePositionInWindow(QMouseEvent *mouseEvent) const;
+    void updateShapesWidgetGeometry();
+    void updateSelectionRelatedWidgets();
+    QRectF shapesContentBoundingRectInWindow() const;
+    QRectF effectiveShapesContentBoundingRectInWindow() const;
+    void constrainSelectionToShapes();
+    void translateShapesForSelectionResize(const QPoint &oldTopLeft);
     int getRecordInputType(bool selectedMic, bool selectedSystemAudio);
     /**
      * @brief initBackground 初始化截图背景，启动截图时调用
@@ -1063,6 +1070,8 @@ private:
     int dragRecordY = -1;
     int dragStartX = 0;
     int dragStartY = 0;
+    QRectF m_resizeContentBoundInWindow;
+    bool m_hasResizeContentBound = false;
 
     int m_shotStatus = ShotMouseStatus::Normal; //
     int recordButtonStatus = RECORD_BUTTON_NORMAL;

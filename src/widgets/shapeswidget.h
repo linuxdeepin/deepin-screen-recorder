@@ -1,5 +1,5 @@
 // Copyright (C) 2020 ~ 2021 Uniontech Software Technology Co.,Ltd.
-// SPDX-FileCopyrightText: 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2022-2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -57,6 +57,10 @@ public:
         Eighth,
     };
 
+    bool isTextEditing() const { return m_editing; }
+    bool hasContents() const;
+    QRectF contentsBoundingRect() const;
+    void translateContents(const QPointF &offset);
 
 signals:
     void reloadEffectImg(QString effect, int radius);
@@ -181,7 +185,7 @@ public slots:
      * @brief paintImage: 绘制图片
      * 将编辑的内容绘制到图片上
      */
-    void paintImage(QImage &image);
+    void paintImage(QImage &image, const QPointF &offset = QPointF(), qreal scale = 1.0);
     /**
      * @brief isExistsText: 是否存在文字图形，
      * @return
@@ -206,7 +210,7 @@ protected:
      * @brief handlePaint:执行绘制操作
      * @param painter:画笔
      */
-    void handlePaint(QPainter &painter);
+    void handlePaint(QPainter &painter, bool drawEditingControls = true);
     void enterEvent(QEvent *e);
 
     /**
