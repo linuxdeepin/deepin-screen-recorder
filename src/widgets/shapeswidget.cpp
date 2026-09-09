@@ -263,6 +263,188 @@ void ShapesWidget::saveActionTriggered()
     qInfo() << __FUNCTION__ << __LINE__ << "已清楚图形编辑界面";
 }
 
+namespace {
+bool shapeHasGeometry(const Toolshape &shape)
+{
+    for (const QPointF &point : shape.mainPoints) {
+        if (!point.isNull()) {
+            return true;
+        }
+    }
+    return !shape.points.isEmpty() || !shape.arrowRotatePos.isNull();
+}
+}
+
+bool ShapesWidget::hasContents() const
+{
+    if (!m_shapes.isEmpty()) {
+        return true;
+    }
+
+    // 当前正在绘制/刚绘制完但尚未同步进 m_shapes 的可见图形，也必须参与约束。
+    if (!m_pos1.isNull() && !m_pos2.isNull()) {
+        return true;
+    }
+
+    // 已选中/悬停的图形也可能还没同步回 m_shapes，但它们同样会被绘制，
+    // 选区缩放时必须把它们纳入外接矩形约束。
+    return shapeHasGeometry(m_selectedShape)
+            || shapeHasGeometry(m_hoveredShape)
+            || shapeHasGeometry(m_currentShape);
+}
+
+QRectF ShapesWidget::contentsBoundingRect() const
+{
+    QRectF boundingRect;
+    bool hasBoundingRect = false;
+
+    auto uniteBoundingRect = [&boundingRect, &hasBoundingRect](const QRectF &rect) {
+        if (!rect.isValid()) {
+            return;
+        }
+
+        if (!hasBoundingRect) {
+            boundingRect = rect;
+            hasBoundingRect = true;
+        } else {
+            boundingRect = boundingRect.united(rect);
+        }
+    };
+
+    auto shapePointRect = [](const Toolshape &shape) {
+        qreal left = 0;
+        qreal top = 0;
+        qreal right = 0;
+        qreal bottom = 0;
+        bool hasPoint = false;
+        bool hasMainPoint = false;
+
+        for (const QPointF &point : shape.mainPoints) {
+            if (!point.isNull()) {
+                hasMainPoint = true;
+                break;
+            }
+        }
+
+        auto unitePoint = [&left, &top, &right, &bottom, &hasPoint](const QPointF &point) {
+            if (!hasPoint) {
+                left = right = point.x();
+                top = bottom = point.y();
+                hasPoint = true;
+                return;
+            }
+
+            left = qMin(left, point.x());
+            top = qMin(top, point.y());
+            right = qMax(right, point.x());
+            bottom = qMax(bottom, point.y());
+        };
+
+        if (hasMainPoint) {
+            for (const QPointF &point : shape.mainPoints) {
+                unitePoint(point);
+            }
+        }
+        for (const QPointF &point : shape.points) {
+            unitePoint(point);
+        }
+        if (!shape.arrowRotatePos.isNull()) {
+            unitePoint(shape.arrowRotatePos);
+        }
+
+        return hasPoint ? QRectF(QPointF(left, top), QPointF(right, bottom)).normalized() : QRectF();
+    };
+
+    auto uniteShape = [&shapePointRect, &uniteBoundingRect](const Toolshape &shape) {
+        if (!shapeHasGeometry(shape)) {
+            return;
+        }
+
+        QRectF shapeRect = shapePointRect(shape);
+
+        // 外接矩形必须覆盖实际绘制范围，而不仅是控制点。
+        // 箭头头部、画笔/马赛克线宽都会超出 points/mainPoints，
+        // 这里预留足够 padding，避免缩小选区后保存时被裁掉。
+        qreal padding = 4.0;
+        if (shape.type == "arrow") {
+            padding = qMax<qreal>(padding, shape.lineWidth * 2.0 + 16.0);
+        } else if (shape.type == "line" || shape.type == "pen"
+                   || (shape.type == "effect" && shape.isOval == 2)) {
+            padding = qMax<qreal>(padding, shape.lineWidth + 8.0);
+        } else if (shape.type == "rectangle" || shape.type == "oval" || shape.type == "effect") {
+            padding = qMax<qreal>(padding, shape.lineWidth + 4.0);
+        } else if (shape.type == "text") {
+            padding = 4.0;
+        }
+
+        shapeRect.adjust(-padding, -padding, padding, padding);
+        uniteBoundingRect(shapeRect.normalized());
+    };
+
+    for (const Toolshape &shape : m_shapes) {
+        uniteShape(shape);
+    }
+    uniteShape(m_selectedShape);
+    uniteShape(m_hoveredShape);
+    uniteShape(m_currentShape);
+
+    // handlePaint() 还会直接根据 m_pos1/m_pos2 绘制当前图形。
+    // 如果这部分不进入外接矩形，用户刚画出的矩形/椭圆在缩小截图区域时会被裁掉。
+    if (!m_pos1.isNull() && !m_pos2.isNull()) {
+        Toolshape currentVisibleShape = m_currentShape;
+        if (currentVisibleShape.type.isEmpty()) {
+            currentVisibleShape.type = m_currentType;
+        }
+        currentVisibleShape.mainPoints = getMainPoints(m_pos1, m_pos2, m_isShiftPressed);
+        uniteShape(currentVisibleShape);
+    }
+
+    return boundingRect;
+}
+
+void ShapesWidget::translateContents(const QPointF &offset)
+{
+    if (qFuzzyIsNull(offset.x()) && qFuzzyIsNull(offset.y())) {
+        return;
+    }
+
+    auto translateShape = [&offset](Toolshape &shape) {
+        for (QPointF &point : shape.mainPoints) {
+            point += offset;
+        }
+        for (QPointF &point : shape.points) {
+            point += offset;
+        }
+        if (!shape.arrowRotatePos.isNull()) {
+            shape.arrowRotatePos += offset;
+        }
+    };
+
+    for (Toolshape &shape : m_shapes) {
+        translateShape(shape);
+    }
+
+    if (shapeHasGeometry(m_currentShape)) {
+        translateShape(m_currentShape);
+    }
+    if (shapeHasGeometry(m_selectedShape)) {
+        translateShape(m_selectedShape);
+    }
+    if (shapeHasGeometry(m_hoveredShape)) {
+        translateShape(m_hoveredShape);
+    }
+
+    auto it = m_editMap.begin();
+    while (it != m_editMap.end()) {
+        if (it.value()) {
+            it.value()->move(it.value()->pos() + offset.toPoint());
+        }
+        ++it;
+    }
+
+    update();
+}
+
 //点击某个形状
 bool ShapesWidget::clickedOnShapes(QPointF pos)
 {
@@ -2115,7 +2297,7 @@ void ShapesWidget::paintEvent(QPaintEvent *)
     }
 }
 
-void ShapesWidget::handlePaint(QPainter &painter)
+void ShapesWidget::handlePaint(QPainter &painter, bool drawEditingControls)
 {
     painter.setRenderHints(QPainter::Antialiasing);
     QPen pen;
@@ -2169,6 +2351,10 @@ void ShapesWidget::handlePaint(QPainter &painter)
                 ++m;
             }
         }
+    }
+
+    if (!drawEditingControls) {
+        return;
     }
 
     //绘制选中的图形
@@ -2299,10 +2485,17 @@ void ShapesWidget::handlePaint(QPainter &painter)
 }
 
 //将编辑的内容绘制到图片上
-void ShapesWidget::paintImage(QImage &image)
+void ShapesWidget::paintImage(QImage &image, const QPointF &offset, qreal scale)
 {
     QPainter painter(&image);
-    handlePaint(painter);
+    if (!qFuzzyCompare(scale, 1.0)) {
+        painter.scale(scale, scale);
+    }
+    if (!qFuzzyIsNull(offset.x()) || !qFuzzyIsNull(offset.y())) {
+        painter.translate(offset);
+    }
+    // 保存到图片时只绘制用户真正创建的标注内容，不绘制选中/悬停控制点。
+    handlePaint(painter, false);
     //    backgroundImage.save("/home/uos/Desktop/temp1.png");
 }
 
