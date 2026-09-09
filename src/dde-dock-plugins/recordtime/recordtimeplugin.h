@@ -39,6 +39,8 @@ public:
     //cppcheck误报：此函数从未被使用，其实这个函数由dde-dock框架调用
     /**
      * @brief pluginIsAllowDisable:返回插件是否允许被禁用
+     * 须保持 true：false 会让旧版 dock 跳过插件状态切换，导致录制图标被
+     * 并入折叠箭头；右键菜单的关闭改由模块 gschema 的 menu-enable=false 实现。
      * @return
      */
     bool pluginIsAllowDisable() override { return true; }

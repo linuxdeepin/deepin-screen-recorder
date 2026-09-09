@@ -20,7 +20,9 @@ SOURCES += \
     dbusservice.cpp
 
 target.path = /usr/lib/dde-dock/plugins/
+gschema.files += $$PWD/com.deepin.dde.dock.module.deepin-screen-recorder-plugin.gschema.xml
+gschema.path += /usr/share/glib-2.0/schemas/
 
-INSTALLS += target
+INSTALLS += target gschema
 
 RESOURCES += res.qrc

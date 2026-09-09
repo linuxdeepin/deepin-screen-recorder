@@ -390,6 +390,15 @@ void TimeWidget::mouseReleaseEvent(QMouseEvent *e)
     m_pressed = false;
     m_hover = false;
     update();
+    if (e->button() == Qt::RightButton) {
+        // 右键已在上方触发停止并保存录屏（stopRecord）。
+        // 此处必须拦截事件、结束传播：1070任务栏中本控件嵌在
+        // trayplugin-loader 的 PluginItem 容器内，右键release一旦
+        // 向上传播，容器会弹出“从任务栏移除”菜单（插件itemContextMenu
+        // 为空，菜单仅含该项），导致“右键保存”的同时弹出驻留/移除菜单。
+        e->accept();
+        return;
+    }
     QWidget::mouseReleaseEvent(e);
     qDebug() << "Mouse release end!";
 

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+SPDX-FileCopyrightText: 2024 UnionTech Software Technology Co., Ltd.
+
+SPDX-License-Identifier: GPL-3.0-or-later
+-->
+
+<schemalist>
+
+  <schema path="/com/deepin/dde/dock/module/deepin-screen-recorder-plugin/" id="com.deepin.dde.dock.module.deepin-screen-recorder-plugin" gettext-domain="deepin-screen-recorder-plugin">
+    <key type="b" name="control">
+      <default>false</default>
+      <summary>Blocking event</summary>
+      <description>
+          Blocking mouse events
+      </description>
+    </key>
+    <key type="b" name="enable">
+      <default>true</default>
+      <summary>Module Enable</summary>
+      <description>
+          Control Module Enable
+      </description>
+    </key>
+    <key type="b" name="menu-enable">
+      <default>false</default>
+      <summary>Menu Enable</summary>
+      <description>
+          Control Menu Enable.
+          录制期计时图标为临时入口：右键即停止并保存录屏（由插件控件自身处理），
+          旧版 dock 不再为其弹出右键菜单（含“禁用插件”等项）。
+      </description>
+    </key>
+    <key type="b" name="visible">
+      <default>true</default>
+      <summary>Module visible</summary>
+      <description>
+          Control Menu pluginsettings visible
+      </description>
+    </key>
+  </schema>
+
+</schemalist>
