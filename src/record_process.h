@@ -1,5 +1,5 @@
-// Copyright (C) 2020 ~ 2021 Uniontech Software Technology Co.,Ltd.
-// SPDX-FileCopyrightText: 2022 UnionTech Software Technology Co., Ltd.
+// Copyright (C) 2020 - 2021 Uniontech Software Technology Co.,Ltd.
+// SPDX-FileCopyrightText: 2022 - 2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -143,6 +143,11 @@ private slots:
      * @brief onStartTranscode:开始转码
      */
     void onStartTranscode();
+
+    /**
+     * @brief onTranscodePaletteFinished:调色板生成完成
+     */
+    void onTranscodePaletteFinished(const QString &palettePng);
 
     /**
      * @brief onTranscodeFinish:转码完成
