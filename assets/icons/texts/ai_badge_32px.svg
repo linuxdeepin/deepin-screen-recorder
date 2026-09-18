@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="10px" height="7px" viewBox="0 0 10 7" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>编组</title>
+    <defs>
+        <linearGradient x1="108.214078%" y1="44.6560905%" x2="50%" y2="36.6118884%" id="linearGradient-1">
+            <stop stop-color="#6448FF" offset="0%"></stop>
+            <stop stop-color="#FF37DF" offset="100%"></stop>
+        </linearGradient>
+        <linearGradient x1="7.56318058%" y1="54.644123%" x2="56.6767213%" y2="38.3832336%" id="linearGradient-2">
+            <stop stop-color="#FF02AA" offset="0%"></stop>
+            <stop stop-color="#FF8BF4" stop-opacity="0" offset="100%"></stop>
+        </linearGradient>
+        <linearGradient x1="50%" y1="42.4283554%" x2="22.8225671%" y2="70.8328971%" id="linearGradient-3">
+            <stop stop-color="#FB6060" stop-opacity="0" offset="0%"></stop>
+            <stop stop-color="#FCA506" offset="100%"></stop>
+        </linearGradient>
+        <path d="M3.30749668,1 L8.69250332,1 C9.49487019,1 9.7858278,1.08354305 10.0791611,1.24041943 C10.3724945,1.39729582 10.6027042,1.62750553 10.7595806,1.92083887 C10.9164569,2.2141722 11,2.50512981 11,3.30749668 L11,5.69250332 C11,6.49487019 10.9164569,6.7858278 10.7595806,7.07916113 C10.6027042,7.37249447 10.3724945,7.60270418 10.0791611,7.75958057 C9.7858278,7.91645695 9.49487019,8 8.69250332,8 L3.30749668,8 C2.50512981,8 2.2141722,7.91645695 1.92083887,7.75958057 C1.62750553,7.60270418 1.39729582,7.37249447 1.24041943,7.07916113 C1.08354305,6.7858278 1,6.49487019 1,5.69250332 L1,3.30749668 C1,2.50512981 1.08354305,2.2141722 1.24041943,1.92083887 C1.39729582,1.62750553 1.62750553,1.39729582 1.92083887,1.24041943 C2.2141722,1.08354305 2.50512981,1 3.30749668,1 Z" id="path-4"></path>
+    </defs>
+    <g id="v25控件替换" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="light" transform="translate(-504, -259)">
+            <g id="编组-3" transform="translate(150, 226)">
+                <g id="编组" transform="translate(334, 10)" fill-rule="nonzero">
+                    <g transform="translate(6, 6)">
+                        <g transform="translate(13, 16)">
+                            <g id="矩形">
+                                <use fill="url(#linearGradient-1)" xlink:href="#path-4"></use>
+                                <use fill="url(#linearGradient-2)" xlink:href="#path-4"></use>
+                                <use fill="url(#linearGradient-3)" xlink:href="#path-4"></use>
+                            </g>
+                            <g id="AI" transform="translate(3, 2)" fill="#FFFFFF">
+                                <path d="M1.77327935,0.762483131 L1.80701754,0.762483131 C1.90148448,1.12235717 2.09716599,1.86819613 2.39406208,3 L1.18122091,3 C1.49045645,1.87269456 1.68780927,1.1268556 1.77327935,0.762483131 Z M-0.379217274,5 L0.632928475,5 L0.983805668,3.77597841 L2.60323887,3.77597841 L2.95411606,5 L4,5 L2.39406208,-5.01820807e-14 L1.21997301,-5.01820807e-14 L-0.379217274,5 Z" id="形状"></path>
+                                <polygon id="路径" points="5 5 5.99865047 5 5.99865047 0 5 0"></polygon>
+                            </g>
+                        </g>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

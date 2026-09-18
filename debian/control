@@ -1,0 +1,81 @@
+Source: deepin-screen-recorder
+Section: utils
+Priority: optional
+Maintainer: Deepin Packages Builder <packages@deepin.com>
+Build-Depends: debhelper,
+ pkg-config,
+# qt
+ qt6-base-dev,
+ qt6-base-dev-tools,
+ qt6-base-private-dev,
+ qt6-l10n-tools,
+ qt6-svg-dev,
+ qt6-tools-dev-tools,
+ qt6-tools-dev,
+ libqt6multimediawidgets6,
+ qt6-multimedia-dev,
+ qt6-wayland-dev,
+ qt6-wayland-private-dev,
+ libqt6waylandclient6,
+ libqt6opengl6,
+ libqt6openglwidgets6,
+# dde
+ libdtk6gui-dev,
+ libdtk6widget-dev,
+ dde-tray-loader-dev | dde-dock-dev,
+ libffmpegthumbnailer-dev,
+ deepin-desktop-base,
+# opencv
+ libopencv-mobile-dev,
+# gstreamer
+ gstreamer1.0-clutter-3.0,
+ gstreamer1.0-x,
+ libgstreamer1.0-dev,
+ libgstreamer-plugins-base1.0-dev,
+ gstreamer1.0-plugins-good,
+# kwayland
+# libkf5windowsystem-dev,
+# libkf5wayland-dev,
+# libkf5i18n-dev,
+# libkf5config-dev,
+# ffmpeg
+ libavcodec-dev,
+ libavdevice-dev,
+ libavfilter-dev,
+ libavformat-dev,
+ libavutil-dev,
+ libswscale-dev,
+ libxcb-util0-dev,
+ libxtst-dev,
+ libxcursor-dev,
+ libxfixes-dev,
+ libxss1,
+ libgbm-dev,
+ libepoxy-dev,
+ libxrandr-dev,
+ libxinerama-dev,
+ libepoxy-dev,
+ libusb-1.0-0-dev,
+ libudev-dev,
+ libprocps-dev | libproc2-dev,
+ portaudio19-dev,
+ libv4l-dev
+Standards-Version: 3.9.8
+Homepage: https://github.com/linuxdeepin/deepin-screen-recorder
+
+Package: deepin-screen-recorder
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}, 
+ libgstreamer1.0-0 (>= 1.0.0), 
+ ffmpeg, 
+ libportaudio2
+Recommends: dde-session-ui,
+ deepin-ocr,
+ gstreamer1.0-plugins-bad,
+ uos-reporter,
+ deepin-event-log
+Conflicts: deepin-screenshot
+Replaces: deepin-screenshot,
+ deepin-screen-recorder-plugin
+Description: Simple recorder tools for UOS
+ Package: deepin-screen-recorder

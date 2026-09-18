@@ -1,0 +1,2275 @@
+// SPDX-FileCopyrightText: 2022-2026 UnionTech Software Technology Co., Ltd.
+//
+// SPDX-License-Identifier: GPL-3.0-or-later
+
+#include "subtoolwidget.h"
+#include "../camera_process.h"
+#include "../utils/configsettings.h"
+#include "../utils/saveutils.h"
+#include "../settings.h"
+#include "tooltips.h"
+#include "../utils.h"
+#include "../utils/log.h"
+#include "../accessibility/acTextDefine.h"
+#include "savemenumanager.h"
+#include "aiassistantwidget.h"
+#include "../utils/dbusutils.h"
+
+#include <QActionGroup>
+#include "../main_window.h"
+#include "imagemenu.h"
+
+#include <DSlider>
+#include <DLineEdit>
+#include <DMenu>
+#include <DInputDialog>
+#include <DFontSizeManager>
+#include <DComboBox>
+#include <DListWidget>
+
+#include <QAction>
+#include <QButtonGroup>
+#include <QHBoxLayout>
+#include <QStyleFactory>
+#include <QDebug>
+#include <QSizePolicy>
+#include <QStandardPaths>
+#include <QDir>
+#include <QFileDialog>
+#include <QThread>
+#include <QToolTip>
+
+#include <unistd.h>
+#include <QMediaDevices>
+
+
+DWIDGET_USE_NAMESPACE
+
+namespace {
+const QSize TOOL_ICON_SIZE = QSize(36, 36);
+const QSize SMALL_TOOL_ICON_SIZE = QSize(24, 24);
+const QSize TOOL_BUTTON_SIZE = QSize(36, 36);
+const QSize MEDIUM_TOOL_BUTTON_SIZE = QSize(56, 36);
+const QSize MIN_TOOL_BUTTON_SIZE = QSize(42, 40);
+}
+
+SubToolWidget::SubToolWidget(MainWindow *pmainwindow, DWidget *parent) : DStackedWidget(parent)
+{
+    qCDebug(dsrApp) << "SubToolWidget constructor called.";
+    m_pMainWindow = pmainwindow;
+    initWidget();
+    connect(m_pMainWindow, SIGNAL(microPhoneEnable(bool)), this, SLOT(setMicroPhoneEnable(bool)));
+}
+
+void SubToolWidget::initWidget()
+{
+    titleActionFont = DFontSizeManager::instance()->get(DFontSizeManager::T8);
+    qCDebug(dsrApp) << "SubToolWidget::initWidget called.";
+    hintFilter = new HintFilter(this);
+    initRecordLabel();
+    initShotLabel();
+    setCurrentWidget(m_shotSubTool);
+    qCDebug(dsrApp) << "Current widget set to shot subtool.";
+}
+
+void SubToolWidget::initRecordLabel()
+{
+    qCDebug(dsrApp) << "SubToolWidget::initRecordLabel called (initializing record toolbar UI).";
+    m_recordSubTool = new DLabel(this);
+    QList<ToolButton *> btnList;
+
+    //添加显示键盘按钮
+    m_keyBoardButton = new ToolButton();
+    m_keyBoardButton->setObjectName("KeyBoardButton");
+    m_keyBoardButton->setAccessibleName("KeyBoardButton");
+    Utils::setAccessibility(m_keyBoardButton, AC_SUBTOOLWIDGET_KEYBOARD_BUTTON);
+    m_keyBoardButton->setIconSize(TOOL_ICON_SIZE);
+    installTipHint(m_keyBoardButton, tr("Show keystroke (K)"));
+    m_keyBoardButton->setIcon(QIcon::fromTheme("key_mormal"));
+    m_keyBoardButton->setFixedSize(TOOL_BUTTON_SIZE);
+    btnList.append(m_keyBoardButton);
+    //发送键盘按键按钮状态信号
+    connect(m_keyBoardButton, &DPushButton::clicked, this, [ = ] {
+        qCDebug(dsrApp) << "Keyboard button clicked, checked:" << m_keyBoardButton->isChecked();
+        if (m_keyBoardButton->isChecked())
+        {
+            installTipHint(m_keyBoardButton, tr("Hide Keystroke (K)"));
+            qCDebug(dsrApp) << "Keyboard button checked, changing hint to 'Hide Keystroke'.";
+        } else
+        {
+            installTipHint(m_keyBoardButton, tr("Show Keystroke (K)"));
+            qCDebug(dsrApp) << "Keyboard button unchecked, changing hint to 'Show Keystroke'.";
+        }
+        emit keyBoardButtonClicked(m_keyBoardButton->isChecked());
+    });
+
+    //添加摄像头显示按钮
+    m_cameraButton = new ToolButton();
+    m_cameraButton->setObjectName("CameraButton");
+    m_cameraButton->setAccessibleName("CameraButton");
+    m_cameraButton->setDisabled(QMediaDevices::videoInputs().isEmpty());
+    Utils::setAccessibility(m_cameraButton, AC_SUBTOOLWIDGET_CAMERA_BUTTON);
+    m_cameraButton->setIconSize(TOOL_ICON_SIZE);
+    installTipHint(m_cameraButton, tr("Turn on camera (C)"));
+    m_cameraButton->setIcon(QIcon::fromTheme("webcam_normal"));
+    m_cameraButton->setFixedSize(TOOL_BUTTON_SIZE);
+    btnList.append(m_cameraButton);
+    connect(m_cameraButton, &DPushButton::clicked, this, [ = ] {
+        qCDebug(dsrApp) << "点击摄像头开启/关闭按钮！";
+        if (m_cameraButton->isChecked())
+        {
+            installTipHint(m_cameraButton, tr("Turn off camera (C)"));
+            qCDebug(dsrApp) << "Camera button checked, changing hint to 'Turn off camera'.";
+        } else
+        {
+            installTipHint(m_cameraButton, tr("Turn on camera (C)"));
+            qCDebug(dsrApp) << "Camera button unchecked, changing hint to 'Turn on camera'.";
+        }
+        qCDebug(dsrApp) << "正在发射摄像头点击信号...";
+        emit cameraActionChecked(m_cameraButton->isChecked());
+        qCDebug(dsrApp) << "已发射摄像头点击信号";
+    });
+
+
+    m_shotButton = new ToolButton();
+    m_shotButton->setObjectName("ShotButton");
+    m_shotButton->setAccessibleName("ShotButton");
+    m_shotButton->setCheckable(false);
+    Utils::setAccessibility(m_shotButton, AC_SUBTOOLWIDGET_SHOT_BUTTON);
+    m_shotButton->setIconSize(TOOL_ICON_SIZE);
+    installTipHint(m_shotButton, tr("Screenshot"));
+    m_shotButton->setIcon(QIcon::fromTheme("shot"));
+    m_shotButton->setFixedSize(TOOL_BUTTON_SIZE);
+    btnList.append(m_shotButton);
+    connect(m_shotButton, &DPushButton::clicked, this, [ = ] {
+        qCDebug(dsrApp) << "Screenshot button clicked.";
+        m_pMainWindow->getToolBarPoint();
+        qInfo() << "shotbutton is clicked";
+        switchContent("shot");
+        if (Utils::isTreelandMode) {
+            m_pMainWindow->onTreelandSwitchToShotUI();
+        }
+        qInfo() << "emit changeShotToolFunc(shot)";
+        emit changeShotToolFunc("shot");
+    });
+
+    //添加录屏选项按钮
+    m_optionButton = new ToolButton();
+    m_optionButton->setObjectName("OptionButton");
+    m_optionButton->setAccessibleName("OptionButton");
+    m_optionButton->setCheckable(false);
+    m_optionButton->setIconSize(QSize(24,24));
+    m_optionButton->setFixedSize(TOOL_BUTTON_SIZE);
+    m_optionButton->setIcon(QIcon::fromTheme("setting"));
+    Utils::setAccessibility(m_optionButton, AC_SUBTOOLWIDGET_RECORD_OPTION_BUT);
+    installTipHint(m_optionButton, tr("Settings (F3)"));
+    btnList.append(m_optionButton);
+
+    // 创建录屏分割线
+    m_recordSeperator = new DVerticalLine(this);
+    m_recordSeperator->setFixedSize(QSize(3, 26));
+
+    QHBoxLayout *rectLayout = new QHBoxLayout();
+    rectLayout->setSizeConstraint(QLayout::SetMinimumSize);
+    rectLayout->setContentsMargins(0, 0, 0, 0);
+    rectLayout->setSpacing(0);
+    rectLayout->setAlignment(Qt::AlignVCenter);
+    rectLayout->addSpacing(10);
+    for (int i = 0; i < btnList.length(); i++) {
+        rectLayout->addWidget(btnList[i]);
+        rectLayout->setAlignment(btnList[i], Qt::AlignVCenter);
+        
+        if (btnList[i] == m_optionButton) {
+            rectLayout->addSpacing(6);
+            rectLayout->addWidget(m_recordSeperator);
+            rectLayout->setAlignment(m_recordSeperator, Qt::AlignVCenter);
+        }
+    }
+    m_recordSubTool->setLayout(rectLayout);
+    addWidget(m_recordSubTool);
+
+    initRecordOption();
+
+    qCDebug(dsrApp) << "Record toolbar UI initialized.";
+}
+void SubToolWidget::initRecordOption()
+{
+    qCDebug(dsrApp) << "SubToolWidget::initRecordOption called (initializing record toolbar options UI).";
+    QActionGroup *t_formatGroup = new QActionGroup(this);
+    QActionGroup *t_fpsGroup = new QActionGroup(this);
+    QActionGroup *t_audioGroup = new QActionGroup(this);
+    QActionGroup *t_mouseInfoGroup = new QActionGroup(this);
+    //录屏保存位置的组
+    QActionGroup *t_saveGroup = new QActionGroup(this);
+    t_formatGroup->setExclusive(true);
+    t_fpsGroup->setExclusive(true);
+    t_audioGroup->setExclusive(false);
+    t_mouseInfoGroup->setExclusive(false);
+    t_saveGroup->setExclusive(true);
+    m_recordOptionMenu = new DMenu(this);
+    m_recordOptionMenu->setObjectName("RecordOptionMenu");
+    m_recordOptionMenu->setAccessibleName("RecordOptionMenu");
+    m_recordOptionMenu->installEventFilter(this);
+    DFontSizeManager::instance()->bind(m_recordOptionMenu, DFontSizeManager::T6);
+    // 保存格式
+    QAction *formatTitleAction = new QAction(tr("Format"), m_recordOptionMenu);
+    formatTitleAction->setFont(titleActionFont);
+
+    QAction *gifAction = new QAction(tr("GIF"));
+    QAction *mp4Action = new QAction(tr("MP4"), m_recordOptionMenu);
+    QAction *mkvAction = new QAction(tr("MKV"), m_recordOptionMenu);
+    if (!Utils::isFFmpegEnv) {
+        qCDebug(dsrApp) << "FFmpeg environment not found, changing MP4 action text to webm.";
+        mp4Action->setText(tr("webm"));
+    }
+    // 帧数
+    QAction *fpsTitleAction = new QAction(tr("FPS"), m_recordOptionMenu);
+    fpsTitleAction->setFont(titleActionFont);
+    QAction *fps5Action = new QAction(tr("5 fps"), m_recordOptionMenu);
+    QAction *fps10Action = new QAction(tr("10 fps"), m_recordOptionMenu);
+    QAction *fps20Action = new QAction(tr("20 fps"), m_recordOptionMenu);
+    QAction *fps24Action = new QAction(tr("24 fps"), m_recordOptionMenu);
+    QAction *fps30Action = new QAction(tr("30 fps"), m_recordOptionMenu);
+    // 声音
+    QAction *audio = new QAction(tr("Sound"), m_recordOptionMenu);
+    audio->setFont(titleActionFont);
+    //QAction *notAudio = new QAction(tr("Not Audio"), m_recordOptionMenu);
+    m_microphoneAction = new QAction(tr("Microphone"), m_recordOptionMenu);
+    m_microphoneAction->setObjectName("MicrophoneAction");
+    m_sysAudioAction = new QAction(tr("System audio"), m_recordOptionMenu);
+    m_sysAudioAction->setObjectName("SysAudioAction");
+    Utils::setAccessibility(m_microphoneAction, "microphoneAction");
+    Utils::setAccessibility(m_sysAudioAction, "sysAudioAction");
+    // 选项
+    QAction *mouseInfo = new QAction(tr("Options"), m_recordOptionMenu);
+    mouseInfo->setFont(titleActionFont);
+    //QAction *notMouse = new QAction(tr("Not Mouse"), m_recordOptionMenu);
+    QAction *showPointer = new QAction(tr("Show pointer"), m_recordOptionMenu);
+    QAction *showClick = new QAction(tr("Show click"), m_recordOptionMenu);
+    //保存位置
+    QAction *saveTitleAction = new QAction(m_recordOptionMenu);
+    saveTitleAction->setFont(titleActionFont);
+    QAction *saveToDesktopAction = new QAction(m_recordOptionMenu);
+    QAction *saveToVideoAction = new QAction(m_recordOptionMenu);
+
+    Utils::setAccessibility(gifAction, "gifAction");
+    Utils::setAccessibility(mp4Action, "mp4Action");
+    Utils::setAccessibility(mkvAction, "mkvAction");
+    Utils::setAccessibility(fps5Action, "fps5Action");
+    Utils::setAccessibility(fps10Action, "fps10Action");
+    Utils::setAccessibility(fps20Action, "fps20Action");
+    Utils::setAccessibility(fps24Action, "fps24Action");
+    Utils::setAccessibility(fps30Action, "fps30Action");
+
+    formatTitleAction->setDisabled(true);
+    gifAction->setCheckable(true);
+    mp4Action->setCheckable(true);
+    mkvAction->setCheckable(true);
+    t_formatGroup->addAction(gifAction);
+    t_formatGroup->addAction(mp4Action);
+    t_formatGroup->addAction(mkvAction);
+
+    fpsTitleAction->setDisabled(true);
+    fps5Action->setCheckable(true);
+    fps10Action->setCheckable(true);
+    fps20Action->setCheckable(true);
+    fps24Action->setCheckable(true);
+    fps30Action->setCheckable(true);
+    t_fpsGroup->addAction(fps5Action);
+    t_fpsGroup->addAction(fps10Action);
+    t_fpsGroup->addAction(fps20Action);
+    t_fpsGroup->addAction(fps24Action);
+    t_fpsGroup->addAction(fps30Action);
+
+    audio->setDisabled(true);
+    //notAudio->setCheckable(true);
+    m_microphoneAction->setCheckable(true);
+    m_sysAudioAction->setCheckable(true);
+    //m_sysAudioAction->setChecked(true);
+    //t_audioGroup->addAction(notAudio);
+    t_audioGroup->addAction(m_microphoneAction);
+    t_audioGroup->addAction(m_sysAudioAction);
+
+    mouseInfo->setDisabled(true);
+    //notMouse->setCheckable(true);
+    showPointer->setCheckable(true);
+    showClick->setCheckable(true);
+    //t_mouseInfoGroup->addAction(notMouse);
+    t_mouseInfoGroup->addAction(showPointer);
+    t_mouseInfoGroup->addAction(showClick);
+
+    saveTitleAction->setDisabled(true);
+    saveTitleAction->setText(tr("Save to"));
+    saveToDesktopAction->setText(tr("Desktop"));
+    saveToDesktopAction->setCheckable(true);
+    saveToVideoAction->setText(tr("Videos"));
+    saveToVideoAction->setCheckable(true);
+    t_saveGroup->addAction(saveToDesktopAction);
+    t_saveGroup->addAction(saveToVideoAction);
+
+    m_recordOptionMenu->addAction(formatTitleAction);
+
+    // BUG-308909 BUG-308909 Restore gif on loong64 sw64 mips
+    if (Utils::isFFmpegEnv) {
+        m_recordOptionMenu->addAction(gifAction);
+    }
+
+    m_recordOptionMenu->addAction(mp4Action);
+    if (Utils::isFFmpegEnv) {
+        m_recordOptionMenu->addAction(mkvAction);
+    }
+    //m_recordOptionMenu->addSeparator();
+
+    m_recordOptionMenu->addAction(fpsTitleAction);
+    m_recordOptionMenu->addAction(fps5Action);
+    m_recordOptionMenu->addAction(fps10Action);
+    m_recordOptionMenu->addAction(fps20Action);
+    m_recordOptionMenu->addAction(fps24Action);
+    m_recordOptionMenu->addAction(fps30Action);
+    //m_recordOptionMenu->addSeparator();
+
+    m_recordOptionMenu->addAction(audio);
+    //m_recordOptionMenu->addAction(notAudio);
+    m_recordOptionMenu->addAction(m_microphoneAction);
+    m_recordOptionMenu->addAction(m_sysAudioAction);
+    //m_recordOptionMenu->addSeparator();
+
+    m_recordOptionMenu->addAction(mouseInfo);
+    //m_recordOptionMenu->addAction(notMouse);
+    m_recordOptionMenu->addAction(showPointer);
+    m_recordOptionMenu->addAction(showClick);
+
+    m_recordOptionMenu->addAction(saveTitleAction);
+    m_recordOptionMenu->addAction(saveToDesktopAction);
+    m_recordOptionMenu->addAction(saveToVideoAction);
+
+    m_recordOptionMenu->hide();
+    m_optionButton->setMenu(m_recordOptionMenu);
+    m_optionButton->setPopupMode(QToolButton::InstantPopup);
+    ConfigSettings *t_settings = ConfigSettings::instance();
+    int save_format = t_settings->getValue("recorder", "format").toInt();
+    int frame_rate = t_settings->getValue("recorder", "frame_rate").toInt();
+    //在GStreamer环境下，录屏格式只有webm，因此录屏格式webm一定会被选中
+    if (!Utils::isFFmpegEnv) {
+        qCDebug(dsrApp) << "Not ffmpeg env, set format to webm";
+        if (save_format != 1) {
+            save_format = 1;
+        }
+    }
+
+    //0 1 2; GIF,MP4,MKV
+    if (save_format == 0) {
+        gifAction->setChecked(true);
+        gifAction->trigger();
+        fps5Action->setEnabled(false);
+        fps10Action->setEnabled(false);
+        fps20Action->setEnabled(false);
+        fps24Action->setEnabled(false);
+        fps30Action->setEnabled(false);
+        m_microphoneAction->setEnabled(false);
+        m_sysAudioAction->setEnabled(false);
+    } else if (save_format == 1) {
+        mp4Action->setChecked(true);
+        mp4Action->trigger();
+        fps5Action->setEnabled(true);
+        fps10Action->setEnabled(true);
+        fps20Action->setEnabled(true);
+        fps24Action->setEnabled(true);
+        fps30Action->setEnabled(true);
+        m_microphoneAction->setEnabled(true);
+        m_sysAudioAction->setEnabled(true);
+    } else {
+        mkvAction->setChecked(true);
+        mkvAction->trigger();
+        fps5Action->setEnabled(true);
+        fps10Action->setEnabled(true);
+        fps20Action->setEnabled(true);
+        fps24Action->setEnabled(true);
+        fps30Action->setEnabled(true);
+        m_microphoneAction->setEnabled(true);
+        m_sysAudioAction->setEnabled(true);
+    }
+
+    connect(gifAction, &QAction::triggered, this, [ = ](bool checked) {
+        qCDebug(dsrApp) << "GIF format selected:" << checked;
+        Q_UNUSED(checked);
+        t_settings->setValue("recorder", "format", 0);
+        fps5Action->setEnabled(false);
+        fps10Action->setEnabled(false);
+        fps20Action->setEnabled(false);
+        fps24Action->setEnabled(false);
+        fps30Action->setEnabled(false);
+        m_microphoneAction->setEnabled(false);
+        m_sysAudioAction->setEnabled(false);
+    });
+
+    connect(mp4Action, &QAction::triggered, this, [ = ](bool checked) {
+        qCDebug(dsrApp) << "MP4 format selected:" << checked;
+        Q_UNUSED(checked);
+        t_settings->setValue("recorder", "format", 1);
+        fps5Action->setEnabled(true);
+        fps10Action->setEnabled(true);
+        fps20Action->setEnabled(true);
+        fps24Action->setEnabled(true);
+        fps30Action->setEnabled(true);
+        m_microphoneAction->setEnabled(true);
+        m_sysAudioAction->setEnabled(true);
+    });
+
+    connect(mkvAction, &QAction::triggered, this, [ = ](bool checked) {
+        qCDebug(dsrApp) << "MKV format selected:" << checked;
+        Q_UNUSED(checked);
+        t_settings->setValue("recorder", "format", 2);
+        fps5Action->setEnabled(true);
+        fps10Action->setEnabled(true);
+        fps20Action->setEnabled(true);
+        fps24Action->setEnabled(true);
+        fps30Action->setEnabled(true);
+        m_microphoneAction->setEnabled(true);
+        m_sysAudioAction->setEnabled(true);
+    });
+
+    connect(t_fpsGroup, QOverload<QAction *>::of(&QActionGroup::triggered),
+    [ = ](QAction * t_act) {
+        int t_frameRate = 24;
+        if (t_act == fps5Action) {
+            t_frameRate = 5;
+        } else if (t_act == fps10Action) {
+            t_frameRate = 10;
+        } else if (t_act == fps20Action) {
+            t_frameRate = 20;
+        } else if (t_act == fps24Action) {
+            t_frameRate = 24;
+        } else if (t_act == fps30Action) {
+            t_frameRate = 30;
+        }
+        t_settings->setValue("recorder", "frame_rate", t_frameRate);
+    });
+    switch (frame_rate) {
+    case 5:
+        fps5Action->triggered();
+        fps5Action->setChecked(true);
+        break;
+    case 10:
+        fps10Action->triggered();
+        fps10Action->setChecked(true);
+        break;
+    case 20:
+        fps20Action->triggered();
+        fps20Action->setChecked(true);
+        break;
+    case 24:
+        fps24Action->triggered();
+        fps24Action->setChecked(true);
+        break;
+    case 30:
+        fps30Action->triggered();
+        fps30Action->setChecked(true);
+        break;
+    default:
+        fps24Action->triggered();
+        fps24Action->setChecked(true);
+        break;
+    }
+
+    //t_settings->setValue("recorder", "audio", 0);
+//    t_settings->setValue("recorder", "cursor", 1);
+    //notAudio->setChecked(true);
+    //notMouse->setChecked(true);
+
+    connect(t_audioGroup, QOverload<QAction *>::of(&QActionGroup::triggered), [ = ](QAction * t_act) {
+        Q_UNUSED(t_act);
+        int configValue = 0;
+        if (m_sysAudioAction->isChecked() && m_microphoneAction->isChecked()) {
+            configValue = 3;
+        } else if (m_sysAudioAction->isChecked()) {
+            configValue = 2;
+        } else if (m_microphoneAction->isChecked()) {
+            configValue = 1;
+        }
+        t_settings->setValue("recorder", "audio", configValue);
+    });
+
+    connect(t_mouseInfoGroup, QOverload<QAction *>::of(&QActionGroup::triggered), [ = ](QAction * t_act) {
+        Q_UNUSED(t_act);
+        int configValue = 0;
+        if (showClick->isChecked() && showPointer->isChecked()) {
+            configValue = 3;
+        } else if (showClick->isChecked()) {
+            configValue = 2;
+        } else if (showPointer->isChecked()) {
+            configValue = 1;
+        }
+        t_settings->setValue("recorder", "cursor", configValue);
+        emit mouseBoardButtonClicked(showClick->isChecked());
+    });
+    int cursor = t_settings->getValue("recorder", "cursor").toInt();
+    qCDebug(dsrApp) << "默认是否录制鼠标？(0 不录制鼠标，及不录制鼠标点击,1 录制鼠标,2 录制鼠标点击,3 录制鼠标，及录制鼠标点击)" << cursor;
+    if (cursor == 3) {
+        showClick->setChecked(true);
+        showPointer->setChecked(true);
+    } else if (cursor == 2) {
+        showClick->setChecked(true);
+        showPointer->setChecked(false);
+    } else if (cursor == 1) {
+        showPointer->setChecked(true);
+        showClick->setChecked(false);
+    }else{
+        showPointer->setChecked(false);
+        showClick->setChecked(false);
+    }
+
+    // 读取历史音频设置
+    int audioSetting = t_settings->getValue("recorder", "audio").toInt();
+    qCWarning(dsrApp) << "历史音频设置：(0 无音频, 1 仅麦克风, 2 仅系统音频, 3 麦克风和系统音频)" << audioSetting;
+    if (audioSetting == 3) {
+        m_microphoneAction->setChecked(true);
+        m_sysAudioAction->setChecked(true);
+    } else if (audioSetting == 2) {
+        m_sysAudioAction->setChecked(true);
+        m_microphoneAction->setChecked(false);
+    } else if (audioSetting == 1) {
+        m_microphoneAction->setChecked(true);
+        m_sysAudioAction->setChecked(false);
+    } else if (audioSetting == 0) {
+        m_microphoneAction->setChecked(false);
+        m_sysAudioAction->setChecked(false);
+    } else {
+        m_microphoneAction->setChecked(true);
+        m_sysAudioAction->setChecked(true);
+    }
+
+    int save_opt = t_settings->getValue("recorder", "save_op").toInt();
+    qCDebug(dsrApp) << "录屏默认保存到" << (save_opt ? "视频" : "桌面");
+    if (save_opt == 0) {
+        saveToVideoAction->setChecked(true);
+        saveToVideoAction->trigger();
+    } else {
+        saveToDesktopAction->setChecked(true);
+        saveToDesktopAction->trigger();
+    }
+    connect(t_saveGroup, QOverload<QAction *>::of(&QActionGroup::triggered),
+    [ = ](QAction * t_act) {
+        if (t_act == saveToDesktopAction) {
+            qInfo() << "save to desktop";
+            t_settings->setValue("recorder", "save_op", 1);
+            t_settings->setValue("recorder", "save_dir", QStandardPaths::writableLocation(QStandardPaths::DesktopLocation));
+        } else {
+            qInfo() << "save to video";
+            t_settings->setValue("recorder", "save_op", 0);
+            t_settings->setValue("recorder", "save_dir", QStandardPaths::writableLocation(QStandardPaths::MoviesLocation));
+        }
+    });
+    qCDebug(dsrApp) << "录屏工具栏选项UI已初始化";
+}
+
+void SubToolWidget::initShotLabel()
+{
+    qCDebug(dsrApp) << "SubToolWidget::initShotLabel called (initializing screenshot toolbar UI).";
+    m_shotSubTool = new DLabel(this);
+    m_shotBtnGroup = new QButtonGroup(this);
+    m_shotBtnGroup->setObjectName("ShotBtnGroup");
+    m_shotBtnGroup->setExclusive(true);
+
+    QList<ToolButton *> btnList;
+
+    //添加几何图形按钮
+    m_gioButton = new ToolButton();
+    m_gioButton->setObjectName("GioButton");
+    m_gioButton->setAccessibleName("GioButton");
+    m_gioButton->setIconSize(TOOL_ICON_SIZE);
+    m_gioButton->setIcon(QIcon::fromTheme("gioshape"));
+    Utils::setAccessibility(m_gioButton, AC_SUBTOOLWIDGET_GIO_BUTTON);
+    m_shotBtnGroup->addButton(m_gioButton);
+    m_gioButton->setFixedSize(TOOL_BUTTON_SIZE);
+    installTipHint(m_gioButton, tr("Geometric Tools (R)\nHold down Shift to draw squares or circles."));
+    btnList.append(m_gioButton);
+
+    //添加直线按钮
+    m_lineButton = new ToolButton();
+    m_lineButton->setObjectName("LineButton");
+    m_lineButton->setAccessibleName("LineButton");
+    m_lineButton->setIconSize(TOOL_ICON_SIZE);
+    installTipHint(m_lineButton, tr("Line (L)\nPress and hold Shift to draw a vertical or horizontal line"));
+    m_lineButton->setIcon(QIcon::fromTheme("line-normal"));
+    Utils::setAccessibility(m_lineButton, AC_SUBTOOLWIDGET_LINE_BUTTON);
+    m_shotBtnGroup->addButton(m_lineButton);
+    m_lineButton->setFixedSize(TOOL_BUTTON_SIZE);
+    btnList.append(m_lineButton);
+
+    //添加箭头按钮
+    m_arrowButton = new ToolButton();
+    m_arrowButton->setObjectName("ArrowButton");
+    m_arrowButton->setAccessibleName("ArrowButton");
+    m_arrowButton->setIconSize(TOOL_ICON_SIZE);
+    installTipHint(m_arrowButton, tr("Arrow (X)\nPress and hold Shift to draw a vertical or horizontal arrow"));
+    m_arrowButton->setIcon(QIcon::fromTheme("Arrow-normal"));
+    Utils::setAccessibility(m_arrowButton, AC_SUBTOOLWIDGET_LINE_BUTTON);
+    m_shotBtnGroup->addButton(m_arrowButton);
+    m_arrowButton->setFixedSize(TOOL_BUTTON_SIZE);
+    btnList.append(m_arrowButton);
+
+    //添加画笔按钮
+    m_penButton = new ToolButton();
+    m_penButton->setObjectName("PenButton");
+    m_penButton->setAccessibleName("PenButton");
+    m_penButton->setIconSize(TOOL_ICON_SIZE);
+    installTipHint(m_penButton, tr("Pencil (P)"));
+    m_penButton->setIcon(QIcon::fromTheme("Combined Shape-normal"));
+    Utils::setAccessibility(m_penButton, AC_SUBTOOLWIDGET_PEN_BUTTON);
+    m_shotBtnGroup->addButton(m_penButton);
+    m_penButton->setFixedSize(TOOL_BUTTON_SIZE);
+    btnList.append(m_penButton);
+
+    //添加模糊按钮
+    m_mosaicButton = new ToolButton();
+    m_mosaicButton->setObjectName("MosaicButton");
+    m_mosaicButton->setAccessibleName("MosaicButton");
+    m_mosaicButton->setIconSize(TOOL_ICON_SIZE);
+    installTipHint(m_mosaicButton, tr("Blur (B)"));
+    m_mosaicButton->setIcon(QIcon::fromTheme("Mosaic_normal"));
+    Utils::setAccessibility(m_mosaicButton, AC_SUBTOOLWIDGET_MOSAIC_BUTTON);
+    m_shotBtnGroup->addButton(m_mosaicButton);
+    m_mosaicButton->setFixedSize(TOOL_BUTTON_SIZE);
+    // TODO: 初版treeland暂时屏蔽
+    if (!(Utils::isTreelandMode))
+          btnList.append(m_mosaicButton);
+
+    //添加文字按钮
+    m_textButton = new ToolButton();
+    m_textButton->setObjectName("TextButton");
+    m_textButton->setAccessibleName("TextButton");
+    m_textButton->setIconSize(TOOL_ICON_SIZE);
+    m_textButton->setIcon(QIcon::fromTheme("text"));
+    installTipHint(m_textButton, tr("Text (T)"));
+    Utils::setAccessibility(m_textButton, AC_SUBTOOLWIDGET_TEXT_BUTTON);
+    m_shotBtnGroup->addButton(m_textButton);
+    m_textButton->setFixedSize(TOOL_BUTTON_SIZE);
+    btnList.append(m_textButton);
+
+    //添加滚动截图按钮
+    m_scrollShotButton = new ToolButton();
+    m_scrollShotButton->setObjectName("ScrollShotButton");
+    m_scrollShotButton->setAccessibleName("ScrollShotButton");
+    m_scrollShotButton->setCheckable(false);
+    m_scrollShotButton->setIconSize(TOOL_ICON_SIZE);
+    m_scrollShotButton->setIcon(QIcon::fromTheme("scrollShot"));
+    Utils::setAccessibility(m_scrollShotButton, AC_SUBTOOLWIDGET_SCROLLSHOT_BUTTON);
+    m_scrollShotButton->setFixedSize(TOOL_BUTTON_SIZE);
+    installTipHint(m_scrollShotButton, tr("Scrollshot (Alt+I）"));
+#ifdef  OCR_SCROLL_FLAGE_ON
+    // TODO: 仅x11下开启，后续处理，目前还有问题
+    if (!(Utils::isTreelandMode))
+    btnList.append(m_scrollShotButton);
+#endif
+    connect(m_scrollShotButton, &DPushButton::clicked, this, [ = ] {
+        qCDebug(dsrApp) << "滚动截图的按钮按下！";
+        switchContent("scroll");
+        emit changeShotToolFunc("scrollShot");
+    });
+    //添加ocr图文识别按钮
+    m_ocrButton = new ToolButton();
+    m_ocrButton->setObjectName("OcrButton");
+    m_ocrButton->setAccessibleName("OcrButton");
+    m_ocrButton->setCheckable(false);
+    m_ocrButton->setIconSize(TOOL_ICON_SIZE);
+    m_ocrButton->setIcon(QIcon::fromTheme("ocr-normal"));
+    Utils::setAccessibility(m_ocrButton, AC_SUBTOOLWIDGET_OCR_BUTTON);
+    m_ocrButton->setFixedSize(TOOL_BUTTON_SIZE);
+    installTipHint(m_ocrButton, tr("Extract text (Alt+O）"));
+    connect(m_ocrButton, &DPushButton::clicked, this, [ = ] {
+        qCDebug(dsrApp) << "OCR按钮按下！";
+        emit changeShotToolFunc("ocr");
+    });
+
+#ifdef  OCR_SCROLL_FLAGE_ON
+    // TODO: 仅x11下开启，后续处理，目前treeland下仍有崩溃情况
+    //if (!(Utils::isTreelandMode))
+        btnList.append(m_ocrButton);
+#endif
+
+    //添加贴图按钮
+    m_pinButton = new ToolButton();
+    m_pinButton->setObjectName("PinButton");
+    m_pinButton->setAccessibleName("PinButton");
+    m_pinButton->setCheckable(false);
+    m_pinButton->setIconSize(TOOL_ICON_SIZE);
+    m_pinButton->setIcon(QIcon::fromTheme("pinscreenshots"));
+    Utils::setAccessibility(m_pinButton, AC_SUBTOOLWIDGET_PINSCREENSHOTS_BUTTON);
+    m_pinButton->setFixedSize(TOOL_BUTTON_SIZE);
+    installTipHint(m_pinButton, tr("Pin screenshots (Alt+P）"));
+    connect(m_pinButton, &DPushButton::clicked, this, [ = ] {
+        qCDebug(dsrApp) << "贴图按钮按下！";
+        emit changeShotToolFunc("pinScreenshots");
+    });
+    btnList.append(m_pinButton);
+
+    m_aiAssistantButton = new ToolButton();
+    m_aiAssistantButton->setObjectName("AiAssistantButton");
+    m_aiAssistantButton->setAccessibleName("AiAssistantButton");
+    m_aiAssistantButton->setIconSize(SMALL_TOOL_ICON_SIZE);
+    m_aiAssistantButton->setIcon(QIcon::fromTheme("ai_assistant"));
+    bool aiAssistantUsed = ConfigSettings::instance()->getValue("shot", "ai_assistant_used").toBool();
+    m_aiAssistantButton->setShowRedDot(!aiAssistantUsed);
+    
+    QString badgePath = ":/icons/deepin/builtin/texts/ai_badge_32px.svg";
+    m_aiAssistantButton->setBadgeIcon(badgePath);
+    m_aiAssistantButton->setBadgeSize(QSize(10, 7)); 
+
+    Utils::setAccessibility(m_aiAssistantButton, AC_SUBTOOLWIDGET_AI_ASSISTANT_BUTTON);
+    m_shotBtnGroup->addButton(m_aiAssistantButton);
+    m_aiAssistantButton->setFixedSize(TOOL_BUTTON_SIZE);
+    installTipHint(m_aiAssistantButton, tr("AI Screenshot (A)"));
+    btnList.append(m_aiAssistantButton);
+    connect(m_aiAssistantButton, &ToolButton::clicked, this, [=] {
+        ConfigSettings::instance()->setValue("shot", "ai_assistant_used", true);
+        m_aiAssistantButton->setShowRedDot(false);
+        emit changeShotToolFunc("aiassistant");
+    });
+
+    if(!DBusUtils::isAiAssistantAvailable())
+        m_aiAssistantButton->hide();
+
+    // 撤销按钮
+    m_cancelButton = new ToolButton();
+    m_cancelButton->setObjectName("CancelButton");
+    m_cancelButton->setAccessibleName("CancelButton");
+    m_cancelButton->setUndoButtonFlag(true);
+    m_cancelButton->setCheckable(false);
+    m_cancelButton->setIconSize(TOOL_ICON_SIZE);
+    m_cancelButton->setIcon(QIcon::fromTheme("cancel"));
+    Utils::setAccessibility(m_cancelButton, AC_SUBTOOLWIDGET_UNDO_BUTTON);
+    m_cancelButton->setFixedSize(TOOL_BUTTON_SIZE);
+    installTipHint(m_cancelButton, tr("Undo (Ctrl+Z)"));
+    btnList.append(m_cancelButton);
+    m_cancelButton->setEnabled(false);
+    connect(m_cancelButton, &ToolButton::clicked, m_pMainWindow, &MainWindow::unDo);
+    connect(m_cancelButton, &ToolButton::isInUndoBtn, m_pMainWindow, &MainWindow::isInUndoBtn);
+    connect(m_pMainWindow, &MainWindow::setUndoEnable, this, [ = ](bool isEnabled) {
+        m_cancelButton->setEnabled(isEnabled);
+    });
+
+    //切换到录屏按钮
+    // TODO:treeland暂时屏蔽录屏功能
+    m_recorderButton = new ToolButton();
+    m_recorderButton->setObjectName("RecorderButton");
+    m_recorderButton->setAccessibleName("RecorderButton");
+    m_recorderButton->setCheckable(false);
+    m_recorderButton->setIconSize(TOOL_ICON_SIZE);
+    m_recorderButton->setIcon(QIcon::fromTheme("recorder"));
+    Utils::setAccessibility(m_recorderButton, AC_SUBTOOLWIDGET_RECORDER_BUTTON);
+        m_recorderButton->setFixedSize(TOOL_BUTTON_SIZE);
+        installTipHint(m_recorderButton, tr("Record"));
+    if (!(Utils::isTreelandMode))
+        btnList.append(m_recorderButton);
+        connect(m_recorderButton, &ToolButton::clicked, this, [ = ] {
+            m_pMainWindow->getToolBarPoint();
+            switchContent("record");
+            // Treeland 环境下点击“切换到录屏”，进行前端UI切换与后端选择器退出
+            if (Utils::isTreelandMode) {
+                m_pMainWindow->onTreelandSwitchToRecordUI();
+            }
+            emit changeShotToolFunc("record");
+        });
+
+    m_shotOptionButton = new ToolButton();
+    m_shotOptionButton->setObjectName("ShotOptionButton");
+    m_shotOptionButton->setAccessibleName("ShotOptionButton");
+    m_shotOptionButton->setCheckable(false);
+    m_shotOptionButton->setIconSize(QSize(24,24));
+    m_shotOptionButton->setFixedSize(TOOL_BUTTON_SIZE);
+    m_shotOptionButton->setIcon(QIcon::fromTheme("setting"));
+    Utils::setAccessibility(m_shotOptionButton, AC_SUBTOOLWIDGET_SHOT_OPTION_BUT);
+    installTipHint(m_shotOptionButton, tr("Settings (F3)"));
+    
+    m_shotBtnGroup->addButton(m_shotOptionButton);
+    btnList.append(m_shotOptionButton);
+
+    m_saveLocalDirButton = new SaveButton();
+    m_saveLocalDirButton->setCheckable(false);
+    updateSaveButtonTip();
+    // m_saveLocalDirButton->setIcon(QIcon::fromTheme("save"));
+    Utils::setAccessibility(m_saveLocalDirButton, AC_SUBTOOLWIDGET_SAVETOLOCAL_BUTTON);
+    
+    // 创建并设置保存菜单管理器
+    SaveMenuManager *saveMenuManager = new SaveMenuManager(this);
+    m_saveLocalDirButton->setOptionsMenu(saveMenuManager->getMenu());
+    // 连接保存选项改变信号，更新tooltip
+    connect(saveMenuManager, &SaveMenuManager::saveOptionChanged, this, &SubToolWidget::updateSaveButtonTip);
+    
+    m_shotBtnGroup->addButton(m_saveLocalDirButton);
+    // m_saveLocalDirButton->setFixedSize(TOOL_BUTTON_SIZE);
+    btnList.append(m_saveLocalDirButton);
+    connect(m_saveLocalDirButton, &SaveButton::clicked, m_pMainWindow, &MainWindow::saveScreenShotToFile);
+
+    if (Utils::is3rdInterfaceStart) {
+        m_shotOptionButton->hide();
+        m_scrollShotButton->hide(); //隐藏滚动截图按钮
+        m_ocrButton->hide(); //隐藏ocr按钮
+        m_pinButton->hide(); //隐藏pin按钮
+        m_aiAssistantButton->hide(); //隐藏AI助手按钮
+    }
+
+    m_saveSeperatorBeg = new DVerticalLine(this);
+    m_saveSeperatorEnd = new DVerticalLine(this);
+    m_saveSeperatorBeg->setFixedSize(QSize(3, 26));
+    m_saveSeperatorEnd->setFixedSize(QSize(3, 26));
+
+    QHBoxLayout *rectLayout = new QHBoxLayout();
+    rectLayout->setSizeConstraint(QLayout::SetMinimumSize);
+    rectLayout->setContentsMargins(0, 0, 0, 0);
+    rectLayout->setSpacing(0);
+    rectLayout->setAlignment(Qt::AlignVCenter);
+    rectLayout->addSpacing(10);
+    for (int i = 0; i < btnList.length(); i++) {
+        // 在m_shotOptionButton之前添加第一个分割线
+        if (btnList[i] == m_shotOptionButton) {
+            rectLayout->addWidget(m_saveSeperatorBeg);
+            rectLayout->setAlignment(m_saveSeperatorBeg, Qt::AlignVCenter);
+            rectLayout->addSpacing(6); // 添加一些间距
+        }
+        
+        rectLayout->addWidget(btnList[i]);
+        rectLayout->setAlignment(btnList[i], Qt::AlignVCenter);
+        
+        // 在m_saveLocalDirButton之后添加第二个分割线
+        if (btnList[i] == m_saveLocalDirButton) {
+            rectLayout->addSpacing(6); // 添加一些间距
+            rectLayout->addWidget(m_saveSeperatorEnd);
+            rectLayout->setAlignment(m_saveSeperatorEnd, Qt::AlignVCenter);
+        }
+        
+        // 原有的条件保持不变
+        if (btnList[i] == m_recorderButton) {
+            rectLayout->addSpacing(6);
+        }
+    }
+    m_shotSubTool->setLayout(rectLayout);
+    addWidget(m_shotSubTool);
+
+
+
+    connect(m_shotBtnGroup, &QButtonGroup::buttonClicked,
+    [ = ](QAbstractButton *button) {
+        Q_UNUSED(button);
+        if (m_gioButton->isChecked()) {
+            // 当几何图形按钮被点击时，发送"gio"信号，而不是直接发送具体形状
+            // 这样SideBarWidget可以正确识别这是几何图形按钮被点击的事件
+            qCDebug(dsrApp) << "Geometry button clicked, sending gio signal";
+            emit changeShotToolFunc("gio");
+        }
+        if (m_lineButton->isChecked()) {
+            emit changeShotToolFunc("line");
+        }
+
+        if (m_arrowButton->isChecked()) {
+            emit changeShotToolFunc("arrow");
+        }
+
+        if (m_penButton->isChecked()) {
+            emit changeShotToolFunc("pen");
+        }
+        if (m_textButton->isChecked()) {
+            emit changeShotToolFunc("text");
+        }
+        if (m_mosaicButton->isChecked()) {
+            emit changeShotToolFunc("effect");
+        }
+
+    });
+
+    initShotOption();
+    qCDebug(dsrApp) << "截图工具栏UI已初始化";
+}
+
+void SubToolWidget::showAIAssistantWidget()
+{
+    // 兼容旧接口：转发到菜单弹出逻辑
+    if (m_aiAssistantButton) {
+        QMetaObject::invokeMethod(m_aiAssistantButton, "click", Qt::QueuedConnection);
+    }
+}
+
+
+// 更新保存按钮的提示信息
+void SubToolWidget::updateSaveButtonTip()
+{
+    qCWarning(dsrApp) << "========== updateSaveButtonTip 开始 ==========";
+    
+    if (!m_saveLocalDirButton) {
+        qCWarning(dsrApp) << "updateSaveButtonTip: m_saveLocalDirButton 为空，直接返回";
+        return;
+    }
+    
+    // 参考saveAction函数的读取方式
+    SaveWays saveWays = ConfigSettings::instance()->getValue("shot", "save_ways").value<SaveWays>();
+    SaveAction saveOp = ConfigSettings::instance()->getValue("shot", "save_op").value<SaveAction>();
+    bool isChangeOnSave = ConfigSettings::instance()->getValue("shot", "save_dir_change").toBool();
+    QString savedPath = ConfigSettings::instance()->getValue("shot", "save_dir").toString();
+    const bool hasHistoryPath = !savedPath.isEmpty() && QFileInfo::exists(savedPath);
+
+    qCWarning(dsrApp) << "updateSaveButtonTip: saveWays=" << static_cast<int>(saveWays) 
+                      << "saveOp=" << static_cast<int>(saveOp)
+                      << "isChangeOnSave=" << isChangeOnSave
+                      << "savedPath=" << savedPath
+                      << "hasHistoryPath=" << hasHistoryPath;
+
+    QString tipText;
+    if (saveWays == Ask) { 
+        // 每次询问模式
+        tipText = tr("Save to local");
+        qCWarning(dsrApp) << "updateSaveButtonTip: 进入每次询问模式，tipText=" << tipText;
+    } else if (saveWays == SpecifyLocation) {
+        // 指定位置模式，根据save_op显示具体保存位置
+        qCWarning(dsrApp) << "updateSaveButtonTip: 进入指定位置模式，saveOp=" << static_cast<int>(saveOp);
+        switch (saveOp) {
+            case SaveToDesktop:
+                tipText = tr("Save to Desktop");
+                qCWarning(dsrApp) << "updateSaveButtonTip: SaveToDesktop分支，tipText=" << tipText;
+                break;
+            case SaveToImage:
+                tipText = tr("Save to Pictures");
+                qCWarning(dsrApp) << "updateSaveButtonTip: SaveToImage分支，tipText=" << tipText;
+                break;
+            case SaveToSpecificDir:
+                qCWarning(dsrApp) << "updateSaveButtonTip: SaveToSpecificDir分支，isChangeOnSave=" << isChangeOnSave;
+                if (isChangeOnSave) {
+                    // 保存时选择/更新位置
+                    tipText = hasHistoryPath ? tr("Update the location when saving")
+                                             : tr("Select a location when saving");
+                    qCWarning(dsrApp) << "updateSaveButtonTip: isChangeOnSave=true，hasHistoryPath=" << hasHistoryPath 
+                                      << "tipText=" << tipText;
+                } else {
+                    // 保存到指定路径
+                    tipText = hasHistoryPath ? tr("Save to %1").arg(savedPath)
+                                             : tr("Save to local");
+                    qCWarning(dsrApp) << "updateSaveButtonTip: isChangeOnSave=false，hasHistoryPath=" << hasHistoryPath 
+                                      << "tipText=" << tipText;
+                }
+                break;
+            default:
+                // 其他情况（SaveToClipboard, AutoSave, CustomScreenSave等）
+                tipText = tr("Save to local");
+                qCWarning(dsrApp) << "updateSaveButtonTip: default分支，saveOp=" << static_cast<int>(saveOp) 
+                                  << "tipText=" << tipText;
+                break;
+        }
+    } else {
+        // 其他情况，保持原来的方式
+        tipText = tr("Save to local");
+        qCWarning(dsrApp) << "updateSaveButtonTip: 其他情况分支，saveWays=" << static_cast<int>(saveWays) 
+                          << "tipText=" << tipText;
+    }
+    
+    qCWarning(dsrApp) << "updateSaveButtonTip: 最终tipText=" << tipText;
+    installTipHint(m_saveLocalDirButton, tipText);
+    qCWarning(dsrApp) << "========== updateSaveButtonTip 结束 ==========";
+}
+
+void SubToolWidget::initShotOption()
+{
+    qCDebug(dsrApp) << "正在初始化截图工具栏选项UI...";
+    QActionGroup *t_saveGroup = new QActionGroup(this);
+    QActionGroup *t_formatGroup = new QActionGroup(this);
+    t_saveGroup->setExclusive(true);
+    t_formatGroup->setExclusive(true);
+
+    m_optionMenu = new DMenu(this);
+    m_optionMenu->setObjectName("OptionMenu");
+    m_optionMenu->setAccessibleName("OptionMenu");
+    m_optionMenu->installEventFilter(this);
+    //系统级别为 T6 的字体大小, 默认是14 px
+    DFontSizeManager::instance()->bind(m_optionMenu, DFontSizeManager::T6);
+
+    // 保存位置
+    // QAction *saveTitleAction = new QAction(tr("Save to"), m_optionMenu);
+    // saveTitleAction->setFont(titleActionFont);
+    // 创建指定位置子菜单
+    // DMenu *specifiedLocationMenu = new DMenu(m_optionMenu);
+    // specifiedLocationMenu->installEventFilter(this);
+    // specifiedLocationMenu->setTitle(tr("Specified Location"));
+    // specifiedLocationMenu->setToolTipsVisible(true);
+    // specifiedLocationMenu->menuAction()->setCheckable(true);
+    // DFontSizeManager::instance()->bind(specifiedLocationMenu, DFontSizeManager::T6);
+    
+    // 指定位置子菜单项
+    // QAction *saveToDesktopAction = new QAction(tr("Desktop"), specifiedLocationMenu);
+    // QAction *saveToPictureAction = new QAction(tr("Pictures"), specifiedLocationMenu);
+    
+    // 创建自定义位置子菜单
+    // m_saveToSpecialPathMenu = new DMenu(specifiedLocationMenu);
+    // m_saveToSpecialPathMenu->setObjectName("SaveToSpecialPathMenu");
+    // m_saveToSpecialPathMenu->setAccessibleName("SaveToSpecialPathMenu");
+    // m_saveToSpecialPathMenu->installEventFilter(this);
+    // m_saveToSpecialPathMenu->setTitle(tr("Custom Location"));
+    // m_saveToSpecialPathMenu->setToolTipsVisible(true);
+    // m_saveToSpecialPathMenu->menuAction()->setCheckable(true);
+    // DFontSizeManager::instance()->bind(m_saveToSpecialPathMenu, DFontSizeManager::T6);
+    
+    // 每次询问选项
+    // QAction *askEveryTimeAction = new QAction(tr("Each inquiry"), m_optionMenu);
+    
+    // 设置自定义位置子菜单项
+    // QString specialPath = ConfigSettings::instance()->getValue("shot", "save_dir").value<QString>();
+    
+    // 上次保存位置
+    // m_saveToSpecialPathAction = new QAction(m_saveToSpecialPathMenu);
+    // m_saveToSpecialPathAction->setObjectName("SaveToSpecialPathAction");
+    // m_saveToSpecialPathAction->setCheckable(true);
+    
+    // 保存时更新位置
+    // m_changeSaveToSpecialPath = new QAction(m_saveToSpecialPathMenu);
+    // m_changeSaveToSpecialPath->setObjectName("ChangeSaveToSpecialPath");
+    // m_changeSaveToSpecialPath->setCheckable(true);
+    
+    // if (specialPath.isEmpty() || !QFileInfo::exists(specialPath)) {
+    //     qCDebug(dsrApp) << "不存在指定路径";
+    //     m_changeSaveToSpecialPath->setText(tr("Set a path on save"));
+    // } else {
+    //     qCDebug(dsrApp) << "存在指定路径: " /*<< specialPath*/;
+    //     m_changeSaveToSpecialPath->setText(tr("Change the path on save"));
+    //     qCDebug(dsrApp) << "存在指定路径";
+    //     // 获取路径的最后一个文件夹名称和上一级文件夹名称
+    //     QFileInfo fileInfo(specialPath);
+    //     QString folderName = fileInfo.fileName();
+    //     QString parentDir = fileInfo.dir().dirName();
+
+    //     // 限制文件夹名称为10个字符
+    //     if (folderName.length() > 7) {
+    //         folderName = folderName.left(7) + "...";
+    //     }
+
+    //     // 格式为 /上级文件夹/本文件夹
+    //     QString displayPath = QString("/%1/%2").arg(parentDir).arg(folderName);
+
+    //     m_saveToSpecialPathAction->setText(displayPath);
+    //     m_saveToSpecialPathAction->setToolTip(specialPath);
+    //     m_saveToSpecialPathMenu->addAction(m_saveToSpecialPathAction);
+    // }
+
+    // 添加"保存时更新位置"选项
+    // m_saveToSpecialPathMenu->addAction(m_changeSaveToSpecialPath);
+
+    // 保存格式
+    QAction *formatTitleAction = new QAction(tr("Format"), m_optionMenu);
+    QAction *pngAction = new QAction(tr("PNG"), m_optionMenu);
+    QAction *jpgAction = new QAction(tr("JPG"), m_optionMenu);
+    QAction *bmpAction = new QAction(tr("BMP"), m_optionMenu);
+
+    // 显示鼠标光标
+    QAction *m_clipTitleAction = new QAction(tr("Options"), m_optionMenu);
+    m_clipTitleAction->setFont(titleActionFont);
+    QAction *m_saveCursorAction = new QAction(tr("Show pointer"), m_optionMenu);
+
+    // 边框样式
+    QAction *borderTitleAction = new QAction(tr("Border Effects"), m_optionMenu);
+    borderTitleAction->setFont(titleActionFont);
+    QAction *noBorderAction = new QAction(tr("None"), m_optionMenu);
+    ImageMenu *borderProjectionMenu = ImageBorderHelper::instance()->getBorderMenu(ImageBorderHelper::BorderType::Projection, tr("Shadow"), m_optionMenu);
+    ImageMenu *externalBorderMenu = ImageBorderHelper::instance()->getBorderMenu(ImageBorderHelper::BorderType::External, tr("Border"), m_optionMenu);
+    ImageMenu *borderPrototypeMenu = ImageBorderHelper::instance()->getBorderMenu(ImageBorderHelper::BorderType::Prototype, tr("Device"), m_optionMenu);
+
+    // Utils::setAccessibility(saveToDesktopAction, "saveToDesktopAction");
+    // Utils::setAccessibility(saveToPictureAction, "saveToPictureAction");
+    // Utils::setAccessibility(m_saveToSpecialPathMenu->menuAction(), "saveToSpecialPath");
+    // Utils::setAccessibility(saveToClipAction, "saveToClipAction");
+    Utils::setAccessibility(m_saveCursorAction, "saveCursorAction");
+    Utils::setAccessibility(pngAction, "pngAction");
+    Utils::setAccessibility(jpgAction, "jpgAction");
+    Utils::setAccessibility(bmpAction, "bmpAction");
+
+    // saveTitleAction->setDisabled(true);
+    // saveToDesktopAction->setCheckable(true);
+    // saveToPictureAction->setCheckable(true);
+    // specifiedLocationMenu->menuAction()->setCheckable(true);
+    // saveToClipAction->setCheckable(true);
+    // askEveryTimeAction->setCheckable(true);
+    
+    // 添加到保存选项组
+    // t_saveGroup->addAction(saveToClipAction);
+    // t_saveGroup->addAction(specifiedLocationMenu->menuAction());
+    // t_saveGroup->addAction(askEveryTimeAction);
+    
+    // 创建指定位置子菜单的选项组
+    // QActionGroup *specifiedLocationGroup = new QActionGroup(this);
+    // specifiedLocationGroup->setExclusive(true);
+    // specifiedLocationGroup->addAction(saveToDesktopAction);
+    // specifiedLocationGroup->addAction(saveToPictureAction);
+    // specifiedLocationGroup->addAction(m_saveToSpecialPathMenu->menuAction());
+    
+    // 创建自定义位置子菜单的选项组
+    // QActionGroup *customLocationGroup = new QActionGroup(this);
+    // customLocationGroup->setExclusive(true);
+    // if (!specialPath.isEmpty() && QFileInfo::exists(specialPath)) {
+    //     customLocationGroup->addAction(m_saveToSpecialPathAction);
+    // }
+    // customLocationGroup->addAction(m_changeSaveToSpecialPath);
+
+    formatTitleAction->setDisabled(true);
+    formatTitleAction->setFont(titleActionFont);
+    pngAction->setCheckable(true);
+    jpgAction->setCheckable(true);
+    bmpAction->setCheckable(true);
+    t_formatGroup->addAction(pngAction);
+    t_formatGroup->addAction(jpgAction);
+    t_formatGroup->addAction(bmpAction);
+
+    m_clipTitleAction->setDisabled(true);
+    m_saveCursorAction->setCheckable(true);
+
+    borderTitleAction->setDisabled(true);
+    noBorderAction->setCheckable(true);
+    noBorderAction->setChecked(true);
+
+    // 创建边框顶级菜单的互斥ActionGroup
+    QActionGroup *borderMenuGroup = new QActionGroup(this);
+    borderMenuGroup->setExclusive(true);
+    borderMenuGroup->addAction(noBorderAction);
+    borderMenuGroup->addAction(borderProjectionMenu->menuAction());
+    borderMenuGroup->addAction(externalBorderMenu->menuAction());
+    borderMenuGroup->addAction(borderPrototypeMenu->menuAction());
+    
+    // 设置边框菜单项为可选中状态
+    borderProjectionMenu->menuAction()->setCheckable(true);
+    externalBorderMenu->menuAction()->setCheckable(true);
+    borderPrototypeMenu->menuAction()->setCheckable(true);
+
+    // 添加到指定位置子菜单
+    // specifiedLocationMenu->addAction(saveToDesktopAction);
+    // specifiedLocationMenu->addAction(saveToPictureAction);
+    // specifiedLocationMenu->addMenu(m_saveToSpecialPathMenu);
+    
+    // 添加到主菜单
+    // m_optionMenu->addAction(saveTitleAction);
+    // m_optionMenu->addMenu(specifiedLocationMenu);
+    // m_optionMenu->addAction(askEveryTimeAction);
+    // m_optionMenu->addSeparator();
+
+    // 边框样式
+    m_optionMenu->addAction(borderTitleAction);
+    m_optionMenu->addAction(noBorderAction);
+    m_optionMenu->addMenu(borderProjectionMenu);
+    m_optionMenu->addMenu(externalBorderMenu);
+    m_optionMenu->addMenu(borderPrototypeMenu);
+    m_optionMenu->addSeparator();
+
+    // 保存格式
+    m_optionMenu->addAction(formatTitleAction);
+    m_optionMenu->addAction(pngAction);
+    m_optionMenu->addAction(jpgAction);
+    m_optionMenu->addAction(bmpAction);
+    m_optionMenu->addSeparator();
+
+    // 保存光标
+    m_optionMenu->addAction(m_clipTitleAction);
+    m_optionMenu->addAction(m_saveCursorAction);
+    m_optionMenu->hide();
+
+    m_shotOptionButton->setMenu(m_optionMenu);
+    m_shotOptionButton->setPopupMode(QToolButton::InstantPopup);
+
+    if (Utils::isTreelandMode) {
+
+    connect(m_optionMenu, &DMenu::aboutToShow, this, [this]() {
+        qWarning() << "截图设置按钮被点击，菜单即将显示！";
+        emit shotOptionMenuShown();
+    });
+
+    }
+
+    // 判断上次是选中的指定位置还是每次都询问
+    // SaveWays t_saveWays = ConfigSettings::instance()->getValue("shot", "save_ways").value<SaveWays>();
+    // qWarning() << "t_saveWays: "<<t_saveWays;
+    // switch (t_saveWays) {
+
+    // case Ask:{
+    //     askEveryTimeAction->setChecked(true);
+    //     qWarning() << "set check  SaveWays::Ask";
+    // }
+    //     break;
+    // case SpecifyLocation: {
+    //     specifiedLocationMenu->menuAction()->setChecked(true);
+    //     // 根据配置，初始化Action状态
+    //     qWarning() << "SpecifyLocation: "<<SpecifyLocation;
+    //     SaveAction t_saveIndex = ConfigSettings::instance()->getValue("shot", "save_op").value<SaveAction>();
+
+    //     // 恢复指定位置的保存位置
+    //     switch (t_saveIndex) {
+    //     case SaveToDesktop: {
+    //         saveToDesktopAction->setChecked(true);
+    //         break;
+    //     }
+    //     case SaveToImage: {
+    //         saveToPictureAction->setChecked(true);
+    //         break;
+    //     }
+    //     case SaveToSpecificDir:
+    //     default:{
+    //         m_saveToSpecialPathMenu->menuAction()->setChecked(true);
+    //         bool isChangeSpecificDir = ConfigSettings::instance()->getValue("shot", "save_dir_change").value<bool>();
+    //         if (specialPath.isEmpty() || isChangeSpecificDir || !QFileInfo::exists(specialPath)) {
+    //             m_changeSaveToSpecialPath->setChecked(true);
+    //             ConfigSettings::instance()->setValue("shot", "save_dir_change", true);
+    //         } else if (!specialPath.isEmpty() && QFileInfo::exists(specialPath)) {
+    //             m_saveToSpecialPathAction->setChecked(true);
+    //             ConfigSettings::instance()->setValue("shot", "save_dir_change", false);
+    //         }
+    //         break;
+    //     }
+    //     }
+    // }
+    //     break;
+    // default:
+    //     break;
+    // }
+
+
+    // 保存选项组的信号连接
+    // connect(t_saveGroup, QOverload<QAction *>::of(&QActionGroup::triggered),
+    // [ = ](QAction * t_act) {
+    //     if (t_act == specifiedLocationMenu->menuAction()) {
+    //         qWarning()<<"save to memue triggered";
+            
+    //         // 检查是否有子菜单项被选中
+    //         bool hasSubItemChecked = saveToDesktopAction->isChecked() ||
+    //                                saveToPictureAction->isChecked() ||
+    //                                m_saveToSpecialPathMenu->menuAction()->isChecked();
+            
+    //         // 只有当有子项被选中时，才能选中指定位置
+    //         if (hasSubItemChecked) {
+    //             ConfigSettings::instance()->setValue("shot", "save_ways", SaveWays::SpecifyLocation);
+    //             askEveryTimeAction->setChecked(false);
+                
+    //             // 根据已选中的子菜单项设置保存位置
+    //             if (saveToDesktopAction->isChecked()) {
+    //                 ConfigSettings::instance()->setValue("shot", "save_op", SaveAction::SaveToDesktop);
+    //             } else if (saveToPictureAction->isChecked()) {
+    //                 ConfigSettings::instance()->setValue("shot", "save_op", SaveAction::SaveToImage);
+    //                 qWarning() << "save_op SaveToImage";
+    //             } else if (m_saveToSpecialPathMenu->menuAction()->isChecked()) {
+    //                 ConfigSettings::instance()->setValue("shot", "save_op", SaveAction::SaveToSpecificDir);
+    //                 qWarning() << "save_op SaveAction::SaveToSpecificDir";
+    //             }
+    //         } else {
+    //             // 如果没有子项被选中，恢复"每次询问"的选中状态
+    //             specifiedLocationMenu->menuAction()->setChecked(false);
+    //             askEveryTimeAction->setChecked(true);
+    //             return; // 不保存设置，保持原状态
+    //         }
+    //     } else if (t_act == askEveryTimeAction) {
+    //         ConfigSettings::instance()->setValue("shot", "save_ways", SaveWays::Ask);
+            
+    //         // 选择"每次询问"时，清空所有指定位置的子选项
+    //         saveToDesktopAction->setChecked(false);
+    //         saveToPictureAction->setChecked(false);
+    //         m_saveToSpecialPathMenu->menuAction()->setChecked(false);
+    //         // 清空自定义位置的子选项
+    //         if (m_saveToSpecialPathAction) {
+    //             m_saveToSpecialPathAction->setChecked(false);
+    //         }
+    //         m_changeSaveToSpecialPath->setChecked(false);
+    //         qCDebug(dsrApp) << "已清空所有指定位置子选项";
+            
+    //         m_optionMenu->hide();
+    //     }
+        
+    //     // 更新保存按钮提示
+    //     updateSaveButtonTip();
+    // });
+
+    // 指定位置子菜单的信号连接
+    // connect(specifiedLocationGroup, QOverload<QAction *>::of(&QActionGroup::triggered),
+    // [ = ](QAction * t_act) {
+    //     specifiedLocationMenu->menuAction()->setChecked(true);
+    //     qWarning()<<"save to memue triggered";
+    //     ConfigSettings::instance()->setValue("shot", "save_ways", SaveWays::SpecifyLocation);
+        
+    //     if (t_act == saveToDesktopAction) {
+    //         ConfigSettings::instance()->setValue("shot", "save_op", SaveAction::SaveToDesktop);
+            
+    //         // 选择桌面时，清空自定义位置的所有子选项
+    //         m_saveToSpecialPathMenu->menuAction()->setChecked(false);
+    //         if (m_saveToSpecialPathAction) {
+    //             m_saveToSpecialPathAction->setChecked(false);
+    //         }
+    //         m_changeSaveToSpecialPath->setChecked(false);
+    //         qCDebug(dsrApp) << "选择桌面，已清空自定义位置选项";
+            
+    //     } else if (t_act == saveToPictureAction) {
+    //         ConfigSettings::instance()->setValue("shot", "save_op", SaveAction::SaveToImage);
+    //         qWarning() << "save_op SaveToImage";
+            
+    //         // 选择图片时，清空自定义位置的所有子选项
+    //         m_saveToSpecialPathMenu->menuAction()->setChecked(false);
+    //         if (m_saveToSpecialPathAction) {
+    //             m_saveToSpecialPathAction->setChecked(false);
+    //         }
+    //         m_changeSaveToSpecialPath->setChecked(false);
+    //         qCDebug(dsrApp) << "选择图片文件夹，已清空自定义位置选项";
+            
+    //     } else if (t_act == m_saveToSpecialPathMenu->menuAction()) {
+    //         ConfigSettings::instance()->setValue("shot", "save_op", SaveAction::SaveToSpecificDir);
+            
+    //         // 选择自定义位置菜单时，清空桌面和图片选项
+    //         saveToDesktopAction->setChecked(false);
+    //         saveToPictureAction->setChecked(false);
+    //         qCDebug(dsrApp) << "选择自定义位置，已清空桌面和图片选项";
+            
+    //         // 检查自定义位置菜单是否有子项选中，如果没有则自动选中默认项
+    //         bool hasCustomSubItemChecked = (m_saveToSpecialPathAction && m_saveToSpecialPathAction->isChecked()) ||
+    //                                      m_changeSaveToSpecialPath->isChecked();
+            
+    //         if (!hasCustomSubItemChecked) {
+    //             // 没有子项被选中，自动选中"保存时更新位置"作为默认项
+    //             m_changeSaveToSpecialPath->setChecked(true);
+    //             ConfigSettings::instance()->setValue("shot", "save_dir_change", true);
+    //             qCDebug(dsrApp) << "自动选中'保存时更新位置'作为默认项";
+    //         }
+    //     }
+        
+    //     // 更新保存按钮提示
+    //     updateSaveButtonTip();
+    // });
+
+    // 自定义位置子菜单的信号连接
+    // connect(customLocationGroup, QOverload<QAction *>::of(&QActionGroup::triggered),
+    // [ = ](QAction * t_act) {
+    //     ConfigSettings::instance()->setValue("shot", "save_ways", SaveWays::SpecifyLocation);
+    //     specifiedLocationMenu->menuAction()->setChecked(true);
+    //     m_saveToSpecialPathMenu->menuAction()->setChecked(true);
+    //     ConfigSettings::instance()->setValue("shot", "save_op", SaveAction::SaveToSpecificDir);
+        
+    //     // 选择自定义位置的子项时，清空同级的桌面和图片选项
+    //     saveToDesktopAction->setChecked(false);
+    //     saveToPictureAction->setChecked(false);
+    //     qCDebug(dsrApp) << "选择自定义位置子项，已清空桌面和图片选项";
+        
+    //     if (t_act == m_changeSaveToSpecialPath) {
+    //         qCDebug(dsrApp) << ">>>>>>>>>>> 保存时更新位置";
+    //         ConfigSettings::instance()->setValue("shot", "save_dir_change", true);
+    //     } else if (t_act == m_saveToSpecialPathAction) {
+    //         qCDebug(dsrApp) << ">>>>>>>>>>> 使用上次保存位置";
+    //         ConfigSettings::instance()->setValue("shot", "save_dir_change", false);
+    //     }
+        
+    //     // 更新保存按钮提示
+    //     updateSaveButtonTip();
+    //     m_optionMenu->hide();
+    // });
+
+    int t_pictureFormat = ConfigSettings::instance()->getValue("shot", "format").toInt();
+    switch (t_pictureFormat) {
+    case 1:
+        jpgAction->setChecked(true);
+        break;
+    case 2:
+        bmpAction->setChecked(true);
+        break;
+    default:
+        pngAction->setChecked(true);
+    }
+
+    connect(t_formatGroup, QOverload<QAction *>::of(&QActionGroup::triggered),
+    [ = ](QAction * t_act) {
+        if (t_act == pngAction) {
+            ConfigSettings::instance()->setValue("shot", "format", 0);
+        } else if (t_act == jpgAction) {
+            ConfigSettings::instance()->setValue("shot", "format", 1);
+        } else if (t_act == bmpAction) {
+            ConfigSettings::instance()->setValue("shot", "format", 2);
+        }
+    });
+
+    int t_saveCursor = ConfigSettings::instance()->getValue("shot", "save_cursor").toInt();
+
+    switch (t_saveCursor) {
+    case 1:
+        m_saveCursorAction->setChecked(true);
+        break;
+    default:
+        m_saveCursorAction->setChecked(false);
+    }
+
+    int border_index = ConfigSettings::instance()->getValue("shot", "border_index").toInt();
+    if (border_index != ImageBorderHelper::Nothing) {
+        noBorderAction->setChecked(false);
+        ImageBorderHelper::instance()->setBorderTypeDetail(border_index);
+        
+        ImageBorderHelper::BorderType borderType = static_cast<ImageBorderHelper::BorderType>(border_index >> 8);
+        switch (borderType) {
+        case ImageBorderHelper::BorderType::External:
+            externalBorderMenu->menuAction()->setChecked(true);
+            break;
+        case ImageBorderHelper::BorderType::Prototype:
+            borderPrototypeMenu->menuAction()->setChecked(true);
+            break;
+        case ImageBorderHelper::BorderType::Projection:
+            borderProjectionMenu->menuAction()->setChecked(true);
+            break;
+        default:
+            break;
+        }
+    }
+
+    connect(m_saveCursorAction, &QAction::triggered, [ = ] {
+        ConfigSettings::instance()->setValue("shot", "save_cursor", m_saveCursorAction->isChecked() ? 1 : 0);
+    });
+
+    // pass "this" as the context object so the connection is disconnected
+    // automatically when this widget is destroyed; otherwise the singleton
+    // sender outlives the lambda and dereferences dangling QAction pointers
+    connect(ImageBorderHelper::instance(), &ImageBorderHelper::updateBorderState, this, [ = ](bool hasBorderChecked) {
+        noBorderAction->setChecked(!hasBorderChecked);
+        
+        // 当有边框被选中时，选中对应的顶级菜单
+        if (hasBorderChecked) {
+            int border_index = ImageBorderHelper::instance()->getBorderTypeDetail();
+            ImageBorderHelper::BorderType borderType = static_cast<ImageBorderHelper::BorderType>(border_index >> 8);
+            
+            switch (borderType) {
+            case ImageBorderHelper::BorderType::External:
+                externalBorderMenu->menuAction()->setChecked(true);
+                break;
+            case ImageBorderHelper::BorderType::Prototype:
+                borderPrototypeMenu->menuAction()->setChecked(true);
+                break;
+            case ImageBorderHelper::BorderType::Projection:
+                borderProjectionMenu->menuAction()->setChecked(true);
+                break;
+            default:
+                break;
+            }
+        }
+    });
+    
+    // 拦截顶级边框菜单的点击事件，只允许通过子项选中来联动
+    connect(borderMenuGroup, QOverload<QAction *>::of(&QActionGroup::triggered), [ = ](QAction * action) {
+        if (action == noBorderAction) {
+            // "无边框"可以直接点击选中
+            ConfigSettings::instance()->setValue("shot", "border_index", 0);
+            ImageBorderHelper::instance()->setActionState(ImageBorderHelper::BorderType::Nothing, false);
+        } else {
+            // 其他边框顶级菜单不能直接被选中，恢复之前的状态
+            qCDebug(dsrApp) << "Border top-level menu clicked, but should only be selected via sub-items";
+            
+            // 恢复到当前实际的状态
+            int current_border_index = ConfigSettings::instance()->getValue("shot", "border_index").toInt();
+            if (current_border_index == 0) {
+                noBorderAction->setChecked(true);
+            } else {
+                ImageBorderHelper::BorderType currentType = static_cast<ImageBorderHelper::BorderType>(current_border_index >> 8);
+                switch (currentType) {
+                case ImageBorderHelper::BorderType::External:
+                    externalBorderMenu->menuAction()->setChecked(true);
+                    break;
+                case ImageBorderHelper::BorderType::Prototype:
+                    borderPrototypeMenu->menuAction()->setChecked(true);
+                    break;
+                case ImageBorderHelper::BorderType::Projection:
+                    borderProjectionMenu->menuAction()->setChecked(true);
+                    break;
+                default:
+                    noBorderAction->setChecked(true);
+                    break;
+                }
+            }
+        }
+    });
+
+    connect(noBorderAction, &QAction::triggered, [ = ] {
+        qCDebug(dsrApp) << __FUNCTION__ << __LINE__ << noBorderAction->isChecked();
+        if (noBorderAction->isChecked())
+        {
+            ConfigSettings::instance()->setValue("shot", "border_index", 0);
+            ImageBorderHelper::instance()->setActionState(ImageBorderHelper::BorderType::Nothing,  false);
+        }
+    });
+    qCDebug(dsrApp) << "截图工具栏选项UI已初始化";
+    updateSaveButtonTip();
+}
+
+void SubToolWidget::initScrollLabel()
+{
+    qCDebug(dsrApp) << "正在初始化滚动截图工具栏UI...";
+    m_scrollSubTool = new DLabel(this);
+    QList<ToolButton *> btnList;
+
+    QButtonGroup *scrollBtnGroup = new QButtonGroup(this);
+    scrollBtnGroup->setExclusive(true);
+
+    // AI 助手（滚动截图工具栏首位）
+    m_aiAssistantScrollButton = new ToolButton();
+    m_aiAssistantScrollButton->setObjectName("AiAssistantScrollButton");
+    m_aiAssistantScrollButton->setAccessibleName("AiAssistantScrollButton");
+    m_aiAssistantScrollButton->setIconSize(SMALL_TOOL_ICON_SIZE);
+    m_aiAssistantScrollButton->setIcon(QIcon::fromTheme("ai_assistant"));
+    // 设置常驻的 AI Icon 角标
+    QString scrollBadgePath = ":/icons/deepin/builtin/texts/ai_badge_32px.svg";
+    m_aiAssistantScrollButton->setBadgeIcon(scrollBadgePath);
+    m_aiAssistantScrollButton->setBadgeSize(QSize(10, 7));  // AI badge 的实际尺寸
+    
+    Utils::setAccessibility(m_aiAssistantScrollButton, AC_SUBTOOLWIDGET_AI_ASSISTANT_BUTTON);
+    m_aiAssistantScrollButton->setFixedSize(TOOL_BUTTON_SIZE);
+    installTipHint(m_aiAssistantScrollButton, tr("AI Screenshot (A)"));
+    scrollBtnGroup->addButton(m_aiAssistantScrollButton);
+    btnList.append(m_aiAssistantScrollButton);
+    connect(m_aiAssistantScrollButton, &ToolButton::clicked, this, [=]{
+        emit changeShotToolFunc("aiassistant");
+    });
+    if (!DBusUtils::isAiAssistantAvailable())
+        m_aiAssistantScrollButton->hide();
+
+    //文字识别按钮
+    m_ocrScrollButton = new ToolButton();
+    m_ocrScrollButton->setObjectName("OcrScrollButton");
+    m_ocrScrollButton->setAccessibleName("OcrScrollButton");
+    Utils::setAccessibility(m_ocrScrollButton, AC_SUBTOOLWIDGET_KEYBOARD_BUTTON);
+    m_ocrScrollButton->setIconSize(TOOL_ICON_SIZE);
+    installTipHint(m_ocrScrollButton,  tr("Extract Text"));
+    m_ocrScrollButton->setIcon(QIcon::fromTheme("ocr-normal"));
+    m_ocrScrollButton->setFixedSize(TOOL_BUTTON_SIZE);
+    btnList.append(m_ocrScrollButton);
+    connect(m_ocrScrollButton, &DPushButton::clicked, this, [ = ] {
+        emit changeShotToolFunc("ocr");
+    });
+
+    //滚动截图选项
+    m_scrollOptionButton = new ToolButton();
+    m_scrollOptionButton->setObjectName("ScrollOptionButton");
+    m_scrollOptionButton->setAccessibleName("ScrollOptionButton");
+    m_scrollOptionButton->setCheckable(false);
+    m_scrollOptionButton->setIconSize(QSize(24,24));
+    m_scrollOptionButton->setFixedSize(TOOL_BUTTON_SIZE);
+    m_scrollOptionButton->setIcon(QIcon::fromTheme("setting"));
+
+    Utils::setAccessibility(m_scrollOptionButton, AC_SUBTOOLWIDGET_RECORD_OPTION_BUT);
+    installTipHint(m_scrollOptionButton, tr("Settings"));
+    
+    btnList.append(m_scrollOptionButton);
+
+    m_saveLocalDirButton = new SaveButton();
+    m_saveLocalDirButton->setCheckable(false);
+    updateSaveButtonTip();
+    m_saveLocalDirButton->installEventFilter(this);
+    m_saveLocalDirButton->setIcon(QIcon::fromTheme("save"));
+    Utils::setAccessibility(m_saveLocalDirButton, AC_SUBTOOLWIDGET_SAVETOLOCAL_BUTTON);
+    
+    // 创建并设置保存菜单管理器
+    SaveMenuManager *scrollSaveMenuManager = new SaveMenuManager(this);
+    m_saveLocalDirButton->setOptionsMenu(scrollSaveMenuManager->getMenu());
+    // 连接保存选项改变信号，更新tooltip
+    connect(scrollSaveMenuManager, &SaveMenuManager::saveOptionChanged, this, &SubToolWidget::updateSaveButtonTip);
+    
+    m_shotBtnGroup->addButton(m_saveLocalDirButton);
+    // m_saveLocalDirButton->setFixedSize(TOOL_BUTTON_SIZE);
+    btnList.append(m_saveLocalDirButton);
+    connect(m_saveLocalDirButton, &SaveButton::clicked, m_pMainWindow, &MainWindow::saveScreenShotToFile);
+
+    m_saveSeperatorBeg = new DVerticalLine(this);
+    m_saveSeperatorEnd = new DVerticalLine(this);
+    m_saveSeperatorBeg->setFixedSize(QSize(3, 26));
+    m_saveSeperatorEnd->setFixedSize(QSize(3, 26));
+    
+    QHBoxLayout *rectLayout = new QHBoxLayout();
+    rectLayout->setSizeConstraint(QLayout::SetMinimumSize);
+    rectLayout->setContentsMargins(0, 0, 0, 0);
+    rectLayout->setSpacing(0);
+    rectLayout->setAlignment(Qt::AlignVCenter);
+    rectLayout->addSpacing(10);
+    for (int i = 0; i < btnList.length(); i++) {
+        if (btnList[i] == m_scrollOptionButton) {
+            rectLayout->addSpacing(6);
+            rectLayout->addWidget(m_saveSeperatorBeg);
+            rectLayout->setAlignment(m_saveSeperatorBeg, Qt::AlignVCenter);
+            rectLayout->addSpacing(6);
+        }
+        
+        rectLayout->addWidget(btnList[i]);
+        rectLayout->setAlignment(btnList[i], Qt::AlignVCenter);
+        
+        if (btnList[i] == m_saveLocalDirButton) {
+            rectLayout->addSpacing(6);
+            rectLayout->addWidget(m_saveSeperatorEnd);
+            rectLayout->setAlignment(m_saveSeperatorEnd, Qt::AlignVCenter);
+        }
+    }
+    m_scrollSubTool->setLayout(rectLayout);
+    addWidget(m_scrollSubTool);
+
+
+    QActionGroup *t_saveGroup = new QActionGroup(this);
+    QActionGroup *t_formatGroup = new QActionGroup(this);
+    t_saveGroup->setExclusive(true);
+    t_formatGroup->setExclusive(true);
+
+    m_scrollOptionMenu = new DMenu(this);
+    m_scrollOptionMenu->setObjectName("ScrollOptionMenu");
+    m_scrollOptionMenu->setAccessibleName("ScrollOptionMenu");
+    m_scrollOptionMenu->installEventFilter(this);
+    DFontSizeManager::instance()->bind(m_scrollOptionMenu, DFontSizeManager::T6);
+
+    // 保存位置
+    // QAction *saveTitleAction = new QAction(tr("Save to"), m_scrollOptionMenu);
+    // saveTitleAction->setFont(titleActionFont);
+    // QAction *saveToClipAction = new QAction(tr("Clipboard"), m_scrollOptionMenu);
+    
+    // 创建指定位置子菜单
+    // DMenu *specifiedLocationMenu = new DMenu(m_scrollOptionMenu);
+    // specifiedLocationMenu->installEventFilter(this);
+    // specifiedLocationMenu->setTitle(tr("Specified Location"));
+    // specifiedLocationMenu->setToolTipsVisible(true);
+    // specifiedLocationMenu->menuAction()->setCheckable(true);
+    // DFontSizeManager::instance()->bind(specifiedLocationMenu, DFontSizeManager::T6);
+    
+    // 指定位置子菜单项
+    // QAction *saveToDesktopAction = new QAction(tr("Desktop"), specifiedLocationMenu);
+    // QAction *saveToPictureAction = new QAction(tr("Pictures"), specifiedLocationMenu);
+    
+    // 创建自定义位置子菜单
+    // m_scrollSaveToSpecialPathMenu = new DMenu(specifiedLocationMenu);
+    // m_scrollSaveToSpecialPathMenu->setObjectName("ScrollSaveToSpecialPathMenu");
+    // m_scrollSaveToSpecialPathMenu->setAccessibleName("ScrollSaveToSpecialPathMenu");
+    // m_scrollSaveToSpecialPathMenu->installEventFilter(this);
+    // m_scrollSaveToSpecialPathMenu->setTitle(tr("Custom Location"));
+    // m_scrollSaveToSpecialPathMenu->setToolTipsVisible(true);
+    // m_scrollSaveToSpecialPathMenu->menuAction()->setCheckable(true);
+    // DFontSizeManager::instance()->bind(m_scrollSaveToSpecialPathMenu, DFontSizeManager::T6);
+    
+    // 每次询问选项
+    // QAction *askEveryTimeAction = new QAction(tr("Each inquiry"), m_scrollOptionMenu);
+    
+    // 设置自定义位置子菜单项
+    // QString specialPath = ConfigSettings::instance()->getValue("shot", "save_dir").value<QString>();
+    
+    // 上次保存位置
+    // m_scrollSaveToSpecialPathAction = new QAction(m_scrollSaveToSpecialPathMenu);
+    // m_scrollSaveToSpecialPathAction->setObjectName("ScrollSaveToSpecialPathAction");
+    // m_scrollSaveToSpecialPathAction->setCheckable(true);
+    
+    // 保存时更新位置
+    // m_scrollChangeSaveToSpecialPath = new QAction(tr("Set a path on save"), m_scrollSaveToSpecialPathMenu);
+    // m_scrollChangeSaveToSpecialPath->setObjectName("ScrollChangeSaveToSpecialPath");
+    // m_scrollChangeSaveToSpecialPath->setCheckable(true);
+    
+    // 如果有保存路径，显示上次保存位置
+    // if (!specialPath.isEmpty() && QFileInfo::exists(specialPath)) {
+    //     qCDebug(dsrApp) << "存在指定路径";
+    //     // 获取路径的最后一个文件夹名称和上一级文件夹名称
+    //     QFileInfo fileInfo(specialPath);
+    //     QString folderName = fileInfo.fileName();
+    //     QString parentDir = fileInfo.dir().dirName();
+        
+    //     // 限制文件夹名称为10个字符
+    //     if (folderName.length() > 7) {
+    //         folderName = folderName.left(7) + "...";
+    //     }
+        
+    //     // 格式为 /上级文件夹/本文件夹
+    //     QString displayPath = QString("/%1/%2").arg(parentDir).arg(folderName);
+        
+    //     m_scrollSaveToSpecialPathAction->setText(displayPath);
+    //     m_scrollSaveToSpecialPathAction->setToolTip(specialPath);
+    //     m_scrollSaveToSpecialPathMenu->addAction(m_scrollSaveToSpecialPathAction);
+    // }
+    
+    // // 添加"保存时更新位置"选项
+    // m_scrollSaveToSpecialPathMenu->addAction(m_scrollChangeSaveToSpecialPath);
+
+    // // 保存格式
+    QAction *formatTitleAction = new QAction(tr("Format"), m_scrollOptionMenu);
+    formatTitleAction->setFont(titleActionFont);
+    QAction *pngAction = new QAction(tr("PNG"), m_scrollOptionMenu);
+    QAction *jpgAction = new QAction(tr("JPG"), m_scrollOptionMenu);
+    QAction *bmpAction = new QAction(tr("BMP"), m_scrollOptionMenu);
+
+    // // 添加到指定位置子菜单
+    // // specifiedLocationMenu->addAction(saveToClipAction);
+    // specifiedLocationMenu->addAction(saveToDesktopAction);
+    // specifiedLocationMenu->addAction(saveToPictureAction);
+    // specifiedLocationMenu->addMenu(m_scrollSaveToSpecialPathMenu);
+    
+    // // 添加到主菜单
+    // m_scrollOptionMenu->addAction(saveTitleAction);
+    // m_scrollOptionMenu->addMenu(specifiedLocationMenu);
+    // m_scrollOptionMenu->addAction(askEveryTimeAction);
+    // m_scrollOptionMenu->addSeparator();
+
+    // 保存格式
+    m_scrollOptionMenu->addAction(formatTitleAction);
+    m_scrollOptionMenu->addAction(pngAction);
+    m_scrollOptionMenu->addAction(jpgAction);
+    m_scrollOptionMenu->addAction(bmpAction);
+
+    // saveTitleAction->setDisabled(true);
+    // saveToDesktopAction->setCheckable(true);
+    // saveToPictureAction->setCheckable(true);
+    // specifiedLocationMenu->menuAction()->setCheckable(true);
+    // // saveToClipAction->setCheckable(true);
+    // askEveryTimeAction->setCheckable(true);
+    
+    // // 添加到保存选项组
+    // // t_saveGroup->addAction(saveToClipAction);
+    // t_saveGroup->addAction(specifiedLocationMenu->menuAction());
+    // t_saveGroup->addAction(askEveryTimeAction);
+    
+    // // 创建指定位置子菜单的选项组
+    // QActionGroup *specifiedLocationGroup = new QActionGroup(this);
+    // specifiedLocationGroup->setExclusive(true);
+    // specifiedLocationGroup->addAction(saveToDesktopAction);
+    // specifiedLocationGroup->addAction(saveToPictureAction);
+    // specifiedLocationGroup->addAction(m_scrollSaveToSpecialPathMenu->menuAction());
+    
+    // // 创建自定义位置子菜单的选项组
+    // QActionGroup *customLocationGroup = new QActionGroup(this);
+    // customLocationGroup->setExclusive(true);
+    // if (!specialPath.isEmpty() && QFileInfo::exists(specialPath)) {
+    //     customLocationGroup->addAction(m_scrollSaveToSpecialPathAction);
+    // }
+    // customLocationGroup->addAction(m_scrollChangeSaveToSpecialPath);
+
+    formatTitleAction->setDisabled(true);
+    pngAction->setCheckable(true);
+    jpgAction->setCheckable(true);
+    bmpAction->setCheckable(true);
+    t_formatGroup->addAction(pngAction);
+    t_formatGroup->addAction(jpgAction);
+    t_formatGroup->addAction(bmpAction);
+
+    m_scrollOptionButton->setMenu(m_scrollOptionMenu);
+    m_scrollOptionButton->setPopupMode(QToolButton::InstantPopup);
+    // // 判断上次是选中的指定位置还是每次都询问
+    // SaveWays t_saveWays = ConfigSettings::instance()->getValue("shot", "save_ways").value<SaveWays>();
+    // qWarning() << "t_saveWays: "<<t_saveWays;
+    // switch (t_saveWays) {
+
+    // case Ask:{
+    //     askEveryTimeAction->setChecked(true);
+    //     qWarning() << "set check  SaveWays::Ask";
+    // }
+    //     break;
+    // case SpecifyLocation: {
+    //     specifiedLocationMenu->menuAction()->setChecked(true);
+    // }
+    //     break;
+    // default:
+    //     break;
+    // }
+    // // 根据配置，初始化Action状态
+    // SaveAction t_saveIndex = ConfigSettings::instance()->getValue("shot", "save_op").value<SaveAction>();
+    // switch (t_saveIndex) {
+    // case SaveToDesktop: {
+    //     // specifiedLocationMenu->menuAction()->setChecked(true);
+    //     saveToDesktopAction->setChecked(true);
+    //     break;
+    // }
+    // case SaveToImage: {
+    //     // specifiedLocationMenu->menuAction()->setChecked(true);
+    //     saveToPictureAction->setChecked(true);
+    //     break;
+    // }
+    // case SaveToSpecificDir:
+    // default: {
+    //     m_scrollSaveToSpecialPathMenu->menuAction()->setChecked(true);
+    //     bool isChangeSpecificDir = ConfigSettings::instance()->getValue("shot", "save_dir_change").value<bool>();
+    //     if (specialPath.isEmpty() || isChangeSpecificDir || !QFileInfo::exists(specialPath)) {
+    //         m_scrollChangeSaveToSpecialPath->setChecked(true);
+    //     } else if (!specialPath.isEmpty() && QFileInfo::exists(specialPath)) {
+    //         m_scrollChangeSaveToSpecialPath->setText(tr("Update location on save"));
+    //         m_scrollSaveToSpecialPathAction->setChecked(true);
+    //     }
+    //     break;
+    // }
+    // }
+
+    // // 保存选项组的信号连接
+    // connect(t_saveGroup, QOverload<QAction *>::of(&QActionGroup::triggered),
+    // [ = ](QAction * t_act) {
+    //     if (t_act == specifiedLocationMenu->menuAction()) {
+    //         // 当选择指定位置时，根据子菜单选中项设置保存位置
+    //         ConfigSettings::instance()->setValue("shot", "save_ways", SaveWays::SpecifyLocation);
+    //         if (saveToDesktopAction->isChecked()) {
+    //             ConfigSettings::instance()->setValue("shot", "save_op", SaveAction::SaveToDesktop);
+    //         } else if (saveToPictureAction->isChecked()) {
+    //             ConfigSettings::instance()->setValue("shot", "save_op", SaveAction::SaveToImage);
+    //             qWarning() << "save_op SaveToImage";
+    //         } else if (m_scrollSaveToSpecialPathMenu->menuAction()->isChecked()) {
+    //             ConfigSettings::instance()->setValue("shot", "save_op", SaveAction::SaveToSpecificDir);
+    //         }
+    //     } else if (t_act == askEveryTimeAction) {
+    //         ConfigSettings::instance()->setValue("shot", "save_ways", SaveWays::Ask);
+            
+    //         // 选择"每次询问"时，清空所有指定位置的子选项
+    //         saveToDesktopAction->setChecked(false);
+    //         saveToPictureAction->setChecked(false);
+    //         m_scrollSaveToSpecialPathMenu->menuAction()->setChecked(false);
+    //         // 清空自定义位置的子选项
+    //         if (m_scrollSaveToSpecialPathAction) {
+    //             m_scrollSaveToSpecialPathAction->setChecked(false);
+    //         }
+    //         m_scrollChangeSaveToSpecialPath->setChecked(false);
+    //         qCDebug(dsrApp) << "滚动截图：已清空所有指定位置子选项";
+            
+    //         m_scrollOptionMenu->hide();
+    //     }
+    //     updateSaveButtonTip();
+    // });
+
+    // 指定位置子菜单的信号连接
+    // connect(specifiedLocationGroup, QOverload<QAction *>::of(&QActionGroup::triggered),
+    // [ = ](QAction * t_act) {
+    //     specifiedLocationMenu->menuAction()->setChecked(true);
+    //     ConfigSettings::instance()->setValue("shot", "save_ways", SaveWays::SpecifyLocation);
+        
+    //     if (t_act == saveToDesktopAction) {
+    //         ConfigSettings::instance()->setValue("shot", "save_op", SaveAction::SaveToDesktop);
+            
+    //         // 选择桌面时，清空自定义位置的所有子选项
+    //         m_scrollSaveToSpecialPathMenu->menuAction()->setChecked(false);
+    //         if (m_scrollSaveToSpecialPathAction) {
+    //             m_scrollSaveToSpecialPathAction->setChecked(false);
+    //         }
+    //         m_scrollChangeSaveToSpecialPath->setChecked(false);
+    //         qCDebug(dsrApp) << "滚动截图：选择桌面，已清空自定义位置选项";
+            
+    //         m_scrollOptionMenu->hide(); // 关闭菜单
+    //     } else if (t_act == saveToPictureAction) {
+    //         ConfigSettings::instance()->setValue("shot", "save_op", SaveAction::SaveToImage);
+    //         qWarning() << "save_op SaveToImage";
+            
+    //         // 选择图片时，清空自定义位置的所有子选项
+    //         m_scrollSaveToSpecialPathMenu->menuAction()->setChecked(false);
+    //         if (m_scrollSaveToSpecialPathAction) {
+    //             m_scrollSaveToSpecialPathAction->setChecked(false);
+    //         }
+    //         m_scrollChangeSaveToSpecialPath->setChecked(false);
+    //         qCDebug(dsrApp) << "滚动截图：选择图片文件夹，已清空自定义位置选项";
+            
+    //         m_scrollOptionMenu->hide(); // 关闭菜单
+    //     } else if (t_act == m_scrollSaveToSpecialPathMenu->menuAction()) {
+    //         ConfigSettings::instance()->setValue("shot", "save_op", SaveAction::SaveToSpecificDir);
+            
+    //         // 选择自定义位置菜单时，清空桌面和图片选项
+    //         saveToDesktopAction->setChecked(false);
+    //         saveToPictureAction->setChecked(false);
+    //         qCDebug(dsrApp) << "滚动截图：选择自定义位置，已清空桌面和图片选项";
+            
+
+            
+    //         // 不立即关闭菜单，因为用户可能需要在子菜单中继续选择
+    //     }
+        
+    //     // 更新保存按钮提示
+    //     updateSaveButtonTip();
+    // });
+
+    // 自定义位置子菜单的信号连接
+    // connect(customLocationGroup, QOverload<QAction *>::of(&QActionGroup::triggered),
+    // [ = ](QAction * t_act) {
+    //     specifiedLocationMenu->menuAction()->setChecked(true);
+    //     ConfigSettings::instance()->setValue("shot", "save_ways", SaveWays::SpecifyLocation);
+    //     m_scrollSaveToSpecialPathMenu->menuAction()->setChecked(true);
+    //     ConfigSettings::instance()->setValue("shot", "save_op", SaveAction::SaveToSpecificDir);
+        
+    //     // 选择自定义位置的子项时，清空同级的桌面和图片选项
+    //     saveToDesktopAction->setChecked(false);
+    //     saveToPictureAction->setChecked(false);
+    //     qCDebug(dsrApp) << "滚动截图：选择自定义位置子项，已清空桌面和图片选项";
+        
+    //     if (t_act == m_scrollChangeSaveToSpecialPath) {
+    //         qCDebug(dsrApp) << ">>>>>>>>>>> 保存时更新位置";
+    //         ConfigSettings::instance()->setValue("shot", "save_dir_change", true);
+    //         m_scrollOptionMenu->hide(); // 关闭菜单
+    //     } else if (t_act == m_scrollSaveToSpecialPathAction) {
+    //         qCDebug(dsrApp) << ">>>>>>>>>>> 使用上次保存位置";
+    //         ConfigSettings::instance()->setValue("shot", "save_dir_change", false);
+    //         m_scrollOptionMenu->hide(); // 关闭菜单
+    //     }
+        
+    //     // 更新保存按钮提示
+    //     updateSaveButtonTip();
+    // });
+
+    // 读取配置并设置默认选中的格式
+    int t_pictureFormat = ConfigSettings::instance()->getValue("shot", "format").toInt();
+    switch (t_pictureFormat) {
+    case 1:
+        jpgAction->setChecked(true);
+        break;
+    case 2:
+        bmpAction->setChecked(true);
+        break;
+    default:
+        pngAction->setChecked(true);
+    }
+
+    // 格式选项的信号连接
+    connect(t_formatGroup, QOverload<QAction *>::of(&QActionGroup::triggered),
+    [ = ](QAction * t_act) {
+        if (t_act == pngAction) {
+            ConfigSettings::instance()->setValue("shot", "format", 0);
+            m_scrollOptionMenu->hide(); // 关闭菜单
+        } else if (t_act == jpgAction) {
+            ConfigSettings::instance()->setValue("shot", "format", 1);
+            m_scrollOptionMenu->hide(); // 关闭菜单
+        } else if (t_act == bmpAction) {
+            ConfigSettings::instance()->setValue("shot", "format", 2);
+            m_scrollOptionMenu->hide(); // 关闭菜单
+        }
+    });
+    // updateSaveButtonTip();
+    qCDebug(dsrApp) << "滚动截图工具栏UI已初始化";
+}
+
+void SubToolWidget::installTipHint(QWidget *w, const QString &hintstr)
+{
+    qCDebug(dsrApp) << "SubToolWidget::installTipHint called for widget:" << w << "with hint:" << hintstr;
+    // TODO: parent must be mainframe
+    auto hintWidget = new ToolTips("", m_pMainWindow);
+    hintWidget->hide();
+    hintWidget->setText(hintstr);
+//    hintWidget->setFixedHeight(32);
+    installHint(w, hintWidget);
+}
+
+void SubToolWidget::installHint(QWidget *w, QWidget *hint)
+{
+    w->setProperty("HintWidget", QVariant::fromValue<QWidget *>(hint));
+    w->installEventFilter(hintFilter);
+}
+
+void SubToolWidget::setScrollShotDisabled(const bool state)
+{
+    qCDebug(dsrApp) << "SubToolWidget::setScrollShotDisabled called with state:" << state;
+    m_scrollShotButton->setDisabled(state);
+}
+
+void SubToolWidget::setPinScreenshotsEnable(const bool &state)
+{
+    m_pinButton->setEnabled(state);
+}
+
+void SubToolWidget::setOcrScreenshotEnable(const bool &state)
+{
+    m_ocrButton->setEnabled(state);
+}
+
+void SubToolWidget::setButEnableOnLockScreen(const bool &state)
+{
+    m_textButton->setEnabled(state);
+    m_optionButton->setEnabled(state);
+    m_shotOptionButton->setEnabled(state);
+}
+
+int SubToolWidget::getFuncSubToolX(QString &shape)
+{
+    int x = -1;
+//    qCDebug(dsrApp) << __FUNCTION__ << "m_rectButton->x() : " << m_rectButton->x();
+//    qCDebug(dsrApp) << __FUNCTION__ << "m_circleButton->x() : " << m_circleButton->x();
+//    qCDebug(dsrApp) << __FUNCTION__ << "m_lineButton->x() : " << m_lineButton->x();
+//    qCDebug(dsrApp) << __FUNCTION__ << "m_arrowButton->x() : " << m_arrowButton->x();
+//    qCDebug(dsrApp) << __FUNCTION__ << "m_penButton->x() : " << m_penButton->x();
+    if (!shape.isEmpty()) {
+        if (shape == "gio" || shape == "rectangle" || shape == "oval" || shape == "rect" || shape == "circ") {
+            x = m_gioButton->x();
+        } else if (shape == "line") {
+            x = m_lineButton->x();
+        } else if (shape == "arrow") {
+            x = m_arrowButton->x();
+        } else if (shape == "pen") {
+            x = m_penButton->x();
+        } else if (shape == "text") {
+            x = m_textButton->x();
+        } else if (shape == "aiassistant") {
+            // 根据当前模式选择对应的 AI 按钮（普通/滚动）
+            if (currentWidget() == m_scrollSubTool && m_aiAssistantScrollButton) {
+                x = m_aiAssistantScrollButton->x();
+            } else {
+                x = m_aiAssistantButton ? m_aiAssistantButton->x() : -1;
+            }
+        }  else  {
+            x = -1;
+        }
+    }
+//    qCDebug(dsrApp) << __FUNCTION__ << "x : " << x;
+    return x;
+}
+
+
+QRect SubToolWidget::getAiButtonGlobalRect() const
+{
+    const ToolButton *btn = nullptr;
+    if (currentWidget() == m_scrollSubTool && m_aiAssistantScrollButton) {
+        btn = m_aiAssistantScrollButton;
+    } else if (m_aiAssistantButton) {
+        btn = m_aiAssistantButton;
+    }
+    if (!btn) return QRect();
+    QPoint topLeft = btn->mapToGlobal(QPoint(0, 0));
+    QRect rect(topLeft, btn->size());
+    return rect;
+}
+
+QPoint SubToolWidget::getAiButtonGlobalCenter() const
+{
+    QRect r = getAiButtonGlobalRect();
+    QPoint center = r.center();
+    return center;
+}
+
+// 屏蔽DMenu，触发QAction Trigger时，收回菜单
+bool SubToolWidget::eventFilter(QObject *watched, QEvent *event)
+{
+
+
+    if (watched == m_recordOptionMenu || watched == m_optionMenu || watched == m_scrollOptionMenu || watched == m_saveToSpecialPathMenu || watched == m_scrollSaveToSpecialPathMenu) {
+        if (event->type() == QEvent::MouseButtonPress) {
+            QAction *action = static_cast<DMenu *>(watched)->actionAt(static_cast<QMouseEvent *>(event)->pos());
+            if (action) {
+                if (nullptr != m_saveToSpecialPathMenu && action == m_saveToSpecialPathMenu->menuAction()) {
+                    return QStackedWidget::eventFilter(watched, event);
+                }
+                if (nullptr != m_scrollSaveToSpecialPathMenu && action == m_scrollSaveToSpecialPathMenu->menuAction()) {
+                    return QStackedWidget::eventFilter(watched, event);
+                }
+                action->activate(QAction::Trigger);
+                static_cast<DMenu *>(watched)->hide();
+                return true;
+            }
+        }
+        if (event->type() == QEvent::MouseButtonRelease) {
+            QAction *action = static_cast<DMenu *>(watched)->actionAt(static_cast<QMouseEvent *>(event)->pos());
+            if (action) {
+                return true;
+            }
+        }
+    }
+
+    if (watched == m_saveToSpecialPathMenu) {
+        if(event->type() == QEvent::ToolTip){
+            QHelpEvent* he = dynamic_cast<QHelpEvent*>(event);
+            QAction *action = static_cast<QMenu *>(watched)->actionAt(he->pos());
+            if (action != nullptr) {
+                if (action == m_saveToSpecialPathAction) {
+                    QToolTip::showText(he->globalPos(), action->toolTip(), this);
+                }
+                if (action == m_changeSaveToSpecialPath) {
+                    QToolTip::hideText();
+                }
+            }
+        }
+    }
+
+    return false;
+}
+
+void SubToolWidget::switchContent(QString shapeType)
+{
+    qCDebug(dsrApp) << "Switching content to shape type:" << shapeType;
+    qCDebug(dsrApp) << __FUNCTION__ << __LINE__ << "切换截图或者录屏工具栏" << shapeType << QCursor().pos() << this->count();
+    if (shapeType == "record") {
+        this->addWidget(m_recordSubTool);
+        this->removeWidget(m_shotSubTool);
+        setCurrentWidget(m_recordSubTool);
+        m_currentType = shapeType;
+    } else if (shapeType == "shot") {
+        this->addWidget(m_shotSubTool);
+        this->removeWidget(m_recordSubTool);
+        setCurrentWidget(m_shotSubTool);
+        m_currentType = shapeType;
+    } else if (shapeType == "scroll") {
+        initScrollLabel();
+        this->addWidget(m_scrollSubTool);
+        this->removeWidget(m_recordSubTool);
+        this->removeWidget(m_shotSubTool);
+        setCurrentWidget(m_scrollSubTool);
+        m_currentType = shapeType;
+    }
+    qCDebug(dsrApp) << __FUNCTION__ << __LINE__ << "已切换工具栏" << shapeType << this->count();
+}
+void SubToolWidget::setRecordButtonDisable()
+{
+    m_recorderButton->setDisabled(true);
+}
+
+void SubToolWidget::setRecordLaunchMode(const unsigned int funType)
+{
+    qCDebug(dsrApp) << "SubToolWidget::setRecordLaunchMode called with funType:" << funType;
+    if (funType == MainWindow::record) {
+        //setCurrentWidget(m_recordSubTool);
+        switchContent("record");
+        emit changeShotToolFunc("record");
+    } else if (funType == MainWindow::ocr) {
+        m_ocrButton->click();
+    } else if (funType == MainWindow::scrollshot) {
+        m_scrollShotButton->click();
+    }
+}
+
+void SubToolWidget::setVideoButtonInitFromSub()
+{
+    if (m_cameraButton->isChecked()) {
+        m_cameraButton->click();
+    }
+
+    if (m_keyBoardButton->isChecked()) {
+        m_keyBoardButton->click();
+    }
+}
+
+void SubToolWidget::shapeClickedFromWidget(QString shape)
+{
+    qCWarning(dsrApp) << "SubToolWidget::shapeClickedFromWidget called with shape:" << shape;
+
+    if (!shape.isEmpty()) {
+        if (shape == "pinScreenshots") {
+            if (!m_pinButton->isChecked())
+                m_pinButton->click();
+        } else if (shape == "scrollShot") {
+            if (!m_scrollShotButton->isChecked())
+                m_scrollShotButton->click();
+        } else if (shape == "ocr") {
+            if (!m_ocrButton->isChecked())
+                m_ocrButton->click();
+        } else if (shape == "gio" || shape == "rect" || shape == "circ" || shape == "rectangle" || shape == "oval") {
+            if (!m_gioButton->isChecked())
+                m_gioButton->click();
+        } else if (shape == "line") {
+            m_lineButton->click();
+        } else if (shape == "arrow") {
+            m_arrowButton->click();
+        } else if (shape == "pen") {
+            m_penButton->click();
+        } else if (shape == "text") {
+            m_textButton->click();
+        } else if (shape == "option") {
+            if (m_currentType == "shot" || currentWidget() == m_shotSubTool) {
+                if (m_optionMenu->isHidden()) {
+                    m_shotOptionButton->showMenu();
+                } else {
+                    m_optionMenu->hide();
+                }
+            } else if (m_currentType == "record" || currentWidget() == m_recordSubTool) {
+                if (m_recordOptionMenu->isHidden()) {
+                    m_optionButton->showMenu();
+                } else {
+                    m_recordOptionMenu->hide();
+                }
+            } else if (m_currentType == "scroll" || currentWidget() == m_scrollSubTool) {
+                if (m_scrollOptionMenu->isHidden()) {
+                    m_scrollOptionButton->showMenu();
+                } else {
+                    m_scrollOptionMenu->hide();
+                }
+            }
+        } else if (shape == "aiassistant") {
+            qCWarning(dsrApp) << "AI assistant mode: showing AI assistant tool.";
+            if (m_aiAssistantButton) {
+                m_aiAssistantButton->click();
+            } else {
+                emit changeShotToolFunc("aiassistant");
+            }
+        } else if (shape == "keyBoard") {
+            m_keyBoardButton->click();
+        } else if (shape == "camera") {
+            m_cameraButton->click();
+        } else if (shape == "effect") {
+            m_mosaicButton->click();
+        } else  {
+            qCDebug(dsrApp) << __FUNCTION__ << __LINE__ << "ERROR" << shape;
+        }
+    }
+}
+
+void SubToolWidget::setMicroPhoneEnable(bool status)
+{
+    qCDebug(dsrApp) << "Setting microphone enable status:" << status;
+    qCDebug(dsrApp) << "mic 是否可选？" << status;
+    // GIF格式不支持音频，即使设备可用也不启用
+    int format = ConfigSettings::instance()->getValue("recorder", "format").toInt();
+    if (format == 0) {
+        m_microphoneAction->setEnabled(false);
+    } else {
+        m_microphoneAction->setEnabled(status);
+    }
+    // 不再强制设置麦克风的选中状态，保留用户的选择
+    // m_microphoneAction->setChecked(!status);
+    // trigger()函数会改变当前的checked状态
+    // m_microphoneAction->trigger();
+}
+
+void SubToolWidget::setCameraDeviceEnable(bool status)
+{
+    qCDebug(dsrApp) << "SubToolWidget::setCameraDeviceEnable called with status:" << status;
+    if (status) {
+        qCDebug(dsrApp) << "status is true";
+        if (!m_cameraButton->isEnabled()) {
+            m_cameraButton->setChecked(false);
+            m_cameraButton->setEnabled(true);
+
+            if (!m_cameraButton->isChecked()) {
+                installTipHint(m_cameraButton, tr("Turn on camera (C)"));
+            }
+        }
+    }
+
+    else {
+        qCDebug(dsrApp) << "status is false";
+        if (m_cameraButton->isEnabled()) {
+            m_cameraButton->setChecked(false);
+            if (m_cameraButton->isChecked()) {
+                installTipHint(m_cameraButton, tr("Turn off camera (C)"));
+            } else {
+                installTipHint(m_cameraButton, tr("Turn on camera (C)"));
+            }
+            m_cameraButton->setDisabled(true);
+
+        }
+    }
+}
+
+QRect SubToolWidget::getShotOptionRect(){
+    qCDebug(dsrApp) << "SubToolWidget::getShotOptionRect called.";
+    if(!m_shotOptionButton->menu()->isVisible()) {
+        qCDebug(dsrApp) << "Shot option menu is not visible.";
+        return QRect();
+    }
+    QRect shotOptionRect {
+        static_cast<int>(m_shotOptionButton->menu()->x()),
+        static_cast<int>(m_shotOptionButton->menu()->y()),
+        static_cast<int>(m_shotOptionButton->menu()->width()),
+        static_cast<int>(m_shotOptionButton->menu()->height())
+    };
+    qCDebug(dsrApp) << "Shot option rect:" << shotOptionRect;
+    return shotOptionRect;
+}
+
+/*
+void SubToolWidget::setIsZhaoxinPlatform(bool isZhaoxin)
+{
+    m_isZhaoxinInSub = isZhaoxin;
+}
+*/
+SubToolWidget::~SubToolWidget()
+{
+    qCDebug(dsrApp) << "SubToolWidget destructor called.";
+    if (nullptr != hintFilter) {
+        qCDebug(dsrApp) << "Destroying hint filter.";
+        delete hintFilter;
+        hintFilter = nullptr;
+    }
+    if (nullptr != m_recordOptionMenu) {
+        qCDebug(dsrApp) << "Destroying record option menu.";
+        delete m_recordOptionMenu;
+        m_recordOptionMenu = nullptr;
+    }
+    if (nullptr != m_shotBtnGroup) {
+        qCDebug(dsrApp) << "Destroying shot button group.";
+        delete m_shotBtnGroup;
+        m_shotBtnGroup = nullptr;
+    }
+    if (nullptr != m_saveToSpecialPathMenu) {
+        qCDebug(dsrApp) << "Destroying save to special path menu.";
+        delete m_saveToSpecialPathMenu;
+        m_saveToSpecialPathMenu = nullptr;
+    }
+}

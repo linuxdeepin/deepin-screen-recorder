@@ -1,0 +1,137 @@
+// Copyright (C) 2017 ~ 2018 Deepin Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2022 UnionTech Software Technology Co., Ltd.
+//
+// SPDX-License-Identifier: GPL-3.0-or-later
+
+#include "bigcolorbutton.h"
+
+#include <QApplication>
+#include <QDebug>
+
+#include "../utils/baseutils.h"
+#include "../utils/configsettings.h"
+#include "../utils/log.h"
+
+const qreal COLOR_RADIUS = 4;
+const QSize BTN_SIZE = QSize(32, 26);
+
+BigColorButton::BigColorButton(DWidget *parent)
+    : DPushButton(parent),
+      m_color(QColor(Qt::red)),
+      m_isHover(false),
+      m_isChecked(false)
+{
+    qCDebug(dsrApp) << "Initializing BigColorButton";
+    setFixedSize(BTN_SIZE);
+    setCheckable(true);
+    int colIndex = ConfigSettings::instance()->value(
+                       "common", "color_index").toInt();
+    m_color = colorIndexOf(colIndex);
+    qCDebug(dsrApp) << "Initial color index:" << colIndex;
+
+    connect(this, &DPushButton::clicked, this,
+            &BigColorButton::setCheckedStatus);
+    connect(ConfigSettings::instance(), &ConfigSettings::shapeConfigChanged,
+            this, &BigColorButton::updateConfigColor);
+}
+
+void BigColorButton::updateConfigColor(const QString &shape, const QString &key, int index)
+{
+    qCDebug(dsrApp) << "updateConfigColor called with shape:" << shape << ", key:" << key << ", index:" << index;
+    if (shape == "common" && key == "color_index") {
+        qCDebug(dsrApp) << "Updating color from config - shape:" << shape << "key:" << key << "index:" << index;
+        setColor(colorIndexOf(index));
+    }
+}
+
+BigColorButton::~BigColorButton()
+{
+    qCDebug(dsrApp) << "Destroying BigColorButton";
+}
+
+void BigColorButton::paintEvent(QPaintEvent *)
+{
+    qCDebug(dsrApp) << "paintEvent entered";
+    QPainter painter(this);
+    painter.setRenderHints(QPainter::Antialiasing);
+    painter.setPen(Qt::transparent);
+
+    painter.setBrush(QBrush(QColor(0, 0, 0, 20)));
+    if (m_isHover) {
+        qCDebug(dsrApp) << "Painting hover state";
+        painter.drawRoundedRect(rect(), 4, 4);
+    }
+
+    painter.setBrush(QBrush(QColor(m_color)));
+    painter.drawEllipse(QPointF(16, 13),
+                        COLOR_RADIUS, COLOR_RADIUS);
+
+    qreal ration = this->devicePixelRatioF();
+    if (m_isChecked) {
+        qCDebug(dsrApp) << "Painting checked state";
+        QPixmap checkedPic = QIcon(":/images/action/colors_checked.svg"
+                                  ).pixmap(BTN_SIZE);
+        checkedPic.setDevicePixelRatio(ration);
+
+        painter.drawPixmap(rect(), checkedPic);
+    } else if (m_isHover && !m_isChecked) {
+        qCDebug(dsrApp) << "Painting hover and unchecked state";
+        QPixmap hoverPic = QIcon(":/images/action/colors_hover.svg"
+                                ).pixmap(BTN_SIZE);
+        hoverPic.setDevicePixelRatio(ration);
+
+        painter.drawPixmap(rect(), hoverPic);
+    } else {
+        qCDebug(dsrApp) << "Painting normal state";
+        QPixmap normalPic = QIcon(":/images/action/colors_hover.svg"
+                                 ).pixmap(BTN_SIZE);
+        normalPic.setDevicePixelRatio(ration);
+
+        painter.drawPixmap(rect(), normalPic);
+    }
+}
+
+void BigColorButton::setColor(QColor color)
+{
+    qCDebug(dsrApp) << "Setting color to:" << color;
+    m_color = color;
+    update();
+}
+/*
+ * never used
+void BigColorButton::setColorIndex()
+{
+    int colorNum = ConfigSettings::instance()->value("common", "color_index").toInt();
+    m_color = colorIndexOf(colorNum);
+    update();
+}
+*/
+void BigColorButton::setCheckedStatus(bool checked)
+{
+    qCDebug(dsrApp) << "setCheckedStatus called with checked:" << checked;
+    if (checked) {
+        qCDebug(dsrApp) << "Setting checked status to:" << checked;
+        m_isChecked = true;
+        update();
+    }
+}
+
+void BigColorButton::enterEvent(QEvent *)
+{
+    qCDebug(dsrApp) << "enterEvent called";
+    if (!m_isHover) {
+        qCDebug(dsrApp) << "Setting hover to true";
+        m_isHover = true;
+        update();
+    }
+}
+
+void BigColorButton::leaveEvent(QEvent *)
+{
+    qCDebug(dsrApp) << "leaveEvent called";
+    if (m_isHover) {
+        qCDebug(dsrApp) << "Setting hover to false";
+        m_isHover = false;
+        update();
+    }
+}

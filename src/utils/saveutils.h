@@ -1,0 +1,25 @@
+// Copyright (C) 2020 ~ 2021 Uniontech Software Technology Co.,Ltd.
+// SPDX-FileCopyrightText: 2022 UnionTech Software Technology Co., Ltd.
+//
+// SPDX-License-Identifier: GPL-3.0-or-later
+
+#ifndef SAVEUTILS_H
+#define SAVEUTILS_H
+
+#include <QObject>
+
+enum SaveWays : unsigned int {
+    Ask, // 每次都询问
+    SpecifyLocation // 指定位置
+};
+
+enum SaveAction : unsigned int {
+    SaveToClipboard,
+    SaveToDesktop,
+    SaveToImage,
+    SaveToSpecificDir,
+    AutoSave, // 自定义保存目录
+    CustomScreenSave, // 通过dbus调用customscreen截图保存的位置
+};
+Q_DECLARE_METATYPE(SaveAction);
+#endif // SAVEUTILS_H

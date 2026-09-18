@@ -1,0 +1,85 @@
+// Copyright (C) 2020 ~ 2021 Uniontech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2022 UnionTech Software Technology Co., Ltd.
+//
+// SPDX-License-Identifier: GPL-3.0-or-later
+
+#ifndef PINSAVEMENUMANAGER_H
+#define PINSAVEMENUMANAGER_H
+
+#include <QObject>
+#include <DMenu>
+#include <QActionGroup>
+#include <QMap>
+
+DWIDGET_USE_NAMESPACE
+
+// CLIPBOARD=0, DESKTOP=1, PICTURES=2, FOLDER=3, FOLDER_CHANGE=4, ASK=5
+enum SavePathType {
+    ASK = 5,           // 每次询问
+    DESKTOP = 1,       // 保存到桌面
+    PICTURES = 2,      // 保存到图片文件夹
+    FOLDER = 3,        // 指定文件夹（历史路径）
+    FOLDER_CHANGE = 4  // 保存时选择文件夹
+};
+
+/**
+ * @brief Pin程序的保存菜单管理器
+ * 专门为pin程序提供保存选项菜单
+ * 但使用pin程序自己的Settings系统和枚举定义
+ */
+class PinSaveMenuManager : public QObject
+{
+    Q_OBJECT
+
+public:
+    explicit PinSaveMenuManager(QWidget *parent = nullptr);
+    ~PinSaveMenuManager();
+
+    DMenu* getMenu() const { return m_saveMenu; }
+    
+    void initializeFromConfig();
+    
+    int getCurrentSaveOption() const;
+    
+    void updateCustomPath(const QString &path);
+
+signals:
+    void saveOptionChanged(int savePathType);
+    void customPathChanged(const QString &displayPath);
+
+private slots:
+    void onSaveOptionTriggered(QAction *action);
+    void onLocationActionTriggered(QAction *action);
+
+private:
+    void createMenu();
+    void createSaveOptionActions();
+    void createLocationActions();
+    void setupConnections();
+    void updateConfigSettings();
+    QString formatDisplayPath(const QString &fullPath) const;
+    void updateSubMenuForFirstTime();
+    void updateSubMenuForExistingPath();
+    void initChangeSaveToSpecialAction(const QString &specialPath);
+
+    DMenu *m_saveMenu;
+    
+    QActionGroup *m_saveOptionGroup;
+    QAction *m_askEveryTimeAction;
+    QAction *m_specifiedLocationAction;
+    
+    DMenu *m_specifiedLocationSubMenu;
+    QActionGroup *m_customLocationGroup;
+    QAction *m_desktopAction;               // "保存到桌面"
+    QAction *m_picturesAction;              // "保存到图片"
+    QAction *m_saveToSpecialPathAction;     // 显示历史路径
+    QAction *m_changeSaveToSpecialPath;     // "保存时选择位置"
+    
+    // 当前状态
+    int m_currentSavePathType;  // SavePathType
+    
+    // 路径映射
+    QMap<int, QAction *> m_savePathActions;
+};
+
+#endif // PINSAVEMENUMANAGER_H

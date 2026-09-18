@@ -1,0 +1,23 @@
+// Copyright (C) 2016 The Qt Company Ltd.
+// SPDX-FileCopyrightText: 2022 UnionTech Software Technology Co., Ltd.
+//
+// SPDX-License-Identifier: GPL-3.0-or-later
+
+#include "dbusscreenshot.h"
+#include "utils/log.h"
+
+/*
+ * Implementation of interface class DBusScreenshot
+ */
+
+DBusScreenshot::DBusScreenshot(const QString &service, const QString &path, const QDBusConnection &connection, QObject *parent)
+    : QDBusAbstractInterface(service, path, staticInterfaceName(), connection, parent)
+{
+    qCInfo(dsrApp) << "DBusScreenshot constructor called.";
+}
+
+DBusScreenshot::~DBusScreenshot()
+{
+    qCInfo(dsrApp) << "DBusScreenshot destructor called.";
+}
+

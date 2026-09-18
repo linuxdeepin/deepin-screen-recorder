@@ -1,0 +1,26 @@
+Makefile
+moc_*.o
+moc_*.cpp
+*.o
+build/
+*.qm
+*.pro.user*
+
+AI config
+.cursor/
+.cursorindexingignore
+.specstory/
+.vscode/
+.npm-cache/
+.claude/
+.trellis/
+
+# build artifacts: qmake/moc/rcc outputs, coverage, caches, built binaries
+build-ut/
+.qmake.stash
+.cache/
+moc_predefs.h
+qrc_*.cpp
+*.so
+*.debhelper.log
+src/pin_screenshots/deepin-pin-screenshots

@@ -1,0 +1,764 @@
+deepin-screen-recorder (6.6.39) unstable; urgency=medium
+
+  * test: add basic screenshot and recording AT suite
+  * [skip CI] Translate deepin-screen-recorder.ts in pt_BR
+  * test: remove invalid and obsolete unit test files
+  * test: enable viable orphan tests and drop dead-code ones
+  * test: add autotests for deepin-screen-recorder (7/7 classes)
+  * test: add autotests for deepin-screen-recorder (5/5 classes)
+  * test: add autotests for deepin-screen-recorder (4/4 classes)
+  * test: add autotests for deepin-screen-recorder (4/4 classes)
+  * test: add autotests for deepin-screen-recorder (2/2 classes)
+  * test: add autotests for deepin-screen-recorder (3/3 classes)
+  * test: add autotests for deepin-screen-recorder (1/1 classes)
+  * fix(ut): fix record_time coverage wiped when worktree path contains
+    "tests"
+  * test: add unit tests for 5 previously-uncovered functions
+  * fix: [record] allow recording across compositor switch and fix
+    camera in 2D
+
+ -- liuzheng <liuzheng@uniontech.com>  Thu, 06 Aug 2026 10:12:04 +0800
+
+deepin-screen-recorder (6.6.38) unstable; urgency=medium
+
+  * chore: Update version to 6.6.38
+  * fix: resolve remaining 41 unit test crashes via guards and test fixes
+  * fix: add null guards to prevent segfaults in non-X11/headless envs
+  * test: remove invalid ut_utils.h test suite
+  * test: strip invalid TEST_F cases from 7 legacy test headers
+  * ci: upgrade actions/checkout to v7 with unsafe PR checkout Upgrade actions/checkout from v3 to v7 and enable allow-unsafe-pr-checkout option for pull request builds.
+  * fix: add X-Deepin-Singleton flag to desktop file
+  * fix: remove deepin prefix from Chinese translations in desktop file
+  * [skip CI] Translate deepin-screen-recorder.ts in it
+  * Fix(mount): X11 button ungrab in scroll screenshot save flow
+  * test: raise ut src line coverage to 75% via per-test isolation + wayland/hw exclusion
+  * test: raise src unit coverage to 68.7% via resize sweep + event_monitor fix
+  * test: raise src unit-test line coverage from 60% to ~67%
+  * test: expand unit tests to lift src/ coverage from ~58% to ~60%
+  * test: add unit tests to boost src line coverage to ~53%
+  * test: port ut_screen_shot_recorder to Qt6; guard test-only prod tweaks
+  * [skip CI] Translate deepin-screen-recorder.ts in es
+
+ -- zhanghongyuan <zhanghongyuan@uniontech.com>  Thu, 30 Jul 2026 15:18:45 +0800
+
+deepin-screen-recorder (6.6.37) unstable; urgency=medium
+
+  * fix(shot): skip save2Clipboard in Treeland mode to improve pin screenshot response
+  * test: migrate unit tests from Qt5 to Qt6
+
+ -- dengzhongyuan <dengzhongyuan@uniontech.com>  Fri, 12 Jun 2026 11:22:29 +0800
+
+deepin-screen-recorder (6.6.36) unstable; urgency=medium
+
+  * fix(shot): hide record button on toolbar under Treeland
+
+ -- dengzhongyuan <dengzhongyuan@uniontech.com>  Fri, 29 May 2026 09:53:11 +0800
+
+deepin-screen-recorder (6.6.35) unstable; urgency=medium
+
+  * Revert "fix(shot): relay XRecord events when Dock grab blocks Qt input on X11"
+
+ -- dengzhongyuan <dengzhongyuan@uniontech.com>  Thu, 28 May 2026 20:31:51 +0800
+
+deepin-screen-recorder (6.6.34) unstable; urgency=medium
+
+  * feat(record): add Treeland override to disable prelaunch splash
+  * fix(recordtime-plugin): replace heartbeat polling with QDBusServiceWatcher
+  * fix(shot): relay XRecord events when Dock grab blocks Qt input on X11
+  * fix(pin_screenshot): adapt toolbar and window management for Treeland compositor
+  * fix(topWindow): filter out dde-shell windows by correct WM_CLASS values
+  * fix(main_window): enhance tool bar management and cleanup
+
+ -- dengzhongyuan <dengzhongyuan@uniontech.com>  Thu, 28 May 2026 17:16:26 +0800
+
+deepin-screen-recorder (6.6.33) unstable; urgency=medium
+
+  * chore: Update version to 6.6.33
+  * fix(main_window): improve mouse scroll event handling for HiDPI support
+  * fix(main_window): update sendSavingNotify to return notification ID
+  * fix(shapeswidget): improve text shape handling and logging
+  * fix(toolbar): correct confirm button tooltip when launching record from plugin
+  * fix(audio): disable system audio option for GIF format
+
+ -- zhanghongyuan <zhanghongyuan@uniontech.com>  Sat, 09 May 2026 11:39:26 +0800
+
+deepin-screen-recorder (6.6.32) unstable; urgency=medium
+
+  * fix(quickpanel): delay DBus call to wait for panel close animation
+  * fix(shot): add event log for OCR and scroll screenshot in toolbar
+  * fix(shot): reset selection index in clearSelected and guard deleteCurrentShape bounds
+  * fix(shot): dynamically calculate size tips dimensions based on font size
+
+ -- dengzhongyuan <dengzhongyuan@uniontech.com>  Thu, 23 Apr 2026 19:21:04 +0800
+
+deepin-screen-recorder (6.6.31) unstable; urgency=medium
+
+  * fix(shot): align size tips with actual saved image dimensions
+  * fix(toolbar): improve toolbar positioning on HiDPI displays
+  * fix(record): fix selection area and toolbar offset offscreen when drawing small region on HiDPI
+
+ -- dengzhongyuan <dengzhongyuan@uniontech.com>  Thu, 16 Apr 2026 20:42:04 +0800
+
+deepin-screen-recorder (6.6.30) unstable; urgency=medium
+
+  * fix(screenshot): prevent multiple simultaneous screenshot requests
+  * fix(focus): update focus policy handling for Wayland and clipboard interactions
+  * chore: remove event logging for screenshot and recording actions
+
+ -- dengzhongyuan <dengzhongyuan@uniontech.com>  Thu, 16 Apr 2026 11:10:18 +0800
+
+deepin-screen-recorder (6.6.29) unstable; urgency=medium
+
+  * fix(pin): correct OCR button size in pin screenshot toolbar
+  * fix: hide color tool in effect (blur/mosaic) mode
+  * fix(shot): include sidebar in background clip region for blur effect
+  * fix(shot): prevent abnormal shape drawing when AI assistant button is clicked
+  * fix(text): Sync text color with theme highlight color in pressed state
+  * fix: Fix screenshot file path not returned when called via third-party interface
+
+ -- dengzhongyuan <dengzhongyuan@uniontech.com>  Sat, 11 Apr 2026 13:57:06 +0800
+
+deepin-screen-recorder (6.6.28) unstable; urgency=medium
+
+  * fix(record): delay app exit to ensure clipboard operation completes
+
+ -- Wang Yu <wangyu@uniontech.com>  Fri, 27 Mar 2026 18:03:56 +0800
+
+deepin-screen-recorder (6.6.27) unstable; urgency=medium
+
+  * chroe: Modify translations
+  * chore: Update dman's resources
+
+ -- dengzhongyuan <dengzhongyuan@uniontech.com>  Wed, 18 Mar 2026 10:41:49 +0800
+
+deepin-screen-recorder (6.6.26) unstable; urgency=medium
+
+  * fix(mainwindow): Update compositing logic to use blur window state
+
+ -- dengzhongyuan <dengzhongyuan@uniontech.com>  Thu, 12 Mar 2026 20:24:17 +0800
+
+deepin-screen-recorder (6.6.25) unstable; urgency=medium
+
+  * fix(screengrabber): Update physical coordinate calculations for partial screenshots
+
+ -- dengzhongyuan <dengzhongyuan@uniontech.com>  Sat, 28 Feb 2026 09:34:57 +0800
+
+deepin-screen-recorder (6.6.24) unstable; urgency=medium
+
+  * fix: Add alternative INCLUDEPATH for dtk widget configurations
+
+ -- dengzhongyuan <dengzhongyuan@uniontech.com>  Tue, 10 Feb 2026 21:01:21 +0800
+
+deepin-screen-recorder (6.6.23) unstable; urgency=medium
+
+  * fix(mainwindow): Sanitize file names for recording and saving actions
+
+ -- dengzhongyuan <dengzhongyuan@uniontech.com>  Tue, 10 Feb 2026 15:43:23 +0800
+
+deepin-screen-recorder (6.6.22) unstable; urgency=medium
+
+  * fix: Refine background rendering logic for toolbar in recording modes
+
+ -- dengzhongyuan <dengzhongyuan@uniontech.com>  Fri, 23 Jan 2026 14:17:18 +0800
+
+deepin-screen-recorder (6.6.21) unstable; urgency=medium
+
+  * fix(mainwindow): Enhance mouse position checks for toolbar visibility
+  * feat(main): Improve command-line save path handling with full file path support
+
+ -- dengzhongyuan <dengzhongyuan@duniontech.com>  Thu, 22 Jan 2026 18:59:09 +0800
+
+deepin-screen-recorder (6.6.20) unstable; urgency=medium
+
+  *  feat: Improve countdown tooltip positioning for multi-screen scenarios
+
+ -- dengzhongyuan <dengzhongyuan@duniontech.com>  Thu, 25 Dec 2025 19:17:42 +0800
+
+deepin-screen-recorder (6.6.19) unstable; urgency=medium
+
+  * fix: Enhance X11 window handling for Qt6 compatibility
+  * Merge branches
+
+ -- dengzhongyuan <dengzhongyuan@duniontech.com>  Thu, 18 Dec 2025 19:23:36 +0800
+
+deepin-screen-recorder (6.6.18) unstable; urgency=medium
+
+  *  fix: Refactor X11 screenshot handling for Qt6 compatibility 
+
+ -- dengzhongyuan <dengzhongyuan@duniontech.com>  Thu, 11 Dec 2025 19:11:45 +0800
+
+deepin-screen-recorder (6.6.17) unstable; urgency=medium
+
+  * fix: Implement X11 screenshot workaround for Qt6
+  * fix: Enhance screenshot functionality and improve capture initialization checks
+  * fix: Enhance destruction safety in capture management during application shutdown 
+
+ -- dengzhongyuan <dengzhongyuan@uniontech.com>  Thu, 11 Dec 2025 15:07:01 +0800
+
+deepin-screen-recorder (6.6.16) unstable; urgency=medium
+
+  * fix: Improve AI Assistant button signal handling and add debug logging
+  * fix: Prevent sidebar from interfering with scroll screenshot auto-scroll
+
+ -- dengzhongyuan <dengzhongyuan@uniontech.com>  Fri, 05 Dec 2025 10:40:27 +0800
+
+deepin-screen-recorder (6.6.15) unstable; urgency=medium
+
+  * fix: Enable mouse pass-through for main window in X11 recording mode
+
+ -- dengzhongyuan <dengzhongyuan@uniontech.com>  Thu, 27 Nov 2025 19:49:28 +0800
+
+deepin-screen-recorder (6.6.14) unstable; urgency=medium
+
+  * feat: support treeland record.
+  * feat: adjust ai button style.
+
+ -- dengzhongyuan <dengzhongyuan@uniontech.com>  Thu, 27 Nov 2025 14:09:23 +0800
+
+deepin-screen-recorder (6.6.13) unstable; urgency=medium
+
+  * fix: Optimize audio initialization timing and DBus interface timeout
+
+ -- dengzhongyuan <dengzhongyuan@uniontech.com>  Thu, 20 Nov 2025 19:49:36 +0800
+
+deepin-screen-recorder (6.6.12) unstable; urgency=medium
+
+  * fix: Add BypassWindowManagerHint to toolbar window flags
+
+ -- dengzhongyuan <dengzhongyuan@uniontech.com>  Wed, 12 Nov 2025 13:30:47 +0800
+
+deepin-screen-recorder (6.6.11) unstable; urgency=medium
+
+  * feat: Integrate AI Assistant functionality and enhance UI components
+
+ -- dengzhongyuan <dengzhongyuan@uniontech.com>  Thu, 30 Oct 2025 16:26:00 +0800
+
+deepin-screen-recorder (6.6.10) unstable; urgency=medium
+
+  * fix: Remove colons from Format and FPS menu labels
+
+ -- dengzhongyuan <dengzhongyuan@uniontech.com>  Thu, 16 Oct 2025 20:13:57 +0800
+
+deepin-screen-recorder (6.6.9) unstable; urgency=medium
+
+  * chore: Update deepin-screen-recorder to version 6.6.8 with improved button functionality
+
+ -- dengzhongyuan <dengzhongyuan@uniontech.com>  Sat, 11 Oct 2025 12:35:20 +0800
+
+deepin-screen-recorder (6.6.8) unstable; urgency=medium
+
+  * feat: Improve SaveButton and ToolButton functionality and visual feedback
+
+ -- dengzhongyuan <dengzhongyuan@uniontech.com>  Fri, 10 Oct 2025 11:33:00 +0800
+
+deepin-screen-recorder (6.6.7) unstable; urgency=medium
+
+  * fix: Integrate recording state management in Screenshot and MainWindow
+
+ -- dengzhongyuan <dengzhongyuan@uniontech.com>  Thu, 18 Sep 2025 19:25:04 +0800
+
+deepin-screen-recorder (6.6.6) unstable; urgency=medium
+
+  * fix: Enhance keyboard interaction for shape adjustments in ShapesWidget
+
+ -- dengzhongyuan <dengzhongyuan@uniontech.com>  Thu, 04 Sep 2025 17:04:03 +0800
+
+deepin-screen-recorder (6.6.5) unstable; urgency=medium
+
+  * fix: Update screenshot handling logic in MainWindow for OCR mode
+
+ -- dengzhongyuan <dengzhongyuan@uniontech.com>  Thu, 28 Aug 2025 19:34:29 +0800
+
+deepin-screen-recorder (6.6.4) unstable; urgency=medium
+
+  * fix: Simplify SVG files and update translations for improved clarity
+
+ -- dengzhongyuan <dengzhongyuan@uniontech.com>  Thu, 21 Aug 2025 21:31:46 +0800
+
+deepin-screen-recorder (6.6.3) unstable; urgency=medium
+
+  * chore: Update version to 6.6.2 (#716)
+
+ -- dengzhongyuan <dengzhongyuan@uniontech.com>  Wed, 13 Aug 2025 13:53:51 +0800
+
+deepin-screen-recorder (6.6.2) unstable; urgency=medium
+
+  * fix: Update translations for various languages in deepin-screen-recorder
+
+ -- dengzhongyuan <dengzhongyuan@uniontech.com>  Wed, 13 Aug 2025 10:45:26 +0800
+
+deepin-screen-recorder (6.6.1) unstable; urgency=medium
+
+  * fix: Update action text for save path in SubToolWidget
+
+ -- dengzhongyuan <dengzhongyuan@uniontech.com>  Fri, 08 Aug 2025 10:42:33 +0800
+
+deepin-screen-recorder (6.6.0) unstable; urgency=medium
+
+  * fix: Enhance toolbar visibility management in MainWindow
+
+ -- dengzhongyuan <dengzhongyuan@uniontech.com>  Thu, 07 Aug 2025 20:50:24 +0800
+
+deepin-screen-recorder (6.5.33) unstable; urgency=medium
+
+  * chore: Add new Lao translation file for deepin-screen-recorder
+
+ -- dengzhongyuan <dengzhongyuan@uniontech.com>  Thu, 07 Aug 2025 15:10:11 +0800
+
+deepin-screen-recorder (6.5.32) unstable; urgency=medium
+
+  * fix: Correct sidebar position calculation in MainWindow
+
+ -- dengzhongyuan <dengzhongyuan@uniontech.com>  Tue, 05 Aug 2025 20:25:28 +0800
+
+deepin-screen-recorder (6.5.31) unstable; urgency=medium
+
+  * fix: Update save path handling and tooltip logic in screenshot tool
+
+ -- dengzhongyuan <dengzhongyuan@uniontech.com>  Mon, 04 Aug 2025 18:14:33 +0800
+
+deepin-screen-recorder (6.5.30) unstable; urgency=medium
+
+  * fix: Correct fullscreen behavior in screenshot functionality
+
+ -- dengzhongyuan <dengzhongyuan@uniontech.com>  Wed, 16 Jul 2025 14:44:13 +0800
+
+deepin-screen-recorder (6.5.29) unstable; urgency=medium
+
+  * chore: Update deepin-manual resources
+
+ -- dengzhongyuan <dengzhongyuan@uniontech.com>  Wed, 09 Jul 2025 17:19:39 +0800
+
+deepin-screen-recorder (6.5.28) unstable; urgency=medium
+
+  * fix: Enhance screenshot functionality for multi-screen setups
+
+ -- dengzhongyuan <dengzhongyuan@uniontech.com>  Fri, 04 Jul 2025 11:41:20 +0800
+
+deepin-screen-recorder (6.5.27) unstable; urgency=medium
+
+  * chore: update translation
+
+ -- xiepengfei <xiepengfei@uniontech.com>  Tue, 01 Jul 2025 19:23:43 +0800
+
+deepin-screen-recorder (6.5.26) unstable; urgency=medium
+
+  * fix: Adjust formatting in screen capture documentation
+
+ -- dengzhongyuan <dengzhongyuan@uniontech.com>  Tue, 24 Jun 2025 17:18:11 +0800
+
+deepin-screen-recorder (6.5.25) unstable; urgency=medium
+
+  * Update version to 6.5.25 
+
+ -- Tian ShiLin <tianshilin@uniontech.com>  Mon, 23 Jun 2025 15:02:16 +0800
+
+deepin-screen-recorder (6.5.24) unstable; urgency=medium
+
+  * chore: Update dman's resources
+
+ -- dengzhongyuan <dengzhongyuan@uniontech.com>  Thu, 19 Jun 2025 14:27:09 +0800
+
+deepin-screen-recorder (6.5.23) unstable; urgency=medium
+
+  * fix: Fix screen recording button not disappear when recording
+  * Update version to 6.5.23
+
+ -- wangrong <wangrong@uniontech.com>  Tue, 17 Jun 2025 19:27:29 +0800
+
+deepin-screen-recorder (6.5.22) unstable; urgency=medium
+
+  * chore: Enhance compiler flags for improved debugging and security
+  * Update version to 6.5.22
+
+ -- wangrong <wangrong@uniontech.com>  Fri, 13 Jun 2025 15:53:59 +0800
+
+deepin-screen-recorder (6.5.21) unstable; urgency=medium
+
+  * chore: Update .gitignore and enhance compiler flags
+  * Update version to 6.5.21
+
+ -- wangrong <wangrong@uniontech.com>  Fri, 13 Jun 2025 14:16:52 +0800
+
+deepin-screen-recorder (6.5.20) unstable; urgency=medium
+
+  * fix: improve file manager command handling
+  * fix: Fix the plugins can not be loaded issue
+  * feat: Adapt to V23 dde dbus interface
+  * Update version to 6.5.20
+
+ -- wangrong <wangrong@uniontech.com>  Fri, 13 Jun 2025 10:04:47 +0800
+
+deepin-screen-recorder (6.5.19) unstable; urgency=medium
+
+  * add log.
+  * Resolve screenshot background display issues in 1080p+4K dual-screen
+    setup.
+  * update version to 6.5.19
+
+ -- dengzhongyuan <dengzhongyuan@uniontech.com>  Thu, 05 Jun 2025 15:15:45 +0800
+
+deepin-screen-recorder (6.5.18) unstable; urgency=medium
+
+  * Fix high dpi display issue.
+  * Update version to 6.5.18.
+
+ -- dengzhongyuan <dengzhongyuan@uniontech.com>  Thu, 15 May 2025 13:02:51 +0800
+
+deepin-screen-recorder (6.5.17) unstable; urgency=medium
+
+  * Update version to 6.5.17
+  * fix: adjust dock shortcut help icon size
+
+ -- dengzhongyuan <dengzhongyuan@uniontech.com>  Thu, 08 May 2025 15:00:06 +0800
+
+deepin-screen-recorder (6.5.16) unstable; urgency=medium
+
+  * Update version to 6.5.16
+
+ -- renbin <renbin@uniontech.com>  Tue, 29 Apr 2025 17:52:12 +0800
+
+deepin-screen-recorder (6.5.15) unstable; urgency=medium
+
+  * fix: Set quick panel margins to 0(Bug: 271223)
+
+ -- renbin <renbin@uniontech.com>  Thu, 03 Apr 2025 10:16:15 +0800
+
+deepin-screen-recorder (6.5.14) unstable; urgency=medium
+
+  * fix: restructure event monitor cleanup(Bug: 306357)
+  * fix: enable gif on loong64/sw64/mips(Bug: 308909)
+
+ -- renbin <renbin@uniontech.com>  Wed, 02 Apr 2025 15:51:22 +0800
+
+deepin-screen-recorder (6.5.13) unstable; urgency=medium
+
+  * fix: adjust spacing in quick panel layout(Bug: 271223)
+  * fix: remove unnecessary depends
+  * fix: blur effect error(Bug: 309211)
+  * refactor: remove dframeworkdbus dependency
+
+ -- renbin <renbin@uniontech.com>  Thu, 27 Mar 2025 15:24:37 +0800
+
+deepin-screen-recorder (6.5.12) unstable; urgency=medium
+
+  * fix: disable v20 interface on Qt6.
+  * fix: oom when convert large video to gif(Bug: 308389)
+  * fix: not reset time after reboot(Bug: 308411)
+  * fix: improve the speed of convrting to GIF(Bug: 295949)
+  * fix: use system theme instead of app cached theme(Bug: 300679)
+  * fix: paint full screen rectangle error.(Bug: 307017)
+
+ -- renbin <renbin@uniontech.com>  Thu, 20 Mar 2025 20:17:52 +0800
+
+deepin-screen-recorder (6.5.11) unstable; urgency=medium
+
+  * fix: crash on scroll image(Bug: 306355)
+
+ -- renbin <renbin@uniontech.com>  Thu, 06 Mar 2025 20:22:56 +0800
+
+deepin-screen-recorder (6.5.10) unstable; urgency=medium
+
+  * fix: not hidden record tray icon when recoding(Bug: 298541)
+  * fix: tray icon is blurred when the scale factor exceeds 1(Bug: 298677)
+  * fix: can not save pin screenshots settings(Bug: 298631)
+  * fix: can not start record via tray icon
+  * chore: support parallel build
+  * fix: pin-screenshots missing rounded corner and focus(Bug: 305423)
+
+ -- renbin <renbin@uniontech.com>  Thu, 27 Feb 2025 19:17:50 +0800
+
+deepin-screen-recorder (6.5.9) unstable; urgency=medium
+
+  * chore: New version 6.5.9.
+
+ -- xiepengfei <xiepengfei@uniontech.com>  Thu, 20 Feb 2025 20:01:38 +0800
+
+deepin-screen-recorder (6.5.8) unstable; urgency=medium
+
+  [ Tian ShiLin ]
+  * fix: esc exit exception under treeland 
+
+ -- Liu zheng <liuzheng@uniontech.com>  Fri, 07 Feb 2025 14:44:36 +0800
+
+deepin-screen-recorder (6.5.7) unstable; urgency=medium
+
+  * fix: adjust border size parameters for narrow images
+  * fix: use dci icons replace svg icons(Bug: 298681)
+  * fix: unnecessary scaling adjustments(Bug: 298677)
+  * fix: delete error log
+
+ -- renbin <renbin@uniontech.com>  Fri, 10 Jan 2025 18:02:07 +0800
+
+deepin-screen-recorder (6.5.6) unstable; urgency=medium
+
+  * fix: Fix save path settings in screenshot toolbar(Bug: 298655)
+  * fix: Use QProcess as workaround for scale factor(Bug: 281713)
+
+ -- renbin <renbin@uniontech.com>  Thu, 09 Jan 2025 14:03:32 +0800
+
+deepin-screen-recorder (6.5.5) unstable; urgency=medium
+
+  * fix: update DBus interface for dock position changes(Bug: 297785)
+  * fix: adjust toolbar position to avoid content overlap(Bug: 296639)
+
+ -- renbin <renbin@uniontech.com>  Thu, 02 Jan 2025 20:07:09 +0800
+
+deepin-screen-recorder (6.5.4) unstable; urgency=medium
+
+  * fix: ocr disappears in treeland(Bug: 283631)
+  * fix: Unified modification of predefined macros
+  * fix: Translation file not found
+
+ -- renbin <renbin@uniontech.com>  Fri, 27 Dec 2024 11:33:08 +0800
+
+deepin-screen-recorder (6.5.3) UNRELEASED; urgency=medium
+
+  * feat: Merge branch 'develop/qt6.8' into develop/snipe
+
+ -- Tian ShiLin <tianshilin@uniontech.com>  Fri, 20 Dec 2024 11:23:01 +0800
+
+deepin-screen-recorder (6.5.2) unstable; urgency=medium
+
+  * fix: translation error (#582)
+  * fix: Addressing translation issues (#584)
+  * fix: Fixed the issue that screen recording fails under ARM (#569) (#586)
+  * fix: dock plugin not loaded (#587)(Bug: 289717)
+
+ -- renbin <renbin@uniontech.com>  Sat, 14 Dec 2024 16:23:59 +0800
+
+deepin-screen-recorder (6.5.1.3) unstable; urgency=medium
+
+  * changelog 6.5.1.3.
+
+ -- tianshilin <tianshilin@uniontech.com>  Sat, 07 Dec 2024 22:55:01 +0800
+
+deepin-screen-recorder (6.5.1.2) unstable; urgency=medium
+
+  * changelog 6.5.1.2.
+
+ -- tianshilin <tianshilin@uniontech.com>  Sat, 07 Dec 2024 10:11:01 +0800
+
+deepin-screen-recorder (6.5.1) unstable; urgency=medium
+
+  * fix: adapt new quick pannel plugin interface(Bug: 266839)
+  * fix: Fixed the problem that v25 screenshot recording arm cannot record the screen(Bug: 283491)
+
+ -- renbin <renbin@uniontech.com>  Fri, 22 Nov 2024 17:01:16 +0800
+
+deepin-screen-recorder (6.5.0) unstable; urgency=medium
+
+  * feat: [translation]add transifex config(Task: 361363)
+  * fix: the config button status(Bug: 270437)
+  * fix: the mouse click control lose in workspace(Bug: 268293)
+  * fix: Optimize command line acquisition parameters(Task: 362613)
+  * fix: the pinscreenshot tips(Bug: 275657)
+  * fix: the pinscreenshot save format error(Bug: 276833)
+  * fix: the offset problem when dual-screen non-alignment(Bug: 275805)
+  * fix: the dual screen expandsion position when scaled(Bug: 273083)
+  * refactor: merge code and fix bugs
+  * fix: dde-shell not show screen shot icon.
+  * fix: camera not display image
+  * fix: save to clipboard slow
+  * fix: audio record pts error on wayland
+
+ -- renbin <renbin@uniontech.com>  Fri, 18 Oct 2024 14:29:23 +0800
+
+deepin-screen-recorder (6.0.9) unstable; urgency=medium
+
+  * changelog 6.0.9.
+
+ -- muyuankai <muyuankai@uniontech.com>  Mon, 02 Sep 2024 17:01:01 +0800
+
+deepin-screen-recorder (6.0.8) unstable; urgency=medium
+
+  * chore: add ForceDock flag(Issue: 9619)
+
+ -- Deepin Packages Builder <packages@deepin.org>  Tue, 13 Aug 2024 16:11:17 +0800
+
+deepin-screen-recorder (6.0.7) unstable; urgency=medium
+
+  * fix: the recorder icon(Bug: 266991)
+  * feat: remove the inner margin of dock plugin tooltips (Issues: 9997)
+  * fix: the screen-capture icon in the taskbar (Bug: 267113)
+  * fix: the recorder taskbar incorrect background-color (Bug: 267669)
+  * Update tag to 6.0.7
+
+ -- zhanghongyuan<zhanghongyuan@uniontech.com>  Tue, 13 Aug 2024 11:23:35 +0800
+
+deepin-screen-recorder (6.0.6) unstable; urgency=medium
+
+  * feat: Update screenshot dropshadow effect(Task: 33231)
+  * fix: 贴图不能移动出屏幕(Bug: 249185)
+
+ -- zyz <zhaoyingzhen@uniontech.com>  Wed, 24 Jul 2024 15:51:34 +0800
+
+deepin-screen-recorder (6.0.5) unstable; urgency=medium
+
+  * Update tag to 6.0.5.
+
+ -- zhanghongyuan <zhanghongyuan@uniontech.com>  Tue, 23 Apr 2024 13:30:03 +0800
+
+deepin-screen-recorder (6.0.4) unstable; urgency=medium
+
+  * Update tag to 6.0.4.
+
+ -- zhanghongyuan <zhanghongyuan@uniontech.com>  Tue, 23 Apr 2024 13:19:20 +0800
+
+deepin-screen-recorder (6.0.3) unstable; urgency=medium
+
+  * Update tag to 6.0.3.
+
+ -- lvwujun <lvwujun@uniontech.com>  Thur, 28 Mar 2024 16:38:34 +0800
+
+deepin-screen-recorder (5.12.20) unstable; urgency=medium
+
+  * fix: The icon scales and deforms after adjusting the
+         display scaling ratio(Bug: 243881)
+  * feat: Add "Recrod" tray icon(Influence: dde-dock-plugin)
+  * feat: The "Screenshot" quick panel removes response
+         recording(Influence: dde-dock-pluin)
+  * fix: Record tray icon no 'Undock' menu(Bug: 250811)
+  * fix: Recording icon display flickering(Bug: 250749)
+
+ -- renbin <renbin@uniontech.com>  Fri, 12 Apr 2024 14:43:50 +0800
+
+deepin-screen-recorder (5.12.19) unstable; urgency=medium
+
+  * New version 5.12.19.
+
+ -- wangcong <wangcong@uniontech.com>  Tue, 27 Feb 2024 17:20:24 +0800
+deepin-screen-recorder (5.12.18) unstable; urgency=medium
+
+  * New version 5.12.18.
+
+ -- wangcong <wangcong@uniontech.com>  Wed, 21 Feb 2024 17:00:24 +0800
+deepin-screen-recorder (5.12.17) unstable; urgency=medium
+
+  * New version 5.12.17.
+
+ -- wangcong <wangcong@uniontech.com>  Thu, 1 Feb 2024 14:20:24 +0800
+deepin-screen-recorder (5.12.16) unstable; urgency=medium
+
+  * New version 5.12.16.
+
+ -- wangcong <wangcong@uniontech.com>  Wed, 17 Jan 2024 14:10:24 +0800
+deepin-screen-recorder (5.12.15) unstable; urgency=medium
+
+  * New version 5.12.15.
+
+ -- wangcong <wangcong@uniontech.com>  Wed, 10 Jan 2024 10:05:24 +0800
+deepin-screen-recorder (5.12.14) unstable; urgency=medium
+
+  * New version 5.12.14.
+
+ -- wangcong <wangcong@uniontech.com>  Fri, 29 Dec 2023 10:50:24 +0800
+deepin-screen-recorder (5.12.13) unstable; urgency=medium
+
+  * New version 5.12.13.
+
+ -- wangcong <wangcong@uniontech.com>  Tue, 5 Dec 2023 10:00:24 +0800
+deepin-screen-recorder (5.12.12) unstable; urgency=medium
+
+  * New version 5.12.12.
+
+ -- wangcong <wangcong@uniontech.com>  Tue, 17 Nov 2023 10:15:24 +0800
+deepin-screen-recorder (5.12.11) unstable; urgency=medium
+
+  * New version 5.12.11.
+
+ -- wangcong <wangcong@uniontech.com>  Thu, 17 Oct 2023 10:00:24 +0800
+deepin-screen-recorder (5.12.10) unstable; urgency=medium
+
+  * New version 5.12.10.
+
+ -- wangcong <wangcong@uniontech.com>  Thu, 17 Oct 2023 09:50:24 +0800
+deepin-screen-recorder (5.12.9) unstable; urgency=medium
+
+  * New version 5.12.9.
+
+ -- wangcong <wangcong@uniontech.com>  Wed, 30 Aug 2023 16:32:24 +0800
+deepin-screen-recorder (5.12.8) unstable; urgency=medium
+
+  * New version 5.12.8.
+
+ -- wangcong <wangcong@uniontech.com>  Wed, 15 Aug 2023 16:22:24 +0800
+deepin-screen-recorder (5.12.7) unstable; urgency=medium
+
+  * New version 5.12.7.
+
+ -- wangcong <wangcong@uniontech.com>  Wed, 19 Jul 2023 11:05:24 +0800
+deepin-screen-recorder (5.12.6) unstable; urgency=medium
+
+  * New version 5.12.6.
+
+ -- wangcong <wangcong@uniontech.com>  Wed, 25 Jun 2023 11:38:24 +0800
+deepin-screen-recorder (5.12.5) unstable; urgency=medium
+
+  * Graded control 5.12.5.
+
+ -- muyuankai <muyuankai@uniontech.com>  Thu, 25 May 2023 11:38:24 +0800
+
+deepin-screen-recorder (5.12.4) unstable; urgency=medium
+
+  * New version 5.12.4
+
+ -- wangcong <wangcong@uniontech.com>  Wed, 24 May 2023 14:24:47 +0800
+
+deepin-screen-recorder (5.12.3) unstable; urgency=medium
+
+  * Graded control.
+
+ -- muyuankai <muyuankai@uniontech.com>  Wed, 17 May 2023 11:17:47 +0800
+
+deepin-screen-recorder (5.12.2) unstable; urgency=low
+
+  * New version 5.12.2
+
+ -- wangcong <wangcong@uniontech.com>  Thu, 5 May 2023 18:02:05 +0800
+deepin-screen-recorder (5.12.1) unstable; urgency=low
+
+  * New version 5.12.1
+
+ -- wangcong <wangcong@uniontech.com>  Tue, 7 Mar 2023 13:10:05 +0800
+deepin-screen-recorder (5.11.21) unstable; urgency=low
+
+  * New version 5.11.21
+
+ -- wangcong <wangcong@uniontech.com>  Wed, 18 Jan 2023 10:34:05 +0800
+
+deepin-screen-recorder (5.11.20) unstable; urgency=low
+
+  * New version 5.11.20
+
+ -- wangcong <wangcong@uniontech.com>  Sat, 14 Jan 2023 15:05:05 +0800
+
+deepin-screen-recorder (5.11.19) unstable; urgency=low
+
+  * New version 5.11.19
+
+ -- hemingyang <hemingyang@uniontech.com>  Fri, 6 Jan 2023 10:05:05 +0800
+
+deepin-screen-recorder (5.11.18) unstable; urgency=low
+
+  * New version 5.11.18
+
+ -- hemingyang <hemingyang@uniontech.com>  Tues, 4 Jan 2023 14:03:05 +0800
+
+deepin-screen-recorder (5.11.17) unstable; urgency=low
+
+  * New version 5.11.17
+
+ -- hemingyang <hemingyang@uniontech.com>  Fri, 30 Dec 2022 17:08:05 +0800
+
+deepin-screen-recorder (5.11.16) unstable; urgency=low
+
+  * New version 5.11.16
+
+ -- hemingyang <hemingyang@uniontech.com>  Tues, 27 Dec 2022 16:50:05 +0800
+
+deepin-screen-recorder (0.1-1) unstable; urgency=low
+
+  * Initial release.
+
+ -- Deepin Packages Builder <packages@deepin.com>  Mon, 13 Feb 2017 16:32:34 +0800
