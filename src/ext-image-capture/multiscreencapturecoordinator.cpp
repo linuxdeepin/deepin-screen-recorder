@@ -225,6 +225,10 @@ QList<QScreen*> MultiScreenCaptureCoordinator::getAvailableScreens() const
 void MultiScreenCaptureCoordinator::onScreenFrameReady(QScreen* screen, int dmaBufferFd, void* gbmBo, 
                                                      int width, int height, int stride, size_t size, uint64_t timestamp)
 {
+    if (!screen) {
+        qCWarning(dsrApp) << "onScreenFrameReady: screen is null, ignoring frame.";
+        return;
+    }
     QMutexLocker locker(&m_frameMutex);
     
     qCDebug(dsrApp) << "MultiScreenCaptureCoordinator::onScreenFrameReady: Screen" << screen->name()
