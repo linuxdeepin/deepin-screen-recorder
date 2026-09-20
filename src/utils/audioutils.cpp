@@ -38,7 +38,7 @@ AudioUtils::AudioUtils(QObject *parent)
     qCDebug(dsrApp) << "AudioUtils constructor";
     Q_UNUSED(parent);
 
-#if QT_VERISON >= QT_VERSION_CHECK(6, 0, 0)
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
     qCDebug(dsrApp) << "Qt version >= 6.0.0, registerAudioPortMetaType()";
     registerAudioPortMetaType();
 #endif

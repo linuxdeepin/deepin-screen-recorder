@@ -254,6 +254,7 @@ XFixesCursorImage *EventMonitor::getCursorImage()
         return nullptr;
     }
     XFixesCursorImage *cursorImage = XFixesGetCursorImage(x11Display);
+    XCloseDisplay(x11Display);
     qCDebug(dsrApp) << "Cursor image retrieved. Returning it.";
     return cursorImage;
 }

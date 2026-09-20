@@ -310,8 +310,8 @@ void RecordProcess::recordVideo()
     qCDebug(dsrApp) << "Starting X11 FFmpeg video recording.";
     initProcess();
     //取系统音频的通道号
-    AudioUtils *audioUtils = new AudioUtils();
-    QString t_currentAudioChannel = audioUtils->currentAudioChannel();
+    AudioUtils audioUtils;
+    QString t_currentAudioChannel = audioUtils.currentAudioChannel();
     //-1表示系统音频的通道号错误
     if (t_currentAudioChannel == "-1") {
         qCWarning(dsrApp) << "Current system audio channel error!";
@@ -573,7 +573,10 @@ void RecordProcess::getScreenRecordSavePath()
     }
     if ((!QDir(saveDir).exists() && QDir().mkdir(saveDir) == false) ||   // 文件不存在，且创建失败
             (QDir(saveDir).exists() && !QFileInfo(saveDir).isWritable())) {   // 文件存在，且不能写
-        saveDir = QStandardPaths::standardLocations(QStandardPaths::MoviesLocation).first();
+        // 兜底分支与其它分支保持一致的后置条件：确保目录存在，且以路径分隔符结尾
+        const QString moviesDir = QStandardPaths::standardLocations(QStandardPaths::MoviesLocation).first();
+        QDir().mkpath(moviesDir);
+        saveDir = moviesDir + QDir::separator();
     }
     qCInfo(dsrApp) << "录屏保存目录: " << saveDir;
 }
@@ -614,7 +617,7 @@ void RecordProcess::waylandRecord()
     qCDebug(dsrApp) << "wayland 录屏！";
     // 启动wayland录屏
     initProcess();
-    AudioUtils *audioUtils = new AudioUtils();
+    AudioUtils audioUtils;
     QStringList arguments;
     arguments << QString("%1").arg(m_recordType);
     arguments << QString("%1").arg(m_recordRect.width()) << QString("%1").arg(m_recordRect.height());
@@ -622,8 +625,8 @@ void RecordProcess::waylandRecord()
     arguments << QString("%1").arg(m_framerate);
     arguments << QString("%1").arg(savePath);
     arguments << QString("%1").arg(m_audioType);
-    arguments << QString(audioUtils->getDefaultDeviceName(AudioUtils::DefaultAudioType::Source));
-    arguments << QString(audioUtils->getDefaultDeviceName(AudioUtils::DefaultAudioType::Sink));
+    arguments << QString(audioUtils.getDefaultDeviceName(AudioUtils::DefaultAudioType::Source));
+    arguments << QString(audioUtils.getDefaultDeviceName(AudioUtils::DefaultAudioType::Sink));
     qCDebug(dsrApp) << arguments;
     WaylandIntegration::init(arguments);
 #endif
@@ -719,9 +722,9 @@ void RecordProcess::GstStartRecord()
     m_gstRecordX->setFramerate(m_framerate);
     m_gstRecordX->setRecordArea(m_recordRect);
     //这里设置音频设备名称（输入和输出），即使名称为空也不影响。
-    AudioUtils *audioUtils = new AudioUtils();
-    m_gstRecordX->setInputDeviceName(audioUtils->getDefaultDeviceName(AudioUtils::DefaultAudioType::Source));
-    m_gstRecordX->setOutputDeviceName(audioUtils->getDefaultDeviceName(AudioUtils::DefaultAudioType::Sink));
+    AudioUtils audioUtils;
+    m_gstRecordX->setInputDeviceName(audioUtils.getDefaultDeviceName(AudioUtils::DefaultAudioType::Source));
+    m_gstRecordX->setOutputDeviceName(audioUtils.getDefaultDeviceName(AudioUtils::DefaultAudioType::Sink));
     //这里才会设置究竟采集哪些音频设备的音频数据
     if (m_audioType == Utils::kMicAndSystemAudio) {
         audioType =  GstRecordX::AudioType::Mix;
@@ -1068,18 +1071,18 @@ void RecordProcess::exitRecord(QString newSavePath)
 
     qCInfo(dsrApp) << __LINE__ << __func__ <<"录屏已退出";
 
-    // 延迟退出，确保剪切板操作完成
+#ifndef ENABLE_UNIT_TEST
+    // 延迟退出，确保剪切板操作完成（单测构建不调度应用退出，避免击穿测试事件循环）
     QTimer::singleShot(500, []() {
         QApplication::quit();
 
         // Treeland 和 Wayland 模式下都强制退出，避免残留事件循环导致进程无法退出
-#ifndef ENABLE_UNIT_TEST
         if (Utils::isWaylandMode || Utils::isTreelandMode) {
             qCInfo(dsrApp) << (Utils::isTreelandMode ? "treeland" : "wayland") << "record exit! (_Exit(0))";
             QTimer::singleShot(100, []() {
                 _Exit(0);
             });
         }
-#endif
     });
+#endif
 }

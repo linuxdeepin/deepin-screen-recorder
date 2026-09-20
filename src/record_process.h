@@ -166,7 +166,7 @@ private:
     /**
      * @brief 是否录制鼠标
      */
-    int m_mouseType = true;
+    int m_mouseType = RECORD_MOUSE_CURSE;
 
     /**
      * @brief 录屏的范围
