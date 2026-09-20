@@ -56,6 +56,15 @@ void ExtCaptureBridge::setExtCaptureRecorder(ExtCaptureRecorder *recorder)
         return;
     }
 
+    if (m_extCaptureRecorder) {
+        disconnect(m_extCaptureRecorder, &ExtCaptureRecorder::recordingStarted,
+                   this, &ExtCaptureBridge::onRecordingStarted);
+        disconnect(m_extCaptureRecorder, &ExtCaptureRecorder::recordingStopped,
+                   this, &ExtCaptureBridge::onRecordingStopped);
+        disconnect(m_extCaptureRecorder, &ExtCaptureRecorder::error,
+                   this, &ExtCaptureBridge::onRecordingError);
+    }
+
     m_extCaptureRecorder = recorder;
     
     if (recorder) {
@@ -175,7 +184,9 @@ void ExtCaptureBridge::processFrames()
             m_totalFramesProcessed++;
         } else {
             m_droppedFrames++;
-            break; // 处理失败，跳出循环
+            // 处理失败时结束本轮：processSingleFrame 的部分失败路径不消费帧，
+            // 若 continue 会因 hasFrames() 恒真在持锁状态下无限自旋
+            break;
         }
     }
     

@@ -359,8 +359,8 @@ void ExtCaptureSession::handleDone()
 {
     d->constraintsReceived = true;
     selectOptimalFormat();
-    setState(Ready);
-    emit ready();
+    if (d->state != Error) setState(Ready);
+    if (d->state != Error) emit ready();
     // qCWarning(dsrApp) << "ExtCaptureSession: Session constraints received, ready for capture";
 }
 
