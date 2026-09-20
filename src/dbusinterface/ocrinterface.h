@@ -59,10 +59,11 @@ public Q_SLOTS: // METHODS
         qDebug() << __FUNCTION__;
         QByteArray data;
         QBuffer buf(&data);
-        if (image.save(&buf, "PNG")) {
-            data = qCompress(data, 9);
-            data = data.toBase64();
+        if (!image.save(&buf, "PNG")) {
+            return QDBusPendingReply<>();
         }
+        data = qCompress(data, 9);
+        data = data.toBase64();
         return call(QStringLiteral("openImage"), QVariant::fromValue(data));
     }
 
@@ -78,10 +79,11 @@ public Q_SLOTS: // METHODS
         qDebug() << __FUNCTION__;
         QByteArray data;
         QBuffer buf(&data);
-        if (image.save(&buf, "PNG")) {
-            data = qCompress(data, 9);
-            data = data.toBase64();
+        if (!image.save(&buf, "PNG")) {
+            return QDBusPendingReply<>();
         }
+        data = qCompress(data, 9);
+        data = data.toBase64();
         return call(QStringLiteral("openImageAndName"), QVariant::fromValue(data),imageName);
     }
 

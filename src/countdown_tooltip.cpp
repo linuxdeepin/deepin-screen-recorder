@@ -184,7 +184,7 @@ void CountdownTooltip::start()
     }
     if(nullptr != showCountdownTimer){
         qCInfo(dsrApp) << Q_FUNC_INFO << "Connecting timeout signal and starting timer."; // Log branch
-        connect(showCountdownTimer, SIGNAL(timeout()), this, SLOT(update()));
+        connect(showCountdownTimer, SIGNAL(timeout()), this, SLOT(update()), Qt::UniqueConnection);
         showCountdownTimer->start(1000);
     }
     qCInfo(dsrApp) << Q_FUNC_INFO << "Exit."; // Log function exit
