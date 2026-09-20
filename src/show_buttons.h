@@ -19,7 +19,7 @@ class ShowButtons : public DWidget
 public:
     static const struct KeyDescription {
         QString text;
-        char x11Key;
+        int x11Key;
         int Qtkey; // wayland 用Qtkey码
     } keyDescriptions[];
 

@@ -180,7 +180,7 @@ bool BaseUtils::isCommandExist(QString command)
         qCWarning(dsrApp) << "Failed to create QProcess for command check:" << command;
         return false;
     }
-    QString cm = QString("which %1\n").arg(command);
+    QString cm = QString("which %1").arg(command);
     proc->start(cm);
     proc->waitForFinished(1000);
     int ret = proc->exitCode() == 0;

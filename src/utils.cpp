@@ -209,7 +209,7 @@ void Utils::drawTooltipText(QPainter &painter, QString text, QString textColor, 
     qCDebug(dsrApp) << "Tooltip text drawn.";
 }
 
-void Utils::passInputEvent(int wid)
+void Utils::passInputEvent(WId wid)
 {
     qCDebug(dsrApp) << "passInputEvent() called for window ID:" << wid << ".";
     // Wayland/TreeLand 事件穿透
@@ -759,7 +759,7 @@ QPoint Utils::getPosWithScreen(QPoint pos)
             pos.y() < screensInfo[i].y + screensInfo[i].height) {
             qCInfo(dsrApp) << "screenInfo: " << screensInfo[i].toString();
             dpos.setX(static_cast<int>((pos.x() - screensInfo[i].x) / pixelRatio + screensInfo[i].x));
-            dpos.setY(static_cast<int>((pos.y() - screensInfo[i].y) / pixelRatio) + +screensInfo[i].y);
+            dpos.setY(static_cast<int>((pos.y() - screensInfo[i].y) / pixelRatio + screensInfo[i].y));
         }
     }
     qCDebug(dsrApp) << "Position" << pos << "not found within any screen. Returning original position:" << dpos;

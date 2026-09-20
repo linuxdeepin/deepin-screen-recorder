@@ -106,7 +106,7 @@ void RecorderRegionShow::initCameraInfo(const CameraWidget::Position position, c
     m_cameraWidget->hide();
     m_cameraWidget->cameraStart();
     m_cameraWidget->setCameraWidgetImmovable(true); //固定窗口
-    Utils::passInputEvent(static_cast<int>(m_cameraWidget->winId()));
+    Utils::passInputEvent(m_cameraWidget->winId());
     qCDebug(dsrApp) << "Exit.";
 }
 
@@ -213,7 +213,7 @@ void RecorderRegionShow::updateMultiKeyBoardPos()
     int recordHeight = r.height();
 
 
-    int count = m_keyButtonList.count();
+    int count = qMin(m_keyButtonList.count(), 5);
     qCDebug(dsrApp) << "Number of key buttons:" << count; // Log count
     for (int j = 0; j < count; ++j) {
         qCDebug(dsrApp) << "Processing key button at index:" << j; // Log loop iteration

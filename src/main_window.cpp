@@ -1085,12 +1085,11 @@ void MainWindow::forciblySavingNotify()
 
 void MainWindow::onExit()
 {
-    static bool hasBeenCalled = false;
-    if (hasBeenCalled) {
+    if (m_hasExited) {
         qCInfo(dsrApp) << "onExit已被调用，忽略重复调用";
         return;
     }
-    hasBeenCalled = true;
+    m_hasExited = true;
 
     qCInfo(dsrApp) << "exit screenshot app";
     if (RECORD_BUTTON_RECORDING == recordButtonStatus) {
@@ -2160,12 +2159,12 @@ bool MainWindow::isToolBarInShotArea()
 {
     qCDebug(dsrApp) << "isToolBarInShotArea";
     const QPoint topLeft = geometry().topLeft();
-    QRect recordRect{static_cast<int>(recordX * m_pixelRatio + topLeft.x()),
-                     static_cast<int>(recordY * m_pixelRatio + topLeft.y()),
-                     static_cast<int>(recordWidth * m_pixelRatio),
-                     static_cast<int>(recordHeight * m_pixelRatio)};
-    int toolbarY = static_cast<int>(m_toolBar->y() * m_pixelRatio);
-    int toolbarHeight = static_cast<int>(m_toolBar->height() * m_pixelRatio);
+    QRect recordRect{static_cast<int>(recordX) + topLeft.x(),
+                     static_cast<int>(recordY) + topLeft.y(),
+                     static_cast<int>(recordWidth),
+                     static_cast<int>(recordHeight)};
+    int toolbarY = m_toolBar->y();
+    int toolbarHeight = m_toolBar->height();
     // 因为工具栏只会在捕捉区域上面或者下面，不存在左面或者右面的情况因此，只需要判断工具栏左上的y坐标及左下的y坐标是否在捕捉区域内部就行了
     if (recordRect.y() <= toolbarY && ((recordRect.y() + recordRect.height()) >= (toolbarY + toolbarHeight))) {
         qCDebug(dsrApp) << "isToolBarInShotArea return true";
@@ -2199,7 +2198,9 @@ void MainWindow::showPreviewWidgetImage(QImage img)
 void MainWindow::onExitScreenCapture()
 {
     qCInfo(dsrApp) << "已超时(3s) 强制退出截图录屏...";
+#ifndef ENABLE_UNIT_TEST
     _exit(0);
+#endif
 }
 
 void MainWindow::onScreenResolutionChanged()
@@ -2635,6 +2636,7 @@ void MainWindow::initBackground()
     }
 
     m_backgroundPixmap = getPixmapofRect(target);
+    m_backgroundPixmap.setDevicePixelRatio(m_pixelRatio);
     qCDebug(dsrApp) << "screen rect:" << m_backgroundPixmap.rect();
    // 暂时注释掉截图失败的检查
     /*
@@ -3572,7 +3574,6 @@ QPoint MainWindow::getTwoScreenIntersectPos(QPoint rawPos)
                 }
             }
             if (type == 0) {
-                if (intersectRect_1.x() + intersectRect_1.width() == s1x + s1w) {}
 
                 if (intersectRect_1.y() <= s1y) {
                     y = intersectRect_1.y() + intersectRect_1.height();
@@ -4055,10 +4056,9 @@ void MainWindow::prepareScreenshot()
 {
     qCInfo(dsrApp) << __FUNCTION__ << __LINE__ << "正在准备截图...";
     // 双击截图保存按钮会触发重复进入
-    static bool isSaving = false;
-    if (isSaving)
+    if (m_isSaving)
         return;
-    isSaving = true;
+    m_isSaving = true;
 
     if (m_pScreenCaptureEvent) {
         if (Utils::isWaylandMode) {
@@ -4293,10 +4293,9 @@ void MainWindow::saveScreenShot()
 {
     qCInfo(dsrApp) << __FUNCTION__ << __LINE__ << "正在执行截图保存流程...";
     // 双击截图保存按钮会触发重复进入
-    static bool isSaving = false;
-    if (isSaving)
+    if (m_isSaving)
         return;
-    isSaving = true;
+    m_isSaving = true;
 
     if (m_pScreenCaptureEvent) {
         if (Utils::isWaylandMode) {
@@ -4381,6 +4380,7 @@ void MainWindow::saveScreenShot()
         sendNotify(m_saveIndex, m_saveFileName, r);
 
     qCInfo(dsrApp) << __FUNCTION__ << __LINE__ << "通知消息已发送！";
+    m_isSaving = false;
     if (Utils::isWaylandMode) {
         exitApp();
     } else {
@@ -5024,7 +5024,6 @@ void MainWindow::paintEvent(QPaintEvent *event)
             backgroundRect = QRect(0, 0, rootWindowRect.width(), rootWindowRect.height());
         }
         
-        m_backgroundPixmap.setDevicePixelRatio(m_pixelRatio);
         painter.drawPixmap(backgroundRect, m_backgroundPixmap);
         //        DWidget::paintEvent(event);
         return;
@@ -5045,7 +5044,6 @@ void MainWindow::paintEvent(QPaintEvent *event)
     if (status::shot == m_functionType || m_hasComposite == false) {
         // 截图模式或2D模式：全屏绘制背景
         painter.setRenderHint(QPainter::Antialiasing, true);
-        m_backgroundPixmap.setDevicePixelRatio(m_pixelRatio);
         painter.drawPixmap(backgroundRect, m_backgroundPixmap);
     } else if (status::record == m_functionType || status::scrollshot == m_functionType) {
         // 录屏/滚动截图模式：只在模糊面板精确圆角区域绘制背景截图，供 InWidgetBlend 模糊采样。
@@ -5063,7 +5061,6 @@ void MainWindow::paintEvent(QPaintEvent *event)
             }
 
             painter.setRenderHint(QPainter::Antialiasing, true);
-            m_backgroundPixmap.setDevicePixelRatio(m_pixelRatio);
             painter.setClipPath(clipPath);
             painter.drawPixmap(backgroundRect, m_backgroundPixmap);
             painter.setClipping(false);
@@ -6772,13 +6769,13 @@ void MainWindow::onAdjustCaptureArea()
 void MainWindow::onScrollShotMerageImgState(PixMergeThread::MergeErrorValue state)
 {
     // LCOV_EXCL_START
+    if (m_tipShowtimer->isActive() || !m_initScroll) {
+        return;
+    }
     // 暂停滚动截图,可以通过点击继续进行截图
     m_scrollShotStatus = 3;
     // 暂停自动滚动截图
     pauseAutoScrollShot();
-    if (m_tipShowtimer->isActive() || !m_initScroll) {
-        return;
-    }
     qCDebug(dsrApp) << "function:" << __func__ << " ,line: " << __LINE__ << " , 拼接时的状态: " << state;
     // state = 1：拼接失败
     if (state == PixMergeThread::MergeErrorValue::Failed) {
@@ -7333,6 +7330,7 @@ void MainWindow::addCursorToImage()
                           cursorImage);
         delete[] pixels;
         XFree(m_CursorImage);
+        m_CursorImage = nullptr;
     }
     qCInfo(dsrApp) << __FUNCTION__ << __LINE__ << "已在图片中添加光标！";
     return;
@@ -7412,7 +7410,7 @@ void MainWindow::resizeLeft(QMouseEvent *mouseEvent)
         int offsetX = mouseEvent->x() - dragStartX;
         recordX = std::max(std::min(dragRecordX + offsetX, dragRecordX + dragRecordWidth - RECORD_MIN_SIZE), 1);
         recordWidth = std::max(std::min(dragRecordWidth - offsetX, m_backgroundRect.width()), RECORD_MIN_SIZE);
-    } else if (m_functionType == 1) {
+    } else if (status::shot == m_functionType) {
         int offsetX = mouseEvent->x() - dragStartX;
         recordX = std::max(std::min(dragRecordX + offsetX, dragRecordX + dragRecordWidth - RECORD_MIN_SHOT_SIZE), 1);
         recordWidth = std::max(std::min(dragRecordWidth - offsetX, m_backgroundRect.width()), RECORD_MIN_SHOT_SIZE);

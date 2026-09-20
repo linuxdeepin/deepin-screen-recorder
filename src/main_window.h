@@ -1256,6 +1256,8 @@ private:
      * @brief 功能类型  0: record, 1: shot , 2: scrollshot , 3: ocr , 4: pinscreenshots
      */
     unsigned int m_functionType = status::shot;  //0: record, 1: shot , 2: scrollshot
+    bool m_hasExited = false;   // onExit re-entrance guard (instance-level, reset per session)
+    bool m_isSaving = false;    // screenshot save re-entrance guard (instance-level)
     /**
      * @brief 此坐标用来记录截图和录屏切换时一级工具栏右上角的坐标
      *  确保切换功能后一级工具栏能够右对齐
