@@ -2057,7 +2057,7 @@ void ShapesWidget::paintLine(QPainter &painter, QList<QPointF> lineFPoints)
     else
         return;
 
-    for (int k = 1; k < lineFPoints.length() - 2; k++) {
+    for (int k = 1; k < lineFPoints.length() - 1; k++) {
         linePaths.quadTo(lineFPoints[k], lineFPoints[k + 1]);
     }
     painter.drawPath(linePaths);
@@ -2071,7 +2071,7 @@ void ShapesWidget::paintEffectLine(QPainter &painter, QList<QPointF> lineFPoints
     else
         return;
 
-    for (int k = 1; k < lineFPoints.length() - 2; k++) {
+    for (int k = 1; k < lineFPoints.length() - 1; k++) {
         FourPoints rectFoints = getRectPoints(lineFPoints[k - 1], lineFPoints[k + 1], lineWidth);
         paintRect(painter, rectFoints, 0, Drawing, isMosaic, !isMosaic, radius);
         //paintRect(painter, rectFoints, 0, Hovered, false, false, radius);
@@ -2446,7 +2446,7 @@ void ShapesWidget::undoDrawShapes()
 {
     textEditIsReadOnly();
     qDebug() << "undoDrawShapes m_selectedIndex:" << m_selectedIndex << m_shapes.length();
-    if (m_selectedOrder < m_shapes.length() && m_selectedIndex != -1) {
+    if (m_selectedOrder >= 0 && m_selectedOrder < m_shapes.length() && m_selectedIndex != -1) {
         deleteCurrentShape();
     } else if (m_shapes.length() > 0) {
         int tmpIndex = m_shapes[m_shapes.length() - 1].index;
@@ -2470,7 +2470,7 @@ void ShapesWidget::undoDrawShapes()
 void ShapesWidget::undoAllDrawShapes()
 {
     qDebug() << "undoAllDrawShapes undoDrawShapes m_selectedIndex:" << m_selectedIndex << m_shapes.length();
-    if (m_selectedOrder < m_shapes.length() && m_selectedIndex != -1) {
+    if (m_selectedOrder >= 0 && m_selectedOrder < m_shapes.length() && m_selectedIndex != -1) {
         deleteCurrentShape();
     } else if (m_shapes.length() > 0) {
         while (m_shapes.length() > 0) {

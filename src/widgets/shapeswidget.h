@@ -240,21 +240,21 @@ private:
     QPointF m_movingPoint;
     qreal   m_lastAngle;
 
-    bool m_isRecording;
-    bool m_isMoving;
-    bool m_isSelected;
-    bool m_isPressed;
-    bool m_isHovered;
-    bool m_isRotated;
-    bool m_isArrowRotated;
-    bool m_isResize;
-    bool m_isShiftPressed;
-    bool m_editing;
+    bool m_isRecording = false;
+    bool m_isMoving = false;
+    bool m_isSelected = false;
+    bool m_isPressed = false;
+    bool m_isHovered = false;
+    bool m_isRotated = false;
+    bool m_isArrowRotated = false;
+    bool m_isResize = false;
+    bool m_isShiftPressed = false;
+    bool m_editing = false;
 
     /**
      * @brief m_isSelectedText: 是否选中文本框
      */
-    bool m_isSelectedText;
+    bool m_isSelectedText = false;
     ResizeDirection m_resizeDirection;
     ClickedKey m_clickedKey;
 
