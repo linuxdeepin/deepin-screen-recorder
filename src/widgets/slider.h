@@ -21,8 +21,8 @@ public:
     {
     }
     explicit Slider(Qt::Orientation orientation = Qt::Horizontal, QWidget *parent = nullptr)
+        : DSlider(orientation, parent)
     {
-        DSlider(orientation, parent);
     }
 
     ~Slider() {}
@@ -36,8 +36,8 @@ protected:
 
     void leaveEvent(QEvent *e) override
     {
-
-        qApp->setOverrideCursor(m_lastCursorShape->shape());
+        if (m_lastCursorShape)
+            qApp->setOverrideCursor(m_lastCursorShape->shape());
         DSlider::leaveEvent(e);
     }
 

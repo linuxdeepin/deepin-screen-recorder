@@ -214,7 +214,7 @@ void SaveButton::enterEvent(QEnterEvent *event)
 void SaveButton::enterEvent(QEvent *event)
 {
     ToolButton::enterEvent(event);
-    currentMouseX = kSaveAreaWidth / 2;
+    currentMouseX = mapFromGlobal(QCursor::pos()).x();
     if (!m_hoverFlag) {
         m_hoverFlag = true;
         update();
