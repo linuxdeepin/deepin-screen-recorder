@@ -72,6 +72,9 @@ void RecorderTablet::start()
     qCDebug(dsrApp) << "Sent recorder state to true.";
 
     showCountdownCounter = 3;
+    if (m_changeTimer) {
+        delete m_changeTimer;
+    }
     m_changeTimer = new QTimer(this);
     qCDebug(dsrApp) << "Countdown timer created and connected.";
     connect(m_changeTimer, SIGNAL(timeout()), this, SLOT(update()));
