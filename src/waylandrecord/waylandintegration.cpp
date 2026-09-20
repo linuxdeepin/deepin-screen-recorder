@@ -505,8 +505,6 @@ void WaylandIntegration::WaylandIntegrationPrivate::onDeviceChanged(quint32 name
 
 void WaylandIntegration::WaylandIntegrationPrivate::processBuffer(const KWayland::Client::RemoteBuffer *rbuf, const QRect rect)
 {
-    qInfo() << __FUNCTION__ << __LINE__ << "开始处理buffer...";
-    qDebug() << ">>>>>> open fd!" << rbuf->fd();
 //    QScopedPointer<const KWayland::Client::RemoteBuffer> guard(rbuf);
     auto dma_fd = rbuf->fd();
     quint32 width = rbuf->width();
@@ -562,8 +560,6 @@ void WaylandIntegration::WaylandIntegrationPrivate::processBuffer(const KWayland
 
 void WaylandIntegration::WaylandIntegrationPrivate::processBufferHw(const KWayland::Client::RemoteBuffer *rbuf, const QRect rect, int screenId)
 {
-    qInfo() << __FUNCTION__ << __LINE__ << "开始处理buffer...";
-    qDebug() << ">>>>>> open fd!" << rbuf->fd();
 //    QScopedPointer<const KWayland::Client::RemoteBuffer> guard(rbuf);
     auto dma_fd = rbuf->fd();
     quint32 width = rbuf->width();
@@ -714,7 +710,6 @@ void WaylandIntegration::WaylandIntegrationPrivate::processBufferHw(const KWayla
     }
 #endif
     munmap(mapData, stride * height);
-    qInfo() << __FUNCTION__ << __LINE__ << "已处理buffer";
 }
 
 //拷贝数据，当远程buffer没有数据传过来时，调用此接口，将上一次的屏幕数据做为当前的屏幕数据
@@ -765,28 +760,20 @@ QImage::Format WaylandIntegration::WaylandIntegrationPrivate::getImageFormat(qui
 {
     switch (format) {
     case GBM_FORMAT_XRGB8888: //GBM_FORMAT_XRGB8888 = 875713112
-        qDebug() << "fd 图片格式: XRGB" << GBM_FORMAT_XRGB8888 << " -> " << "QImage::Format_RGB32";
         return QImage::Format_RGB32;
     case GBM_FORMAT_XBGR8888: //GBM_FORMAT_XBGR8888 = 875709016
-        qDebug() << "fd 图片格式: XBGR" << GBM_FORMAT_XBGR8888 << " -> " << "QImage::Format_RGB32";
         return QImage::Format_RGB32;
     case GBM_FORMAT_RGBX8888: //GBM_FORMAT_RGBX8888 = 875714642
-        qDebug() << "fd 图片格式: RGBX" << GBM_FORMAT_RGBX8888 << " -> " << "QImage::Format_RGBX8888";
         return QImage::Format_RGBX8888;
     case GBM_FORMAT_BGRX8888: //GBM_FORMAT_BGRX8888 = 875714626
-        qDebug() << "fd 图片格式: BGRX" << GBM_FORMAT_BGRX8888 << " -> " << "QImage::Format_BGR30";
         return QImage::Format_BGR30;
     case GBM_FORMAT_ARGB8888: //GBM_FORMAT_ARGB8888 = 875713089
-        qDebug() << "fd 图片格式: ARGB" << GBM_FORMAT_ARGB8888 << " -> " << "QImage::Format_ARGB32";
         return QImage::Format_ARGB32;
     case GBM_FORMAT_ABGR8888: //GBM_FORMAT_ABGR8888 = 875708993
-        qDebug() << "fd 图片格式: ABGR" << GBM_FORMAT_ABGR8888 << " -> " << "QImage::Format_ARGB32";
         return QImage::Format_ARGB32;
     case GBM_FORMAT_RGBA8888: //GBM_FORMAT_RGBA8888 = 875708754
-        qDebug() << "fd 图片格式: RGBA" << GBM_FORMAT_RGBA8888 << " -> " << "QImage::Format_RGBA8888";
         return QImage::Format_RGBA8888;
     case GBM_FORMAT_BGRA8888: //GBM_FORMAT_BGRA8888 = 875708738
-        qDebug() << "fd 图片格式: BGRA" << GBM_FORMAT_BGRA8888 << " -> " << "QImage::Format_BGR30";
         return QImage::Format_BGR30;
     default:
         qDebug() << "fd 图片格式未知: " << format << " -> " << "QImage::Format_RGB32";
@@ -796,8 +783,6 @@ QImage::Format WaylandIntegration::WaylandIntegrationPrivate::getImageFormat(qui
 
 void WaylandIntegration::WaylandIntegrationPrivate::processBufferX86(const KWayland::Client::RemoteBuffer *rbuf, const QRect rect)
 {
-    qInfo() << __FUNCTION__ << __LINE__ << "开始处理buffer...";
-    qDebug() << ">>>>>> open fd!" << rbuf->fd();
     //QScopedPointer<const KWayland::Client::RemoteBuffer> guard(rbuf);
     auto dma_fd = rbuf->fd();
     quint32 width = rbuf->width();
@@ -901,24 +886,41 @@ void WaylandIntegration::WaylandIntegrationPrivate::appendFrameToList()
 #else
 
             QVector<QPair<QRect, QImage>> tempImageVec;
+            bool frameReady = false;
             {
                 QMutexLocker locker(&m_bGetScreenImageMutex);
                 if (m_boardVendorType) {
-                    if (!m_curNewImageScreenFrames[0]._flag || !m_curNewImageScreenFrames[1]._flag) continue;
-                    for (int i = 0 ; i < 2 ; i++) {
-                        QImage tempImage = QImage(m_curNewImageScreenFrames[i]._frame,
-                                                  static_cast<int>(m_curNewImageScreenFrames[i]._width),
-                                                  static_cast<int>(m_curNewImageScreenFrames[i]._height),
-                                                  m_curNewImageScreenFrames[i]._format).copy();
-                        tempImageVec.append(QPair<QRect, QImage>(m_curNewImageScreenFrames[i]._rect, tempImage));
-                        m_curNewImageScreenFrames[i]._flag = false;
+                    frameReady = isScreenFrameReady(true,
+                                                    m_screenCount,
+                                                    m_curNewImageScreenFrames[0]._flag,
+                                                    m_curNewImageScreenFrames[1]._flag,
+                                                    m_curNewImageScreen.size());
+                    if (frameReady) {
+                        for (int i = 0 ; i < 2 ; i++) {
+                            QImage tempImage = QImage(m_curNewImageScreenFrames[i]._frame,
+                                                      static_cast<int>(m_curNewImageScreenFrames[i]._width),
+                                                      static_cast<int>(m_curNewImageScreenFrames[i]._height),
+                                                      m_curNewImageScreenFrames[i]._format).copy();
+                            tempImageVec.append(QPair<QRect, QImage>(m_curNewImageScreenFrames[i]._rect, tempImage));
+                            m_curNewImageScreenFrames[i]._flag = false;
+                        }
                     }
                 } else {
-                    if (m_curNewImageScreen.size() != m_screenCount) continue;
-                    for (auto itr = m_curNewImageScreen.begin(); itr != m_curNewImageScreen.end(); ++itr) {
-                        tempImageVec.append(*itr);
+                    frameReady = isScreenFrameReady(false,
+                                                    m_screenCount,
+                                                    false,
+                                                    false,
+                                                    m_curNewImageScreen.size());
+                    if (frameReady) {
+                        for (auto itr = m_curNewImageScreen.begin(); itr != m_curNewImageScreen.end(); ++itr) {
+                            tempImageVec.append(*itr);
+                        }
                     }
                 }
+            }
+            if (!frameReady) {
+                QThread::msleep(static_cast<unsigned long>(delayTime));
+                continue;
             }
             QImage img(m_screenSize, QImage::Format_RGBA8888);
             if (m_boardVendorType) {
@@ -1055,7 +1057,6 @@ void WaylandIntegration::WaylandIntegrationPrivate::setupRegistry()
             //qDebug() << "screenGeometry: " << screenGeometry;
             //qDebug() << "rbuf->isValid(): " << rbuf->isValid();
             connect(rbuf, &KWayland::Client::RemoteBuffer::parametersObtained, this, [this, rbuf, screenGeometry] {
-                qDebug() << "正在处理buffer..." << "fd:" << rbuf->fd() << "frameCount: " << frameCount ;
                 if(frameCount == 0)
                 {
                     qDebug() << "Current number of screens: " << m_screenCount;
@@ -1071,7 +1072,6 @@ void WaylandIntegration::WaylandIntegrationPrivate::setupRegistry()
                 }
 
 #ifdef KWAYLAND_REMOTE_BUFFER_RELEASE_FLAGE_ON
-                qDebug()<< "m_screenCount: "<< m_screenCount << "m_isScreenExtension: " << m_isScreenExtension << screenGeometry << "m_currentScreenBufs[0]->" <<  (m_currentScreenBufs[0] ? "true":"false") << "m_currentScreenBufs[1]->" << (m_currentScreenBufs[1] ? "true":"false");;
                 if (m_screenCount == 1 || !m_isScreenExtension)
                 {
                     if(m_currentScreenBufs[0] == nullptr)
@@ -1193,7 +1193,6 @@ void WaylandIntegration::WaylandIntegrationPrivate::setupRegistry()
                     rbuf->release();
 #endif
                 }
-                qDebug() << "buffer已处理" << "fd:" << rbuf->fd() << "frameCount: " << frameCount;
             });
             //qDebug() << "buffer已接收";
         });
@@ -1256,13 +1255,9 @@ void WaylandIntegration::WaylandIntegrationPrivate::initEgl()
 }
 void WaylandIntegration::WaylandIntegrationPrivate::appendBuffer(unsigned char *frame, int width, int height, int stride, int64_t time)
 {
-    static int f_count = 0;
-    bool res = false;
-    if (res = !bGetFrame() || nullptr == frame || width <= 0 || height <= 0) {
-        qDebug() << "drop ...." << res << frame << width  << height;
+    if (!bGetFrame() || nullptr == frame || width <= 0 || height <= 0) {
         return;
     }
-    qDebug() << "append frame index:" << ++f_count;
     int size = height * stride;
     unsigned char *ch = nullptr;
     if (m_bInit) {
@@ -1282,7 +1277,6 @@ void WaylandIntegration::WaylandIntegrationPrivate::appendBuffer(unsigned char *
         //先进先出
         //取队首
         waylandFrame wFrame = m_waylandList.first();
-        memset(wFrame._frame, 0, static_cast<size_t>(size));
         //拷贝当前帧
         memcpy(wFrame._frame, frame, static_cast<size_t>(size));
         wFrame._time = time;
@@ -1306,7 +1300,6 @@ void WaylandIntegration::WaylandIntegrationPrivate::appendBuffer(unsigned char *
             wFrame._index = 0;
             //分配空闲内存
             wFrame._frame = m_freeList.first();
-            memset(wFrame._frame, 0, static_cast<size_t>(size));
             //拷贝wayland推送的视频帧
             memcpy(wFrame._frame, frame, static_cast<size_t>(size));
             m_waylandList.append(wFrame);
@@ -1366,6 +1359,10 @@ void WaylandIntegration::WaylandIntegrationPrivate::appendRemoteBuffer()
             }else{
                 copyScreenData(1);
             }
+        }
+        if (m_currentScreenBufs[0] == nullptr
+                && (m_screenCount != 2 || !m_isScreenExtension || m_currentScreenBufs[1] == nullptr)) {
+            QThread::msleep(2);
         }
     }
     qInfo() << "Stop append remote buffer" ;
@@ -1453,14 +1450,10 @@ int WaylandIntegration::WaylandIntegrationPrivate::getPadStride(int width, int d
 
 void WaylandIntegration::WaylandIntegrationPrivate::copyBuffer(unsigned char *tmpDst, unsigned char * tmpSrc, const KWayland::Client::RemoteBuffer *rbuf)
 {
-    unsigned char *dst = tmpDst;
-    unsigned char *buf = tmpSrc;
-    int srcStride = getPadStride(rbuf->width(),4,32);
-    qDebug()<<"current strade"<<srcStride;
-
-    for (int i = 0; i < rbuf->height(); i++) {
-        memcpy(dst, buf, srcStride);
-        buf += rbuf->stride();
-        dst += srcStride;
-    }
+    const int rowBytes = getPadStride(rbuf->width(), 4, 32);
+    copyImageRows(tmpDst,
+                  tmpSrc,
+                  rowBytes,
+                  static_cast<int>(rbuf->height()),
+                  static_cast<int>(rbuf->stride()));
 }

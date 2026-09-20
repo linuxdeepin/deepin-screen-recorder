@@ -131,6 +131,13 @@ void CAVOutputStream::SetVideoCodecProp(AVCodecID codec_id, int framerate, int b
     m_gopsize = gopsize;
 }
 
+bool CAVOutputStream::shouldUseSingleThread(int width, int height)
+{
+    const qint64 pixelCount = static_cast<qint64>(width) * height;
+    const qint64 fullHdPixelCount = static_cast<qint64>(1920) * 1080;
+    return m_boardVendorType != 0 && width > 0 && height > 0 && pixelCount <= fullHdPixelCount;
+}
+
 //初始化音频编码器
 void CAVOutputStream::SetAudioCodecProp(AVCodecID codec_id, int samplerate, int channels, int layout, int bitrate)
 {
@@ -502,7 +509,10 @@ bool CAVOutputStream::open(QString path)
             // Set H264 preset and tune
             avlibInterface::m_av_dict_set(&param, "preset", "ultrafast", 0);
             avlibInterface::m_av_dict_set(&param, "tune", "zerolatency", 0);
-            avlibInterface::m_av_dict_set(&param, "crf", "30", 0);            // 质量较低，文件较大但编码更快
+            avlibInterface::m_av_dict_set(&param, "crf", "30", 0);
+            if (shouldUseSingleThread(pCodecCtx->width, pCodecCtx->height)) {
+                avlibInterface::m_av_dict_set(&param, "threads", "1", 0);
+            }
         }
 
         if (avlibInterface::m_avcodec_open2(pCodecCtx, pCodec, &param) < 0) {
@@ -734,16 +744,11 @@ int CAVOutputStream::writeVideoFrame(WaylandIntegration::WaylandIntegrationPriva
         //qDebug() << "stride-src: " << pRgbFrame->linesize[0] << pRgbFrame->width*4 << pRgbFrame->linesize[2] <<
         //            "stride-dst: " << pFrameYUV->linesize[0] << pFrameYUV->linesize[1] << pFrameYUV->linesize[2];
         //qDebug() << "pYUVFrame -w h" << pFrameYUV->width << pFrameYUV->height ;
-        qint64 time2 = QDateTime::currentMSecsSinceEpoch();
         avlibInterface::m_sws_scale(m_pVideoSwsContext, pRgbFrame->data, pRgbFrame->linesize, 0, pCodecCtx->height, pFrameYUV->data, pFrameYUV->linesize);
 
-
-        qint64 time3 = QDateTime::currentMSecsSinceEpoch();
-        qDebug() << "time3 - time2: sws_scale : " << time3-time2;
         if (pRgbFrame->height != pCodecCtx->height && pRgbFrame->width != pCodecCtx->width) {
             pFrameYUV->width  = pCodecCtx->width;
             pFrameYUV->height = pCodecCtx->height;
-            qDebug() << "the frame maybe cropped. the frame mybe not be encode. use the codectx as encode frame size";
         } else {
             pFrameYUV->width  = pRgbFrame->width;
             pFrameYUV->height = pRgbFrame->height;
@@ -752,8 +757,6 @@ int CAVOutputStream::writeVideoFrame(WaylandIntegration::WaylandIntegrationPriva
     } else {
         pFrameYUV->width  = pCodecCtx->width;
         pFrameYUV->height = pCodecCtx->height;
-
-        qint64 time2 = QDateTime::currentMSecsSinceEpoch();
 
         convertARGB2YUV420(pCodecCtx->width,
                            pCodecCtx->height,
@@ -791,10 +794,8 @@ int CAVOutputStream::writeVideoFrame(WaylandIntegration::WaylandIntegrationPriva
             return ret;
         }
     }
-    qint64 time4 = QDateTime::currentMSecsSinceEpoch();
 //    qDebug() << "time4 - time1: writeVideoFrame : " << time4-time1;
     avlibInterface::m_av_free_packet(&packet);
-    fflush(stdout);
     return 0;
 }
 
@@ -1205,7 +1206,6 @@ void CAVOutputStream::writeMixAudio()
                 printf("Mixer: failed to call av_buffersink_get_frame_flags ret : %d \n", ret);
                 break;
             }
-            fflush(stdout);
             if (pFrame_out->data[0] != nullptr) {
                 AVPacket packet_out;
                 avlibInterface::m_av_init_packet(&packet_out);

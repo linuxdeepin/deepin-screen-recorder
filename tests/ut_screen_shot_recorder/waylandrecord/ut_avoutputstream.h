@@ -333,6 +333,35 @@ ACCESS_PRIVATE_FIELD(CAVOutputStream, uint8_t *, m_out_buffer);
 ACCESS_PRIVATE_FIELD(CAVOutputStream, AVFilterGraph *, filter_graph);
 ACCESS_PRIVATE_FIELD(CAVOutputStream, AVFrame *, mMic_frame);
 ACCESS_PRIVATE_FIELD(CAVOutputStream, AVFrame *, mSpeaker_frame);
+ACCESS_PRIVATE_FUN(CAVOutputStream, bool(int, int), shouldUseSingleThread);
+
+TEST_F(CAVOutputStreamTest, shouldUseSingleThreadForHuaweiFullHD)
+{
+    m_avOutputStream->setBoardVendor(1);
+
+    EXPECT_TRUE(call_private_fun::CAVOutputStreamshouldUseSingleThread(*m_avOutputStream, 1920, 1080));
+}
+
+TEST_F(CAVOutputStreamTest, shouldNotUseSingleThreadForHuawei4K)
+{
+    m_avOutputStream->setBoardVendor(1);
+
+    EXPECT_FALSE(call_private_fun::CAVOutputStreamshouldUseSingleThread(*m_avOutputStream, 3840, 2160));
+}
+
+TEST_F(CAVOutputStreamTest, shouldNotUseSingleThreadForOtherVendors)
+{
+    m_avOutputStream->setBoardVendor(0);
+
+    EXPECT_FALSE(call_private_fun::CAVOutputStreamshouldUseSingleThread(*m_avOutputStream, 1920, 1080));
+}
+
+TEST_F(CAVOutputStreamTest, shouldNotUseSingleThreadForInvalidSize)
+{
+    m_avOutputStream->setBoardVendor(1);
+
+    EXPECT_FALSE(call_private_fun::CAVOutputStreamshouldUseSingleThread(*m_avOutputStream, 0, 1080));
+}
 
 TEST_F(CAVOutputStreamTest, SetVideoCodecProp)
 {

@@ -18,6 +18,7 @@
 #include <QScreen>
 #include <QDesktopWidget>
 #include <QtConcurrent>
+#include <cstring>
 
 #include "stub.h"
 #include "addr_pri.h"
@@ -35,6 +36,53 @@
 #include <KWayland/Client/remote_access.h>
 using namespace testing;
 using namespace WaylandIntegration;
+
+ACCESS_PRIVATE_STATIC_FUN(WaylandIntegrationPrivate,
+                          void(unsigned char *, const unsigned char *, int, int, int),
+                          copyImageRows);
+ACCESS_PRIVATE_STATIC_FUN(WaylandIntegrationPrivate,
+                          bool(bool, int, bool, bool, int),
+                          isScreenFrameReady);
+
+TEST(WaylandFramePipelineTest, copyImageRowsCopiesContiguousBuffer)
+{
+    const unsigned char source[] = {1, 2, 3, 4, 5, 6, 7, 8};
+    unsigned char destination[sizeof(source)] = {};
+
+    call_private_static_fun::WaylandIntegrationPrivate::WaylandIntegrationPrivatecopyImageRows(
+        destination, source, 4, 2, 4);
+
+    EXPECT_EQ(0, std::memcmp(destination, source, sizeof(source)));
+}
+
+TEST(WaylandFramePipelineTest, copyImageRowsSkipsSourcePadding)
+{
+    const unsigned char source[] = {1, 2, 3, 4, 99, 99, 5, 6, 7, 8, 99, 99};
+    const unsigned char expected[] = {1, 2, 3, 4, 5, 6, 7, 8};
+    unsigned char destination[sizeof(expected)] = {};
+
+    call_private_static_fun::WaylandIntegrationPrivate::WaylandIntegrationPrivatecopyImageRows(
+        destination, source, 4, 2, 6);
+
+    EXPECT_EQ(0, std::memcmp(destination, expected, sizeof(expected)));
+}
+
+TEST(WaylandFramePipelineTest, screenFrameIsNotReadyUntilAllVendorBuffersArrive)
+{
+    EXPECT_FALSE(call_private_static_fun::WaylandIntegrationPrivate::WaylandIntegrationPrivateisScreenFrameReady(
+        true, 2, true, false, 0));
+    EXPECT_TRUE(call_private_static_fun::WaylandIntegrationPrivate::WaylandIntegrationPrivateisScreenFrameReady(
+        true, 2, true, true, 0));
+}
+
+TEST(WaylandFramePipelineTest, screenFrameIsNotReadyUntilAllImagesArrive)
+{
+    EXPECT_FALSE(call_private_static_fun::WaylandIntegrationPrivate::WaylandIntegrationPrivateisScreenFrameReady(
+        false, 2, false, false, 1));
+    EXPECT_TRUE(call_private_static_fun::WaylandIntegrationPrivate::WaylandIntegrationPrivateisScreenFrameReady(
+        false, 2, false, false, 2));
+}
+
 class WaylandIntegrationPrivateTest: public testing::Test
 {
 public:
@@ -363,4 +411,3 @@ TEST_F(WaylandIntegrationPrivateTest, appendFrameToList)
     access_private_field::WaylandIntegrationPrivatem_appendFrameToListFlag(*m_waylandIntegrationPrivate) = false;
     call_private_fun::WaylandIntegrationPrivateappendFrameToList(*m_waylandIntegrationPrivate);
 }
-
