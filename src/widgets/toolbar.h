@@ -185,6 +185,7 @@ protected:
 #elif (QT_VERSION_MAJOR == 6)
     void enterEvent(QEnterEvent *e) Q_DECL_OVERRIDE;
 #endif
+    void leaveEvent(QEvent *e) Q_DECL_OVERRIDE;
     bool eventFilter(QObject *obj, QEvent *event) Q_DECL_OVERRIDE;
     void mousePressEvent(QMouseEvent* event) Q_DECL_OVERRIDE;
     void mouseMoveEvent(QMouseEvent* event) Q_DECL_OVERRIDE;

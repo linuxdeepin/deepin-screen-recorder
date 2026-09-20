@@ -57,6 +57,8 @@ void TopTips::setContent(const QSize &size)
         setText(text);
         setFixedSize(fontMetrics().horizontalAdvance(text), fontMetrics().boundingRect(text).height());
     }
+    m_width = size.width();
+    m_height = size.height();
 }
 
 void TopTips::updateTips(QPoint pos, const QSize &size)

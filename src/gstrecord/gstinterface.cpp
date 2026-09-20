@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2022-2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -66,8 +66,11 @@ QString gstInterface::libPath(const QString &sLib)
         qCDebug(dsrApp) << "Library list:" << list;
         list.sort();
     }
+    if (list.isEmpty()) {
+        qCWarning(dsrApp) << "No library found for:" << sLib;
+        return QString();
+    }
     qCDebug(dsrApp) << "Returning last library in sorted list:" << list.last();
-    //Q_ASSERT(list.size() > 0);
     return list.last();
 }
 void gstInterface::initFunctions()
@@ -118,6 +121,7 @@ void gstInterface::initFunctions()
 
     qCDebug(dsrApp) << "gstreamer-1.0 function is load";
 
+    m_isInitFunction = true;
 }
 
 void gstInterface::unloadFunctions()
@@ -130,6 +134,8 @@ void gstInterface::unloadFunctions()
         qCDebug(dsrApp) << "libglib-2.0 unloaded.";
         m_libgobject.unload();
         qCDebug(dsrApp) << "libgobject-2.0 unloaded.";
+        // 复位初始化标志，允许后续录屏重新加载库并解析符号
+        m_isInitFunction = false;
     }
     qCDebug(dsrApp) << "unloadFunctions method finished.";
 }

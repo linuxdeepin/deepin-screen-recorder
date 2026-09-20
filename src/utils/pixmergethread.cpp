@@ -179,7 +179,6 @@ QImage PixMergeThread::getMerageResult() const
 
 void PixMergeThread::run()
 {
-    m_loopTask = true;
     qCInfo(dsrApp) << "PixMergeThread started running";
     while (m_loopTask) {
         while (!m_pixImgs.isEmpty()) {

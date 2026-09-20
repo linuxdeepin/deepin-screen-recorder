@@ -242,7 +242,8 @@ bool HoverShadowFilter::eventFilter(QObject *obj, QEvent *event)
     }
     case QEvent::Leave: {
         auto w = qobject_cast<QWidget *>(obj);
-        w->graphicsEffect()->deleteLater();
+        if (w->graphicsEffect())
+            w->graphicsEffect()->deleteLater();
         w->setGraphicsEffect(nullptr);
         w->unsetCursor();
         return QObject::eventFilter(obj, event);

@@ -83,6 +83,7 @@ void ShotToolWidget::installTipHint(QWidget *w, const QString &hintstr)
 //初始化模糊功能工具栏
 void ShotToolWidget::initEffectLabel()
 {
+    if (m_effectSubTool) return;
     qCDebug(dsrApp) << "ShotToolWidget::initEffectLabel called.";
     m_effectSubTool = new DLabel(this);
     DBlurEffectWidget *t_blurArea = new DBlurEffectWidget(this);

@@ -169,7 +169,6 @@ void MenuController::showMenu(QPoint pos)
 {
     qCDebug(dsrApp) << "Showing menu at position:" << pos;
     // 立即设置鼠标样式为箭头光标
-    qApp->setOverrideCursor(Qt::ArrowCursor);
     m_menu->popup(pos);
 }
 

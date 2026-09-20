@@ -511,6 +511,7 @@ void GstRecordX::stopPipeline()
     qCDebug(dsrApp) << "Pipeline state set to NULL";
     Q_UNUSED(ret);
     gstInterface::m_gst_object_unref(m_pipeline);
+    m_pipeline = nullptr;
     qCInfo(dsrApp) << "Pipeline stopped and cleaned up";
 }
 
@@ -543,8 +544,8 @@ GstRecordX::~GstRecordX()
     qCDebug(dsrApp) << "GstRecordX destructor called.";
     if (m_pipeline) {
         qCInfo(dsrApp) << "Cleaning up GStreamer pipeline";
+        gstInterface::m_gst_object_unref(m_pipeline);
         m_pipeline = nullptr;
-        delete m_pipeline;
     }
     qCDebug(dsrApp) << "GstRecordX destructor finished.";
 }

@@ -42,6 +42,8 @@ bool XMultiScreenInfo::screenNeedResetScale()
         XineramaScreenInfo *screens = XineramaQueryScreens(display, &num_screens);
         if (!screens || num_screens <= 1) {
             qCDebug(dsrApp) << "Less than or equal to one screen or screens info is null. Number of screens:" << num_screens;
+            if (screens)
+                XFree(screens);
             break;
         }
 

@@ -66,7 +66,7 @@ public:
     static QString getQrcPath(QString imageName);
     static void drawTooltipBackground(QPainter &painter, QRect rect, QString textColor, qreal opacity = 0.4);
     static void drawTooltipText(QPainter &painter, QString text, QString textColor, int textSize, QRectF rect);
-    static void passInputEvent(int wid);
+    static void passInputEvent(WId wid);
     static void setFontSize(QPainter &painter, int textSize);
     static void setAccessibility(DPushButton *button, const QString name);
     static void setAccessibility(DToolButton *button, const QString name);
