@@ -341,7 +341,7 @@ void ToolButton::leaveEvent(QEvent *e)
     DToolButton::leaveEvent(e);
 
     if (m_isMousePress) {
-        qApp->setOverrideCursor(Qt::ArrowCursor);
+        qApp->restoreOverrideCursor();
         m_isMousePress = false;
     }
 

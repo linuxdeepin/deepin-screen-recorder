@@ -1962,7 +1962,7 @@ void SubToolWidget::setButEnableOnLockScreen(const bool &state)
 
 int SubToolWidget::getFuncSubToolX(QString &shape)
 {
-    int x = 0;
+    int x = -1;
 //    qCDebug(dsrApp) << __FUNCTION__ << "m_rectButton->x() : " << m_rectButton->x();
 //    qCDebug(dsrApp) << __FUNCTION__ << "m_circleButton->x() : " << m_circleButton->x();
 //    qCDebug(dsrApp) << __FUNCTION__ << "m_lineButton->x() : " << m_lineButton->x();
@@ -2028,7 +2028,7 @@ bool SubToolWidget::eventFilter(QObject *watched, QEvent *event)
                 if (nullptr != m_saveToSpecialPathMenu && action == m_saveToSpecialPathMenu->menuAction()) {
                     return QStackedWidget::eventFilter(watched, event);
                 }
-                if (nullptr != m_scrollSaveToSpecialPathMenu && action == m_saveToSpecialPathMenu->menuAction()) {
+                if (nullptr != m_scrollSaveToSpecialPathMenu && action == m_scrollSaveToSpecialPathMenu->menuAction()) {
                     return QStackedWidget::eventFilter(watched, event);
                 }
                 action->activate(QAction::Trigger);
@@ -2088,7 +2088,7 @@ void SubToolWidget::switchContent(QString shapeType)
 }
 void SubToolWidget::setRecordButtonDisable()
 {
-   // m_recorderButton->setDisabled(true);
+    m_recorderButton->setDisabled(true);
 }
 
 void SubToolWidget::setRecordLaunchMode(const unsigned int funType)

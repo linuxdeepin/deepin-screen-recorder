@@ -123,7 +123,6 @@ void SideBarWidget::initSideBarWidget()
     setMinimumSize(TOOLBAR_WIDGET_SIZE1);
 
     connect(m_shotTool, &ShotToolWidget::changeArrowAndLine, this, &SideBarWidget::changeArrowAndLineEvent);
-    connect(m_colorTool, &ColorToolWidget::colorChecked, m_shotTool, &ShotToolWidget::colorChecked);
     connect(m_shapeTool, &ShapeToolWidget::shapeSelected, m_shotTool, &ShotToolWidget::shapeSelected);
 }
 
@@ -152,6 +151,7 @@ void SideBarWidget::changeShotToolWidget(const QString &func)
         m_aiAssistantTool->hide();
         m_shotTool->show();
         m_colorTool->show();
+        m_currentFunc = func;
         
         
         // 无论是几何图形模式还是直接选择矩形/椭圆，都读取上次选中的形状
@@ -309,6 +309,7 @@ SideBar::~SideBar()
 void SideBar::changeShotToolFunc(const QString &func)
 {
     qCDebug(dsrApp) << "SideBar::changeShotToolFunc called with func:" << func;
+    if (!m_sidebarWidget) return;
     m_sidebarWidget->changeShotToolWidget(func);
     resize(m_sidebarWidget->size());
 }
@@ -316,6 +317,7 @@ void SideBar::changeShotToolFunc(const QString &func)
 int SideBar::getSideBarWidth(const QString &func)
 {
     qCDebug(dsrApp) << "SideBar::getSideBarWidth called with func:" << func;
+    if (!m_sidebarWidget) return 0;
     return m_sidebarWidget->getSideBarWidth(func);
 }
 
@@ -342,11 +344,13 @@ void SideBar::showAt(QPoint pos)
 
 void SideBar::showWidget(){
     qCDebug(dsrApp) << "SideBar::showWidget called.";
+    if (!m_sidebarWidget) return;
     m_sidebarWidget->show();
 }
 
 void SideBar::hideWidget(){
     qCDebug(dsrApp) << "SideBar::hideWidget called.";
+    if (!m_sidebarWidget) return;
     m_sidebarWidget->hide();
 }
 
@@ -404,6 +408,13 @@ void SideBar::enterEvent(QEnterEvent *e)
     DLabel::enterEvent(e);
 }
 #endif
+
+void SideBar::leaveEvent(QEvent *e)
+{
+    qCDebug(dsrApp) << "SideBar::leaveEvent called.";
+    QApplication::restoreOverrideCursor();
+    DLabel::leaveEvent(e);
+}
 
 bool SideBar::eventFilter(QObject *obj, QEvent *event)
 {

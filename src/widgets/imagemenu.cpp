@@ -353,6 +353,10 @@ QPixmap ImageBorderHelper::getPixmapAddBorder(QPixmap pix)
     }
 
     BorderType type = static_cast<BorderType>(borderType >> 8);
+    if (m_borderhandle) {
+        delete m_borderhandle;
+        m_borderhandle = nullptr;
+    }
     if (type == BorderType::Prototype) {
         qCDebug(dsrApp) << "Creating PrototypeBorderProcess";
         m_borderhandle = new PrototypeBorderProcess(this);

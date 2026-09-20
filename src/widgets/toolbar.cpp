@@ -181,7 +181,7 @@ void ToolBarWidget::setRecordLaunchFromMain(const unsigned int funType)
 void ToolBarWidget::setRecordButtonDisable()
 {
     qCDebug(dsrApp) << "ToolBarWidget::setRecordButtonDisable called.";
-   // m_subTool->setRecordButtonDisable();
+    m_subTool->setRecordButtonDisable();
 }
 
 void ToolBarWidget::setVideoInitFromMain()
@@ -280,6 +280,12 @@ void ToolBar::enterEvent(QEnterEvent *e)
     DLabel::enterEvent(e);
 }
 #endif
+
+void ToolBar::leaveEvent(QEvent *e)
+{
+    QApplication::restoreOverrideCursor();
+    DLabel::leaveEvent(e);
+}
 
 bool ToolBar::eventFilter(QObject *obj, QEvent *event)
 {
