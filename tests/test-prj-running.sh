@@ -29,6 +29,11 @@ SSR_TEST_TIMEOUT="${SSR_TEST_TIMEOUT:-75}"
 # QApplication 构造依赖 X，否则 --gtest_list_tests 即崩、收集到 0 个用例。
 export DISPLAY="${DISPLAY:-:0}"
 
+# 确保使用 offscreen 平台：CI/后台环境无 X11 授权，native xcb 平台会导致
+# --gtest_list_tests 及所有子模块测试启动即 SEGV（收集到 0 个用例 / 无 .gcda）。
+# offscreen 为纯软件平台，不依赖 X 服务器，所有 GUI 测试可稳定运行。
+export QT_QPA_PLATFORM="${QT_QPA_PLATFORM:-offscreen}"
+
 # 确保 DBus 会话总线可用。AudioUtils / voiceVolumeWatcher / Shortcut 等用例在
 # 构造 QDBusInterface 时，若 DBUS_SESSION_BUS_ADDRESS 为空，Qt 会尝试 autolaunch
 # 阻塞 dbus-launch，导致 AudioUtilsCovTest / VoiceVolumeWatcherCovTest /

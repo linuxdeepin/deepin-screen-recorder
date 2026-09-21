@@ -5,7 +5,7 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 export DISPLAY=":0"
-export QT_QPA_PLATFORM=
+export QT_QPA_PLATFORM="${QT_QPA_PLATFORM:-offscreen}"
 
 rm -rf ./ut_dde_dock_plugins/ut_shot_start_record/build-ut
 mkdir ./ut_dde_dock_plugins/ut_shot_start_record/build-ut
