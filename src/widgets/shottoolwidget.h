@@ -52,7 +52,7 @@ private:
     DLabel *m_thicknessLabel;
 
 
-    DLabel *m_effectSubTool;
+    DLabel *m_effectSubTool = nullptr;
     /**
      * @brief 当前选中的图形名称
      */

@@ -190,12 +190,12 @@ TEST_F(SubToolWidgetExtTest, getFuncSubToolXUnknownShapeReturnsMinusOne)
     EXPECT_EQ(x, -1);
 }
 
-TEST_F(SubToolWidgetExtTest, getFuncSubToolXEmptyStringReturnsZero)
+TEST_F(SubToolWidgetExtTest, getFuncSubToolXEmptyStringReturnsMinusOne)
 {
     QString s;
     int x = 999;
     EXPECT_NO_FATAL_FAILURE(x = m_w->getFuncSubToolX(s));
-    EXPECT_EQ(x, 0); // early-return preserves initial x=0 when shape empty
+    EXPECT_EQ(x, -1); // empty string returns -1 (initial value in source)
 }
 
 // ---------------------------------------------------------------------------
