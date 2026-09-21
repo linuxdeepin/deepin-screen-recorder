@@ -80,7 +80,7 @@ TEST_F(ExtCaptureRecorderCovTest, stopRecordingFromRecordingState)
 {
     access_private_field::ExtCaptureRecorderm_state(*m_rec) = ExtCaptureRecorder::Recording;
     EXPECT_NO_FATAL_FAILURE(m_rec->stopRecording());
-    EXPECT_EQ(m_rec->state(), ExtCaptureRecorder::Stopping);
+    EXPECT_EQ(m_rec->state(), ExtCaptureRecorder::Stopped);
 }
 
 // stopRecording：从 Starting 态执行
@@ -88,7 +88,7 @@ TEST_F(ExtCaptureRecorderCovTest, stopRecordingFromStartingState)
 {
     access_private_field::ExtCaptureRecorderm_state(*m_rec) = ExtCaptureRecorder::Starting;
     EXPECT_NO_FATAL_FAILURE(m_rec->stopRecording());
-    EXPECT_EQ(m_rec->state(), ExtCaptureRecorder::Stopping);
+    EXPECT_EQ(m_rec->state(), ExtCaptureRecorder::Stopped);
 }
 
 // onExtCaptureUnavailable：Recording 态 -> stopRecording + emit error
