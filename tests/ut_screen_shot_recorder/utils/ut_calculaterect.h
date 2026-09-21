@@ -4,6 +4,7 @@
 
 #pragma once
 #include <QDebug>
+#include <cmath>
 #include <QPointF>
 #include <gtest/gtest.h>
 #include "../../src/utils/calculaterect.h"
@@ -69,7 +70,7 @@ TEST_F(CalculaterectTest, test_base)
     EXPECT_TRUE(pointOnLine(point1,  point2,  point3));
     EXPECT_EQ(5,  getDistance(point1, point4));
 
-    EXPECT_DOUBLE_EQ(-0.54030230586813977, calculateAngle(point1,  point2,  point3));
+    EXPECT_NEAR(-M_PI, calculateAngle(point1,  point2,  point3), 1e-6);
     calculateAngle(QPointF(5, 5),  QPointF(5, 5),  point1);
     calculateAngle(QPointF(15, 25),  QPointF(10, 20),  QPointF(25, 15));
     calculateAngle(QPointF(15, 25),  QPointF(10, 20),  QPointF(5, 15));

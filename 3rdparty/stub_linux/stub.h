@@ -57,7 +57,7 @@
     #define REPLACE_FAR(t, fn, fn_stub)\
         *fn = 0x49;\
         *(fn + 1) = 0xbb;\
-        *(long long *)(fn + 2) = (long long)fn_stub;\
+        std::memcpy(fn + 2, &fn_stub, sizeof(long long));\
         *(fn + 10) = 0x41;\
         *(fn + 11) = 0xff;\
         *(fn + 12) = 0xe3;
