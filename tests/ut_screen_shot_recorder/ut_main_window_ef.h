@@ -34,6 +34,8 @@ ACCESS_PRIVATE_FUN(MainWindow, int(QMouseEvent *, bool &), mouseMoveEF);
 ACCESS_PRIVATE_FUN(MainWindow, int(QKeyEvent *, bool &), keyPressEF);
 ACCESS_PRIVATE_FUN(MainWindow, int(QKeyEvent *, bool &), keyReleaseEF);
 ACCESS_PRIVATE_FUN(MainWindow, int(QWheelEvent *, bool &), wheelEF);
+ACCESS_PRIVATE_FUN(MainWindow, bool(), expandSelectionToContents);
+ACCESS_PRIVATE_FIELD(MainWindow, QRect, m_backgroundRect);
 
 class MainWindowEFTest : public Test
 {
@@ -153,4 +155,84 @@ TEST_F(MainWindowEFTest, wheelEFVertical)
         Qt::NoButton, Qt::NoModifier, Qt::NoScrollPhase, false);
     bool needRepaint = false;
     EXPECT_NO_FATAL_FAILURE(call_private_fun::MainWindowwheelEF(*m_w, &wheelEvent, needRepaint));
+}
+
+// expandSelectionToContents：图形编辑越界时，选区实时扩张到覆盖图形外接矩形。
+// 这里是纯状态计算，不依赖真实鼠标事件，可稳定回归"扩张方向/边界/幂等"。
+TEST_F(MainWindowEFTest, expandSelectionGrowsToCoverAnnotationOnRight)
+{
+    access_private_field::MainWindowrecordX(*m_w) = 400;
+    access_private_field::MainWindowrecordY(*m_w) = 300;
+    access_private_field::MainWindowrecordWidth(*m_w) = 500;
+    access_private_field::MainWindowrecordHeight(*m_w) = 400;
+    access_private_field::MainWindowm_backgroundRect(*m_w) = QRect(0, 0, 1920, 1080);
+
+    ShapesWidget *sw = new ShapesWidget(m_w);
+    sw->setFixedSize(496, 396);      // 选区四周内缩 2px
+    sw->move(402, 302);
+    access_private_field::MainWindowm_shapesWidget(*m_w) = sw;
+    access_private_field::MainWindowm_isShapesWidgetExist(*m_w) = true;
+
+    // 局部坐标 x:300..700 => 屏幕坐标 x:702..1102，超出选区右边界 900
+    Toolshape shape;
+    shape.type = "rectangle";
+    shape.lineWidth = 3;
+    // 注意：Toolshape 构造函数默认已有 4 个 (0,0) 点，这里必须整体赋值
+    shape.mainPoints = {QPointF(300, 50), QPointF(300, 200),
+                        QPointF(700, 50), QPointF(700, 200)};
+    access_private_field::ShapesWidgetm_shapes(*sw).append(shape);
+
+    EXPECT_TRUE(call_private_fun::MainWindowexpandSelectionToContents(*m_w));
+
+    // 只往右长：左/上边界不动
+    EXPECT_EQ(400, access_private_field::MainWindowrecordX(*m_w));
+    EXPECT_EQ(300, access_private_field::MainWindowrecordY(*m_w));
+    // 右边界必须覆盖图形屏幕外接矩形（702+700=1102）
+    EXPECT_GE(access_private_field::MainWindowrecordX(*m_w)
+              + access_private_field::MainWindowrecordWidth(*m_w), 1102);
+
+    // 幂等：几何没再变化时不应继续增长
+    EXPECT_FALSE(call_private_fun::MainWindowexpandSelectionToContents(*m_w));
+}
+
+// 左/上扩张会移动 ShapesWidget 原点，图形局部坐标必须同步平移，
+// 保证图形在屏幕上的位置不变（否则会跳变）。
+TEST_F(MainWindowEFTest, expandSelectionGrowsLeftWithoutMovingShapeOnScreen)
+{
+    access_private_field::MainWindowrecordX(*m_w) = 400;
+    access_private_field::MainWindowrecordY(*m_w) = 300;
+    access_private_field::MainWindowrecordWidth(*m_w) = 500;
+    access_private_field::MainWindowrecordHeight(*m_w) = 400;
+    access_private_field::MainWindowm_backgroundRect(*m_w) = QRect(0, 0, 1920, 1080);
+
+    ShapesWidget *sw = new ShapesWidget(m_w);
+    sw->setFixedSize(496, 396);
+    sw->move(402, 302);
+    access_private_field::MainWindowm_shapesWidget(*m_w) = sw;
+    access_private_field::MainWindowm_isShapesWidgetExist(*m_w) = true;
+
+    // 局部 x:-50..100 => 屏幕 x:352..502，左侧超出选区左边界 400
+    Toolshape shape;
+    shape.type = "rectangle";
+    shape.lineWidth = 3;
+    shape.mainPoints = {QPointF(-50, 50), QPointF(-50, 200),
+                        QPointF(100, 50), QPointF(100, 200)};
+    access_private_field::ShapesWidgetm_shapes(*sw).append(shape);
+
+    const qreal screenLeftBefore = shape.mainPoints[0].x() + sw->x();
+
+    EXPECT_TRUE(call_private_fun::MainWindowexpandSelectionToContents(*m_w));
+
+    // 左边界收缩（选区左边界变小），右/上/下不变
+    EXPECT_LT(access_private_field::MainWindowrecordX(*m_w), 400);
+    EXPECT_EQ(300, access_private_field::MainWindowrecordY(*m_w));
+    EXPECT_EQ(900, access_private_field::MainWindowrecordX(*m_w)
+              + access_private_field::MainWindowrecordWidth(*m_w));
+
+    // widget 已移动到新的选区原点
+    EXPECT_EQ(access_private_field::MainWindowrecordX(*m_w) + 2, sw->x());
+
+    // 图形屏幕位置保持不变（局部坐标已反向平移）
+    const Toolshape &moved = access_private_field::ShapesWidgetm_shapes(*sw).at(0);
+    EXPECT_EQ(screenLeftBefore, moved.mainPoints[0].x() + sw->x());
 }

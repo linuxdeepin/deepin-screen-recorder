@@ -74,6 +74,9 @@ signals:
     //选中某个形状后对应工具栏切换
     void shapeClicked(QString shape);
     void setShapesUndo(bool status);
+    // 图形几何发生变化（绘制/拖动/缩放/旋转/键盘微调/文本改尺寸等）。
+    // MainWindow 收到该信号后实时扩张选区，避免图形超出画布后被裁剪。
+    void contentsGeometryChanged();
 
 public slots:
     /**
