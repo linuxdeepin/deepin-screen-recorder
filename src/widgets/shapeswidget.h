@@ -1,5 +1,5 @@
 // Copyright (C) 2020 ~ 2021 Uniontech Software Technology Co.,Ltd.
-// SPDX-FileCopyrightText: 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2022-2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -57,6 +57,10 @@ public:
         Eighth,
     };
 
+    bool isTextEditing() const { return m_editing; }
+    bool hasContents() const;
+    QRectF contentsBoundingRect() const;
+    void translateContents(const QPointF &offset);
 
 signals:
     void reloadEffectImg(QString effect, int radius);
@@ -70,6 +74,9 @@ signals:
     //选中某个形状后对应工具栏切换
     void shapeClicked(QString shape);
     void setShapesUndo(bool status);
+    // 图形几何发生变化（绘制/拖动/缩放/旋转/键盘微调/文本改尺寸等）。
+    // MainWindow 收到该信号后实时扩张选区，避免图形超出画布后被裁剪。
+    void contentsGeometryChanged();
 
 public slots:
     /**
@@ -181,7 +188,7 @@ public slots:
      * @brief paintImage: 绘制图片
      * 将编辑的内容绘制到图片上
      */
-    void paintImage(QImage &image);
+    void paintImage(QImage &image, const QPointF &offset = QPointF(), qreal scale = 1.0);
     /**
      * @brief isExistsText: 是否存在文字图形，
      * @return
@@ -206,7 +213,7 @@ protected:
      * @brief handlePaint:执行绘制操作
      * @param painter:画笔
      */
-    void handlePaint(QPainter &painter);
+    void handlePaint(QPainter &painter, bool drawEditingControls = true);
     void enterEvent(QEvent *e);
 
     /**

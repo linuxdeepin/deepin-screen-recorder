@@ -19,7 +19,7 @@ using namespace testing;
 // 调用 handlePaint，即可覆盖整个绘制子系统。
 // 注：ut_shapeswidget.h 因 API drift 被禁用，故 m_shapes/m_pos1/m_currentShape/m_currentType
 // 在本 TU 中尚无声明，需在此补齐（其余 paint*/event 访问器由 _ext/_ext2 提供）。
-ACCESS_PRIVATE_FUN(ShapesWidget, void(QPainter &), handlePaint);
+ACCESS_PRIVATE_FUN(ShapesWidget, void(QPainter &, bool), handlePaint);
 ACCESS_PRIVATE_FIELD(ShapesWidget, QPointF, m_pos2);
 ACCESS_PRIVATE_FIELD(ShapesWidget, bool, m_clearAllTextBorder);
 ACCESS_PRIVATE_FIELD(ShapesWidget, Toolshapes, m_shapes);
@@ -64,7 +64,7 @@ public:
         img.fill(Qt::white);
         {
             QPainter p(&img);
-            EXPECT_NO_FATAL_FAILURE(call_private_fun::ShapesWidgethandlePaint(*m_w, p));
+            EXPECT_NO_FATAL_FAILURE(call_private_fun::ShapesWidgethandlePaint(*m_w, p, true));
         }
     }
 };
