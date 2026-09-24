@@ -1,0 +1,194 @@
+name: ai_screenshot_part1_suite
+app: deepin-screen-recorder
+module: ai_screenshot_part1
+setup:
+- action: session_start
+  command: deepin-screen-recorder
+  wait: 3.0
+suites:
+- id: suite_ai_screenshot_part1_002_s1
+  name: AI截图功能-未安装uosai或版本过低时AI图标显示验证
+  description: ''
+  steps:
+  - action: keyboard_hot_key
+    key: ctrl+alt+a
+  - action: mouse_drag
+    x: 300
+    y: 300
+    selector:
+      name: MajToolBar
+      role: panel
+  assert_steps:
+  - action: assert_element
+    selector:
+      name: MajToolBar
+      role: panel
+  - action: assert_not_exists
+    selector:
+      name: AiAssistantButton
+      role: panel
+- id: suite_ai_screenshot_part1_004_s1
+  name: AI截图功能-快捷键A触发AI功能验证
+  description: ''
+  steps:
+  - action: keyboard_hot_key
+    key: ctrl+alt+a
+  - action: mouse_drag
+    x: 300
+    y: 300
+    selector:
+      name: MajToolBar
+      role: panel
+  - action: keyboard_press
+    key: a
+  assert_steps:
+  - action: assert_element
+    selector:
+      name: MajToolBar
+      role: panel
+  - action: assert_element
+    selector:
+      name: AIAssistantWidget
+      role: panel
+- id: suite_ai_screenshot_part1_005_s1
+  name: AI截图功能-首次使用新功能提示显示与消失验证
+  description: ''
+  steps:
+  - action: keyboard_hot_key
+    key: ctrl+alt+a
+  - action: mouse_drag
+    x: 300
+    y: 300
+    selector:
+      name: MajToolBar
+      role: panel
+  - action: mouse_click
+    selector:
+      name: AiAssistantButton
+      role: panel
+  - action: mouse_click
+    selector:
+      name: CloseBtn
+      role: panel
+  - action: keyboard_hot_key
+    key: ctrl+alt+a
+  - action: mouse_drag
+    x: 300
+    y: 300
+    selector:
+      name: MajToolBar
+      role: panel
+  assert_steps:
+  - action: assert_element
+    selector:
+      name: MajToolBar
+      role: panel
+  - action: assert_element
+    selector:
+      name: ToolTips
+      role: panel
+  - action: assert_not_exists
+    selector:
+      name: ToolTips
+      role: panel
+- id: suite_ai_screenshot_part1_006_s1
+  name: AI截图功能-空白截图内容点击解释
+  description: ''
+  steps:
+  - action: keyboard_hot_key
+    key: ctrl+alt+a
+  - action: mouse_drag
+    x: 300
+    y: 300
+    selector:
+      name: MajToolBar
+      role: panel
+  - action: mouse_click
+    selector:
+      name: AiAssistantButton
+      role: panel
+  - action: mouse_click
+    selector:
+      name: ExplainButton
+      role: panel
+  assert_steps:
+  - action: assert_element
+    selector:
+      name: MajToolBar
+      role: panel
+  - action: assert_element
+    selector:
+      name: AIAssistantWidget
+      role: panel
+  - action: assert_not_exists
+    selector:
+      name: AIAssistantWidget
+      role: panel
+- id: suite_ai_screenshot_part1_020_s1
+  name: 全局验证-文案检查-中文环境AI工具栏文案
+  description: ''
+  steps:
+  - action: keyboard_hot_key
+    key: ctrl+alt+a
+  - action: mouse_drag
+    x: 300
+    y: 300
+    selector:
+      name: MajToolBar
+      role: panel
+  - action: mouse_click
+    selector:
+      name: AiAssistantButton
+      role: panel
+  assert_steps:
+  - action: assert_element
+    selector:
+      name: MajToolBar
+      role: panel
+  - action: assert_element
+    selector:
+      name: AIAssistantWidget
+      role: panel
+  - action: assert_text
+    selector:
+      name: ExplainButton
+      role: panel
+  - action: assert_text
+    selector:
+      name: SummarizeButton
+      role: panel
+  - action: assert_text
+    selector:
+      name: TranslateButton
+      role: panel
+  - action: assert_text
+    selector:
+      name: AskAibutton
+      role: panel
+- id: suite_ai_screenshot_part1_022_s1
+  name: 全局验证-文案检查-英文环境新功能上线提示文案
+  description: ''
+  steps:
+  - action: keyboard_hot_key
+    key: ctrl+alt+a
+  - action: mouse_drag
+    x: 300
+    y: 300
+    selector:
+      name: MajToolBar
+      role: panel
+  assert_steps:
+  - action: assert_element
+    selector:
+      name: MajToolBar
+      role: panel
+  - action: assert_element
+    selector:
+      name: ToolTips
+      role: panel
+  - action: assert_text
+    selector:
+      name: TipText
+      role: panel
+teardown:
+- action: session_stop

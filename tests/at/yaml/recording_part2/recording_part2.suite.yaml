@@ -1,0 +1,73 @@
+name: recording_part2_suite
+app: deepin-screen-recorder
+module: recording_part2
+setup:
+- action: session_start
+  command: deepin-screen-recorder
+  wait: 3.0
+suites:
+- id: suite_recording_part2_003_s1
+  name: 兼容性测试-区域选择
+  description: ''
+  steps:
+  - action: keyboard_hot_key
+    key: ctrl+alt+a
+  - action: mouse_drag
+    x: 300
+    y: 300
+  - action: wait
+  - action: mouse_click
+    selector:
+      name: CloseBtn
+      role: panel
+  - action: wait
+  - action: keyboard_hot_key
+    key: ctrl+alt+r
+  - action: mouse_drag
+    x: 300
+    y: 300
+  - action: wait
+  assert_steps:
+  - action: assert_element
+    selector:
+      name: MajToolBar
+      role: panel
+  - action: assert_element
+    selector:
+      name: SubToolWidget
+      role: panel
+- id: suite_recording_part2_007_s1
+  name: 主屏截图-图片保存到桌面-查看截图图片
+  description: ''
+  steps:
+  - action: keyboard_hot_key
+    key: ctrl+alt+a
+  - action: mouse_drag
+    x: 300
+    y: 300
+  - action: wait
+  - action: mouse_click
+    selector:
+      name: SaveBtn
+      role: panel
+  - action: wait
+  - action: mouse_click
+    selector:
+      name: DesktopAction
+      role: panel
+  - action: wait
+  assert_steps:
+  - action: assert_element
+    selector:
+      name: MajToolBar
+      role: panel
+  - action: assert_element
+    selector:
+      name: SaveMenu
+      role: panel
+  - action: assert_not_exists
+    selector:
+      name: MajToolBar
+      role: panel
+teardown:
+- action: session_stop

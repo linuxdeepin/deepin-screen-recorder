@@ -1,0 +1,142 @@
+name: scrollshot_part2_suite
+app: deepin-screen-recorder
+module: scrollshot_part2
+setup:
+- action: session_start
+  command: deepin-screen-recorder
+  wait: 3.0
+suites:
+- id: suite_scrollshot_part2_001_s1
+  name: 截长图-滚动方式切换-手动切自动
+  description: ''
+  steps:
+  - action: keyboard_hot_key
+    key: ctrl+alt+i
+  - action: wait
+  - action: mouse_scroll
+    selector:
+      name: ScrollShotTip
+      role: panel
+    x: 400
+    y: 400
+    value: 3
+  - action: wait
+  - action: mouse_click
+    selector:
+      name: scrollshot_tip_adjust_button
+      role: panel
+  - action: wait
+  assert_steps:
+  - action: assert_element
+    selector:
+      name: ScrollShotTip
+      role: panel
+  - action: assert_element
+    selector:
+      name: scrollshot_tip_adjust_button
+      role: panel
+  - action: assert_element
+    selector:
+      name: ScrollShotTip
+      role: panel
+- id: suite_scrollshot_part2_002_s1
+  name: 截长图-启动-系统快捷键启动
+  description: ''
+  steps:
+  - action: keyboard_hot_key
+    key: ctrl+alt+i
+  - action: wait
+  assert_steps:
+  - action: assert_element
+    selector:
+      name: ScrollShotTip
+      role: panel
+- id: suite_scrollshot_part2_003_s1
+  name: 截图工具栏贴图入口位置
+  description: ''
+  steps:
+  - action: keyboard_hot_key
+    key: ctrl+alt+a
+  - action: wait
+  - action: mouse_drag
+    x: 100
+    y: 100
+  - action: wait
+  assert_steps:
+  - action: assert_element
+    selector:
+      name: PinButton
+      role: panel
+  - action: assert_element
+    selector:
+      name: ScrollShotButton
+      role: panel
+- id: suite_scrollshot_part2_004_s1
+  name: 贴图大小-鼠标滚轮放大缩小贴图
+  description: ''
+  steps:
+  - action: keyboard_hot_key
+    key: ctrl+alt+a
+  - action: wait
+  - action: mouse_drag
+    x: 100
+    y: 100
+  - action: wait
+  - action: mouse_click
+    selector:
+      name: PinButton
+      role: panel
+  - action: wait
+  - action: mouse_click
+    selector:
+      name: PinButton
+      role: panel
+  - action: mouse_scroll
+    selector:
+      name: PinButton
+      role: panel
+    x: 300
+    y: 300
+    value: 3
+  - action: mouse_scroll
+    selector:
+      name: PinButton
+      role: panel
+    x: 300
+    y: 300
+    value: -3
+  assert_steps:
+  - action: assert_image_exists
+  - action: assert_image_exists
+- id: suite_scrollshot_part2_007_s1
+  name: 滚动截取长图&OCR识别成功
+  description: ''
+  steps:
+  - action: keyboard_hot_key
+    key: ctrl+alt+i
+  - action: wait
+  - action: mouse_scroll
+    selector:
+      name: ScrollShotTip
+      role: panel
+    x: 400
+    y: 400
+    value: 5
+  - action: wait
+  - action: mouse_click
+    selector:
+      name: OcrScrollButton
+      role: panel
+  - action: wait
+  assert_steps:
+  - action: assert_element
+    selector:
+      name: ScrollShotTip
+      role: panel
+  - action: assert_element
+    selector:
+      name: scrollshot_tip_adjust_button
+      role: panel
+  - action: assert_ocr_exists
+teardown:
+- action: session_stop

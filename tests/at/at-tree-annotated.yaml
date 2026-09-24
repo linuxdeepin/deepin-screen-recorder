@@ -1,0 +1,1034 @@
+version: '1.0'
+tree:
+- id: ''
+  role: panel
+  name: CommonIconButton
+  object_name: CommonIconButton
+  accessible_id: ''
+  classification: container
+  comment: ''
+  annotation_status: draft
+- id: ''
+  role: panel
+  name: MenuController
+  object_name: ''
+  accessible_id: ''
+  classification: container
+  comment: ''
+  annotation_status: draft
+  children:
+  - id: ''
+    role: panel
+    name: CloseAct
+    object_name: CloseAct
+    accessible_id: ''
+    classification: container
+    comment: ''
+    annotation_status: draft
+  - id: ''
+    role: panel
+    name: Menu
+    object_name: Menu
+    accessible_id: ''
+    classification: container
+    comment: ''
+    annotation_status: draft
+  - id: ''
+    role: panel
+    name: SaveAct
+    object_name: SaveAct
+    accessible_id: ''
+    classification: container
+    comment: ''
+    annotation_status: draft
+  - id: ''
+    role: panel
+    name: UnDoAct
+    object_name: UnDoAct
+    accessible_id: ''
+    classification: container
+    comment: ''
+    annotation_status: draft
+- id: ''
+  role: panel
+  name: PinSaveMenuManager
+  object_name: ''
+  accessible_id: ''
+  classification: container
+  comment: ''
+  annotation_status: draft
+  children:
+  - id: ''
+    role: panel
+    name: AskEveryTimeAction
+    object_name: AskEveryTimeAction
+    accessible_id: ''
+    classification: container
+    comment: ''
+    annotation_status: draft
+  - id: ''
+    role: panel
+    name: ChangeSaveToSpecialPath
+    object_name: ChangeSaveToSpecialPath
+    accessible_id: ''
+    classification: container
+    comment: ''
+    annotation_status: draft
+  - id: ''
+    role: panel
+    name: CustomLocationGroup
+    object_name: CustomLocationGroup
+    accessible_id: ''
+    classification: container
+    comment: ''
+    annotation_status: draft
+  - id: ''
+    role: panel
+    name: DesktopAction
+    object_name: DesktopAction
+    accessible_id: ''
+    classification: container
+    comment: ''
+    annotation_status: draft
+  - id: ''
+    role: panel
+    name: PicturesAction
+    object_name: PicturesAction
+    accessible_id: ''
+    classification: container
+    comment: ''
+    annotation_status: draft
+  - id: ''
+    role: panel
+    name: SaveMenu
+    object_name: SaveMenu
+    accessible_id: ''
+    classification: container
+    comment: ''
+    annotation_status: draft
+  - id: ''
+    role: panel
+    name: SaveOptionGroup
+    object_name: SaveOptionGroup
+    accessible_id: ''
+    classification: container
+    comment: ''
+    annotation_status: draft
+  - id: ''
+    role: panel
+    name: SaveToSpecialPathAction
+    object_name: SaveToSpecialPathAction
+    accessible_id: ''
+    classification: container
+    comment: ''
+    annotation_status: draft
+  - id: ''
+    role: panel
+    name: SpecifiedLocationAction
+    object_name: SpecifiedLocationAction
+    accessible_id: ''
+    classification: container
+    comment: ''
+    annotation_status: draft
+  - id: ''
+    role: panel
+    name: SpecifiedLocationSubMenu
+    object_name: SpecifiedLocationSubMenu
+    accessible_id: ''
+    classification: container
+    comment: ''
+    annotation_status: draft
+- id: ''
+  role: panel
+  name: AIAssistantWidget
+  object_name: ''
+  accessible_id: ''
+  classification: container
+  comment: ''
+  annotation_status: draft
+  children:
+  - id: ''
+    role: panel
+    name: AskAibutton
+    object_name: AskAibutton
+    accessible_id: ''
+    classification: container
+    comment: ''
+    annotation_status: draft
+  - id: ''
+    role: panel
+    name: ExplainButton
+    object_name: ExplainButton
+    accessible_id: ''
+    classification: container
+    comment: ''
+    annotation_status: draft
+  - id: ''
+    role: panel
+    name: SummarizeButton
+    object_name: SummarizeButton
+    accessible_id: ''
+    classification: container
+    comment: ''
+    annotation_status: draft
+  - id: ''
+    role: panel
+    name: TranslateButton
+    object_name: TranslateButton
+    accessible_id: ''
+    classification: container
+    comment: ''
+    annotation_status: draft
+- id: ''
+  role: panel
+  name: ColorToolWidget
+  object_name: ''
+  accessible_id: ''
+  classification: container
+  comment: ''
+  annotation_status: draft
+  children:
+  - id: ''
+    role: panel
+    name: ColorButtonGroup
+    object_name: ColorButtonGroup
+    accessible_id: ''
+    classification: container
+    comment: ''
+    annotation_status: draft
+- id: ''
+  role: panel
+  name: FontSizeWidget
+  object_name: ''
+  accessible_id: ''
+  classification: container
+  comment: ''
+  annotation_status: draft
+  children:
+  - id: ''
+    role: panel
+    name: AddSizeBtn
+    object_name: AddSizeBtn
+    accessible_id: ''
+    classification: container
+    comment: ''
+    annotation_status: draft
+  - id: ''
+    role: panel
+    name: FontSizeEdit
+    object_name: FontSizeEdit
+    accessible_id: ''
+    classification: container
+    comment: ''
+    annotation_status: draft
+  - id: ''
+    role: panel
+    name: FontSizeWidget
+    object_name: FontSizeWidget
+    accessible_id: ''
+    classification: container
+    comment: ''
+    annotation_status: draft
+  - id: ''
+    role: panel
+    name: ReduceSizeBtn
+    object_name: ReduceSizeBtn
+    accessible_id: ''
+    classification: container
+    comment: ''
+    annotation_status: draft
+- id: ''
+  role: panel
+  name: ImageMenu
+  object_name: ''
+  accessible_id: ''
+  classification: container
+  comment: ''
+  annotation_status: draft
+  children:
+  - id: ''
+    role: panel
+    name: ActionGroup
+    object_name: ActionGroup
+    accessible_id: ''
+    classification: container
+    comment: ''
+    annotation_status: draft
+- id: ''
+  role: panel
+  name: MainToolWidget
+  object_name: ''
+  accessible_id: ''
+  classification: container
+  comment: ''
+  annotation_status: draft
+  children:
+  - id: ''
+    role: panel
+    name: RecordBtn
+    object_name: RecordBtn
+    accessible_id: ''
+    classification: container
+    comment: ''
+    annotation_status: draft
+  - id: ''
+    role: panel
+    name: ShotBtn
+    object_name: ShotBtn
+    accessible_id: ''
+    classification: container
+    comment: ''
+    annotation_status: draft
+- id: ''
+  role: panel
+  name: MajToolBar
+  object_name: ''
+  accessible_id: ''
+  classification: container
+  comment: ''
+  annotation_status: draft
+  children:
+  - id: ''
+    role: panel
+    name: ArrowBtn
+    object_name: ArrowBtn
+    accessible_id: ''
+    classification: container
+    comment: ''
+    annotation_status: draft
+  - id: ''
+    role: panel
+    name: CloseBtn
+    object_name: CloseBtn
+    accessible_id: ''
+    classification: container
+    comment: ''
+    annotation_status: draft
+  - id: ''
+    role: panel
+    name: ColorBtn
+    object_name: ColorBtn
+    accessible_id: ''
+    classification: container
+    comment: ''
+    annotation_status: draft
+  - id: ''
+    role: panel
+    name: ListBtn
+    object_name: ListBtn
+    accessible_id: ''
+    classification: container
+    comment: ''
+    annotation_status: draft
+  - id: ''
+    role: panel
+    name: OkBtn
+    object_name: OkBtn
+    accessible_id: ''
+    classification: container
+    comment: ''
+    annotation_status: draft
+  - id: ''
+    role: panel
+    name: OvalBtn
+    object_name: OvalBtn
+    accessible_id: ''
+    classification: container
+    comment: ''
+    annotation_status: draft
+  - id: ''
+    role: panel
+    name: PenBtn
+    object_name: PenBtn
+    accessible_id: ''
+    classification: container
+    comment: ''
+    annotation_status: draft
+  - id: ''
+    role: panel
+    name: RectBtn
+    object_name: RectBtn
+    accessible_id: ''
+    classification: container
+    comment: ''
+    annotation_status: draft
+  - id: ''
+    role: panel
+    name: SaveBtn
+    object_name: SaveBtn
+    accessible_id: ''
+    classification: container
+    comment: ''
+    annotation_status: draft
+  - id: ''
+    role: panel
+    name: StraightLineBtn
+    object_name: StraightLineBtn
+    accessible_id: ''
+    classification: container
+    comment: ''
+    annotation_status: draft
+  - id: ''
+    role: panel
+    name: TextBtn
+    object_name: TextBtn
+    accessible_id: ''
+    classification: container
+    comment: ''
+    annotation_status: draft
+- id: ''
+  role: panel
+  name: SaveMenuManager
+  object_name: ''
+  accessible_id: ''
+  classification: container
+  comment: ''
+  annotation_status: draft
+  children:
+  - id: ''
+    role: panel
+    name: AskEachTimeAction
+    object_name: AskEachTimeAction
+    accessible_id: ''
+    classification: container
+    comment: ''
+    annotation_status: draft
+  - id: ''
+    role: panel
+    name: ChooseOnSaveAction
+    object_name: ChooseOnSaveAction
+    accessible_id: ''
+    classification: container
+    comment: ''
+    annotation_status: draft
+  - id: ''
+    role: panel
+    name: CustomPathAction
+    object_name: CustomPathAction
+    accessible_id: ''
+    classification: container
+    comment: ''
+    annotation_status: draft
+  - id: ''
+    role: panel
+    name: DesktopAction
+    object_name: DesktopAction
+    accessible_id: ''
+    classification: container
+    comment: ''
+    annotation_status: draft
+  - id: ''
+    role: panel
+    name: LocationGroup
+    object_name: LocationGroup
+    accessible_id: ''
+    classification: container
+    comment: ''
+    annotation_status: draft
+  - id: ''
+    role: panel
+    name: PicturesAction
+    object_name: PicturesAction
+    accessible_id: ''
+    classification: container
+    comment: ''
+    annotation_status: draft
+  - id: ''
+    role: panel
+    name: SaveMenu
+    object_name: SaveMenu
+    accessible_id: ''
+    classification: container
+    comment: ''
+    annotation_status: draft
+  - id: ''
+    role: panel
+    name: SaveOptionGroup
+    object_name: SaveOptionGroup
+    accessible_id: ''
+    classification: container
+    comment: ''
+    annotation_status: draft
+  - id: ''
+    role: panel
+    name: SpecifiedLocationAction
+    object_name: SpecifiedLocationAction
+    accessible_id: ''
+    classification: container
+    comment: ''
+    annotation_status: draft
+  - id: ''
+    role: panel
+    name: SpecifiedLocationSubMenu
+    object_name: SpecifiedLocationSubMenu
+    accessible_id: ''
+    classification: container
+    comment: ''
+    annotation_status: draft
+  - id: ''
+    role: panel
+    name: UpdateOnSaveAction
+    object_name: UpdateOnSaveAction
+    accessible_id: ''
+    classification: container
+    comment: ''
+    annotation_status: draft
+- id: ''
+  role: panel
+  name: ScrollShotTip
+  object_name: ''
+  accessible_id: ''
+  classification: container
+  comment: ''
+  annotation_status: draft
+  children:
+  - id: ''
+    role: panel
+    name: TipText
+    object_name: TipText
+    accessible_id: ''
+    classification: container
+    comment: ''
+    annotation_status: draft
+  - id: ''
+    role: panel
+    name: WarmingIconButton
+    object_name: WarmingIconButton
+    accessible_id: ''
+    classification: container
+    comment: ''
+    annotation_status: draft
+  - id: ''
+    role: panel
+    name: scrollshot_tip_adjust_button
+    object_name: scrollshot_tip_adjust_button
+    accessible_id: ''
+    classification: container
+    comment: ''
+    annotation_status: draft
+  - id: ''
+    role: panel
+    name: scrollshot_tip_help_button
+    object_name: scrollshot_tip_help_button
+    accessible_id: ''
+    classification: container
+    comment: ''
+    annotation_status: draft
+- id: ''
+  role: panel
+  name: ShapeToolWidget
+  object_name: ''
+  accessible_id: ''
+  classification: container
+  comment: ''
+  annotation_status: draft
+  children:
+  - id: ''
+    role: panel
+    name: OvalButton
+    object_name: OvalButton
+    accessible_id: ''
+    classification: container
+    comment: ''
+    annotation_status: draft
+  - id: ''
+    role: panel
+    name: RectButton
+    object_name: RectButton
+    accessible_id: ''
+    classification: container
+    comment: ''
+    annotation_status: draft
+  - id: ''
+    role: panel
+    name: ShapeBtnGroup
+    object_name: ShapeBtnGroup
+    accessible_id: ''
+    classification: container
+    comment: ''
+    annotation_status: draft
+- id: ''
+  role: panel
+  name: ShotToolWidget
+  object_name: ''
+  accessible_id: ''
+  classification: container
+  comment: ''
+  annotation_status: draft
+  children:
+  - id: ''
+    role: panel
+    name: ThicknessBtnGroup
+    object_name: ThicknessBtnGroup
+    accessible_id: ''
+    classification: container
+    comment: ''
+    annotation_status: draft
+- id: ''
+  role: panel
+  name: SubToolBar
+  object_name: ''
+  accessible_id: ''
+  classification: container
+  comment: ''
+  annotation_status: draft
+  children:
+  - id: ''
+    role: panel
+    name: ArrowBtn
+    object_name: ArrowBtn
+    accessible_id: ''
+    classification: container
+    comment: ''
+    annotation_status: draft
+  - id: ''
+    role: panel
+    name: ArrowFine
+    object_name: ArrowFine
+    accessible_id: ''
+    classification: container
+    comment: ''
+    annotation_status: draft
+  - id: ''
+    role: panel
+    name: ArrowFineLine
+    object_name: ArrowFineLine
+    accessible_id: ''
+    classification: container
+    comment: ''
+    annotation_status: draft
+  - id: ''
+    role: panel
+    name: ArrowMedium
+    object_name: ArrowMedium
+    accessible_id: ''
+    classification: container
+    comment: ''
+    annotation_status: draft
+  - id: ''
+    role: panel
+    name: ArrowMediumLine
+    object_name: ArrowMediumLine
+    accessible_id: ''
+    classification: container
+    comment: ''
+    annotation_status: draft
+  - id: ''
+    role: panel
+    name: ArrowThick
+    object_name: ArrowThick
+    accessible_id: ''
+    classification: container
+    comment: ''
+    annotation_status: draft
+  - id: ''
+    role: panel
+    name: ArrowThickLine
+    object_name: ArrowThickLine
+    accessible_id: ''
+    classification: container
+    comment: ''
+    annotation_status: draft
+  - id: ''
+    role: panel
+    name: BlurBtn
+    object_name: BlurBtn
+    accessible_id: ''
+    classification: container
+    comment: ''
+    annotation_status: draft
+  - id: ''
+    role: panel
+    name: ColorBtn%1
+    object_name: ColorBtn%1
+    accessible_id: ''
+    classification: container
+    comment: ''
+    annotation_status: draft
+  - id: ''
+    role: panel
+    name: FineLine
+    object_name: FineLine
+    accessible_id: ''
+    classification: container
+    comment: ''
+    annotation_status: draft
+  - id: ''
+    role: panel
+    name: HighQualityLabel
+    object_name: HighQualityLabel
+    accessible_id: ''
+    classification: container
+    comment: ''
+    annotation_status: draft
+  - id: ''
+    role: panel
+    name: LineBtn
+    object_name: LineBtn
+    accessible_id: ''
+    classification: container
+    comment: ''
+    annotation_status: draft
+  - id: ''
+    role: panel
+    name: LowQualityLabel
+    object_name: LowQualityLabel
+    accessible_id: ''
+    classification: container
+    comment: ''
+    annotation_status: draft
+  - id: ''
+    role: panel
+    name: MediumLine
+    object_name: MediumLine
+    accessible_id: ''
+    classification: container
+    comment: ''
+    annotation_status: draft
+  - id: ''
+    role: panel
+    name: MosaicBtn
+    object_name: MosaicBtn
+    accessible_id: ''
+    classification: container
+    comment: ''
+    annotation_status: draft
+  - id: ''
+    role: panel
+    name: SaveToAutoClipboard
+    object_name: SaveToAutoClipboard
+    accessible_id: ''
+    classification: container
+    comment: ''
+    annotation_status: draft
+  - id: ''
+    role: panel
+    name: SaveToClipboard
+    object_name: SaveToClipboard
+    accessible_id: ''
+    classification: container
+    comment: ''
+    annotation_status: draft
+  - id: ''
+    role: panel
+    name: SaveToDesktop
+    object_name: SaveToDesktop
+    accessible_id: ''
+    classification: container
+    comment: ''
+    annotation_status: draft
+  - id: ''
+    role: panel
+    name: SaveToPictureDir
+    object_name: SaveToPictureDir
+    accessible_id: ''
+    classification: container
+    comment: ''
+    annotation_status: draft
+  - id: ''
+    role: panel
+    name: SaveToSpecificDir
+    object_name: SaveToSpecificDir
+    accessible_id: ''
+    classification: container
+    comment: ''
+    annotation_status: draft
+  - id: ''
+    role: panel
+    name: ThickLine
+    object_name: ThickLine
+    accessible_id: ''
+    classification: container
+    comment: ''
+    annotation_status: draft
+  - id: ''
+    role: panel
+    name: VerticalSeparatorLine
+    object_name: VerticalSeparatorLine
+    accessible_id: ''
+    classification: container
+    comment: ''
+    annotation_status: draft
+- id: ''
+  role: panel
+  name: SubToolWidget
+  object_name: ''
+  accessible_id: ''
+  classification: container
+  comment: ''
+  annotation_status: draft
+  children:
+  - id: ''
+    role: panel
+    name: AiAssistantButton
+    object_name: AiAssistantButton
+    accessible_id: ''
+    classification: container
+    comment: ''
+    annotation_status: draft
+  - id: ''
+    role: panel
+    name: AiAssistantScrollButton
+    object_name: AiAssistantScrollButton
+    accessible_id: ''
+    classification: container
+    comment: ''
+    annotation_status: draft
+  - id: ''
+    role: panel
+    name: ArrowButton
+    object_name: ArrowButton
+    accessible_id: ''
+    classification: container
+    comment: ''
+    annotation_status: draft
+  - id: ''
+    role: panel
+    name: CameraButton
+    object_name: CameraButton
+    accessible_id: ''
+    classification: container
+    comment: ''
+    annotation_status: draft
+  - id: ''
+    role: panel
+    name: CancelButton
+    object_name: CancelButton
+    accessible_id: ''
+    classification: container
+    comment: ''
+    annotation_status: draft
+  - id: ''
+    role: panel
+    name: GioButton
+    object_name: GioButton
+    accessible_id: ''
+    classification: container
+    comment: ''
+    annotation_status: draft
+  - id: ''
+    role: panel
+    name: KeyBoardButton
+    object_name: KeyBoardButton
+    accessible_id: ''
+    classification: container
+    comment: ''
+    annotation_status: draft
+  - id: ''
+    role: panel
+    name: LineButton
+    object_name: LineButton
+    accessible_id: ''
+    classification: container
+    comment: ''
+    annotation_status: draft
+  - id: ''
+    role: panel
+    name: MicrophoneAction
+    object_name: MicrophoneAction
+    accessible_id: ''
+    classification: container
+    comment: ''
+    annotation_status: draft
+  - id: ''
+    role: panel
+    name: MosaicButton
+    object_name: MosaicButton
+    accessible_id: ''
+    classification: container
+    comment: ''
+    annotation_status: draft
+  - id: ''
+    role: panel
+    name: OcrButton
+    object_name: OcrButton
+    accessible_id: ''
+    classification: container
+    comment: ''
+    annotation_status: draft
+  - id: ''
+    role: panel
+    name: OcrScrollButton
+    object_name: OcrScrollButton
+    accessible_id: ''
+    classification: container
+    comment: ''
+    annotation_status: draft
+  - id: ''
+    role: panel
+    name: OptionButton
+    object_name: OptionButton
+    accessible_id: ''
+    classification: container
+    comment: ''
+    annotation_status: draft
+  - id: ''
+    role: panel
+    name: OptionMenu
+    object_name: OptionMenu
+    accessible_id: ''
+    classification: container
+    comment: ''
+    annotation_status: draft
+  - id: ''
+    role: panel
+    name: PenButton
+    object_name: PenButton
+    accessible_id: ''
+    classification: container
+    comment: ''
+    annotation_status: draft
+  - id: ''
+    role: panel
+    name: PinButton
+    object_name: PinButton
+    accessible_id: ''
+    classification: container
+    comment: ''
+    annotation_status: draft
+  - id: ''
+    role: panel
+    name: RecordOptionMenu
+    object_name: RecordOptionMenu
+    accessible_id: ''
+    classification: container
+    comment: ''
+    annotation_status: draft
+  - id: ''
+    role: panel
+    name: RecorderButton
+    object_name: RecorderButton
+    accessible_id: ''
+    classification: container
+    comment: ''
+    annotation_status: draft
+  - id: ''
+    role: panel
+    name: ScrollOptionButton
+    object_name: ScrollOptionButton
+    accessible_id: ''
+    classification: container
+    comment: ''
+    annotation_status: draft
+  - id: ''
+    role: panel
+    name: ScrollOptionMenu
+    object_name: ScrollOptionMenu
+    accessible_id: ''
+    classification: container
+    comment: ''
+    annotation_status: draft
+  - id: ''
+    role: panel
+    name: ScrollShotButton
+    object_name: ScrollShotButton
+    accessible_id: ''
+    classification: container
+    comment: ''
+    annotation_status: draft
+  - id: ''
+    role: panel
+    name: ShotBtnGroup
+    object_name: ShotBtnGroup
+    accessible_id: ''
+    classification: container
+    comment: ''
+    annotation_status: draft
+  - id: ''
+    role: panel
+    name: ShotButton
+    object_name: ShotButton
+    accessible_id: ''
+    classification: container
+    comment: ''
+    annotation_status: draft
+  - id: ''
+    role: panel
+    name: ShotOptionButton
+    object_name: ShotOptionButton
+    accessible_id: ''
+    classification: container
+    comment: ''
+    annotation_status: draft
+  - id: ''
+    role: panel
+    name: SysAudioAction
+    object_name: SysAudioAction
+    accessible_id: ''
+    classification: container
+    comment: ''
+    annotation_status: draft
+  - id: ''
+    role: panel
+    name: TextButton
+    object_name: TextButton
+    accessible_id: ''
+    classification: container
+    comment: ''
+    annotation_status: draft
+- id: ''
+  role: panel
+  name: TextButton
+  object_name: TextButton
+  accessible_id: ''
+  classification: container
+  comment: ''
+  annotation_status: draft
+- id: ''
+  role: panel
+  name: ToolBarWidget
+  object_name: ''
+  accessible_id: ''
+  classification: container
+  comment: ''
+  annotation_status: draft
+  children:
+  - id: ''
+    role: panel
+    name: CloseButton
+    object_name: CloseButton
+    accessible_id: ''
+    classification: container
+    comment: ''
+    annotation_status: draft
+  - id: ''
+    role: panel
+    name: ConfirmButton
+    object_name: ConfirmButton
+    accessible_id: ''
+    classification: container
+    comment: ''
+    annotation_status: draft
+  - id: ''
+    role: panel
+    name: HorSeparatorLine
+    object_name: HorSeparatorLine
+    accessible_id: ''
+    classification: container
+    comment: ''
+    annotation_status: draft
+- id: ''
+  role: panel
+  name: ToolTips
+  object_name: ''
+  accessible_id: ''
+  classification: container
+  comment: ''
+  annotation_status: draft
+  children:
+  - id: ''
+    role: panel
+    name: TipText
+    object_name: TipText
+    accessible_id: ''
+    classification: container
+    comment: ''
+    annotation_status: draft
+  - id: ''
+    role: panel
+    name: ToolTips
+    object_name: ToolTips
+    accessible_id: ''
+    classification: container
+    comment: ''
+    annotation_status: draft

@@ -1,0 +1,36 @@
+name: misc_suite
+app: deepin-screen-recorder
+module: misc
+setup:
+- action: session_start
+  command: deepin-screen-recorder
+  wait: 3.0
+suites:
+- id: suite_misc_001_s1
+  name: 开启摄像头选项-鼠标选择工具
+  description: ''
+  steps:
+  - action: keyboard_hot_key
+    key: ctrl+alt+r
+  - action: mouse_drag
+    x: 100
+    y: 100
+    selector:
+      name: SubToolWidget
+      role: panel
+  - action: wait
+  - action: mouse_click
+    selector:
+      name: CameraButton
+      role: panel
+  assert_steps:
+  - action: assert_element
+    selector:
+      name: SubToolWidget
+      role: panel
+  - action: assert_element
+    selector:
+      name: CameraButton
+      role: panel
+teardown:
+- action: session_stop

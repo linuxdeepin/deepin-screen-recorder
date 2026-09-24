@@ -1,0 +1,54 @@
+name: record_options_part2_suite
+app: deepin-screen-recorder
+module: record_options_part2
+setup:
+- action: session_start
+  command: deepin-screen-recorder
+  wait: 3.0
+suites:
+- id: suite_record_options_part2_002_s1
+  name: 【录制】录制不同格式与时段视频
+  description: ''
+  steps:
+  - action: keyboard_hot_key
+    key: ctrl+alt+r
+  - action: mouse_drag
+    x: 300
+    y: 300
+    wait: 1
+  - action: mouse_click
+    selector:
+      name: OptionButton
+      role: panel
+    wait: 1
+  - action: mouse_click
+    selector:
+      name: GioButton
+      role: panel
+    wait: 1
+  - action: mouse_click
+    selector:
+      name: RecorderButton
+      role: panel
+    wait: 1
+  - action: wait
+  assert_steps:
+  - action: assert_element
+    selector:
+      name: MainToolWidget
+      role: panel
+  - action: assert_element
+    selector:
+      name: SubToolWidget
+      role: panel
+  - action: assert_element
+    selector:
+      name: RecordOptionMenu
+      role: panel
+  - action: assert_element
+    selector:
+      name: RecorderButton
+      role: panel
+  - action: assert_process
+teardown:
+- action: session_stop

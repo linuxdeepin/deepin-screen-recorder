@@ -1,0 +1,94 @@
+name: ocr_part2_suite
+app: deepin-screen-recorder
+module: ocr_part2
+setup:
+- action: session_start
+  command: deepin-screen-recorder
+  wait: 3.0
+suites:
+- id: suite_ocr_part2_005_s1
+  name: '[core]OCR-识别状态'
+  description: ''
+  steps:
+  - action: keyboard_hot_key
+    key: ctrl+alt+a
+  - action: mouse_drag
+    x: 300
+    y: 300
+    selector:
+      name: MajToolBar
+      role: panel
+  - action: mouse_click
+    selector:
+      name: OcrButton
+      role: panel
+  assert_steps:
+  - action: assert_element
+    selector:
+      name: MajToolBar
+      role: panel
+  - action: assert_ocr_exists
+- id: suite_ocr_part2_007_s1
+  name: '[core]OCR-文案检查-快捷键预览'
+  description: ''
+  steps:
+  - action: keyboard_hot_key
+    key: ctrl+alt+a
+  - action: mouse_drag
+    x: 300
+    y: 300
+    selector:
+      name: MajToolBar
+      role: panel
+  - action: keyboard_hot_key
+    key: ctrl+shift+/
+  assert_steps:
+  - action: assert_element
+    selector:
+      name: MajToolBar
+      role: panel
+  - action: assert_ocr_exists
+- id: suite_ocr_part2_008_s1
+  name: '[smoke]OCR-入口检查-工具栏按钮'
+  description: ''
+  steps:
+  - action: keyboard_hot_key
+    key: ctrl+alt+a
+  - action: mouse_drag
+    x: 300
+    y: 300
+    selector:
+      name: MajToolBar
+      role: panel
+  - action: mouse_click
+    selector:
+      name: OcrButton
+      role: panel
+  assert_steps:
+  - action: assert_element
+    selector:
+      name: MajToolBar
+      role: panel
+  - action: assert_window
+- id: suite_ocr_part2_009_s1
+  name: '[smoke]OCR-启动检查-快捷键启动'
+  description: ''
+  steps:
+  - action: keyboard_hot_key
+    key: ctrl+alt+a
+  - action: mouse_drag
+    x: 300
+    y: 300
+    selector:
+      name: MajToolBar
+      role: panel
+  - action: keyboard_hot_key
+    key: alt+o
+  assert_steps:
+  - action: assert_element
+    selector:
+      name: MajToolBar
+      role: panel
+  - action: assert_window
+teardown:
+- action: session_stop

@@ -1,0 +1,175 @@
+elements:
+  MajToolBar:
+    name: MajToolBar
+    role: panel
+  AiAssistantButton:
+    name: AiAssistantButton
+    role: panel
+  AIAssistantWidget:
+    name: AIAssistantWidget
+    role: panel
+  ToolTips:
+    name: ToolTips
+    role: panel
+  CloseBtn:
+    name: CloseBtn
+    role: panel
+  ExplainButton:
+    name: ExplainButton
+    role: panel
+  SummarizeButton:
+    name: SummarizeButton
+    role: panel
+  TranslateButton:
+    name: TranslateButton
+    role: panel
+  AskAibutton:
+    name: AskAibutton
+    role: panel
+  TipText:
+    name: TipText
+    role: panel
+  ToolBarWidget:
+    name: ToolBarWidget
+    role: panel
+  CloseButton:
+    name: CloseButton
+    role: panel
+  ConfirmButton:
+    name: ConfirmButton
+    role: panel
+  SubToolBar:
+    name: SubToolBar
+    role: panel
+  KeyBoardButton:
+    name: KeyBoardButton
+    role: panel
+  ShotButton:
+    name: ShotButton
+    role: panel
+  SubToolWidget:
+    name: SubToolWidget
+    role: panel
+  CameraButton:
+    name: CameraButton
+    role: panel
+  OcrButton:
+    name: OcrButton
+    role: panel
+  PinButton:
+    name: PinButton
+    role: panel
+  OkBtn:
+    name: OkBtn
+    role: panel
+  MenuController:
+    name: MenuController
+    role: panel
+  SaveAct:
+    name: SaveAct
+    role: panel
+  OptionButton:
+    name: OptionButton
+    role: panel
+  RecordOptionMenu:
+    name: RecordOptionMenu
+    role: panel
+  GioButton:
+    name: GioButton
+    role: panel
+  MicrophoneAction:
+    name: MicrophoneAction
+    role: panel
+  SysAudioAction:
+    name: SysAudioAction
+    role: panel
+  RecorderButton:
+    name: RecorderButton
+    role: panel
+  MainToolWidget:
+    name: MainToolWidget
+    role: panel
+  CommonIconButton:
+    name: CommonIconButton
+    role: panel
+  SaveBtn:
+    name: SaveBtn
+    role: panel
+  SaveMenu:
+    name: SaveMenu
+    role: panel
+  DesktopAction:
+    name: DesktopAction
+    role: panel
+  ListBtn:
+    name: ListBtn
+    role: panel
+  OptionMenu:
+    name: OptionMenu
+    role: panel
+  AskEachTimeAction:
+    name: AskEachTimeAction
+    role: panel
+  SaveMenuManager:
+    name: SaveMenuManager
+    role: panel
+  ChooseOnSaveAction:
+    name: ChooseOnSaveAction
+    role: panel
+  TextBtn:
+    name: TextBtn
+    role: panel
+  RectBtn:
+    name: RectBtn
+    role: panel
+  ShapeToolWidget:
+    name: ShapeToolWidget
+    role: panel
+  OvalButton:
+    name: OvalButton
+    role: panel
+  ColorBtn:
+    name: ColorBtn
+    role: panel
+  RectButton:
+    name: RectButton
+    role: panel
+  ArrowBtn:
+    name: ArrowBtn
+    role: panel
+  ScrollShotButton:
+    name: ScrollShotButton
+    role: panel
+  ScrollOptionButton:
+    name: ScrollOptionButton
+    role: panel
+  ScrollOptionMenu:
+    name: ScrollOptionMenu
+    role: panel
+  OvalBtn:
+    name: OvalBtn
+    role: panel
+  ScrollShotTip:
+    name: ScrollShotTip
+    role: panel
+  AiAssistantScrollButton:
+    name: AiAssistantScrollButton
+    role: panel
+  SpecifiedLocationAction:
+    name: SpecifiedLocationAction
+    role: panel
+  SpecifiedLocationSubMenu:
+    name: SpecifiedLocationSubMenu
+    role: panel
+  OcrScrollButton:
+    name: OcrScrollButton
+    role: panel
+  WarmingIconButton:
+    name: WarmingIconButton
+    role: panel
+  scrollshot_tip_help_button:
+    name: scrollshot_tip_help_button
+    role: panel
+  scrollshot_tip_adjust_button:
+    name: scrollshot_tip_adjust_button
+    role: panel
