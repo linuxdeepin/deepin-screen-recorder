@@ -5454,6 +5454,50 @@ void MainWindow::translateShapesForSelectionResize(const QPoint &oldTopLeft)
     }
 }
 
+// 图形编辑（绘制/拖动/缩放/旋转/键盘微调/文本改尺寸）后，
+// 如果图形外接矩形超出了选区画布，就把选区向外扩张到刚好覆盖它。
+// 只增不减：撤销或删除图形时保持选区不变，避免选区自己跳动。
+bool MainWindow::expandSelectionToContents()
+{
+    if (!m_shapesWidget || !m_isShapesWidgetExist || !m_shapesWidget->hasContents()) {
+        return false;
+    }
+
+    const QRectF contentRect = shapesContentBoundingRectInWindow();
+    if (!contentRect.isValid()) {
+        return false;
+    }
+
+    // ShapesWidget 相对选区四周内缩 2px，要完整容纳图形需把选区多让出 2px。
+    int left = qMin(recordX, static_cast<int>(std::floor(contentRect.left())) - 2);
+    int top = qMin(recordY, static_cast<int>(std::floor(contentRect.top())) - 2);
+    int right = qMax(recordX + recordWidth, static_cast<int>(std::ceil(contentRect.right())) + 2);
+    int bottom = qMax(recordY + recordHeight, static_cast<int>(std::ceil(contentRect.bottom())) + 2);
+
+    // 屏幕是最终边界。图形本身仍可能越过屏幕（键盘微调、旋转角点），此时只能到边为止。
+    left = qMax(left, 0);
+    top = qMax(top, 0);
+    right = qMin(right, m_backgroundRect.width());
+    bottom = qMin(bottom, m_backgroundRect.height());
+
+    if (left == recordX && top == recordY
+            && right == recordX + recordWidth && bottom == recordY + recordHeight) {
+        return false;
+    }
+
+    const QPoint oldTopLeft(recordX, recordY);
+    recordX = left;
+    recordY = top;
+    recordWidth = qMax(right - left, 1);
+    recordHeight = qMax(bottom - top, 1);
+
+    // 左/上边界扩张会移动 ShapesWidget 原点，需反向平移内容，
+    // 让图形继续贴在原来的屏幕位置上（同时会同步拖拽锚点）。
+    translateShapesForSelectionResize(oldTopLeft);
+    updateSelectionRelatedWidgets();
+    return true;
+}
+
 // 事件过滤器过滤的鼠标按下事件在此方法处理
 int MainWindow::mousePressEF(QMouseEvent *mouseEvent, bool &needRepaint)
 {
@@ -5989,16 +6033,18 @@ int MainWindow::mouseMoveEF(QMouseEvent *mouseEvent, bool &needRepaint)
             needRepaint = true;
             return 2;
         } else {
-            // 非拖拽状态：只在无按键悬停时更新选区边框光标，避免抢占 ShapesWidget 的绘制/拖动事件。
+            // 非拖拽状态：只有命中选区边框时才接管光标。
+            // 选区内部的绘制、图形拖动和图形缩放必须交给 ShapesWidget，
+            // 否则这里设置的抓手光标会覆盖图形控制点对应的缩放光标。
             if (recordButtonStatus == RECORD_BUTTON_NORMAL && mouseEvent->buttons() == Qt::NoButton) {
-                updateCursor(mouseEvent);
-                int action = getAction(mouseEvent);
-                bool drawPoint = action != ACTION_MOVE;
+                const int action = getAction(mouseEvent);
+                const bool drawPoint = action != ACTION_MOVE;
                 if (drawPoint != drawDragPoint) {
                     drawDragPoint = drawPoint;
                     needRepaint = true;
                 }
                 if (action != ACTION_MOVE) {
+                    updateCursor(mouseEvent);
                     if (needRepaint) {
                         update();
                     }
@@ -8191,6 +8237,8 @@ void MainWindow::initShapeWidget(QString type)
     connect(m_shapesWidget, &ShapesWidget::saveFromMenu, this, &MainWindow::saveScreenShot);
     connect(m_shapesWidget, &ShapesWidget::closeFromMenu, this, &MainWindow::exitApp);
     connect(m_shapesWidget, &ShapesWidget::shapeClicked, this, &MainWindow::shapeClickedSlot);
+    connect(m_shapesWidget, &ShapesWidget::contentsGeometryChanged,
+            this, &MainWindow::expandSelectionToContents);
     connect(this, &MainWindow::unDo, m_shapesWidget, &ShapesWidget::undoDrawShapes);
     connect(this, &MainWindow::unDoAll, m_shapesWidget, &ShapesWidget::undoAllDrawShapes);
     connect(this, &MainWindow::isInUndoBtn, m_shapesWidget, &ShapesWidget::isInUndoBtn);

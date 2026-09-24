@@ -850,6 +850,8 @@ protected:
     QRectF effectiveShapesContentBoundingRectInWindow() const;
     void constrainSelectionToShapes();
     void translateShapesForSelectionResize(const QPoint &oldTopLeft);
+    // 图形编辑过程中，把选区实时扩张到覆盖图形外接矩形（只增不减）。
+    bool expandSelectionToContents();
     int getRecordInputType(bool selectedMic, bool selectedSystemAudio);
     /**
      * @brief initBackground 初始化截图背景，启动截图时调用

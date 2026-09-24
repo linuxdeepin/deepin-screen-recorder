@@ -273,6 +273,128 @@ bool shapeHasGeometry(const Toolshape &shape)
     }
     return !shape.points.isEmpty() || !shape.arrowRotatePos.isNull();
 }
+
+QRectF shapePointRect(const Toolshape &shape)
+{
+    qreal left = 0;
+    qreal top = 0;
+    qreal right = 0;
+    qreal bottom = 0;
+    bool hasPoint = false;
+    bool hasMainPoint = false;
+
+    for (const QPointF &point : shape.mainPoints) {
+        if (!point.isNull()) {
+            hasMainPoint = true;
+            break;
+        }
+    }
+
+    auto unitePoint = [&left, &top, &right, &bottom, &hasPoint](const QPointF &point) {
+        if (!hasPoint) {
+            left = right = point.x();
+            top = bottom = point.y();
+            hasPoint = true;
+            return;
+        }
+
+        left = qMin(left, point.x());
+        top = qMin(top, point.y());
+        right = qMax(right, point.x());
+        bottom = qMax(bottom, point.y());
+    };
+
+    if (hasMainPoint) {
+        for (const QPointF &point : shape.mainPoints) {
+            unitePoint(point);
+        }
+    }
+    for (const QPointF &point : shape.points) {
+        unitePoint(point);
+    }
+    if (!shape.arrowRotatePos.isNull()) {
+        unitePoint(shape.arrowRotatePos);
+    }
+
+    return hasPoint ? QRectF(QPointF(left, top), QPointF(right, bottom)).normalized()
+                    : QRectF();
+}
+
+QRectF shapeContentBoundingRect(const Toolshape &shape)
+{
+    if (!shapeHasGeometry(shape)) {
+        return QRectF();
+    }
+
+    QRectF shapeRect = shapePointRect(shape);
+
+    // 外接矩形必须覆盖实际绘制范围，而不仅是控制点。
+    // 箭头头部、画笔/马赛克线宽都会超出 points/mainPoints，
+    // 这里预留足够 padding，避免缩小选区后保存时被裁掉。
+    qreal padding = 4.0;
+    if (shape.type == "arrow") {
+        padding = qMax<qreal>(padding, shape.lineWidth * 2.0 + 16.0);
+    } else if (shape.type == "line" || shape.type == "pen"
+               || (shape.type == "effect" && shape.isOval == 2)) {
+        padding = qMax<qreal>(padding, shape.lineWidth + 8.0);
+    } else if (shape.type == "rectangle" || shape.type == "oval" || shape.type == "effect") {
+        padding = qMax<qreal>(padding, shape.lineWidth + 4.0);
+    } else if (shape.type == "text") {
+        padding = 4.0;
+    }
+
+    shapeRect.adjust(-padding, -padding, padding, padding);
+    return shapeRect.normalized();
+}
+
+void translateShape(Toolshape &shape, const QPointF &offset)
+{
+    for (QPointF &point : shape.mainPoints) {
+        point += offset;
+    }
+    for (QPointF &point : shape.points) {
+        point += offset;
+    }
+    if (!shape.arrowRotatePos.isNull()) {
+        shape.arrowRotatePos += offset;
+    }
+}
+
+void applyOverrideCursor(const QCursor &cursor)
+{
+    const QCursor *currentOverride = QApplication::overrideCursor();
+    if (currentOverride == nullptr) {
+        QApplication::setOverrideCursor(cursor);
+    } else if (*currentOverride != cursor) {
+        QApplication::changeOverrideCursor(cursor);
+    }
+}
+
+QCursor cursorForResizeDirection(ResizeDirection direction)
+{
+    switch (direction) {
+    case TopLeft:
+    case BottomRight:
+        return QCursor(Qt::SizeFDiagCursor);
+    case TopRight:
+    case BottomLeft:
+        return QCursor(Qt::SizeBDiagCursor);
+    case Left:
+    case Right:
+        return QCursor(Qt::SizeHorCursor);
+    case Top:
+    case Bottom:
+        return QCursor(Qt::SizeVerCursor);
+    case Rotate:
+        return BaseUtils::setCursorShape("rotate");
+    case Moving:
+        return QCursor(Qt::ClosedHandCursor);
+    case Outting:
+        return QCursor(Qt::ArrowCursor);
+    }
+
+    return QCursor(Qt::ArrowCursor);
+}
 }
 
 bool ShapesWidget::hasContents() const
@@ -311,74 +433,8 @@ QRectF ShapesWidget::contentsBoundingRect() const
         }
     };
 
-    auto shapePointRect = [](const Toolshape &shape) {
-        qreal left = 0;
-        qreal top = 0;
-        qreal right = 0;
-        qreal bottom = 0;
-        bool hasPoint = false;
-        bool hasMainPoint = false;
-
-        for (const QPointF &point : shape.mainPoints) {
-            if (!point.isNull()) {
-                hasMainPoint = true;
-                break;
-            }
-        }
-
-        auto unitePoint = [&left, &top, &right, &bottom, &hasPoint](const QPointF &point) {
-            if (!hasPoint) {
-                left = right = point.x();
-                top = bottom = point.y();
-                hasPoint = true;
-                return;
-            }
-
-            left = qMin(left, point.x());
-            top = qMin(top, point.y());
-            right = qMax(right, point.x());
-            bottom = qMax(bottom, point.y());
-        };
-
-        if (hasMainPoint) {
-            for (const QPointF &point : shape.mainPoints) {
-                unitePoint(point);
-            }
-        }
-        for (const QPointF &point : shape.points) {
-            unitePoint(point);
-        }
-        if (!shape.arrowRotatePos.isNull()) {
-            unitePoint(shape.arrowRotatePos);
-        }
-
-        return hasPoint ? QRectF(QPointF(left, top), QPointF(right, bottom)).normalized() : QRectF();
-    };
-
-    auto uniteShape = [&shapePointRect, &uniteBoundingRect](const Toolshape &shape) {
-        if (!shapeHasGeometry(shape)) {
-            return;
-        }
-
-        QRectF shapeRect = shapePointRect(shape);
-
-        // 外接矩形必须覆盖实际绘制范围，而不仅是控制点。
-        // 箭头头部、画笔/马赛克线宽都会超出 points/mainPoints，
-        // 这里预留足够 padding，避免缩小选区后保存时被裁掉。
-        qreal padding = 4.0;
-        if (shape.type == "arrow") {
-            padding = qMax<qreal>(padding, shape.lineWidth * 2.0 + 16.0);
-        } else if (shape.type == "line" || shape.type == "pen"
-                   || (shape.type == "effect" && shape.isOval == 2)) {
-            padding = qMax<qreal>(padding, shape.lineWidth + 8.0);
-        } else if (shape.type == "rectangle" || shape.type == "oval" || shape.type == "effect") {
-            padding = qMax<qreal>(padding, shape.lineWidth + 4.0);
-        } else if (shape.type == "text") {
-            padding = 4.0;
-        }
-
-        shapeRect.adjust(-padding, -padding, padding, padding);
-        uniteBoundingRect(shapeRect.normalized());
+    auto uniteShape = [&uniteBoundingRect](const Toolshape &shape) {
+        uniteBoundingRect(shapeContentBoundingRect(shape));
     };
 
     for (const Toolshape &shape : m_shapes) {
@@ -408,30 +464,18 @@ void ShapesWidget::translateContents(const QPointF &offset)
         return;
     }
 
-    auto translateShape = [&offset](Toolshape &shape) {
-        for (QPointF &point : shape.mainPoints) {
-            point += offset;
-        }
-        for (QPointF &point : shape.points) {
-            point += offset;
-        }
-        if (!shape.arrowRotatePos.isNull()) {
-            shape.arrowRotatePos += offset;
-        }
-    };
-
     for (Toolshape &shape : m_shapes) {
-        translateShape(shape);
+        translateShape(shape, offset);
     }
 
     if (shapeHasGeometry(m_currentShape)) {
-        translateShape(m_currentShape);
+        translateShape(m_currentShape, offset);
     }
     if (shapeHasGeometry(m_selectedShape)) {
-        translateShape(m_selectedShape);
+        translateShape(m_selectedShape, offset);
     }
     if (shapeHasGeometry(m_hoveredShape)) {
-        translateShape(m_hoveredShape);
+        translateShape(m_hoveredShape, offset);
     }
 
     auto it = m_editMap.begin();
@@ -440,6 +484,22 @@ void ShapesWidget::translateContents(const QPointF &offset)
             it.value()->move(it.value()->pos() + offset.toPoint());
         }
         ++it;
+    }
+
+    // 当前正在绘制的图形的起止点，以及拖动/缩放/旋转的鼠标锚点，
+    // 都是 ShapesWidget 局部坐标。选区左/上边界扩张时 widget 原点会移动，
+    // 若不同步这些点，下一个鼠标事件会跨坐标系计算增量，图形会跳变。
+    if (!m_pos1.isNull()) {
+        m_pos1 += offset;
+    }
+    if (!m_pos2.isNull()) {
+        m_pos2 += offset;
+    }
+    if (!m_pressedPoint.isNull()) {
+        m_pressedPoint += offset;
+    }
+    if (!m_movingPoint.isNull()) {
+        m_movingPoint += offset;
     }
 
     update();
@@ -1284,28 +1344,45 @@ void ShapesWidget::handleDrag(QPointF oldPoint, QPointF newPoint)
         return;
     }
 
-    if (m_shapes[m_selectedOrder].type == "arrow" || m_shapes[m_selectedOrder].type == "line") {
+    QPointF offset(newPoint.x() - oldPoint.x(), newPoint.y() - oldPoint.y());
+    const Toolshape &selectedShape = m_shapes[m_selectedOrder];
+    const QRectF contentRect = shapeContentBoundingRect(selectedShape);
+    if (parentWidget() && contentRect.isValid()) {
+        const QRectF allowedRect = QRectF(parentWidget()->rect()).translated(-pos());
+        if (contentRect.width() <= allowedRect.width()) {
+            offset.setX(qBound(allowedRect.left() - contentRect.left(),
+                               offset.x(),
+                               allowedRect.right() - contentRect.right()));
+        }
+        if (contentRect.height() <= allowedRect.height()) {
+            offset.setY(qBound(allowedRect.top() - contentRect.top(),
+                               offset.y(),
+                               allowedRect.bottom() - contentRect.bottom()));
+        }
+    }
+
+    if (selectedShape.type == "arrow" || selectedShape.type == "line") {
         for (int i = 0; i < m_shapes[m_selectedOrder].points.length(); i++) {
             m_shapes[m_selectedOrder].points[i] = QPointF(
-                                                      m_shapes[m_selectedOrder].points[i].x() + (newPoint.x() - oldPoint.x()),
-                                                      m_shapes[m_selectedOrder].points[i].y() + (newPoint.y() - oldPoint.y())
+                                                      m_shapes[m_selectedOrder].points[i].x() + offset.x(),
+                                                      m_shapes[m_selectedOrder].points[i].y() + offset.y()
                                                   );
         }
         return;
     }
 
-    if (m_shapes[m_selectedOrder].mainPoints.length() == 4) {
+    if (selectedShape.mainPoints.length() == 4) {
         for (int i = 0; i < m_shapes[m_selectedOrder].mainPoints.length(); i++) {
             m_shapes[m_selectedOrder].mainPoints[i] = QPointF(
-                                                          m_shapes[m_selectedOrder].mainPoints[i].x() + (newPoint.x() - oldPoint.x()),
-                                                          m_shapes[m_selectedOrder].mainPoints[i].y() + (newPoint.y() - oldPoint.y())
+                                                          m_shapes[m_selectedOrder].mainPoints[i].x() + offset.x(),
+                                                          m_shapes[m_selectedOrder].mainPoints[i].y() + offset.y()
                                                       );
         }
     }
     for (int i = 0; i < m_shapes[m_selectedOrder].points.length(); i++) {
         m_shapes[m_selectedOrder].points[i] = QPointF(
-                                                  m_shapes[m_selectedOrder].points[i].x() + (newPoint.x() - oldPoint.x()),
-                                                  m_shapes[m_selectedOrder].points[i].y() + (newPoint.y() - oldPoint.y())
+                                                  m_shapes[m_selectedOrder].points[i].x() + offset.x(),
+                                                  m_shapes[m_selectedOrder].points[i].y() + offset.y()
                                               );
     }
 }
@@ -1832,6 +1909,7 @@ void ShapesWidget::mouseReleaseEvent(QMouseEvent *e)
     m_pos2 = QPointF(0, 0);
 
     update();
+    emit contentsGeometryChanged();
     DFrame::mouseReleaseEvent(e);
     qCDebug(dsrApp) << "mouseReleaseEvent finished.";
 }
@@ -1907,17 +1985,22 @@ void ShapesWidget::mouseMoveEvent(QMouseEvent *e)
             }
         }
         update();
+        emit contentsGeometryChanged();
     } else if (!m_isRecording && m_isPressed) {
         if (m_isRotated && m_isPressed) {
+            applyOverrideCursor(BaseUtils::setCursorShape("rotate"));
             handleRotate(e->pos());
             update();
+            emit contentsGeometryChanged();
             qCDebug(dsrApp) << "Not recording but pressed and rotated, calling handleRotate.";
         }
 
         if (m_isResize && m_isPressed) {
             // resize function
+            applyOverrideCursor(cursorForResizeDirection(m_resizeDirection));
             handleResize(QPointF(e->pos()), m_clickedKey);
             update();
+            emit contentsGeometryChanged();
             DFrame::mouseMoveEvent(e);
             qCDebug(dsrApp) << "Not recording but pressed and resizing, calling handleResize.";
             return;
@@ -1937,6 +2020,7 @@ void ShapesWidget::mouseMoveEvent(QMouseEvent *e)
 
             m_pressedPoint = m_movingPoint;
             update();
+            emit contentsGeometryChanged();
             qCDebug(dsrApp) << "Selected, pressed, and index not -1, calling handleDrag.";
         }
 
@@ -1953,56 +2037,56 @@ void ShapesWidget::mouseMoveEvent(QMouseEvent *e)
                     //悬停状态时，根据悬停的位置不同，光标的形状也不同
                     if (m_resizeDirection == Left) {
                         if (m_isSelected || m_isRotated) {
-                            qApp->setOverrideCursor(Qt::SizeHorCursor);
+                            applyOverrideCursor(Qt::SizeHorCursor);
                         } else {
-                            qApp->setOverrideCursor(Qt::ClosedHandCursor);
+                            applyOverrideCursor(Qt::ClosedHandCursor);
                         }
                     } else if (m_resizeDirection == Top) {
                         if (m_isSelected || m_isRotated) {
-                            qApp->setOverrideCursor(Qt::SizeVerCursor);
+                            applyOverrideCursor(Qt::SizeVerCursor);
                         } else {
-                            qApp->setOverrideCursor(Qt::ClosedHandCursor);
+                            applyOverrideCursor(Qt::ClosedHandCursor);
                         }
                     } else if (m_resizeDirection == Right) {
                         if (m_isSelected || m_isRotated) {
-                            qApp->setOverrideCursor(Qt::SizeHorCursor);
+                            applyOverrideCursor(Qt::SizeHorCursor);
                         } else {
-                            qApp->setOverrideCursor(Qt::ClosedHandCursor);
+                            applyOverrideCursor(Qt::ClosedHandCursor);
                         }
                     } else if (m_resizeDirection == Bottom) {
                         if (m_isSelected || m_isRotated) {
-                            qApp->setOverrideCursor(Qt::SizeVerCursor);
+                            applyOverrideCursor(Qt::SizeVerCursor);
                         } else {
-                            qApp->setOverrideCursor(Qt::ClosedHandCursor);
+                            applyOverrideCursor(Qt::ClosedHandCursor);
                         }
                     } else if (m_resizeDirection == TopLeft) {
                         if (m_isSelected || m_isRotated) {
-                            qApp->setOverrideCursor(Qt::SizeFDiagCursor);
+                            applyOverrideCursor(Qt::SizeFDiagCursor);
                         } else {
-                            qApp->setOverrideCursor(Qt::ClosedHandCursor);
+                            applyOverrideCursor(Qt::ClosedHandCursor);
                         }
                     } else if (m_resizeDirection == BottomLeft) {
                         if (m_isSelected || m_isRotated) {
-                            qApp->setOverrideCursor(Qt::SizeBDiagCursor);
+                            applyOverrideCursor(Qt::SizeBDiagCursor);
                         } else {
-                            qApp->setOverrideCursor(Qt::ClosedHandCursor);
+                            applyOverrideCursor(Qt::ClosedHandCursor);
                         }
                     } else if (m_resizeDirection == TopRight) {
                         if (m_isSelected || m_isRotated) {
-                            qApp->setOverrideCursor(Qt::SizeBDiagCursor);
+                            applyOverrideCursor(Qt::SizeBDiagCursor);
                         } else {
-                            qApp->setOverrideCursor(Qt::ClosedHandCursor);
+                            applyOverrideCursor(Qt::ClosedHandCursor);
                         }
                     } else if (m_resizeDirection == BottomRight) {
                         if (m_isSelected || m_isRotated) {
-                            qApp->setOverrideCursor(Qt::SizeFDiagCursor);
+                            applyOverrideCursor(Qt::SizeFDiagCursor);
                         } else {
-                            qApp->setOverrideCursor(Qt::ClosedHandCursor);
+                            applyOverrideCursor(Qt::ClosedHandCursor);
                         }
                     } else if (m_resizeDirection == Rotate) {
-                        qApp->setOverrideCursor(BaseUtils::setCursorShape("rotate"));
+                        applyOverrideCursor(BaseUtils::setCursorShape("rotate"));
                     } else if (m_resizeDirection == Moving) {
-                        qApp->setOverrideCursor(Qt::ClosedHandCursor);
+                        applyOverrideCursor(Qt::ClosedHandCursor);
                     } else {
                         updateCursorShape();
                     }
@@ -2112,6 +2196,7 @@ void ShapesWidget::updateTextRect(TextEdit *edit, QRectF newRect)
         }
     }
     update();
+    emit contentsGeometryChanged();
 }
 
 void ShapesWidget::paintImgPoint(QPainter &painter, QPointF pos, QPixmap img, bool isResize)
@@ -2589,6 +2674,7 @@ void ShapesWidget::pinchTriggered(QPinchGesture *pinch)
             m_shapes[m_selectedOrder].points[k].setY(y);
         }
     }
+    emit contentsGeometryChanged();
 }
 
 void ShapesWidget::tapTriggered(QTapGesture *tap)
@@ -2776,6 +2862,7 @@ void ShapesWidget::microAdjust(QString direction)
     m_selectedShape.points = currentShape.points;
     m_hoveredShape.type = "";
     update();
+    emit contentsGeometryChanged();
 }
 
 void ShapesWidget::setShiftKeyPressed(bool isShift)
@@ -2803,13 +2890,7 @@ void ShapesWidget::updateCursorShape()
         } else {
             setCursorValue = BaseUtils::setCursorShape(m_currentType);
         }
-        // 避免相同的光标样式重复设置
-        // qApp->overrideCursor() 在未设置任何 override cursor 时返回 nullptr，
-        // 直接解引用会段错误，需先判空。
-        const QCursor *currentOverride = qApp->overrideCursor();
-        if (currentOverride == nullptr || *currentOverride != setCursorValue) {
-            qApp->changeOverrideCursor(setCursorValue);
-        }
+        applyOverrideCursor(setCursorValue);
     }
 }
 
@@ -2826,5 +2907,3 @@ void ShapesWidget::setGlobalRect(QRect rect)
 {
     m_globalRect = rect;
 }
-
-
