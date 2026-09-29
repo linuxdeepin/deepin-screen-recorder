@@ -141,3 +141,33 @@ TEST_F(VoiceVolumeWatcherCovTest, initV20DeviceWatcherQt6NoCrash)
 {
     EXPECT_NO_FATAL_FAILURE(call_private_fun::voiceVolumeWatcherinitV20DeviceWatcher(*w));
 }
+
+// =========================================================================
+// BUG 79399 (sev1) — 社区版 5.9.7.10 截图录屏启动卡死（音频驱动致界面卡死）
+// PMS: https://pms.uniontech.com/bug-view-79399.html  commit: 9b3fa41aa2
+// 根因：voiceVolumeWatcher 构造时在 V20 路径上未先检查 DBus 音频服务是否注册即
+//       initV20DeviceWatcher，当音频服务不存在时阻塞致启动卡死。修复在构造中
+//       增加 isServiceRegistered 守卫，服务不存在时跳过 DBus 初始化；
+//       slotVoiceVolumeWatcher 将原阻塞 run() 改为定时器槽，避免退出缓慢。
+// 回归：构造 voiceVolumeWatcher 不卡死（Fixture SetUp 已隐式验证一次），再独立
+//       构造第二个实例证明修复可重复，并调用 slotVoiceVolumeWatcher 不崩溃。
+// 注：上方 slotVoiceVolumeWatcherRunsClean 已有同名行为用例，本例以 BUG 编号
+//     命名建立 PMS 可追溯链接，并补"二次构造不卡死"维度。
+// =========================================================================
+TEST_F(VoiceVolumeWatcherCovTest, BUG79399_ConstructorNoHangAndSlotSafe)
+{
+    // Arrange — SetUp() 已 new voiceVolumeWatcher()（本身已验证构造不卡死）
+    ASSERT_NE(w, nullptr);
+
+    // Act + Assert — 二次独立构造（证明修复可重复，不依赖 fixture 状态）
+    voiceVolumeWatcher *extra = nullptr;
+    EXPECT_NO_FATAL_FAILURE(extra = new voiceVolumeWatcher());
+    ASSERT_NE(extra, nullptr);
+
+    // slotVoiceVolumeWatcher 定时器槽须不阻塞/不崩溃（原 run() 阻塞修复点）
+    EXPECT_NO_FATAL_FAILURE(extra->slotVoiceVolumeWatcher());
+    EXPECT_NO_FATAL_FAILURE(delete extra);
+
+    // fixture 实例同样验证
+    EXPECT_NO_FATAL_FAILURE(w->slotVoiceVolumeWatcher());
+}

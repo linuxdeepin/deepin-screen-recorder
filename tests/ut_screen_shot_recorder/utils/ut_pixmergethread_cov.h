@@ -93,6 +93,38 @@ TEST_F(PixMergeCovTest, mergeImageWorkEmptyReturnsFalse)
     EXPECT_FALSE(ok);
 }
 
+// =========================================================================
+// BUG 314667 (sev1) — ARM 长截图提示“无效区域”
+// PMS: https://pms.uniontech.com/bug-view-314667.html  commit: 405504d20f
+// 根因：mergeImageWork 未校验入参 image 是否为空，空图进入拼接分支致无效区域。
+//       修复加入 `if (image.empty()) return false;` 早返回守卫。
+// 回归：空 cv::Mat 各 imageStatus 分支均返回 false（守卫命中），不崩溃。
+// 注：上方 mergeImageWorkEmptyReturnsFalse 已有同名行为用例，本例以 BUG 编号
+//     命名建立 PMS 可追溯链接，并补 ScrollUp/非法状态精确断言。
+// =========================================================================
+TEST_F(PixMergeCovTest, BUG314667_EmptyImageGuardReturnsFalse)
+{
+    // Arrange
+    ASSERT_NE(t, nullptr);
+    cv::Mat empty;  // 默认构造的空 Mat（rows/cols=0）
+
+    // Act + Assert — 守卫对每种 imageStatus 均应命中并返回 false
+    bool okDown = true;
+    EXPECT_NO_FATAL_FAILURE(okDown = call_private_fun::PixMergeThreadmergeImageWork(
+                                *t, empty, PixMergeThread::ScrollDown));
+    EXPECT_FALSE(okDown) << "空图 ScrollDown 必须被 empty 守卫拦截返回 false";
+
+    bool okUp = true;
+    EXPECT_NO_FATAL_FAILURE(okUp = call_private_fun::PixMergeThreadmergeImageWork(
+                                *t, empty, PixMergeThread::ScrollUp));
+    EXPECT_FALSE(okUp) << "空图 ScrollUp 必须被 empty 守卫拦截返回 false";
+
+    bool okInvalid = true;
+    EXPECT_NO_FATAL_FAILURE(okInvalid = call_private_fun::PixMergeThreadmergeImageWork(
+                                *t, empty, 9999));
+    EXPECT_FALSE(okInvalid) << "空图 + 非法状态必须返回 false";
+}
+
 // mergeImageWork with an invalid status falls into the default branch and
 // returns false without splicing.
 TEST_F(PixMergeCovTest, mergeImageWorkInvalidStatusReturnsFalse)

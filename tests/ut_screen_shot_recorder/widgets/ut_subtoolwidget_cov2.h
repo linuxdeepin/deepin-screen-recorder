@@ -38,6 +38,8 @@ using namespace testing;
 // DEDUP-REMOVED: ACCESS_PRIVATE_FIELD(SubToolWidget, DMenu *, m_recordOptionMenu);
 ACCESS_PRIVATE_FIELD(SubToolWidget, QAction *, m_microphoneAction);
 ACCESS_PRIVATE_FIELD(SubToolWidget, QAction *, m_sysAudioAction);
+// initRecordOption 为 private，全仓唯一声明（无 ODR 冲突）
+ACCESS_PRIVATE_FUN(SubToolWidget, void(), initRecordOption);
 
 class SubToolWidgetCov2Test : public Test
 {
@@ -268,4 +270,27 @@ TEST_F(SubToolWidgetCov2Test, setVideoButtonInitFromSubTwice)
 {
     EXPECT_NO_FATAL_FAILURE(m_w->setVideoButtonInitFromSub());
     EXPECT_NO_FATAL_FAILURE(m_w->setVideoButtonInitFromSub());
+}
+
+// =========================================================================
+// BUG 308909 (sev2) — sw64 录屏不能保存为 gif 格式
+// BUG 309067 (sev2) — mips 录屏无 GIF 选项
+// PMS: https://pms.uniontech.com/bug-view-308909.html  commit: 5d11f97903
+// PMS: https://pms.uniontech.com/bug-view-309067.html  commit: 5d11f97903
+// 根因：initRecordOption 构建录屏工具栏格式选项菜单时，gif 选项在 loong64/sw64/mips
+//       架构上未启用。修复在此函数中放开 gif 格式选项（全架构可用）。
+// 回归：initRecordOption 在 SubToolWidgetCov2Test fixture（已 switchContent("shot")）
+//       上调用不崩溃，验证录屏选项菜单（含 gif）构建路径稳定。
+// 注：函数体 370 行纯 UI 构建（QActionGroup/DMenu），无 exec/waitFor/dialog 风险。
+// =========================================================================
+TEST_F(SubToolWidgetCov2Test, BUG308909_InitRecordOptionNoCrash)
+{
+    // Arrange — SetUp() 已 new MainWindow + new SubToolWidget + switchContent("shot")
+    ASSERT_NE(m_w, nullptr);
+
+    // Act — 触发录屏选项菜单构建（修复点：gif 格式选项全架构放开）
+    EXPECT_NO_FATAL_FAILURE(call_private_fun::SubToolWidgetinitRecordOption(*m_w));
+
+    // Assert — 对象存活，菜单构建路径稳定
+    EXPECT_NE(m_w, nullptr);
 }

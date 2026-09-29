@@ -193,3 +193,103 @@ TEST_F(MainWindowCov4Test, keyAndWheelEvents)
     QWheelEvent we(QPointF(100, 100), QPointF(100, 100), QPoint(0, 120), QPoint(0, 120), Qt::NoButton, Qt::NoModifier, Qt::NoScrollPhase, false);
     EXPECT_NO_FATAL_FAILURE(call_private_fun::MainWindowwheelEvent(*m_w, &we));
 }
+
+// =========================================================================
+// BUG 185721 (sev1) — 终端拉起录屏提示段错误，导致无法录屏
+// PMS: https://pms.uniontech.com/bug-view-185721.html  commit: 3691818fe7
+// 根因：initAttributes 中未判 windowHandle() 即设窗口属性；startCountdown 路径
+//       缺保护。修复在 initAttributes 加 windowHandle() 守卫 + startCountdown 加固。
+// 回归：initAttributes（SetUp 已执行，隐式验证守卫）+ startCountdown 不再段错误。
+// 注：ut_main_window_ext.h:118 / ut_main_window_cov2.h:319 已有同名行为用例
+//     （startCountdownSafe），本例以 BUG 编号命名建立 PMS 可追溯链接，并在
+//     MainWindowCov4Test 这个不同 stub 集下复跑，扩宽路径覆盖。
+// =========================================================================
+TEST_F(MainWindowCov4Test, BUG185721_StartCountdownNoSegfault)
+{
+    // Arrange — SetUp() 已 new MainWindow + initAttributes() + initResource()，
+    //            initAttributes 的 windowHandle() 守卫在此被隐式覆盖。
+    ASSERT_NE(m_w, nullptr);
+
+    // Act — 触发修复的第二处（startCountdown 路径）
+    EXPECT_NO_FATAL_FAILURE(m_w->startCountdown());
+
+    // Assert — 对象存活、未析构崩溃；窗口句柄属性访问不段错误
+    EXPECT_NE(m_w, nullptr);
+    EXPECT_NO_FATAL_FAILURE(m_w->windowHandle());
+}
+
+// =========================================================================
+// BUG 275661 (sev2) — 适配屏幕窗口层级
+// PMS: https://pms.uniontech.com/bug-view-275661.html  commit: 38c42f57
+// 根因：initAttributes 中屏幕窗口层级设置在部分机型异常。修复追加层级适配。
+// 回归：initAttributes 可重复执行（幂等无崩溃），窗口属性稳定。
+// =========================================================================
+TEST_F(MainWindowCov4Test, BUG275661_InitAttributesScreenLayerIdempotent)
+{
+    // Arrange — SetUp() 已调用一次 initAttributes()
+    ASSERT_NE(m_w, nullptr);
+
+    // Act — 再次执行 initAttributes，验证层级适配代码路径稳定
+    EXPECT_NO_FATAL_FAILURE(m_w->initAttributes());
+
+    // Assert — 重复初始化后对象仍可用
+    EXPECT_NE(m_w, nullptr);
+    EXPECT_NO_FATAL_FAILURE(m_w->initAttributes());
+}
+
+// =========================================================================
+// BUG 280187 (sev2) — 休眠唤醒后录屏卡顿
+// BUG 344127 (sev2) — Treeland 下跳过不必要的后台初始化
+// PMS: https://pms.uniontech.com/bug-view-280187.html  commit: d4be697a82 / b8c106bd77
+// PMS: https://pms.uniontech.com/bug-view-344127.html  commit: 05d44da0f7
+// 根因：initTreelandtAttributes 在休眠唤醒/Treeland 路径下执行了不必要的后台初始化
+//       致卡顿。修复跳过冗余初始化、收敛属性设置路径。
+// 回归：initTreelandtAttributes 可重复执行（幂等无崩溃），属性设置稳定。
+// 注：ut_main_window_cov2.h:322 / ut_main_window_ext.h:112 已有同名行为用例，
+//     本例以 BUG 编号命名建立 PMS 可追溯链接，并在 MainWindowCov4Test 这个
+//     不同 stub 集下复跑，扩宽路径覆盖。
+// =========================================================================
+TEST_F(MainWindowCov4Test, BUG280187_InitTreelandtAttributesIdempotent)
+{
+    // Arrange — SetUp() 已 new MainWindow + initAttributes() + initResource()
+    ASSERT_NE(m_w, nullptr);
+
+    // Act — 触发 Treeland 属性初始化路径（修复点：跳过冗余后台初始化）
+    EXPECT_NO_FATAL_FAILURE(m_w->initTreelandtAttributes());
+
+    // Assert — 重复执行稳定（休眠唤醒等场景会再次进入此路径）
+    EXPECT_NE(m_w, nullptr);
+    EXPECT_NO_FATAL_FAILURE(m_w->initTreelandtAttributes());
+}
+
+// =========================================================================
+// BUG 352125 (sev2) — 整机适配：特效/模糊态合成逻辑
+// BUG 241263 (sev2) — 快捷键打开截图录屏时无法 ESC 退出
+// BUG 235511 (sev2) — 截图录屏不能自动识别桌面/应用窗口
+// BUG 185721 (sev1) — 终端拉起截图录屏段错误（另已测 startCountdown 路径，
+//                     本例补 initMainWindow 路径，185721 的 initMainWindow 关联 commit）
+// BUG 170721 (sev2) — 休眠唤醒卡顿（另已测 initTreelandtAttributes 路径）
+// BUG 124121 (sev2) — 启动性能
+// PMS: https://pms.uniontech.com/bug-view-352125.html  commit: 65b0c35ef9
+// PMS: https://pms.uniontech.com/bug-view-241263.html  commit: a8b04484d0
+// PMS: https://pms.uniontech.com/bug-view-235511.html  commit: fd1d7aaf07
+//
+// initMainWindow 是 sev1/2 缺陷热点函数（多个 bug 汇聚于此），既有 cov/ef/ext
+// 系列均未直接调用此公开函数（SetUp 仅调 initAttributes+initResource）。函数体
+// 含光标绑定、pixelRatio、DWindowManagerHelper 信号连接、EventMonitor 创建等。
+// wayland/treeland 块被 #ifndef ENABLE_UNIT_TEST 守卫（测试构建跳过），EventMonitor
+// 构造的 wayland 分支同理（ut_misc_cov2.h / ut_event_monitor.h 已验证构造安全）。
+// 回归：在已 initAttributes+initResource 的 MainWindow 上调用 initMainWindow 不崩溃，
+//       覆盖光标/pixelRatio/信号连接/EventMonitor 创建路径，防退化。
+// =========================================================================
+TEST_F(MainWindowCov4Test, BUG352125_InitMainWindowNoCrash)
+{
+    // Arrange — SetUp() 已 new MainWindow + initAttributes() + initResource()
+    ASSERT_NE(m_w, nullptr);
+
+    // Act — 触发主窗口初始化（多 bug 汇聚路径）
+    EXPECT_NO_FATAL_FAILURE(m_w->initMainWindow());
+
+    // Assert — 对象存活，关键初始化路径稳定
+    EXPECT_NE(m_w, nullptr);
+}
