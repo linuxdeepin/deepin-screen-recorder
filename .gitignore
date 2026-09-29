@@ -24,3 +24,6 @@ qrc_*.cpp
 *.so
 *.debhelper.log
 src/pin_screenshots/deepin-pin-screenshots
+
+# qt-autotest-generator 工作目录（Mode 7 PMS 补强产物：图谱数据/脚本/缺陷源）
+.ut/
