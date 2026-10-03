@@ -81,6 +81,7 @@ set ( deepin-screen-recorder_HDRS
     widgets/tooltips.h
     widgets/filter.h
     utils/screengrabber.h
+    utils/treelandtoolbarplacement.h
     dbusinterface/drawinterface.h
     screen_shot_event.h
     lib/GifH/gif.h
@@ -145,6 +146,7 @@ set ( deepin-screen-recorder_SRCS
     widgets/filter.cpp
     utils/desktopinfo.cpp
     utils/screengrabber.cpp
+    utils/treelandtoolbarplacement.cpp
     dbusinterface/drawinterface.cpp
     screen_shot_event.cpp
     RecorderRegionShow.cpp
