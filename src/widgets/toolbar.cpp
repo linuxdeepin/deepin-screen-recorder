@@ -143,6 +143,12 @@ void ToolBarWidget::setOcrScreenshotsEnable(const bool &state)
     m_subTool->setOcrScreenshotEnable(state);
 }
 
+void ToolBarWidget::setTableScreenshotsEnable(const bool &state)
+{
+    qCDebug(dsrApp) << "ToolBarWidget::setTableScreenshotsEnable called with state:" << state;
+    m_subTool->setTableScreenshotEnable(state);
+}
+
 void ToolBarWidget::setButEnableOnLockScreen(const bool &state)
 {
     qCDebug(dsrApp) << "ToolBarWidget::setButEnableOnLockScreen called with state:" << state;
@@ -349,6 +355,13 @@ void ToolBar::setOcrScreenshotsEnable(const bool &state)
 {
     if (m_toolbarWidget)
         m_toolbarWidget->setOcrScreenshotsEnable(state);
+}
+
+void ToolBar::setTableScreenshotsEnable(const bool &state)
+{
+    if (m_toolbarWidget) {
+        m_toolbarWidget->setTableScreenshotsEnable(state);
+    }
 }
 
 void ToolBar::setButEnableOnLockScreen(const bool &state)

@@ -136,14 +136,15 @@ class MainWindow : public QMainWindow
 
 public:
     /**
-     * @brief 截图录屏工具存在的功能类型(0: record, 1: shot , 2: scrollshot , 3: ocr , 4: pinscreenshots)
+     * @brief 截图录屏工具存在的功能类型(0: record, 1: shot , 2: scrollshot , 3: ocr , 4: pinscreenshots , 5: tablerecogn)
      */
     enum status {
         record = 0,
         shot,
         scrollshot,
         ocr,
-        pinscreenshots
+        pinscreenshots,
+        tablerecogn
     };
     //滚动截图的滚动模式
     /**
