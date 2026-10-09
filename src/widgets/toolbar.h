@@ -40,6 +40,8 @@ public:
 
     void setOcrScreenshotsEnable(const bool &state);
 
+    void setTableScreenshotsEnable(const bool &state);
+
     void setButEnableOnLockScreen(const bool &state);
     /**
      * @brief getShotOptionRect 获取选项菜单的位置及大小
@@ -127,6 +129,8 @@ public:
     void setPinScreenshotsEnable(const bool &state);
 
     void setOcrScreenshotsEnable(const bool &state);
+
+    void setTableScreenshotsEnable(const bool &state);
 
     void setButEnableOnLockScreen(const bool &state);
 
