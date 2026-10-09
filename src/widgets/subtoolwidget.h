@@ -67,6 +67,8 @@ public:
 
     void setOcrScreenshotEnable(const bool &state);
 
+    void setTableScreenshotEnable(const bool &state);
+
     void setButEnableOnLockScreen(const bool &state);
     /**
      * @brief getShotOptionRect 获取选项菜单的位置及大小
@@ -145,6 +147,10 @@ private:
      */
     ToolButton *m_ocrButton = nullptr;
     ToolButton *m_ocrScrollButton = nullptr;
+    /**
+     * @brief 表格识别工具栏按钮
+     */
+    ToolButton *m_tableButton = nullptr;
     /**
      * @brief 贴图工具栏按钮
      */

@@ -682,10 +682,26 @@ void SubToolWidget::initShotLabel()
         emit changeShotToolFunc("ocr");
     });
 
+    //添加表格识别按钮（位于文字识别与贴图之间）
+    m_tableButton = new ToolButton();
+    m_tableButton->setObjectName("TableButton");
+    m_tableButton->setAccessibleName("TableButton");
+    m_tableButton->setCheckable(false);
+    m_tableButton->setIconSize(TOOL_ICON_SIZE);
+    m_tableButton->setIcon(QIcon::fromTheme("table-recognition"));
+    Utils::setAccessibility(m_tableButton, AC_SUBTOOLWIDGET_TABLE_BUTTON);
+    m_tableButton->setFixedSize(TOOL_BUTTON_SIZE);
+    installTipHint(m_tableButton, tr("Table recognition (Alt+T）"));
+    connect(m_tableButton, &DPushButton::clicked, this, [ = ] {
+        qCDebug(dsrApp) << "table recognition button clicked.";
+        emit changeShotToolFunc("tableRecogn");
+    });
+
 #ifdef  OCR_SCROLL_FLAGE_ON
     // TODO: 仅x11下开启，后续处理，目前treeland下仍有崩溃情况
     //if (!(Utils::isTreelandMode))
         btnList.append(m_ocrButton);
+        btnList.append(m_tableButton);
 #endif
 
     //添加贴图按钮
@@ -806,6 +822,7 @@ void SubToolWidget::initShotLabel()
         m_shotOptionButton->hide();
         m_scrollShotButton->hide(); //隐藏滚动截图按钮
         m_ocrButton->hide(); //隐藏ocr按钮
+        m_tableButton->hide(); //隐藏表格识别按钮
         m_pinButton->hide(); //隐藏pin按钮
         m_aiAssistantButton->hide(); //隐藏AI助手按钮
     }
@@ -1953,6 +1970,11 @@ void SubToolWidget::setOcrScreenshotEnable(const bool &state)
     m_ocrButton->setEnabled(state);
 }
 
+void SubToolWidget::setTableScreenshotEnable(const bool &state)
+{
+    m_tableButton->setEnabled(state);
+}
+
 void SubToolWidget::setButEnableOnLockScreen(const bool &state)
 {
     m_textButton->setEnabled(state);
@@ -2130,6 +2152,8 @@ void SubToolWidget::shapeClickedFromWidget(QString shape)
         } else if (shape == "ocr") {
             if (!m_ocrButton->isChecked())
                 m_ocrButton->click();
+        } else if (shape == "tableRecogn") {
+            m_tableButton->click();
         } else if (shape == "gio" || shape == "rect" || shape == "circ" || shape == "rectangle" || shape == "oval") {
             if (!m_gioButton->isChecked())
                 m_gioButton->click();

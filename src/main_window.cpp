@@ -944,6 +944,7 @@ void MainWindow::checkIsLockScreen()
         if (m_toolBar) {
             m_toolBar->setScrollShotDisabled(true);
             m_toolBar->setOcrScreenshotsEnable(false);
+            m_toolBar->setTableScreenshotsEnable(false);
             m_toolBar->setButEnableOnLockScreen(false);
         }
     }
@@ -966,6 +967,7 @@ void MainWindow::checkIsLockScreen()
         if (m_toolBar) {
             m_toolBar->setScrollShotDisabled(true);
             m_toolBar->setOcrScreenshotsEnable(false);
+            m_toolBar->setTableScreenshotsEnable(false);
             m_toolBar->setButEnableOnLockScreen(false);
         }
     }
@@ -1120,6 +1122,8 @@ void MainWindow::initToolBarShortcut()
     QShortcut *scrollShotSC = new QShortcut(QKeySequence("Alt+I"), this);
     // 截图模式/滚动模式 ocr应用内快捷键
     QShortcut *ocrSC = new QShortcut(QKeySequence("Alt+O"), this);
+    // 截图模式 表格识别应用内快捷键
+    QShortcut *tableRecognSC = new QShortcut(QKeySequence("Alt+T"), this);
     // 截图模式 矩形
     QShortcut *rectSC = new QShortcut(QKeySequence("R"), this);
     // 截图模式 圆形
@@ -1181,6 +1185,13 @@ void MainWindow::initToolBarShortcut()
         if ((status::shot == m_functionType || status::scrollshot == m_functionType) && Utils::is3rdInterfaceStart == false) {
             qCDebug(dsrApp) << "shortcut : ocrSC (key: alt+o)";
             m_toolBar->shapeClickedFromMain("ocr");
+        }
+    });
+    // 截图模式 表格识别应用内快捷键
+    connect(tableRecognSC, &QShortcut::activated, this, [=] {
+        if ((status::shot == m_functionType || status::scrollshot == m_functionType) && Utils::is3rdInterfaceStart == false) {
+            qCDebug(dsrApp) << "shortcut : tableRecognSC (key: alt+t)";
+            m_toolBar->shapeClickedFromMain("tableRecogn");
         }
     });
     // 截图模式 矩形
@@ -4002,6 +4013,44 @@ void MainWindow::changeShotToolEvent(const QString &func)
             exitApp();
         });
 
+    // 点击表格识别
+    } else if (func == "tableRecogn") {
+        {
+            QJsonObject obj{{"tid", EventLogUtils::Start},
+                            {"version", QCoreApplication::applicationVersion()},
+                            {"mode", 1},
+                            {"startup_mode", "B9"}};
+            EventLogUtils::get().writeLogs(obj);
+        }
+        m_pinInterface = new PinScreenShotsInterface(
+            "com.deepin.PinScreenShots", "/com/deepin/PinScreenShots", QDBusConnection::sessionBus(), this);
+        // TODO: 在treeland里暂时是走handleCapture去执行保存图片，后续会和原逻辑统一
+        if (Utils::isTreelandMode) {
+            // 与 OCR 一致：Treeland 下由 handleCaptureFinish 拿选区帧，再交给贴图窗口识别
+            QTimer::singleShot(0, this, [=] {
+                m_functionType = status::tablerecogn;
+                onFinishClicked();
+            });
+        } else {
+            m_functionType = status::tablerecogn;
+            saveScreenShot();
+            QImage tableImage = m_resultPixmap.toImage();
+            QDBusPendingCall pendingCall =
+                m_pinInterface->openImageAndNameForTable(tableImage, m_saveFileName, QPoint(recordX, recordY));
+            auto *watcher = new QDBusPendingCallWatcher(pendingCall, this);
+            connect(watcher, &QDBusPendingCallWatcher::finished, this, [this, watcher]() {
+                if (watcher->isError()) {
+                    qCWarning(dsrApp) << "[TABLE_DIAG] D-Bus openImageAndNameForTable failed:"
+                                      << watcher->error().name()
+                                      << watcher->error().message();
+                } else {
+                    qCWarning(dsrApp) << "[TABLE_DIAG] D-Bus openImageAndNameForTable succeeded";
+                }
+                watcher->deleteLater();
+                exitApp();
+            });
+        }
+
     } else if (func == "scrollShot") {  // 点击滚动截图
         {
             QJsonObject obj{{"tid", EventLogUtils::Start},
@@ -4373,7 +4422,7 @@ void MainWindow::saveScreenShot()
         qCInfo(dsrApp) << "发送自定义截图保存路径信号:" << m_saveFileName;
     }
     this->hide();
-    if (status::pinscreenshots == m_functionType)
+    if (status::pinscreenshots == m_functionType || status::tablerecogn == m_functionType)
         return;
 
     if (m_saveIndex != SaveAction::CustomScreenSave)
@@ -4519,7 +4568,7 @@ bool MainWindow::saveAction(const QPixmap &pix)
         m_saveIndex = SaveAction::CustomScreenSave;
         saveWays = SaveWays::SpecifyLocation;
     }
-    else if(m_functionType == status::ocr) {
+    else if(m_functionType == status::ocr || m_functionType == status::tablerecogn) {
         m_saveIndex = SaveAction::SaveToClipboard;
         saveWays = SaveWays::SpecifyLocation;
     }
@@ -8138,6 +8187,11 @@ void MainWindow::handleCaptureFinish()
             } else {
                 m_ocrInterface->openImageAndName(result, saveBasePath);
             }
+        }
+
+        // check if trigger table recognition.
+        if (m_functionType == status::tablerecogn && m_pinInterface) {
+            m_pinInterface->openImageAndNameForTable(result, saveBasePath, QPoint(recordX, recordY));
         }
 
     } else {
