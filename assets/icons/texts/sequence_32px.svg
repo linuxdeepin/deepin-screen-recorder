@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="36px" height="36px" viewBox="0 0 36 36" version="1.1" xmlns="http://www.w3.org/2000/svg">
+    <title>sequence</title>
+    <!-- 依据设计稿 symbol 图标/截图工具栏/序号（24x24 画板，圆 20x20 居中，线宽 2；数字 1 为闭合路径） -->
+    <path id="序号圆圈" fill="#000000" fill-rule="nonzero" d="M8,18 A10,10 0 1 1 28,18 A10,10 0 1 1 8,18 Z M10,18 A8,8 0 1 0 26,18 A8,8 0 1 0 10,18 Z"></path>
+    <path id="序号数字" fill="#000000" d="M19,12.5 L19,23 L17,23 L17,14.7039 L15.5,15.5 L15.5,13.4291 L17.5,12.5 Z"></path>
+</svg>

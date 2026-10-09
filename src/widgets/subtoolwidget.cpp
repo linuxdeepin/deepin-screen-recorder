@@ -647,6 +647,16 @@ void SubToolWidget::initShotLabel()
     m_textButton->setFixedSize(TOOL_BUTTON_SIZE);
     btnList.append(m_textButton);
 
+    //添加序号标注按钮
+    m_sequenceButton = new ToolButton();
+    m_sequenceButton->setIconSize(TOOL_ICON_SIZE);
+    m_sequenceButton->setIcon(QIcon::fromTheme("sequence"));
+    installTipHint(m_sequenceButton, tr("Sequence number (Alt+S)"));
+    Utils::setAccessibility(m_sequenceButton, AC_SUBTOOLWIDGET_SEQUENCE_BUTTON);
+    m_shotBtnGroup->addButton(m_sequenceButton);
+    m_sequenceButton->setFixedSize(TOOL_BUTTON_SIZE);
+    btnList.append(m_sequenceButton);
+
     //添加滚动截图按钮
     m_scrollShotButton = new ToolButton();
     m_scrollShotButton->setObjectName("ScrollShotButton");
@@ -888,6 +898,9 @@ void SubToolWidget::initShotLabel()
         }
         if (m_textButton->isChecked()) {
             emit changeShotToolFunc("text");
+        }
+        if (m_sequenceButton->isChecked()) {
+            emit changeShotToolFunc("sequence");
         }
         if (m_mosaicButton->isChecked()) {
             emit changeShotToolFunc("effect");
@@ -2001,6 +2014,8 @@ int SubToolWidget::getFuncSubToolX(QString &shape)
             x = m_penButton->x();
         } else if (shape == "text") {
             x = m_textButton->x();
+        } else if (shape == "sequence") {
+            x = m_sequenceButton->x();
         } else if (shape == "aiassistant") {
             // 根据当前模式选择对应的 AI 按钮（普通/滚动）
             if (currentWidget() == m_scrollSubTool && m_aiAssistantScrollButton) {
@@ -2165,6 +2180,8 @@ void SubToolWidget::shapeClickedFromWidget(QString shape)
             m_penButton->click();
         } else if (shape == "text") {
             m_textButton->click();
+        } else if (shape == "sequence") {
+            m_sequenceButton->click();
         } else if (shape == "option") {
             if (m_currentType == "shot" || currentWidget() == m_shotSubTool) {
                 if (m_optionMenu->isHidden()) {

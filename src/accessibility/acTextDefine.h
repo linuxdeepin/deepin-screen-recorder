@@ -44,6 +44,7 @@
 #define AC_SUBTOOLWIDGET_PEN_BUTTON "pen_button"// 截图 画笔按钮
 #define AC_SUBTOOLWIDGET_MOSAIC_BUTTON "mosaic_button"// 截图 模糊按钮
 #define AC_SUBTOOLWIDGET_TEXT_BUTTON "text_button"// 截图文本按钮
+#define AC_SUBTOOLWIDGET_SEQUENCE_BUTTON "sequence_button"// 截图 序号标注按钮
 #define AC_SUBTOOLWIDGET_UNDO_BUTTON "undo_button"// 截图撤销按钮
 #define AC_SUBTOOLWIDGET_RECORDER_BUTTON "recorder_button"// 截图 录屏按钮
 #define AC_SUBTOOLWIDGET_SHOT_OPTION_BUT "shot_option_but" // 截图 选项按钮

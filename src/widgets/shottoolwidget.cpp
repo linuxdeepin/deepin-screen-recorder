@@ -1,5 +1,5 @@
 // Copyright (C) 2020 ~ 2021 Uniontech Software Technology Co.,Ltd.
-// SPDX-FileCopyrightText: 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2022-2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -408,8 +408,9 @@ void ShotToolWidget::switchContent(QString shapeType)
                                           (currentWidget() == m_effectSubTool ? "effect" : "unknown")));
     
     // 根据形状类型切换到相应的工具栏
-    if (shapeType == "rectangle" || shapeType == "oval" || shapeType == "gio" || 
-        shapeType == "line" || shapeType == "arrow" || shapeType == "pen") {
+    if (shapeType == "rectangle" || shapeType == "oval" || shapeType == "gio" ||
+        shapeType == "line" || shapeType == "arrow" || shapeType == "pen" ||
+        shapeType == "sequence") {
         
         qCDebug(dsrApp) << "Switching to thickness panel for shape:" << shapeType;
         if (m_textSubTool)

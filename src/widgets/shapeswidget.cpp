@@ -16,10 +16,87 @@
 #include <QPainterPath>
 #include <QDebug>
 #include <QGestureEvent>
+#include <QIntValidator>
+#include <QLineEdit>
+#include <QTimer>
+#include "tooltips.h"
 
 #include <cmath>
 
 #define LINEWIDTH(index) (index*2+3)
+#define SEQUENCE_DIAMETER(idx) (24 + (idx)*8)
+
+namespace {
+
+// 下一个编号超过 99 时的禁用角标：跟随鼠标显示，不显示下一个编号预览。
+const QSize SEQUENCE_PREVIEW_SIZE(17, 17);
+// 光标热点到禁用角标左上角的偏移（设计稿 Group 3 相对鼠标的位置）。
+const int SEQUENCE_PREVIEW_ANCHOR = 5;
+
+// 最大编号：设计稿只示意两位编号，达到后不再允许新增
+const int SEQUENCE_MAX_NUMBER = 99;
+
+// 超限态角标（设计稿 序列号2 的 Group 3）：17x17 白色底圆 + 14x14 红圆 + 30° 白色横条 10x1
+const qreal SEQUENCE_LIMIT_BADGE_SIZE = 17.0;
+const qreal SEQUENCE_LIMIT_BADGE_INNER_SIZE = 14.0;
+const qreal SEQUENCE_LIMIT_BADGE_BAR_WIDTH = 10.0;
+const qreal SEQUENCE_LIMIT_BADGE_BAR_HEIGHT = 1.0;
+const qreal SEQUENCE_LIMIT_BADGE_BAR_ANGLE = 30.0;
+const QColor SEQUENCE_LIMIT_BADGE_BASE_COLOR(Qt::white);
+const QColor SEQUENCE_LIMIT_BADGE_COLOR(0xFE, 0x00, 0x00);
+// 提示左上角对齐角标右下角：相对光标再偏移一个角标边长
+const int SEQUENCE_LIMIT_TIPS_ANCHOR = SEQUENCE_PREVIEW_ANCHOR + int(SEQUENCE_LIMIT_BADGE_SIZE);
+
+/**
+ * @brief 序号超限禁用角标
+ *
+ * 只在下一个编号超过 99 时跟随鼠标显示；正常序号模式下不显示下一个编号预览。
+ */
+class SequenceLimitBadgeWidget : public QWidget
+{
+public:
+    explicit SequenceLimitBadgeWidget(QWidget *parent = nullptr)
+        : QWidget(parent)
+    {
+        setAttribute(Qt::WA_TransparentForMouseEvents);
+        setAttribute(Qt::WA_NoSystemBackground);
+        setAttribute(Qt::WA_TranslucentBackground);
+        setFixedSize(SEQUENCE_PREVIEW_SIZE);
+    }
+
+protected:
+    void paintEvent(QPaintEvent *) override
+    {
+        QPainter painter(this);
+        painter.setRenderHint(QPainter::Antialiasing, true);
+        paintLimitBadge(painter);
+    }
+
+private:
+    // 超限角标：白底圆 + 红圆 + 白色横条（自绘，不使用 Qt 样式表）
+    void paintLimitBadge(QPainter &painter)
+    {
+        const qreal size = SEQUENCE_LIMIT_BADGE_SIZE;
+        const qreal inset = (size - SEQUENCE_LIMIT_BADGE_INNER_SIZE) / 2.0;
+        painter.setPen(Qt::NoPen);
+        painter.setBrush(SEQUENCE_LIMIT_BADGE_BASE_COLOR);
+        painter.drawEllipse(QRectF(0, 0, size, size));
+        painter.setBrush(SEQUENCE_LIMIT_BADGE_COLOR);
+        painter.drawEllipse(QRectF(inset, inset, SEQUENCE_LIMIT_BADGE_INNER_SIZE,
+                                   SEQUENCE_LIMIT_BADGE_INNER_SIZE));
+        painter.save();
+        painter.translate(size / 2.0, size / 2.0);
+        painter.rotate(SEQUENCE_LIMIT_BADGE_BAR_ANGLE);
+        painter.setBrush(SEQUENCE_LIMIT_BADGE_BASE_COLOR);
+        painter.drawRect(QRectF(-SEQUENCE_LIMIT_BADGE_BAR_WIDTH / 2.0,
+                                -SEQUENCE_LIMIT_BADGE_BAR_HEIGHT / 2.0,
+                                SEQUENCE_LIMIT_BADGE_BAR_WIDTH,
+                                SEQUENCE_LIMIT_BADGE_BAR_HEIGHT));
+        painter.restore();
+    }
+};
+
+} // namespace
 
 const int DRAG_BOUND_RADIUS = 8;
 const int SPACING = 12;
@@ -76,6 +153,20 @@ ShapesWidget::ShapesWidget(DWidget *parent)
     //m_sideBar = new SideBar(this);
     //m_sideBar->hide();
     m_currentCursor = QCursor().pos();
+
+    // 序号超限禁用角标：仅在下一编号超过 99 时跟随光标显示（自绘，不使用 Qt 样式表）
+    m_sequencePreview = new SequenceLimitBadgeWidget(this);
+    m_sequencePreview->hide();
+
+    // 超限气泡限时显示：点击弹出，2 秒后气泡消失，角标继续跟随鼠标
+    m_sequenceLimitTipsTimer = new QTimer(this);
+    m_sequenceLimitTipsTimer->setSingleShot(true);
+    m_sequenceLimitTipsTimer->setInterval(2000);
+    connect(m_sequenceLimitTipsTimer, &QTimer::timeout, this, [this] {
+        if (m_sequenceLimitTips) {
+            m_sequenceLimitTips->hide();
+        }
+    });
 }
 
 ShapesWidget::~ShapesWidget()
@@ -83,6 +174,16 @@ ShapesWidget::~ShapesWidget()
     if (m_menuController) {
         delete m_menuController;
         m_menuController = nullptr;
+    }
+    if (m_sequenceEdit) {
+        delete m_sequenceEdit;
+        m_sequenceEdit = nullptr;
+    }
+    if (m_sequenceLimitTipsTimer) {
+        m_sequenceLimitTipsTimer->stop();
+    }
+    if (m_sequenceLimitTips) {
+        m_sequenceLimitTips->hide();
     }
 }
 //更新选中的形状
@@ -105,7 +206,10 @@ void ShapesWidget::updateSelectedShape(const QString &group,
     if (m_selectedIndex != -1 && m_selectedOrder != -1 && m_selectedOrder < m_shapes.length()) {
         qCDebug(dsrApp) << "Updating shape properties for selected shape at order:" << m_selectedOrder;
         
-        if ((m_selectedShape.type == "arrow" || m_selectedShape.type == "line") && key != "color_index") {
+        if (m_selectedShape.type == "sequence" && key == "line_width") {
+            // 序号圆圈的直径由大小档位换算，实时调整选中项而不是仅记忆到下次新建
+            resizeSelectedSequence(index);
+        } else if ((m_selectedShape.type == "arrow" || m_selectedShape.type == "line") && key != "color_index") {
             m_selectedShape.lineWidth = LINEWIDTH(index);
         } else if (m_selectedShape.type == group && key == "line_width") {
             m_selectedShape.lineWidth = LINEWIDTH(index);
@@ -126,6 +230,10 @@ void ShapesWidget::updateSelectedShape(const QString &group,
             }
         } else if (group != "text" && m_selectedShape.type == group && key == "color_index") {
             m_selectedShape.colorIndex = index;
+            if (m_selectedShape.type == "sequence") {
+                // 序号颜色与大小一样需要记忆，作用于下一个新建序号
+                ConfigSettings::instance()->setValue("sequence", "color_index", index);
+            }
         } else if (group == "effect" && m_selectedShape.type == group &&
                    key == "radius" && (m_selectedShape.isOval == 0 || m_selectedShape.isOval == 1)) {
 
@@ -161,6 +269,20 @@ void ShapesWidget::setCurrentShape(QString shapeType)
         resetForTextToolSwitch();
     } else {
         setAllTextEditReadOnly();
+    }
+
+    if (shapeType == "sequence") {
+        // 进入序号工具时工具栏会恢复上次的粗细档位，此时不应缩放之前选中的序号；
+        // 本函数在工具栏恢复完成之后才被调用，延后到下一轮事件循环即可覆盖恢复过程。
+        m_sequenceToolEntry = true;
+        QTimer::singleShot(0, this, [this] { m_sequenceToolEntry = false; });
+        if (m_sequencePreview) {
+            updateSequencePreview(mapFromGlobal(QCursor::pos()));
+        }
+        updateCursorShape();
+    } else if (m_sequencePreview) {
+        m_sequencePreview->hide();
+        hideSequenceLimitTips();
     }
 }
 
@@ -330,6 +452,18 @@ bool ShapesWidget::clickedOnShapes(QPointF pos)
             if (clickedOnText(m_shapes[i].mainPoints, pos)) {
                 currentOnShape = true;
                 emit shapeClicked("text");
+            }
+        }
+
+        if (m_shapes[i].type == "sequence") {
+            // 序号标注：仅内部命中（包围矩形 contains），不启用四角缩放
+            if (m_shapes[i].mainPoints.length() == 4) {
+                QRectF seqRect(m_shapes[i].mainPoints[0], m_shapes[i].mainPoints[3]);
+                if (seqRect.contains(pos)) {
+                    currentOnShape = true;
+                    m_isSelected = true;
+                    emit shapeClicked("sequence");
+                }
             }
         }
 
@@ -1420,6 +1554,39 @@ void ShapesWidget::mousePressEvent(QMouseEvent *e)
             } else if (m_currentType == "oval") {
                 m_currentShape.isShiftPressed = m_isShiftPressed;
                 m_currentShape.index = m_currentIndex;
+            } else if (m_currentType == "sequence") {
+                // 序号标注：点击即放置，不进入拖拽绘制
+                int seqNum = sequenceNextNumber();
+                if (seqNum > SEQUENCE_MAX_NUMBER) {
+                    // 已达最大编号：角标跟随光标，气泡提示弹出 2 秒后自动消失，忽略本次放置
+                    updateSequencePreview(e->pos());
+                    showSequenceLimitTips(e->pos());
+                    m_isRecording = false;
+                    m_pos1 = QPointF(0, 0);
+                    DFrame::mousePressEvent(e);
+                    return;
+                }
+                int tier = ConfigSettings::instance()->getValue("sequence", "line_width").toInt();
+                // 序号圆圈直径由档位经 SEQUENCE_DIAMETER 编码进 mainPoints；
+                // m_currentShape.lineWidth（由公共放置路径写入）仅供配置记忆，渲染不使用。
+                qreal diameter = SEQUENCE_DIAMETER(tier);
+                qreal half = diameter / 2.0;
+                QPointF center = e->pos();
+                m_currentShape.index = m_currentIndex;
+                m_currentShape.sequenceNumber = seqNum;
+                m_currentShape.mainPoints[0] = QPointF(center.x() - half, center.y() - half);
+                m_currentShape.mainPoints[1] = QPointF(center.x() - half, center.y() + half);
+                m_currentShape.mainPoints[2] = QPointF(center.x() + half, center.y() - half);
+                m_currentShape.mainPoints[3] = QPointF(center.x() + half, center.y() + half);
+                m_shapes.append(m_currentShape);
+                // 点击放置后不进入拖拽，重置绘制状态
+                m_isRecording = false;
+                m_pos1 = QPointF(0, 0);
+                for (int k = 0; k < m_currentShape.mainPoints.length(); k++) {
+                    m_currentShape.mainPoints[k] = QPointF(0, 0);
+                }
+                m_currentShape.type = "";
+                updateSequencePreview(e->pos());
             } else if (m_currentType == "text") {
                 if (!m_editing) {
                     setAllTextEditReadOnly();
@@ -1845,6 +2012,9 @@ void ShapesWidget::mouseMoveEvent(QMouseEvent *e)
             //TODO text
         }
     }
+    if (m_currentType == "sequence") {
+        updateSequencePreview(e->pos());
+    }
     update();
     DFrame::mouseMoveEvent(e);
 }
@@ -2168,6 +2338,8 @@ void ShapesWidget::handlePaint(QPainter &painter)
                 }
                 ++m;
             }
+        } else if (m_shapes[i].type == "sequence") {
+            paintSequence(painter, m_shapes[i].mainPoints, m_shapes[i].sequenceNumber, m_shapes[i].colorIndex);
         }
     }
 
@@ -2415,10 +2587,26 @@ void ShapesWidget::tapTriggered(QTapGesture *tap)
 void ShapesWidget::deleteCurrentShape()
 {
     qDebug() << "delete shape";
+    int deletedSequenceOrder = -1;
+    int previousSequenceNumber = 0;
     if (m_selectedOrder >= 0 && m_selectedOrder < m_shapes.length()) {
+        if (m_shapes[m_selectedOrder].type == "sequence") {
+            int sequenceOrder = 0;
+            for (int i = 0; i < m_selectedOrder; ++i) {
+                if (m_shapes[i].type != "sequence") {
+                    continue;
+                }
+                previousSequenceNumber = m_shapes[i].sequenceNumber;
+                ++sequenceOrder;
+            }
+            deletedSequenceOrder = sequenceOrder;
+        }
         m_shapes.removeAt(m_selectedOrder);
     } else {
         qWarning() << "Invalid index";
+    }
+    if (deletedSequenceOrder >= 0) {
+        renumberSequenceFrom(deletedSequenceOrder, previousSequenceNumber + 1);
     }
 
     if (m_selectedShape.type == "text" && m_editMap.contains(m_selectedShape.index)) {
@@ -2457,6 +2645,9 @@ void ShapesWidget::undoDrawShapes()
         }
 
         m_shapes.removeLast();
+        if (m_currentType == "sequence") {
+            updateSequencePreview(mapFromGlobal(QCursor::pos()));
+        }
     }
     qDebug() << "undoDrawShapes m_selectedIndex:" << m_selectedIndex << m_shapes.length();
 
@@ -2482,6 +2673,9 @@ void ShapesWidget::undoAllDrawShapes()
             }
 
             m_shapes.removeLast();
+        }
+        if (m_currentType == "sequence") {
+            updateSequencePreview(mapFromGlobal(QCursor::pos()));
         }
     }
     qDebug() << "undoDrawShapes m_selectedIndex:" << m_selectedIndex << m_shapes.length();
@@ -2519,8 +2713,13 @@ void ShapesWidget::microAdjust(QString direction)
     bool isSimpleMove = direction == Direction::LEFT || direction == Direction::RIGHT || 
                         direction == Direction::UP || direction == Direction::DOWN;
                         
-    bool isReduceResize = direction == Direction::CTRL_SHIFT_LEFT || direction == Direction::CTRL_SHIFT_RIGHT || 
+    bool isReduceResize = direction == Direction::CTRL_SHIFT_LEFT || direction == Direction::CTRL_SHIFT_RIGHT ||
                           direction == Direction::CTRL_SHIFT_UP || direction == Direction::CTRL_SHIFT_DOWN;
+
+    // 序号标注仅支持整体平移微调，不启用缩放（与需求「仅需移动+删除」口径一致）
+    if (currentShape.type == "sequence" && !isSimpleMove) {
+        return;
+    }
 
     // 调整mainPoints
     if (isSimpleMove) {
@@ -2607,6 +2806,8 @@ void ShapesWidget::updateCursorShape()
             } else {
                 setCursorValue = BaseUtils::setCursorShape("pen", 0);
             }
+        } else if (m_currentType == "sequence") {
+            setCursorValue = QCursor(Qt::CrossCursor);
         } else {
             setCursorValue = BaseUtils::setCursorShape(m_currentType);
         }
@@ -2634,4 +2835,348 @@ void ShapesWidget::setGlobalRect(QRect rect)
     m_globalRect = rect;
 }
 
+int ShapesWidget::sequenceCount()
+{
+    int count = 0;
+    for (int i = 0; i < m_shapes.length(); i++) {
+        if (m_shapes[i].type == "sequence") {
+            count++;
+        }
+    }
+    return count;
+}
 
+int ShapesWidget::sequenceNumberBeforeOrder(int order)
+{
+    if (order <= 0) {
+        return 0;
+    }
+    int sequenceOrder = 0;
+    for (int i = 0; i < m_shapes.length(); ++i) {
+        if (m_shapes[i].type != "sequence") {
+            continue;
+        }
+        if (sequenceOrder == order - 1) {
+            return m_shapes[i].sequenceNumber;
+        }
+        ++sequenceOrder;
+    }
+    return 0;
+}
+
+int ShapesWidget::sequenceNextNumber()
+{
+    // 新增编号接在最后一个已有序号之后，不受前面手动改号次数影响。
+    int lastNumber = 0;
+    for (int i = 0; i < m_shapes.length(); ++i) {
+        if (m_shapes[i].type == "sequence") {
+            lastNumber = m_shapes[i].sequenceNumber;
+        }
+    }
+    return lastNumber + 1;
+}
+
+void ShapesWidget::renumberSequenceFrom(int startOrder, int firstNumber)
+{
+    // 只重排当前项及其后续项，前面已有编号保持不变。
+    int sequenceOrder = 0;
+    int nextNumber = firstNumber;
+    for (int i = 0; i < m_shapes.length(); ++i) {
+        if (m_shapes[i].type != "sequence") {
+            continue;
+        }
+        if (sequenceOrder >= startOrder) {
+            m_shapes[i].sequenceNumber = nextNumber++;
+        }
+        ++sequenceOrder;
+    }
+    if (m_currentType == "sequence") {
+        updateSequencePreview(mapFromGlobal(QCursor::pos()));
+    }
+}
+
+void ShapesWidget::resizeSelectedSequence(int lineWidthIndex)
+{
+    // 保存原始映射关系：lineWidthIndex -> 圆圈直径（与新建时保持一致）
+    if (m_selectedShape.mainPoints.length() < 4 || lineWidthIndex < 0) {
+        return;
+    }
+
+    if (m_sequenceToolEntry) {
+        // 工具进入阶段仅恢复面板状态，不回写、不缩放已有选中项
+        return;
+    }
+
+    const qreal diameter = SEQUENCE_DIAMETER(lineWidthIndex);
+    const QPointF center((m_selectedShape.mainPoints[0].x() + m_selectedShape.mainPoints[3].x()) / 2.0,
+                         (m_selectedShape.mainPoints[0].y() + m_selectedShape.mainPoints[3].y()) / 2.0);
+
+    // 以圆心为基准等比缩放，保证点击位置与编号不变
+    // 与箭头/直线一致，lineWidth 也写入配置值供下次记忆
+    const qreal oldDiameter = qMax(qAbs(m_selectedShape.mainPoints[3].x() - m_selectedShape.mainPoints[0].x()),
+                                   qAbs(m_selectedShape.mainPoints[3].y() - m_selectedShape.mainPoints[0].y()));
+    if (oldDiameter <= 0) {
+        return;
+    }
+    if (qFuzzyCompare(oldDiameter, diameter)) {
+        // 尺寸未变化：避免配置写入再次触发本函数形成递归
+        m_selectedShape.lineWidth = LINEWIDTH(lineWidthIndex);
+        return;
+    }
+    const qreal scale = diameter / oldDiameter;
+    for (int i = 0; i < m_selectedShape.mainPoints.length(); ++i) {
+        const QPointF p = m_selectedShape.mainPoints[i];
+        m_selectedShape.mainPoints[i] = QPointF(center.x() + (p.x() - center.x()) * scale,
+                                                center.y() + (p.y() - center.y()) * scale);
+    }
+    m_selectedShape.lineWidth = LINEWIDTH(lineWidthIndex);
+    ConfigSettings::instance()->setValue("sequence", "line_width", lineWidthIndex);
+
+    // 若正在就地编辑该序号，保持输入框居中并同步字号
+    if (m_sequenceEdit && m_sequenceEditOrder >= 0) {
+        const QSize editSize(m_sequenceEdit->width(), m_sequenceEdit->height());
+        m_sequenceEdit->move(static_cast<int>(center.x() - editSize.width() / 2.0),
+                             static_cast<int>(center.y() - editSize.height() / 2.0));
+    }
+}
+
+bool ShapesWidget::isLightSequenceColor(int colorIndex)
+{
+    // 设计稿中仅白色、黄色、亮绿色使用黑色文字，其余颜色使用白色文字。
+    return colorIndex == 2 || colorIndex == 5 || colorIndex == 6;
+}
+
+void ShapesWidget::paintSequence(QPainter &painter, FourPoints mainFPoints,
+                                  int sequenceNumber, int colorIndex)
+{
+    if (mainFPoints.length() < 4) {
+        return;
+    }
+    QRectF rectF(mainFPoints[0], mainFPoints[3]);
+    QPointF center = rectF.center();
+    qreal radius = qMin(rectF.width(), rectF.height()) / 2.0;
+    if (radius <= 0) {
+        return;
+    }
+    QColor fillColor = BaseUtils::colorIndexOf(colorIndex);
+    painter.setRenderHint(QPainter::Antialiasing, true);
+    painter.setPen(Qt::NoPen);
+    painter.setBrush(QBrush(fillColor));
+    const QRectF ellipseRect(center.x() - radius, center.y() - radius,
+                             radius * 2.0, radius * 2.0);
+    painter.drawEllipse(ellipseRect);
+    QColor textColor = isLightSequenceColor(colorIndex) ? Qt::black : Qt::white;
+    painter.setPen(QPen(textColor));
+    QFont font = painter.font();
+    // 设计稿：24/32/40 圆对应 13/17/22px Roboto-Black 字号。
+    font.setPixelSize(qMax(8, qRound(radius * 1.08)));
+    font.setWeight(QFont::Black);
+    painter.setFont(font);
+    painter.drawText(rectF, Qt::AlignCenter, QString::number(sequenceNumber));
+}
+
+void ShapesWidget::updateSequencePreview(const QPointF &pos)
+{
+    auto *preview = static_cast<SequenceLimitBadgeWidget *>(m_sequencePreview);
+    if (!preview) {
+        return;
+    }
+    int next = sequenceNextNumber();
+    // 正常序号模式不显示下一个编号预览；只有下一个编号超过 99 时才显示禁用角标。
+    const bool maxReached = next > SEQUENCE_MAX_NUMBER;
+    if (!maxReached) {
+        preview->hide();
+        hideSequenceLimitTips();
+        return;
+    }
+
+    preview->move(static_cast<int>(pos.x() + SEQUENCE_PREVIEW_ANCHOR),
+                  static_cast<int>(pos.y() + SEQUENCE_PREVIEW_ANCHOR));
+    preview->show();
+    preview->raise();
+    // 角标持续跟随鼠标；气泡仅在点击弹出后跟随，2 秒内不因移动而重新弹出。
+    updateSequenceLimitTips(pos);
+}
+
+void ShapesWidget::moveSequenceLimitTips(const QPointF &pos)
+{
+    QWidget *host = window();
+    if (!host || !m_sequenceLimitTips) {
+        return;
+    }
+    // 提示左上角与禁止角标右下角对齐（设计稿：角标 + (17,17)）
+    const QPoint anchor = mapToGlobal(QPoint(qRound(pos.x()) + SEQUENCE_LIMIT_TIPS_ANCHOR,
+                                             qRound(pos.y()) + SEQUENCE_LIMIT_TIPS_ANCHOR));
+    m_sequenceLimitTips->move(host->mapFromGlobal(anchor));
+}
+
+void ShapesWidget::updateSequenceLimitTips(const QPointF &pos)
+{
+    // 仅在气泡可见时跟随鼠标；隐藏后不因移动重新弹出，需再次点击
+    if (!m_sequenceLimitTips || !m_sequenceLimitTips->isVisible()) {
+        return;
+    }
+    moveSequenceLimitTips(pos);
+    m_sequenceLimitTips->raise();
+}
+
+void ShapesWidget::showSequenceLimitTips(const QPointF &pos)
+{
+    QWidget *host = window();
+    if (!host) {
+        return;
+    }
+    if (!m_sequenceLimitTips) {
+        // 复用工程内已有的 DTK 工具提示（对应设计稿 DTK/工具提示），不做自绘、不使用 Qt 样式表
+        m_sequenceLimitTips = new ToolTips(tr("Maximum number range exceeded"), host);
+        m_sequenceLimitTips->adjustSize();
+    }
+    moveSequenceLimitTips(pos);
+    m_sequenceLimitTips->show();
+    m_sequenceLimitTips->raise();
+    if (m_sequenceLimitTipsTimer) {
+        m_sequenceLimitTipsTimer->start();
+    }
+}
+
+void ShapesWidget::hideSequenceLimitTips()
+{
+    if (m_sequenceLimitTipsTimer) {
+        m_sequenceLimitTipsTimer->stop();
+    }
+    if (m_sequenceLimitTips) {
+        m_sequenceLimitTips->hide();
+    }
+}
+
+void ShapesWidget::mouseDoubleClickEvent(QMouseEvent *e)
+{
+    if (m_currentType == "sequence") {
+        int hitOrder = -1;
+        int currentDisplay = 0;
+        QRectF hitRect;
+        for (int i = m_shapes.length() - 1; i >= 0; i--) {
+            if (m_shapes[i].type != "sequence") {
+                continue;
+            }
+            int orderUpTo = -1;
+            int cnt = 0;
+            for (int k = 0; k <= i; k++) {
+                if (m_shapes[k].type == "sequence") {
+                    if (k == i) {
+                        orderUpTo = cnt;
+                    }
+                    cnt++;
+                }
+            }
+            QRectF r(m_shapes[i].mainPoints[0], m_shapes[i].mainPoints[3]);
+            if (r.contains(e->pos())) {
+                hitOrder = orderUpTo;
+                currentDisplay = m_shapes[i].sequenceNumber;
+                hitRect = r;
+                break;
+            }
+        }
+        if (hitOrder >= 0) {
+            // 就地内联编辑：在命中的序号圆圈位置覆盖一个 QLineEdit 输入框，
+            // 预填当前编号；回车确认改号并从当前项起顺延重排，Esc 取消 / 失焦提交。
+            // 下限必须大于前一个序号，避免逆序；编辑首项时从 1 开始。
+            // 上限保证当前项及后续已有项都不超过 SEQUENCE_MAX_NUMBER。
+            const int editMinNum = sequenceNumberBeforeOrder(hitOrder) + 1;
+            const int editMaxNum = SEQUENCE_MAX_NUMBER - (sequenceCount() - 1 - hitOrder);
+            m_sequenceEdit = new QLineEdit(this);
+            m_sequenceEditOrder = hitOrder;
+            m_sequenceEdit->setText(QString::number(currentDisplay));
+            m_sequenceEdit->setMaxLength(2);
+            m_sequenceEdit->setValidator(new QIntValidator(editMinNum, editMaxNum, m_sequenceEdit));
+            m_sequenceEdit->setAlignment(Qt::AlignCenter);
+            m_sequenceEdit->installEventFilter(this);
+            // 将输入框居中覆盖在序号圆圈位置，实现"就地"编辑
+            QSize editSize(40, 28);
+            QPointF center = hitRect.center();
+            m_sequenceEdit->setFixedSize(editSize);
+            m_sequenceEdit->move(static_cast<int>(center.x() - editSize.width() / 2.0),
+                                 static_cast<int>(center.y() - editSize.height() / 2.0));
+            m_sequenceEdit->show();
+            m_sequenceEdit->raise();
+            m_sequenceEdit->setFocus();
+            m_sequenceEdit->selectAll();
+            return;
+        }
+    }
+    DFrame::mouseDoubleClickEvent(e);
+}
+
+bool ShapesWidget::eventFilter(QObject *watched, QEvent *event)
+{
+    if (watched == m_sequenceEdit && m_sequenceEdit) {
+        // 拦截全局 Enter/Return/Esc 快捷键（保存截图/退出），避免编辑时泄漏
+        if (event->type() == QEvent::ShortcutOverride) {
+            QKeyEvent *keyEvent = static_cast<QKeyEvent *>(event);
+            int key = keyEvent->key();
+            if (key == Qt::Key_Return || key == Qt::Key_Enter || key == Qt::Key_Escape) {
+                event->accept();
+                return true;
+            }
+        } else if (event->type() == QEvent::KeyPress) {
+            QKeyEvent *keyEvent = static_cast<QKeyEvent *>(event);
+            int key = keyEvent->key();
+            // 回车确认改号
+            if (key == Qt::Key_Return || key == Qt::Key_Enter) {
+                commitSequenceEdit();
+                return true;
+            }
+            // Esc 取消编辑
+            if (key == Qt::Key_Escape) {
+                cancelSequenceEdit();
+                return true;
+            }
+        } else if (event->type() == QEvent::FocusOut) {
+            // 失焦提交编辑，与回车行为一致
+            commitSequenceEdit();
+            return false;
+        }
+    }
+    return DFrame::eventFilter(watched, event);
+}
+
+void ShapesWidget::commitSequenceEdit()
+{
+    if (!m_sequenceEdit) {
+        return;
+    }
+    QLineEdit *edit = m_sequenceEdit;
+    int hitOrder = m_sequenceEditOrder;
+    bool ok = false;
+    int newNum = edit->text().toInt(&ok);
+    // 改号后只重排当前项及后续项，前面已有编号保持不动。
+    int minNum = sequenceNumberBeforeOrder(hitOrder) + 1;
+    int maxNum = SEQUENCE_MAX_NUMBER - (sequenceCount() - 1 - hitOrder);
+    if (!ok || newNum < minNum) {
+        // 空值或小于前一个序号：不合法，直接取消本次编辑
+        cancelSequenceEdit();
+        return;
+    }
+    if (newNum > maxNum) {
+        // 只有真正超出最大编号范围时才给出设计稿提示，同样 2 秒后消失
+        showSequenceLimitTips(edit->geometry().center());
+        cancelSequenceEdit();
+        return;
+    }
+    m_sequenceEdit = nullptr;
+    m_sequenceEditOrder = -1;
+    renumberSequenceFrom(hitOrder, newNum);
+    update();
+    edit->deleteLater();
+}
+
+void ShapesWidget::cancelSequenceEdit()
+{
+    if (!m_sequenceEdit) {
+        return;
+    }
+    QLineEdit *edit = m_sequenceEdit;
+    m_sequenceEdit = nullptr;
+    m_sequenceEditOrder = -1;
+    edit->deleteLater();
+}

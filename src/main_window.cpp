@@ -1138,6 +1138,8 @@ void MainWindow::initToolBarShortcut()
     QShortcut *penSC = new QShortcut(QKeySequence("P"), this);
     // 截图模式 文本
     QShortcut *textSC = new QShortcut(QKeySequence("T"), this);
+    // 截图模式 序号标注
+    QShortcut *sequenceSC = new QShortcut(QKeySequence("Alt+S"), this);
     // 截图模式 撤销
     QShortcut *undoSC = new QShortcut(QKeySequence("Ctrl+Z"), this);
     // 截图模式 全部撤销
@@ -1256,6 +1258,13 @@ void MainWindow::initToolBarShortcut()
         }
         if (status::record == m_functionType && Utils::isWaylandMode)
             m_showButtons->showContentButtons(KEY_T);
+    });
+    // 截图模式 序号标注
+    connect(sequenceSC, &QShortcut::activated, this, [=] {
+        if (status::shot == m_functionType) {
+            qCDebug(dsrApp) << "shortcut : sequenceSC (key: alt+s)";
+            m_toolBar->shapeClickedFromMain("sequence");
+        }
     });
     // 截图模式 撤销
     connect(undoSC, &QShortcut::activated, this, [=] {
