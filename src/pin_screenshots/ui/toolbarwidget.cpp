@@ -132,6 +132,7 @@ void ToolBarWidget::initToolBarWidget()
     m_subTool = new SubToolWidget(this);
     qCDebug(dsrApp) << "SubToolWidget created.";
     connect(m_subTool, SIGNAL(signalOcrButtonClicked()), this, SIGNAL(sendOcrButtonClicked()));
+    connect(m_subTool, SIGNAL(signalTableButtonClicked()), this, SIGNAL(sendTableButtonClicked()));
     connect(m_subTool, &SubToolWidget::signalSaveToLocalButtonClicked, this, &ToolBarWidget::signalSaveToLocalButtonClicked);
     qCDebug(dsrApp) << "Connected signalOcrButtonClicked.";
 
