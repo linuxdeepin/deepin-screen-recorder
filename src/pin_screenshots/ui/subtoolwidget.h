@@ -53,6 +53,7 @@ public slots:
     void updateOptionChecked();
 signals:
     void signalOcrButtonClicked(); // ocr被点击
+    void signalTableButtonClicked(); // 表格识别被点击
     void signalCloseButtonClicked();// 关闭按钮被点击
     void signalSaveToLocalButtonClicked();  // 保存到本地
 protected:
@@ -68,6 +69,10 @@ private:
      * @brief OCR按钮
      */
     ToolButton *m_ocrButton;
+    /**
+     * @brief 表格识别按钮
+     */
+    ToolButton *m_tableButton = nullptr;
     /**
      * @brief 选项按钮
      */

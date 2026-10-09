@@ -30,6 +30,7 @@ public slots:
     void onThemeTypeChange(DGuiApplicationHelper::ColorType themeType); //主题变化槽
 signals:
     void sendOcrButtonClicked(); // ocr被点击
+    void sendTableButtonClicked(); // 表格识别被点击
     void sendCloseButtonClicked();// 关闭按钮被点击
     void sendSaveButtonClicked();
     void signalSaveToLocalButtonClicked();
