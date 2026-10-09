@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="28px" height="28px" viewBox="0 0 28 28" version="1.1" xmlns="http://www.w3.org/2000/svg">
+    <title>表格识别失败</title>
+    <circle cx="14" cy="14" r="12" fill="#F76161"/>
+    <rect x="12.5" y="6.5" width="3" height="10" rx="1.5" fill="#FFFFFF"/>
+    <circle cx="14" cy="20.5" r="1.7" fill="#FFFFFF"/>
+</svg>

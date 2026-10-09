@@ -54,6 +54,10 @@ SOURCES += \
     putils.cpp \
     settings.cpp \
     ui/mainToolWidget.cpp \
+    ui/tableglasspanel.cpp \
+    ui/tablerecognizingwidget.cpp \
+    ui/tablerecognizetoast.cpp \
+    ui/tableresultdialog.cpp \
     ../utils/log.cpp \
     ../widgets/toolbutton.cpp \
     ../widgets/savebutton.cpp
@@ -70,6 +74,10 @@ HEADERS += \
     ui/pinsavemenumanager.h \
     putils.h \
     settings.h \
+    ui/tableglasspanel.h \
+    ui/tablerecognizingwidget.h \
+    ui/tablerecognizetoast.h \
+    ui/tableresultdialog.h \
     ui/mainToolWidget.h \
     ../utils/log.h \
     ../widgets/toolbutton.h \
