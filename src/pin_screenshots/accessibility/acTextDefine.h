@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2022-2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -11,6 +11,8 @@
 // 使用宏定义，方便国际化操作
 #define AC_SUBTOOLWIDGET_PIN_OPTION_BUT "pin_option_but" //
 #define AC_SUBTOOLWIDGET_PIN_OCR_BUT "pin_ocr_but"//
+#define AC_SUBTOOLWIDGET_PIN_TABLE_BUT "pin_table_but"//
+#define AC_TABLERESULT_DIALOG_BUT "pin_table_result_dialog"//
 #define AC_MAINWINDOW_PIN_SAVE_BUT "pin_save_but" //
 #define AC_TOOLBARWIDGET_CLOSE_PIN_BUT "pin_close_but"//
 #define AC_TOOLBARWIDGET_SAVE_LOACL_PIN_BUT "pin_save_local_but"//

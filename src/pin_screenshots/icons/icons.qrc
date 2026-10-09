@@ -6,5 +6,9 @@
         <file>texts/save_32px.svg</file>
         <file>texts/dropdown_32px.svg</file>
         <file>texts/setting_32px.svg</file>
+        <file>texts/table-recognition_32px.svg</file>
+        <file>texts/tableresult_success.svg</file>
+        <file>texts/table_error.svg</file>
+        <file>texts/table_close.svg</file>
     </qresource>
 </RCC>
