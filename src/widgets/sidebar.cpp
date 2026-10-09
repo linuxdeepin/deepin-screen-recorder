@@ -1,5 +1,5 @@
 // Copyright (C) 2020 ~ 2021 Uniontech Software Technology Co.,Ltd.
-// SPDX-FileCopyrightText: 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2022-2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -227,7 +227,8 @@ void SideBarWidget::changeShotToolWidget(const QString &func)
     else if(
         func == "line" ||
         func == "arrow" ||
-        func == "pen") {
+        func == "pen" ||
+        func == "sequence") {
         qCDebug(dsrApp) << "Resizing sidebar for line, arrow, or pen.";
         resize(TOOLBAR_WIDGET_SIZE1);
     } else if (func == "text") {
@@ -258,7 +259,8 @@ int SideBarWidget::getSideBarWidth(const QString &func)
             func == "oval" ||
             func == "line" ||
             func == "arrow" ||
-            func == "pen") {
+            func == "pen" ||
+            func == "sequence") {
         resize(TOOLBAR_WIDGET_SIZE1);
         width = TOOLBAR_WIDGET_SIZE1.width();
     } else if (func == "text") {

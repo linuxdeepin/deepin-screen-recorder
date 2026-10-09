@@ -182,6 +182,10 @@ private:
      */
     ToolButton *m_textButton = nullptr;
     /**
+     * @brief 截图功能中序号标注工具按钮
+     */
+    ToolButton *m_sequenceButton = nullptr;
+    /**
      * @brief 录屏功能中摄像头工具按钮
      */
     ToolButton *m_cameraButton = nullptr;

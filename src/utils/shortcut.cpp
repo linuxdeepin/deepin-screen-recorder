@@ -1,5 +1,5 @@
 // Copyright (C) 2020 ~ 2021 Uniontech Software Technology Co.,Ltd.
-// SPDX-FileCopyrightText: 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2022-2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -45,7 +45,8 @@ Shortcut::Shortcut(QObject *parent)
 #endif
     toolsGroup.groupItems << ShortcutItem(tr("Pin screenshots"), "Alt+P") << ShortcutItem(tr("Rectangle"), "R")
                           << ShortcutItem(tr("Ellipse"), "O") << ShortcutItem(tr("Line"), "L") << ShortcutItem(tr("Arrow"), "X")
-                          << ShortcutItem(tr("Pencil"), "P") << ShortcutItem(tr("Text"), "T");
+                          << ShortcutItem(tr("Pencil"), "P") << ShortcutItem(tr("Text"), "T")
+                          << ShortcutItem(tr("Sequence number"), "Alt+S");
 #ifdef OCR_SCROLL_FLAGE_ON
     toolsGroup.groupItems << ShortcutItem(tr("Extract text"), "Alt+O");
 #endif

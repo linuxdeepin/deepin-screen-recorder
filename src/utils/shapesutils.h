@@ -1,5 +1,5 @@
 // Copyright (C) 2020 ~ 2021 Uniontech Software Technology Co.,Ltd.
-// SPDX-FileCopyrightText: 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2022-2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -17,12 +17,13 @@ class Toolshape
 {
 public:
     QString type; // 图元类型
-    // rectangle, oval, effect, arrow, line, pen, text
-    // 矩形，椭圆，模糊，箭头，直线，画笔，文本
+    // rectangle, oval, effect, arrow, line, pen, text, sequence
+    // 矩形，椭圆，模糊，箭头，直线，画笔，文本，序号标注
     FourPoints mainPoints;
     int index = -1;
     int lineWidth = 1; // 线宽
     int colorIndex = 0; // 颜色编号
+    int sequenceNumber = 0; // 序号标注的显示编号（1..99）
     bool isBlur = false; // 模糊类型
     int isOval = 0; // 模糊形状 0 椭圆，1 矩形， 2模糊笔
     bool isShiftPressed = false;
