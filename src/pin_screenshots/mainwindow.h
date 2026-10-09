@@ -7,7 +7,11 @@
 #define MAINWINDOW_H
 
 #include "service/ocrinterface.h"
+#include "table/tablerecognizerloader.h"
 #include "ui/menucontroller.h"
+#include "ui/tablerecognizingwidget.h"
+#include "ui/tablerecognizetoast.h"
+#include "ui/tableresultdialog.h"
 #include "ui/toolbarwidget.h"
 
 #include <DWidget>
@@ -65,6 +69,15 @@ public:
      * @return
      */
     bool openImageAndName(const QImage &image, const QString &name = "", const QPoint &point = QPoint(0, 0));
+
+    /**
+     * @brief 打开图片并进行表格识别
+     * @param 图片对象
+     * @param 图片名称
+     * @param 贴图窗口显示的坐标
+     * @return
+     */
+    bool openImageForTable(const QImage &image, const QString &name = "", const QPoint &point = QPoint(0, 0));
     /**
      * @brief 保存图片
      */
@@ -93,6 +106,17 @@ public slots:
      * @brief 开启ocr
      */
     void onOpenOCR();
+
+    /**
+     * @brief 在贴图工具栏点击“表格识别”按钮：对当前贴图内容重新识别
+     */
+    void onOpenTableRecognition();
+
+    /**
+     * @brief 表格识别结束
+     */
+    void onTableRecognitionFinished(bool success, const QString &html,
+                                    Dtk::TableRecognizer::TableError error);
 
     void saveToClipboard();
     /**
@@ -145,6 +169,21 @@ protected:
     void updateToolBarPosition(); // 工具栏显示位置
     bool toolbarAttachedToWindow() const;
 
+    /**
+     * @brief 启动表格识别流程
+     */
+    void startTableRecognition();
+    /**
+     * @brief 显示表格识别提示条
+     */
+    void showTableToast(const QString &message, const QString &actionText, bool closable);
+    /**
+     * @brief 清理表格识别相关控件
+     */
+    void cleanupTableToast();
+    /// 表格识别浮层/提示条是独立置顶窗口，主窗口映射后需要重新置顶
+    void raiseTableOverlays();
+
 private:
     /**
      * @brief 按下鼠标的位置
@@ -196,6 +235,35 @@ private:
     QPoint m_showPosition;
     QTimer *m_mouseMonitorTimer = nullptr;
     QTimer *m_hideToolbarTimer = nullptr;
+
+    /**
+     * @brief 是否处于表格识别流程
+     */
+    bool m_isTableRecognizeMode = false;
+    /**
+     * @brief 表格识别中浮层
+     */
+    TableRecognizingWidget *m_tableRecognizingWidget = nullptr;
+    /**
+     * @brief 表格识别提示条
+     */
+    TableRecognizeToast *m_tableToast = nullptr;
+    /**
+     * @brief 表格识别成功弹窗（窗口内浮层，随窗口析构）
+     */
+    TableResultDialog *m_tableResultDialog = nullptr;
+    /**
+     * @brief 表格识别能力动态加载器
+     */
+    TableRecognizerLoader *m_tableRecognizerLoader = nullptr;
+    /**
+     * @brief 是否已经挂接过主窗口映射信号（用于给独立浮层补置顶）
+     */
+    bool m_tableOverlayRaiseHooked = false;
+    /**
+     * @brief 表格识别是否等待贴图窗口映射完成后再启动
+     */
+    bool m_tableRecognizePending = false;
 };
 
 #endif // MAINWINDOW_H

@@ -53,6 +53,24 @@ void PinScreenShots::openImage(QImage image)
     }
 }
 
+void PinScreenShots::openImageForTable(QImage image, QString imageName, QPoint point)
+{
+    if (!image.isNull() && image.width() >= 1) {
+        qCDebug(dsrApp) << "Opening image for table recognition. Name:" << imageName << ", Point:" << point;
+        MainWindow *win = new MainWindow();
+        win->openImageForTable(image, imageName, point);
+        Dtk::Widget::moveToCenter(win);
+        win->move(win->getShowPosition());
+        win->show();
+        if (m_loadingCount == 0) {
+            qCDebug(dsrApp) << "First window, incrementing loading count";
+            m_loadingCount++;
+        }
+    } else {
+        qCWarning(dsrApp) << "Attempted to open invalid image for table recognition. Name:" << imageName;
+    }
+}
+
 void PinScreenShots::openImageAndName(QImage image, QString imageName, QPoint point)
 {
     //增加判断，空图片不会启动

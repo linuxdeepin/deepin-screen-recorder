@@ -47,6 +47,17 @@ void SubToolWidget::initShotLable()
     connect(m_ocrButton, SIGNAL(clicked()), this, SIGNAL(signalOcrButtonClicked()));
     qCDebug(dsrApp) << "OCR button initialized";
 
+    // 表格识别按钮（与主窗口工具栏“表格识别”一致，用于在贴图窗口内重新识别）
+    m_tableButton = new ToolButton(this);
+    m_tableButton->setObjectName(AC_SUBTOOLWIDGET_PIN_TABLE_BUT);
+    m_tableButton->setAccessibleName(AC_SUBTOOLWIDGET_PIN_TABLE_BUT);
+    m_tableButton->setIconSize(QSize(36, 36));
+    m_tableButton->setFixedSize(36, 36);
+    m_tableButton->setIcon(QIcon::fromTheme("table-recognition"));
+    m_tableButton->setToolTip(tr("Table recognition"));
+    connect(m_tableButton, SIGNAL(clicked()), this, SIGNAL(signalTableButtonClicked()));
+    qCDebug(dsrApp) << "Table recognition button initialized";
+
     // 选项按钮
     m_pinOptionButton = new ToolButton(this);
 
@@ -151,6 +162,7 @@ void SubToolWidget::initShotLable()
     hLayout->setSizeConstraint(QLayout::SetFixedSize);
     hLayout->setContentsMargins(0, 0, 0, 0);
     hLayout->addWidget(m_ocrButton, 0,  Qt::AlignCenter);
+    hLayout->addWidget(m_tableButton, 0, Qt::AlignCenter);
     hLayout->addWidget(m_saveSeperatorBeg, 0, Qt::AlignCenter);
     hLayout->addWidget(m_pinOptionButton, 0, Qt::AlignCenter);
     hLayout->addWidget(m_saveLocalDirButton, 0, Qt::AlignCenter);

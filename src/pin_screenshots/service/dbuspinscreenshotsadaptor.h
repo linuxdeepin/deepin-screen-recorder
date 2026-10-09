@@ -32,6 +32,13 @@ class DbusPinScreenShotsAdaptor: public QDBusAbstractAdaptor
                 "    <method name=\"openImageAndName\">\n"
                 "      <arg direction=\"in\" type=\"ay\" name=\"images\"/>\n"
                 "      <arg direction=\"in\" type=\"s\" name=\"imageName\"/>\n"
+                "      <arg direction=\"in\" type=\"(ii)\" name=\"point\"/>\n"
+                "    </method>\n"
+
+                "    <method name=\"openImageAndNameForTable\">\n"
+                "      <arg direction=\"in\" type=\"ay\" name=\"images\"/>\n"
+                "      <arg direction=\"in\" type=\"s\" name=\"imageName\"/>\n"
+                "      <arg direction=\"in\" type=\"(ii)\" name=\"point\"/>\n"
                 "    </method>\n"
 
                 "    <method name=\"openFile\">\n"
@@ -48,6 +55,7 @@ public:
 public Q_SLOTS: // METHODS
     void openImage(QByteArray images);
     void openImageAndName(QByteArray images, QString imageName, QPoint point);
+    void openImageAndNameForTable(QByteArray images, QString imageName, QPoint point);
     bool openFile(QString filePath);
 
 Q_SIGNALS: // SIGNALS

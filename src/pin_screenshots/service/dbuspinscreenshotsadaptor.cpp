@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2022-2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -42,6 +42,19 @@ void DbusPinScreenShotsAdaptor::openImageAndName(QByteArray images, QString imag
     image.loadFromData(data);
     QMetaObject::invokeMethod(parent(), "openImageAndName", Q_ARG(QImage, image), Q_ARG(QString, imageName), Q_ARG(QPoint, point));
     qCDebug(dsrApp) << "Invoked openImageAndName method on parent object.";
+}
+
+void DbusPinScreenShotsAdaptor::openImageAndNameForTable(QByteArray images, QString imageName, QPoint point)
+{
+    qCDebug(dsrApp) << "Received DBus call to open image for table recognition. Image name:" << imageName << ", Point:" << point;
+    QByteArray data = images;
+    QString tmp_data = QString::fromLatin1(data.data(), data.size());
+    QByteArray srcData = QByteArray::fromBase64(tmp_data.toLatin1());
+    data = qUncompress(srcData);
+    QImage image;
+    image.loadFromData(data);
+    QMetaObject::invokeMethod(parent(), "openImageForTable", Q_ARG(QImage, image), Q_ARG(QString, imageName), Q_ARG(QPoint, point));
+    qCDebug(dsrApp) << "Invoked openImageForTable method on parent object.";
 }
 
 void DbusPinScreenShotsAdaptor::openImage(QByteArray images)

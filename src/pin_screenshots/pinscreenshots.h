@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2022-2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -19,6 +19,9 @@ public:
     Q_INVOKABLE void openImage(QImage image);
 
     Q_INVOKABLE void openImageAndName(QImage image, QString imageName, QPoint point);
+
+    // 打开图片并进行表格识别
+    Q_INVOKABLE void openImageForTable(QImage image, QString imageName, QPoint point);
 
 signals:
 
