@@ -137,6 +137,26 @@ or press the shortcut again to stop recording</source>
         <source>Screenshot finished and copy to clipboard</source>
         <translation>截图完成，文件已复制到剪贴板</translation>
     </message>
+    <message>
+        <source>Failed to recognize: no table content detected</source>
+        <translation>识别失败，未检测到表格内容</translation>
+    </message>
+    <message>
+        <source>Got it</source>
+        <translation>知道了</translation>
+    </message>
+    <message>
+        <source>The table is too large, recognition timed out</source>
+        <translation>表格过大，识别超时</translation>
+    </message>
+    <message>
+        <source>Recognition is already running, please wait</source>
+        <translation>正在识别中，请稍候</translation>
+    </message>
+    <message>
+        <source>Recognition failed, please try again</source>
+        <translation>识别失败，请重试</translation>
+    </message>
 </context>
 <context>
     <name>MenuController</name>
@@ -757,6 +777,40 @@ Hold down Shift to draw squares or circles.</source>
     <message>
         <source>Save to Pictures</source>
         <translation>保存到图片</translation>
+    </message>
+    <message>
+        <source>Table recognition (Alt+T）</source>
+        <translation>表格识别 (Alt+T）</translation>
+    </message>
+    <message>
+        <source>Table recognition</source>
+        <translation type="unfinished">表格识别</translation>
+    </message>
+</context>
+<context>
+    <name>TableRecognizingWidget</name>
+    <message>
+        <source>Table recognition in progress...</source>
+        <translation>表格识别中…</translation>
+    </message>
+</context>
+<context>
+    <name>TableResultDialog</name>
+    <message>
+        <source>Table recognition</source>
+        <translation>表格识别</translation>
+    </message>
+    <message>
+        <source>Table recognized successfully!</source>
+        <translation>表格已识别成功！</translation>
+    </message>
+    <message>
+        <source>Cancel</source>
+        <translation>取消</translation>
+    </message>
+    <message>
+        <source>Copy as Excel format</source>
+        <translation>复制为Excel格式</translation>
     </message>
 </context>
 <context>
