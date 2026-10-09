@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="100" height="100" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+  <title>table-recognition-success-light</title>
+  <!-- 数值取自设计稿 symbol 插图/表格识别成功/浅色（100x100）：
+       底板 76x68 @(10,13.5) 圆角 10，渐变 #F4F4F4 -> #DBDBDB，描边 rgba(0,0,0,0.05)
+       表格字形：外框 59x50 @(18.5,22.5) 圆角 5.5、描边 5px，竖分隔 4x40 @(32.5,27.5)，
+                 横线 49x4 @ y=33/42/51，填充 rgba(0,0,0,0.10)；右下角裁切 43x43 @(52,46)
+       绿色对勾：圆 32 @(57,52.5)，渐变 #57E869 -> #1CBCD6，描边 rgba(0,0,0,0.10) -->
+  <defs>
+    <linearGradient id="tile" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#F4F4F4"/>
+      <stop offset="1" stop-color="#DBDBDB"/>
+    </linearGradient>
+    <linearGradient id="ok" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#57E869"/>
+      <stop offset="1" stop-color="#1CBCD6"/>
+    </linearGradient>
+    <mask id="cut">
+      <rect x="0" y="0" width="100" height="100" fill="#FFFFFF"/>
+      <rect x="52" y="46" width="43" height="43" fill="#000000"/>
+    </mask>
+  </defs>
+  <rect x="10" y="13.5" width="76" height="68" rx="10" fill="url(#tile)"
+        stroke="#000000" stroke-opacity="0.05"/>
+  <g mask="url(#cut)">
+    <rect x="21" y="25" width="54" height="45" rx="3" fill="none"
+          stroke="#000000" stroke-opacity="0.10" stroke-width="5"/>
+    <rect x="32.5" y="27.5" width="4" height="40" fill="#000000" fill-opacity="0.10"/>
+    <rect x="23.5" y="33" width="49" height="4" fill="#000000" fill-opacity="0.10"/>
+    <rect x="23.5" y="42" width="49" height="4" fill="#000000" fill-opacity="0.10"/>
+    <rect x="23.5" y="51" width="49" height="4" fill="#000000" fill-opacity="0.10"/>
+  </g>
+  <circle cx="73" cy="68.5" r="16" fill="url(#ok)" stroke="#000000" stroke-opacity="0.10"/>
+  <path d="M65.5 68.2 L71 73 L82.3 62.6" fill="none" stroke="#FFFFFF"
+        stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
