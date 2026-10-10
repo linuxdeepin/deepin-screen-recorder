@@ -327,6 +327,10 @@ or press the shortcut again to stop recording</source>
         <source>Input text here</source>
         <translation>在此處添加文本</translation>
     </message>
+    <message>
+        <source>Maximum number range exceeded</source>
+        <translation>超出最大編號範圍</translation>
+    </message>
 </context>
 <context>
     <name>Shortcut</name>
@@ -551,6 +555,10 @@ Press and hold Shift to draw a straight line</source>
     <message>
         <source>Hide Keystroke (K)</source>
         <translation>隱藏按鍵 K</translation>
+    </message>
+    <message>
+        <source>Sequence number (Alt+S)</source>
+        <translation>序號標註 (Alt+S)</translation>
     </message>
     <message>
         <source>Show Keystroke (K)</source>
