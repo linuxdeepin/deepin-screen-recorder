@@ -52,9 +52,12 @@ static void checkLayout(int bits, bool native, int offset, bool fast)
         for (int x = 0; x < result.width(); ++x)
             expect(qAlpha(result.pixel(x, y)) == 255, "Captured pixels must be opaque");
     }
-    // The returned image must own its storage.
-    fixture.storage.clear();
-    fixture.storage.shrink_to_fit();
+#ifndef STARTUP_TEST_LEGACY
+    expect(fast ? fixture.image.data == nullptr : fixture.image.data != nullptr,
+           "Native RGB32 buffers must be adopted; other layouts must stay with the XImage");
+#endif
+    // The returned image must not depend on storage the XImage still owns.
+    fixture.release();
     expect(result == expected, "Converted image must survive destruction of XImage storage");
 }
 int main()
@@ -79,13 +82,19 @@ int main()
     calls = 0;
     const QImage fallback = convert(&nonstandard.image);
     expect(calls > 0 && fallback == expected, "Nonstandard masks must preserve the legacy fallback");
-    XImageFixture invalidStride(7, 5);
-    invalidStride.image.bytes_per_line = 4;
-#ifndef STARTUP_TEST_LEGACY
-    expect(convert(&invalidStride.image).isNull(), "Short source stride must be rejected");
-    invalidStride.image.data = nullptr;
-    expect(convert(&invalidStride.image).isNull(), "Missing image data must be rejected");
-#endif
+    XImageFixture shortStride(7, 5);
+    shortStride.image.bytes_per_line = 4;
+    originalGetPixel = shortStride.image.f.get_pixel;
+    shortStride.image.f.get_pixel = countingGetPixel;
+    const QImage shortExpected = legacyXImageConversion(&shortStride.image);
+    calls = 0;
+    const QImage shortResult = convert(&shortStride.image);
+    expect(calls > 0 && shortResult == shortExpected, "Short source stride must use the legacy fallback");
+    XImageFixture missingData(7, 5);
+    char *const missingStorage = missingData.image.data;
+    missingData.image.data = nullptr;
+    expect(convert(&missingData.image).isNull(), "Missing image data must be rejected");
+    missingData.image.data = missingStorage;
     qInfo() << (failures ? "FAILED" : "PASSED") << failures << "failures";
     return failures ? 1 : 0;
 }
