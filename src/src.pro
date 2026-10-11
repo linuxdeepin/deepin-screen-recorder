@@ -203,6 +203,7 @@ HEADERS += main_window.h \
     widgets/keybuttonwidget.h \
     widgets/sidebar.h \
     widgets/shottoolwidget.h \
+    widgets/roundedcornerwidget.h \
     widgets/colortoolwidget.h \
     widgets/shapetoolwidget.h \
     widgets/savebutton.h \
@@ -298,6 +299,7 @@ SOURCES += main.cpp \
     widgets/keybuttonwidget.cpp \
     widgets/sidebar.cpp \
     widgets/shottoolwidget.cpp \
+    widgets/roundedcornerwidget.cpp \
     widgets/colortoolwidget.cpp \
     widgets/shapetoolwidget.cpp \
     widgets/savebutton.cpp \

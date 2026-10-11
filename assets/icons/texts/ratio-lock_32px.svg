@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="36px" height="36px" viewBox="0 0 36 36" version="1.1" xmlns="http://www.w3.org/2000/svg">
+    <title>锁定比例</title>
+    <!-- 依据设计稿 symbol 图标/截图工具栏/比例/锁定（24x24 画板，闭合挂锁） -->
+    <path fill="none" stroke="#000000" stroke-width="3" d="M10.5,15 L10.5,10.5 C10.5,6.358 13.858,3 18,3 C22.142,3 25.5,6.358 25.5,10.5 L25.5,15"></path>
+    <path fill="none" stroke="#000000" stroke-width="3" d="M7.5,15 L28.5,15 L28.5,31.5 L7.5,31.5 Z"></path>
+</svg>

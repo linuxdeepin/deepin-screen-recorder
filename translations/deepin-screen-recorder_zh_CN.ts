@@ -854,4 +854,31 @@ Hold down Shift to draw squares or circles.</source>
         <translation>退出</translation>
     </message>
 </context>
+<context>
+    <name>RoundedCornerWidget</name>
+    <message>
+        <source>Radius</source>
+        <translation>圆角</translation>
+    </message>
+    <message>
+        <source>Size / ratio</source>
+        <translation>尺寸/比例</translation>
+    </message>
+    <message>
+        <source>Size</source>
+        <translation>尺寸</translation>
+    </message>
+    <message>
+        <source>Lock ratio</source>
+        <translation>锁定比例</translation>
+    </message>
+    <message>
+        <source>Ratio</source>
+        <translation>比例</translation>
+    </message>
+    <message>
+        <source>Keep the selected size or ratio for the next screenshot</source>
+        <translation>选中后，下次截图保持该尺寸/比例</translation>
+    </message>
+</context>
 </TS>
