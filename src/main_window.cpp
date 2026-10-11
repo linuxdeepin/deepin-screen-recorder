@@ -1193,7 +1193,7 @@ void MainWindow::initToolBarShortcut()
     QShortcut *keyBoardSC = new QShortcut(QKeySequence("K"), this);
     // 录屏模式（未做穿透） 摄像头
     QShortcut *cameraSC = new QShortcut(QKeySequence("C"), this);
-    // 截图模式 AI 助手（按键 A）
+    // 截图模式 AI 助手（按键 Alt+A）
     QShortcut *aiAssistantSC = new QShortcut(QKeySequence("Alt+A"), this);
 
     // 截图模式/录屏模式（未做穿透）/滚动模式 帮助快捷面板
@@ -1212,9 +1212,9 @@ void MainWindow::initToolBarShortcut()
     });
     // 截图模式 AI 助手应用内快捷键
     connect(aiAssistantSC, &QShortcut::activated, this, [=] {
-        qCWarning(dsrApp) << "shortcut : aiAssistantSC (key: a)";
+        qCWarning(dsrApp) << "shortcut : aiAssistantSC (key: alt+a)";
         if ((status::shot == m_functionType || status::scrollshot == m_functionType)&& Utils::is3rdInterfaceStart == false) {
-            qCWarning(dsrApp) << "shortcut : aiAssistantSC (key: a)";
+            qCWarning(dsrApp) << "shortcut : aiAssistantSC (key: alt+a)";
             m_toolBar->shapeClickedFromMain("aiassistant");
         }
     });

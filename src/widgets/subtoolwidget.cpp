@@ -745,7 +745,7 @@ void SubToolWidget::initShotLabel()
     Utils::setAccessibility(m_aiAssistantButton, AC_SUBTOOLWIDGET_AI_ASSISTANT_BUTTON);
     m_shotBtnGroup->addButton(m_aiAssistantButton);
     m_aiAssistantButton->setFixedSize(TOOL_BUTTON_SIZE);
-    installTipHint(m_aiAssistantButton, tr("AI Screenshot (A)"));
+    installTipHint(m_aiAssistantButton, tr("AI Screenshot (Alt+A)"));
     btnList.append(m_aiAssistantButton);
     connect(m_aiAssistantButton, &ToolButton::clicked, this, [=] {
         ConfigSettings::instance()->setValue("shot", "ai_assistant_used", true);
@@ -1540,7 +1540,7 @@ void SubToolWidget::initScrollLabel()
     
     Utils::setAccessibility(m_aiAssistantScrollButton, AC_SUBTOOLWIDGET_AI_ASSISTANT_BUTTON);
     m_aiAssistantScrollButton->setFixedSize(TOOL_BUTTON_SIZE);
-    installTipHint(m_aiAssistantScrollButton, tr("AI Screenshot (A)"));
+    installTipHint(m_aiAssistantScrollButton, tr("AI Screenshot (Alt+A)"));
     scrollBtnGroup->addButton(m_aiAssistantScrollButton);
     btnList.append(m_aiAssistantScrollButton);
     connect(m_aiAssistantScrollButton, &ToolButton::clicked, this, [=]{
