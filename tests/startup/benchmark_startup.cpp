@@ -20,7 +20,8 @@ static void benchmarkImage(XImage *image, const QString &label)
 {
     QTextStream output(stdout);
     const QImage expected = legacyXImageConversion(image);
-    const QImage actual = XImageConverter::toImage(image);
+    XImageClone check(*image);
+    const QImage actual = XImageConverter::toImage(&check.image);
     if (expected != actual)
         qFatal("Pixel mismatch during benchmark");
     std::vector<double> before, after;
@@ -29,8 +30,10 @@ static void benchmarkImage(XImage *image, const QString &label)
     for (int i = 0; i < 31; ++i) {
         for (int step = 0; step < 2; ++step) {
             const bool fast = (i + step) % 2 == 0;
+            // The optimized conversion consumes its input, so each sample gets a fresh copy.
+            XImageClone input(*image);
             timer.start();
-            QImage result = fast ? XImageConverter::toImage(image) : legacyXImageConversion(image);
+            QImage result = fast ? XImageConverter::toImage(&input.image) : legacyXImageConversion(&input.image);
             const double elapsed = timer.nsecsElapsed() / 1e6;
             if (result.isNull())
                 qFatal("Conversion failed during benchmark");

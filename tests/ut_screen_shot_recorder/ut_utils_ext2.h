@@ -16,7 +16,8 @@ using namespace testing;
 // Deliberately SKIPPED (X11/Wayland/modal/process dependencies):
 //   - passInputEvent, getInputEvent, cancelInputEvent, cancelInputEvent1
 //   - enableXGrabButton, disableXGrabButton
-//   - checkCpuIsZhaoxin, notSupportWarn
+//   - checkCpuIsZhaoxin (host /proc/cpuinfo; parsing in ut_utils_cov2.h)
+//   - notSupportWarn
 //   - getAllWindowInfo, cursorMove (QCursor::setPos)
 //   - getCurrentAudioChannel (QProcess)
 //   - blurRect, clearBlur (DWindowManager)

@@ -3,21 +3,26 @@
 #pragma once
 #include <QImage>
 #include <QSysInfo>
-#include <vector>
+#include <cstdlib>
+#include <cstring>
 #include <X11/Xlib.h>
 #include <X11/Xutil.h>
 
 struct XImageFixture
 {
-    std::vector<char> storage;
+    // malloc-backed like Xlib, because the converter may adopt and XFree the buffer.
+    char *storage = nullptr;
     XImage image{};
     XImageFixture(int width, int height, int bits = 32, bool native = true, int offset = 0)
-        : storage((width * bits / 8 + 12) * height + offset)
+        : storage(static_cast<char *>(std::calloc((width * bits / 8 + 12) * height + offset, 1)))
     {
+        // An aligned nonzero offset could be adopted although it is not the allocation start.
+        if (offset % 4 == 0 && offset != 0)
+            qFatal("Fixture offsets must be zero or misaligned");
         image.width = width;
         image.height = height;
         image.format = ZPixmap;
-        image.data = storage.data() + offset;
+        image.data = storage + offset;
         const int nativeOrder = QSysInfo::ByteOrder == QSysInfo::LittleEndian ? LSBFirst : MSBFirst;
         image.byte_order = native ? nativeOrder : (nativeOrder == LSBFirst ? MSBFirst : LSBFirst);
         image.bitmap_unit = 32;
@@ -36,6 +41,33 @@ struct XImageFixture
                 XPutPixel(&image, x, y, qRgb((x * 19 + y) % 256, (y * 53 + x) % 256, (x + y * 7) % 256));
         }
     }
+    XImageFixture(const XImageFixture &) = delete;
+    XImageFixture &operator=(const XImageFixture &) = delete;
+    ~XImageFixture() { release(); }
+    // Mirrors XDestroyImage: frees the buffer unless the converter adopted it.
+    void release()
+    {
+        if (image.data)
+            std::free(storage);
+        image.data = nullptr;
+        storage = nullptr;
+    }
+};
+
+// Copies an XImage into a fresh malloc buffer so a consuming conversion can run repeatedly.
+struct XImageClone
+{
+    XImage image;
+    explicit XImageClone(const XImage &source)
+        : image(source)
+    {
+        const size_t size = size_t(source.bytes_per_line) * source.height;
+        image.data = static_cast<char *>(std::malloc(size));
+        std::memcpy(image.data, source.data, size);
+    }
+    XImageClone(const XImageClone &) = delete;
+    XImageClone &operator=(const XImageClone &) = delete;
+    ~XImageClone() { std::free(image.data); }
 };
 
 inline QImage legacyXImageConversion(XImage *image)
