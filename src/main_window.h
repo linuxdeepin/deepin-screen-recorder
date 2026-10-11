@@ -19,8 +19,13 @@
 #include "widgets/shapeswidget.h"
 #include "widgets/toptips.h"
 #include <functional>
+
+QT_BEGIN_NAMESPACE
+class QShortcut;
+QT_END_NAMESPACE
 #include "widgets/toolbar.h"
 #include "widgets/sidebar.h"
+#include "widgets/roundedcornerwidget.h"
 #include "widgets/keybuttonwidget.h"
 #include "widgets/zoomIndicator.h"
 #include "widgets/camerawidget.h"
@@ -1283,6 +1288,33 @@ private:
     int m_screenWidth = 0;  //屏幕宽度
     int m_screenHeight = 0; //屏幕高度
     SideBar *m_sideBar = nullptr; //截图功能侧边栏功能
+    RoundedCornerWidget *m_roundedCornerWidget = nullptr; //选区右上角圆角/尺寸比例工具组
+    qreal m_lockedRatio = 0.0; //拖拽开始时记录的选区宽高比（锁定比例用）
+    int m_radiusPreviewRadius = 0; //上一次圆角预览半径，用于计算需要重绘的四角区域
+    // 保存截图的回车快捷方式：焦点在圆角/尺寸比例面板的输入框时要临时禁用，
+    // 否则 QShortcut 会先于输入框吃掉回车，导致“输入尺寸回车直接结束截图”。
+    QShortcut *m_returnSaveShortcut = nullptr;
+    QShortcut *m_enterSaveShortcut = nullptr;
+
+    /**
+     * @brief 当前焦点是否位于圆角/尺寸比例面板的文本输入框内
+     */
+    bool isRoundedPanelEditorFocused() const;
+
+    /**
+     * @brief 圆角工具组尺寸/比例面板修改了选区尺寸
+     */
+    void onRoundedSelectionSizeChanged(int width, int height);
+
+    /**
+     * @brief 应用上次勾选“下次截图保持”的尺寸或比例
+     */
+    void applyRememberedSelectionSetting();
+
+    /**
+     * @brief 锁定比例后，拖拽选区时按固定宽高比等比调整
+     */
+    void applyLockedRatioToSelection();
     /**
      * @brief 在一级工具栏按下鼠标左键的时，此时记录下二级菜单的位置
      */
