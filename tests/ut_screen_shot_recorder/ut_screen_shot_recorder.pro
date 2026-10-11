@@ -331,6 +331,8 @@ HEADERS += test_all_interfaces.h \
     ut_scope_guard.h
 
 
+SOURCES += ../../src/utils/ximageconverter.cpp ../../src/utils/cpuvendor.cpp
+
 SOURCES += main.cpp \
     ../../src/utils/audioutils.cpp \
     ../../src/utils/baseutils.cpp \
