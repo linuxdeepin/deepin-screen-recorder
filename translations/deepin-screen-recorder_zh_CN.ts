@@ -775,8 +775,8 @@ Hold down Shift to draw squares or circles.</source>
         <translation>保存时选择位置</translation>
     </message>
     <message>
-        <source>AI Screenshot (A)</source>
-        <translation>AI截图 (A)</translation>
+        <source>AI Screenshot (Alt+A)</source>
+        <translation>AI截图 (Alt+A)</translation>
     </message>
     <message>
         <source>Save to Desktop</source>
