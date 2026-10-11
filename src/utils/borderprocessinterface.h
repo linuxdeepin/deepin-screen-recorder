@@ -7,6 +7,7 @@
 #define BORDERPROCESSINTERFACE_H
 
 #include <QObject>
+#include <QImage>
 #include <QPixmap>
 #include <QtSvg>
 class BorderProcessInterface : public QObject
@@ -117,7 +118,11 @@ public:
     virtual QPixmap getPixmapAddBorder(const QPixmap &pix) override;
 
 private:
-    void drawShadow(QPainter *p, const QRect &rect, const QColor &color, int radius);
+    // 依据截图 alpha 轮廓绘制投影/边框，使圆角截图的投影和描边同样保持圆角
+    void drawShadow(QPainter *p, const QRect &rect, const QColor &color, int radius,
+                    const QImage &source, bool shaped);
+    void drawShapeBorder(QPainter *p, const QRect &imageRect, const QColor &color,
+                         const QImage &source);
 };
 
 #endif // BORDERPROCESSINTERFACE_H

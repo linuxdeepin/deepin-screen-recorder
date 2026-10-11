@@ -11,7 +11,10 @@
 #include <DFontSizeManager>
 #include <dstyle.h>
 
+#include <QBitmap>
 #include <QBrush>
+#include <QPen>
+#include <QRegion>
 
 QT_BEGIN_NAMESPACE
 // 参考DTK blurEffect 的实现
@@ -570,6 +573,25 @@ QPixmap ShadowBorderProcess::getPixmapAddBorder(const QPixmap &pix)
     const QColor borderColor(0, 0, 0, 50);
     const QColor shadowColor(0, 0, 0, 70);
 
+    // 判断截图是否包含透明区域（圆角截图会切掉四个圆角），
+    // 有透明区域时投影与描边都要跟随 alpha 轮廓，否则会透出直角阴影/边框。
+    QImage shapeImage;
+    bool shaped = false;
+    if (pix.hasAlphaChannel()) {
+        shapeImage = pix.toImage().convertToFormat(QImage::Format_ARGB32_Premultiplied);
+        const int w = shapeImage.width();
+        const int h = shapeImage.height();
+        for (int y = 0; y < h && !shaped; ++y) {
+            const QRgb *line = reinterpret_cast<const QRgb *>(shapeImage.constScanLine(y));
+            for (int x = 0; x < w; ++x) {
+                if (qAlpha(line[x]) != 255) {
+                    shaped = true;
+                    break;
+                }
+            }
+        }
+    }
+
     // 获取当前缩放比例
     qreal radius = shadowRadius * pix.devicePixelRatioF();
     QRect generateRect = pix.rect().adjusted(0, 0, radius * 2, radius * 2);
@@ -580,7 +602,7 @@ QPixmap ShadowBorderProcess::getPixmapAddBorder(const QPixmap &pix)
         qCDebug(dsrApp) << "Adjusting draw area: xOffset and yOffset are less than radius.";
         imageRect.moveTo(radius - xOffset, radius - yOffset);
     } else {
-        qCDebug(dsrApp) << "Adjusting draw area: xOffset or yOffset is greater than or equal to radius.";
+        qCDebug(dsrApp) << "Adjusting draw area: xOffset or yOffset are greater than or equal to radius.";
         if (xOffset > radius) {
             qCDebug(dsrApp) << "Adjusting draw area: xOffset > radius.";
             imageRect.setX(0);
@@ -604,7 +626,7 @@ QPixmap ShadowBorderProcess::getPixmapAddBorder(const QPixmap &pix)
     painter.save();
     qCDebug(dsrApp) << "Drawing shadow.";
     // 绘制投影 DTK提供的接口调整了绘制的透明度，不便直接使用,参考 QPixmapDropShadowFilter 实现
-    drawShadow(&painter, generateRect, shadowColor, radius);
+    drawShadow(&painter, generateRect, shadowColor, radius, shapeImage, shaped);
     painter.restore();
 
     qCDebug(dsrApp) << "Drawing image.";
@@ -613,8 +635,13 @@ QPixmap ShadowBorderProcess::getPixmapAddBorder(const QPixmap &pix)
 
     qCDebug(dsrApp) << "Drawing border.";
     // 绘制边框 设置 0, 不同缩放率下均绘制1px
-    painter.setPen(QPen(borderColor));
-    painter.drawRect(imageRect.adjusted(0, 0, -1, -1));
+    if (shaped) {
+        // 圆角截图：描边跟随 alpha 轮廓，避免直角边框压在圆角上
+        drawShapeBorder(&painter, imageRect, borderColor, shapeImage);
+    } else {
+        painter.setPen(QPen(borderColor));
+        painter.drawRect(imageRect.adjusted(0, 0, -1, -1));
+    }
 
     painter.end();
     return newPixmap;
@@ -623,7 +650,8 @@ QPixmap ShadowBorderProcess::getPixmapAddBorder(const QPixmap &pix)
 /**
    @brief 根据传入的矩形 \a rect 绘制居中阴影，以模糊强度 \a radius 为边距(像素计算范围)居中，阴影基础颜色以 \a color 为准
  */
-void ShadowBorderProcess::drawShadow(QPainter *p, const QRect &rect, const QColor &color, int radius)
+void ShadowBorderProcess::drawShadow(QPainter *p, const QRect &rect, const QColor &color, int radius,
+                                     const QImage &source, bool shaped)
 {
     qCDebug(dsrApp) << "Drawing shadow with rect:" << rect << ", color:" << color << ", radius:" << radius;
     // 绘制区域必须大于像素模糊半径
@@ -637,15 +665,55 @@ void ShadowBorderProcess::drawShadow(QPainter *p, const QRect &rect, const QColo
     tmp.fill(0);
     QPainter tmpPainter(&tmp);
     tmpPainter.setCompositionMode(QPainter::CompositionMode_Source);
-    tmpPainter.setBrush(color);
     // 调整蒙版图片，居中
     QRect tmpRect = rect.adjusted(radius, radius, -radius, -radius);
-    tmpPainter.drawRect(tmpRect);
+    if (shaped && !source.isNull()) {
+        // 用截图自身的 alpha 轮廓作为阴影蒙版：圆角截图的投影同样保持圆角。
+        QImage silhouette(source.size(), QImage::Format_ARGB32_Premultiplied);
+        silhouette.fill(Qt::transparent);
+        {
+            QPainter silhouettePainter(&silhouette);
+            silhouettePainter.drawImage(0, 0, source);
+            silhouettePainter.setCompositionMode(QPainter::CompositionMode_SourceIn);
+            silhouettePainter.fillRect(silhouette.rect(), color);
+        }
+        tmpPainter.drawImage(tmpRect.topLeft(), silhouette);
+    } else {
+        tmpPainter.setBrush(color);
+        tmpPainter.drawRect(tmpRect);
+    }
     tmpPainter.end();
 
     // 在区域中绘制模糊背景
     p->save();
     qCDebug(dsrApp) << "Applying blur image for shadow.";
     qt_blurImage(p, tmp, radius, false, true);
+    p->restore();
+}
+
+void ShadowBorderProcess::drawShapeBorder(QPainter *p, const QRect &imageRect, const QColor &color,
+                                          const QImage &source)
+{
+    if (source.isNull()) {
+        return;
+    }
+    qCDebug(dsrApp) << "Drawing shape border for rounded pixmap.";
+    // 1px 圆角描边：对 alpha 轮廓做 1px 膨胀后减去原始轮廓，
+    // 得到跟随圆角的细边，避免直角边框压在圆角截图上。
+    const QRegion base(QBitmap::fromImage(source.createAlphaMask(Qt::ThresholdDither)));
+    QRegion dilated;
+    for (int dx = -1; dx <= 1; ++dx) {
+        for (int dy = -1; dy <= 1; ++dy) {
+            dilated = dilated.united(base.translated(dx, dy));
+        }
+    }
+    const QRegion ring = dilated.subtracted(base).translated(imageRect.topLeft());
+    if (ring.isEmpty()) {
+        return;
+    }
+
+    p->save();
+    p->setClipRegion(ring);
+    p->fillRect(imageRect.adjusted(-1, -1, 1, 1), color);
     p->restore();
 }
