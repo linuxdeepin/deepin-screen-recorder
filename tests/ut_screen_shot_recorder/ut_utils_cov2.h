@@ -5,6 +5,8 @@
 #pragma once
 #include <gtest/gtest.h>
 #include <QApplication>
+#include <QBuffer>
+#include "utils/cpuvendor.h"
 #include <QKeyEvent>
 #include <QPixmap>
 #include <QPainter>
@@ -27,7 +29,7 @@ using namespace testing;
 //   - isSysHighVersion1040 / isSysGreatEqualV23 (already partly covered, add
 //     a fresh invocation to be safe).
 //   - cursorMove with additional modifier combinations (Shift / Ctrl).
-//   - checkCpuIsZhaoxin via QProcess stub so no real `lscpu` is spawned.
+//   - CPU vendor parsing with in-memory metadata.
 //   - Utils::instance() (singleton getter).
 //   - notSupportWarn guarded by DDialog::exec stub.
 //
@@ -135,32 +137,22 @@ TEST_F(UtilsCov2Test, isSysGreatEqualV23IsCallable)
     EXPECT_NO_FATAL_FAILURE((void)v);
 }
 
-// ---------- checkCpuIsZhaoxin via stubbed QProcess ----------
-// Real checkCpuIsZhaoxin spawns `lscpu`; stub waitForFinished/readAll to keep
-// the test hermetic and fast. The stub returns content with no CentaurHauls
-// keyword so the function returns false deterministically.
-
-static void waitForFinished_stub(QProcess *) { return; }
-static QByteArray readAllStandardOutput_stub() { return QByteArray("Vendor ID: GenuineIntel\n"); }
+// ---------- CPU vendor metadata parsing ----------
 
 TEST_F(UtilsCov2Test, checkCpuIsZhaoxinNoCentaurReturnsFalse)
 {
-    stub.set(ADDR(QProcess, waitForFinished), waitForFinished_stub);
-    stub.set(ADDR(QProcess, readAllStandardOutput), readAllStandardOutput_stub);
-    bool v = true;
-    EXPECT_NO_FATAL_FAILURE(v = Utils::checkCpuIsZhaoxin());
-    EXPECT_FALSE(v);
+    QBuffer cpuInfo;
+    cpuInfo.setData("vendor_id : GenuineIntel\n");
+    cpuInfo.open(QIODevice::ReadOnly);
+    EXPECT_FALSE(CpuVendor::isZhaoxin(cpuInfo));
 }
-
-static QByteArray readAllZhaoxin_stub() { return QByteArray("Vendor ID: CentaurHauls\n"); }
 
 TEST_F(UtilsCov2Test, checkCpuIsZhaoxinWithCentaurReturnsTrue)
 {
-    stub.set(ADDR(QProcess, waitForFinished), waitForFinished_stub);
-    stub.set(ADDR(QProcess, readAllStandardOutput), readAllZhaoxin_stub);
-    bool v = false;
-    EXPECT_NO_FATAL_FAILURE(v = Utils::checkCpuIsZhaoxin());
-    EXPECT_TRUE(v);
+    QBuffer cpuInfo;
+    cpuInfo.setData("vendor_id : CentaurHauls\n");
+    cpuInfo.open(QIODevice::ReadOnly);
+    EXPECT_TRUE(CpuVendor::isZhaoxin(cpuInfo));
 }
 
 // ---------- cursorMove with Shift / Ctrl modifiers ----------
