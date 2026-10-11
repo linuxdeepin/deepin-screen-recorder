@@ -16,6 +16,14 @@
         <file>texts/ocr-normal_32px.svg</file>
         <file>texts/table-recognition_32px.svg</file>
         <file>texts/sequence_32px.svg</file>
+        <file>texts/corner-radius_32px.svg</file>
+        <file>texts/corner-sharp_32px.svg</file>
+        <file>texts/corner-adjust_32px.svg</file>
+        <file>texts/size-ratio_32px.svg</file>
+        <file>texts/ratio-free_32px.svg</file>
+        <file>texts/ratio-lock_32px.svg</file>
+        <file>texts/ratio-unlock_32px.svg</file>
+        <file>texts/selection-fixed_32px.svg</file>
         <file>texts/oval-normal_32px.svg</file>
         <file>texts/pinscreenshots_32px.svg</file>
         <file>texts/recorder_32px.svg</file>
