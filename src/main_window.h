@@ -18,6 +18,7 @@
 #include "show_buttons.h"
 #include "widgets/shapeswidget.h"
 #include "widgets/toptips.h"
+#include "widgets/fineadjusttips.h"
 #include <functional>
 
 QT_BEGIN_NAMESPACE
@@ -535,6 +536,11 @@ public slots:
     void onAiAssistantSelected(int func);
     void prepareScreenshot();
     void hideScreenshotTips();
+
+    /**
+     * @brief 刷新像素级微调快捷键提示面板（模式、位置、遮挡与置灰状态）
+     */
+    void updateFineAdjustTips();
     void captureScreenshotImage();
     void finishScreenshot();
     bool saveAction(const QPixmap &pix);
@@ -828,6 +834,8 @@ protected:
      */
     QPixmap paintImage();
     void paintEvent(QPaintEvent *event) override;
+    void showEvent(QShowEvent *event) override;
+    void resizeEvent(QResizeEvent *event) override;
     void resizeBottom(QMouseEvent *event);
     void resizeLeft(QMouseEvent *event);
     void resizeRight(QMouseEvent *event);
@@ -1205,6 +1213,10 @@ private:
      * @brief 左上角图片大小提示
      */
     TopTips *m_sizeTips = nullptr;
+    /**
+     * @brief 左下角像素级微调快捷键提示
+     */
+    FineAdjustTips *m_fineAdjustTips = nullptr;
     /**
      * @brief 滚动截图时图片的大小
      */

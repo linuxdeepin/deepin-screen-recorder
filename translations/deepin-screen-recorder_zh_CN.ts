@@ -881,4 +881,23 @@ Hold down Shift to draw squares or circles.</source>
         <translation>选中后，下次截图保持该尺寸/比例</translation>
     </message>
 </context>
+<context>
+    <name>FineAdjustTips</name>
+    <message>
+        <source>Move the mouse pointer by 1 pixel</source>
+        <translation>将鼠标指针移动1像素</translation>
+    </message>
+    <message>
+        <source>Move the capture area by 1 pixel</source>
+        <translation>将截屏选区移动1像素</translation>
+    </message>
+    <message>
+        <source>Enlarge the capture area by 1 pixel</source>
+        <translation>将截屏选区扩大1像素</translation>
+    </message>
+    <message>
+        <source>Shrink the capture area by 1 pixel</source>
+        <translation>将截屏选区缩小1像素</translation>
+    </message>
+</context>
 </TS>

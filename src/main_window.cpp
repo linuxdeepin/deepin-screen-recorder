@@ -53,6 +53,8 @@ extern "C" {
 #include <QApplication>
 #include <QTimer>
 #include <QKeyEvent>
+#include <QShowEvent>
+#include <QResizeEvent>
 #include <QObject>
 #include <QPainter>
 #include <QDebug>
@@ -561,6 +563,12 @@ void MainWindow::initAttributes()
         m_sizeTips = new TopTips(this);
         m_sizeTips->setFullScreenRecord(m_isFullScreenRecord);
         m_sizeTips->hide();
+
+        // 左下角像素级微调快捷键提示（仅 X11 普通截图模式使用）
+        if (m_fineAdjustTips == nullptr) {
+            m_fineAdjustTips = new FineAdjustTips(this);
+        }
+        updateFineAdjustTips();
 
         if (m_functionType == status::record) {
             m_zoomIndicator = new ZoomIndicator(this, true);
@@ -1186,7 +1194,7 @@ void MainWindow::initToolBarShortcut()
     // 录屏模式（未做穿透） 摄像头
     QShortcut *cameraSC = new QShortcut(QKeySequence("C"), this);
     // 截图模式 AI 助手（按键 A）
-    QShortcut *aiAssistantSC = new QShortcut(QKeySequence("A"), this);
+    QShortcut *aiAssistantSC = new QShortcut(QKeySequence("Alt+A"), this);
 
     // 截图模式/录屏模式（未做穿透）/滚动模式 帮助快捷面板
 #if (QT_VERSION_MAJOR == 5)
@@ -1568,6 +1576,9 @@ void MainWindow::initScreenShot()
         m_sizeTips->setRecorderTipsInfo(false);
         m_sizeTips->updateTips(QPoint(recordX, recordY), QSize(recordWidth, recordHeight));
     }
+
+    // 启动截图后立即展示像素级微调快捷键提示
+    updateFineAdjustTips();
 
     if (m_toolBar) {
         m_toolBar->setFocus();
@@ -4430,6 +4441,40 @@ void MainWindow::onAiAssistantSelected(int func)
     });
 }
 
+void MainWindow::updateFineAdjustTips()
+{
+    if (m_fineAdjustTips == nullptr) {
+        return;
+    }
+
+    // 仅在普通截图模式、尚未进入编辑态且非平板/非 Treeland 时展示
+    if (status::shot != m_functionType || m_isShapesWidgetExist
+            || Utils::isTabletEnvironment || Utils::isTreelandMode
+            || !m_initScreenShot) {
+        m_fineAdjustTips->hide();
+        return;
+    }
+
+    m_fineAdjustTips->setMode(isFirstReleaseButton ? FineAdjustTips::SelectionMode
+                                                   : FineAdjustTips::CursorMode);
+    // 固定比例激活时，扩大/缩小快捷键不可用，对应两行置灰
+    m_fineAdjustTips->setResizeEnabled(!(m_roundedCornerWidget && m_roundedCornerWidget->isRatioLocked()));
+    m_fineAdjustTips->dockToBottomLeft();
+
+    // 光标（或选区）与提示面板重叠时隐藏提示面板
+    const QRect tipsRect(m_fineAdjustTips->pos(), m_fineAdjustTips->size());
+    const QRect blockedRect = isFirstReleaseButton
+            ? QRect(recordX, recordY, recordWidth, recordHeight)
+            : QRect(m_currentCursor, QSize(1, 1));
+    if (tipsRect.intersects(blockedRect)) {
+        m_fineAdjustTips->hide();
+        return;
+    }
+
+    m_fineAdjustTips->show();
+    m_fineAdjustTips->raise();
+}
+
 // 公共函数：隐藏截图提示
 void MainWindow::hideScreenshotTips()
 {
@@ -5634,6 +5679,7 @@ int MainWindow::mouseReleaseEF(QMouseEvent *mouseEvent, bool &needRepaint)
             isReleaseMouseLeftButton = true;
 
             needRepaint = true;
+            updateFineAdjustTips();
         }
     }
     return 1;
@@ -5645,6 +5691,7 @@ int MainWindow::mouseMoveEF(QMouseEvent *mouseEvent, bool &needRepaint)
     // qCDebug(dsrApp) << "mouseEvent->pos()" << mouseEvent->pos() << " , isFirsMove: " << isFirstMove;
     // 当前光标的位置
     m_currentCursor = mouseEvent->pos();
+    updateFineAdjustTips();
     // 没打开截图的编辑模式
     if (!m_isShapesWidgetExist) {
         if (m_toolBar && m_toolBar->isVisible()) {
@@ -6350,6 +6397,7 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
         //        cursorMove(event);
         Utils::cursorMove(m_currentCursor, event);
     }
+    updateFineAdjustTips();
 
     if (Utils::isWaylandMode) {
         onKeyboardPressWayland(static_cast<int>(event->nativeScanCode()));
@@ -8035,6 +8083,19 @@ void MainWindow::startCountdown()
 
     repaint();
 }
+void MainWindow::showEvent(QShowEvent *event)
+{
+    QMainWindow::showEvent(event);
+    // 窗口真正显示（如全屏）后再停靠提示面板，避免拿到 0x0 的窗口尺寸
+    updateFineAdjustTips();
+}
+
+void MainWindow::resizeEvent(QResizeEvent *event)
+{
+    QMainWindow::resizeEvent(event);
+    updateFineAdjustTips();
+}
+
 void MainWindow::hideAllWidget()
 {
 
@@ -8086,6 +8147,10 @@ void MainWindow::adjustLayout(QVBoxLayout *layout, int layoutWidth, int layoutHe
 void MainWindow::initShapeWidget(QString type)
 {
     qCDebug(dsrApp) << "正在初始化截图编辑界面...";
+    if (m_fineAdjustTips) {
+        // 进入截图编辑态后不再提示微调快捷键
+        m_fineAdjustTips->hide();
+    }
     m_shapesWidget = new ShapesWidget(this);
     m_shapesWidget->setShiftKeyPressed(m_isShiftPressed);
 

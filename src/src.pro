@@ -195,6 +195,7 @@ HEADERS += main_window.h \
     widgets/zoomIndicator.h \
     widgets/textedit.h \
     widgets/toptips.h \
+    widgets/fineadjusttips.h \
     widgets/toolbar.h \
     widgets/shapeswidget.h \
     widgets/toolbutton.h \
@@ -290,6 +291,7 @@ SOURCES += main.cpp \
     utils_interface.cpp \
     wayland-treeland-capture-unstable-v1-protocol.c \
     widgets/toptips.cpp \
+    widgets/fineadjusttips.cpp \
     widgets/shapeswidget.cpp \
     widgets/textedit.cpp \
     widgets/zoomIndicator.cpp \
