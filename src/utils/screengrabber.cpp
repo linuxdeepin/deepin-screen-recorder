@@ -22,6 +22,7 @@
 
 // X11 headers for XGetImage workaround
 #if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+#include "ximageconverter.h"
 #include <X11/Xlib.h>
 #include <X11/Xutil.h>
 #endif
@@ -650,19 +651,16 @@ QPixmap ScreenGrabber::grabWithXGetImage(bool &ok, const QRect &rect)
                     << "depth:" << ximg->depth << "bits_per_pixel:" << ximg->bits_per_pixel;
 
     // 将 XImage 转换为 QImage
-    QImage qimg(ximg->width, ximg->height, QImage::Format_RGB32);
-    for (int row = 0; row < ximg->height; ++row) {
-        for (int col = 0; col < ximg->width; ++col) {
-            unsigned long pixel = XGetPixel(ximg, col, row);
-            int r = (pixel >> 16) & 0xFF;
-            int g = (pixel >> 8) & 0xFF;
-            int b = pixel & 0xFF;
-            qimg.setPixel(col, row, qRgb(r, g, b));
-        }
-    }
+    QImage qimg = XImageConverter::toImage(ximg);
 
     XDestroyImage(ximg);
     XCloseDisplay(dpy);
+
+    if (qimg.isNull()) {
+        qCWarning(dsrApp) << "[XGetImage] Failed to convert XImage";
+        ok = false;
+        return QPixmap();
+    }
 
     // 转换为 QPixmap
     QPixmap fullPixmap = QPixmap::fromImage(qimg);

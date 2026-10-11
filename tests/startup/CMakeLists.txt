@@ -1,0 +1,26 @@
+# SPDX-FileCopyrightText: 2026 UnionTech Software Technology Co., Ltd.
+# SPDX-License-Identifier: GPL-3.0-or-later
+cmake_minimum_required(VERSION 3.16)
+project(screenshot_startup_tests LANGUAGES CXX)
+set(CMAKE_CXX_STANDARD 17)
+find_package(Qt6 REQUIRED COMPONENTS Core Gui)
+find_package(X11 REQUIRED)
+option(STARTUP_TEST_LEGACY "Run the fast-path regression against the original loop" OFF)
+if(STARTUP_TEST_LEGACY)
+    add_executable(test_startup test_startup.cpp)
+    target_compile_definitions(test_startup PRIVATE STARTUP_TEST_LEGACY)
+else()
+    add_executable(test_startup test_startup.cpp ../../src/utils/ximageconverter.cpp)
+endif()
+target_link_libraries(test_startup PRIVATE Qt6::Core Qt6::Gui X11::X11)
+enable_testing()
+add_test(NAME startup_regressions COMMAND test_startup)
+
+add_executable(test_cpuvendor test_cpuvendor.cpp ../../src/utils/cpuvendor.cpp)
+target_link_libraries(test_cpuvendor PRIVATE Qt6::Core)
+add_test(NAME cpuvendor_regressions COMMAND test_cpuvendor)
+if(NOT STARTUP_TEST_LEGACY)
+    add_executable(benchmark_startup benchmark_startup.cpp
+        ../../src/utils/ximageconverter.cpp ../../src/utils/cpuvendor.cpp)
+    target_link_libraries(benchmark_startup PRIVATE Qt6::Core Qt6::Gui X11::X11)
+endif()

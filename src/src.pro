@@ -263,6 +263,9 @@ lessThan(QT_MAJOR_VERSION, 6) {
 }
 
 # Sources
+HEADERS += utils/ximageconverter.h utils/cpuvendor.h
+SOURCES += utils/ximageconverter.cpp utils/cpuvendor.cpp
+
 SOURCES += main.cpp \
     capture.cpp \
     main_window.cpp \

@@ -3,6 +3,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 
 #include "utils.h"
+#include "utils/cpuvendor.h"
 #include "constant.h"
 #include "dbus_name.h"
 
@@ -14,6 +15,7 @@
 #include <dlfcn.h>
 
 #include <QString>
+#include <QFile>
 #include <QDir>
 #include <QApplication>
 #include <QDebug>
@@ -698,27 +700,14 @@ void Utils::getAllWindowInfo(
 bool Utils::checkCpuIsZhaoxin()
 {
     qCInfo(dsrApp) << "checkCpuIsZhaoxin() called.";
-    QProcess process;
-    process.start("lscpu");
-    process.waitForFinished();
-    process.waitForReadyRead();
-    QString comStr = process.readAllStandardOutput();
-    process.close();
-    QStringList lines = comStr.split('\n');
-    QStringList filteredLines;
-
-    // 过滤包含指定关键字的行
-    for (const QString &line : lines) {
-        if (line.contains("CentaurHauls", Qt::CaseInsensitive)) {
-            filteredLines.append(line);
-        }
-    }
-    if (filteredLines.isEmpty()) {
-        qCInfo(dsrApp) << "CPU is not zhaoxin.";
+    QFile cpuInfo(QStringLiteral("/proc/cpuinfo"));
+    if (!cpuInfo.open(QIODevice::ReadOnly)) {
+        qCWarning(dsrApp) << "Cannot read CPU vendor:" << cpuInfo.errorString();
         return false;
     }
-    qCInfo(dsrApp) << "CPU is zhaoxin.";
-    return true;
+    const bool isZhaoxin = CpuVendor::isZhaoxin(cpuInfo);
+    qCInfo(dsrApp) << "CPU is zhaoxin:" << isZhaoxin;
+    return isZhaoxin;
 }
 
 // 获取处理器名称
