@@ -22,7 +22,6 @@ using namespace testing;
 //     / cancelInputEvent1 / enableXGrabButton / disableXGrabButton / passInputEvent
 //     (the X11 branches call XShapeCombineRectangles/XGrabButton/QX11Info and are
 //      FORBIDDEN by the task constraints; the Wayland branches just log+return).
-//   - checkCpuIsZhaoxin with QProcess stubbed so no real `lscpu` is spawned.
 //   - cursorMove additional key branches not exercised by ext2.
 //
 // The global Utils::isWaylandMode flag is flipped for the duration of each

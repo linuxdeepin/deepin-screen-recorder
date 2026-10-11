@@ -21,7 +21,7 @@ using namespace testing;
 // Deliberately SKIPPED (touch Wayland / X11 / QProcess / modal dialog per the rules):
 //   - passInputEvent, getInputEvent, cancelInputEvent, cancelInputEvent1  (XShapeCombineRectangles / QX11Info)
 //   - enableXGrabButton, disableXGrabButton                                (XGrabButton / QX11Info)
-//   - checkCpuIsZhaoxin                                                    (spawns QProcess "lscpu")
+//   - checkCpuIsZhaoxin                                                    (host /proc/cpuinfo; parsing in ut_utils_cov2.h)
 //   - cursorMove                                                           (QCursor::setPos / WaylandMouseSimulator)
 //   - notSupportWarn                                                       (DDialog::exec modal loop)
 //   - getAllWindowInfo                                                     (DForeignWindow + X11 geometry)

@@ -331,7 +331,8 @@ HEADERS += test_all_interfaces.h \
     ut_scope_guard.h
 
 
-SOURCES += ../../src/utils/ximageconverter.cpp ../../src/utils/cpuvendor.cpp
+SOURCES += ../../src/utils/cpuvendor.cpp
+equals(QT_MAJOR_VERSION, 6): SOURCES += ../../src/utils/ximageconverter.cpp
 
 SOURCES += main.cpp \
     ../../src/utils/audioutils.cpp \

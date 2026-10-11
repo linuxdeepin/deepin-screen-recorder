@@ -6,7 +6,9 @@
 struct _XImage;
 
 namespace XImageConverter {
-// Returns an owned, opaque RGB32 image; it never retains the XImage buffer.
+// Returns an opaque RGB32 image. When the XImage already stores native RGB32
+// pixels, its buffer is reused: alpha is forced in place and image->data is set
+// to nullptr. Callers must still release the XImage with XDestroyImage.
 QImage toImage(_XImage *image);
 }
 #endif
