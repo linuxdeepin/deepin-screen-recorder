@@ -43,7 +43,7 @@ void SubToolWidget::initShotLable()
     m_ocrButton->setIconSize(QSize(36, 36));
     m_ocrButton->setFixedSize(36, 36);
     m_ocrButton->setIcon(QIcon::fromTheme("ocr-normal"));
-    m_ocrButton->setToolTip(tr("Extract Text"));
+    m_ocrButton->setToolTip(tr("Extract Text (Alt+O)"));
     connect(m_ocrButton, SIGNAL(clicked()), this, SIGNAL(signalOcrButtonClicked()));
     qCDebug(dsrApp) << "OCR button initialized";
 
@@ -66,7 +66,7 @@ void SubToolWidget::initShotLable()
     m_pinOptionButton->setIcon(QIcon::fromTheme("setting"));
     m_pinOptionButton->setIconSize(QSize(24, 24));
     m_pinOptionButton->setFixedSize(QSize(36, 36));
-    m_pinOptionButton->setToolTip(tr("Options"));
+    m_pinOptionButton->setToolTip(tr("Options (F3)"));
     qCDebug(dsrApp) << "Options button initialized";
 
     m_saveLocalDirButton = new SaveButton();
@@ -248,6 +248,9 @@ void SubToolWidget::updateSaveButtonTip()
             break;
     }
 
+    if (!tipText.isEmpty()) {
+        tipText += QStringLiteral(" (Ctrl+S)");
+    }
     m_saveLocalDirButton->setToolTip(tipText);
 }
 

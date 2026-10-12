@@ -130,7 +130,7 @@ void ShotToolWidget::initEffectLabel()
     rectBut->setFixedSize(TOOL_BUTTON_SIZE);
     rectBut->setIconSize(TOOL_ICON_SIZE);
     rectBut->setIcon(QIcon::fromTheme(QString("rectangle-normal")));
-    installTipHint(rectBut, tr("Rectangle\nPress and hold Shift to draw a square"));
+    installTipHint(rectBut, tr("Rectangle (R)\nPress and hold Shift to draw a square"));
     shapBtnGroup->addButton(rectBut);
     
     // 创建椭圆按钮
@@ -138,14 +138,14 @@ void ShotToolWidget::initEffectLabel()
     ovalBut->setFixedSize(TOOL_BUTTON_SIZE);
     ovalBut->setIconSize(TOOL_ICON_SIZE);
     ovalBut->setIcon(QIcon::fromTheme(QString("oval-normal")));
-    installTipHint(ovalBut, tr("Ellipse\nPress and hold Shift to draw a circle"));
+    installTipHint(ovalBut, tr("Ellipse (O)\nPress and hold Shift to draw a circle"));
     shapBtnGroup->addButton(ovalBut);
     
     ToolButton *penBut = new ToolButton(this);
     penBut->setFixedSize(TOOL_BUTTON_SIZE);
     penBut->setIconSize(TOOL_ICON_SIZE);
     penBut->setIcon(QIcon::fromTheme(QString("effect_pen")));
-    installTipHint(penBut, tr("Brush\nPress and hold Shift to draw a straight line"));
+    installTipHint(penBut, tr("Brush (P)\nPress and hold Shift to draw a straight line"));
     shapBtnGroup->addButton(penBut);
 
     //模糊强度滑动条
