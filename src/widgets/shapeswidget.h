@@ -179,6 +179,10 @@ public slots:
      */
     bool hasSelectedShape() const;
     /**
+     * @brief isPressed: 当前是否正在拖拽/绘制标注
+     */
+    bool isPressed() const;
+    /**
      * @brief translateAllShapes: 整体平移所有标注，保持其在屏幕上的绝对位置不变
      * @param delta 平移量（标注局部坐标系）
      */

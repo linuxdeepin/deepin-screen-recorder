@@ -8453,6 +8453,12 @@ bool MainWindow::handleEditModeSelectionResize(QMouseEvent *event, const QPoint 
         return false;
     }
 
+    // 标注正在绘制/拖动时，选区边框不能让鼠标事件改道，否则标注移动会
+    // 在中途被选区调整截获，表现为只显示起点和终点、位置跳变。
+    if (!m_editModeResizing && m_shapesWidget->isPressed()) {
+        return false;
+    }
+
     if (m_editModeResizing) {
         if (event->type() == QEvent::MouseMove) {
             applyEditModeSelectionResize(mainPos);

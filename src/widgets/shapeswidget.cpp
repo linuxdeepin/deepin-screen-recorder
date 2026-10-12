@@ -310,6 +310,12 @@ void ShapesWidget::clearSelected()
 
     //qDebug() << "clear selected!!!";
     m_isSelected = false;
+    m_isResize = false;
+    m_isRotated = false;
+    m_isArrowRotated = false;
+    m_resizeDirection = Outting;
+    m_clickedKey = Unknow;
+    m_isMoving = false;
     m_selectedIndex = -1;
     m_hoveredIndex = -1;
     m_selectedOrder = -1;
@@ -391,6 +397,13 @@ bool ShapesWidget::clickedOnShapes(QPointF pos)
     qCDebug(dsrApp) << "Checking for shape click at position:" << pos;
     bool onShapes = false;
     m_selectedOrder = -1;
+    // 上一次选择可能停留在缩放/旋转状态；命中检测会按当前图形重新设置。
+    // 序号只参与整体移动，不复用其它图形遗留的缩放/旋转语义。
+    m_isResize = false;
+    m_isRotated = false;
+    m_isArrowRotated = false;
+    m_resizeDirection = Outting;
+    m_clickedKey = Unknow;
     //    qDebug() << ">>>>> function: " << __func__ << ", line: " << __LINE__
     //             << ", pos: " << pos
     //             << ", m_shapes.length(): " << m_shapes.length();
@@ -462,6 +475,9 @@ bool ShapesWidget::clickedOnShapes(QPointF pos)
                 if (seqRect.contains(pos)) {
                     currentOnShape = true;
                     m_isSelected = true;
+                    m_isResize = false;
+                    m_isRotated = false;
+                    m_resizeDirection = Moving;
                     emit shapeClicked("sequence");
                 }
             }
@@ -1507,6 +1523,15 @@ void ShapesWidget::mousePressEvent(QMouseEvent *e)
             return;
         }
 
+        // 开始新的绘制前必须先清掉旧的选中态，否则 mouseReleaseEvent 会因
+        // m_isSelected 仍为 true 而跳过落盘，并且旧标注的拖动锚点会污染新图形。
+        clearSelected();
+        setAllTextEditReadOnly();
+        m_editing = false;
+        m_selectedShape = Toolshape();
+        m_hoveredShape = Toolshape();
+        m_currentShape = Toolshape();
+
         m_isRecording = true;
         //qDebug() << "no one shape be clicked!" << m_selectedIndex << m_shapes.length();
 
@@ -2025,6 +2050,11 @@ bool ShapesWidget::hasSelectedShape() const
             && m_selectedOrder < static_cast<int>(m_shapes.size());
 }
 
+bool ShapesWidget::isPressed() const
+{
+    return m_isPressed;
+}
+
 void ShapesWidget::translateAllShapes(const QPointF &delta)
 {
     if (delta.isNull()) {
@@ -2035,20 +2065,51 @@ void ShapesWidget::translateAllShapes(const QPointF &delta)
             point += delta;
         }
     };
-    for (Toolshape &shape : m_shapes) {
+    auto hasGeometry = [](const Toolshape &shape) {
+        for (const QPointF &point : shape.mainPoints) {
+            if (!point.isNull()) {
+                return true;
+            }
+        }
+        return !shape.points.isEmpty() || !shape.arrowRotatePos.isNull();
+    };
+    auto translateShape = [&delta, &shiftPoints, &hasGeometry](Toolshape &shape) {
+        // 空 Toolshape 的 mainPoints 全是 (0,0)，不能直接整体加偏移；
+        // 否则会把“未绘制”误变成有效几何，后续绘制和拖动都会出现幽灵图形。
+        if (!hasGeometry(shape)) {
+            return;
+        }
         shiftPoints(shape.mainPoints);
         shiftPoints(shape.points);
-        shape.arrowRotatePos += delta;
+        if (!shape.arrowRotatePos.isNull()) {
+            shape.arrowRotatePos += delta;
+        }
+    };
+    for (Toolshape &shape : m_shapes) {
+        translateShape(shape);
     }
     for (Toolshape *shape : {&m_currentShape, &m_selectedShape, &m_hoveredShape}) {
-        shiftPoints(shape->mainPoints);
-        shiftPoints(shape->points);
-        shape->arrowRotatePos += delta;
+        translateShape(*shape);
     }
     for (TextEdit *edit : m_editMap) {
         if (edit) {
             edit->move(edit->pos() + delta.toPoint());
         }
+    }
+
+    // ShapesWidget 的原点移动后，鼠标锚点也必须同步平移，否则下一次
+    // mouseMoveEvent 会用新旧两个坐标系计算增量，表现为标注跳跃。
+    if (!m_pos1.isNull()) {
+        m_pos1 += delta;
+    }
+    if (!m_pos2.isNull()) {
+        m_pos2 += delta;
+    }
+    if (!m_pressedPoint.isNull()) {
+        m_pressedPoint += delta;
+    }
+    if (!m_movingPoint.isNull()) {
+        m_movingPoint += delta;
     }
     update();
 }
@@ -2993,6 +3054,9 @@ void ShapesWidget::paintSequence(QPainter &painter, FourPoints mainFPoints,
         return;
     }
     QColor fillColor = BaseUtils::colorIndexOf(colorIndex);
+    // 序号需要填充圆和文字；必须恢复 painter 状态，否则后续图形会继承
+    // 这里的 brush，圆形/矩形会被误画成实心图形。
+    painter.save();
     painter.setRenderHint(QPainter::Antialiasing, true);
     painter.setPen(Qt::NoPen);
     painter.setBrush(QBrush(fillColor));
@@ -3007,6 +3071,7 @@ void ShapesWidget::paintSequence(QPainter &painter, FourPoints mainFPoints,
     font.setWeight(QFont::Black);
     painter.setFont(font);
     painter.drawText(rectF, Qt::AlignCenter, QString::number(sequenceNumber));
+    painter.restore();
 }
 
 void ShapesWidget::updateSequencePreview(const QPointF &pos)
