@@ -7,34 +7,58 @@
 #define ZOOMINDICATOR_H
 
 #include "zoomIndicatorGL.h"
+
 #include <DLabel>
-#include <DWidget>
-#include <QPainter>
-#include <QPaintEvent>
+#include <QColor>
+#include <QImage>
+#include <QPoint>
+#include <QString>
 
 DWIDGET_USE_NAMESPACE
 
+class QPainter;
+
+/**
+ * @brief The ZoomIndicator class
+ * 截图选区阶段跟随光标的像素放大镜与取色浮窗。
+ * 视觉参数取自 Sketch 画板「截图录屏-光标指针」。
+ */
 class ZoomIndicator : public DLabel
 {
     Q_OBJECT
 public:
-    explicit ZoomIndicator(DWidget *parent = 0,bool isRecord = false);
-    ~ZoomIndicator();
+    // 浮窗尺寸（逻辑像素），取自 Sketch 画板「截图录屏-光标指针」
+    static constexpr int PANEL_WIDTH = 150;
+    static constexpr int PANEL_HEIGHT = 170;
+
+    explicit ZoomIndicator(DWidget *parent = nullptr, bool isRecord = false);
+    ~ZoomIndicator() override;
 
     void showMagnifier(QPoint pos);
     void hideMagnifier();
 
+    // 屏幕物理像素坐标，用于放大取样与取色
     void setCursorPos(QPoint pos);
+    // 屏幕逻辑坐标，用于浮窗上的坐标文案
+    void setScreenPos(QPoint pos);
+
+    QString currentColorHex() const;
+
 protected:
-    void paintEvent(QPaintEvent *);
+    void paintEvent(QPaintEvent *) override;
 
 private:
-    QRect m_globalRect;
-    QRect m_centerRect;
-    QBrush m_lastCenterPosBrush;
+    QColor sampleColor() const;
+    const QImage &cachedFullscreenImage() const;
+    void drawPreview(QPainter &painter);
+    void drawCrosshair(QPainter &painter);
+    void drawInfoPanel(QPainter &painter);
 
     ZoomIndicatorGL *m_zoomIndicatorGL = nullptr;
+    // 物理像素坐标（全屏截图坐标系）
     QPoint m_cursorPos;
+    // 逻辑屏幕坐标（坐标文案显示）
+    QPoint m_screenPos;
 
     /**
      * @brief 是否打开多任务视图界面。
@@ -43,6 +67,9 @@ private:
      */
     bool m_isOpenWM = false;
     bool m_isRecord = false;
+
+    mutable QImage m_cachedImage;
+    mutable qint64 m_cachedPixmapKey = 0;
 };
 
-#endif // MAGNIFIER_H
+#endif // ZOOMINDICATOR_H
