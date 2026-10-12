@@ -2019,6 +2019,40 @@ void ShapesWidget::mouseMoveEvent(QMouseEvent *e)
     DFrame::mouseMoveEvent(e);
 }
 
+bool ShapesWidget::hasSelectedShape() const
+{
+    return m_selectedIndex != -1 && m_selectedOrder >= 0
+            && m_selectedOrder < static_cast<int>(m_shapes.size());
+}
+
+void ShapesWidget::translateAllShapes(const QPointF &delta)
+{
+    if (delta.isNull()) {
+        return;
+    }
+    auto shiftPoints = [&delta](QList<QPointF> &points) {
+        for (QPointF &point : points) {
+            point += delta;
+        }
+    };
+    for (Toolshape &shape : m_shapes) {
+        shiftPoints(shape.mainPoints);
+        shiftPoints(shape.points);
+        shape.arrowRotatePos += delta;
+    }
+    for (Toolshape *shape : {&m_currentShape, &m_selectedShape, &m_hoveredShape}) {
+        shiftPoints(shape->mainPoints);
+        shiftPoints(shape->points);
+        shape->arrowRotatePos += delta;
+    }
+    for (TextEdit *edit : m_editMap) {
+        if (edit) {
+            edit->move(edit->pos() + delta.toPoint());
+        }
+    }
+    update();
+}
+
 //鼠标选中图形时，可以通过w/a/s/d及小键盘方向键控制光标移动
 void ShapesWidget::keyPressEvent(QKeyEvent *keyEvent)
 {

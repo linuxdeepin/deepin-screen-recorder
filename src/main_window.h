@@ -825,6 +825,7 @@ protected:
     void keyReleaseEvent(QKeyEvent *event) override;
 
     int getAction(QEvent *event);
+    int getAction(const QPoint &pos);
 
 
     /**
@@ -836,10 +837,10 @@ protected:
     void paintEvent(QPaintEvent *event) override;
     void showEvent(QShowEvent *event) override;
     void resizeEvent(QResizeEvent *event) override;
-    void resizeBottom(QMouseEvent *event);
-    void resizeLeft(QMouseEvent *event);
-    void resizeRight(QMouseEvent *event);
-    void resizeTop(QMouseEvent *event);
+    void resizeBottom(const QPoint &pos);
+    void resizeLeft(const QPoint &pos);
+    void resizeRight(const QPoint &pos);
+    void resizeTop(const QPoint &pos);
     /**
      * @brief 更新光标样式
      * @param event
@@ -857,6 +858,30 @@ protected:
     void hideAllWidget();
     void adjustLayout(QVBoxLayout *layout, int layoutWidth, int layoutHeight);
     void initShapeWidget(QString type);
+    /**
+     * @brief 标注模式下是否命中选区边框拖拽点，命中则开始/继续调整截图区域大小
+     * @param event 原始鼠标事件
+     * @param mainPos 主窗口坐标系下的光标位置
+     * @return 是否已消费该事件
+     */
+    bool handleEditModeSelectionResize(QMouseEvent *event, const QPoint &mainPos);
+    /**
+     * @brief 应用标注模式下的选区拖拽调整（复用框选阶段的 resize 逻辑）
+     */
+    void applyEditModeSelectionResize(const QPoint &mainPos);
+    /**
+     * @brief 标注模式下用 Ctrl/Ctrl+Shift + 方向键调整截图区域大小
+     * @return 是否已处理该按键
+     */
+    bool handleEditModeSelectionResizeKey(QKeyEvent *keyEvent);
+    /**
+     * @brief 同步 ShapesWidget 到当前选区，并可保持已画标注的屏幕绝对位置
+     */
+    void syncShapesWidgetGeometry(bool keepAnnotationsInPlace);
+    /**
+     * @brief 选区边框拖拽动作对应的鼠标样式
+     */
+    int resizeCursorShape(int action) const;
     int getRecordInputType(bool selectedMic, bool selectedSystemAudio);
     /**
      * @brief initBackground 初始化截图背景，启动截图时调用
@@ -1045,6 +1070,14 @@ private:
      * @brief 是否画骨架点
      */
     bool drawDragPoint = false;
+    /**
+     * @brief 标注模式下是否正在拖拽选区边框调整截图区域大小
+     */
+    bool m_editModeResizing = false;
+    /**
+     * @brief 标注模式下是否已把光标切换为边框缩放样式
+     */
+    bool m_editModeResizeCursorActive = false;
     /**
      * @brief 是否第一次拖动鼠标
      */

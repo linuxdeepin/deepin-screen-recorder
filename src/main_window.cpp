@@ -51,6 +51,7 @@ extern "C" {
 #include <DSysInfo>
 #include <QAbstractSpinBox>
 #include <QApplication>
+#include <QCursor>
 #include <QTimer>
 #include <QKeyEvent>
 #include <QShowEvent>
@@ -114,6 +115,12 @@ const int MainWindow::CAMERA_WIDGET_MIN_HEIGHT = 45;
 
 DWIDGET_USE_NAMESPACE
 
+// X11 的 X.h 把 CursorShape 定义成了宏（#define CursorShape 0），会破坏 Qt::CursorShape，
+// 这里先取消该宏，本文件改用 Qt 的光标枚举。
+#ifdef CursorShape
+#undef CursorShape
+#endif
+
 namespace {
 const int TOOLBAR_X_SPACING = 85;
 // const int TOOLBAR_Y_SPACING = 3;
@@ -123,6 +130,20 @@ const int SIDEBAR_Y_SPACING = -2;
 const int INDICATOR_WIDTH = 50;
 // 放大镜浮窗相对光标点的右下偏移，取自 Sketch 画板「截图录屏-光标指针」
 const int MAGNIFIER_OFFSET = 12;
+
+// 工程内的光标统一走 QApplication override cursor；override cursor 会压过控件级
+// setCursor，因此调整选区边框这里也必须用同一套接口。
+// 优先替换当前 override cursor，避免反复 push 造成光标栈无限增长。
+void applyOverrideCursorShape(int shape)
+{
+    const QCursor cursor(static_cast<Qt::CursorShape>(shape));
+    const QCursor *current = qApp->overrideCursor();
+    if (current == nullptr) {
+        qApp->setOverrideCursor(cursor);
+    } else if (*current != cursor) {
+        qApp->changeOverrideCursor(cursor);
+    }
+}
 }  // namespace
 #ifdef KF5_WAYLAND_FLAGE_ON
 /**
@@ -5413,10 +5434,31 @@ bool MainWindow::eventFilter(QObject *obj, QEvent *event)
     if (Utils::isTreelandMode)
         return DWidget::eventFilter(obj,event);
 
-    bool needRepaint = false;
-
 #undef KeyPress
 #undef KeyRelease
+    // 需求：标注模式下仍可调整截图区域大小。
+    // ShapesWidget 覆盖在选区之上并自行接收事件，这里先过滤它的事件：
+    // 命中选区边框拖拽点（鼠标）或选区尺寸快捷键（Ctrl/Ctrl+Shift+方向键）时优先
+    // 按“调整截图区域”处理，其余一律交回 ShapesWidget，避免影响标注交互。
+    if (obj != this && m_isShapesWidgetExist && m_shapesWidget && obj == m_shapesWidget) {
+        bool consumed = false;
+        if (event->type() == QEvent::KeyPress) {
+            consumed = handleEditModeSelectionResizeKey(static_cast<QKeyEvent *>(event));
+        } else if (event->type() == QEvent::MouseButtonPress
+                   || event->type() == QEvent::MouseMove
+                   || event->type() == QEvent::MouseButtonRelease) {
+            QMouseEvent *mouseEvent = static_cast<QMouseEvent *>(event);
+            const QPoint mainPos = m_shapesWidget->mapTo(this, mouseEvent->pos());
+            consumed = handleEditModeSelectionResize(mouseEvent, mainPos);
+        }
+        if (consumed) {
+            return true;
+        }
+        return DWidget::eventFilter(obj, event);
+    }
+
+    bool needRepaint = false;
+
     if (event->type() == QEvent::KeyPress) {
         QKeyEvent *keyEvent = static_cast<QKeyEvent *>(event);
         // 键盘按下事件处理
@@ -5524,6 +5566,13 @@ int MainWindow::mouseDblClickEF(QMouseEvent *mouseEvent, bool &needRepaint)
 int MainWindow::mousePressEF(QMouseEvent *mouseEvent, bool &needRepaint)
 {
     Q_UNUSED(needRepaint);
+    if (m_isShapesWidgetExist) {
+        // 标注模式下，光标落在选区边框拖拽点上时开始调整截图区域大小
+        if (handleEditModeSelectionResize(mouseEvent, mouseEvent->pos())) {
+            return 2;
+        }
+        return 1;
+    }
     if (!m_isShapesWidgetExist) {
         // 未打开截图形状编辑界面
         if (mouseEvent->button() == Qt::LeftButton) {
@@ -5585,6 +5634,13 @@ int MainWindow::mousePressEF(QMouseEvent *mouseEvent, bool &needRepaint)
 // 事件过滤器过滤的鼠标双击事件在此方法处理
 int MainWindow::mouseReleaseEF(QMouseEvent *mouseEvent, bool &needRepaint)
 {
+    if (m_isShapesWidgetExist) {
+        // 标注模式下结束选区调整
+        if (handleEditModeSelectionResize(mouseEvent, mouseEvent->pos())) {
+            return 2;
+        }
+        return 1;
+    }
     if (!m_isShapesWidgetExist) {
         // 未打开截图形状编辑界面
         if (mouseEvent->button() == Qt::LeftButton) {
@@ -5697,6 +5753,13 @@ int MainWindow::mouseMoveEF(QMouseEvent *mouseEvent, bool &needRepaint)
     // 当前光标的位置
     m_currentCursor = mouseEvent->pos();
     updateFineAdjustTips();
+    if (m_isShapesWidgetExist) {
+        // 标注模式下，悬停/拖拽选区边框时调整截图区域大小
+        if (handleEditModeSelectionResize(mouseEvent, mouseEvent->pos())) {
+            return 2;
+        }
+        return 1;
+    }
     // 没打开截图的编辑模式
     if (!m_isShapesWidgetExist) {
         if (m_toolBar && m_toolBar->isVisible()) {
@@ -5807,25 +5870,25 @@ int MainWindow::mouseMoveEF(QMouseEvent *mouseEvent, bool &needRepaint)
                         recordY = std::max(
                             std::min(dragRecordY + mouseEvent->y() - dragStartY, m_backgroundRect.height() - recordHeight), 0);
                     } else if (dragAction == ACTION_RESIZE_TOP_LEFT) {
-                        resizeTop(mouseEvent);
-                        resizeLeft(mouseEvent);
+                        resizeTop(mouseEvent->pos());
+                        resizeLeft(mouseEvent->pos());
                     } else if (dragAction == ACTION_RESIZE_TOP_RIGHT) {
-                        resizeTop(mouseEvent);
-                        resizeRight(mouseEvent);
+                        resizeTop(mouseEvent->pos());
+                        resizeRight(mouseEvent->pos());
                     } else if (dragAction == ACTION_RESIZE_BOTTOM_LEFT) {
-                        resizeBottom(mouseEvent);
-                        resizeLeft(mouseEvent);
+                        resizeBottom(mouseEvent->pos());
+                        resizeLeft(mouseEvent->pos());
                     } else if (dragAction == ACTION_RESIZE_BOTTOM_RIGHT) {
-                        resizeBottom(mouseEvent);
-                        resizeRight(mouseEvent);
+                        resizeBottom(mouseEvent->pos());
+                        resizeRight(mouseEvent->pos());
                     } else if (dragAction == ACTION_RESIZE_TOP) {
-                        resizeTop(mouseEvent);
+                        resizeTop(mouseEvent->pos());
                     } else if (dragAction == ACTION_RESIZE_BOTTOM) {
-                        resizeBottom(mouseEvent);
+                        resizeBottom(mouseEvent->pos());
                     } else if (dragAction == ACTION_RESIZE_LEFT) {
-                        resizeLeft(mouseEvent);
+                        resizeLeft(mouseEvent->pos());
                     } else if (dragAction == ACTION_RESIZE_RIGHT) {
-                        resizeRight(mouseEvent);
+                        resizeRight(mouseEvent->pos());
                     }
 
                     // 锁定比例时，拖拽后按固定宽高比等比修正选区
@@ -6022,6 +6085,11 @@ int MainWindow::keyPressEF(QKeyEvent *keyEvent, bool &needRepaint)
             if (keyEvent->key() == Qt::Key_Shift) {
                 m_isShiftPressed = true;
                 m_shapesWidget->setShiftKeyPressed(m_isShiftPressed);
+            }
+
+            // 未选中标注时，Ctrl / Ctrl+Shift + 方向键调整截图区域大小（需求：标注模式仍可调整选区）
+            if (handleEditModeSelectionResizeKey(keyEvent)) {
+                return 0;
             }
 
             if (keyEvent->modifiers() == (Qt::ShiftModifier | Qt::ControlModifier)) {
@@ -7673,52 +7741,52 @@ void MainWindow::shotFullScreen(bool isFull)
 //    }
 //}
 
-void MainWindow::resizeTop(QMouseEvent *mouseEvent)
+void MainWindow::resizeTop(const QPoint &pos)
 {
     if (status::record == m_functionType) {
-        int offsetY = mouseEvent->y() - dragStartY;
+        int offsetY = pos.y() - dragStartY;
         recordY = std::max(std::min(dragRecordY + offsetY, dragRecordY + dragRecordHeight - RECORD_MIN_HEIGHT), 1);
         recordHeight = std::max(std::min(dragRecordHeight - offsetY, m_backgroundRect.height()), RECORD_MIN_HEIGHT);
     }
 
     else if (status::shot == m_functionType) {
-        int offsetY = mouseEvent->y() - dragStartY;
+        int offsetY = pos.y() - dragStartY;
         recordY = std::max(std::min(dragRecordY + offsetY, dragRecordY + dragRecordHeight - RECORD_MIN_SHOT_SIZE), 1);
         recordHeight = std::max(std::min(dragRecordHeight - offsetY, m_backgroundRect.height()), RECORD_MIN_SHOT_SIZE);
     }
 }
 
-void MainWindow::resizeBottom(QMouseEvent *mouseEvent)
+void MainWindow::resizeBottom(const QPoint &pos)
 {
     if (status::record == m_functionType) {
-        int offsetY = mouseEvent->y() - dragStartY;
+        int offsetY = pos.y() - dragStartY;
         recordHeight = std::max(std::min(dragRecordHeight + offsetY, m_backgroundRect.height()), RECORD_MIN_HEIGHT);
     } else if (status::shot == m_functionType) {
-        int offsetY = mouseEvent->y() - dragStartY;
+        int offsetY = pos.y() - dragStartY;
         recordHeight = std::max(std::min(dragRecordHeight + offsetY, m_backgroundRect.height()), RECORD_MIN_SHOT_SIZE);
     }
 }
 
-void MainWindow::resizeLeft(QMouseEvent *mouseEvent)
+void MainWindow::resizeLeft(const QPoint &pos)
 {
     if (status::record == m_functionType) {
-        int offsetX = mouseEvent->x() - dragStartX;
+        int offsetX = pos.x() - dragStartX;
         recordX = std::max(std::min(dragRecordX + offsetX, dragRecordX + dragRecordWidth - RECORD_MIN_SIZE), 1);
         recordWidth = std::max(std::min(dragRecordWidth - offsetX, m_backgroundRect.width()), RECORD_MIN_SIZE);
     } else if (status::shot == m_functionType) {
-        int offsetX = mouseEvent->x() - dragStartX;
+        int offsetX = pos.x() - dragStartX;
         recordX = std::max(std::min(dragRecordX + offsetX, dragRecordX + dragRecordWidth - RECORD_MIN_SHOT_SIZE), 1);
         recordWidth = std::max(std::min(dragRecordWidth - offsetX, m_backgroundRect.width()), RECORD_MIN_SHOT_SIZE);
     }
 }
 
-void MainWindow::resizeRight(QMouseEvent *mouseEvent)
+void MainWindow::resizeRight(const QPoint &pos)
 {
     if (status::record == m_functionType) {
-        int offsetX = mouseEvent->x() - dragStartX;
+        int offsetX = pos.x() - dragStartX;
         recordWidth = std::max(std::min(dragRecordWidth + offsetX, m_backgroundRect.width()), RECORD_MIN_SIZE);
     } else if (status::shot == m_functionType) {
-        int offsetX = mouseEvent->x() - dragStartX;
+        int offsetX = pos.x() - dragStartX;
         recordWidth = std::max(std::min(dragRecordWidth + offsetX, m_backgroundRect.width()), RECORD_MIN_SHOT_SIZE);
     }
 }
@@ -7726,8 +7794,13 @@ void MainWindow::resizeRight(QMouseEvent *mouseEvent)
 int MainWindow::getAction(QEvent *event)
 {
     QMouseEvent *mouseEvent = static_cast<QMouseEvent *>(event);
-    int cursorX = mouseEvent->x();
-    int cursorY = mouseEvent->y();
+    return getAction(mouseEvent->pos());
+}
+
+int MainWindow::getAction(const QPoint &pos)
+{
+    int cursorX = pos.x();
+    int cursorY = pos.y();
 
     if (cursorX > recordX - m_cursorBound && cursorX < recordX + m_cursorBound && cursorY > recordY - m_cursorBound &&
         cursorY < recordY + m_cursorBound) {
@@ -8164,11 +8237,18 @@ void MainWindow::adjustLayout(QVBoxLayout *layout, int layoutWidth, int layoutHe
 void MainWindow::initShapeWidget(QString type)
 {
     qCDebug(dsrApp) << "正在初始化截图编辑界面...";
+    // 进入编辑态时重置选区调整状态，避免上次拖拽残留
+    m_editModeResizing = false;
+    m_editModeResizeCursorActive = false;
     if (m_fineAdjustTips) {
         // 进入截图编辑态后不再提示微调快捷键
         m_fineAdjustTips->hide();
     }
     m_shapesWidget = new ShapesWidget(this);
+    // 需求：标注模式下仍可调整截图区域大小。
+    // ShapesWidget 覆盖在选区之上并自行处理鼠标/键盘事件，这里装上过滤器，
+    // 在光标命中选区边框拖拽点时优先按“调整选区”处理，其余事件照常交给标注。
+    m_shapesWidget->installEventFilter(this);
     m_shapesWidget->setShiftKeyPressed(m_isShiftPressed);
 
     if (type != "color")
@@ -8360,6 +8440,258 @@ void MainWindow::applyRememberedSelectionSetting()
                     << "selection:" << QRect(recordX, recordY, recordWidth, recordHeight);
 }
 
+// ===== 需求：标注模式（编辑态）下仍可调整截图区域大小 =====
+
+bool MainWindow::handleEditModeSelectionResize(QMouseEvent *event, const QPoint &mainPos)
+{
+    if (status::shot != m_functionType || !m_isShapesWidgetExist || !m_shapesWidget) {
+        return false;
+    }
+
+    if (m_editModeResizing) {
+        if (event->type() == QEvent::MouseMove) {
+            applyEditModeSelectionResize(mainPos);
+            // 拖拽过程中保持边框缩放光标
+            applyOverrideCursorShape(resizeCursorShape(dragAction));
+            m_editModeResizeCursorActive = true;
+            return true;
+        }
+        if (event->type() == QEvent::MouseButtonRelease && event->button() == Qt::LeftButton) {
+            m_editModeResizing = false;
+            isPressMouseLeftButton = false;
+            isReleaseMouseLeftButton = true;
+            // 恢复标注工具的默认光标
+            if (m_editModeResizeCursorActive) {
+                m_shapesWidget->updateCursorShape();
+                m_editModeResizeCursorActive = false;
+            }
+            updateFineAdjustTips();
+            updateToolBarPos();
+            if (m_sideBar && m_sideBar->isVisible()) {
+                updateSideBarPos();
+            }
+            update();
+            return true;
+        }
+        return false;
+    }
+
+    if (event->type() == QEvent::MouseButtonPress && event->button() == Qt::LeftButton) {
+        const int action = getAction(mainPos);
+        if (action == ACTION_MOVE) {
+            // 不在边框拖拽点上：交给 ShapesWidget 正常绘制/编辑标注
+            return false;
+        }
+        // 开始调整截图区域大小
+        dragStartX = mainPos.x();
+        dragStartY = mainPos.y();
+        dragRecordX = recordX;
+        dragRecordY = recordY;
+        dragRecordWidth = recordWidth;
+        dragRecordHeight = recordHeight;
+        dragAction = action;
+        m_lockedRatio = (recordWidth > 0 && recordHeight > 0)
+                ? static_cast<qreal>(recordWidth) / static_cast<qreal>(recordHeight) : 0.0;
+        isPressMouseLeftButton = true;
+        isReleaseMouseLeftButton = false;
+        m_editModeResizing = true;
+        // 立即切换为缩放光标，避免按下瞬间仍是标注工具光标
+        applyOverrideCursorShape(resizeCursorShape(action));
+        m_editModeResizeCursorActive = true;
+        return true;
+    }
+
+    if (event->type() == QEvent::MouseMove) {
+        // 悬停在边框拖拽点上时显示骨架点与缩放光标
+        const int action = getAction(mainPos);
+        if (action != ACTION_MOVE) {
+            drawDragPoint = true;
+            applyOverrideCursorShape(resizeCursorShape(action));
+            m_editModeResizeCursorActive = true;
+            update();
+            return true;
+        }
+        if (drawDragPoint || m_editModeResizeCursorActive) {
+            drawDragPoint = false;
+            // 离开边框后恢复标注工具的默认光标
+            m_shapesWidget->updateCursorShape();
+            m_editModeResizeCursorActive = false;
+            update();
+        }
+        return false;
+    }
+    return false;
+}
+
+int MainWindow::resizeCursorShape(int action) const
+{
+    switch (action) {
+    case ACTION_RESIZE_TOP_LEFT:
+    case ACTION_RESIZE_BOTTOM_RIGHT:
+        return Qt::SizeFDiagCursor;
+    case ACTION_RESIZE_TOP_RIGHT:
+    case ACTION_RESIZE_BOTTOM_LEFT:
+        return Qt::SizeBDiagCursor;
+    case ACTION_RESIZE_LEFT:
+    case ACTION_RESIZE_RIGHT:
+        return Qt::SizeHorCursor;
+    case ACTION_RESIZE_TOP:
+    case ACTION_RESIZE_BOTTOM:
+        return Qt::SizeVerCursor;
+    default:
+        return Qt::ArrowCursor;
+    }
+}
+
+void MainWindow::applyEditModeSelectionResize(const QPoint &mainPos)
+{
+    switch (dragAction) {
+    case ACTION_RESIZE_TOP_LEFT:
+        resizeTop(mainPos);
+        resizeLeft(mainPos);
+        break;
+    case ACTION_RESIZE_TOP_RIGHT:
+        resizeTop(mainPos);
+        resizeRight(mainPos);
+        break;
+    case ACTION_RESIZE_BOTTOM_LEFT:
+        resizeBottom(mainPos);
+        resizeLeft(mainPos);
+        break;
+    case ACTION_RESIZE_BOTTOM_RIGHT:
+        resizeBottom(mainPos);
+        resizeRight(mainPos);
+        break;
+    case ACTION_RESIZE_TOP:
+        resizeTop(mainPos);
+        break;
+    case ACTION_RESIZE_BOTTOM:
+        resizeBottom(mainPos);
+        break;
+    case ACTION_RESIZE_LEFT:
+        resizeLeft(mainPos);
+        break;
+    case ACTION_RESIZE_RIGHT:
+        resizeRight(mainPos);
+        break;
+    default:
+        return;
+    }
+
+    applyLockedRatioToSelection();
+    // 已画标注保持屏幕绝对位置不动
+    syncShapesWidgetGeometry(true);
+    if (m_sizeTips && status::scrollshot != m_functionType) {
+        m_sizeTips->updateTips(QPoint(recordX, recordY), QSize(recordWidth, recordHeight));
+    }
+    updateToolBarPos();
+    if (m_sideBar && m_sideBar->isVisible()) {
+        updateSideBarPos();
+    }
+    update();
+}
+
+bool MainWindow::handleEditModeSelectionResizeKey(QKeyEvent *keyEvent)
+{
+    if (status::shot != m_functionType || !m_isShapesWidgetExist || !m_shapesWidget) {
+        return false;
+    }
+    // 有选中标注时，Ctrl+方向键仍用于微调标注，不改变截图区域
+    if (m_shapesWidget->hasSelectedShape()) {
+        return false;
+    }
+    // 固定比例时禁用单边扩大/缩小，与框选阶段保持一致
+    if (m_roundedCornerWidget && m_roundedCornerWidget->isRatioLocked()) {
+        return false;
+    }
+
+    const int key = keyEvent->key();
+    if (key != Qt::Key_Left && key != Qt::Key_Right && key != Qt::Key_Up && key != Qt::Key_Down) {
+        return false;
+    }
+    const Qt::KeyboardModifiers modifiers = keyEvent->modifiers();
+    const bool enlarge = (modifiers == Qt::ControlModifier);
+    const bool shrink = (modifiers == (Qt::ControlModifier | Qt::ShiftModifier));
+    if (!enlarge && !shrink) {
+        return false;
+    }
+
+    switch (key) {
+    case Qt::Key_Left:
+        if (enlarge) {
+            if (recordX > 0) {
+                recordX -= 1;
+                recordWidth += 1;
+            }
+        } else if (recordWidth > RECORD_MIN_SHOT_SIZE) {
+            recordX += 1;
+            recordWidth -= 1;
+        }
+        break;
+    case Qt::Key_Right:
+        if (enlarge) {
+            if (recordX + recordWidth < m_backgroundRect.width()) {
+                recordWidth += 1;
+            }
+        } else if (recordWidth > RECORD_MIN_SHOT_SIZE) {
+            recordWidth -= 1;
+        }
+        break;
+    case Qt::Key_Up:
+        if (enlarge) {
+            if (recordY > 0) {
+                recordY -= 1;
+                recordHeight += 1;
+            }
+        } else if (recordHeight > RECORD_MIN_SHOT_SIZE) {
+            recordY += 1;
+            recordHeight -= 1;
+        }
+        break;
+    case Qt::Key_Down:
+        if (enlarge) {
+            if (recordY + recordHeight < m_backgroundRect.height()) {
+                recordHeight += 1;
+            }
+        } else if (recordHeight > RECORD_MIN_SHOT_SIZE) {
+            recordHeight -= 1;
+        }
+        break;
+    default:
+        return false;
+    }
+
+    syncShapesWidgetGeometry(true);
+    if (m_sizeTips && status::scrollshot != m_functionType) {
+        m_sizeTips->updateTips(QPoint(recordX, recordY), QSize(recordWidth, recordHeight));
+    }
+    updateToolBarPos();
+    if (m_sideBar && m_sideBar->isVisible()) {
+        updateSideBarPos();
+    }
+    updateFineAdjustTips();
+    update();
+    return true;
+}
+
+void MainWindow::syncShapesWidgetGeometry(bool keepAnnotationsInPlace)
+{
+    if (!m_shapesWidget || Utils::isTreelandMode) {
+        return;
+    }
+    const QPoint newTopLeft(recordX + 2, recordY + 2);
+    if (keepAnnotationsInPlace) {
+        const QPoint delta = newTopLeft - m_shapesWidget->pos();
+        if (!delta.isNull()) {
+            // 控件左上角移动多少，标注局部坐标就反向补偿多少，保证标注屏幕上位置不变
+            m_shapesWidget->translateAllShapes(QPointF(-delta.x(), -delta.y()));
+        }
+    }
+    m_shapesWidget->setFixedSize(qMax(1, recordWidth - 4), qMax(1, recordHeight - 4));
+    m_shapesWidget->move(newTopLeft);
+    m_shapesWidget->setGlobalRect(QRect(recordX, recordY, recordWidth, recordHeight));
+}
+
 void MainWindow::onRoundedSelectionSizeChanged(int width, int height)
 {
     if (status::shot != m_functionType) {
@@ -8377,6 +8709,8 @@ void MainWindow::onRoundedSelectionSizeChanged(int width, int height)
     }
     recordWidth = newWidth;
     recordHeight = newHeight;
+    // 尺寸面板只改变宽高、不动左上角，标注保持屏幕绝对位置即可
+    syncShapesWidgetGeometry(false);
     if (m_sizeTips) {
         m_sizeTips->updateTips(QPoint(recordX, recordY), QSize(recordWidth, recordHeight));
     }

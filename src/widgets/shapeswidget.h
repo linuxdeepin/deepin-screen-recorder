@@ -173,6 +173,16 @@ public slots:
     void deleteCurrentShape();
     //QString  getCurrentType();
     void microAdjust(QString direction);
+    /**
+     * @brief hasSelectedShape: 当前是否存在选中的标注
+     * 编辑态下用于区分 Ctrl+方向键等快捷键的作用对象（标注 / 截图区域）。
+     */
+    bool hasSelectedShape() const;
+    /**
+     * @brief translateAllShapes: 整体平移所有标注，保持其在屏幕上的绝对位置不变
+     * @param delta 平移量（标注局部坐标系）
+     */
+    void translateAllShapes(const QPointF &delta);
     void setShiftKeyPressed(bool isShift);
     void updateCursorShape();
     void menuSaveSlot();
