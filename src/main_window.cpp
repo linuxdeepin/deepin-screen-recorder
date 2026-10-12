@@ -120,9 +120,9 @@ const int TOOLBAR_X_SPACING = 85;
 const int TOOLBAR_Y_SPACING = 5;
 const int SIDEBAR_X_SPACING = 8;
 const int SIDEBAR_Y_SPACING = -2;
-const int CURSOR_WIDTH = 8;
-const int CURSOR_HEIGHT = 18;
 const int INDICATOR_WIDTH = 50;
+// 放大镜浮窗相对光标点的右下偏移，取自 Sketch 画板「截图录屏-光标指针」
+const int MAGNIFIER_OFFSET = 12;
 }  // namespace
 #ifdef KF5_WAYLAND_FLAGE_ON
 /**
@@ -5678,6 +5678,11 @@ int MainWindow::mouseReleaseEF(QMouseEvent *mouseEvent, bool &needRepaint)
             isPressMouseLeftButton = false;
             isReleaseMouseLeftButton = true;
 
+            // 调整/移动选区结束后工具栏重新弹出，放大镜同步隐藏（需求 2.9）
+            if (m_zoomIndicator) {
+                m_zoomIndicator->hideMagnifier();
+            }
+
             needRepaint = true;
             updateFineAdjustTips();
         }
@@ -5705,10 +5710,14 @@ int MainWindow::mouseMoveEF(QMouseEvent *mouseEvent, bool &needRepaint)
             isFirstMove = true;
         } else {
             if (status::shot == m_functionType) {
-                if (m_toolBar && !m_toolBar->isVisible() && !isFirstReleaseButton) {
+                // 需求 2.9：工具栏隐藏时显示放大镜。框选完成后工具栏弹出即隐藏，
+                // 拖拽调整选区边界时工具栏会自动收起，放大镜随之重新显示。
+                if (m_toolBar && !m_toolBar->isVisible()) {
                     // QPoint curPos = this->cursor().pos(); 采用全局坐标，替换局部坐标
                     // mouseEvent->globalPos()此接口获取的光标坐标是已经缩放后的坐标，需还原
                     QPoint curPos = this->cursor().pos();  // 采用全局坐标，替换局部坐标
+                    // 逻辑坐标，放大镜浮窗上的坐标文案使用该值
+                    const QPoint screenCursorPos = curPos;
                     // qCDebug(dsrApp)  << "1 >>>> curPos: " << curPos << " , mouseEvent->globalPos(): "<< mouseEvent->globalPos();
                     // mouseEvent->globalPos()此接口获取的光标坐标是已经缩放后的坐标，需还原
                     //                         QPoint curPos = mouseEvent->globalPos();
@@ -5731,18 +5740,25 @@ int MainWindow::mouseMoveEF(QMouseEvent *mouseEvent, bool &needRepaint)
                     QPoint tmpPos;
                     QPoint topLeft = m_backgroundRect.topLeft() * m_pixelRatio;
 
-                    // 光标x坐标+110+8 > 截图背景左上角x坐标+截图背景宽度 判断光标横向是否超出屏幕
-                    if (curPos.x() + INDICATOR_WIDTH + CURSOR_WIDTH > topLeft.x() + m_backgroundRect.width() * m_pixelRatio) {
-                        tmpPos.setX(curPos.x() - INDICATOR_WIDTH);
+                    // 放大镜浮窗尺寸与偏移（统一换算到当前缩放比下的物理像素）
+                    const int zoomWidth =
+                        static_cast<int>(std::lround(ZoomIndicator::PANEL_WIDTH * m_pixelRatio));
+                    const int zoomHeight =
+                        static_cast<int>(std::lround(ZoomIndicator::PANEL_HEIGHT * m_pixelRatio));
+                    const int zoomOffset =
+                        static_cast<int>(std::lround(MAGNIFIER_OFFSET * m_pixelRatio));
+
+                    // 默认放在光标右下方；右侧/下方放不下时翻转到另一侧，保证浮窗完整可见。
+                    if (curPos.x() + zoomOffset + zoomWidth > topLeft.x() + m_backgroundRect.width() * m_pixelRatio) {
+                        tmpPos.setX(curPos.x() - zoomOffset - zoomWidth);
                     } else {
-                        tmpPos.setX(curPos.x() + CURSOR_WIDTH);
+                        tmpPos.setX(curPos.x() + zoomOffset);
                     }
 
-                    // 光标y坐标+110 > 截图背景左上角y坐标+截图背景高度 判断光标纵向是否超出屏幕
-                    if (curPos.y() + INDICATOR_WIDTH > topLeft.y() + m_backgroundRect.height() * m_pixelRatio) {
-                        tmpPos.setY(curPos.y() - INDICATOR_WIDTH);
+                    if (curPos.y() + zoomOffset + zoomHeight > topLeft.y() + m_backgroundRect.height() * m_pixelRatio) {
+                        tmpPos.setY(curPos.y() - zoomOffset - zoomHeight);
                     } else {
-                        tmpPos.setY(curPos.y() + CURSOR_HEIGHT);
+                        tmpPos.setY(curPos.y() + zoomOffset);
                     }
 
                     // 判断是否进行缩放且缩放的时候屏幕数量大于1
@@ -5762,6 +5778,7 @@ int MainWindow::mouseMoveEF(QMouseEvent *mouseEvent, bool &needRepaint)
                     QPoint tempPoint = QPoint(std::max(tmpPos.x() - topLeft.x(), 0), std::max(tmpPos.y() - topLeft.y(), 0));
                     // 由于move接口，移动的坐标点都是直接将未经缩放的点直接缩放后得到，即point / m_pixelRatio
                     m_zoomIndicator->setCursorPos(curPos);
+                    m_zoomIndicator->setScreenPos(screenCursorPos);
                     m_zoomIndicator->showMagnifier(tempPoint / m_pixelRatio);
                 }
             }
