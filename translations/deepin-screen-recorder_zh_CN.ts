@@ -900,4 +900,11 @@ Hold down Shift to draw squares or circles.</source>
         <translation>将截屏选区缩小1像素</translation>
     </message>
 </context>
+<context>
+    <name>ZoomIndicator</name>
+    <message>
+        <source>Press Ctrl+c to copy color</source>
+        <translation>按Ctrl+c复制色值</translation>
+    </message>
+</context>
 </TS>

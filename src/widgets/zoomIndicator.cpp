@@ -4,6 +4,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 
 #include "zoomIndicator.h"
+
 #include "../utils/baseutils.h"
 #include "../utils/tempfile.h"
 #include "../utils.h"
@@ -15,21 +16,82 @@
 #include <QOpenGLWidget>
 #endif
 
+#include <QColor>
 #include <QCursor>
-#include <QTextOption>
-#include <QDebug>
-#include <QRgb>
 #include <QDBusInterface>
 #include <QDBusReply>
+#include <QDebug>
+#include <QFont>
+#include <QFontMetrics>
+#include <QPainter>
+#include <QPainterPath>
+#include <QRgb>
+
 namespace {
-const QSize BACKGROUND_SIZE = QSize(59, 59);
-//const int SCALE_VALUE = 4;
-const int IMG_WIDTH =  12;
-const int INDICATOR_WIDTH = 49;
-const int CENTER_RECT_WIDTH = 12;
-const int BOTTOM_RECT_HEIGHT = 14;
+// 以下尺寸、颜色、字号均取自 Sketch 画板「截图录屏-光标指针」(8F8261D2-...)。
+// 放大镜浮窗：预览区 150x105 + 信息区 150x65。
+constexpr int PREVIEW_HEIGHT = 105;
+constexpr int INFO_HEIGHT = 65;
+static_assert(PREVIEW_HEIGHT + INFO_HEIGHT == ZoomIndicator::PANEL_HEIGHT,
+              "preview + info height must match the panel height");
+constexpr int PREVIEW_RADIUS = 8;
+
+// 以光标为中心取样约 15px 宽的区域，放大 10 倍渲染。
+constexpr int SAMPLE_WIDTH = 15;
+constexpr int SAMPLE_HEIGHT = 11;
+
+// 中心准心框（1px 白描边，中心缺口由十字分隔线让出）。
+constexpr int CENTER_BOX_SIZE = 9;
+
+constexpr int SWATCH_SIZE = 10;
+constexpr int SWATCH_TEXT_GAP = 6;
+constexpr int FONT_PIXEL_SIZE = 12;
+
+// 预览区 1px 描边：#FFFFFF 19.8%
+const QColor PREVIEW_BORDER_COLOR(255, 255, 255, 50);
+// 十字分隔线：#FFFFFF 20%
+const QColor DIVIDER_COLOR(255, 255, 255, 51);
+// 中心准心框：#FFFFFF 50%
+const QColor CENTER_BOX_COLOR(255, 255, 255, 128);
+// 信息区底色：#000000 49.8%
+const QColor INFO_FILL_COLOR(0, 0, 0, 127);
+// 信息区描边：#000000 19.8%
+const QColor INFO_BORDER_COLOR(0, 0, 0, 50);
+// 取样失败时的兜底底色
+const QColor PREVIEW_FALLBACK_COLOR(0, 0, 0, 127);
+
+QString toHexString(const QColor &color)
+{
+    // 取样失败（图像为空或坐标越界）时返回空串，避免把无效色值写成 "#-1-1-1"。
+    if (!color.isValid()) {
+        return QString();
+    }
+    return QString("#%1%2%3")
+            .arg(color.red(), 2, 16, QChar('0'))
+            .arg(color.green(), 2, 16, QChar('0'))
+            .arg(color.blue(), 2, 16, QChar('0'))
+            .toLower();
 }
-ZoomIndicator::ZoomIndicator(DWidget *parent,bool isRecord)
+
+// 预览区路径：上方圆角，下边缘与信息区平接。
+QPainterPath previewPath()
+{
+    const qreal r = PREVIEW_RADIUS;
+    const qreal w = ZoomIndicator::PANEL_WIDTH;
+    const qreal h = PREVIEW_HEIGHT;
+    QPainterPath path;
+    path.moveTo(0, r);
+    path.arcTo(0, 0, 2 * r, 2 * r, 180, -90);
+    path.lineTo(w - r, 0);
+    path.arcTo(w - 2 * r, 0, 2 * r, 2 * r, 90, -90);
+    path.lineTo(w, h);
+    path.lineTo(0, h);
+    path.closeSubpath();
+    return path;
+}
+} // namespace
+
+ZoomIndicator::ZoomIndicator(DWidget *parent, bool isRecord)
     : DLabel(parent)
 {
     qCDebug(dsrApp) << "ZoomIndicator constructor called, isRecord:" << isRecord;
@@ -62,17 +124,9 @@ ZoomIndicator::ZoomIndicator(DWidget *parent,bool isRecord)
     }
 #endif
 
-    setFixedSize(BACKGROUND_SIZE);
-//    setStyleSheet(getFileContent(":/resources/qss/zoomindicator.qss"));
+    setFixedSize(PANEL_WIDTH, PANEL_HEIGHT);
     setAttribute(Qt::WA_TransparentForMouseEvents);
-//    QString t_zoomStyle = QString("border-image: url(:/resources/images/action/magnifier.png);");
-//    this->setStyleSheet(t_zoomStyle);
-
-    m_centerRect = QRect((BACKGROUND_SIZE.width() - CENTER_RECT_WIDTH) / 2 + 1,
-                         (BACKGROUND_SIZE.width() - CENTER_RECT_WIDTH) / 2 + 1,
-                         CENTER_RECT_WIDTH, CENTER_RECT_WIDTH);
-
-    m_globalRect = QRect(0, 0, BACKGROUND_SIZE.width(), BACKGROUND_SIZE.height());
+    setAttribute(Qt::WA_TranslucentBackground);
 }
 
 ZoomIndicator::~ZoomIndicator()
@@ -81,76 +135,151 @@ ZoomIndicator::~ZoomIndicator()
 #ifndef ENABLE_UNIT_TEST
     if (Utils::isWaylandMode && !m_isOpenWM && m_zoomIndicatorGL && !m_isRecord) {
         qCDebug(dsrApp) << "Deleting ZoomIndicatorGL in Wayland mode.";
-        delete  m_zoomIndicatorGL;
+        delete m_zoomIndicatorGL;
     }
 #endif
 }
 
+const QImage &ZoomIndicator::cachedFullscreenImage() const
+{
+    // getFullscreenPixmap() 每次返回的时候是隐式共享的拷贝，这里按 cacheKey 缓存
+    // 转换后的 QImage，避免每次重绘都对整屏图做一次深拷贝。
+    const QPixmap pixmap = TempFile::instance()->getFullscreenPixmap();
+    const qint64 key = pixmap.cacheKey();
+    if (key != m_cachedPixmapKey || m_cachedImage.isNull()) {
+        m_cachedImage = pixmap.toImage();
+        m_cachedImage.setDevicePixelRatio(1.0);
+        m_cachedPixmapKey = key;
+    }
+    return m_cachedImage;
+}
+
+QColor ZoomIndicator::sampleColor() const
+{
+    const QImage &image = cachedFullscreenImage();
+    if (image.isNull() || !image.rect().contains(m_cursorPos)) {
+        return QColor();
+    }
+    return QColor(image.pixel(m_cursorPos));
+}
+
+QString ZoomIndicator::currentColorHex() const
+{
+    return toHexString(sampleColor());
+}
+
+void ZoomIndicator::drawPreview(QPainter &painter)
+{
+    const QPainterPath path = previewPath();
+    const QRectF previewRect(0, 0, PANEL_WIDTH, PREVIEW_HEIGHT);
+
+    painter.save();
+    painter.setClipPath(path);
+    // 放大视图要保持像素边界清晰，这里关闭平滑。
+    painter.setRenderHint(QPainter::SmoothPixmapTransform, false);
+
+    const QImage &image = cachedFullscreenImage();
+    const QRect sourceRect(m_cursorPos.x() - SAMPLE_WIDTH / 2,
+                           m_cursorPos.y() - SAMPLE_HEIGHT / 2,
+                           SAMPLE_WIDTH, SAMPLE_HEIGHT);
+    if (!image.isNull() && image.rect().intersects(sourceRect)) {
+        painter.drawImage(previewRect, image, sourceRect);
+    } else {
+        painter.fillRect(previewRect, PREVIEW_FALLBACK_COLOR);
+    }
+    painter.restore();
+
+    painter.save();
+    painter.setBrush(Qt::NoBrush);
+    painter.setPen(QPen(PREVIEW_BORDER_COLOR, 1));
+    painter.drawPath(path);
+    painter.restore();
+}
+
+void ZoomIndicator::drawCrosshair(QPainter &painter)
+{
+    // 设计稿：水平分隔线 y=53、垂直分隔线 x=75、中心准心框 9x9 位于 (70.5, 48.5)。
+    // 1px 线条必须落在半像素上，否则会被平分到相邻两列/行，渲染成模糊的浅色线。
+    const qreal lineY = PREVIEW_HEIGHT / 2.0;          // 52.5
+    const qreal lineX = PANEL_WIDTH / 2.0 + 0.5;       // 75.5
+    const qreal boxLeft = PANEL_WIDTH / 2.0 - 4.5;     // 70.5
+    const qreal boxTop = PREVIEW_HEIGHT / 2.0 - 4.0;   // 48.5
+    const qreal boxRight = boxLeft + CENTER_BOX_SIZE;  // 79.5
+    const qreal boxBottom = boxTop + CENTER_BOX_SIZE;  // 57.5
+
+    painter.save();
+    painter.setRenderHint(QPainter::Antialiasing, false);
+    painter.setPen(QPen(DIVIDER_COLOR, 1));
+    // 水平分隔线，中间让出中心准心框
+    painter.drawLine(QPointF(0, lineY), QPointF(boxLeft, lineY));
+    painter.drawLine(QPointF(boxRight, lineY), QPointF(PANEL_WIDTH, lineY));
+    // 垂直分隔线
+    painter.drawLine(QPointF(lineX, 0), QPointF(lineX, boxTop));
+    painter.drawLine(QPointF(lineX, boxBottom), QPointF(lineX, PREVIEW_HEIGHT));
+
+    // 中心准心框：1px 描边
+    painter.setBrush(Qt::NoBrush);
+    painter.setPen(QPen(CENTER_BOX_COLOR, 1));
+    painter.drawRect(QRectF(boxLeft, boxTop, CENTER_BOX_SIZE, CENTER_BOX_SIZE));
+    painter.restore();
+}
+
+void ZoomIndicator::drawInfoPanel(QPainter &painter)
+{
+    const QRectF infoRect(0, PREVIEW_HEIGHT, PANEL_WIDTH, INFO_HEIGHT);
+
+    painter.save();
+    painter.setRenderHint(QPainter::Antialiasing, false);
+    painter.fillRect(infoRect, INFO_FILL_COLOR);
+    painter.setBrush(Qt::NoBrush);
+    painter.setPen(QPen(INFO_BORDER_COLOR, 1));
+    painter.drawRect(infoRect.adjusted(0.5, 0.5, -0.5, -0.5));
+
+    QFont font = painter.font();
+    font.setPixelSize(FONT_PIXEL_SIZE);
+    painter.setFont(font);
+    painter.setPen(QColor(Qt::white));
+
+    // 坐标：(X,Y)
+    const QRectF coordRect(0, PREVIEW_HEIGHT + 4, PANEL_WIDTH, 17);
+    painter.drawText(coordRect, Qt::AlignCenter,
+                     QString("(%1,%2)").arg(m_screenPos.x()).arg(m_screenPos.y()));
+
+    // 颜色行：色块 + HEX，整体水平居中
+    const QColor color = sampleColor();
+    const QString hex = toHexString(color);
+    const QFontMetrics metrics(font);
+    const qreal textWidth = metrics.horizontalAdvance(hex);
+    const qreal rowWidth = SWATCH_SIZE + SWATCH_TEXT_GAP + textWidth;
+    const qreal rowLeft = (PANEL_WIDTH - rowWidth) / 2.0;
+    const qreal rowTop = PREVIEW_HEIGHT + 23;
+
+    const QRectF swatchRect(rowLeft, PREVIEW_HEIGHT + 28, SWATCH_SIZE, SWATCH_SIZE);
+    if (color.isValid()) {
+        painter.fillRect(swatchRect, color);
+    }
+    painter.setBrush(Qt::NoBrush);
+    painter.setPen(QPen(QColor(Qt::white), 1));
+    painter.drawRect(swatchRect);
+
+    painter.setPen(QColor(Qt::white));
+    painter.drawText(QRectF(rowLeft + SWATCH_SIZE + SWATCH_TEXT_GAP, rowTop, textWidth, 17),
+                     Qt::AlignCenter, hex);
+
+    // 底部操作提示
+    const QRectF tipRect(0, PREVIEW_HEIGHT + 42, PANEL_WIDTH, 17);
+    painter.drawText(tipRect, Qt::AlignCenter, tr("Press Ctrl+c to copy color"));
+
+    painter.restore();
+}
+
 void ZoomIndicator::paintEvent(QPaintEvent *)
 {
-    qCDebug(dsrApp) << "ZoomIndicator::paintEvent called.";
-//    using namespace utils;
-    //通过此方式获取光标的位置实际是当前光标所在的屏幕的位置加上光标的位置，实际上已经进行了缩放，但是只缩放光标所在的屏幕
-    //例如两个1920的屏幕横连，实际宽度是3840,进行1.25缩放后实际宽度是3072、但是屏幕1上的点的范围是0～1920,屏幕二上的范围是1920～3840
-//    QPoint centerPos =   this->cursor().pos(); //不清楚为啥有些时候此接口获取的值是两个屏幕都缩放了，有些时候只有一个屏幕缩放
-    qreal ration = this->devicePixelRatioF();
-    QPoint centerPos = m_cursorPos / ration;
-//    qDebug() << "0 centerPos: " << centerPos << "m_cursorPos: " << m_cursorPos;
-//    centerPos = QPoint(std::max(centerPos.x() - this->window()->x(), 0),
-//                       std::max(centerPos.y() - this->window()->y(), 0));
-//    qDebug() << "1 centerPos: " << centerPos;
     QPainter painter(this);
-    //获取背景图片
-    const QPixmap &fullscreenImgFile = TempFile::instance()->getFullscreenPixmap();
-//    qDebug() << "fullscreenImgFile.size(): " << fullscreenImgFile.size();
-    QImage fullscreenImg = fullscreenImgFile.toImage();
-//    qDebug() << "1 fullscreenImg.size(): " << fullscreenImg.size();
-
-    //将背景图片按屏幕缩放比进行缩放
-    fullscreenImg =  fullscreenImg.scaled(static_cast<int>(fullscreenImg.width() / ration),
-                                          static_cast<int>(fullscreenImg.height() / ration), Qt::KeepAspectRatio);
-
-//    qDebug() << "2 fullscreenImg.size(): " << fullscreenImg.size();
-    //获取所有屏幕的信息
-//    QList<Utils::ScreenInfo> screensInfo = Utils::getScreensInfo();
-//    for (int i = 0; i < screensInfo.size(); i++) {
-//        //判断当前点在哪块屏幕上
-//        if (centerPos.x() > screensInfo[i].x && centerPos.x() < screensInfo[i].x + screensInfo[i].width &&
-//                centerPos.y() > screensInfo[i].y && centerPos.y() < screensInfo[i].y + screensInfo[i].height) {
-//            centerPos.setX(static_cast<int>((centerPos.x() - screensInfo[i].x) * ration + screensInfo[i].x ));
-//            centerPos.setY(static_cast<int>((centerPos.y() - screensInfo[i].y) * ration + screensInfo[i].y ));
-//            break;
-//        }
-//    }
-//    qDebug() << "2 centerPos: " << centerPos;
-//    centerPos = centerPos*ration;
-//    qDebug() << "3 centerPos: " << centerPos;
-    //返回centerPos位置的像素颜色
-    const QRgb centerRectRgb = fullscreenImg.pixel(centerPos);
-    QRect tempRec = QRect(centerPos.x() - IMG_WIDTH / 2, centerPos.y() - IMG_WIDTH / 2, IMG_WIDTH, IMG_WIDTH) ;
-    //qDebug() << " tempRec: " <<  tempRec;
-    QPixmap zoomPix = QPixmap(fullscreenImgFile).scaled(
-                          fullscreenImg.width(), fullscreenImg.height()).copy(tempRec);
-
-    zoomPix = zoomPix.scaled(QSize(INDICATOR_WIDTH,  INDICATOR_WIDTH),
-                             Qt::KeepAspectRatio);
-    painter.drawPixmap(QRect(5, 5, INDICATOR_WIDTH, INDICATOR_WIDTH), zoomPix);
-    painter.drawPixmap(m_centerRect, QPixmap(":/images/action/center_rect.png"));
-    painter.drawPixmap(m_globalRect, QPixmap(":/images/action/magnifier.png"));
-    m_lastCenterPosBrush = QBrush(QColor(qRed(centerRectRgb),
-                                         qGreen(centerRectRgb), qBlue(centerRectRgb)));
-    painter.fillRect(QRect(INDICATOR_WIDTH / 2 + 2, INDICATOR_WIDTH / 2 + 2,
-                           CENTER_RECT_WIDTH - 4, CENTER_RECT_WIDTH - 4), m_lastCenterPosBrush);
-    painter.fillRect(QRect(5, INDICATOR_WIDTH - 9, INDICATOR_WIDTH, BOTTOM_RECT_HEIGHT),
-                     QBrush(QColor(0, 0, 0, 125)));
-    QFont posFont;
-    posFont.setPixelSize(9);
-    painter.setFont(posFont);
-    painter.setPen(QColor(Qt::white));
-    QTextOption posTextOption;
-    posTextOption.setAlignment(Qt::AlignHCenter | Qt::AlignTop);
-    painter.drawText(QRectF(5, INDICATOR_WIDTH - 10, INDICATOR_WIDTH, INDICATOR_WIDTH),
-                     QString("%1, %2").arg(m_cursorPos.x()).arg(m_cursorPos.y()), posTextOption);
+    painter.setRenderHint(QPainter::Antialiasing, true);
+    drawPreview(painter);
+    drawCrosshair(painter);
+    drawInfoPanel(painter);
 }
 
 void ZoomIndicator::showMagnifier(QPoint pos)
@@ -162,10 +291,9 @@ void ZoomIndicator::showMagnifier(QPoint pos)
     }
 #endif
 
-    this->show();
-
     this->move(pos);
-    //qDebug() << "this->pos(): " << this->pos();
+    this->show();
+    this->update();
 }
 
 void ZoomIndicator::hideMagnifier()
@@ -185,5 +313,9 @@ void ZoomIndicator::hideMagnifier()
 void ZoomIndicator::setCursorPos(QPoint pos)
 {
     m_cursorPos = pos;
-    //qDebug() << "0 pos: " << pos << "m_cursorPos: " << m_cursorPos;
+}
+
+void ZoomIndicator::setScreenPos(QPoint pos)
+{
+    m_screenPos = pos;
 }
