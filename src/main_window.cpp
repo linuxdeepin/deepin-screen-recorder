@@ -6191,11 +6191,16 @@ int MainWindow::keyPressEF(QKeyEvent *keyEvent, bool &needRepaint)
                 }
 
                 if (keyEvent->key() == Qt::Key_C) {
-                    //                        ConfigSettings::instance()->setValue("save", "save_op",
-                    //                        SaveAction::SaveToClipboard);
-                    // m_copyToClipboard = true;
-                    //                        saveScreenshot();
-                    // saveScreenShot();
+                    // 需求 2.9：放大镜显示状态下按 Ctrl+C，把当前光标像素的
+                    // HEX 色值（小写带 #）复制到系统剪贴板，并退出截图。
+                    if (m_zoomIndicator && m_zoomIndicator->isVisible()) {
+                        const QString colorHex = m_zoomIndicator->currentColorHex();
+                        if (!colorHex.isEmpty()) {
+                            qCInfo(dsrApp) << "copy color to clipboard:" << colorHex;
+                            qApp->clipboard()->setText(colorHex, QClipboard::Clipboard);
+                        }
+                        exitApp();
+                    }
                 }
                 if (keyEvent->key() == Qt::Key_Left) {
                     recordX = std::max(0, recordX - 1);
