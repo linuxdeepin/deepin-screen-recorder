@@ -22,6 +22,7 @@
 
 DWIDGET_USE_NAMESPACE
 
+class QMouseEvent;
 class ToolButton;
 
 /**
@@ -68,6 +69,18 @@ public:
      *   ③ 两侧均不足 -> 按钮组在选区右上角内侧，面板向左展开
      */
     void followSelection(const QRect &selection, const QRect &screen);
+    /**
+     * @brief 按同一套①/②/③规则计算按钮组可见底板在父窗口坐标系中的矩形，
+     * 但不移动控件。供主窗口判断工具栏是否会被按钮组遮挡：
+     * 设计稿③下工具栏会顺移到按钮组下方显示。
+     */
+    QRect groupPlateRect(const QRect &selection, const QRect &screen) const;
+    // 用户是否手动拖动过按钮组；拖动之后不再按①/②/③自动贴边，
+    // 与主工具栏「拖动过就保持用户位置」的行为保持一致。
+    bool isUserMoved() const { return m_userMoved; }
+    // 按钮组可见底板当前的实际矩形（父窗口坐标系）。用户拖动过之后它不再等于
+    // groupPlateRect() 算出来的位置，主窗口判断工具栏是否被遮挡时要用这个。
+    QRect currentGroupPlateRect() const;
     // 主窗口同步当前选区尺寸到尺寸/比例面板
     void setSelectionSize(int width, int height);
 
@@ -82,10 +95,20 @@ signals:
     // 用户在尺寸/比例面板中输入了新的选区尺寸
     void selectionSizeChanged(int width, int height);
     void panelExpandedChanged(bool expanded);
+    // 用户拖动按钮组结束，主窗口据此重新检查工具栏是否被遮挡
+    void groupMoved();
 
 public slots:
     // 点击其它工具时收起属性面板（保留圆角与尺寸比例设置）
     void collapsePanels();
+
+protected:
+    // 按钮组支持像主工具栏一样拖动；按钮/滑块等子控件自己消费点击，不受影响。
+    void mousePressEvent(QMouseEvent *event) override;
+    void mouseMoveEvent(QMouseEvent *event) override;
+    void mouseReleaseEvent(QMouseEvent *event) override;
+    // 鼠标停在按钮组底板上时显示“可拖动”手型（与主工具栏一致）
+    bool eventFilter(QObject *watched, QEvent *event) override;
 
 private:
     void initUi();
@@ -137,6 +160,14 @@ private:
     QRect m_lastSelection;
     QRect m_lastScreen;
     bool m_syncingSelectionSize = false;
+    // 拖动状态：m_groupAnchor 始终记录按钮组可见底板的左上角（父窗口坐标系），
+    // 面板展开/收起导致控件尺寸变化时据此回算控件原点，按钮组不会跟着跑。
+    bool m_userMoved = false;
+    bool m_dragging = false;
+    bool m_hoverCursorPushed = false;
+    QPoint m_dragMouseStart;
+    QPoint m_dragWidgetStart;
+    QPoint m_groupAnchor;
 };
 
 #endif // ROUNDEDCORNERWIDGET_H

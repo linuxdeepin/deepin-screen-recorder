@@ -580,6 +580,9 @@ void MainWindow::initAttributes()
         });
         connect(m_roundedCornerWidget, &RoundedCornerWidget::selectionSizeChanged,
                 this, &MainWindow::onRoundedSelectionSizeChanged);
+        // 用户拖动圆角/尺寸按钮组后，工具栏需要按新的实际位置重新避让
+        connect(m_roundedCornerWidget, &RoundedCornerWidget::groupMoved,
+                this, &MainWindow::updateToolBarPos);
 
         m_sizeTips = new TopTips(this);
         m_sizeTips->setFullScreenRecord(m_isFullScreenRecord);
@@ -3344,8 +3347,12 @@ void MainWindow::updateToolBarPos()
             toolbarPoint.setY(recordY - m_toolBar->height() - TOOLBAR_Y_SPACING);
 
         } else {
-            // 将一级工具栏放在捕捉区域内部
-            toolbarPoint.setY(recordY + TOOLBAR_Y_SPACING);
+            // 选区内侧兜底：贴选区底边右对齐显示。
+            // 工具栏的默认家在捕捉区域下方，贴底是"下方"在选区内最接近的位置；
+            // 放顶部会和右上角的圆角/尺寸按钮组挤成一竖条（设计稿 2.3 ③ 的顺移场景）。
+            // 与底边留出缩放热区 + 常规间距，避免压住选区底边的缩放手柄/虚框。
+            const int bottomGap = m_cursorBound + TOOLBAR_Y_SPACING;
+            toolbarPoint.setY(recordY + recordHeight - m_toolBar->height() - bottomGap);
             m_isToolBarInside = true;
         }
     }
@@ -3485,16 +3492,37 @@ void MainWindow::updateToolBarPos()
         }
     }
 
+    // 圆角 / 尺寸比例工具组本次是否显示（下面定位工具栏时也要用同一个判定）
+    const bool canShowRoundedCorner = (status::shot == m_functionType)
+            && !Utils::isTreelandMode
+            && recordWidth > 0 && recordHeight > 0;
+
+    // 设计稿 2.3 ③：圆角/尺寸按钮组落在选区右上角内侧时，若截图工具栏也在
+    // 选区内右上角，两者会互相遮挡。按设计稿把工具栏顺移到按钮组下方显示，
+    // 按钮组本身保持设计稿规定的位置不动。
+    // 选区内侧的兜底位置已改为贴选区底边，正常不会再命中这里；此分支用于兜底
+    // 多屏/边界收敛把工具栏又放回选区内顶部的残留场景。
+    if (canShowRoundedCorner && m_roundedCornerWidget) {
+        // 用户手动拖动过按钮组时，①②③算出来的位置已经不是它的真实位置，
+        // 必须用实际底板矩形判断，否则工具栏避让会错位。
+        const QRect groupPlate = m_roundedCornerWidget->isUserMoved()
+                ? m_roundedCornerWidget->currentGroupPlateRect()
+                : m_roundedCornerWidget->groupPlateRect(
+                      QRect(recordX, recordY, recordWidth, recordHeight), m_backgroundRect);
+        if (!groupPlate.isEmpty() && QRect(toolbarPoint, m_toolBar->size()).intersects(groupPlate)) {
+            const int maxToolBarY = m_backgroundRect.y() + m_backgroundRect.height() - m_toolBar->height();
+            toolbarPoint.setY(qMin(groupPlate.bottom() + 1 + TOOLBAR_Y_SPACING, maxToolBarY));
+            m_toolbarLastPoint = toolbarPoint;
+        }
+    }
+
     // TODO: treeland适配，解决问题临时方案
     if (!(Utils::isTreelandMode))
         m_toolBar->showAt(toolbarPoint);
 
     // 圆角 / 尺寸比例工具组跟随选区右上角
     if (m_roundedCornerWidget) {
-        const bool canShow = (status::shot == m_functionType)
-                && !Utils::isTreelandMode
-                && recordWidth > 0 && recordHeight > 0;
-        if (canShow) {
+        if (canShowRoundedCorner) {
             // 尺寸面板与左上角尺寸提示保持一致，展示实际截图像素大小
             const qreal pixelRatio = qApp->primaryScreen()->devicePixelRatio();
             m_roundedCornerWidget->setSelectionSize(
@@ -4483,9 +4511,13 @@ void MainWindow::updateFineAdjustTips()
     m_fineAdjustTips->setResizeEnabled(!(m_roundedCornerWidget && m_roundedCornerWidget->isRatioLocked()));
     m_fineAdjustTips->dockToBottomLeft();
 
-    // 光标（或选区）与提示面板重叠时隐藏提示面板
+    // 光标（或选区）与提示面板重叠时隐藏提示面板。
+    // 首次框选拖动过程中，选区一旦碰到提示面板就应立即隐藏，
+    // 而不是等松开鼠标（第一次释放）后由选区矩形判定才消失。
+    const bool isSelecting = isFirstPressButton && isPressMouseLeftButton
+            && !isReleaseMouseLeftButton && !isFirstReleaseButton;
     const QRect tipsRect(m_fineAdjustTips->pos(), m_fineAdjustTips->size());
-    const QRect blockedRect = isFirstReleaseButton
+    const QRect blockedRect = (isFirstReleaseButton || isSelecting)
             ? QRect(recordX, recordY, recordWidth, recordHeight)
             : QRect(m_currentCursor, QSize(1, 1));
     if (tipsRect.intersects(blockedRect)) {
@@ -5868,6 +5900,8 @@ int MainWindow::mouseMoveEF(QMouseEvent *mouseEvent, bool &needRepaint)
                     recordHeight = std::abs(dragStartY - mouseEvent->y());
 
                     needRepaint = true;
+                    // 选区刚更新完就重新判定与提示面板的遮挡，实现拖动中实时消失
+                    updateFineAdjustTips();
                 }
             } else if (isPressMouseLeftButton) {
                 if (recordButtonStatus == RECORD_BUTTON_NORMAL && dragRecordX >= 0 && dragRecordY >= 0) {
@@ -5902,6 +5936,8 @@ int MainWindow::mouseMoveEF(QMouseEvent *mouseEvent, bool &needRepaint)
                     applyLockedRatioToSelection();
 
                     needRepaint = true;
+                    // 移动/缩放选区时同样实时判定与提示面板的遮挡
+                    updateFineAdjustTips();
                 }
             }
             // 更新光标

@@ -23,6 +23,7 @@
 
 #include <QActionGroup>
 #include <QApplication>
+#include <QMouseEvent>
 #include <QLineEdit>
 #include <QIntValidator>
 #include <QPainter>
@@ -250,8 +251,10 @@ protected:
     void paintEvent(QPaintEvent *event) override
     {
         Q_UNUSED(event);
-        const bool darkTheme = DGuiApplicationHelper::instance()->themeType()
-                               == DGuiApplicationHelper::DarkType;
+        // 本应用通过 setApplicationPalette() 套用系统主题，DGuiApplicationHelper::themeType()
+        // 不一定会跟随实际调色板（本机出现 palette 为深色但 themeType() 仍报浅色，
+        // 导致深色模式下钉住图标被涂成纯黑）。这里直接按调色板判断，与 ToolButton 保持一致。
+        const bool darkTheme = palette().color(QPalette::Window).lightness() < 128;
         const bool active = isChecked();
 
         // 设计稿：normal #000000 10%、hover #000000 20%，press 再深一档；
@@ -278,6 +281,9 @@ protected:
         DStyleOptionButton option;
         initStyleOption(&option);
 
+        const QSize iconSize = option.iconSize.isValid() ? option.iconSize
+                                                         : QSize(BUTTON_ICON_SIZE, BUTTON_ICON_SIZE);
+        // selection-fixed 不会被 builtin 图标引擎自动重着色，需按当前调色板手工着色。
         QColor iconColor;
         if (active) {
             iconColor = option.palette.highlightedText().color();
@@ -286,8 +292,6 @@ protected:
         } else {
             iconColor = darkTheme ? QColor(255, 255, 255) : QColor(0, 0, 0);
         }
-        const QSize iconSize = option.iconSize.isValid() ? option.iconSize
-                                                         : QSize(BUTTON_ICON_SIZE, BUTTON_ICON_SIZE);
         option.icon = tintedIcon(option.icon, iconSize, iconColor);
 
         stylePainter.drawControl(DStyle::CE_IconButton, option);
@@ -301,6 +305,43 @@ QColor blurMaskColor()
         return QColor(0xF7, 0xF7, 0xF7, 153);
     }
     return QColor(0, 0, 0, 76);
+}
+
+// Qt6 用 globalPosition()，Qt5 只有 globalPos()，拖动时取鼠标的全局坐标。
+QPoint eventGlobalPos(const QMouseEvent *event)
+{
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+    return event->globalPosition().toPoint();
+#else
+    return event->globalPos();
+#endif
+}
+
+// 按钮组水平位置的①/②/③判定（设计稿 2.3）：
+// reposition() 与 groupPlateRect() 共用，避免两处几何计算出现偏差。
+struct GroupPlacement
+{
+    int groupLeft = 0;        // 按钮组可见底板相对父窗口的左边
+    bool panelOnLeft = false; // 属性面板是否向左展开
+};
+
+GroupPlacement computeGroupPlacement(const QRect &selection, const QRect &screen)
+{
+    const int totalWidth = GROUP_WIDTH + PANEL_GAP + PANEL_WIDTH;
+    GroupPlacement placement;
+    if (selection.right() + SELECTION_GAP + totalWidth <= screen.right()) {
+        // ① 选区右侧空间足够：按钮组在选区右上角右侧，面板向右展开
+        placement.groupLeft = selection.right() + SELECTION_GAP;
+    } else if (selection.left() - SELECTION_GAP - totalWidth >= screen.left()) {
+        // ② 选区左侧空间足够：按钮组在选区左上角左侧，面板向左展开
+        placement.panelOnLeft = true;
+        placement.groupLeft = selection.left() - SELECTION_GAP - GROUP_WIDTH;
+    } else {
+        // ③ 两侧均不足：按钮组贴在选区右上角内侧，面板向左展开
+        placement.panelOnLeft = true;
+        placement.groupLeft = selection.right() - GROUP_WIDTH + 1;
+    }
+    return placement;
 }
 
 // DFloatingWidget 会在内容四周预留阴影留白（常规档位为 6px），
@@ -408,6 +449,8 @@ RoundedCornerWidget::~RoundedCornerWidget()
 void RoundedCornerWidget::initUi()
 {
     m_groupFrame = buildGroup();
+    // 底板（按钮组）悬停时显示手型；面板内部有滑块/输入框，不能一起改光标
+    m_groupFrame->installEventFilter(this);
     m_cornerPanel = buildCornerPanel();
     m_sizePanel = buildSizePanel();
 
@@ -755,6 +798,13 @@ void RoundedCornerWidget::flushPendingPersist()
 
 void RoundedCornerWidget::hideEvent(QHideEvent *event)
 {
+    // 控件隐藏时（例如拖到一半按 Esc）复位拖动状态，避免残留到下一次显示
+    m_dragging = false;
+    // 底板不会再收到 Leave，这里主动收回手型光标
+    if (m_hoverCursorPushed) {
+        QApplication::restoreOverrideCursor();
+        m_hoverCursorPushed = false;
+    }
     flushPendingPersist();
     QWidget::hideEvent(event);
 }
@@ -941,25 +991,24 @@ void RoundedCornerWidget::reposition()
         return;
     }
 
-    // 面板展开方向与位置都以「按钮组 + 面板」的完整宽度计算，
-    // 保证面板展开前后按钮组位置不会跳动（设计稿 ①/②/③ 判定条件）。
-    const int totalWidth = GROUP_WIDTH + PANEL_GAP + PANEL_WIDTH;
     const bool hasPanel = (m_panel != NoPanel);
 
-    // 按钮组在屏幕坐标系下应贴合的左边位置
+    // 面板展开方向与位置都以「按钮组 + 面板」的完整宽度计算，
+    // 保证面板展开前后按钮组位置不会跳动（设计稿 ①/②/③ 判定条件）。
     int groupLeft = 0;
+    int groupTop = 0;
     bool panelOnLeft = false;
-    // ① 选区右侧空间足够：按钮组在选区右上角右侧，面板向右展开
-    if (selection.right() + SELECTION_GAP + totalWidth <= screen.right()) {
-        groupLeft = selection.right() + SELECTION_GAP;
-    } else if (selection.left() - SELECTION_GAP - totalWidth >= screen.left()) {
-        // ② 选区左侧空间足够：按钮组在选区左上角左侧，面板向左展开
-        panelOnLeft = true;
-        groupLeft = selection.left() - SELECTION_GAP - GROUP_WIDTH;
+    if (m_userMoved) {
+        // 用户手动拖过按钮组：不再按①②③贴边，保持用户放的位置；
+        // 面板朝空间大的一侧展开，避免拖到边缘后面板出屏。
+        groupLeft = m_groupAnchor.x();
+        groupTop = m_groupAnchor.y();
+        panelOnLeft = groupLeft + GROUP_WIDTH / 2 < screen.center().x();
     } else {
-        // ③ 两侧均不足：按钮组贴在选区右上角内侧，面板向左展开
-        panelOnLeft = true;
-        groupLeft = selection.right() - GROUP_WIDTH + 1;
+        const GroupPlacement placement = computeGroupPlacement(selection, screen);
+        groupLeft = placement.groupLeft;
+        groupTop = selection.top();
+        panelOnLeft = placement.panelOnLeft;
     }
 
     if (m_panelOnLeft != panelOnLeft) {
@@ -973,11 +1022,117 @@ void RoundedCornerWidget::reposition()
     // 控件左上角比可见底板多出一个阴影留白，定位时要去掉
     const int margin = plateShadowMargin(this);
     int x = groupLeft - groupOffset - margin;
-    int y = selection.top() - margin;
+    int y = groupTop - margin;
 
     x = qBound(screen.left(), x, qMax(screen.left(), screen.right() - width() + 1));
     y = qBound(screen.top(), y, qMax(screen.top(), screen.bottom() - height() + 1));
     move(x, y);
+    m_groupAnchor = QPoint(x + groupOffset + margin, y + margin);
+}
+
+QRect RoundedCornerWidget::currentGroupPlateRect() const
+{
+    const int margin = plateShadowMargin(this);
+    return QRect(pos() + m_groupFrame->pos() + QPoint(margin, margin),
+                 QSize(GROUP_WIDTH, GROUP_HEIGHT));
+}
+
+bool RoundedCornerWidget::eventFilter(QObject *watched, QEvent *event)
+{
+    // 与主工具栏一致：鼠标停在按钮组底板上显示“可拖动”手型。
+    // 只监听底板本身，属性面板里的滑块/输入框保持自己的光标。
+    if (watched == m_groupFrame) {
+        if (event->type() == QEvent::Enter) {
+            if (!m_hoverCursorPushed) {
+                QApplication::setOverrideCursor(Qt::OpenHandCursor);
+                m_hoverCursorPushed = true;
+            }
+        } else if (event->type() == QEvent::Leave) {
+            if (m_hoverCursorPushed) {
+                QApplication::restoreOverrideCursor();
+                m_hoverCursorPushed = false;
+            }
+        }
+    }
+    return QWidget::eventFilter(watched, event);
+}
+
+void RoundedCornerWidget::mousePressEvent(QMouseEvent *event)
+{
+    if (event->button() != Qt::LeftButton) {
+        QWidget::mousePressEvent(event);
+        return;
+    }
+    // 与主工具栏一致：按住按钮组底板即可整体拖动（按钮、滑块等子控件会先消费自己的点击）
+    QApplication::changeOverrideCursor(Qt::ClosedHandCursor);
+    m_dragging = true;
+    m_dragMouseStart = eventGlobalPos(event);
+    m_dragWidgetStart = pos();
+    event->accept();
+}
+
+void RoundedCornerWidget::mouseMoveEvent(QMouseEvent *event)
+{
+    if (!m_dragging) {
+        QWidget::mouseMoveEvent(event);
+        return;
+    }
+
+    QPoint target = m_dragWidgetStart + (eventGlobalPos(event) - m_dragMouseStart);
+
+    // 限制在截图背景范围内，避免拖出屏幕后找不回来
+    const QRect &screen = m_lastScreen;
+    if (!screen.isEmpty()) {
+        target.setX(qBound(screen.left(), target.x(), qMax(screen.left(), screen.right() - width() + 1)));
+        target.setY(qBound(screen.top(), target.y(), qMax(screen.top(), screen.bottom() - height() + 1)));
+    }
+
+    if (target != pos()) {
+        m_userMoved = true;
+        move(target);
+        // 拖动过程中同步锚点，面板展开/收起时按钮组不会跳
+        const int margin = plateShadowMargin(this);
+        m_groupAnchor = pos() + m_groupFrame->pos() + QPoint(margin, margin);
+    }
+    event->accept();
+}
+
+void RoundedCornerWidget::mouseReleaseEvent(QMouseEvent *event)
+{
+    if (event->button() != Qt::LeftButton) {
+        QWidget::mouseReleaseEvent(event);
+        return;
+    }
+    const bool wasDragging = m_dragging;
+    m_dragging = false;
+    QApplication::changeOverrideCursor(Qt::OpenHandCursor);
+    event->accept();
+    if (wasDragging && m_userMoved) {
+        emit groupMoved();
+    }
+}
+
+QRect RoundedCornerWidget::groupPlateRect(const QRect &selection, const QRect &screen) const
+{
+    if (selection.isEmpty() || screen.isEmpty()) {
+        return {};
+    }
+
+    const GroupPlacement placement = computeGroupPlacement(selection, screen);
+    const bool hasPanel = (m_panel != NoPanel);
+    const int margin = plateShadowMargin(this);
+    const int groupOffset = (placement.panelOnLeft && hasPanel) ? (PANEL_WIDTH + PANEL_GAP) : 0;
+    const int widgetWidth = (hasPanel ? (GROUP_WIDTH + PANEL_GAP + PANEL_WIDTH) : GROUP_WIDTH) + margin * 2;
+    const int widgetHeight = GROUP_HEIGHT + margin * 2;
+
+    // 与 reposition() 使用完全相同的边界收敛，保证算出来的底板位置就是实际显示位置。
+    int x = placement.groupLeft - groupOffset - margin;
+    int y = selection.top() - margin;
+    x = qBound(screen.left(), x, qMax(screen.left(), screen.right() - widgetWidth + 1));
+    y = qBound(screen.top(), y, qMax(screen.top(), screen.bottom() - widgetHeight + 1));
+
+    const int groupX = (hasPanel && placement.panelOnLeft) ? (PANEL_WIDTH + PANEL_GAP) : 0;
+    return QRect(x + groupX + margin, y + margin, GROUP_WIDTH, GROUP_HEIGHT);
 }
 
 QPixmap RoundedCornerWidget::applyRoundedCorners(const QPixmap &source, int radius)
