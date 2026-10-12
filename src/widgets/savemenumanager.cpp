@@ -278,11 +278,20 @@ void SaveMenuManager::initializeFromConfig()
                 m_currentLocationState = LocationState::ChooseOnSave;
                 updateSubMenuForFirstTime();
                 m_chooseOnSaveAction->setChecked(true);
+                ConfigSettings::instance()->setValue("shot", "location_state", static_cast<int>(LocationState::ChooseOnSave));
+                ConfigSettings::instance()->setValue("shot", "save_dir_change", true);
                 qCWarning(dsrApp) << "SaveMenuManager::initializeFromConfig - SpecifiedLocation mode, invalid save_dir, fallback to choose on save";
             }
         }
     }
-    m_updateOnSaveAction->setChecked(isChangeOnSave);
+    // 仅当「指定位置 + 保存时更新位置」且存在历史路径时，勾选才落在 m_updateOnSaveAction。
+    // 无历史路径时该项是隐藏的，若仍勾选它，可见项「保存时选择位置」就没有选中状态。
+    const bool updateOnSaveChecked =
+        (m_currentSaveOption == SaveOption::SpecifiedLocation) &&
+        (m_currentLocationState == LocationState::ChooseOnSave) &&
+        isChangeOnSave &&
+        !m_currentCustomPath.isEmpty();
+    m_updateOnSaveAction->setChecked(updateOnSaveChecked);
     qCDebug(dsrApp) << "SaveMenuManager initialized - SaveOption:" << static_cast<int>(m_currentSaveOption)
                     << "LocationState:" << static_cast<int>(m_currentLocationState)
                     << "CustomPath:" << m_currentCustomPath;

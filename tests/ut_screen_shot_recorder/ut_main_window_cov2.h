@@ -258,7 +258,28 @@ TEST_F(MainWindowCov2Test, saveActionSafe)
 TEST_F(MainWindowCov2Test, sendNotifySafe)
 {
     EXPECT_NO_FATAL_FAILURE(call_private_fun::MainWindowsendNotify(*m_w, SaveAction::SaveToClipboard, QStringLiteral("/tmp/x.png"), true));
+
+    const QString keepDir = QStringLiteral("/tmp/dsr_keep_save_dir");
+    ConfigSettings::instance()->setValue("shot", "save_dir", keepDir);
     EXPECT_NO_FATAL_FAILURE(call_private_fun::MainWindowsendNotify(*m_w, SaveAction::SaveToDesktop, QStringLiteral("/tmp/y.png"), false));
+    EXPECT_EQ(ConfigSettings::instance()->getValue("shot", "save_dir").toString(), keepDir);
+}
+
+TEST_F(MainWindowCov2Test, saveActionInvalidFixedPathDoesNotMutateConfig)
+{
+    const QString invalidDir = QStringLiteral("/no/such/dsr/fixed/path");
+    ConfigSettings::instance()->setValue("shot", "save_ways", 1);
+    ConfigSettings::instance()->setValue("shot", "save_op", 3);
+    ConfigSettings::instance()->setValue("shot", "save_dir_change", false);
+    ConfigSettings::instance()->setValue("shot", "save_dir", invalidDir);
+
+    QPixmap pix(10, 10);
+    pix.fill(Qt::red);
+    bool result = true;
+    EXPECT_NO_FATAL_FAILURE(result = call_private_fun::MainWindowsaveAction(*m_w, pix));
+    EXPECT_FALSE(result);
+    EXPECT_EQ(ConfigSettings::instance()->getValue("shot", "save_dir").toString(), invalidDir);
+    EXPECT_FALSE(ConfigSettings::instance()->getValue("shot", "save_dir_change").toBool());
 }
 
 TEST_F(MainWindowCov2Test, saveScreenShotSafe)               { EXPECT_NO_FATAL_FAILURE(call_private_fun::MainWindowsaveScreenShot(*m_w)); }
