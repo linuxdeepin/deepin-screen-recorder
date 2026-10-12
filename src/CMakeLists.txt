@@ -89,6 +89,7 @@ set ( deepin-screen-recorder_HDRS
     )
 
 set ( deepin-screen-recorder_SRCS
+    utils/cpuvendor.cpp
     utils/log.cpp
     utils/calculaterect.cpp
     utils/shapesutils.cpp
