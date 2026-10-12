@@ -48,11 +48,11 @@ or press the shortcut again to stop recording</source>
     <name>MainToolWidget</name>
     <message>
         <source>Close (Esc)</source>
-        <translation>關閉 Esc</translation>
+        <translation>關閉 (Esc)</translation>
     </message>
     <message>
         <source>Copy to clipboard (Enter)</source>
-        <translation>複製到剪貼板 Enter</translation>
+        <translation>複製到剪貼板 (Enter)</translation>
     </message>
 </context>
 <context>
@@ -516,21 +516,21 @@ or press the shortcut again to stop recording</source>
 <context>
     <name>ShotToolWidget</name>
     <message>
-        <source>Rectangle
+        <source>Rectangle (R)
 Press and hold Shift to draw a square</source>
-        <translation>矩形
+        <translation>矩形 (R)
 按住Shift可畫正方形</translation>
     </message>
     <message>
-        <source>Ellipse
+        <source>Ellipse (O)
 Press and hold Shift to draw a circle</source>
-        <translation>橢圓
+        <translation>橢圓 (O)
 按住Shift可畫圓形</translation>
     </message>
     <message>
-        <source>Brush
+        <source>Brush (P)
 Press and hold Shift to draw a straight line</source>
-        <translation>筆刷
+        <translation>筆刷 (P)
 按住Shift可畫直線</translation>
     </message>
     <message>
@@ -550,11 +550,11 @@ Press and hold Shift to draw a straight line</source>
     <name>SubToolWidget</name>
     <message>
         <source>Show keystroke (K)</source>
-        <translation>顯示按鍵 K</translation>
+        <translation>顯示按鍵 (K)</translation>
     </message>
     <message>
         <source>Hide Keystroke (K)</source>
-        <translation>隱藏按鍵 K</translation>
+        <translation>隱藏按鍵 (K)</translation>
     </message>
     <message>
         <source>Sequence number (Alt+S)</source>
@@ -562,15 +562,15 @@ Press and hold Shift to draw a straight line</source>
     </message>
     <message>
         <source>Show Keystroke (K)</source>
-        <translation>顯示按鍵 K</translation>
+        <translation>顯示按鍵 (K)</translation>
     </message>
     <message>
         <source>Turn on camera (C)</source>
-        <translation>開啟攝像頭 C</translation>
+        <translation>開啟攝像頭 (C)</translation>
     </message>
     <message>
         <source>Turn off camera (C)</source>
-        <translation>關閉攝像頭 C</translation>
+        <translation>關閉攝像頭 (C)</translation>
     </message>
     <message>
         <source>Screenshot</source>
@@ -582,7 +582,7 @@ Press and hold Shift to draw a straight line</source>
     </message>
     <message>
         <source>Settings (F3)</source>
-        <translation>設置 F3</translation>
+        <translation>設置 (F3)</translation>
     </message>
     <message>
         <source>Format</source>
@@ -645,6 +645,10 @@ Press and hold Shift to draw a straight line</source>
         <translation>選項</translation>
     </message>
     <message>
+        <source>Options (F3)</source>
+        <translation>選項 (F3)</translation>
+    </message>
+    <message>
         <source>Show pointer</source>
         <translation>顯示游標</translation>
     </message>
@@ -667,42 +671,42 @@ Press and hold Shift to draw a straight line</source>
     <message>
         <source>Line (L)
 Press and hold Shift to draw a vertical or horizontal line</source>
-        <translation>直線（L）
+        <translation>直線 (L)
 按住Shift可畫垂直線和水平線</translation>
     </message>
     <message>
         <source>Arrow (X)
 Press and hold Shift to draw a vertical or horizontal arrow</source>
-        <translation>箭頭（X）
+        <translation>箭頭 (X)
 按住Shift可畫垂直和水平箭頭</translation>
     </message>
     <message>
         <source>Pencil (P)</source>
-        <translation>畫筆 P</translation>
+        <translation>畫筆 (P)</translation>
     </message>
     <message>
         <source>Blur (B)</source>
-        <translation>模糊 B</translation>
+        <translation>模糊 (B)</translation>
     </message>
     <message>
         <source>Text (T)</source>
-        <translation>文字 T</translation>
+        <translation>文字 (T)</translation>
     </message>
     <message>
-        <source>Scrollshot (Alt+I）</source>
-        <translation>滾動截圖 Alt+I</translation>
+        <source>Scrollshot (Alt+I)</source>
+        <translation>滾動截圖 (Alt+I)</translation>
     </message>
     <message>
-        <source>Extract text (Alt+O）</source>
-        <translation>識別文字 Alt+O</translation>
+        <source>Extract text (Alt+O)</source>
+        <translation>識別文字 (Alt+O)</translation>
     </message>
     <message>
-        <source>Pin screenshots (Alt+P）</source>
-        <translation>貼圖 Alt+P</translation>
+        <source>Pin screenshots (Alt+P)</source>
+        <translation>貼圖 (Alt+P)</translation>
     </message>
     <message>
         <source>Undo (Ctrl+Z)</source>
-        <translation>撤銷 Ctrl+Z</translation>
+        <translation>撤銷 (Ctrl+Z)</translation>
     </message>
     <message>
         <source>Record</source>
@@ -745,8 +749,8 @@ Press and hold Shift to draw a vertical or horizontal arrow</source>
         <translation>樣機</translation>
     </message>
     <message>
-        <source>Extract Text</source>
-        <translation>識別文字</translation>
+        <source>Extract Text (Alt+O)</source>
+        <translation>識別文字 (Alt+O)</translation>
     </message>
     <message>
         <source>Save to local</source>
@@ -775,8 +779,8 @@ Hold down Shift to draw squares or circles.</source>
         <translation>保存時選擇位置</translation>
     </message>
     <message>
-        <source>AI Screenshot (A)</source>
-        <translation>AI截圖 (A)</translation>
+        <source>AI Screenshot (Alt+A)</source>
+        <translation>AI截圖 (Alt+A)</translation>
     </message>
     <message>
         <source>Save to Desktop</source>
@@ -787,8 +791,8 @@ Hold down Shift to draw squares or circles.</source>
         <translation>保存到圖片</translation>
     </message>
     <message>
-        <source>Table recognition (Alt+T）</source>
-        <translation>表格識別 (Alt+T）</translation>
+        <source>Table recognition (Alt+T)</source>
+        <translation>表格識別 (Alt+T)</translation>
     </message>
     <message>
         <source>Table recognition</source>
@@ -825,15 +829,15 @@ Hold down Shift to draw squares or circles.</source>
     <name>ToolBarWidget</name>
     <message>
         <source>Close (Esc)</source>
-        <translation>關閉 Esc</translation>
+        <translation>關閉 (Esc)</translation>
     </message>
     <message>
         <source>Copy to clipboard (Enter)</source>
-        <translation>複製到剪貼板 Enter</translation>
+        <translation>複製到剪貼板 (Enter)</translation>
     </message>
     <message>
         <source>OK (Enter)</source>
-        <translation>確認 Enter</translation>
+        <translation>確認 (Enter)</translation>
     </message>
 </context>
 <context>

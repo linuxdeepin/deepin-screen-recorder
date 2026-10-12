@@ -666,7 +666,7 @@ void SubToolWidget::initShotLabel()
     m_scrollShotButton->setIcon(QIcon::fromTheme("scrollShot"));
     Utils::setAccessibility(m_scrollShotButton, AC_SUBTOOLWIDGET_SCROLLSHOT_BUTTON);
     m_scrollShotButton->setFixedSize(TOOL_BUTTON_SIZE);
-    installTipHint(m_scrollShotButton, tr("Scrollshot (Alt+I）"));
+    installTipHint(m_scrollShotButton, tr("Scrollshot (Alt+I)"));
 #ifdef  OCR_SCROLL_FLAGE_ON
     // TODO: 仅x11下开启，后续处理，目前还有问题
     if (!(Utils::isTreelandMode))
@@ -686,7 +686,7 @@ void SubToolWidget::initShotLabel()
     m_ocrButton->setIcon(QIcon::fromTheme("ocr-normal"));
     Utils::setAccessibility(m_ocrButton, AC_SUBTOOLWIDGET_OCR_BUTTON);
     m_ocrButton->setFixedSize(TOOL_BUTTON_SIZE);
-    installTipHint(m_ocrButton, tr("Extract text (Alt+O）"));
+    installTipHint(m_ocrButton, tr("Extract text (Alt+O)"));
     connect(m_ocrButton, &DPushButton::clicked, this, [ = ] {
         qCDebug(dsrApp) << "OCR按钮按下！";
         emit changeShotToolFunc("ocr");
@@ -701,7 +701,7 @@ void SubToolWidget::initShotLabel()
     m_tableButton->setIcon(QIcon::fromTheme("table-recognition"));
     Utils::setAccessibility(m_tableButton, AC_SUBTOOLWIDGET_TABLE_BUTTON);
     m_tableButton->setFixedSize(TOOL_BUTTON_SIZE);
-    installTipHint(m_tableButton, tr("Table recognition (Alt+T）"));
+    installTipHint(m_tableButton, tr("Table recognition (Alt+T)"));
     connect(m_tableButton, &DPushButton::clicked, this, [ = ] {
         qCDebug(dsrApp) << "table recognition button clicked.";
         emit changeShotToolFunc("tableRecogn");
@@ -723,7 +723,7 @@ void SubToolWidget::initShotLabel()
     m_pinButton->setIcon(QIcon::fromTheme("pinscreenshots"));
     Utils::setAccessibility(m_pinButton, AC_SUBTOOLWIDGET_PINSCREENSHOTS_BUTTON);
     m_pinButton->setFixedSize(TOOL_BUTTON_SIZE);
-    installTipHint(m_pinButton, tr("Pin screenshots (Alt+P）"));
+    installTipHint(m_pinButton, tr("Pin screenshots (Alt+P)"));
     connect(m_pinButton, &DPushButton::clicked, this, [ = ] {
         qCDebug(dsrApp) << "贴图按钮按下！";
         emit changeShotToolFunc("pinScreenshots");
@@ -991,6 +991,9 @@ void SubToolWidget::updateSaveButtonTip()
                           << "tipText=" << tipText;
     }
     
+    if (!tipText.isEmpty()) {
+        tipText += QStringLiteral(" (Ctrl+S)");
+    }
     qCWarning(dsrApp) << "updateSaveButtonTip: 最终tipText=" << tipText;
     installTipHint(m_saveLocalDirButton, tipText);
     qCWarning(dsrApp) << "========== updateSaveButtonTip 结束 ==========";
@@ -1555,7 +1558,7 @@ void SubToolWidget::initScrollLabel()
     m_ocrScrollButton->setAccessibleName("OcrScrollButton");
     Utils::setAccessibility(m_ocrScrollButton, AC_SUBTOOLWIDGET_KEYBOARD_BUTTON);
     m_ocrScrollButton->setIconSize(TOOL_ICON_SIZE);
-    installTipHint(m_ocrScrollButton,  tr("Extract Text"));
+    installTipHint(m_ocrScrollButton,  tr("Extract Text (Alt+O)"));
     m_ocrScrollButton->setIcon(QIcon::fromTheme("ocr-normal"));
     m_ocrScrollButton->setFixedSize(TOOL_BUTTON_SIZE);
     btnList.append(m_ocrScrollButton);
@@ -1573,7 +1576,7 @@ void SubToolWidget::initScrollLabel()
     m_scrollOptionButton->setIcon(QIcon::fromTheme("setting"));
 
     Utils::setAccessibility(m_scrollOptionButton, AC_SUBTOOLWIDGET_RECORD_OPTION_BUT);
-    installTipHint(m_scrollOptionButton, tr("Settings"));
+    installTipHint(m_scrollOptionButton, tr("Settings (F3)"));
     
     btnList.append(m_scrollOptionButton);
 

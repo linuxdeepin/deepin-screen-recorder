@@ -1467,10 +1467,11 @@ void MainWindow::initSaveShortcut()
             m_showButtons->showContentButtons(KEY_ENTER);
     });
     // 截图模式/滚动模式 保存截图
+    // Ctrl+S 为「保存」按钮的快捷键（复制到剪贴板由 Enter 负责）
     connect(saveShotSC, &QShortcut::activated, this, [=] {
         if (status::shot == m_functionType || status::scrollshot == m_functionType) {
-            qCDebug(dsrApp) << "shortcut : saveShotSC (key: ctrl+s)";
-            saveScreenShotToClipboardOnly();
+            qCDebug(dsrApp) << "shortcut : saveShotSC (key: ctrl+s) save to file";
+            saveScreenShot();
         }
     });
     // 截图模式/录屏模式（未做穿透）/滚动模式 退出
