@@ -4654,8 +4654,6 @@ void MainWindow::sendNotify(SaveAction saveAction, QString saveFilePath, const b
                                 QStringList(),
                                 QVariantMap(),
                                 5000);
-        ConfigSettings::instance()->setValue("shot", "save_dir", "");
-
         exitApp();
         return;
     }
@@ -4744,6 +4742,7 @@ bool MainWindow::saveAction(const QPixmap &pix)
 
     QString tempFileName = "";
     QStandardPaths::StandardLocation saveOption = QStandardPaths::TempLocation;
+    QString pendingSpecificSaveDir;
 
     // 隐藏了工具栏之后保存的时候需要同时写到剪切板和本地
     // 且此时的保存路径为tmp/customsave/xxx.png
@@ -4902,9 +4901,14 @@ bool MainWindow::saveAction(const QPixmap &pix)
                 // QString path = ConfigSettings::instance()->getValue("save", "save_dir").toString();
                 QString path = ConfigSettings::instance()->getValue("shot", "save_dir").toString();
                 QString fileName = selectAreaName;
+                const bool isChangeSpecificDir = ConfigSettings::instance()->getValue("shot", "save_dir_change").value<bool>();
+                const bool invalidPath = path.isEmpty() || !QDir(path).exists();
 
-                if (path.isEmpty() || !QDir(path).exists()) {
+                if (invalidPath && isChangeSpecificDir) {
                     path = QStandardPaths::writableLocation(QStandardPaths::DesktopLocation);
+                } else if (invalidPath) {
+                    qWarning() << __FUNCTION__ << __LINE__ << "Invalid fixed save directory:" << path;
+                    return false;
                 }
 
                 if (selectAreaName.isEmpty()) {
@@ -4914,8 +4918,6 @@ bool MainWindow::saveAction(const QPixmap &pix)
                 }
                 QString lastFileName;
 
-                // 是否设置或更新指定目录
-                bool isChangeSpecificDir = ConfigSettings::instance()->getValue("shot", "save_dir_change").value<bool>();
                 qCInfo(dsrApp) << __FUNCTION__ << __LINE__ << "isChangeSpecificDir: " << isChangeSpecificDir;
                 // 自动化测试反馈, dde-desktop里面有2个computer_window. 修改直接调用QFileDialog类的静态函数. 不用创建其对象
                 // QFileDialog fileDialog;
@@ -4952,10 +4954,6 @@ bool MainWindow::saveAction(const QPixmap &pix)
                                     this, tr("Save"), lastFileName, tr("PNG (*.png);;JPEG (*.jpg *.jpeg);;BMP (*.bmp)")) :
                                 lastFileName;
                         break;
-                }
-
-                if (isChangeSpecificDir) {
-                    ConfigSettings::instance()->setValue("shot", "save_dir_change", false);
                 }
 
                 if (Utils::isWaylandMode) {
@@ -5013,7 +5011,9 @@ bool MainWindow::saveAction(const QPixmap &pix)
 
                 qCInfo(dsrApp) << __FUNCTION__ << __LINE__ << "保存到指定文件夹！";
                 qCDebug(dsrApp) << "The fileName is: " << m_saveFileName;
-                ConfigSettings::instance()->setValue("shot", "save_dir", QFileInfo(m_saveFileName).dir().absolutePath());
+                if (isChangeSpecificDir) {
+                    pendingSpecificSaveDir = QFileInfo(m_saveFileName).dir().absolutePath();
+                }
                 break;
             }
             case AutoSave:
@@ -5205,6 +5205,12 @@ bool MainWindow::saveAction(const QPixmap &pix)
     if (m_ocrInterface != nullptr) {
         m_ocrInterface->openImageAndName(pix.toImage(), tempFileName);
         // m_ocrInterface->openFile(m_saveFileName);
+    }
+    // 只有真正保存成功后才记住位置：写入 save_dir，并把「保存时更新位置」固化为该位置。
+    // 保存失败时不写配置，保持 save_dir_change=true，下次仍然弹出位置选择框。
+    if (!pendingSpecificSaveDir.isEmpty()) {
+        ConfigSettings::instance()->setValue("shot", "save_dir", pendingSpecificSaveDir);
+        ConfigSettings::instance()->setValue("shot", "save_dir_change", false);
     }
     return true;
 }

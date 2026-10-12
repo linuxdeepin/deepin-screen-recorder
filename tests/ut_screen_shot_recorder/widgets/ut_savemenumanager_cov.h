@@ -227,6 +227,57 @@ TEST_F(SaveMenuManagerCovTest, initializeSpecifiedInvalidPathFallback)
     setShot("save_dir", QStringLiteral("/no/such/dsr/path/xyz"));
     EXPECT_NO_FATAL_FAILURE(m_m->initializeFromConfig());
     EXPECT_EQ(m_m->getCurrentLocationState(), LocationState::ChooseOnSave);
+    EXPECT_TRUE(getShot(QStringLiteral("save_dir_change")).toBool());
+    EXPECT_EQ(getShot(QStringLiteral("location_state")).toInt(), static_cast<int>(LocationState::ChooseOnSave));
+}
+
+// 「保存时选择位置 / 保存时更新位置」的勾选必须落在可见项上，
+// 否则菜单看起来没有任何选中项（失败保存后无历史路径时会踩到）。
+TEST_F(SaveMenuManagerCovTest, initializeChooseOnSaveWithoutPathChecksVisibleItem)
+{
+    setShot("save_ways", 1);
+    setShot("save_op", 3);
+    setShot("location_state", static_cast<int>(LocationState::ChooseOnSave));
+    setShot("save_dir_change", true);
+    setShot("save_dir", QString());
+    EXPECT_NO_FATAL_FAILURE(m_m->initializeFromConfig());
+
+    DMenu *sub = nullptr;
+    for (QAction *a : m_m->getMenu()->actions()) {
+        if (a->menu()) { sub = qobject_cast<DMenu *>(a->menu()); break; }
+    }
+    ASSERT_NE(sub, nullptr);
+
+    int visibleChecked = 0;
+    for (QAction *locAct : sub->actions()) {
+        if (locAct->isVisible() && locAct->isChecked())
+            ++visibleChecked;
+    }
+    EXPECT_EQ(visibleChecked, 1);
+}
+
+TEST_F(SaveMenuManagerCovTest, initializeChooseOnSaveWithPathChecksVisibleItem)
+{
+    const QString dir = QStringLiteral("/tmp");
+    setShot("save_ways", 1);
+    setShot("save_op", 3);
+    setShot("location_state", static_cast<int>(LocationState::ChooseOnSave));
+    setShot("save_dir_change", true);
+    setShot("save_dir", dir);
+    EXPECT_NO_FATAL_FAILURE(m_m->initializeFromConfig());
+
+    DMenu *sub = nullptr;
+    for (QAction *a : m_m->getMenu()->actions()) {
+        if (a->menu()) { sub = qobject_cast<DMenu *>(a->menu()); break; }
+    }
+    ASSERT_NE(sub, nullptr);
+
+    int visibleChecked = 0;
+    for (QAction *locAct : sub->actions()) {
+        if (locAct->isVisible() && locAct->isChecked())
+            ++visibleChecked;
+    }
+    EXPECT_EQ(visibleChecked, 1);
 }
 
 // ---------- slot interiors ----------
