@@ -180,3 +180,6 @@
 #include "ut_ext_capture_cov_final.h"
 #include "ut_record_process_cov_final.h"
 
+// --- UT supplement: bug-fix commits c1e1741a / 487c41cd (TASK-393987) ---
+#include "widgets/ut_shapeswidget_fix_cov.h"
+#include "utils/ut_borderprocessinterface_fix_cov.h"

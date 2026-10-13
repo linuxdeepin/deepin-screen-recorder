@@ -19,7 +19,12 @@ INCLUDEPATH += . ../../src/ \
             ../../../3rdparty/libcam/libcam_render/ \
             ../../../3rdparty/libcam/libcam_encoder/ \
             ../../../3rdparty/libcam/libcam_audio/ \
-            ../../../src/ext-image-capture/
+            ../../../src/ext-image-capture/ \
+            /usr/include/x86_64-linux-gnu/qt6/QtWaylandClient/6.8.0 \
+            /usr/include/x86_64-linux-gnu/qt6/QtWaylandClient \
+            /usr/include/x86_64-linux-gnu/qt6/QtWaylandClient/6.8.0/QtWaylandClient \
+            /usr/include/x86_64-linux-gnu/qt6/QtWaylandGlobal/6.8.0 \
+            /usr/include/x86_64-linux-gnu/qt6/QtWaylandGlobal/6.8.0/QtWaylandGlobal
 DEFINES += DDE_START_FLAGE_ON
 DEFINES += OCR_SCROLL_FLAGE_ON
 DEFINES += ENABLE_UNIT_TEST
@@ -320,15 +325,21 @@ HEADERS += test_all_interfaces.h \
     dbusinterface/ut_dbusinterface_cov.h \
     # --- P1: 启用孤儿测试头 ---
     widgets/ut_colorbutton.h \
+    ../../src/widgets/roundedcornerwidget.h \
+    ../../src/widgets/fineadjusttips.h \
     gstrecord/ut_gstrecordx.h \
     # --- P1: 补入对应源码头（moc）---
     ../../src/widgets/colorbutton.h \
+    ../../src/widgets/roundedcornerwidget.h \
+    ../../src/widgets/fineadjusttips.h \
     ut_widgets_cov_final.h \
     ut_main_window_cov_final.h \
     ut_misc_cov_final.h \
     ut_ext_capture_cov_final.h \
     ut_record_process_cov_final.h \
-    ut_scope_guard.h
+    ut_scope_guard.h \
+    widgets/ut_shapeswidget_fix_cov.h \
+    utils/ut_borderprocessinterface_fix_cov.h
 
 
 SOURCES += main.cpp \
@@ -430,6 +441,8 @@ SOURCES += main.cpp \
     ../../src/dbusservice/dbusscreenshotservice.cpp \
     # --- P1: 启用孤儿测试，补入对应源文件 ---
     ../../src/widgets/colorbutton.cpp \
+    ../../src/widgets/roundedcornerwidget.cpp \
+    ../../src/widgets/fineadjusttips.cpp \
     coverage_final.cpp \
     protocols_handle_cov.cpp \
     remaining_cov.cpp \
