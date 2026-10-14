@@ -1141,11 +1141,16 @@ QPixmap RoundedCornerWidget::applyRoundedCorners(const QPixmap &source, int radi
         return source;
     }
     QImage image = source.toImage().convertToFormat(QImage::Format_ARGB32_Premultiplied);
-    const qreal dpr = image.devicePixelRatio() > 0 ? image.devicePixelRatio() : 1.0;
+    const qreal dpr = source.devicePixelRatio() > 0 ? source.devicePixelRatio() : 1.0;
+    // 全程在「设备像素」坐标系下裁剪，最后再恢复 devicePixelRatio。
+    // 若在绘制前给 out 设置 dpr，QPainter 会切换到逻辑坐标，而下面的
+    // QPainterPath 仍以设备像素构造（宽高、radius*dpr），路径会被放大 dpr 倍，
+    // 导致只有左上角落在画布内、其余三个圆角被裁到画布外（高 DPI 下只圆了左上角）。
+    image.setDevicePixelRatio(1.0);
     const qreal scaledRadius = radius * dpr;
     QImage out(image.size(), QImage::Format_ARGB32_Premultiplied);
     out.fill(Qt::transparent);
-    out.setDevicePixelRatio(dpr);
+    out.setDevicePixelRatio(1.0);
 
     QPainter painter(&out);
     painter.setRenderHint(QPainter::Antialiasing, true);
@@ -1156,6 +1161,7 @@ QPixmap RoundedCornerWidget::applyRoundedCorners(const QPixmap &source, int radi
     painter.drawImage(0, 0, image);
     painter.end();
 
+    out.setDevicePixelRatio(dpr);
     QPixmap result = QPixmap::fromImage(out);
     result.setDevicePixelRatio(dpr);
     return result;
