@@ -1016,6 +1016,14 @@ void MainWindow::checkIsLockScreen()
             m_toolBar->setTableScreenshotsEnable(false);
             m_toolBar->setButEnableOnLockScreen(false);
         }
+    } else {
+        // 问题5：锁屏结束后恢复表格识别按钮可用状态
+        if (m_toolBar) {
+            m_toolBar->setScrollShotDisabled(false);
+            m_toolBar->setOcrScreenshotsEnable(true);
+            m_toolBar->setTableScreenshotsEnable(true);
+            m_toolBar->setButEnableOnLockScreen(true);
+        }
     }
     // 电源界面判断接口
     QDBusInterface ddeLockFront(
@@ -1038,6 +1046,14 @@ void MainWindow::checkIsLockScreen()
             m_toolBar->setOcrScreenshotsEnable(false);
             m_toolBar->setTableScreenshotsEnable(false);
             m_toolBar->setButEnableOnLockScreen(false);
+        }
+    } else {
+        // 问题5：电源界面关闭后恢复按钮可用状态
+        if (m_toolBar) {
+            m_toolBar->setScrollShotDisabled(false);
+            m_toolBar->setOcrScreenshotsEnable(true);
+            m_toolBar->setTableScreenshotsEnable(true);
+            m_toolBar->setButEnableOnLockScreen(true);
         }
     }
 #endif
@@ -8754,15 +8770,23 @@ void MainWindow::onRoundedSelectionSizeChanged(int width, int height)
     const qreal pixelRatio = qApp->primaryScreen()->devicePixelRatio() > 0
             ? qApp->primaryScreen()->devicePixelRatio() : 1.0;
     // 尺寸面板与实际截图裁剪保持一致：宽-2、高-1，并限制不超出屏幕
-    const int maxWidth = qMax(RECORD_MIN_SHOT_SIZE, m_backgroundRect.width() - recordX - 2);
-    const int maxHeight = qMax(RECORD_MIN_SHOT_SIZE, m_backgroundRect.height() - recordY - 1);
-    const int newWidth = qBound(RECORD_MIN_SHOT_SIZE, qRound(width / pixelRatio) + 2, maxWidth);
-    const int newHeight = qBound(RECORD_MIN_SHOT_SIZE, qRound(height / pixelRatio) + 1, maxHeight);
+    // 问题22：允许选区尺寸使用整个屏幕范围，当右下角超出时左移/上移选区左上角
+    const int screenWidth = m_backgroundRect.width();
+    const int screenHeight = m_backgroundRect.height();
+    const int newWidth = qBound(RECORD_MIN_SHOT_SIZE, qRound(width / pixelRatio) + 2, screenWidth - 2);
+    const int newHeight = qBound(RECORD_MIN_SHOT_SIZE, qRound(height / pixelRatio) + 1, screenHeight - 1);
     if (newWidth == recordWidth && newHeight == recordHeight) {
         return;
     }
     recordWidth = newWidth;
     recordHeight = newHeight;
+    // 当选区右/下边超出屏幕时，左移/上移选区左上角，使选区完整保留在屏幕内
+    if (recordX + recordWidth > screenWidth - 2) {
+        recordX = qMax(0, screenWidth - 2 - recordWidth);
+    }
+    if (recordY + recordHeight > screenHeight - 1) {
+        recordY = qMax(0, screenHeight - 1 - recordHeight);
+    }
     // 尺寸面板只改变宽高、不动左上角，标注保持屏幕绝对位置即可
     syncShapesWidgetGeometry(false);
     if (m_sizeTips) {

@@ -27,6 +27,9 @@
 #include <QPainterPath>
 #include <QRgb>
 
+#include <DPalette>
+#include <DGuiApplicationHelper>
+
 namespace {
 // 以下尺寸、颜色、字号均取自 Sketch 画板「截图录屏-光标指针」(8F8261D2-...)。
 // 放大镜浮窗：预览区 150x105 + 信息区 150x65。
@@ -230,10 +233,58 @@ void ZoomIndicator::drawInfoPanel(QPainter &painter)
 
     painter.save();
     painter.setRenderHint(QPainter::Antialiasing, false);
-    painter.fillRect(infoRect, INFO_FILL_COLOR);
+    // 问题3.3：使用 QPainterPath 绘制底部圆角矩形（仅底部两角圆角）
+    QPainterPath infoPath;
+    const qreal radius = 4.0;
+    infoPath.moveTo(infoRect.left(), infoRect.top());
+    infoPath.lineTo(infoRect.right(), infoRect.top());
+    infoPath.lineTo(infoRect.right(), infoRect.bottom() - radius);
+    infoPath.quadTo(infoRect.right(), infoRect.bottom(),
+                    infoRect.right() - radius, infoRect.bottom());
+    infoPath.lineTo(infoRect.left() + radius, infoRect.bottom());
+    infoPath.quadTo(infoRect.left(), infoRect.bottom(),
+                    infoRect.left(), infoRect.bottom() - radius);
+    infoPath.closeSubpath();
+    painter.setRenderHint(QPainter::Antialiasing, true);
+    // 问题3.2：从全屏缓存图采样信息面板背后的区域，缩小再放大实现模糊效果
+    const qreal dpr = devicePixelRatioF();
+    const QPoint widgetPos = pos();
+    const QRect screenInfoRect(
+        qRound(widgetPos.x() * dpr),
+        qRound((widgetPos.y() + PREVIEW_HEIGHT) * dpr),
+        qRound(PANEL_WIDTH * dpr),
+        qRound(INFO_HEIGHT * dpr));
+    const QImage &fullImg = cachedFullscreenImage();
+    if (fullImg.rect().contains(screenInfoRect) && screenInfoRect.width() > 0 && screenInfoRect.height() > 0) {
+        // 缓存模糊结果：仅在取样区域变化时重新生成，避免每次 drawInfoPanel 执行两次 QImage 缩放
+        if (m_cachedBlurredImage.isNull() || m_cachedBlurRect != screenInfoRect) {
+            QImage bgTile = fullImg.copy(screenInfoRect);
+            const int blurScale = 8;
+            QImage blurred = bgTile.scaled(
+                qMax(1, bgTile.width() / blurScale),
+                qMax(1, bgTile.height() / blurScale),
+                Qt::KeepAspectRatio, Qt::SmoothTransformation);
+            blurred = blurred.scaled(bgTile.width(), bgTile.height(),
+                Qt::KeepAspectRatio, Qt::SmoothTransformation);
+            m_cachedBlurredImage = blurred;
+            m_cachedBlurRect = screenInfoRect;
+        }
+        painter.setClipPath(infoPath);
+        painter.setRenderHint(QPainter::SmoothPixmapTransform, true);
+        painter.drawImage(infoRect.topLeft(), m_cachedBlurredImage);
+        painter.setClipping(false);
+        // 覆盖层使用半透明黑色作为 scrim 暗化背景，保证文字可读性
+        painter.fillPath(infoPath, QColor(0, 0, 0, 80));
+    } else {
+        painter.fillPath(infoPath, INFO_FILL_COLOR);
+    }
+    // 边框颜色使用 DPalette 主题适配
+    DPalette palette = DGuiApplicationHelper::instance()->standardPalette(
+        DGuiApplicationHelper::instance()->themeType());
+    QColor borderColor = palette.color(DPalette::FrameBorder);
     painter.setBrush(Qt::NoBrush);
-    painter.setPen(QPen(INFO_BORDER_COLOR, 1));
-    painter.drawRect(infoRect.adjusted(0.5, 0.5, -0.5, -0.5));
+    painter.setPen(QPen(borderColor, 2));
+    painter.drawPath(infoPath);
 
     QFont font = painter.font();
     font.setPixelSize(FONT_PIXEL_SIZE);

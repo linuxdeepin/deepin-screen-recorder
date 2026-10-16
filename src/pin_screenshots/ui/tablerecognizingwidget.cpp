@@ -12,6 +12,8 @@
 #include <QIcon>
 
 #include "../../utils/log.h"
+#include <QScreen>
+#include <QApplication>
 
 namespace {
 // 数值逐项取自设计稿画板“截图录屏-工具栏-表格识别2（识别中）”
@@ -130,8 +132,37 @@ void TableRecognizingWidget::repositionOn(QWidget *host)
     const int inset = contentMargin();
     const int cardWidth = width() - inset * 2;
     const int cardHeight = height() - inset * 2;
-    move((host->width() - cardWidth) / 2 - inset,
-         (host->height() - cardHeight) / 2 - inset);
+
+    // 问题9：当 host 小于卡片时，将卡片定位到屏幕可见区域而非 host 内部
+    int targetX = (host->width() - cardWidth) / 2 - inset;
+    int targetY = (host->height() - cardHeight) / 2 - inset;
+
+    // 获取屏幕可用区域
+    const QRect hostGlobalRect(host->mapToGlobal(QPoint(0, 0)), host->size());
+    QScreen *screen = QApplication::screenAt(hostGlobalRect.center());
+    if (!screen)
+        screen = QApplication::primaryScreen();
+    if (screen) {
+        const QRect screenRect = screen->availableGeometry();
+        const int cardRight = hostGlobalRect.left() + targetX + cardWidth;
+        const int cardBottom = hostGlobalRect.top() + targetY + cardHeight;
+        // 如果卡片超出 host 右边或下边，将卡片移到 host 下方/屏幕底部
+        if (cardWidth > host->width() || cardHeight > host->height()) {
+            // X 轴溢出：当卡片超出 host 宽度时，定位到 host 左边缘，防止负值裁切
+            if (cardWidth > host->width()) {
+                targetX = -inset;
+            } else {
+                targetX = (host->width() - cardWidth) / 2 - inset;
+            }
+            targetY = host->height() + 10;  // 放到 host 下方
+            // 如果下方也放不下，放到屏幕底部
+            if (hostGlobalRect.top() + targetY + cardHeight > screenRect.bottom()) {
+                targetY = screenRect.bottom() - hostGlobalRect.top() - cardHeight - 10;
+            }
+        }
+    }
+
+    move(targetX, targetY);
 }
 
 void TableRecognizingWidget::stop()

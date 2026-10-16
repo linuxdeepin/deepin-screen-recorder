@@ -138,6 +138,7 @@ private:
      */
     DLabel *m_scrollSubTool = nullptr;
     QString m_currentType;
+    QAbstractButton *m_lastCheckedTool = nullptr;
     /**
      * @brief 滚动截图工具栏按钮
      */

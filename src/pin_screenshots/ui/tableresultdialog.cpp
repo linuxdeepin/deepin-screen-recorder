@@ -43,7 +43,7 @@ const int CARD_HEIGHT = 240;
 const int CARD_RADIUS = 12;
 const int APP_ICON_SIZE = 20;
 const int BUTTON_MARGIN = 6;
-const int BUTTON_SPACING = 6;
+const int BUTTON_SPACING = 20;
 // 设计稿卡片背景模糊 radius 45
 const int CARD_BLUR_RADIUS = 45;
 // 设计稿卡片 fills：浅色 #EEEEEE 80%、深色 #181818 80%
@@ -122,6 +122,16 @@ TableResultDialog::TableResultDialog(const QString &html, const QImage &backdrop
     // 按钮行交给 DDialog（和例子里 addButton("取消") / addButton("授权", ...) 同款），
     // 沿用 DDialog 的按钮排布与背景；只有设计稿要求“复制为Excel格式”用蓝色文字。
     addButton(tr("Cancel"));
+
+    // 问题7.1：主题切换时更新插图
+    connect(DGuiApplicationHelper::instance(), &DGuiApplicationHelper::themeTypeChanged,
+            this, [this, illustration]() {
+        const bool isDark = DGuiApplicationHelper::instance()->themeType() == DGuiApplicationHelper::DarkType;
+        const QString path = isDark
+            ? QStringLiteral(":/icons/deepin/builtin/texts/tableresult_success_dark.svg")
+            : QStringLiteral(":/icons/deepin/builtin/texts/tableresult_success.svg");
+        illustration->setPixmap(QIcon(path).pixmap(ILLUSTRATION_SIZE, ILLUSTRATION_SIZE));
+    });
 
     auto *copyButton = new TableActionButton(tr("Copy as Excel format"), this);
     copyButton->setObjectName(QStringLiteral("ActionButton"));
@@ -265,9 +275,9 @@ void TableResultDialog::setupFrostedBackground()
     if (!m_blurGroup)
         m_blurGroup = new DBlurEffectGroup;
 
+    // 问题8：不缩放源图到 host 尺寸（host 过小时缩放后模糊不可见），
+    // 直接使用原始背景图，DBlurEffectGroup 会按 widget geometry 取样
     QImage source = m_backdrop;
-    if (source.size() != host->size())
-        source = source.scaled(host->size(), Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
 
     m_blurGroup->setSourceImage(source, CARD_BLUR_RADIUS);
 

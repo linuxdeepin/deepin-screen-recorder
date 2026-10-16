@@ -220,7 +220,11 @@ void RecorderRegionShow::updateMultiKeyBoardPos()
         m_keyButtonList.at(j)->hide();
         t_keyPoint[j] = QPoint(static_cast<int>(recordX + recordWidth / 2 + m_keyButtonList.at(j)->width() * posfix[count - 1][j]), std::max(recordY + recordHeight - INDICATOR_WIDTH, 0));
         m_keyButtonList.at(j)->move(t_keyPoint[j].x(), t_keyPoint[j].y());
-        m_keyButtonList.at(j)->show();
+        // 问题1：关键词按钮与截图选区重叠时不显示
+        QRect keyBtnRect(t_keyPoint[j], m_keyButtonList.at(j)->size());
+        if (!r.intersects(keyBtnRect)) {
+            m_keyButtonList.at(j)->show();
+        }
     }
 
     /*

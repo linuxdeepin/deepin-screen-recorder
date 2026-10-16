@@ -1110,6 +1110,15 @@ void MainWindow::checkToolbarVisibility()
         }
     }
 
+    // 问题6：表格识别进行中或结果弹窗可见时不显示工具栏
+    if ((m_tableRecognizingWidget && m_tableRecognizingWidget->isVisible()) ||
+        (m_tableResultDialog && m_tableResultDialog->isVisible())) {
+        if (m_toolBar && m_toolBar->isVisible()) {
+            m_toolBar->hide();
+        }
+        return;
+    }
+
     if (mouseOnMainWindow || mouseOnToolBar || mouseOnMenu) {
         if (m_toolBar && m_toolBar->isHidden()) {
             updateToolBarPosition();
