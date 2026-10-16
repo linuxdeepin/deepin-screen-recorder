@@ -224,6 +224,7 @@ private:
     QAction *m_microphoneAction = nullptr;
     QAction *m_sysAudioAction = nullptr;
     QButtonGroup *m_shotBtnGroup = nullptr;
+    QAbstractButton *m_lastCheckedTool = nullptr;
 
     /**
      * @brief m_saveToSpecialPathMenu 截图选项: 保存到指定位置的菜单

@@ -2544,11 +2544,8 @@ void ShapesWidget::handlePaint(QPainter &painter)
                 paintRect(painter,  m_selectedShape.mainPoints, -1);
             }
 
-            QPixmap rotatePointImg;
-            //            rotatePointImg = QIcon(":/resources/images/size/rotate.svg").pixmap(ROTATE_ICON_SIZE);
-            rotatePointImg = QIcon(":/other/icon_rotate.svg").pixmap(ROTATE_ICON_SIZE);
-            rotatePointImg.setDevicePixelRatio(this->devicePixelRatioF());
-            paintImgPoint(painter, rotatePoint, rotatePointImg, false);
+            // Do not draw rotate icon in selected state per UI requirement
+            // (previously: unconditional rotate icon drawing caused visual clutter)
 
             //画出形状的主要骨架点
             for (int i = 0; i < m_selectedShape.mainPoints.length(); i ++) {

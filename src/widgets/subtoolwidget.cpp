@@ -661,7 +661,8 @@ void SubToolWidget::initShotLabel()
     m_scrollShotButton = new ToolButton();
     m_scrollShotButton->setObjectName("ScrollShotButton");
     m_scrollShotButton->setAccessibleName("ScrollShotButton");
-    m_scrollShotButton->setCheckable(false);
+    m_scrollShotButton->setCheckable(true);
+    m_shotBtnGroup->addButton(m_scrollShotButton);
     m_scrollShotButton->setIconSize(TOOL_ICON_SIZE);
     m_scrollShotButton->setIcon(QIcon::fromTheme("scrollShot"));
     Utils::setAccessibility(m_scrollShotButton, AC_SUBTOOLWIDGET_SCROLLSHOT_BUTTON);
@@ -674,6 +675,10 @@ void SubToolWidget::initShotLabel()
 #endif
     connect(m_scrollShotButton, &DPushButton::clicked, this, [ = ] {
         qCDebug(dsrApp) << "滚动截图的按钮按下！";
+        if (m_lastCheckedTool == m_scrollShotButton) {
+            switchContent("shot");
+            return;
+        }
         switchContent("scroll");
         emit changeShotToolFunc("scrollShot");
     });
@@ -681,7 +686,8 @@ void SubToolWidget::initShotLabel()
     m_ocrButton = new ToolButton();
     m_ocrButton->setObjectName("OcrButton");
     m_ocrButton->setAccessibleName("OcrButton");
-    m_ocrButton->setCheckable(false);
+    m_ocrButton->setCheckable(true);
+    m_shotBtnGroup->addButton(m_ocrButton);
     m_ocrButton->setIconSize(TOOL_ICON_SIZE);
     m_ocrButton->setIcon(QIcon::fromTheme("ocr-normal"));
     Utils::setAccessibility(m_ocrButton, AC_SUBTOOLWIDGET_OCR_BUTTON);
@@ -689,6 +695,9 @@ void SubToolWidget::initShotLabel()
     installTipHint(m_ocrButton, tr("Extract text (Alt+O)"));
     connect(m_ocrButton, &DPushButton::clicked, this, [ = ] {
         qCDebug(dsrApp) << "OCR按钮按下！";
+        if (m_lastCheckedTool == m_ocrButton) {
+            return;
+        }
         emit changeShotToolFunc("ocr");
     });
 
@@ -696,7 +705,8 @@ void SubToolWidget::initShotLabel()
     m_tableButton = new ToolButton();
     m_tableButton->setObjectName("TableButton");
     m_tableButton->setAccessibleName("TableButton");
-    m_tableButton->setCheckable(false);
+    m_tableButton->setCheckable(true);
+    m_shotBtnGroup->addButton(m_tableButton);
     m_tableButton->setIconSize(TOOL_ICON_SIZE);
     m_tableButton->setIcon(QIcon::fromTheme("table-recognition"));
     Utils::setAccessibility(m_tableButton, AC_SUBTOOLWIDGET_TABLE_BUTTON);
@@ -704,6 +714,9 @@ void SubToolWidget::initShotLabel()
     installTipHint(m_tableButton, tr("Table recognition (Alt+T)"));
     connect(m_tableButton, &DPushButton::clicked, this, [ = ] {
         qCDebug(dsrApp) << "table recognition button clicked.";
+        if (m_lastCheckedTool == m_tableButton) {
+            return;
+        }
         emit changeShotToolFunc("tableRecogn");
     });
 
@@ -718,7 +731,8 @@ void SubToolWidget::initShotLabel()
     m_pinButton = new ToolButton();
     m_pinButton->setObjectName("PinButton");
     m_pinButton->setAccessibleName("PinButton");
-    m_pinButton->setCheckable(false);
+    m_pinButton->setCheckable(true);
+    m_shotBtnGroup->addButton(m_pinButton);
     m_pinButton->setIconSize(TOOL_ICON_SIZE);
     m_pinButton->setIcon(QIcon::fromTheme("pinscreenshots"));
     Utils::setAccessibility(m_pinButton, AC_SUBTOOLWIDGET_PINSCREENSHOTS_BUTTON);
@@ -726,6 +740,9 @@ void SubToolWidget::initShotLabel()
     installTipHint(m_pinButton, tr("Pin screenshots (Alt+P)"));
     connect(m_pinButton, &DPushButton::clicked, this, [ = ] {
         qCDebug(dsrApp) << "贴图按钮按下！";
+        if (m_lastCheckedTool == m_pinButton) {
+            return;
+        }
         emit changeShotToolFunc("pinScreenshots");
     });
     btnList.append(m_pinButton);
@@ -878,7 +895,13 @@ void SubToolWidget::initShotLabel()
 
     connect(m_shotBtnGroup, &QButtonGroup::buttonClicked,
     [ = ](QAbstractButton *button) {
-        Q_UNUSED(button);
+        if (m_lastCheckedTool == button) {
+            button->setChecked(false);
+            m_lastCheckedTool = nullptr;
+            emit changeShotToolFunc("");
+            return;
+        }
+        m_lastCheckedTool = button;
         if (m_gioButton->isChecked()) {
             // 当几何图形按钮被点击时，发送"gio"信号，而不是直接发送具体形状
             // 这样SideBarWidget可以正确识别这是几何图形按钮被点击的事件

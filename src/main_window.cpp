@@ -1016,6 +1016,14 @@ void MainWindow::checkIsLockScreen()
             m_toolBar->setTableScreenshotsEnable(false);
             m_toolBar->setButEnableOnLockScreen(false);
         }
+    } else {
+        // P5: Re-enable buttons when not on lock screen
+        if (m_toolBar) {
+            m_toolBar->setScrollShotDisabled(false);
+            m_toolBar->setOcrScreenshotsEnable(true);
+            m_toolBar->setTableScreenshotsEnable(true);
+            m_toolBar->setButEnableOnLockScreen(true);
+        }
     }
     // 电源界面判断接口
     QDBusInterface ddeLockFront(
@@ -1038,6 +1046,14 @@ void MainWindow::checkIsLockScreen()
             m_toolBar->setOcrScreenshotsEnable(false);
             m_toolBar->setTableScreenshotsEnable(false);
             m_toolBar->setButEnableOnLockScreen(false);
+        }
+    } else {
+        // P5: Re-enable buttons when not on lock front
+        if (m_toolBar) {
+            m_toolBar->setScrollShotDisabled(false);
+            m_toolBar->setOcrScreenshotsEnable(true);
+            m_toolBar->setTableScreenshotsEnable(true);
+            m_toolBar->setButEnableOnLockScreen(true);
         }
     }
 #endif
@@ -8763,6 +8779,13 @@ void MainWindow::onRoundedSelectionSizeChanged(int width, int height)
     }
     recordWidth = newWidth;
     recordHeight = newHeight;
+    // P22: Left-shift selection if it extends beyond screen bounds
+    if (recordX + recordWidth > m_backgroundRect.width()) {
+        recordX = qMax(0, m_backgroundRect.width() - recordWidth - 2);
+    }
+    if (recordY + recordHeight > m_backgroundRect.height()) {
+        recordY = qMax(0, m_backgroundRect.height() - recordHeight - 1);
+    }
     // 尺寸面板只改变宽高、不动左上角，标注保持屏幕绝对位置即可
     syncShapesWidgetGeometry(false);
     if (m_sizeTips) {

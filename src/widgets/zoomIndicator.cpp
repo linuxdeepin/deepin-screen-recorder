@@ -26,6 +26,7 @@
 #include <QPainter>
 #include <QPainterPath>
 #include <QRgb>
+#include <DGuiApplicationHelper>
 
 namespace {
 // 以下尺寸、颜色、字号均取自 Sketch 画板「截图录屏-光标指针」(8F8261D2-...)。
@@ -56,7 +57,7 @@ const QColor CENTER_BOX_COLOR(255, 255, 255, 128);
 // 信息区底色：#000000 49.8%
 const QColor INFO_FILL_COLOR(0, 0, 0, 127);
 // 信息区描边：#000000 19.8%
-const QColor INFO_BORDER_COLOR(0, 0, 0, 50);
+const QColor INFO_BORDER_COLOR(0, 0, 0, 120);
 // 取样失败时的兜底底色
 const QColor PREVIEW_FALLBACK_COLOR(0, 0, 0, 127);
 
@@ -229,11 +230,50 @@ void ZoomIndicator::drawInfoPanel(QPainter &painter)
     const QRectF infoRect(0, PREVIEW_HEIGHT, PANEL_WIDTH, INFO_HEIGHT);
 
     painter.save();
-    painter.setRenderHint(QPainter::Antialiasing, false);
-    painter.fillRect(infoRect, INFO_FILL_COLOR);
+    painter.setRenderHint(QPainter::Antialiasing, true);
+    // Problem 3.3: Use QPainterPath for bottom-only rounded corners (matching preview top corners)
+    QPainterPath infoPath;
+    const qreal r = PREVIEW_RADIUS;
+    const qreal w = PANEL_WIDTH;
+    const qreal h = INFO_HEIGHT;
+    infoPath.moveTo(0, 0);
+    infoPath.lineTo(w, 0);
+    infoPath.lineTo(w, h - r);
+    infoPath.arcTo(w - 2 * r, h - 2 * r, 2 * r, 2 * r, 0, -90);
+    infoPath.lineTo(r, h);
+    infoPath.arcTo(0, h - 2 * r, 2 * r, 2 * r, 270, -90);
+    infoPath.closeSubpath();
+    painter.translate(0, PREVIEW_HEIGHT);
+    // P3.2: Blur effect — sample screen region behind panel, downscale-upscale for blur
+    const QImage &fullImage = cachedFullscreenImage();
+    if (!fullImage.isNull()) {
+        const QPoint widgetPos = pos();
+        const QRect screenSrc(widgetPos.x(),
+                              widgetPos.y() + int(PREVIEW_HEIGHT),
+                              int(PANEL_WIDTH), int(INFO_HEIGHT));
+        QRect boundedSrc = screenSrc.intersected(fullImage.rect());
+        if (boundedSrc.isValid() && boundedSrc.width() > 2 && boundedSrc.height() > 2) {
+            QImage blurred = fullImage.copy(boundedSrc);
+            blurred = blurred.scaled(boundedSrc.width() / 4, boundedSrc.height() / 4,
+                                      Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
+            blurred = blurred.scaled(boundedSrc.width(), boundedSrc.height(),
+                                      Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
+            painter.setClipPath(infoPath);
+            painter.drawPixmap(0, 0, QPixmap::fromImage(blurred));
+            painter.setClipping(false);
+        }
+    }
+    painter.fillPath(infoPath, INFO_FILL_COLOR);
     painter.setBrush(Qt::NoBrush);
-    painter.setPen(QPen(INFO_BORDER_COLOR, 1));
-    painter.drawRect(infoRect.adjusted(0.5, 0.5, -0.5, -0.5));
+    // R5: Use DPalette for theme-aware border color instead of hardcoded
+    {
+        DPalette pal = this->palette();
+        QColor borderColor = pal.color(DPalette::FrameBorder);
+        if (!borderColor.isValid())
+            borderColor = INFO_BORDER_COLOR;
+        painter.setPen(QPen(borderColor, 2));
+    }
+    painter.drawPath(infoPath);
 
     QFont font = painter.font();
     font.setPixelSize(FONT_PIXEL_SIZE);
