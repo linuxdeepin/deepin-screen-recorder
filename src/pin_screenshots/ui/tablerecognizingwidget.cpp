@@ -130,8 +130,14 @@ void TableRecognizingWidget::repositionOn(QWidget *host)
     const int inset = contentMargin();
     const int cardWidth = width() - inset * 2;
     const int cardHeight = height() - inset * 2;
-    move((host->width() - cardWidth) / 2 - inset,
-         (host->height() - cardHeight) / 2 - inset);
+    int x = (host->width() - cardWidth) / 2 - inset;
+    int y = (host->height() - cardHeight) / 2 - inset;
+    // P9: Clamp position to keep card visible when host is smaller than card
+    if (host->width() < cardWidth + inset * 2)
+        x = 0;
+    if (host->height() < cardHeight + inset * 2)
+        y = 0;
+    move(x, y);
 }
 
 void TableRecognizingWidget::stop()

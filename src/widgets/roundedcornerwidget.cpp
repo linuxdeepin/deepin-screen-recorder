@@ -30,7 +30,6 @@
 #include <QPainterPath>
 #include <QIcon>
 #include <QHideEvent>
-#include <QProxyStyle>
 #include <QStyleOptionSlider>
 
 DWIDGET_USE_NAMESPACE
@@ -63,7 +62,7 @@ const int SIZE_MODE_X = 10;
 const int SIZE_MODE_Y = 16;
 const int SIZE_MODE_WIDTH = 55;
 const int SIZE_MODE_HEIGHT = 24;
-const int WIDTH_SPIN_X = 74;
+const int WIDTH_SPIN_X = 73;
 const int HEIGHT_SPIN_X = 154;
 const int DIMENSION_SPIN_WIDTH = 60;
 const int DIMENSION_SEPARATOR_X = 136;
@@ -77,129 +76,9 @@ const int MAX_RATIO_VALUE = 999;
 // 按钮组与选区、按钮组与属性面板的间距
 const int SELECTION_GAP = 16;
 const int PANEL_GAP = 10;
+// P20: Gap when button group is placed inside selection (smaller than outside)
+const int SELECTION_GAP_INSIDE = 10;
 
-// DTK 默认 DSlider 的滑块是蓝色胶囊；设计稿要求 16x16、圆角 4px 的深色方形滑块。
-// 轨道仍由当前 DTK 样式绘制，只替换 handle，避免重新实现整套 slider 行为。
-class RoundedSliderStyle : public QProxyStyle
-{
-public:
-    explicit RoundedSliderStyle(QObject *parent)
-        // 这里必须传 nullptr 基样式，不能传控件当前样式：
-        // QProxyStyle 会把基样式收成自己的子对象，而 QSlider 默认拿到的是
-        // QApplication 的应用样式；一旦把应用样式传进来，slider 析构时就会
-        // 连带销毁应用样式，QApplicationPrivate::app_style 变成悬空指针，
-        // 退出时 ~QApplication 再次释放它就会崩溃。
-        // 传 nullptr 时 QProxyStyle::baseStyle() 会在绘制时动态取回应用样式。
-        : QProxyStyle(nullptr)
-    {
-        setParent(parent);
-    }
-
-    void drawComplexControl(ComplexControl control, const QStyleOptionComplex *option,
-                            QPainter *painter, const QWidget *widget) const override
-    {
-        if (control != QStyle::CC_Slider || !option || !painter) {
-            QProxyStyle::drawComplexControl(control, option, painter, widget);
-            return;
-        }
-
-        const auto *sliderOption = qstyleoption_cast<const QStyleOptionSlider *>(option);
-        if (!sliderOption) {
-            QProxyStyle::drawComplexControl(control, option, painter, widget);
-            return;
-        }
-
-        const bool darkTheme = DGuiApplicationHelper::instance()->themeType()
-                               == DGuiApplicationHelper::DarkType;
-        constexpr qreal HANDLE_SIZE = 16.0;
-        constexpr qreal HANDLE_RADIUS = 4.0;
-
-        // 轨道范围用 groove（也就是可滑动区间），不要用 defaultHandle 的圆心定位：
-        // DTK 原生手柄约 28px，设计稿手柄是 16px，两者圆心相同但宽度不同，
-        // 直接套用圆心会把 16px 手柄整体往右顶 6px，最小值时轨道会在手柄左边露出一截。
-        QRectF trackRect(QProxyStyle::subControlRect(
-            control, sliderOption, QStyle::SC_SliderGroove, widget));
-        if (!trackRect.isValid()) {
-            trackRect = QRectF(sliderOption->rect);
-        }
-        if (trackRect.width() < HANDLE_SIZE) {
-            trackRect = QRectF(sliderOption->rect);
-        }
-
-        const int range = sliderOption->maximum - sliderOption->minimum;
-        const qreal fraction = range > 0
-                               ? qreal(sliderOption->sliderPosition - sliderOption->minimum) / range
-                               : 0.0;
-        // 最小值时手柄左边缘贴住轨道左端，最大值时右边缘贴住轨道右端，
-        // 这样手柄两端各占 16px，中间正好留出设计稿的 120px 虚线区间。
-        QRectF handleRect(0, 0, HANDLE_SIZE, HANDLE_SIZE);
-        handleRect.moveTopLeft(QPointF(trackRect.left() + fraction * (trackRect.width() - HANDLE_SIZE),
-                                       trackRect.center().y() - HANDLE_SIZE / 2.0));
-
-        const qreal trackY = trackRect.center().y();
-        const QColor trackColor = darkTheme ? QColor(255, 255, 255, 51)
-                                           : QColor(0, 0, 0, 51);
-        const QColor progressColor = darkTheme ? QColor(2, 76, 202)
-                                               : QColor(0, 91, 255);
-
-        painter->save();
-        painter->setRenderHint(QPainter::Antialiasing, false);
-
-        QPen trackPen(trackColor, 2.0, Qt::CustomDashLine, Qt::FlatCap, Qt::MiterJoin);
-        trackPen.setDashPattern(QVector<qreal>{1.0, 0.5});
-        painter->setPen(trackPen);
-        painter->drawLine(QPointF(trackRect.left(), trackY),
-                          QPointF(trackRect.right(), trackY));
-
-        if (sliderOption->sliderPosition > sliderOption->minimum) {
-            if (darkTheme) {
-                QPen progressShadowPen(QColor(0, 40, 128, 128), 2.0,
-                                       Qt::CustomDashLine, Qt::FlatCap, Qt::MiterJoin);
-                progressShadowPen.setDashPattern(QVector<qreal>{1.0, 0.5});
-                painter->setPen(progressShadowPen);
-                painter->drawLine(QPointF(trackRect.left(), trackY + 2.0),
-                                  QPointF(handleRect.center().x(), trackY + 2.0));
-            }
-
-            QPen progressPen(progressColor, 2.0, Qt::CustomDashLine,
-                             Qt::FlatCap, Qt::MiterJoin);
-            progressPen.setDashPattern(QVector<qreal>{1.0, 0.5});
-            painter->setPen(progressPen);
-            painter->drawLine(QPointF(trackRect.left(), trackY),
-                              QPointF(handleRect.center().x(), trackY));
-        }
-
-        painter->setRenderHint(QPainter::Antialiasing, true);
-        if (darkTheme) {
-            DDrawUtils::drawShadow(painter, handleRect.toRect(), HANDLE_RADIUS, HANDLE_RADIUS,
-                                   QColor(31, 31, 31, 102), 6.0, QPoint(0, 4));
-
-            QLinearGradient gradient(handleRect.topLeft(), handleRect.bottomLeft());
-            gradient.setColorAt(0, QColor(83, 83, 83));
-            gradient.setColorAt(1, QColor(46, 46, 46));
-            painter->setPen(Qt::NoPen);
-            painter->setBrush(gradient);
-            painter->drawRoundedRect(handleRect.adjusted(0.5, 0.5, -0.5, -0.5),
-                                     HANDLE_RADIUS, HANDLE_RADIUS);
-
-            painter->setPen(QPen(QColor(0, 0, 0, 51), 1.0));
-            painter->setBrush(Qt::NoBrush);
-            painter->drawRoundedRect(handleRect.adjusted(0.5, 0.5, -0.5, -0.5),
-                                     HANDLE_RADIUS, HANDLE_RADIUS);
-            painter->setPen(QPen(QColor(255, 255, 255, 26), 1.0));
-            painter->drawRoundedRect(handleRect.adjusted(1.5, 1.5, -1.5, -1.5),
-                                     HANDLE_RADIUS - 1.0, HANDLE_RADIUS - 1.0);
-        } else {
-            DDrawUtils::drawShadow(painter, handleRect.toRect(), HANDLE_RADIUS, HANDLE_RADIUS,
-                                   QColor(0, 0, 0, 77), 4.0, QPoint(0, 2));
-            painter->setPen(Qt::NoPen);
-            painter->setBrush(QColor(77, 77, 77));
-            painter->drawRoundedRect(handleRect.adjusted(0.5, 0.5, -0.5, -0.5),
-                                     HANDLE_RADIUS, HANDLE_RADIUS);
-        }
-        painter->restore();
-    }
-};
 
 // 把单色图标整体着色成指定颜色（保留原始 alpha 形状）。
 // 图标资源本身固定是 #000000，DTK 对普通 QIcon 不会按 palette 重新着色，
@@ -290,7 +169,9 @@ protected:
         } else if (isDown()) {
             iconColor = option.palette.highlight().color();
         } else {
-            iconColor = darkTheme ? QColor(255, 255, 255) : QColor(0, 0, 0);
+            // P17: Use DPalette for theme-aware icon color instead of hardcoded
+            DPalette pal = palette();
+            iconColor = pal.color(DPalette::WindowText);
         }
         option.icon = tintedIcon(option.icon, iconSize, iconColor);
 
@@ -339,7 +220,7 @@ GroupPlacement computeGroupPlacement(const QRect &selection, const QRect &screen
     } else {
         // ③ 两侧均不足：按钮组贴在选区右上角内侧，面板向左展开
         placement.panelOnLeft = true;
-        placement.groupLeft = selection.right() - GROUP_WIDTH + 1;
+        placement.groupLeft = selection.right() - SELECTION_GAP_INSIDE - GROUP_WIDTH + 1;
     }
     return placement;
 }
@@ -384,7 +265,11 @@ void applyLineEditPlateColor(DLineEdit *edit)
         return;
     }
 
-    const QColor plateColor(255, 255, 255, 153);
+    // Use theme-aware plate color instead of hardcoded white (Problem 16)
+    const bool darkTheme = DGuiApplicationHelper::instance()->themeType()
+                           == DGuiApplicationHelper::DarkType;
+    const QColor plateColor = darkTheme ? QColor(0, 0, 0, 153)
+                                        : QColor(255, 255, 255, 153);
     QPalette pal = edit->palette();
     pal.setColor(QPalette::Base, plateColor);
     pal.setColor(QPalette::Button, plateColor);
@@ -619,7 +504,7 @@ QWidget *RoundedCornerWidget::buildCornerPanel()
     m_radiusSlider->setAccessibleName("CornerRadiusSlider");
     m_radiusSlider->move(margin + SLIDER_X, margin + SLIDER_Y);
     QSlider *radiusSlider = m_radiusSlider->slider();
-    radiusSlider->setStyle(new RoundedSliderStyle(radiusSlider));
+    // Use DTK default slider style instead of custom RoundedSliderStyle (Problem 14)
     connect(DGuiApplicationHelper::instance(), &DGuiApplicationHelper::themeTypeChanged,
             radiusSlider, qOverload<>(&QWidget::update));
 
@@ -723,6 +608,12 @@ QWidget *RoundedCornerWidget::buildSizePanel()
     m_lockButton->setFixedSize(BUTTON_SIZE, BUTTON_SIZE);
     m_lockButton->setIconSize(QSize(BUTTON_ICON_SIZE, BUTTON_ICON_SIZE));
     m_lockButton->setIcon(QIcon::fromTheme("selection-fixed"));
+    // Ensure icon color follows theme palette instead of fixed gray (Problem 17)
+    {
+        DPalette pal = m_lockButton->palette();
+        QColor iconColor = pal.color(DPalette::ButtonText);
+        m_lockButton->setPalette(pal);
+    }
     m_lockButton->setObjectName("RatioLockButton");
     m_lockButton->setAccessibleName("RatioLockButton");
     m_lockButton->setToolTip(tr("Keep the selected size or ratio for the next screenshot"));
@@ -774,8 +665,8 @@ void RoundedCornerWidget::syncFromConfig()
 void RoundedCornerWidget::syncButtonStates()
 {
     // 圆角按钮高亮表示面板已展开或圆角已开启；尺寸比例按钮高亮表示面板展开或已锁定比例
-    m_cornerButton->setChecked(m_panel == CornerPanel || m_radius > 0);
-    m_ratioButton->setChecked(m_panel == SizePanel || m_ratioLocked);
+    m_cornerButton->setChecked(m_panel == CornerPanel);
+    m_ratioButton->setChecked(m_panel == SizePanel);
 }
 
 void RoundedCornerWidget::persistRadius()
@@ -918,6 +809,10 @@ void RoundedCornerWidget::updateDimensionFields()
     if (!m_widthEdit || !m_heightEdit) {
         return;
     }
+    // P21: Guard against stale/zero selection dimensions
+    if (m_selectionWidth <= 0 || m_selectionHeight <= 0) {
+        return;
+    }
 
     const int maxValue = m_ratioLocked ? MAX_RATIO_VALUE : MAX_DIMENSION_VALUE;
     if (m_widthValidator) {
@@ -1044,7 +939,7 @@ bool RoundedCornerWidget::eventFilter(QObject *watched, QEvent *event)
     if (watched == m_groupFrame) {
         if (event->type() == QEvent::Enter) {
             if (!m_hoverCursorPushed) {
-                QApplication::setOverrideCursor(Qt::OpenHandCursor);
+                QApplication::setOverrideCursor(Qt::PointingHandCursor);
                 m_hoverCursorPushed = true;
             }
         } else if (event->type() == QEvent::Leave) {
@@ -1064,7 +959,7 @@ void RoundedCornerWidget::mousePressEvent(QMouseEvent *event)
         return;
     }
     // 与主工具栏一致：按住按钮组底板即可整体拖动（按钮、滑块等子控件会先消费自己的点击）
-    QApplication::changeOverrideCursor(Qt::ClosedHandCursor);
+    QApplication::changeOverrideCursor(Qt::PointingHandCursor);
     m_dragging = true;
     m_dragMouseStart = eventGlobalPos(event);
     m_dragWidgetStart = pos();
@@ -1105,7 +1000,7 @@ void RoundedCornerWidget::mouseReleaseEvent(QMouseEvent *event)
     }
     const bool wasDragging = m_dragging;
     m_dragging = false;
-    QApplication::changeOverrideCursor(Qt::OpenHandCursor);
+    QApplication::changeOverrideCursor(Qt::PointingHandCursor);
     event->accept();
     if (wasDragging && m_userMoved) {
         emit groupMoved();

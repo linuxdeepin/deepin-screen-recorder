@@ -215,12 +215,17 @@ void RecorderRegionShow::updateMultiKeyBoardPos()
 
     int count = qMin(m_keyButtonList.count(), 5);
     qCDebug(dsrApp) << "Number of key buttons:" << count; // Log count
+    const QRect selectionRect(recordX, recordY, recordWidth, recordHeight);
     for (int j = 0; j < count; ++j) {
         qCDebug(dsrApp) << "Processing key button at index:" << j; // Log loop iteration
         m_keyButtonList.at(j)->hide();
         t_keyPoint[j] = QPoint(static_cast<int>(recordX + recordWidth / 2 + m_keyButtonList.at(j)->width() * posfix[count - 1][j]), std::max(recordY + recordHeight - INDICATOR_WIDTH, 0));
         m_keyButtonList.at(j)->move(t_keyPoint[j].x(), t_keyPoint[j].y());
-        m_keyButtonList.at(j)->show();
+        // Only show the keyword button if it doesn't overlap the selection area
+        const QRect buttonRect(t_keyPoint[j], m_keyButtonList.at(j)->size());
+        if (!buttonRect.intersects(selectionRect)) {
+            m_keyButtonList.at(j)->show();
+        }
     }
 
     /*

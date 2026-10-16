@@ -43,7 +43,7 @@ const int CARD_HEIGHT = 240;
 const int CARD_RADIUS = 12;
 const int APP_ICON_SIZE = 20;
 const int BUTTON_MARGIN = 6;
-const int BUTTON_SPACING = 6;
+const int BUTTON_SPACING = 20;
 // 设计稿卡片背景模糊 radius 45
 const int CARD_BLUR_RADIUS = 45;
 // 设计稿卡片 fills：浅色 #EEEEEE 80%、深色 #181818 80%
@@ -164,7 +164,21 @@ TableResultDialog::TableResultDialog(const QString &html, const QImage &backdrop
     // 深色/浅色切换：DDialog 自带的图标、标题、文字、按钮都由 DTK 跟随主题，
     // 我们额外设过的卡片遮罩色需要跟着重设一次。
     connect(DGuiApplicationHelper::instance(), &DGuiApplicationHelper::themeTypeChanged,
-            this, [this]() { applyThemeColors(); });
+            this, [this]() {
+        applyThemeColors();
+        // P7.1: Update illustration on theme change
+        auto *illustrationLabel = findChild<DLabel *>();
+        if (illustrationLabel) {
+            QPixmap pix = QIcon(QStringLiteral(":/icons/deepin/builtin/texts/tableresult_success.svg"))
+                                .pixmap(ILLUSTRATION_SIZE, ILLUSTRATION_SIZE);
+            if (PUtils::isDarkTheme()) {
+                QImage img = pix.toImage();
+                img.invertPixels(QImage::InvertRgba);
+                pix = QPixmap::fromImage(img);
+            }
+            illustrationLabel->setPixmap(pix);
+        }
+    });
 }
 
 TableResultDialog::~TableResultDialog()
@@ -265,11 +279,8 @@ void TableResultDialog::setupFrostedBackground()
     if (!m_blurGroup)
         m_blurGroup = new DBlurEffectGroup;
 
-    QImage source = m_backdrop;
-    if (source.size() != host->size())
-        source = source.scaled(host->size(), Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
-
-    m_blurGroup->setSourceImage(source, CARD_BLUR_RADIUS);
+    // P8: Use original unscaled backdrop to avoid blur being invisible on small selections
+    m_blurGroup->setSourceImage(m_backdrop, CARD_BLUR_RADIUS);
 
     // DBlurEffectGroup::paint 按 widget->geometry() + offset 在截图里取样，
     // 这里把对话框相对贴图窗口的位置算出来。

@@ -1074,6 +1074,14 @@ void MainWindow::checkToolbarVisibility()
 {
     m_hideToolbarTimer->stop();
 
+    // P6: Hide toolbar while table recognition overlays are active
+    if ((m_tableRecognizingWidget && m_tableRecognizingWidget->isVisible()) ||
+        (m_tableResultDialog && m_tableResultDialog->isVisible())) {
+        if (m_toolBar && m_toolBar->isVisible())
+            m_toolBar->hide();
+        return;
+    }
+
     if (isLeftPressDown) {
         if (m_toolBar && m_toolBar->isVisible()) {
             m_toolBar->hide();

@@ -15,6 +15,7 @@
 
 #include <QApplication>
 #include <QGraphicsDropShadowEffect>
+#include <QHBoxLayout>
 #include <QIcon>
 #include <QLabel>
 #include <QResizeEvent>
@@ -50,7 +51,7 @@ TableRecognizeToast::TableRecognizeToast(const QString &message,
                                          bool closable,
                                          Status status,
                                          DWidget *parent)
-    : DFloatingMessage(closable ? ResidentType : TransientType, parent)
+    : DFloatingMessage(ResidentType, parent)
     , m_status(status)
 {
     qCDebug(dsrApp) << "TableRecognizeToast constructed:" << message;
@@ -95,7 +96,13 @@ TableRecognizeToast::TableRecognizeToast(const QString &message,
             Q_EMIT actionTriggered();
             close();
         });
-        setWidget(m_actionButton);
+        // P10.2: Use container widget with left margin for spacing between message and button
+        auto *container = new QWidget(this);
+        auto *hLayout = new QHBoxLayout(container);
+        hLayout->setContentsMargins(10, 0, 0, 0);
+        hLayout->setSpacing(0);
+        hLayout->addWidget(m_actionButton);
+        setWidget(container);
     }
 
     // 深色/浅色切换：填充与文字颜色跟着 DTK 的主题走
