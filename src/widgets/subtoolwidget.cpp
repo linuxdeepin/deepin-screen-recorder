@@ -661,7 +661,7 @@ void SubToolWidget::initShotLabel()
     m_scrollShotButton = new ToolButton();
     m_scrollShotButton->setObjectName("ScrollShotButton");
     m_scrollShotButton->setAccessibleName("ScrollShotButton");
-    m_scrollShotButton->setCheckable(false);
+    m_scrollShotButton->setCheckable(true);
     m_scrollShotButton->setIconSize(TOOL_ICON_SIZE);
     m_scrollShotButton->setIcon(QIcon::fromTheme("scrollShot"));
     Utils::setAccessibility(m_scrollShotButton, AC_SUBTOOLWIDGET_SCROLLSHOT_BUTTON);
@@ -672,6 +672,7 @@ void SubToolWidget::initShotLabel()
     if (!(Utils::isTreelandMode))
     btnList.append(m_scrollShotButton);
 #endif
+    m_shotBtnGroup->addButton(m_scrollShotButton);
     connect(m_scrollShotButton, &DPushButton::clicked, this, [ = ] {
         qCDebug(dsrApp) << "滚动截图的按钮按下！";
         switchContent("scroll");
@@ -681,7 +682,7 @@ void SubToolWidget::initShotLabel()
     m_ocrButton = new ToolButton();
     m_ocrButton->setObjectName("OcrButton");
     m_ocrButton->setAccessibleName("OcrButton");
-    m_ocrButton->setCheckable(false);
+    m_ocrButton->setCheckable(true);
     m_ocrButton->setIconSize(TOOL_ICON_SIZE);
     m_ocrButton->setIcon(QIcon::fromTheme("ocr-normal"));
     Utils::setAccessibility(m_ocrButton, AC_SUBTOOLWIDGET_OCR_BUTTON);
@@ -691,12 +692,13 @@ void SubToolWidget::initShotLabel()
         qCDebug(dsrApp) << "OCR按钮按下！";
         emit changeShotToolFunc("ocr");
     });
+    m_shotBtnGroup->addButton(m_ocrButton);
 
     //添加表格识别按钮（位于文字识别与贴图之间）
     m_tableButton = new ToolButton();
     m_tableButton->setObjectName("TableButton");
     m_tableButton->setAccessibleName("TableButton");
-    m_tableButton->setCheckable(false);
+    m_tableButton->setCheckable(true);
     m_tableButton->setIconSize(TOOL_ICON_SIZE);
     m_tableButton->setIcon(QIcon::fromTheme("table-recognition"));
     Utils::setAccessibility(m_tableButton, AC_SUBTOOLWIDGET_TABLE_BUTTON);
@@ -706,6 +708,7 @@ void SubToolWidget::initShotLabel()
         qCDebug(dsrApp) << "table recognition button clicked.";
         emit changeShotToolFunc("tableRecogn");
     });
+    m_shotBtnGroup->addButton(m_tableButton);
 
 #ifdef  OCR_SCROLL_FLAGE_ON
     // TODO: 仅x11下开启，后续处理，目前treeland下仍有崩溃情况
@@ -718,7 +721,7 @@ void SubToolWidget::initShotLabel()
     m_pinButton = new ToolButton();
     m_pinButton->setObjectName("PinButton");
     m_pinButton->setAccessibleName("PinButton");
-    m_pinButton->setCheckable(false);
+    m_pinButton->setCheckable(true);
     m_pinButton->setIconSize(TOOL_ICON_SIZE);
     m_pinButton->setIcon(QIcon::fromTheme("pinscreenshots"));
     Utils::setAccessibility(m_pinButton, AC_SUBTOOLWIDGET_PINSCREENSHOTS_BUTTON);
@@ -728,6 +731,7 @@ void SubToolWidget::initShotLabel()
         qCDebug(dsrApp) << "贴图按钮按下！";
         emit changeShotToolFunc("pinScreenshots");
     });
+    m_shotBtnGroup->addButton(m_pinButton);
     btnList.append(m_pinButton);
 
     m_aiAssistantButton = new ToolButton();
@@ -878,7 +882,14 @@ void SubToolWidget::initShotLabel()
 
     connect(m_shotBtnGroup, &QButtonGroup::buttonClicked,
     [ = ](QAbstractButton *button) {
-        Q_UNUSED(button);
+        // 问题12：再次点击已选中的工具按钮时收起（toggle 逻辑）
+        if (button && button->isChecked() && m_lastCheckedTool == button) {
+            button->setChecked(false);
+            m_lastCheckedTool = nullptr;
+            emit changeShotToolFunc("");
+            return;
+        }
+        m_lastCheckedTool = button;
         if (m_gioButton->isChecked()) {
             // 当几何图形按钮被点击时，发送"gio"信号，而不是直接发送具体形状
             // 这样SideBarWidget可以正确识别这是几何图形按钮被点击的事件

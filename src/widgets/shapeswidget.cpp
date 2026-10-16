@@ -2548,7 +2548,8 @@ void ShapesWidget::handlePaint(QPainter &painter)
             //            rotatePointImg = QIcon(":/resources/images/size/rotate.svg").pixmap(ROTATE_ICON_SIZE);
             rotatePointImg = QIcon(":/other/icon_rotate.svg").pixmap(ROTATE_ICON_SIZE);
             rotatePointImg.setDevicePixelRatio(this->devicePixelRatioF());
-            paintImgPoint(painter, rotatePoint, rotatePointImg, false);
+            // 问题4：选中状态下不显示旋转图标
+            // paintImgPoint(painter, rotatePoint, rotatePointImg, false);
 
             //画出形状的主要骨架点
             for (int i = 0; i < m_selectedShape.mainPoints.length(); i ++) {

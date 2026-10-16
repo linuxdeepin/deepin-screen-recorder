@@ -12,6 +12,7 @@
 #include <QColor>
 #include <QImage>
 #include <QPoint>
+#include <QRect>
 #include <QString>
 
 DWIDGET_USE_NAMESPACE
@@ -70,6 +71,10 @@ private:
 
     mutable QImage m_cachedImage;
     mutable qint64 m_cachedPixmapKey = 0;
+
+    // 模糊结果缓存：仅在位置变化时重新生成，避免每次 drawInfoPanel 两次缩放
+    mutable QImage m_cachedBlurredImage;
+    mutable QRect m_cachedBlurRect;
 };
 
 #endif // ZOOMINDICATOR_H

@@ -20,6 +20,8 @@
 #include <QResizeEvent>
 #include <QScreen>
 
+#include <QHBoxLayout>
+
 #include "../../utils/log.h"
 
 namespace {
@@ -50,7 +52,8 @@ TableRecognizeToast::TableRecognizeToast(const QString &message,
                                          bool closable,
                                          Status status,
                                          DWidget *parent)
-    : DFloatingMessage(closable ? ResidentType : TransientType, parent)
+    // 问题10.3：失败 toast 始终使用 ResidentType，不自动消失，需点击"知道了"关闭
+    : DFloatingMessage(closable ? ResidentType : (status == Error ? ResidentType : TransientType), parent)
     , m_status(status)
 {
     qCDebug(dsrApp) << "TableRecognizeToast constructed:" << message;
@@ -89,13 +92,25 @@ TableRecognizeToast::TableRecognizeToast(const QString &message,
         m_actionButton = new DPushButton(actionText, this);
         m_actionButton->setFixedHeight(ACTION_HEIGHT);
         m_actionButton->setMinimumWidth(62);
+        // 问题10.1：使用 DTK 标准按钮样式，不硬编码颜色
+        m_actionButton->setStyleSheet("QPushButton { border: none; background: transparent; }");
         // 系统级别为 T6 的字体大小, 默认是14 px
         DFontSizeManager::instance()->bind(m_actionButton, DFontSizeManager::T6);
         connect(m_actionButton, &DPushButton::clicked, this, [this]() {
             Q_EMIT actionTriggered();
             close();
         });
-        setWidget(m_actionButton);
+        // 问题10.2：按钮与提示文字之间添加 10px 间距
+        // DFloatingMessage::setWidget() 是替换语义而非追加，需用容器一次性设置
+        QWidget *container = new QWidget(this);
+        QHBoxLayout *containerLayout = new QHBoxLayout(container);
+        containerLayout->setContentsMargins(0, 0, 0, 0);
+        containerLayout->setSpacing(0);
+        QWidget *spacerWidget = new QWidget(container);
+        spacerWidget->setFixedWidth(10);
+        containerLayout->addWidget(spacerWidget);
+        containerLayout->addWidget(m_actionButton);
+        setWidget(container);
     }
 
     // 深色/浅色切换：填充与文字颜色跟着 DTK 的主题走
