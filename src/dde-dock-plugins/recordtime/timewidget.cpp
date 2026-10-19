@@ -112,13 +112,13 @@ QSize TimeWidget::sizeHint() const
     if (position::top == m_position || position::bottom == m_position) {
         width = fm.boundingRect(RECORDER_TIME_LEVEL_SIZE).size().width() + 5 + RECORDER_TIME_LEVEL_ICON_SIZE + RECORDER_TEXT_TOP_BOTTOM_X;
         if(m_systemVersion >= 1070){
-            width = fm.boundingRect(RECORDER_TIME_LEVEL_SIZE).size().width() + 5 + RECORDER_TIME_VERTICAL_ICON_SIZE;
+            width = fm.boundingRect(RECORDER_TIME_LEVEL_SIZE).size().width() * devicePixelRatioF() + 5 + RECORDER_TIME_VERTICAL_ICON_SIZE;
         }
         height = this->height();
         qInfo() << "top or bottom itemWidget width: " << width << " ,itemWidget height: " << height;
     } else if (position::left == m_position || position::right == m_position) {
-        if(this->width() > RECORDER_TIME_WIDGET_MAXHEIGHT){
-            width = RECORDER_TIME_WIDGET_MAXHEIGHT;
+        if(this->width() > RECORDER_TIME_WIDGET_MAXWIDTH){
+            width = RECORDER_TIME_WIDGET_MAXWIDTH;
             height = width;
         }else{
             width = this->width();
@@ -256,11 +256,11 @@ void TimeWidget::paintEvent(QPaintEvent *e)
 
     //判断任务栏在屏幕上的位置,上下左右
     if (position::top == m_position || position::bottom == m_position) {
-        m_pixmap = QIcon::fromTheme(QString("recordertime"), *m_currentIcon).pixmap(size);
+        m_pixmap = QIcon::fromTheme(QString("recordertime"), *m_currentIcon).pixmap(pixmapSize);
         //m_pixmap.setDevicePixelRatio(ratio);
         const QRectF &rf = QRectF(rect());
         qDebug() << ">>>>>>> rf: " << rf << rf.center();
-        const QRectF &prf = QRectF(m_pixmap.rect().x(), m_pixmap.rect().y(), m_pixmap.rect().width() / ratio, m_pixmap.rect().height() / ratio);
+        const QRectF &prf = QRectF(m_pixmap.rect().x(), m_pixmap.rect().y(), m_pixmap.rect().width() / m_pixmap.devicePixelRatioF(), m_pixmap.rect().height() / m_pixmap.devicePixelRatioF());
         qDebug() << ">>>>>>> prf: " << prf << prf.center();
         QPointF pf = rf.center() - prf.center();
         //qDebug() << ">>>>>>> pf: " << pf ;
