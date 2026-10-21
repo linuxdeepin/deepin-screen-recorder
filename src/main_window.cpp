@@ -1971,8 +1971,8 @@ void MainWindow::initBackground()
     if (Utils::isWaylandMode) {
         target = QRect(m_backgroundRect.x(),
                        m_backgroundRect.y(),
-                       static_cast<int>(m_backgroundRect.width() * m_pixelRatio),
-                       static_cast<int>(m_backgroundRect.height() *  m_pixelRatio));
+                       static_cast<int>(m_backgroundRect.width()),
+                       static_cast<int>(m_backgroundRect.height()));
     }
 
     m_backgroundPixmap = getPixmapofRect(target);
@@ -6001,8 +6001,8 @@ void MainWindow::shotFullScreen(bool isFull)
     if (Utils::isWaylandMode) {
         target = QRect(m_backgroundRect.x(),
                        m_backgroundRect.y(),
-                       static_cast<int>(m_backgroundRect.width() * m_pixelRatio),
-                       static_cast<int>(m_backgroundRect.height() * m_pixelRatio));
+                       static_cast<int>(m_backgroundRect.width()),
+                       static_cast<int>(m_backgroundRect.height()));
     }
 
     //    m_resultPixmap = getPixmapofRect(m_backgroundRect);
