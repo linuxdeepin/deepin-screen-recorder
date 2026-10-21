@@ -1,4 +1,4 @@
-// Copyright (C) 2020 ~ 2021 Uniontech Software Technology Co.,Ltd.
+// Copyright (C) 2020 ~ 2026 Uniontech Software Technology Co.,Ltd.
 // SPDX-FileCopyrightText: 2022-2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
@@ -3184,6 +3184,8 @@ void ShapesWidget::mouseDoubleClickEvent(QMouseEvent *e)
             const int editMinNum = sequenceNumberBeforeOrder(hitOrder) + 1;
             const int editMaxNum = SEQUENCE_MAX_NUMBER - (sequenceCount() - 1 - hitOrder);
             m_sequenceEdit = new QLineEdit(this);
+            m_sequenceEdit->setObjectName("SequenceEdit");
+            m_sequenceEdit->setAccessibleName("SequenceEdit");
             m_sequenceEditOrder = hitOrder;
             m_sequenceEdit->setText(QString::number(currentDisplay));
             m_sequenceEdit->setMaxLength(2);

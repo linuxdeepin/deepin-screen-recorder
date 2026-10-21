@@ -87,6 +87,8 @@ TableRecognizeToast::TableRecognizeToast(const QString &message,
 
     if (!actionText.isEmpty()) {
         m_actionButton = new DPushButton(actionText, this);
+        m_actionButton->setObjectName("ActionButton");
+        m_actionButton->setAccessibleName("ActionButton");
         m_actionButton->setFixedHeight(ACTION_HEIGHT);
         m_actionButton->setMinimumWidth(62);
         // 系统级别为 T6 的字体大小, 默认是14 px

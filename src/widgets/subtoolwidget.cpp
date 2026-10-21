@@ -649,6 +649,8 @@ void SubToolWidget::initShotLabel()
 
     //添加序号标注按钮
     m_sequenceButton = new ToolButton();
+    m_sequenceButton->setObjectName("SequenceButton");
+    m_sequenceButton->setAccessibleName("SequenceButton");
     m_sequenceButton->setIconSize(TOOL_ICON_SIZE);
     m_sequenceButton->setIcon(QIcon::fromTheme("sequence"));
     installTipHint(m_sequenceButton, tr("Sequence number (Alt+S)"));
