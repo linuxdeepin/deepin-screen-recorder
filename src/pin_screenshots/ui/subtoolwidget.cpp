@@ -12,6 +12,7 @@
 #include <QHelpEvent>
 #include <QToolTip>
 #include <DFontSizeManager>
+#include <DHiDPIHelper>
 
 #define THEMETYPE 1 // 主题颜色为浅色
 
@@ -35,7 +36,7 @@ void SubToolWidget::initShotLable()
     m_ocrButton->setAccessibleName(AC_SUBTOOLWIDGET_PIN_OCR_BUT);
     m_ocrButton->setIconSize(QSize(36, 36));
     m_ocrButton->setMaximumSize(42, 40);
-    m_ocrButton->setIcon(QIcon::fromTheme("ocr-normal"));
+    m_ocrButton->setIcon(QIcon(DHiDPIHelper::loadNxPixmap(":/icons/deepin/builtin/texts/ocr-normal_32px.svg")));
     m_ocrButton->setFixedSize(MIN_TOOL_BUTTON_SIZE);
     m_ocrButton->setToolTip(tr("Extract Text"));
     connect(m_ocrButton, SIGNAL(clicked()), this, SIGNAL(signalOcrButtonClicked()));
