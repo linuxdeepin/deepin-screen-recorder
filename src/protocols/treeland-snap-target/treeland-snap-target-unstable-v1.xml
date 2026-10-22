@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<protocol name="treeland_snap_target_unstable_v1">
+  <copyright><![CDATA[
+  SPDX-FileCopyrightText: 2026 UnionTech Software Technology Co., Ltd.
+  SPDX-License-Identifier: MIT
+  ]]></copyright>
+
+  <description summary="compositor-side snap region hint">
+    This protocol allows a client to request snap region hints from the
+    compositor. While snapping is active, the compositor tracks the cursor
+    position and notifies the client of the rectangle currently hovered by
+    the cursor (e.g., a window boundary or a full output). The client uses
+    these hints to draw its own snap preview UI.
+
+    Snap targets are computed against the window layout captured when the
+    snap session starts: the compositor records the position and stacking
+    order of every window at that moment and keeps them unchanged for the
+    whole session. Windows that move, are mapped or unmapped, change
+    stacking order, or are destroyed after start are not reflected in the
+    snap targets.
+
+    A client may identify an overlay surface by setting the xdg-toplevel-tag
+    "org.deepin.treeland.snap-mask" on that toplevel. When the compositor
+    detects this tag, it applies the following configuration to the surface:
+
+    1. Raises the surface above normal windows and their popup panels.
+    2. Disables window open/close animations.
+    3. Excludes the surface from the multitask view and window switcher.
+
+    Such a surface does not affect the snapping protocol; snapping
+    behaves the same whether or not the surface exists. Surfaces
+    carrying the snap-mask tag are excluded from snapping, i.e., they
+    are never reported as snap targets.
+
+    Warning! This protocol is EXPERIMENTAL and under active development.
+    It may change at any time, including in backward-incompatible ways,
+    without incrementing the interface major version and without prior
+    notice. No compatibility guarantees of any kind are provided. Clients
+    and compositors must track the upstream definition in treeland-protocols
+    and must not rely on the current interface names, requests, events, or
+    semantics remaining stable across releases.
+  </description>
+
+  <interface name="treeland_snap_target_v1" version="1">
+    <description summary="snap region hint session">
+      This interface is a global singleton for requesting snap region hints
+      from the compositor. Each client binds at most one instance of this
+      global. The compositor tracks the cursor position and notifies the
+      client of the rectangle currently hovered by the cursor.
+
+      The snap object is created in an idle state. The client starts
+      snapping by calling start, which causes the compositor to capture the
+      current window positions and stacking order and begin tracking the
+      cursor position, providing snap region hints based on the captured
+      layout.
+
+      While snapping is active, the compositor sends a snap_region event
+      each time the snap target changes (i.e., when the cursor moves to a
+      different window or output). A client that also needs to know which
+      process owns a window snap target can enable the optional pidfd event
+      by setting the event_type.pidfd bit in the events argument of start;
+      without that bit the compositor sends no pidfd events. When enabled,
+      and when the new snap target is a window with a determinable owning
+      process, a pidfd event reporting that process is sent before the
+      snap_region event it applies to. The client can use these events to
+      update its snap preview UI.
+
+      When the client is done (e.g., the user has clicked or dragged to
+      confirm a selection in the client's UI), the client calls stop to
+      stop snap notifications. A stopped snap object may be restarted by
+      calling start again.
+
+      Only one snap session may be active across all clients at any time.
+      If another client's snap session is active, start fails with the
+      snap_busy reason.
+    </description>
+
+    <enum name="failure_reason">
+      <description summary="reasons why snapping failed"/>
+      <entry name="snap_busy" value="0"
+             summary="another client has an active snap session"/>
+    </enum>
+
+    <enum name="event_type" bitfield="true">
+      <description summary="optional events a client can enable at start">
+        Bitfield of optional events the client may request when starting a
+        snap session. Bits not listed here are reserved for future events
+        and are ignored by the compositor.
+      </description>
+      <entry name="pidfd" value="1"
+             summary="report the pidfd of the process owning window snap targets"/>
+    </enum>
+
+    <request name="destroy" type="destructor">
+      <description summary="destroy the snap object">
+        Destroy the treeland_snap_target_v1 object. If snapping is in
+        progress, the compositor automatically stops it (stops cursor
+        tracking). No further events are emitted on this object.
+      </description>
+    </request>
+
+    <request name="start">
+      <description summary="begin snap region hints">
+        Request the compositor to capture the current window positions and
+        stacking order and begin tracking the cursor, sending snap region
+        hints based on the captured layout.
+
+        This request may be called again after stop to restart snapping; a
+        fresh capture of the window layout is taken on every start. start
+        must not be called on an already active snap object; the compositor
+        ignores such a request.
+
+        The events argument selects which optional events the compositor may
+        send for this session. It is a bitfield of event_type values: only
+        the events whose bits are set are enabled, and passing 0 enables no
+        optional events. Bits that do not correspond to a known event_type
+        value are ignored. The selection applies to this session only; a
+        start after stop establishes a new selection.
+
+        If snapping cannot be started because another client's snap session
+        is already active, the compositor sends a failed event with the
+        snap_busy reason instead.
+      </description>
+      <arg name="seat" type="object" interface="wl_seat"
+           summary="seat associated with this snap session"/>
+      <arg name="events" type="uint" enum="event_type"
+           summary="optional events to enable for this session"/>
+    </request>
+
+    <request name="stop">
+      <description summary="stop snap region hints">
+        Signal that the client is done with snapping. The compositor stops
+        tracking the cursor and stops sending snap_region events.
+
+        This request is a no-op if snapping is not in progress (e.g., if
+        failed was already emitted or stop was already called).
+
+        The client should call destroy afterwards to free the snap object.
+      </description>
+    </request>
+
+    <event name="pidfd">
+      <description summary="pidfd of the process owning the snap target">
+        Reports the process owning the window that corresponds to the snap
+        target reported by the next snap_region event. This event is sent
+        only if the client enabled the event_type.pidfd bit in the events
+        argument of start; otherwise it is never sent. When enabled, the
+        compositor sends this event before the snap_region event it applies
+        to, and only when the snap target is a window whose owning process
+        can be determined. If the snap target is not a window (for example an
+        output or empty desktop space), or the owning process cannot be
+        determined, this event is omitted and snap_region is sent on its own.
+
+        No pidfd event is ever sent for a snap target whose window was
+        destroyed after start: the captured region remains a snap target,
+        but its owning process no longer exists.
+
+        The client owns the received file descriptor and is responsible for
+        closing it. The descriptor stays valid independently of the snap
+        session.
+      </description>
+      <arg name="pidfd" type="fd"
+           summary="pidfd of the process owning the snap target"/>
+    </event>
+
+    <event name="snap_region">
+      <description summary="current snap target region">
+        Notifies the client of the current snap target rectangle. The snap
+        target set is captured at start and is fixed for the whole session:
+        a window that moves, is mapped or unmapped, changes stacking order,
+        or is destroyed after start does not add, remove, move, resize, or
+        reorder the targets captured at start. In particular, a window
+        destroyed after start keeps its captured region as a snap target.
+        This event is sent each time the snap target changes due to cursor
+        movement.
+
+        This event commits the snap target. A pidfd event, when sent for
+        this target, precedes it and reports the process owning the target.
+        When processing this event, the client should associate the most
+        recent preceding pidfd event, if any, with this target; if no pidfd
+        event precedes it, the target has no associated process.
+
+        The region is in global logical coordinates (i.e., the
+        xdg_output logical coordinate space). The client is responsible for
+        any coordinate transformation needed for its UI.
+
+        If width and height are both zero, there is no current snap target
+        (e.g., the cursor is over empty desktop space). The client should
+        hide its snap preview in this case.
+      </description>
+      <arg name="x" type="int"
+           summary="global logical x coordinate of the snap target"/>
+      <arg name="y" type="int"
+           summary="global logical y coordinate of the snap target"/>
+      <arg name="width" type="uint"
+           summary="width of the snap target (0 if no target)"/>
+      <arg name="height" type="uint"
+           summary="height of the snap target (0 if no target)"/>
+    </event>
+
+    <event name="failed">
+      <description summary="snapping failed">
+        Snapping could not be started. The compositor
+        will not send any more snap_region events. The client should call
+        destroy to free the snap object.
+      </description>
+      <arg name="reason" type="uint"
+           enum="failure_reason"
+           summary="why snapping failed"/>
+    </event>
+  </interface>
+</protocol>
