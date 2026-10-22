@@ -44,6 +44,8 @@ const int CARD_RADIUS = 12;
 const int APP_ICON_SIZE = 20;
 const int BUTTON_MARGIN = 6;
 const int BUTTON_SPACING = 6;
+// 设计稿文案底边到按钮顶边为 20
+const int CONTENT_BUTTON_GAP = 20;
 // 设计稿卡片背景模糊 radius 45
 const int CARD_BLUR_RADIUS = 45;
 // 设计稿卡片 fills：浅色 #EEEEEE 80%、深色 #181818 80%
@@ -57,18 +59,20 @@ const QColor ACTION_TEXT_COLOR(0, 129, 255);
 } // namespace
 
 /**
- * @brief 设计稿里的“复制为Excel格式”按钮
+ * @brief 表格识别结果弹窗按钮
  *
- * 绘制路径和 QPushButton 自带的一模一样（QStylePainter + QStyleOptionButton +
- * CE_PushButton，交给平台样式画），只改一处：非按下状态用设计稿的蓝色文字。
- * 按下时不碰调色板，于是按下态与普通 DTK 按钮逐像素一致（系统强调色底 +
- * 主题自己的文字色），不会出现“设计稿蓝字压在强调色底上”那种脏紫色。
+ * 弹窗是 BypassWindowManagerHint 的贴图窗口内浮层，窗管不维护它的激活状态，
+ * DTK 会把启用中的普通按钮按 Inactive 色组绘制，看起来像被禁用。
+ * 这里在控件仍启用时固定使用 Active 色组；真正禁用时不干预，仍显示禁用态。
+ * “复制为Excel格式”额外使用设计稿要求的蓝色文字。
  */
-class TableActionButton : public DPushButton
+class TableButton : public DPushButton
 {
 public:
-    explicit TableActionButton(const QString &text, QWidget *parent = nullptr)
+    explicit TableButton(const QString &text, const QColor &textColor = QColor(),
+                         QWidget *parent = nullptr)
         : DPushButton(text, parent)
+        , m_textColor(textColor)
     {
     }
 
@@ -79,10 +83,16 @@ protected:
         QStylePainter painter(this);
         QStyleOptionButton option;
         initStyleOption(&option);
-        if (!(option.state & QStyle::State_Sunken))
-            option.palette.setBrush(QPalette::ButtonText, QBrush(ACTION_TEXT_COLOR));
+        if (option.state & QStyle::State_Enabled) {
+            option.palette.setCurrentColorGroup(QPalette::Active);
+            if (m_textColor.isValid() && !(option.state & QStyle::State_Sunken))
+                option.palette.setBrush(QPalette::ButtonText, QBrush(m_textColor));
+        }
         painter.drawControl(QStyle::CE_PushButton, option);
     }
+
+private:
+    QColor m_textColor;
 };
 
 TableResultDialog::TableResultDialog(const QString &html, const QImage &backdrop, DWidget *parent)
@@ -102,15 +112,13 @@ TableResultDialog::TableResultDialog(const QString &html, const QImage &backdrop
     setIcon(appIcon);
     setTitle(tr("Table recognition"));
 
-    // 这一步特有的内容：识别成功插图
-    auto *illustration = new DLabel(this);
-    illustration->setFixedSize(ILLUSTRATION_SIZE, ILLUSTRATION_SIZE);
-    // 设计稿深色卡片没有覆盖插图，浅色/深色用的是同一张“插图/表格识别成功/浅色”
-    illustration->setPixmap(QIcon(QStringLiteral(":/icons/deepin/builtin/texts/tableresult_success.svg"))
-                                    .pixmap(ILLUSTRATION_SIZE, ILLUSTRATION_SIZE));
-    illustration->setAlignment(Qt::AlignCenter);
-    illustration->setAccessibleName(QStringLiteral("table_result_illustration"));
-    addContent(illustration, Qt::AlignHCenter);
+    // 这一步特有的内容：识别成功插图。设计稿提供浅色/深色两张独立资源。
+    m_illustration = new DLabel(this);
+    m_illustration->setFixedSize(ILLUSTRATION_SIZE, ILLUSTRATION_SIZE);
+    m_illustration->setAlignment(Qt::AlignCenter);
+    m_illustration->setAccessibleName(QStringLiteral("table_result_illustration"));
+    updateIllustration();
+    addContent(m_illustration, Qt::AlignHCenter);
 
     // 这一步特有的内容：结果文案（正文档位 T6）
     auto *message = new DLabel(tr("Table recognized successfully!"), this);
@@ -119,11 +127,14 @@ TableResultDialog::TableResultDialog(const QString &html, const QImage &backdrop
     message->setAccessibleName(QStringLiteral("table_result_message"));
     addContent(message, Qt::AlignHCenter);
 
-    // 按钮行交给 DDialog（和例子里 addButton("取消") / addButton("授权", ...) 同款），
-    // 沿用 DDialog 的按钮排布与背景；只有设计稿要求“复制为Excel格式”用蓝色文字。
-    addButton(tr("Cancel"));
+    // 按钮行仍交给 DDialog 排布；两个按钮都用同一套绘制逻辑，
+    // 避免贴图浮层失焦时把启用中的“取消”按钮误画成禁用态。
+    auto *cancelButton = new TableButton(tr("Cancel"), QColor(), this);
+    cancelButton->setObjectName(QStringLiteral("CancelButton"));
+    cancelButton->setAccessibleName(QStringLiteral("table_result_cancel_button"));
+    insertButton(0, cancelButton);
 
-    auto *copyButton = new TableActionButton(tr("Copy as Excel format"), this);
+    auto *copyButton = new TableButton(tr("Copy as Excel format"), ACTION_TEXT_COLOR, this);
     copyButton->setObjectName(QStringLiteral("ActionButton"));
     copyButton->setAccessibleName(QStringLiteral("table_result_copy_button"));
     insertButton(COPY_BUTTON_INDEX, copyButton);
@@ -141,6 +152,12 @@ TableResultDialog::TableResultDialog(const QString &html, const QImage &backdrop
                 buttonLayout->setContentsMargins(BUTTON_MARGIN, 0, BUTTON_MARGIN, BUTTON_MARGIN);
                 buttonLayout->setSpacing(BUTTON_SPACING);
             }
+        }
+        // DDialog 在内容区和按钮行之间默认放了一个 10px spacer，设计稿要求 20px。
+        // 只调整这一项，避免 DDialog::setSpacing() 同时改变插图与文案的间距。
+        if (mainLayout->count() >= 2) {
+            if (auto *gap = mainLayout->itemAt(mainLayout->count() - 2)->spacerItem())
+                gap->changeSize(0, CONTENT_BUTTON_GAP, QSizePolicy::Minimum, QSizePolicy::Fixed);
         }
     }
 
@@ -162,14 +179,24 @@ TableResultDialog::TableResultDialog(const QString &html, const QImage &backdrop
     });
 
     // 深色/浅色切换：DDialog 自带的图标、标题、文字、按钮都由 DTK 跟随主题，
-    // 我们额外设过的卡片遮罩色需要跟着重设一次。
+    // 卡片遮罩色和独立插图需要跟着重设。
     connect(DGuiApplicationHelper::instance(), &DGuiApplicationHelper::themeTypeChanged,
-            this, [this]() { applyThemeColors(); });
+            this, [this]() {
+                applyThemeColors();
+                updateIllustration();
+            });
 }
 
 TableResultDialog::~TableResultDialog()
 {
     qCDebug(dsrApp) << "TableResultDialog destructed";
+}
+
+void TableResultDialog::closeEvent(QCloseEvent *event)
+{
+    DDialog::closeEvent(event);
+    if (event->isAccepted())
+        Q_EMIT dismissed();
 }
 
 void TableResultDialog::setBackdropImage(const QImage &image)
@@ -195,11 +222,81 @@ void TableResultDialog::showOverlay()
         move(hostCenter - QPoint(width() / 2, height() / 2));
     }
 
+    prepareBlurBackdrop();
     show();
     raise();
     activateWindow();
     setupFrostedBackground();
     applyCloseButtonMask();
+}
+
+void TableResultDialog::prepareBlurBackdrop()
+{
+    m_blurBackdrop = QImage();
+    m_blurBackdropOrigin = QPoint();
+    m_blurBackdropFromScreen = false;
+
+    QWidget *host = parentWidget();
+    if (m_backdrop.isNull() || !host)
+        return;
+
+    const QRect hostGlobal(host->mapToGlobal(QPoint(0, 0)), host->size());
+    const QRect dialogGlobal(mapToGlobal(QPoint(0, 0)), size());
+    m_blurBackdrop = m_backdrop;
+    m_blurBackdropOrigin = hostGlobal.topLeft();
+
+    // 贴图窗口完整覆盖弹窗时，贴图本身就是最准确的模糊源。
+    if (hostGlobal.contains(dialogGlobal))
+        return;
+
+    // 小尺寸贴图下弹窗会超出贴图范围，原来的模糊源没有对应像素。
+    // 在弹窗显示前抓取屏幕背景，并向外多取一个模糊半径，保证整块卡片都有模糊。
+    // 重新定位时先隐藏，避免把弹窗自身截进模糊源。
+    if (isVisible())
+        hide();
+    QScreen *screen = QGuiApplication::screenAt(dialogGlobal.center());
+    if (!screen)
+        screen = QGuiApplication::primaryScreen();
+    if (!screen)
+        return;
+
+    const QRect screenGeometry = screen->geometry();
+    const QRect captureRect = dialogGlobal.adjusted(-CARD_BLUR_RADIUS, -CARD_BLUR_RADIUS,
+                                                    CARD_BLUR_RADIUS, CARD_BLUR_RADIUS)
+                                      .intersected(screenGeometry);
+    if (captureRect.isEmpty())
+        return;
+
+    const QPixmap capture = screen->grabWindow(0,
+                                                captureRect.x() - screenGeometry.x(),
+                                                captureRect.y() - screenGeometry.y(),
+                                                captureRect.width(),
+                                                captureRect.height());
+    if (capture.isNull())
+        return;
+
+    m_blurBackdrop = capture.toImage();
+    m_blurBackdrop.setDevicePixelRatio(screen->devicePixelRatio());
+    m_blurBackdropOrigin = captureRect.topLeft();
+    m_blurBackdropFromScreen = true;
+
+    qCDebug(dsrApp) << "table result dialog uses screen backdrop, host:" << hostGlobal
+                    << "dialog:" << dialogGlobal << "capture:" << captureRect
+                    << "image:" << m_blurBackdrop.size()
+                    << "dpr:" << m_blurBackdrop.devicePixelRatio();
+}
+
+void TableResultDialog::updateIllustration()
+{
+    if (!m_illustration)
+        return;
+
+    const QString resource = PUtils::isDarkTheme()
+            ? QStringLiteral(":/icons/deepin/builtin/texts/tableresult_success_dark.svg")
+            : QStringLiteral(":/icons/deepin/builtin/texts/tableresult_success.svg");
+    m_illustration->setPixmap(QIcon(resource).pixmap(ILLUSTRATION_SIZE, ILLUSTRATION_SIZE));
+    qCDebug(dsrApp) << "table result illustration, dark:" << PUtils::isDarkTheme()
+                    << "resource:" << resource;
 }
 
 void TableResultDialog::applyThemeColors()
@@ -242,7 +339,7 @@ void TableResultDialog::applyCloseButtonMask()
 void TableResultDialog::setupFrostedBackground()
 {
     QWidget *host = parentWidget();
-    if (m_backdrop.isNull() || !host)
+    if (m_blurBackdrop.isNull() || !host)
         return;
 
     // DDialog 的背景层是它内部这个 DBlurEffectWidget。
@@ -265,18 +362,20 @@ void TableResultDialog::setupFrostedBackground()
     if (!m_blurGroup)
         m_blurGroup = new DBlurEffectGroup;
 
-    QImage source = m_backdrop;
-    if (source.size() != host->size())
+    QImage source = m_blurBackdrop;
+    // 贴图截图按宿主窗口的逻辑尺寸缩放；屏幕截图本身已经带 DPR，不能再次缩放。
+    if (!m_blurBackdropFromScreen && source.size() != host->size())
         source = source.scaled(host->size(), Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
 
     m_blurGroup->setSourceImage(source, CARD_BLUR_RADIUS);
 
     // DBlurEffectGroup::paint 按 widget->geometry() + offset 在截图里取样，
-    // 这里把对话框相对贴图窗口的位置算出来。
-    const QPoint offset = mapToGlobal(QPoint(0, 0)) - host->mapToGlobal(QPoint(0, 0));
+    // 这里把对话框相对模糊源左上角的位置算出来。
+    const QPoint offset = mapToGlobal(QPoint(0, 0)) - m_blurBackdropOrigin;
     m_blurGroup->addWidget(blur, offset);
 
     qCDebug(dsrApp) << "table result dialog frosted background, offset:" << offset
+                    << "source:" << source.size() << "fromScreen:" << m_blurBackdropFromScreen
                     << "radius:" << blur->radius() << "size:" << size();
 }
 

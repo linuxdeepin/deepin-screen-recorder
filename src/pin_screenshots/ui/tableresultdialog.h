@@ -8,9 +8,12 @@
 
 #include <DBlurEffectWidget>
 #include <DDialog>
+#include <DLabel>
 #include <DWidget>
 
+#include <QCloseEvent>
 #include <QImage>
+#include <QPoint>
 #include <QString>
 
 DWIDGET_USE_NAMESPACE
@@ -44,14 +47,27 @@ public:
     /// 定位到贴图窗口中间并显示
     void showOverlay();
 
+Q_SIGNALS:
+    /// 用户取消/关闭/复制后弹窗关闭
+    void dismissed();
+
+protected:
+    void closeEvent(QCloseEvent *event) override;
+
 private:
     void copyToClipboard() const;
+    void prepareBlurBackdrop();
     void setupFrostedBackground();
+    void updateIllustration();
     void applyThemeColors();
     void applyCloseButtonMask();
 
     QString m_html;
     QImage m_backdrop;
+    QImage m_blurBackdrop;
+    QPoint m_blurBackdropOrigin;
+    bool m_blurBackdropFromScreen = false;
+    Dtk::Widget::DLabel *m_illustration = nullptr;
     Dtk::Widget::DBlurEffectGroup *m_blurGroup = nullptr;
 };
 

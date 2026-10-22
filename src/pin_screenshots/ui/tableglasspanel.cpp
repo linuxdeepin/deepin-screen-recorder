@@ -74,6 +74,14 @@ void TableGlassPanel::makeFloatingOverlay()
     setWindowFlags(flags);
     setAttribute(Qt::WA_TranslucentBackground, true);
     setAttribute(Qt::WA_ShowWithoutActivating, true);
+
+    // 该控件四周留有透明阴影边距，卡片本身只占中间区域。DTK 默认会按整个
+    // 顶层窗口矩形再加一圈窗口阴影/圆角/边框，导致透明留白被画成异常的大底板。
+    // 这里关闭系统窗口装饰，阴影由控件内部的 QGraphicsDropShadowEffect 绘制。
+    DPlatformWindowHandle windowHandle(this);
+    windowHandle.setWindowEffect(DPlatformWindowHandle::EffectNoShadow
+                                 | DPlatformWindowHandle::EffectNoRadius
+                                 | DPlatformWindowHandle::EffectNoBorder);
 }
 
 void TableGlassPanel::setBackdropHost(QWidget *host)

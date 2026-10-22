@@ -183,6 +183,8 @@ protected:
     void cleanupTableToast();
     /// 表格识别浮层/提示条是独立置顶窗口，主窗口映射后需要重新置顶
     void raiseTableOverlays();
+    /// 识别进度/结果/错误提示显示期间禁止工具栏弹出
+    void setTableOverlayActive(bool active);
 
 private:
     /**
@@ -264,6 +266,8 @@ private:
      * @brief 表格识别是否等待贴图窗口映射完成后再启动
      */
     bool m_tableRecognizePending = false;
+    /// 表格识别过程或结果浮层正在显示，此时工具栏必须保持隐藏
+    bool m_tableOverlayActive = false;
 };
 
 #endif // MAINWINDOW_H
