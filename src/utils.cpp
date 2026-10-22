@@ -41,6 +41,7 @@
 #include <DForeignWindow>
 
 // error qtextstream.h must be included before any header file that defines Status
+#include <X11/Xatom.h>
 #include <X11/extensions/shape.h>
 #include <QtGui/private/qtx11extras_p.h>
 #include <QtGui/private/qtguiglobal_p.h>
@@ -539,8 +540,95 @@ void Utils::disableXGrabButton()
     qCDebug(dsrApp) << "XUngrabButton called.";
 }
 
+// 获取窗口在 X11 根窗口物理像素坐标系下的几何信息。
+//
+// 非合成（最佳性能）模式下，窗管会在窗口四周补 1 物理像素边框（DDE 下为高亮描边），
+// 该边框不属于窗口内容；而 DForeignWindow::frameGeometry() 拿到的是包含该边框的
+// 窗口外框，并且 Qt 在缩放屏幕上会把物理坐标截断成逻辑坐标，再叠加 1 像素误差。
+// 直接按外框截图就会把窗口之外的像素（窗管边框/桌面背景）截进图片，
+// 表现为截图左边缘、上边缘多出 1~2 像素彩色描边。
+Utils::WindowPhysicalGeometry Utils::getWindowPhysicalGeometry(quint32 winId)
+{
+    WindowPhysicalGeometry info;
+    if (winId == 0) {
+        return info;
+    }
+    Display *display = QX11Info::display();
+    if (!display) {
+        qCWarning(dsrApp) << "getWindowPhysicalGeometry: no X11 display, window:" << winId;
+        return info;
+    }
+
+    const Window window = static_cast<Window>(winId);
+    XWindowAttributes attributes;
+    if (!XGetWindowAttributes(display, window, &attributes)) {
+        qCWarning(dsrApp) << "getWindowPhysicalGeometry: XGetWindowAttributes failed, window:" << winId;
+        return info;
+    }
+
+    // 客户区相对于根窗口的绝对坐标（物理像素，不受 Qt 逻辑坐标截断影响）
+    int absoluteX = 0;
+    int absoluteY = 0;
+    Window child = 0;
+    if (!XTranslateCoordinates(display, window, attributes.root, 0, 0, &absoluteX, &absoluteY, &child)) {
+        qCWarning(dsrApp) << "getWindowPhysicalGeometry: XTranslateCoordinates failed, window:" << winId;
+        return info;
+    }
+    const QRect clientRect(absoluteX, absoluteY, attributes.width, attributes.height);
+
+    // _NET_FRAME_EXTENTS：left, right, top, bottom（物理像素），未设置时说明窗管没有额外装饰
+    int left = 0;
+    int right = 0;
+    int top = 0;
+    int bottom = 0;
+    Atom actualType = None;
+    int actualFormat = 0;
+    unsigned long itemCount = 0;
+    unsigned long bytesAfter = 0;
+    unsigned char *propertyData = nullptr;
+    const Atom extentsAtom = XInternAtom(display, "_NET_FRAME_EXTENTS", False);
+    if (extentsAtom != None
+            && XGetWindowProperty(display,
+                                  window,
+                                  extentsAtom,
+                                  0,
+                                  4,
+                                  False,
+                                  XA_CARDINAL,
+                                  &actualType,
+                                  &actualFormat,
+                                  &itemCount,
+                                  &bytesAfter,
+                                  &propertyData) == Success
+            && propertyData != nullptr && itemCount == 4 && actualFormat == 32) {
+        // Xlib 会把 32 位属性展开成 long 数组
+        const unsigned long *values = reinterpret_cast<const unsigned long *>(propertyData);
+        left = static_cast<int>(values[0]);
+        right = static_cast<int>(values[1]);
+        top = static_cast<int>(values[2]);
+        bottom = static_cast<int>(values[3]);
+    }
+    if (propertyData) {
+        XFree(propertyData);
+    }
+
+    info.frame = QRect(clientRect.x() - left,
+                       clientRect.y() - top,
+                       clientRect.width() + left + right,
+                       clientRect.height() + top + bottom);
+    // 窗管补的边框宽度：left/right/bottom 都是纯边框，top 可能还包含标题栏，取三者最小值
+    const int border = std::min(left, std::min(right, bottom));
+    info.visible = info.frame.adjusted(border, border, -border, -border);
+    info.valid = info.visible.width() > 0 && info.visible.height() > 0;
+    qCDebug(dsrApp) << "getWindowPhysicalGeometry: window:" << winId << "client:" << clientRect
+                    << "extents(l,r,t,b):" << left << right << top << bottom
+                    << "frame:" << info.frame << "visible:" << info.visible;
+    return info;
+}
+
 void Utils::getAllWindowInfo(
-    const quint32 winId, const int width, const int height, QList<QRect> &windowRects, QList<QString> &windowNames)
+    const quint32 winId, const int width, const int height, QList<QRect> &windowRects, QList<QString> &windowNames,
+    QList<WindowPhysicalGeometry> *windowGeometries)
 {
     qCDebug(dsrApp) << "getAllWindowInfo() called for window ID:" << winId << ", width:" << width << ", height:" << height << ".";
     Dtk::Gui::DForeignWindow *prewindow = nullptr;
@@ -567,6 +655,18 @@ void Utils::getAllWindowInfo(
             continue;
         }
 
+        // 窗口物理像素几何信息，用于非合成模式下排除窗管补的边框
+        const WindowPhysicalGeometry geometryPhysical = getWindowPhysicalGeometry(wid);
+        const bool needGeometry = (windowGeometries != nullptr);
+        // windowRects / windowNames / 窗口物理几何信息必须一一对应，统一从这里写入
+        auto pushWindow = [&](const QRect &rect) {
+            windowRects << rect;
+            windowNames << window->wmClass();
+            if (needGeometry) {
+                windowGeometries->append(geometryPhysical);
+            }
+        };
+
         if (window) {
             int t_tempWidth = 0;
             int t_tempHeight = 0;
@@ -588,8 +688,7 @@ void Utils::getAllWindowInfo(
                     t_tempHeight = window->frameGeometry().height() + window->frameGeometry().y();
 
                     // windowRects << Dtk::Wm::WindowRect {0, 0, t_tempWidth, t_tempHeight};
-                    windowRects << QRect(0, 0, t_tempWidth, t_tempHeight);
-                    windowNames << window->wmClass();
+                    pushWindow(QRect(0, 0, t_tempWidth, t_tempHeight));
                     qCDebug(dsrApp) << "Added window:" << window->wmClass() << ", rect:(" << 0 << "," << 0 << "," << t_tempWidth << "," << t_tempHeight << ").";
                     continue;
                 } else if (window->frameGeometry().y() >= 0 &&
@@ -599,8 +698,7 @@ void Utils::getAllWindowInfo(
                     t_tempHeight = window->frameGeometry().height();
 
                     // windowRects << Dtk::Wm::WindowRect {0, window->frameGeometry().y(), t_tempWidth, t_tempHeight};
-                    windowRects << QRect(0, window->frameGeometry().y(), t_tempWidth, t_tempHeight);
-                    windowNames << window->wmClass();
+                    pushWindow(QRect(0, window->frameGeometry().y(), t_tempWidth, t_tempHeight));
                     continue;
                 } else if (window->frameGeometry().y() > height - window->frameGeometry().height()) {
                     // x为负坐标，y方向窗口超出屏幕底部
@@ -609,8 +707,7 @@ void Utils::getAllWindowInfo(
 
                     //                        windowRects << Dtk::Wm::WindowRect {0, window->frameGeometry().y(), t_tempWidth,
                     //                        t_tempHeight};
-                    windowRects << QRect(0, window->frameGeometry().y(), t_tempWidth, t_tempHeight);
-                    windowNames << window->wmClass();
+                    pushWindow(QRect(0, window->frameGeometry().y(), t_tempWidth, t_tempHeight));
                     continue;
                 }
             }
@@ -625,8 +722,7 @@ void Utils::getAllWindowInfo(
 
                     //                        windowRects << Dtk::Wm::WindowRect {window->frameGeometry().x(), 0, t_tempWidth,
                     //                        t_tempHeight};
-                    windowRects << QRect(window->frameGeometry().x(), 0, t_tempWidth, t_tempHeight);
-                    windowNames << window->wmClass();
+                    pushWindow(QRect(window->frameGeometry().x(), 0, t_tempWidth, t_tempHeight));
                     continue;
                 } else if (window->frameGeometry().y() >= 0 &&
                            window->frameGeometry().y() <= height - window->frameGeometry().height()) {
@@ -636,8 +732,7 @@ void Utils::getAllWindowInfo(
 
                     //                        windowRects << Dtk::Wm::WindowRect {window->frameGeometry().x(),
                     //                        window->frameGeometry().y(), t_tempWidth, t_tempHeight};
-                    windowRects << QRect(window->frameGeometry().x(), window->frameGeometry().y(), t_tempWidth, t_tempHeight);
-                    windowNames << window->wmClass();
+                    pushWindow(QRect(window->frameGeometry().x(), window->frameGeometry().y(), t_tempWidth, t_tempHeight));
                     continue;
                 } else if (window->frameGeometry().y() > height - window->frameGeometry().height()) {
                     // y方向窗口超出屏幕底部
@@ -646,8 +741,7 @@ void Utils::getAllWindowInfo(
 
                     //                        windowRects << Dtk::Wm::WindowRect {window->frameGeometry().x(),
                     //                        window->frameGeometry().y(), t_tempWidth, t_tempHeight};
-                    windowRects << QRect(window->frameGeometry().x(), window->frameGeometry().y(), t_tempWidth, t_tempHeight);
-                    windowNames << window->wmClass();
+                    pushWindow(QRect(window->frameGeometry().x(), window->frameGeometry().y(), t_tempWidth, t_tempHeight));
                     continue;
                 }
             }
@@ -662,8 +756,7 @@ void Utils::getAllWindowInfo(
 
                     //                        windowRects << Dtk::Wm::WindowRect {window->frameGeometry().x(), 0, t_tempWidth,
                     //                        t_tempHeight};
-                    windowRects << QRect(window->frameGeometry().x(), 0, t_tempWidth, t_tempHeight);
-                    windowNames << window->wmClass();
+                    pushWindow(QRect(window->frameGeometry().x(), 0, t_tempWidth, t_tempHeight));
                     continue;
                 } else if (window->frameGeometry().y() >= 0 &&
                            window->frameGeometry().y() <= height - window->frameGeometry().height()) {
@@ -673,8 +766,7 @@ void Utils::getAllWindowInfo(
 
                     //                        windowRects << Dtk::Wm::WindowRect {window->frameGeometry().x(),
                     //                        window->frameGeometry().y(), t_tempWidth, t_tempHeight};
-                    windowRects << QRect(window->frameGeometry().x(), window->frameGeometry().y(), t_tempWidth, t_tempHeight);
-                    windowNames << window->wmClass();
+                    pushWindow(QRect(window->frameGeometry().x(), window->frameGeometry().y(), t_tempWidth, t_tempHeight));
                     continue;
                 } else if (window->frameGeometry().y() > height - window->frameGeometry().height()) {
                     // y方向窗口超出屏幕底部
@@ -683,8 +775,7 @@ void Utils::getAllWindowInfo(
 
                     //                        windowRects << Dtk::Wm::WindowRect {window->frameGeometry().x(),
                     //                        window->frameGeometry().y(), t_tempWidth, t_tempHeight};
-                    windowRects << QRect(window->frameGeometry().x(), window->frameGeometry().y(), t_tempWidth, t_tempHeight);
-                    windowNames << window->wmClass();
+                    pushWindow(QRect(window->frameGeometry().x(), window->frameGeometry().y(), t_tempWidth, t_tempHeight));
                     continue;
                 }
             }

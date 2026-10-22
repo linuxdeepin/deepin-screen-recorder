@@ -73,9 +73,10 @@ void TopTips::updateTips(QPoint pos, const QSize &size)
 
     QPoint startPoint = pos;
     qreal pixelRatio = qApp->primaryScreen()->devicePixelRatio();
-    // 与实际截图裁剪逻辑保持一致：宽度-2、高度-1（避开选区虚线边框）
-    int tipWidth = qMax(static_cast<int>((size.width() - 2) * pixelRatio), 0);
-    int tipHeight = qMax(static_cast<int>((size.height() - 1) * pixelRatio), 0);
+    // 与实际截图裁剪逻辑保持一致：成图 = 选区（逻辑像素） × DPR，
+    // 不再沿用从虚线边框绘制里抄来的 “宽 -2、高 -1” 补偿，否则提示的尺寸会比成图小一圈
+    int tipWidth = qMax(qRound(size.width() * pixelRatio), 0);
+    int tipHeight = qMax(qRound(size.height() * pixelRatio), 0);
     QSize s = QSize(tipWidth, tipHeight);
     setContent(s);
     startPoint.setX(pos.x());

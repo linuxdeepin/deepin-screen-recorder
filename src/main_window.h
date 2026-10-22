@@ -834,6 +834,24 @@ protected:
      * 将背景图进行裁剪，并将编辑的内容绘制到图片上
      */
     QPixmap paintImage();
+    /**
+     * @brief 背景图（整屏物理像素）对应的矩形
+     */
+    QRect backgroundPhysicalRect() const;
+    /**
+     * @brief 当前选区是否仍来自窗口识别（含顶层窗口截图）
+     *
+     * 手工拖动/缩放选区、多屏缩放重映射后会失效，此时截图必须退回手工框选换算。
+     */
+    bool isWindowIdentifiedSelection() const;
+    /**
+     * @brief 计算从背景图中裁剪截图区域的物理像素矩形
+     *
+     * 选区来自窗口识别时使用窗管上报的窗口真实范围作为起点与尺寸，排除窗管补的边框、
+     * 保留标题栏，成图即窗口内容；其余情况按逻辑坐标 × DPR 换算，
+     * 尺寸沿用既有约定（宽 -2、高 -1 逻辑像素）。
+     */
+    QRect shotTargetRectPhysical() const;
     void paintEvent(QPaintEvent *event) override;
     void showEvent(QShowEvent *event) override;
     void resizeEvent(QResizeEvent *event) override;
@@ -858,6 +876,10 @@ protected:
     void hideAllWidget();
     void adjustLayout(QVBoxLayout *layout, int layoutWidth, int layoutHeight);
     void initShapeWidget(QString type);
+    /**
+     * @brief 退出当前标注工具，恢复为仅可选择/编辑已有标注的普通状态
+     */
+    void resetCurrentShotTool();
     /**
      * @brief 标注模式下是否命中选区边框拖拽点，命中则开始/继续调整截图区域大小
      * @param event 原始鼠标事件
@@ -1038,6 +1060,19 @@ private:
      * @brief 所有窗口的名称，与windowRects一一对应
      */
     QList<QString> windowNames;
+    /**
+     * @brief 所有窗口的物理像素几何信息，与windowRects一一对应
+     *
+     * 非合成（最佳性能）模式下窗管会给窗口补 1 物理像素边框，
+     * frameGeometry() 得到的外框会把边框外的像素带进截图，这里保存窗口真实范围。
+     */
+    QList<Utils::WindowPhysicalGeometry> windowPhysicalGeometries;
+    /**
+     * @brief 当前选区来自窗口识别时，记录该窗口的物理像素几何信息
+     *
+     * 仅当它与当前选区一致时才会用于裁剪，避免手工框选后误用旧数据。
+     */
+    Utils::WindowPhysicalGeometry m_selectedWindowPhysicalGeometry;
     int ddeDockLayerIndex = -1;
     ShowButtons *m_showButtons = nullptr;
     //QTimer *flashTrayIconTimer = nullptr;
@@ -1350,6 +1385,21 @@ private:
      * @brief 圆角工具组尺寸/比例面板修改了选区尺寸
      */
     void onRoundedSelectionSizeChanged(int width, int height);
+
+    /**
+     * @brief 圆角工具组比例面板修改了锁定比例
+     */
+    void onRoundedRatioChanged(int width, int height);
+
+    /**
+     * @brief 让当前选区立即符合指定宽高比
+     */
+    void applyRatioToCurrentSelection(qreal ratio);
+
+    /**
+     * @brief 新建选区拖动过程中按锁定比例约束记录区域
+     */
+    void applyLockedRatioToNewSelection(const QPoint &currentPos);
 
     /**
      * @brief 应用上次勾选“下次截图保持”的尺寸或比例

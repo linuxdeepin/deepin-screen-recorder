@@ -184,8 +184,28 @@ public:
      */
     static void disableXGrabButton();
 
+    /**
+     * @brief 窗口在 X11 根窗口物理像素坐标系下的几何信息
+     */
+    struct WindowPhysicalGeometry {
+        QRect frame;    ///< 窗管外框（含窗管边框、标题栏）物理像素矩形
+        QRect visible;  ///< 去掉窗管补的边框后的窗口范围（截图应当使用的范围）
+        bool valid = false;
+    };
+
     static void getAllWindowInfo(
-        const quint32 winId, const int width, const int height, QList<QRect> &windowRects, QList<QString> &windowNames);
+        const quint32 winId, const int width, const int height, QList<QRect> &windowRects, QList<QString> &windowNames,
+        QList<WindowPhysicalGeometry> *windowGeometries = nullptr);
+
+    /**
+     * @brief 获取窗口物理像素几何信息
+     *
+     * 非合成（最佳性能）模式下窗管会在窗口四周补 1 物理像素边框，该边框不属于窗口内容；
+     * 而 DForeignWindow::frameGeometry() 得到的是包含边框的窗口外框，并且 Qt 在缩放屏幕下
+     * 会把物理坐标截断成逻辑坐标，再叠加 1 像素误差。直接按外框截图会把窗口之外的像素
+     * （窗管边框、桌面背景）截进图片，表现为截图左边缘/上边缘多出 1~2 像素描边。
+     */
+    static WindowPhysicalGeometry getWindowPhysicalGeometry(quint32 winId);
     static bool checkCpuIsZhaoxin();
 
     /**

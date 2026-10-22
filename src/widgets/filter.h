@@ -47,6 +47,7 @@ public:
 
     QWidget *parentWidget = nullptr;
     QWidget *hintWidget = nullptr;
+    QWidget *anchorWidget = nullptr;
 
     HintFilter *q_ptr;
     Q_DECLARE_PUBLIC(HintFilter)

@@ -747,10 +747,14 @@ void SubToolWidget::initShotLabel()
     m_aiAssistantButton->setFixedSize(TOOL_BUTTON_SIZE);
     installTipHint(m_aiAssistantButton, tr("AI Screenshot (Alt+A)"));
     btnList.append(m_aiAssistantButton);
+    // 功能信号统一由 m_shotBtnGroup 的点击处理发出；这里仅处理使用状态。
+    // 这样再次点击 AI 按钮时，不会在收起二级工具栏后又立刻被重新展开。
     connect(m_aiAssistantButton, &ToolButton::clicked, this, [=] {
+        if (!m_aiAssistantButton->isChecked()) {
+            return;
+        }
         ConfigSettings::instance()->setValue("shot", "ai_assistant_used", true);
         m_aiAssistantButton->setShowRedDot(false);
-        emit changeShotToolFunc("aiassistant");
     });
 
     if(!DBusUtils::isAiAssistantAvailable())
@@ -878,34 +882,44 @@ void SubToolWidget::initShotLabel()
 
     connect(m_shotBtnGroup, &QButtonGroup::buttonClicked,
     [ = ](QAbstractButton *button) {
-        Q_UNUSED(button);
-        if (m_gioButton->isChecked()) {
+        // 选项、保存等非 checkable 按钮也属于该按钮组，不能参与标注工具切换。
+        if (!button || !button->isCheckable()) {
+            return;
+        }
+
+        // 互斥 QButtonGroup 不会因为再次点击当前按钮而取消选中，因此需要显式
+        // 记录当前工具并在这里实现“再次点击收起二级工具栏”的交互。
+        if (button == m_activeShotTool) {
+            m_shotBtnGroup->setExclusive(false);
+            button->setChecked(false);
+            m_shotBtnGroup->setExclusive(true);
+            m_activeShotTool = nullptr;
+            emit changeShotToolFunc(QString());
+            return;
+        }
+
+        m_activeShotTool = button;
+
+        if (button == m_gioButton) {
             // 当几何图形按钮被点击时，发送"gio"信号，而不是直接发送具体形状
             // 这样SideBarWidget可以正确识别这是几何图形按钮被点击的事件
             qCDebug(dsrApp) << "Geometry button clicked, sending gio signal";
             emit changeShotToolFunc("gio");
-        }
-        if (m_lineButton->isChecked()) {
+        } else if (button == m_lineButton) {
             emit changeShotToolFunc("line");
-        }
-
-        if (m_arrowButton->isChecked()) {
+        } else if (button == m_arrowButton) {
             emit changeShotToolFunc("arrow");
-        }
-
-        if (m_penButton->isChecked()) {
+        } else if (button == m_penButton) {
             emit changeShotToolFunc("pen");
-        }
-        if (m_textButton->isChecked()) {
+        } else if (button == m_textButton) {
             emit changeShotToolFunc("text");
-        }
-        if (m_sequenceButton->isChecked()) {
+        } else if (button == m_sequenceButton) {
             emit changeShotToolFunc("sequence");
-        }
-        if (m_mosaicButton->isChecked()) {
+        } else if (button == m_mosaicButton) {
             emit changeShotToolFunc("effect");
+        } else if (button == m_aiAssistantButton) {
+            emit changeShotToolFunc("aiassistant");
         }
-
     });
 
     initShotOption();
@@ -2176,15 +2190,20 @@ void SubToolWidget::shapeClickedFromWidget(QString shape)
             if (!m_gioButton->isChecked())
                 m_gioButton->click();
         } else if (shape == "line") {
-            m_lineButton->click();
+            if (!m_lineButton->isChecked())
+                m_lineButton->click();
         } else if (shape == "arrow") {
-            m_arrowButton->click();
+            if (!m_arrowButton->isChecked())
+                m_arrowButton->click();
         } else if (shape == "pen") {
-            m_penButton->click();
+            if (!m_penButton->isChecked())
+                m_penButton->click();
         } else if (shape == "text") {
-            m_textButton->click();
+            if (!m_textButton->isChecked())
+                m_textButton->click();
         } else if (shape == "sequence") {
-            m_sequenceButton->click();
+            if (!m_sequenceButton->isChecked())
+                m_sequenceButton->click();
         } else if (shape == "option") {
             if (m_currentType == "shot" || currentWidget() == m_shotSubTool) {
                 if (m_optionMenu->isHidden()) {
@@ -2208,7 +2227,8 @@ void SubToolWidget::shapeClickedFromWidget(QString shape)
         } else if (shape == "aiassistant") {
             qCWarning(dsrApp) << "AI assistant mode: showing AI assistant tool.";
             if (m_aiAssistantButton) {
-                m_aiAssistantButton->click();
+                if (!m_aiAssistantButton->isChecked())
+                    m_aiAssistantButton->click();
             } else {
                 emit changeShotToolFunc("aiassistant");
             }
@@ -2217,11 +2237,30 @@ void SubToolWidget::shapeClickedFromWidget(QString shape)
         } else if (shape == "camera") {
             m_cameraButton->click();
         } else if (shape == "effect") {
-            m_mosaicButton->click();
+            if (!m_mosaicButton->isChecked())
+                m_mosaicButton->click();
         } else  {
             qCDebug(dsrApp) << __FUNCTION__ << __LINE__ << "ERROR" << shape;
         }
     }
+}
+
+void SubToolWidget::clearShotToolSelection()
+{
+    if (!m_shotBtnGroup) {
+        return;
+    }
+
+    // 二级工具栏可能由再次点击、关闭按钮、模式切换等路径隐藏。
+    // 任何隐藏路径都要同步清掉横向工具的选中态，避免下次点击先执行“收起”。
+    m_shotBtnGroup->setExclusive(false);
+    for (QAbstractButton *button : m_shotBtnGroup->buttons()) {
+        if (button->isCheckable()) {
+            button->setChecked(false);
+        }
+    }
+    m_shotBtnGroup->setExclusive(true);
+    m_activeShotTool = nullptr;
 }
 
 void SubToolWidget::setMicroPhoneEnable(bool status)

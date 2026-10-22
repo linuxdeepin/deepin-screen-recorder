@@ -5,6 +5,8 @@
 
 #include "roundedcornerwidget.h"
 #include "toolbutton.h"
+#include "filter.h"
+#include "tooltips.h"
 #include "../utils/configsettings.h"
 #include "../utils.h"
 #include "../utils/log.h"
@@ -28,14 +30,122 @@
 #include <QIntValidator>
 #include <QPainter>
 #include <QPainterPath>
+#include <QProxyStyle>
+#include <QStyleOptionButton>
+#include <QStylePainter>
 #include <QIcon>
 #include <QHideEvent>
-#include <QProxyStyle>
-#include <QStyleOptionSlider>
 
 DWIDGET_USE_NAMESPACE
 
 namespace {
+
+// DPushButton 挂 QMenu 后会按默认样式同时预留文字和菜单箭头空间；
+// 56px 宽的中文“尺寸/比例”在 T6 字体下会被最后一个字裁掉。
+// 保留 DTK 按钮背景绘制，只重新分配内部文字与箭头区域。
+// Sketch 中尺寸/比例下拉弹层为 152x64、圆角 12px，两行菜单项各 26px，
+// 上下留白各 6px。DTK 默认 QMenu 的纵向留白会把它撑到 104px 高，
+// 因此只对这一个菜单使用紧凑尺寸策略，不影响应用内其他菜单。
+class SizeModeMenuStyle : public QProxyStyle
+{
+public:
+    explicit SizeModeMenuStyle(QObject *parent)
+        // 和圆角滑块样式同理：不接管应用样式所有权，只在绘制时动态委托。
+        : QProxyStyle(nullptr)
+    {
+        setParent(parent);
+    }
+
+    int pixelMetric(PixelMetric metric, const QStyleOption *option = nullptr,
+                    const QWidget *widget = nullptr) const override
+    {
+        switch (metric) {
+        case PM_MenuHMargin:
+        case PM_MenuVMargin:
+            return 6;
+        case PM_MenuPanelWidth:
+        case PM_MenuTearoffHeight:
+        case PM_MenuDesktopFrameWidth:
+            return 0;
+        default:
+            return QProxyStyle::pixelMetric(metric, option, widget);
+        }
+    }
+
+    QSize sizeFromContents(ContentsType type, const QStyleOption *option,
+                           const QSize &contentsSize, const QWidget *widget) const override
+    {
+        if (type == CT_MenuItem) {
+            QSize size = QProxyStyle::sizeFromContents(type, option, contentsSize, widget);
+            size.setHeight(26);
+            // QMenu 用内容宽度计算 actionGeometry。DTK 默认内容宽度会把
+            // 菜单项撑到 162px，右侧被 152px 的菜单裁掉，hover 因此只有
+            // 左边距、没有右边距；这里收敛到菜单内宽 140px，左右各留 6px。
+            size.setWidth(140);
+            return size;
+        }
+        if (type == CT_Menu) {
+            return QSize(152, 64);
+        }
+        return QProxyStyle::sizeFromContents(type, option, contentsSize, widget);
+    }
+};
+
+class SizeModeButton : public DPushButton
+{
+public:
+    explicit SizeModeButton(QWidget *parent = nullptr)
+        : DPushButton(parent)
+    {
+    }
+
+protected:
+    void paintEvent(QPaintEvent *event) override
+    {
+        Q_UNUSED(event);
+
+        QStylePainter painter(this);
+        QStyleOptionButton option;
+        initStyleOption(&option);
+        // 只关闭默认菜单指示器，保留 Flat 等按钮状态，避免 DTK
+        // 把原本透明的扁平按钮画成实心深色背景。文字和箭头在下方自行绘制。
+        option.text.clear();
+        option.icon = QIcon();
+        option.features.setFlag(QStyleOptionButton::HasMenu, false);
+        painter.drawControl(QStyle::CE_PushButton, option);
+
+        // 对齐 Sketch：背景 56x24，文字从 x=4 开始，箭头图标区域
+        // 位于 x=36、16x16。按钮总宽保持不变，只收紧内部留白。
+        constexpr int arrowSize = 16;
+        constexpr int arrowRight = 4;
+        constexpr int leftPadding = 4;
+        constexpr int textArrowGap = 2;
+
+        const QRect arrowRect(width() - arrowRight - arrowSize,
+                              (height() - arrowSize) / 2,
+                              arrowSize,
+                              arrowSize);
+        const QRect textRect(leftPadding,
+                             0,
+                             qMax(0, arrowRect.left() - textArrowGap - leftPadding),
+                             height());
+
+        const QPalette::ColorGroup colorGroup = isEnabled()
+                ? QPalette::Normal : QPalette::Disabled;
+        painter.setPen(palette().color(colorGroup, QPalette::ButtonText));
+        painter.setFont(font());
+        painter.drawText(textRect, Qt::AlignLeft | Qt::AlignVCenter, text());
+
+        QStyleOption arrowOption;
+        arrowOption.initFrom(this);
+        arrowOption.rect = arrowRect;
+        arrowOption.state = option.state;
+        style()->drawPrimitive(QStyle::PE_IndicatorArrowDown,
+                               &arrowOption,
+                               &painter,
+                               this);
+    }
+};
 
 // 设计稿「截图录屏-工具栏-圆角 / 比例」尺寸（24x24 图标按 32px 资源提供，控件按 1x 逻辑像素实现）
 const int GROUP_WIDTH = 56;
@@ -61,9 +171,11 @@ const int ADJUST_ICON_SIZE = 16;
 
 const int SIZE_MODE_X = 10;
 const int SIZE_MODE_Y = 16;
-const int SIZE_MODE_WIDTH = 55;
+const int SIZE_MODE_WIDTH = 56;
 const int SIZE_MODE_HEIGHT = 24;
-const int WIDTH_SPIN_X = 74;
+const int SIZE_MODE_RADIUS = 6;
+const int SIZE_MODE_INPUT_GAP = 8;
+const int WIDTH_SPIN_X = SIZE_MODE_X + SIZE_MODE_WIDTH + SIZE_MODE_INPUT_GAP;
 const int HEIGHT_SPIN_X = 154;
 const int DIMENSION_SPIN_WIDTH = 60;
 const int DIMENSION_SEPARATOR_X = 136;
@@ -77,129 +189,8 @@ const int MAX_RATIO_VALUE = 999;
 // 按钮组与选区、按钮组与属性面板的间距
 const int SELECTION_GAP = 16;
 const int PANEL_GAP = 10;
-
-// DTK 默认 DSlider 的滑块是蓝色胶囊；设计稿要求 16x16、圆角 4px 的深色方形滑块。
-// 轨道仍由当前 DTK 样式绘制，只替换 handle，避免重新实现整套 slider 行为。
-class RoundedSliderStyle : public QProxyStyle
-{
-public:
-    explicit RoundedSliderStyle(QObject *parent)
-        // 这里必须传 nullptr 基样式，不能传控件当前样式：
-        // QProxyStyle 会把基样式收成自己的子对象，而 QSlider 默认拿到的是
-        // QApplication 的应用样式；一旦把应用样式传进来，slider 析构时就会
-        // 连带销毁应用样式，QApplicationPrivate::app_style 变成悬空指针，
-        // 退出时 ~QApplication 再次释放它就会崩溃。
-        // 传 nullptr 时 QProxyStyle::baseStyle() 会在绘制时动态取回应用样式。
-        : QProxyStyle(nullptr)
-    {
-        setParent(parent);
-    }
-
-    void drawComplexControl(ComplexControl control, const QStyleOptionComplex *option,
-                            QPainter *painter, const QWidget *widget) const override
-    {
-        if (control != QStyle::CC_Slider || !option || !painter) {
-            QProxyStyle::drawComplexControl(control, option, painter, widget);
-            return;
-        }
-
-        const auto *sliderOption = qstyleoption_cast<const QStyleOptionSlider *>(option);
-        if (!sliderOption) {
-            QProxyStyle::drawComplexControl(control, option, painter, widget);
-            return;
-        }
-
-        const bool darkTheme = DGuiApplicationHelper::instance()->themeType()
-                               == DGuiApplicationHelper::DarkType;
-        constexpr qreal HANDLE_SIZE = 16.0;
-        constexpr qreal HANDLE_RADIUS = 4.0;
-
-        // 轨道范围用 groove（也就是可滑动区间），不要用 defaultHandle 的圆心定位：
-        // DTK 原生手柄约 28px，设计稿手柄是 16px，两者圆心相同但宽度不同，
-        // 直接套用圆心会把 16px 手柄整体往右顶 6px，最小值时轨道会在手柄左边露出一截。
-        QRectF trackRect(QProxyStyle::subControlRect(
-            control, sliderOption, QStyle::SC_SliderGroove, widget));
-        if (!trackRect.isValid()) {
-            trackRect = QRectF(sliderOption->rect);
-        }
-        if (trackRect.width() < HANDLE_SIZE) {
-            trackRect = QRectF(sliderOption->rect);
-        }
-
-        const int range = sliderOption->maximum - sliderOption->minimum;
-        const qreal fraction = range > 0
-                               ? qreal(sliderOption->sliderPosition - sliderOption->minimum) / range
-                               : 0.0;
-        // 最小值时手柄左边缘贴住轨道左端，最大值时右边缘贴住轨道右端，
-        // 这样手柄两端各占 16px，中间正好留出设计稿的 120px 虚线区间。
-        QRectF handleRect(0, 0, HANDLE_SIZE, HANDLE_SIZE);
-        handleRect.moveTopLeft(QPointF(trackRect.left() + fraction * (trackRect.width() - HANDLE_SIZE),
-                                       trackRect.center().y() - HANDLE_SIZE / 2.0));
-
-        const qreal trackY = trackRect.center().y();
-        const QColor trackColor = darkTheme ? QColor(255, 255, 255, 51)
-                                           : QColor(0, 0, 0, 51);
-        const QColor progressColor = darkTheme ? QColor(2, 76, 202)
-                                               : QColor(0, 91, 255);
-
-        painter->save();
-        painter->setRenderHint(QPainter::Antialiasing, false);
-
-        QPen trackPen(trackColor, 2.0, Qt::CustomDashLine, Qt::FlatCap, Qt::MiterJoin);
-        trackPen.setDashPattern(QVector<qreal>{1.0, 0.5});
-        painter->setPen(trackPen);
-        painter->drawLine(QPointF(trackRect.left(), trackY),
-                          QPointF(trackRect.right(), trackY));
-
-        if (sliderOption->sliderPosition > sliderOption->minimum) {
-            if (darkTheme) {
-                QPen progressShadowPen(QColor(0, 40, 128, 128), 2.0,
-                                       Qt::CustomDashLine, Qt::FlatCap, Qt::MiterJoin);
-                progressShadowPen.setDashPattern(QVector<qreal>{1.0, 0.5});
-                painter->setPen(progressShadowPen);
-                painter->drawLine(QPointF(trackRect.left(), trackY + 2.0),
-                                  QPointF(handleRect.center().x(), trackY + 2.0));
-            }
-
-            QPen progressPen(progressColor, 2.0, Qt::CustomDashLine,
-                             Qt::FlatCap, Qt::MiterJoin);
-            progressPen.setDashPattern(QVector<qreal>{1.0, 0.5});
-            painter->setPen(progressPen);
-            painter->drawLine(QPointF(trackRect.left(), trackY),
-                              QPointF(handleRect.center().x(), trackY));
-        }
-
-        painter->setRenderHint(QPainter::Antialiasing, true);
-        if (darkTheme) {
-            DDrawUtils::drawShadow(painter, handleRect.toRect(), HANDLE_RADIUS, HANDLE_RADIUS,
-                                   QColor(31, 31, 31, 102), 6.0, QPoint(0, 4));
-
-            QLinearGradient gradient(handleRect.topLeft(), handleRect.bottomLeft());
-            gradient.setColorAt(0, QColor(83, 83, 83));
-            gradient.setColorAt(1, QColor(46, 46, 46));
-            painter->setPen(Qt::NoPen);
-            painter->setBrush(gradient);
-            painter->drawRoundedRect(handleRect.adjusted(0.5, 0.5, -0.5, -0.5),
-                                     HANDLE_RADIUS, HANDLE_RADIUS);
-
-            painter->setPen(QPen(QColor(0, 0, 0, 51), 1.0));
-            painter->setBrush(Qt::NoBrush);
-            painter->drawRoundedRect(handleRect.adjusted(0.5, 0.5, -0.5, -0.5),
-                                     HANDLE_RADIUS, HANDLE_RADIUS);
-            painter->setPen(QPen(QColor(255, 255, 255, 26), 1.0));
-            painter->drawRoundedRect(handleRect.adjusted(1.5, 1.5, -1.5, -1.5),
-                                     HANDLE_RADIUS - 1.0, HANDLE_RADIUS - 1.0);
-        } else {
-            DDrawUtils::drawShadow(painter, handleRect.toRect(), HANDLE_RADIUS, HANDLE_RADIUS,
-                                   QColor(0, 0, 0, 77), 4.0, QPoint(0, 2));
-            painter->setPen(Qt::NoPen);
-            painter->setBrush(QColor(77, 77, 77));
-            painter->drawRoundedRect(handleRect.adjusted(0.5, 0.5, -0.5, -0.5),
-                                     HANDLE_RADIUS, HANDLE_RADIUS);
-        }
-        painter->restore();
-    }
-};
+// 按钮组显示在选区内部时，与选区上边缘、右边缘保留的间距
+const int INNER_SELECTION_GAP = 10;
 
 // 把单色图标整体着色成指定颜色（保留原始 alpha 形状）。
 // 图标资源本身固定是 #000000，DTK 对普通 QIcon 不会按 palette 重新着色，
@@ -317,12 +308,25 @@ QPoint eventGlobalPos(const QMouseEvent *event)
 #endif
 }
 
+// 只替换当前 override cursor，不反复 push，避免鼠标移动过程中光标栈持续增长。
+void applyOverrideCursorShape(Qt::CursorShape shape)
+{
+    const QCursor *current = QApplication::overrideCursor();
+    if (!current) {
+        QApplication::setOverrideCursor(QCursor(shape));
+    } else if (current->shape() != shape) {
+        QApplication::changeOverrideCursor(QCursor(shape));
+    }
+}
+
 // 按钮组水平位置的①/②/③判定（设计稿 2.3）：
 // reposition() 与 groupPlateRect() 共用，避免两处几何计算出现偏差。
 struct GroupPlacement
 {
-    int groupLeft = 0;        // 按钮组可见底板相对父窗口的左边
-    bool panelOnLeft = false; // 属性面板是否向左展开
+    int groupLeft = 0;          // 按钮组可见底板相对父窗口的左边
+    int groupTop = 0;           // 按钮组可见底板相对父窗口的上边
+    bool panelOnLeft = false;   // 属性面板是否向左展开
+    bool insideSelection = false; // 两侧空间不足，按钮组显示在选区内部
 };
 
 GroupPlacement computeGroupPlacement(const QRect &selection, const QRect &screen)
@@ -332,14 +336,19 @@ GroupPlacement computeGroupPlacement(const QRect &selection, const QRect &screen
     if (selection.right() + SELECTION_GAP + totalWidth <= screen.right()) {
         // ① 选区右侧空间足够：按钮组在选区右上角右侧，面板向右展开
         placement.groupLeft = selection.right() + SELECTION_GAP;
+        placement.groupTop = selection.top();
     } else if (selection.left() - SELECTION_GAP - totalWidth >= screen.left()) {
         // ② 选区左侧空间足够：按钮组在选区左上角左侧，面板向左展开
         placement.panelOnLeft = true;
         placement.groupLeft = selection.left() - SELECTION_GAP - GROUP_WIDTH;
+        placement.groupTop = selection.top();
     } else {
-        // ③ 两侧均不足：按钮组贴在选区右上角内侧，面板向左展开
+        // ③ 两侧均不足：按钮组显示在选区右上角内部，
+        // 与选区上边缘、右边缘各保留 10px 间距，面板向左展开。
         placement.panelOnLeft = true;
-        placement.groupLeft = selection.right() - GROUP_WIDTH + 1;
+        placement.insideSelection = true;
+        placement.groupLeft = selection.right() - INNER_SELECTION_GAP - GROUP_WIDTH + 1;
+        placement.groupTop = selection.top() + INNER_SELECTION_GAP;
     }
     return placement;
 }
@@ -367,14 +376,19 @@ QWidget *createFloatingPlate(QWidget *parent, const QSize &plateSize, int radius
     return plate;
 }
 
-// 设计稿 DTK/输入框/Spinbox2：输入框底色为 #FFFFFF 60%。
-// DTK/chameleon 的 embed 样式是按 QPalette::Button 取这个底色的，
-// 默认浅色主题下该角色与悬浮面板底色几乎一致（实测 228 vs 229），
-// 结果设计稿里那个圆角输入框在界面上"消失"了。这里按设计稿显式指定底色。
+// 输入框/Spinbox 的底板颜色需要跟随主题：
+// 浅色主题沿用设计稿的 #FFFFFF 60%；深色主题使用 #FFFFFF 10%，
+// 避免深色模式下仍显示浅色底板，同时保证与半透明深色面板有可见区分。
+QColor inputPlateColor(const QWidget *widget)
+{
+    const bool darkTheme = widget->palette().color(QPalette::Window).lightness() < 128;
+    return darkTheme ? QColor(255, 255, 255, 26) : QColor(255, 255, 255, 153);
+}
+
 void applySpinBoxPlateColor(DSpinBox *spin)
 {
     QPalette pal = spin->palette();
-    pal.setColor(QPalette::Button, QColor(255, 255, 255, 153));
+    pal.setColor(QPalette::Button, inputPlateColor(spin));
     spin->setPalette(pal);
 }
 
@@ -384,7 +398,7 @@ void applyLineEditPlateColor(DLineEdit *edit)
         return;
     }
 
-    const QColor plateColor(255, 255, 255, 153);
+    const QColor plateColor = inputPlateColor(edit);
     QPalette pal = edit->palette();
     pal.setColor(QPalette::Base, plateColor);
     pal.setColor(QPalette::Button, plateColor);
@@ -435,6 +449,7 @@ RoundedCornerWidget::RoundedCornerWidget(QWidget *parent)
 {
     setAttribute(Qt::WA_TranslucentBackground);
     setAttribute(Qt::WA_NoSystemBackground);
+    m_hintFilter = new HintFilter(this);
     const int margin = plateShadowMargin(this);
     setFixedSize(GROUP_WIDTH + margin * 2, GROUP_HEIGHT + margin * 2);
     initUi();
@@ -449,10 +464,21 @@ RoundedCornerWidget::~RoundedCornerWidget()
 void RoundedCornerWidget::initUi()
 {
     m_groupFrame = buildGroup();
-    // 底板（按钮组）悬停时显示手型；面板内部有滑块/输入框，不能一起改光标
+    // 底板（按钮组）悬停时显示手型。主窗口在选区内部使用全局 override cursor，
+    // 会覆盖控件自己的 cursor，因此按钮组及子控件也需要主动同步手型。
+    m_groupFrame->setCursor(Qt::OpenHandCursor);
     m_groupFrame->installEventFilter(this);
+    const QList<QWidget *> groupChildren = m_groupFrame->findChildren<QWidget *>();
+    for (QWidget *child : groupChildren) {
+        child->installEventFilter(this);
+    }
     m_cornerPanel = buildCornerPanel();
     m_sizePanel = buildSizePanel();
+    // 主窗口会在选区内部使用“拖动选区”的全局手型，面板必须在该区域
+    // 主动保护为普通箭头，否则手型会覆盖面板及其子控件的光标。输入框
+    // 内部的 QLineEdit 也要单独监听，才能在其上恢复 I 型文本光标。
+    installPanelCursorFilters(m_cornerPanel);
+    installPanelCursorFilters(m_sizePanel);
 
     m_cornerPanel->hide();
     m_sizePanel->hide();
@@ -461,13 +487,11 @@ void RoundedCornerWidget::initUi()
     // 圆角半径默认保持 0（设计稿：0px~60px，默认 0），需要用户拖动滑块或输入数值才真正生效。
     connect(m_cornerButton, &ToolButton::clicked, this, [this]() {
         setPanel(m_panel == CornerPanel ? NoPanel : CornerPanel);
-        syncButtonStates();
     });
 
     // 尺寸/比例按钮：展开/收起尺寸比例面板
     connect(m_ratioButton, &ToolButton::clicked, this, [this]() {
         setPanel(m_panel == SizePanel ? NoPanel : SizePanel);
-        syncButtonStates();
     });
 
     // 拖动滑块时每一步都写配置会造成明显卡顿：QSettings::sync() 在 /home 上单次实测
@@ -527,13 +551,17 @@ void RoundedCornerWidget::initUi()
         const int widthValue = qBound(1, m_widthEdit->text().toInt(), maxValue);
         const int heightValue = qBound(1, m_heightEdit->text().toInt(), maxValue);
         if (m_ratioLocked) {
-            const int anchorHeight = qMax(1, m_selectionHeight);
-            m_selectionWidth = qMax(1, qRound(anchorHeight * static_cast<qreal>(widthValue) / heightValue));
-            m_selectionHeight = anchorHeight;
-        } else {
-            m_selectionWidth = widthValue;
-            m_selectionHeight = heightValue;
+            // 比例是选区拖动的约束条件，不是像素尺寸。原样保存用户输入，
+            // 不能用当前像素尺寸换算后再反算，否则 9:16 会被改写成其他比例。
+            m_ratioWidth = widthValue;
+            m_ratioHeight = heightValue;
+            updateDimensionFields();
+            persistFixedSize();
+            emit ratioChanged(m_ratioWidth, m_ratioHeight);
+            return;
         }
+        m_selectionWidth = widthValue;
+        m_selectionHeight = heightValue;
         updateDimensionFields();
         persistFixedSize();
         emit selectionSizeChanged(m_selectionWidth, m_selectionHeight);
@@ -547,13 +575,15 @@ void RoundedCornerWidget::initUi()
         const int widthValue = qBound(1, m_widthEdit->text().toInt(), maxValue);
         const int heightValue = qBound(1, m_heightEdit->text().toInt(), maxValue);
         if (m_ratioLocked) {
-            const int anchorWidth = qMax(1, m_selectionWidth);
-            m_selectionHeight = qMax(1, qRound(anchorWidth * static_cast<qreal>(heightValue) / widthValue));
-            m_selectionWidth = anchorWidth;
-        } else {
-            m_selectionWidth = widthValue;
-            m_selectionHeight = heightValue;
+            m_ratioWidth = widthValue;
+            m_ratioHeight = heightValue;
+            updateDimensionFields();
+            persistFixedSize();
+            emit ratioChanged(m_ratioWidth, m_ratioHeight);
+            return;
         }
+        m_selectionWidth = widthValue;
+        m_selectionHeight = heightValue;
         updateDimensionFields();
         persistFixedSize();
         emit selectionSizeChanged(m_selectionWidth, m_selectionHeight);
@@ -578,6 +608,17 @@ QWidget *RoundedCornerWidget::buildGroup()
     const int margin = plateShadowMargin(this);
     QWidget *group = createFloatingPlate(this, QSize(GROUP_WIDTH, GROUP_HEIGHT), PANEL_RADIUS, margin);
 
+    // 与横向工具栏复用完全相同的 ToolTips/HintFilter，保证提示的样式、
+    // 延迟时间和“按钮上方居中”的定位规则一致。
+    const auto installTipHint = [this](QWidget *button, const QString &text) {
+        auto *hintWidget = new ToolTips("", window());
+        hintWidget->hide();
+        hintWidget->setText(text);
+        button->setProperty("HintWidget", QVariant::fromValue<QWidget *>(hintWidget));
+        button->setProperty("HintAnchorWidget", QVariant::fromValue<QWidget *>(m_cornerButton));
+        button->installEventFilter(m_hintFilter);
+    };
+
     m_cornerButton = new ToolButton(group);
     m_cornerButton->setFixedSize(BUTTON_SIZE, BUTTON_SIZE);
     m_cornerButton->setIconSize(QSize(BUTTON_ICON_SIZE, BUTTON_ICON_SIZE));
@@ -585,7 +626,7 @@ QWidget *RoundedCornerWidget::buildGroup()
     m_cornerButton->setIcon(QIcon::fromTheme("corner-radius"));
     m_cornerButton->setObjectName("RoundedCornerButton");
     m_cornerButton->setAccessibleName("RoundedCornerButton");
-    m_cornerButton->setToolTip(tr("Radius"));
+    installTipHint(m_cornerButton, tr("Radius"));
     m_cornerButton->move(margin + BUTTON_MARGIN_X, margin + FIRST_BUTTON_Y);
 
     m_ratioButton = new ToolButton(group);
@@ -595,7 +636,7 @@ QWidget *RoundedCornerWidget::buildGroup()
     m_ratioButton->setIcon(QIcon::fromTheme("size-ratio"));
     m_ratioButton->setObjectName("SizeRatioButton");
     m_ratioButton->setAccessibleName("SizeRatioButton");
-    m_ratioButton->setToolTip(tr("Size / ratio"));
+    installTipHint(m_ratioButton, tr("Size / ratio"));
     m_ratioButton->move(margin + BUTTON_MARGIN_X, margin + SECOND_BUTTON_Y);
 
     return group;
@@ -618,8 +659,8 @@ QWidget *RoundedCornerWidget::buildCornerPanel()
     m_radiusSlider->setObjectName("CornerRadiusSlider");
     m_radiusSlider->setAccessibleName("CornerRadiusSlider");
     m_radiusSlider->move(margin + SLIDER_X, margin + SLIDER_Y);
+    // 圆角滑动条使用 DTK DSlider 的默认样式。
     QSlider *radiusSlider = m_radiusSlider->slider();
-    radiusSlider->setStyle(new RoundedSliderStyle(radiusSlider));
     connect(DGuiApplicationHelper::instance(), &DGuiApplicationHelper::themeTypeChanged,
             radiusSlider, qOverload<>(&QWidget::update));
 
@@ -632,6 +673,8 @@ QWidget *RoundedCornerWidget::buildCornerPanel()
     m_radiusSpin->setAccessibleName("CornerRadiusSpinBox");
     m_radiusSpin->move(margin + PANEL_WIDTH - PANEL_PADDING - SPIN_WIDTH,
                        margin + (PANEL_HEIGHT - SPIN_HEIGHT) / 2);
+    connect(DGuiApplicationHelper::instance(), &DGuiApplicationHelper::themeTypeChanged,
+            this, [this]() { applySpinBoxPlateColor(m_radiusSpin); });
 
     return panel;
 }
@@ -641,14 +684,15 @@ QWidget *RoundedCornerWidget::buildSizePanel()
     const int margin = plateShadowMargin(this);
     QWidget *panel = createFloatingPlate(this, QSize(PANEL_WIDTH, PANEL_HEIGHT), PANEL_RADIUS, margin);
 
-    // 设计稿「尺寸 ▾」：55x24，前面是文字，后面是下拉箭头。
+    // 设计稿「尺寸 ▾」：56x24，前面是文字，后面是下拉箭头。
     // 用 DTK 的 DPushButton（QPushButton 派生）挂 DMenu，按钮自带“文本 + 下拉箭头”，
     // 不去自绘箭头，也不依赖 ComboBox 的额外内边距。
-    m_sizeModeButton = new DPushButton(panel);
+    m_sizeModeButton = new SizeModeButton(panel);
     m_sizeModeButton->setFlat(true);
-    // Sketch 里整块下拉区可见宽度是 55；DPushButton 自带内边距，
-    // 固定 55 会把“尺寸”文字裁掉，这里放宽到贴住右侧输入框的 64。
-    m_sizeModeButton->setFixedSize(64, SIZE_MODE_HEIGHT);
+    // 下拉按钮背景宽 56，与右侧宽度输入框保留 8px 间距。
+    m_sizeModeButton->setFixedSize(SIZE_MODE_WIDTH, SIZE_MODE_HEIGHT);
+    // 下拉按钮沿用 DTK 默认背景，只把背景圆角调整为 6px。
+    DStyle::setFrameRadius(m_sizeModeButton, SIZE_MODE_RADIUS);
     m_sizeModeButton->setObjectName("SizeRatioModeButton");
     m_sizeModeButton->setAccessibleName("SizeRatioModeButton");
     m_sizeModeButton->setToolTip(tr("Size / ratio"));
@@ -656,33 +700,30 @@ QWidget *RoundedCornerWidget::buildSizePanel()
     DFontSizeManager::instance()->bind(m_sizeModeButton, DFontSizeManager::T6);
 
     DMenu *modeMenu = new DMenu(m_sizeModeButton);
-    QAction *sizeAction = modeMenu->addAction(tr("Size"));
-    QAction *ratioAction = modeMenu->addAction(tr("Ratio"));
-    sizeAction->setCheckable(true);
-    ratioAction->setCheckable(true);
-    sizeAction->setChecked(true);
+    modeMenu->setStyle(new SizeModeMenuStyle(modeMenu));
+    modeMenu->setFixedSize(152, 64);
+    DStyle::setFrameRadius(modeMenu, 12);
+    m_sizeAction = modeMenu->addAction(tr("Size"));
+    m_ratioAction = modeMenu->addAction(tr("Ratio"));
+    m_sizeAction->setCheckable(true);
+    m_ratioAction->setCheckable(true);
+    m_sizeAction->setChecked(true);
     QActionGroup *modeGroup = new QActionGroup(modeMenu);
     modeGroup->setExclusive(true);
-    modeGroup->addAction(sizeAction);
-    modeGroup->addAction(ratioAction);
-    connect(modeGroup, &QActionGroup::triggered, this, [this, ratioAction](QAction *action) {
-        if (!action || !m_sizeModeButton) {
-            return;
-        }
-        const bool locked = (action == ratioAction);
-        m_sizeModeButton->setText(action->text());
-        if (m_ratioLocked != locked) {
-            m_ratioLocked = locked;
-            persistRatioType();
-            // 图钉已经选中时，前面切换“尺寸/比例”也属于修改记忆设置，
-            // 立即同步 remember_ratio，保证图钉、下拉选项和实际参数一致。
-            if (m_rememberSetting) {
-                captureCurrentSetting();
-            }
-        }
-        updateDimensionFields();
-        syncButtonStates();
+    modeGroup->addAction(m_sizeAction);
+    modeGroup->addAction(m_ratioAction);
+
+    // 不用 QActionGroup::triggered 间接分发：直接监听每个动作，重复选择当前项时
+    // 也会重新同步输入框，避免菜单勾选状态和实际数据显示偶发不一致。
+    connect(m_sizeAction, &QAction::triggered, this, [this]() {
+        applySizeMode(false);
     });
+    connect(m_ratioAction, &QAction::triggered, this, [this]() {
+        applySizeMode(true);
+    });
+    // 菜单显示前从唯一状态源回写勾选状态，防止外部配置切换或上一次
+    // 编辑提交造成 action 状态与实际模式暂时不同步。
+    connect(modeMenu, &QMenu::aboutToShow, this, &RoundedCornerWidget::syncSizeModeControls);
     m_sizeModeButton->setMenu(modeMenu);
     m_sizeModeButton->move(margin + SIZE_MODE_X, margin + SIZE_MODE_Y);
 
@@ -718,6 +759,11 @@ QWidget *RoundedCornerWidget::buildSizePanel()
     m_heightEdit->lineEdit()->setValidator(m_heightValidator);
     DFontSizeManager::instance()->bind(m_heightEdit, DFontSizeManager::T6);
     m_heightEdit->move(margin + HEIGHT_SPIN_X, margin + (PANEL_HEIGHT - SPIN_HEIGHT) / 2);
+    connect(DGuiApplicationHelper::instance(), &DGuiApplicationHelper::themeTypeChanged,
+            this, [this]() {
+                applyLineEditPlateColor(m_widthEdit);
+                applyLineEditPlateColor(m_heightEdit);
+            });
 
     m_lockButton = new SelectionLockButton(panel);
     m_lockButton->setFixedSize(BUTTON_SIZE, BUTTON_SIZE);
@@ -758,24 +804,76 @@ void RoundedCornerWidget::syncFromConfig()
             persistRatioType();
         }
     }
+    m_ratioWidth = 0;
+    m_ratioHeight = 0;
+    if (m_ratioLocked && m_rememberedIsRatio && m_fixedWidth > 0 && m_fixedHeight > 0) {
+        // 比例模式下配置保存的 fixed_width/fixed_height 就是比例分子/分母。
+        m_ratioWidth = m_fixedWidth;
+        m_ratioHeight = m_fixedHeight;
+    }
     m_pendingRememberedSetting = m_rememberSetting && m_fixedWidth > 0 && m_fixedHeight > 0;
 
     m_lockButton->setChecked(m_rememberSetting);
-    if (m_sizeModeButton && m_sizeModeButton->menu()) {
-        QList<QAction *> actions = m_sizeModeButton->menu()->actions();
-        if (actions.size() > 1) {
-            actions.at(m_ratioLocked ? 1 : 0)->setChecked(true);
-            m_sizeModeButton->setText(actions.at(m_ratioLocked ? 1 : 0)->text());
+    syncSizeModeControls();
+    updateDimensionFields();
+    syncButtonStates();
+}
+
+void RoundedCornerWidget::applySizeMode(bool ratioMode)
+{
+    if (!m_sizeModeButton || !m_sizeAction || !m_ratioAction) {
+        return;
+    }
+
+    // 菜单可能在输入框仍持有焦点时执行。先显式结束编辑，让旧模式下的最后一次
+    // 输入提交完成，再切换模式并刷新字段，避免迟到的 editingFinished 覆盖比例数据。
+    if (m_widthEdit && m_widthEdit->lineEdit()->hasFocus()) {
+        m_widthEdit->lineEdit()->clearFocus();
+    }
+    if (m_heightEdit && m_heightEdit->lineEdit()->hasFocus()) {
+        m_heightEdit->lineEdit()->clearFocus();
+    }
+
+    const bool changed = (m_ratioLocked != ratioMode);
+    if (ratioMode && changed) {
+        // 从尺寸模式切到比例模式时，以当前选区比例作为新的约束起点。
+        syncRatioFromSelection();
+    }
+    m_ratioLocked = ratioMode;
+    if (changed) {
+        persistRatioType();
+        // 图钉已经选中时，前面切换“尺寸/比例”也属于修改记忆设置，
+        // 立即同步 remember_ratio，保证图钉、下拉选项和实际参数一致。
+        if (m_rememberSetting) {
+            captureCurrentSetting();
         }
     }
+
+    syncSizeModeControls();
+    updateDimensionFields();
     syncButtonStates();
+    if (ratioMode && m_ratioWidth > 0 && m_ratioHeight > 0) {
+        emit ratioChanged(m_ratioWidth, m_ratioHeight);
+    }
+}
+
+void RoundedCornerWidget::syncSizeModeControls()
+{
+    if (!m_sizeModeButton || !m_sizeAction || !m_ratioAction) {
+        return;
+    }
+    QAction *activeAction = m_ratioLocked ? m_ratioAction : m_sizeAction;
+    m_sizeAction->setChecked(!m_ratioLocked);
+    m_ratioAction->setChecked(m_ratioLocked);
+    m_sizeModeButton->setText(activeAction->text());
 }
 
 void RoundedCornerWidget::syncButtonStates()
 {
-    // 圆角按钮高亮表示面板已展开或圆角已开启；尺寸比例按钮高亮表示面板展开或已锁定比例
-    m_cornerButton->setChecked(m_panel == CornerPanel || m_radius > 0);
-    m_ratioButton->setChecked(m_panel == SizePanel || m_ratioLocked);
+    // 竖排工具组是单选语义：只有当前展开的属性面板对应按钮高亮。
+    // 半径值、比例锁定是持久化设置，不代表按钮应长期处于选中态。
+    m_cornerButton->setChecked(m_panel == CornerPanel);
+    m_ratioButton->setChecked(m_panel == SizePanel);
 }
 
 void RoundedCornerWidget::persistRadius()
@@ -800,10 +898,14 @@ void RoundedCornerWidget::hideEvent(QHideEvent *event)
 {
     // 控件隐藏时（例如拖到一半按 Esc）复位拖动状态，避免残留到下一次显示
     m_dragging = false;
-    // 底板不会再收到 Leave，这里主动收回手型光标
-    if (m_hoverCursorPushed) {
-        QApplication::restoreOverrideCursor();
-        m_hoverCursorPushed = false;
+    m_groupFrame->setCursor(Qt::OpenHandCursor);
+    if (m_groupCursorActive) {
+        applyOverrideCursorShape(m_groupPreviousCursorShape);
+        m_groupCursorActive = false;
+    }
+    if (m_panelCursorActive) {
+        applyOverrideCursorShape(m_panelPreviousCursorShape);
+        m_panelCursorActive = false;
     }
     flushPendingPersist();
     QWidget::hideEvent(event);
@@ -821,16 +923,20 @@ void RoundedCornerWidget::persistRememberSetting()
 
 void RoundedCornerWidget::persistFixedSize()
 {
-    if (m_selectionWidth <= 0 || m_selectionHeight <= 0) {
-        return;
-    }
-
     m_rememberedIsRatio = m_ratioLocked;
     if (m_rememberedIsRatio) {
-        const QPair<int, int> ratio = simplifiedRatio(m_selectionWidth, m_selectionHeight);
-        m_fixedWidth = ratio.first;
-        m_fixedHeight = ratio.second;
+        if (m_ratioWidth <= 0 || m_ratioHeight <= 0) {
+            syncRatioFromSelection();
+        }
+        if (m_ratioWidth <= 0 || m_ratioHeight <= 0) {
+            return;
+        }
+        m_fixedWidth = m_ratioWidth;
+        m_fixedHeight = m_ratioHeight;
     } else {
+        if (m_selectionWidth <= 0 || m_selectionHeight <= 0) {
+            return;
+        }
         m_fixedWidth = qMax(1, m_selectionWidth);
         m_fixedHeight = qMax(1, m_selectionHeight);
     }
@@ -882,6 +988,20 @@ bool RoundedCornerWidget::isRatioLocked() const
     return m_ratioLocked;
 }
 
+qreal RoundedCornerWidget::lockedRatio() const
+{
+    if (!m_ratioLocked) {
+        return 0.0;
+    }
+    if (m_ratioWidth > 0 && m_ratioHeight > 0) {
+        return static_cast<qreal>(m_ratioWidth) / static_cast<qreal>(m_ratioHeight);
+    }
+    if (m_selectionWidth > 0 && m_selectionHeight > 0) {
+        return static_cast<qreal>(m_selectionWidth) / static_cast<qreal>(m_selectionHeight);
+    }
+    return 0.0;
+}
+
 void RoundedCornerWidget::setRadius(int radius)
 {
     m_radiusSlider->setValue(qBound(0, radius, RADIUS_MAX));
@@ -889,21 +1009,77 @@ void RoundedCornerWidget::setRadius(int radius)
 
 void RoundedCornerWidget::setPanel(PanelType panel)
 {
-    if (m_panel == panel) {
-        return;
+    if (m_panel != panel) {
+        m_panel = panel;
+        updateLayout();
+        reposition();
+        emit panelExpandedChanged(m_panel != NoPanel);
     }
-    m_panel = panel;
-    updateLayout();
-    reposition();
-    emit panelExpandedChanged(m_panel != NoPanel);
+    // 无论面板是切换还是收起，都从面板状态统一回写按钮选中态，
+    // 保证圆角和尺寸/比例两个按钮始终至多只有一个高亮。
+    syncButtonStates();
 }
 
 void RoundedCornerWidget::collapsePanels()
 {
     flushPendingPersist();
-    if (m_panel != NoPanel) {
-        setPanel(NoPanel);
+    setPanel(NoPanel);
+}
+
+Qt::CursorShape RoundedCornerWidget::cursorShapeAt(const QPoint &parentPos) const
+{
+    // 拖动期间始终保持闭合手型，即使在快速移动时鼠标暂时离开了底板。
+    if (m_dragging) {
+        return Qt::ClosedHandCursor;
     }
+    if (currentGroupPlateRect().contains(parentPos)) {
+        return Qt::OpenHandCursor;
+    }
+
+    const QPoint localPos = mapFromParent(parentPos);
+    const auto contains = [this, &localPos](const QWidget *widget) {
+        if (!widget || !widget->isVisible()) {
+            return false;
+        }
+        const QRect rect(widget->mapTo(this, QPoint(0, 0)), widget->size());
+        return rect.contains(localPos);
+    };
+    if (contains(m_widthEdit) || contains(m_heightEdit) || contains(m_radiusSpin)) {
+        return Qt::IBeamCursor;
+    }
+    return Qt::ArrowCursor;
+}
+
+void RoundedCornerWidget::installPanelCursorFilters(QWidget *panel)
+{
+    if (!panel) {
+        return;
+    }
+    panel->installEventFilter(this);
+    const QList<QWidget *> children = panel->findChildren<QWidget *>();
+    for (QWidget *child : children) {
+        child->installEventFilter(this);
+    }
+}
+
+bool RoundedCornerWidget::isTextInputWidget(const QObject *watched) const
+{
+    const auto *widget = qobject_cast<const QWidget *>(watched);
+    if (!widget) {
+        return false;
+    }
+    if (qobject_cast<const QLineEdit *>(widget)) {
+        return true;
+    }
+    const auto isWithin = [widget](const QWidget *container) {
+        for (const QWidget *parent = widget; parent; parent = parent->parentWidget()) {
+            if (parent == container) {
+                return true;
+            }
+        }
+        return false;
+    };
+    return isWithin(m_widthEdit) || isWithin(m_heightEdit) || isWithin(m_radiusSpin);
 }
 
 void RoundedCornerWidget::setSelectionSize(int width, int height)
@@ -911,6 +1087,18 @@ void RoundedCornerWidget::setSelectionSize(int width, int height)
     m_selectionWidth = width;
     m_selectionHeight = height;
     updateDimensionFields();
+}
+
+void RoundedCornerWidget::syncRatioFromSelection()
+{
+    if (m_selectionWidth > 0 && m_selectionHeight > 0) {
+        const QPair<int, int> ratio = simplifiedRatio(m_selectionWidth, m_selectionHeight);
+        m_ratioWidth = ratio.first;
+        m_ratioHeight = ratio.second;
+    } else if (m_ratioWidth <= 0 || m_ratioHeight <= 0) {
+        m_ratioWidth = 1;
+        m_ratioHeight = 1;
+    }
 }
 
 void RoundedCornerWidget::updateDimensionFields()
@@ -928,13 +1116,15 @@ void RoundedCornerWidget::updateDimensionFields()
     }
 
     m_syncingSelectionSize = true;
-    if (m_ratioLocked && m_selectionWidth > 0 && m_selectionHeight > 0) {
-        const QPair<int, int> ratio = simplifiedRatio(m_selectionWidth, m_selectionHeight);
-        if (m_widthEdit->text().toInt() != ratio.first) {
-            m_widthEdit->setText(QString::number(ratio.first));
+    if (m_ratioLocked) {
+        if (m_ratioWidth <= 0 || m_ratioHeight <= 0) {
+            syncRatioFromSelection();
         }
-        if (m_heightEdit->text().toInt() != ratio.second) {
-            m_heightEdit->setText(QString::number(ratio.second));
+        if (m_widthEdit->text().toInt() != m_ratioWidth) {
+            m_widthEdit->setText(QString::number(m_ratioWidth));
+        }
+        if (m_heightEdit->text().toInt() != m_ratioHeight) {
+            m_heightEdit->setText(QString::number(m_ratioHeight));
         }
     } else {
         if (m_widthEdit->text().toInt() != m_selectionWidth) {
@@ -1007,7 +1197,7 @@ void RoundedCornerWidget::reposition()
     } else {
         const GroupPlacement placement = computeGroupPlacement(selection, screen);
         groupLeft = placement.groupLeft;
-        groupTop = selection.top();
+        groupTop = placement.groupTop;
         panelOnLeft = placement.panelOnLeft;
     }
 
@@ -1039,20 +1229,44 @@ QRect RoundedCornerWidget::currentGroupPlateRect() const
 
 bool RoundedCornerWidget::eventFilter(QObject *watched, QEvent *event)
 {
-    // 与主工具栏一致：鼠标停在按钮组底板上显示“可拖动”手型。
-    // 只监听底板本身，属性面板里的滑块/输入框保持自己的光标。
-    if (watched == m_groupFrame) {
-        if (event->type() == QEvent::Enter) {
-            if (!m_hoverCursorPushed) {
-                QApplication::setOverrideCursor(Qt::OpenHandCursor);
-                m_hoverCursorPushed = true;
-            }
-        } else if (event->type() == QEvent::Leave) {
-            if (m_hoverCursorPushed) {
-                QApplication::restoreOverrideCursor();
-                m_hoverCursorPushed = false;
-            }
+    const auto *watchedWidget = qobject_cast<const QWidget *>(watched);
+    const bool isGroupWidget = watched == m_groupFrame
+            || (watchedWidget && m_groupFrame && m_groupFrame->isAncestorOf(watchedWidget));
+    if (isGroupWidget) {
+        if (event->type() == QEvent::Enter && !m_groupCursorActive) {
+            const QCursor *current = QApplication::overrideCursor();
+            m_groupPreviousCursorShape = current ? current->shape() : Qt::ArrowCursor;
+            m_groupCursorActive = true;
         }
+        if (event->type() == QEvent::Enter || event->type() == QEvent::MouseMove) {
+            applyOverrideCursorShape(m_dragging ? Qt::ClosedHandCursor : Qt::OpenHandCursor);
+        } else if (event->type() == QEvent::Leave && m_groupCursorActive
+                   && m_groupFrame
+                   && !m_groupFrame->rect().contains(m_groupFrame->mapFromGlobal(QCursor::pos()))) {
+            applyOverrideCursorShape(m_groupPreviousCursorShape);
+            m_groupCursorActive = false;
+        }
+    }
+
+    const bool isPropertyPanel = (watched == m_cornerPanel || watched == m_sizePanel);
+    if (isPropertyPanel) {
+        if (event->type() == QEvent::Enter && !m_panelCursorActive) {
+            const QCursor *current = QApplication::overrideCursor();
+            m_panelPreviousCursorShape = current ? current->shape() : Qt::ArrowCursor;
+            applyOverrideCursorShape(Qt::ArrowCursor);
+            m_panelCursorActive = true;
+        } else if (event->type() == QEvent::Leave && m_panelCursorActive) {
+            applyOverrideCursorShape(m_panelPreviousCursorShape);
+            m_panelCursorActive = false;
+        }
+    }
+
+    const auto *panelChild = qobject_cast<const QWidget *>(watched);
+    const bool isPanelChild = panelChild
+            && ((m_cornerPanel && m_cornerPanel->isAncestorOf(panelChild))
+                || (m_sizePanel && m_sizePanel->isAncestorOf(panelChild)));
+    if (isPanelChild && (event->type() == QEvent::Enter || event->type() == QEvent::MouseMove)) {
+        applyOverrideCursorShape(isTextInputWidget(watched) ? Qt::IBeamCursor : Qt::ArrowCursor);
     }
     return QWidget::eventFilter(watched, event);
 }
@@ -1064,7 +1278,8 @@ void RoundedCornerWidget::mousePressEvent(QMouseEvent *event)
         return;
     }
     // 与主工具栏一致：按住按钮组底板即可整体拖动（按钮、滑块等子控件会先消费自己的点击）
-    QApplication::changeOverrideCursor(Qt::ClosedHandCursor);
+    m_groupFrame->setCursor(Qt::ClosedHandCursor);
+    applyOverrideCursorShape(Qt::ClosedHandCursor);
     m_dragging = true;
     m_dragMouseStart = eventGlobalPos(event);
     m_dragWidgetStart = pos();
@@ -1105,7 +1320,8 @@ void RoundedCornerWidget::mouseReleaseEvent(QMouseEvent *event)
     }
     const bool wasDragging = m_dragging;
     m_dragging = false;
-    QApplication::changeOverrideCursor(Qt::OpenHandCursor);
+    m_groupFrame->setCursor(Qt::OpenHandCursor);
+    applyOverrideCursorShape(Qt::OpenHandCursor);
     event->accept();
     if (wasDragging && m_userMoved) {
         emit groupMoved();
@@ -1127,7 +1343,7 @@ QRect RoundedCornerWidget::groupPlateRect(const QRect &selection, const QRect &s
 
     // 与 reposition() 使用完全相同的边界收敛，保证算出来的底板位置就是实际显示位置。
     int x = placement.groupLeft - groupOffset - margin;
-    int y = selection.top() - margin;
+    int y = placement.groupTop - margin;
     x = qBound(screen.left(), x, qMax(screen.left(), screen.right() - widgetWidth + 1));
     y = qBound(screen.top(), y, qMax(screen.top(), screen.bottom() - widgetHeight + 1));
 

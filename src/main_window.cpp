@@ -529,7 +529,13 @@ void MainWindow::initAttributes()
         {
 #endif
             // x11自动识别窗口
-            Utils::getAllWindowInfo(static_cast<quint32>(this->winId()), m_screenWidth, m_screenHeight, windowRects, windowNames);
+            // 同时采集窗口物理几何信息，用于非合成模式下排除窗管补的边框
+            Utils::getAllWindowInfo(static_cast<quint32>(this->winId()),
+                                    m_screenWidth,
+                                    m_screenHeight,
+                                    windowRects,
+                                    windowNames,
+                                    &windowPhysicalGeometries);
         }
         // 构建截屏工具栏按钮 by zyg
         m_toolBar = new ToolBar(this);
@@ -544,6 +550,14 @@ void MainWindow::initAttributes()
         m_toolBar->hide();
 
         m_sideBar = new SideBar(this);
+        // 侧栏收起后同步清除横向工具选中态；否则再次点击当前工具时，
+        // 会先进入“取消选中”分支，表现为点了没有展开。
+        connect(m_sideBar, &SideBar::closed, this, [this]() {
+            if (m_toolBar) {
+                m_toolBar->clearShotToolSelection();
+            }
+            resetCurrentShotTool();
+        });
         m_sideBar->hide();
 
         // 选区右上角的圆角 / 尺寸比例工具组
@@ -580,6 +594,8 @@ void MainWindow::initAttributes()
         });
         connect(m_roundedCornerWidget, &RoundedCornerWidget::selectionSizeChanged,
                 this, &MainWindow::onRoundedSelectionSizeChanged);
+        connect(m_roundedCornerWidget, &RoundedCornerWidget::ratioChanged,
+                this, &MainWindow::onRoundedRatioChanged);
         // 用户拖动圆角/尺寸按钮组后，工具栏需要按新的实际位置重新避让
         connect(m_roundedCornerWidget, &RoundedCornerWidget::groupMoved,
                 this, &MainWindow::updateToolBarPos);
@@ -2526,7 +2542,12 @@ void MainWindow::topWindow()
             recordY = window->frameGeometry().y();
             recordWidth = window->frameGeometry().width();
             recordHeight = window->frameGeometry().height();
-            qCDebug(dsrApp) << "topWindow break";
+            // 记录该窗口的物理像素几何信息：非合成模式下窗管会加 1 像素边框，
+            // frameGeometry() 的外框会把边框外的像素截进图片
+            m_selectedWindowPhysicalGeometry = Utils::getWindowPhysicalGeometry(wid);
+            qCDebug(dsrApp) << "topWindow break, window:" << wid
+                            << "frame:" << window->frameGeometry()
+                            << "visible(physical):" << m_selectedWindowPhysicalGeometry.visible;
             break;
         } else {
             qCDebug(dsrApp) << "topWindow continue";
@@ -2559,15 +2580,7 @@ void MainWindow::topWindow()
     // this->hide();
     qCDebug(dsrApp) << "topWindow QRect target";
    
-    int adjustedX = std::max(recordX, 1);
-    int adjustedY = std::max(recordY, 1);
-    int adjustedWidth = std::min(recordWidth - 2, m_backgroundRect.width() - 2);
-    int adjustedHeight = std::min(recordHeight - 1, m_backgroundRect.height() - 2);
-    
-    QRect target(static_cast<int>(adjustedX * m_pixelRatio),
-                 static_cast<int>(adjustedY * m_pixelRatio),
-                 static_cast<int>(adjustedWidth * m_pixelRatio),
-                 static_cast<int>(adjustedHeight * m_pixelRatio));
+    const QRect target = shotTargetRectPhysical();
     //    using namespace utils;
     QPixmap screenShotPix = m_backgroundPixmap.copy(target);
     qCDebug(dsrApp) << "topWindow grabImage is null:" << m_backgroundPixmap.isNull()
@@ -2582,6 +2595,79 @@ void MainWindow::topWindow()
     QTimer::singleShot(10, [=] {
         exitApp();
     });
+}
+
+// 背景图（整屏物理像素）对应的矩形，用于把窗口物理坐标收敛到图内。
+QRect MainWindow::backgroundPhysicalRect() const
+{
+    return QRect(static_cast<int>(m_backgroundRect.x() * m_pixelRatio),
+                 static_cast<int>(m_backgroundRect.y() * m_pixelRatio),
+                 static_cast<int>(m_backgroundRect.width() * m_pixelRatio),
+                 static_cast<int>(m_backgroundRect.height() * m_pixelRatio));
+}
+
+// 当前选区是否仍然来自窗口识别（含顶层窗口截图）。
+//
+// 记录的窗口外框物理矩形换算回逻辑坐标后应与当前选区基本重合；一旦用户手工拖动、
+// 缩放选区，或在多屏缩放下重映射过选区，两者就会明显不一致，此时必须退回手工框选换算，
+// 否则会拿旧窗口的坐标去裁新选区。
+bool MainWindow::isWindowIdentifiedSelection() const
+{
+    if (!Utils::isQt6XcbEnv || !m_selectedWindowPhysicalGeometry.valid) {
+        return false;
+    }
+    const QRect &framePhysical = m_selectedWindowPhysicalGeometry.frame;
+    const QRect frameLogical(static_cast<int>(qRound(framePhysical.x() / m_pixelRatio)),
+                             static_cast<int>(qRound(framePhysical.y() / m_pixelRatio)),
+                             static_cast<int>(qRound(framePhysical.width() / m_pixelRatio)),
+                             static_cast<int>(qRound(framePhysical.height() / m_pixelRatio)));
+    return qAbs(frameLogical.x() - recordX) <= 1
+            && qAbs(frameLogical.y() - recordY) <= 1
+            && qAbs(frameLogical.width() - recordWidth) <= 1
+            && qAbs(frameLogical.height() - recordHeight) <= 1;
+}
+
+// 计算从背景图中裁剪截图区域的物理像素矩形。
+//
+// 起点与尺寸分两种情况：
+//  1. 选区来自窗口识别（含顶层窗口截图）：直接使用窗管上报的窗口真实范围物理坐标
+//     （外框去掉窗管补的边框、保留标题栏），起点和尺寸都用物理像素，成图正好是窗口内容，
+//     既不会裁进窗管边框/桌面像素，也不会多裁掉窗口内容。
+//     非合成（最佳性能）模式下窗管会在窗口四周补 1 物理像素高亮边框，
+//     且 Qt 把物理坐标截断成逻辑坐标时还会再引入 1~2 像素误差，
+//     按 frameGeometry() 换算会把边框/桌面像素截进图片（左、上边缘彩色描边）。
+//  2. 手工框选：选区即用户所见——成图与选区一一对应，按逻辑坐标 × DPR 取整换算。
+//     旧代码把虚线边框绘制里的 “宽 -2、高 -1、起点 +1” 原样抄进了裁剪算式，
+//     但 QPixmap::copy() 的入参是“起点 + 尺寸”，不是“起点 + 右下角”，
+//     减出来的 2/1 像素只会让成图平白少一圈（整屏框选得到 3836x2156 而非 3840x2160）。
+QRect MainWindow::shotTargetRectPhysical() const
+{
+    const QRect selectionRect(recordX, recordY, recordWidth, recordHeight);
+    if (isWindowIdentifiedSelection()) {
+        // 窗口物理坐标与背景图（整屏物理像素）坐标一致，可直接使用；
+        // 收敛到背景图范围内，避免窗口部分移出屏幕时 copy() 越界
+        const QRect target = m_selectedWindowPhysicalGeometry.visible.intersected(backgroundPhysicalRect());
+        if (target.width() > 0 && target.height() > 0) {
+            qCDebug(dsrApp) << "shotTargetRectPhysical: window selection, frame(physical)"
+                            << m_selectedWindowPhysicalGeometry.frame
+                            << "visible(physical)" << m_selectedWindowPhysicalGeometry.visible
+                            << "target:" << target;
+            return target;
+        }
+        qCDebug(dsrApp) << "shotTargetRectPhysical: window physical geometry outside background"
+                        << m_selectedWindowPhysicalGeometry.visible;
+    }
+
+    // 手工框选：选区矩形的物理像素范围就是成图范围，不做任何“边框补偿”。
+    const QRect selectionPhysical(static_cast<int>(qRound(recordX * m_pixelRatio)),
+                                  static_cast<int>(qRound(recordY * m_pixelRatio)),
+                                  static_cast<int>(qRound(recordWidth * m_pixelRatio)),
+                                  static_cast<int>(qRound(recordHeight * m_pixelRatio)));
+    // 收敛到背景图范围内，避免选区部分移出屏幕时 copy() 越界（整屏框选时二者相等）
+    const QRect target = selectionPhysical.intersected(backgroundPhysicalRect());
+    qCDebug(dsrApp) << "shotTargetRectPhysical: manual selection" << selectionRect
+                    << "physical" << selectionPhysical << "target:" << target;
+    return target;
 }
 
 void MainWindow::saveTopWindow()
@@ -2612,10 +2698,15 @@ void MainWindow::saveTopWindow()
     // this->hide();
     const qreal ratio = qApp->primaryScreen()->devicePixelRatio();
     qCDebug(dsrApp) << ratio << recordX << recordY << recordWidth << recordHeight;
-    QRect target(static_cast<int>(recordX * ratio),
-                 static_cast<int>(recordY * ratio),
-                 static_cast<int>(recordWidth * ratio),
-                 static_cast<int>(recordHeight * ratio));
+    // 与 X11 顶层窗口截图保持一致：窗口识别选中的窗口使用窗口物理坐标裁剪，
+    // 避免非合成模式下把窗管补的边框截进图片
+    if (topWindowIndex < windowPhysicalGeometries.size()
+            && windowPhysicalGeometries.size() == windowRects.size()) {
+        m_selectedWindowPhysicalGeometry = windowPhysicalGeometries.at(topWindowIndex);
+    } else {
+        m_selectedWindowPhysicalGeometry = Utils::WindowPhysicalGeometry();
+    }
+    const QRect target = shotTargetRectPhysical();
     //    using namespace utils;
     QPixmap screenShotPix = m_backgroundPixmap.copy(target);
     qCDebug(dsrApp) << "topWindow grabImage is null:" << m_backgroundPixmap.isNull()
@@ -3523,11 +3614,11 @@ void MainWindow::updateToolBarPos()
     // 圆角 / 尺寸比例工具组跟随选区右上角
     if (m_roundedCornerWidget) {
         if (canShowRoundedCorner) {
-            // 尺寸面板与左上角尺寸提示保持一致，展示实际截图像素大小
-            const qreal pixelRatio = qApp->primaryScreen()->devicePixelRatio();
-            m_roundedCornerWidget->setSelectionSize(
-                        qMax(1, qRound((recordWidth - 2) * pixelRatio)),
-                        qMax(1, qRound((recordHeight - 1) * pixelRatio)));
+            // 尺寸面板展示实际截图像素大小：直接复用裁剪计算，
+            // 窗口识别选区取窗口真实范围（不含窗管边框），手工框选保持宽 -2、高 -1 的既有约定。
+            const QRect shotTarget = shotTargetRectPhysical();
+            m_roundedCornerWidget->setSelectionSize(qMax(1, shotTarget.width()),
+                                                    qMax(1, shotTarget.height()));
             m_roundedCornerWidget->followSelection(
                         QRect(recordX, recordY, recordWidth, recordHeight), m_backgroundRect);
             m_roundedCornerWidget->show();
@@ -4138,6 +4229,16 @@ void MainWindow::changeShotToolEvent(const QString &func)
     if (m_roundedCornerWidget) {
         m_roundedCornerWidget->collapsePanels();
     }
+
+    // 再次点击当前横向工具时由 SubToolWidget 发送空 func。
+    // 收起二级工具栏并退出当前绘制工具，已有标注保持可见并可继续选择/编辑。
+    if (func.isEmpty()) {
+        if (m_sideBar) {
+            m_sideBar->hide();
+        }
+        resetCurrentShotTool();
+        return;
+    }
     // 调用ocr功能时先截图后，退出截图录屏，将刚截图的图片串递到ocr识别界面；
     if (func == "ocr") {
         {
@@ -4280,6 +4381,15 @@ void MainWindow::changeShotToolEvent(const QString &func)
         }
         // 禁用滚动图按钮
        // m_toolBar->setScrollShotDisabled(true);
+    }
+}
+
+void MainWindow::resetCurrentShotTool()
+{
+    m_currentToolShape.clear();
+    if (m_shapesWidget) {
+        // 空类型表示普通模式：保留已有标注，但不再创建新的图形。
+        m_shapesWidget->setCurrentShape(QString());
     }
 }
 
@@ -5630,9 +5740,12 @@ int MainWindow::mousePressEF(QMouseEvent *mouseEvent, bool &needRepaint)
                 dragRecordWidth = recordWidth;
                 dragRecordHeight = recordHeight;
                 // 记录锁定比例基准，供拖拽过程中等比缩放使用
-                m_lockedRatio = (recordWidth > 0 && recordHeight > 0)
-                        ? static_cast<qreal>(recordWidth) / static_cast<qreal>(recordHeight)
-                        : 0.0;
+                const qreal panelRatio = m_roundedCornerWidget
+                        ? m_roundedCornerWidget->lockedRatio() : 0.0;
+                m_lockedRatio = panelRatio > 0.0 ? panelRatio
+                        : ((recordWidth > 0 && recordHeight > 0)
+                           ? static_cast<qreal>(recordWidth) / static_cast<qreal>(recordHeight)
+                           : 0.0);
 
                 if (recordButtonStatus == RECORD_BUTTON_NORMAL) {
                     // hideRecordButton();
@@ -5898,6 +6011,10 @@ int MainWindow::mouseMoveEF(QMouseEvent *mouseEvent, bool &needRepaint)
                     recordY = std::min(dragStartY, mouseEvent->y());
                     recordWidth = std::abs(dragStartX - mouseEvent->x());
                     recordHeight = std::abs(dragStartY - mouseEvent->y());
+                    // 新建选区同样必须遵守比例锁定，不能只在调整已有选区时生效。
+                    if (m_roundedCornerWidget && m_roundedCornerWidget->isRatioLocked()) {
+                        applyLockedRatioToNewSelection(mouseEvent->pos());
+                    }
 
                     needRepaint = true;
                     // 选区刚更新完就重新判定与提示面板的遮挡，实现拖动中实时消失
@@ -5932,6 +6049,9 @@ int MainWindow::mouseMoveEF(QMouseEvent *mouseEvent, bool &needRepaint)
                         resizeRight(mouseEvent->pos());
                     }
 
+                    // 手工搬动/缩放选区后不再是窗口选区，清掉窗口物理几何记录
+                    m_selectedWindowPhysicalGeometry = Utils::WindowPhysicalGeometry();
+
                     // 锁定比例时，拖拽后按固定宽高比等比修正选区
                     applyLockedRatioToSelection();
 
@@ -5961,6 +6081,14 @@ int MainWindow::mouseMoveEF(QMouseEvent *mouseEvent, bool &needRepaint)
                         QRect(it->x(), it->y(), it->width(), it->height())
                             .contains(mousePoint);  // QRect(it->x(), it->y(), it->width(), it->height()).contains(mousePoint);
                     if (flag) {
+                        // 记录命中窗口的物理几何信息（与 windowRects 下标一一对应），
+                        // 非合成模式下按外框截图会把窗管补的 1 像素边框截进图片
+                        const int hitIndex = static_cast<int>(windowRects.rend() - it - 1);
+                        if (hitIndex >= 0 && windowPhysicalGeometries.size() == windowRects.size()) {
+                            m_selectedWindowPhysicalGeometry = windowPhysicalGeometries.at(hitIndex);
+                        } else {
+                            m_selectedWindowPhysicalGeometry = Utils::WindowPhysicalGeometry();
+                        }
                         // 屏幕缩放及屏幕数量大于1时需要进行调整
                         if (!qFuzzyCompare(1.0, m_pixelRatio) && m_screenCount > 1) {
                             qCDebug(dsrApp) << "窗口信息 >>>> " << windowNames[i] << ": "
@@ -6065,6 +6193,8 @@ int MainWindow::mouseMoveEF(QMouseEvent *mouseEvent, bool &needRepaint)
                                 }
                             }
                             // qCDebug(dsrApp)  << "1.3 >>>> recordX: " << recordX << " , recordY: "<< recordY;
+                            // 多屏缩放下选区会被重新映射，窗口物理几何信息不再一一对应
+                            m_selectedWindowPhysicalGeometry = Utils::WindowPhysicalGeometry();
                         } else {
                             recordX = it->x() - static_cast<int>(screenRect.x() * m_pixelRatio);
                             recordY = it->y() - static_cast<int>(screenRect.y() * m_pixelRatio);
@@ -7598,20 +7728,11 @@ void MainWindow::shotCurrentImg()
             m_resultPixmap = paintImage();
         } else {
             shotFullScreen();
-            // 修正方案：对逻辑坐标进行相同的边界调整，然后转换为物理坐标
-            int adjustedX = std::max(recordX, 1);
-            int adjustedY = std::max(recordY, 1);
-            int adjustedWidth = std::min(recordWidth - 2, m_backgroundRect.width() - 2);
-            int adjustedHeight = std::min(recordHeight - 1, m_backgroundRect.height() - 2);
+            // 窗口识别选中的窗口使用客户区物理坐标，避免非合成模式下截入窗管边框
+            const QRect target = shotTargetRectPhysical();
 
-            QRect target(static_cast<int>(adjustedX * m_pixelRatio),
-                         static_cast<int>(adjustedY * m_pixelRatio),
-                         static_cast<int>(adjustedWidth * m_pixelRatio),
-                         static_cast<int>(adjustedHeight * m_pixelRatio));
-
-            qCWarning(dsrApp) << "=== 截图区域计算调试 (onExit) 修正后 ===";
+            qCWarning(dsrApp) << "=== 截图区域计算调试 ===";
             qCWarning(dsrApp) << "原始区域: x=" << recordX << "y=" << recordY << "width=" << recordWidth << "height=" << recordHeight;
-            qCWarning(dsrApp) << "调整后逻辑坐标: x=" << adjustedX << "y=" << adjustedY << "width=" << adjustedWidth << "height=" << adjustedHeight;
             qCWarning(dsrApp) << "物理像素target:" << target;
             qCWarning(dsrApp) << "截图右边界:" << (target.x() + target.width()) << "截图下边界:" << (target.y() + target.height());
 
@@ -7673,17 +7794,10 @@ QPixmap MainWindow::paintImage()
     if (Utils::isTreelandMode) {
         saveImage = backgroundImage;
     } else {
-        // 修正方案：对逻辑坐标进行相同的边界调整，然后转换为物理坐标
-        // 虚线绘制的调整逻辑：x=max(x,1), y=max(y,1), width=min(width-2, maxWidth-2), height=min(height-1, maxHeight-2)
-        int adjustedX = std::max(recordX, 1);
-        int adjustedY = std::max(recordY, 1);
-        int adjustedWidth = std::min(recordWidth - 2, m_backgroundRect.width() - 2);
-        int adjustedHeight = std::min(recordHeight - 1, m_backgroundRect.height() - 2);
-
-        QRect target(static_cast<int>(adjustedX * m_pixelRatio),
-                     static_cast<int>(adjustedY * m_pixelRatio),
-                     static_cast<int>(adjustedWidth * m_pixelRatio),
-                     static_cast<int>(adjustedHeight * m_pixelRatio));
+        // 窗口识别选中的窗口使用客户区物理坐标，避免非合成模式下截入窗管边框
+        const QRect target = shotTargetRectPhysical();
+        qCDebug(dsrApp) << "paintImage: target(physical)" << target
+                        << "selection:" << QRect(recordX, recordY, recordWidth, recordHeight);
 
         saveImage = backgroundImage.copy(target);
     }
@@ -7887,6 +8001,21 @@ void MainWindow::updateCursor(QEvent *event)
 {
     if (recordButtonStatus == RECORD_BUTTON_NORMAL) {
         QMouseEvent *mouseEvent = static_cast<QMouseEvent *>(event);
+
+        // 圆角/尺寸比例按钮组及其展开面板是独立的浮层操作区，不能沿用
+        // 选区内部的“拖动选区”手型，否则手型会覆盖面板自身及子控件的光标。
+        // X11 底层鼠标事件坐标是物理像素，而 QWidget::geometry() 使用逻辑坐标；
+        // 这里统一从全局逻辑坐标换算，避免高 DPI 下浮层命中判断失效。
+        const QPoint logicalCursorPos = mapFromGlobal(QCursor::pos());
+        if (m_roundedCornerWidget && m_roundedCornerWidget->isVisible()
+            && m_roundedCornerWidget->geometry().contains(logicalCursorPos)) {
+            // 浮层内部的光标由浮层按命中的子控件统一决定：输入框 I 型、
+            // 可拖动按钮组手型、其余区域箭头，避免全局 override cursor
+            // 覆盖控件自己的光标语义。
+            applyOverrideCursorShape(m_roundedCornerWidget->cursorShapeAt(logicalCursorPos));
+            return;
+        }
+
         int cursorX = mouseEvent->x();
         int cursorY = mouseEvent->y();
 
@@ -7900,31 +8029,31 @@ void MainWindow::updateCursor(QEvent *event)
         if (cursorX > recordX - m_cursorBound && cursorX < recordX + m_cursorBound && cursorY > recordY - m_cursorBound &&
             cursorY < recordY + m_cursorBound) {
             // Top-Left corner.
-            QApplication::setOverrideCursor(Qt::SizeFDiagCursor);
+            applyOverrideCursorShape(Qt::SizeFDiagCursor);
         } else if (cursorX > recordX + recordWidth - m_cursorBound && cursorX < recordX + recordWidth + m_cursorBound &&
                    cursorY > recordY + recordHeight - m_cursorBound && cursorY < recordY + recordHeight + m_cursorBound) {
             // Bottom-Right corner.
-            QApplication::setOverrideCursor(Qt::SizeFDiagCursor);
+            applyOverrideCursorShape(Qt::SizeFDiagCursor);
         } else if (cursorX > recordX + recordWidth - m_cursorBound && cursorX < recordX + recordWidth + m_cursorBound &&
                    cursorY > recordY - m_cursorBound && cursorY < recordY + m_cursorBound) {
             // Top-Right corner.
-            QApplication::setOverrideCursor(Qt::SizeBDiagCursor);
+            applyOverrideCursorShape(Qt::SizeBDiagCursor);
         } else if (cursorX > recordX - m_cursorBound && cursorX < recordX + m_cursorBound &&
                    cursorY > recordY + recordHeight - m_cursorBound && cursorY < recordY + recordHeight + m_cursorBound) {
             // Bottom-Left corner.
-            QApplication::setOverrideCursor(Qt::SizeBDiagCursor);
+            applyOverrideCursorShape(Qt::SizeBDiagCursor);
         } else if (cursorX > recordX - m_cursorBound && cursorX < recordX + m_cursorBound) {
             // Left.
-            QApplication::setOverrideCursor(Qt::SizeHorCursor);
+            applyOverrideCursorShape(Qt::SizeHorCursor);
         } else if (cursorX > recordX + recordWidth - m_cursorBound && cursorX < recordX + recordWidth + m_cursorBound) {
             // Right.
-            QApplication::setOverrideCursor(Qt::SizeHorCursor);
+            applyOverrideCursorShape(Qt::SizeHorCursor);
         } else if (cursorY > recordY - m_cursorBound && cursorY < recordY + m_cursorBound) {
             // Top.
-            QApplication::setOverrideCursor(Qt::SizeVerCursor);
+            applyOverrideCursorShape(Qt::SizeVerCursor);
         } else if (cursorY > recordY + recordHeight - m_cursorBound && cursorY < recordY + recordHeight + m_cursorBound) {
             // Bottom.
-            QApplication::setOverrideCursor(Qt::SizeVerCursor);
+            applyOverrideCursorShape(Qt::SizeVerCursor);
 
             //}
 
@@ -7933,9 +8062,9 @@ void MainWindow::updateCursor(QEvent *event)
             // QApplication::setOverrideCursor(Qt::ArrowCursor);
         } else {
             if (isPressMouseLeftButton) {
-                QApplication::setOverrideCursor(Qt::ClosedHandCursor);
+                applyOverrideCursorShape(Qt::ClosedHandCursor);
             } else {
-                QApplication::setOverrideCursor(Qt::OpenHandCursor);
+                applyOverrideCursorShape(Qt::OpenHandCursor);
             }
         }
     }
@@ -8447,13 +8576,13 @@ void MainWindow::applyRememberedSelectionSetting()
     int newHeight = recordHeight;
     if (m_roundedCornerWidget->isRememberedSettingRatio()) {
         const qreal ratio = static_cast<qreal>(setting.width()) / static_cast<qreal>(setting.height());
-        // 选区宽高到最终截图还会减去 2/1 像素边框；这里先在最终输出像素上套用比例，
-        // 否则保存出来的图片比例会因边框补偿产生偏差。
-        const int minOutputWidth = qMax(1, minWidth - 2);
-        const int minOutputHeight = qMax(1, minHeight - 1);
-        const int maxOutputWidth = qMax(minOutputWidth, maxWidth - 2);
-        const int maxOutputHeight = qMax(minOutputHeight, maxHeight - 1);
-        int outputWidth = qMax(minOutputWidth, recordWidth - 2);
+        // 成图 = 选区（逻辑像素） × DPR，比例在逻辑坐标下同样成立，
+        // 直接按比例收敛选区即可，不再做 “输出像素 = 选区 - 2/-1” 的补偿。
+        const int minOutputWidth = qMax(1, minWidth);
+        const int minOutputHeight = qMax(1, minHeight);
+        const int maxOutputWidth = qMax(minOutputWidth, maxWidth);
+        const int maxOutputHeight = qMax(minOutputHeight, maxHeight);
+        int outputWidth = qMax(minOutputWidth, recordWidth);
         int outputHeight = qMax(minOutputHeight, qRound(outputWidth / ratio));
 
         if (outputHeight > maxOutputHeight) {
@@ -8465,13 +8594,14 @@ void MainWindow::applyRememberedSelectionSetting()
             outputHeight = qMax(minOutputHeight, qRound(outputWidth / ratio));
         }
 
-        newWidth = outputWidth + 2;
-        newHeight = outputHeight + 1;
+        newWidth = outputWidth;
+        newHeight = outputHeight;
     } else {
         const qreal pixelRatio = qApp->primaryScreen()->devicePixelRatio() > 0
                 ? qApp->primaryScreen()->devicePixelRatio() : 1.0;
-        newWidth = qRound(setting.width() / pixelRatio) + 2;
-        newHeight = qRound(setting.height() / pixelRatio) + 1;
+        // 用户在面板里输入的是成图（物理像素）尺寸，换算成选区逻辑尺寸时无需再补 2/1 像素
+        newWidth = qRound(setting.width() / pixelRatio);
+        newHeight = qRound(setting.height() / pixelRatio);
         newWidth = qBound(minWidth, newWidth, maxWidth);
         newHeight = qBound(minHeight, newHeight, maxHeight);
     }
@@ -8544,8 +8674,11 @@ bool MainWindow::handleEditModeSelectionResize(QMouseEvent *event, const QPoint 
         dragRecordWidth = recordWidth;
         dragRecordHeight = recordHeight;
         dragAction = action;
-        m_lockedRatio = (recordWidth > 0 && recordHeight > 0)
-                ? static_cast<qreal>(recordWidth) / static_cast<qreal>(recordHeight) : 0.0;
+        const qreal panelRatio = m_roundedCornerWidget
+                ? m_roundedCornerWidget->lockedRatio() : 0.0;
+        m_lockedRatio = panelRatio > 0.0 ? panelRatio
+                : ((recordWidth > 0 && recordHeight > 0)
+                   ? static_cast<qreal>(recordWidth) / static_cast<qreal>(recordHeight) : 0.0);
         isPressMouseLeftButton = true;
         isReleaseMouseLeftButton = false;
         m_editModeResizing = true;
@@ -8746,6 +8879,104 @@ void MainWindow::syncShapesWidgetGeometry(bool keepAnnotationsInPlace)
     m_shapesWidget->setGlobalRect(QRect(recordX, recordY, recordWidth, recordHeight));
 }
 
+void MainWindow::onRoundedRatioChanged(int width, int height)
+{
+    if (status::shot != m_functionType || width <= 0 || height <= 0) {
+        return;
+    }
+
+    const qreal ratio = static_cast<qreal>(width) / static_cast<qreal>(height);
+    m_lockedRatio = ratio;
+    if (recordWidth > 0 && recordHeight > 0) {
+        applyRatioToCurrentSelection(ratio);
+    }
+}
+
+void MainWindow::applyRatioToCurrentSelection(qreal ratio)
+{
+    if (status::shot != m_functionType || ratio <= 0.0 || recordWidth <= 0 || recordHeight <= 0) {
+        return;
+    }
+
+    const int minSize = qMax(1, RECORD_MIN_SHOT_SIZE);
+    const int maxWidth = qMax(minSize, m_backgroundRect.width() - recordX);
+    const int maxHeight = qMax(minSize, m_backgroundRect.height() - recordY);
+
+    // 保持当前宽度，按用户输入的比例调整高度；触边后以受限边反推另一边。
+    int newWidth = qMax(minSize, recordWidth);
+    int newHeight = qMax(minSize, qRound(newWidth / ratio));
+    if (newHeight > maxHeight) {
+        newHeight = maxHeight;
+        newWidth = qMax(minSize, qRound(newHeight * ratio));
+    }
+    if (newWidth > maxWidth) {
+        newWidth = maxWidth;
+        newHeight = qMax(minSize, qRound(newWidth / ratio));
+    }
+
+    if (newWidth == recordWidth && newHeight == recordHeight) {
+        return;
+    }
+
+    recordWidth = newWidth;
+    recordHeight = newHeight;
+    syncShapesWidgetGeometry(false);
+    if (m_sizeTips) {
+        m_sizeTips->updateTips(QPoint(recordX, recordY), QSize(recordWidth, recordHeight));
+    }
+    updateToolBarPos();
+    if (m_sideBar && m_sideBar->isVisible()) {
+        updateSideBarPos();
+    }
+    if (m_cameraWidget && m_cameraWidget->isVisible()) {
+        updateCameraWidgetPos();
+    }
+    update();
+}
+
+void MainWindow::applyLockedRatioToNewSelection(const QPoint &currentPos)
+{
+    if (status::shot != m_functionType || !m_roundedCornerWidget
+            || !m_roundedCornerWidget->isRatioLocked()) {
+        return;
+    }
+    const qreal ratio = m_roundedCornerWidget->lockedRatio();
+    if (ratio <= 0.0) {
+        return;
+    }
+
+    const int rawWidth = std::abs(currentPos.x() - dragStartX);
+    const int rawHeight = std::abs(currentPos.y() - dragStartY);
+    if (rawWidth <= 0 && rawHeight <= 0) {
+        return;
+    }
+
+    const int minSize = qMax(1, RECORD_MIN_SHOT_SIZE);
+    const int signX = currentPos.x() < dragStartX ? -1 : 1;
+    const int signY = currentPos.y() < dragStartY ? -1 : 1;
+    const int maxWidth = qMax(minSize, signX > 0
+                              ? m_backgroundRect.width() - dragStartX : dragStartX);
+    const int maxHeight = qMax(minSize, signY > 0
+                               ? m_backgroundRect.height() - dragStartY : dragStartY);
+
+    // 以鼠标覆盖到的较大一边为驱动边，让选区跟手且始终保持锁定比例。
+    int newWidth = qMax(minSize, qMax(rawWidth, qRound(rawHeight * ratio)));
+    int newHeight = qMax(minSize, qRound(newWidth / ratio));
+    if (newHeight > maxHeight) {
+        newHeight = maxHeight;
+        newWidth = qMax(minSize, qRound(newHeight * ratio));
+    }
+    if (newWidth > maxWidth) {
+        newWidth = maxWidth;
+        newHeight = qMax(minSize, qRound(newWidth / ratio));
+    }
+
+    recordWidth = newWidth;
+    recordHeight = newHeight;
+    recordX = signX > 0 ? dragStartX : qMax(0, dragStartX - newWidth);
+    recordY = signY > 0 ? dragStartY : qMax(0, dragStartY - newHeight);
+}
+
 void MainWindow::onRoundedSelectionSizeChanged(int width, int height)
 {
     if (status::shot != m_functionType) {
@@ -8783,16 +9014,14 @@ void MainWindow::applyLockedRatioToSelection()
     if (status::shot != m_functionType || dragAction == ACTION_MOVE) {
         return;
     }
-    if (!m_roundedCornerWidget || !m_roundedCornerWidget->isRatioLocked() || m_lockedRatio <= 0.0) {
+    if (!m_roundedCornerWidget || !m_roundedCornerWidget->isRatioLocked()) {
         return;
     }
-
-    // 固定比例后，以变化幅度较大的一边作为驱动边，另一边按比例联动
-    const qreal wScale = dragRecordWidth > 0
-            ? static_cast<qreal>(recordWidth) / static_cast<qreal>(dragRecordWidth) : 1.0;
-    const qreal hScale = dragRecordHeight > 0
-            ? static_cast<qreal>(recordHeight) / static_cast<qreal>(dragRecordHeight) : 1.0;
-    const bool widthDriven = qAbs(wScale - 1.0) >= qAbs(hScale - 1.0);
+    const qreal lockedRatio = m_roundedCornerWidget->lockedRatio();
+    if (lockedRatio <= 0.0) {
+        return;
+    }
+    m_lockedRatio = lockedRatio;
 
     const bool leftEdge = (dragAction == ACTION_RESIZE_LEFT
                            || dragAction == ACTION_RESIZE_TOP_LEFT
@@ -8800,6 +9029,25 @@ void MainWindow::applyLockedRatioToSelection()
     const bool topEdge = (dragAction == ACTION_RESIZE_TOP
                           || dragAction == ACTION_RESIZE_TOP_LEFT
                           || dragAction == ACTION_RESIZE_TOP_RIGHT);
+    const bool horizontalEdge = dragAction == ACTION_RESIZE_LEFT
+            || dragAction == ACTION_RESIZE_RIGHT;
+    const bool verticalEdge = dragAction == ACTION_RESIZE_TOP
+            || dragAction == ACTION_RESIZE_BOTTOM;
+
+    // 左右边框只有宽度会由 resizeLeft/resizeRight 重新计算，高度仍是上一次
+    // 比例联动后的值；此时不能再比较宽高变化幅度来决定驱动边，否则反向拖动时
+    // 会一直认为高度变化更大，宽度无法缩回。固定边框的驱动方向必须明确。
+    // 角点拖动时宽高都由本次鼠标位置重新计算，仍可选择变化更大的一边。
+    bool widthDriven = false;
+    if (horizontalEdge) {
+        widthDriven = true;
+    } else if (!verticalEdge) {
+        const qreal wScale = dragRecordWidth > 0
+                ? static_cast<qreal>(recordWidth) / static_cast<qreal>(dragRecordWidth) : 1.0;
+        const qreal hScale = dragRecordHeight > 0
+                ? static_cast<qreal>(recordHeight) / static_cast<qreal>(dragRecordHeight) : 1.0;
+        widthDriven = qAbs(wScale - 1.0) >= qAbs(hScale - 1.0);
+    }
 
     // 保持对边（单边拖拽）或对角（角点拖拽）固定
     const int anchorRight = dragRecordX + dragRecordWidth;
@@ -8810,17 +9058,17 @@ void MainWindow::applyLockedRatioToSelection()
     int newWidth = qMax(RECORD_MIN_SHOT_SIZE, recordWidth);
     int newHeight = qMax(RECORD_MIN_SHOT_SIZE, recordHeight);
     if (widthDriven) {
-        newHeight = qMax(RECORD_MIN_SHOT_SIZE, qRound(newWidth / m_lockedRatio));
+        newHeight = qMax(RECORD_MIN_SHOT_SIZE, qRound(newWidth / lockedRatio));
     } else {
-        newWidth = qMax(RECORD_MIN_SHOT_SIZE, qRound(newHeight * m_lockedRatio));
+        newWidth = qMax(RECORD_MIN_SHOT_SIZE, qRound(newHeight * lockedRatio));
     }
 
     // 限制在屏幕可用范围内，受限时按比例回退
     newWidth = qMin(newWidth, qMax(RECORD_MIN_SHOT_SIZE, maxWidth));
-    newHeight = qMax(RECORD_MIN_SHOT_SIZE, qRound(newWidth / m_lockedRatio));
+    newHeight = qMax(RECORD_MIN_SHOT_SIZE, qRound(newWidth / lockedRatio));
     if (newHeight > qMax(RECORD_MIN_SHOT_SIZE, maxHeight)) {
         newHeight = qMax(RECORD_MIN_SHOT_SIZE, maxHeight);
-        newWidth = qMax(RECORD_MIN_SHOT_SIZE, qRound(newHeight * m_lockedRatio));
+        newWidth = qMax(RECORD_MIN_SHOT_SIZE, qRound(newHeight * lockedRatio));
         newWidth = qMin(newWidth, qMax(RECORD_MIN_SHOT_SIZE, maxWidth));
     }
 

@@ -265,6 +265,23 @@ void ShapesWidget::setCurrentShape(QString shapeType)
 {
     qDebug() << __FUNCTION__ << __LINE__ << "type: " << shapeType;
     m_currentType = shapeType;
+    if (shapeType.isEmpty()) {
+        // 收起二级工具栏后进入普通模式：不创建新图形，但仍允许选中和编辑已有标注。
+        m_isRecording = false;
+        m_currentShape = Toolshape();
+        m_pos1 = QPointF(0, 0);
+        m_pos2 = QPointF(0, 0);
+        clearSelected();
+        setAllTextEditReadOnly();
+        m_editing = false;
+        if (m_sequencePreview) {
+            m_sequencePreview->hide();
+            hideSequenceLimitTips();
+        }
+        update();
+        return;
+    }
+
     if (shapeType == "text") {
         resetForTextToolSwitch();
     } else {
@@ -1517,6 +1534,17 @@ void ShapesWidget::mousePressEvent(QMouseEvent *e)
     m_pressedPoint = e->pos();
     m_isPressed = true;
     if (!clickedOnShapes(m_pressedPoint)) {
+        // 普通模式下只处理已有标注的选择/编辑，不允许继续创建图形。
+        if (m_currentType.isEmpty()) {
+            clearSelected();
+            setAllTextEditReadOnly();
+            m_editing = false;
+            m_isRecording = false;
+            update();
+            DFrame::mousePressEvent(e);
+            return;
+        }
+
         // AI助手不是绘图工具，不进入绘制逻辑
         if (m_currentType == "aiassistant") {
             DFrame::mousePressEvent(e);
@@ -2544,11 +2572,13 @@ void ShapesWidget::handlePaint(QPainter &painter)
                 paintRect(painter,  m_selectedShape.mainPoints, -1);
             }
 
-            QPixmap rotatePointImg;
-            //            rotatePointImg = QIcon(":/resources/images/size/rotate.svg").pixmap(ROTATE_ICON_SIZE);
-            rotatePointImg = QIcon(":/other/icon_rotate.svg").pixmap(ROTATE_ICON_SIZE);
-            rotatePointImg.setDevicePixelRatio(this->devicePixelRatioF());
-            paintImgPoint(painter, rotatePoint, rotatePointImg, false);
+            // 序号标注选中时只显示控制点，不显示旋转图标；其他图形保持原样。
+            if (m_selectedShape.type != "sequence") {
+                QPixmap rotatePointImg;
+                rotatePointImg = QIcon(":/other/icon_rotate.svg").pixmap(ROTATE_ICON_SIZE);
+                rotatePointImg.setDevicePixelRatio(this->devicePixelRatioF());
+                paintImgPoint(painter, rotatePoint, rotatePointImg, false);
+            }
 
             //画出形状的主要骨架点
             for (int i = 0; i < m_selectedShape.mainPoints.length(); i ++) {
@@ -2889,7 +2919,9 @@ void ShapesWidget::updateCursorShape()
 //    qDebug() << "func" << __FUNCTION__ << "line" << __LINE__;
     if (!m_isUnDo) {
         QCursor setCursorValue;
-        if (m_currentType == "pen") {
+        if (m_currentType.isEmpty()) {
+            setCursorValue = QCursor(Qt::ArrowCursor);
+        } else if (m_currentType == "pen") {
             m_penColor = BaseUtils::colorIndexOf(ConfigSettings::instance()->getValue("pen", "color_index").toInt());
             setCursorValue = BaseUtils::setCursorShape(m_currentType, BaseUtils::colorIndex(m_penColor));
         } else if (m_currentType == "effect") {
