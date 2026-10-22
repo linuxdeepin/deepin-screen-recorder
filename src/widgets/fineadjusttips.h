@@ -5,6 +5,7 @@
 #ifndef FINEADJUSTTIPS_H
 #define FINEADJUSTTIPS_H
 
+#include <DBlurEffectWidget>
 #include <DWidget>
 
 #include <QPoint>
@@ -20,7 +21,7 @@ DWIDGET_USE_NAMESPACE
  * 对应 Sketch 中的 “提示语/截图时” 与 “提示语/选区完成时” 两个控件：
  * 未框选时提示移动鼠标指针，框选完成后提示移动、扩大、缩小选区。
  */
-class FineAdjustTips : public DWidget
+class FineAdjustTips : public DBlurEffectWidget
 {
     Q_OBJECT
 public:
