@@ -192,6 +192,10 @@ done
 # 2.5) 编译 + 运行 ut_pin_screenshots（贴图模块单元测试）
 ( cd "$HERE" && ./ut_pin_screenshots/build_run_ut.sh ) || echo "[WARN] ut_pin_screenshots 运行失败，继续。"
 
+# 2.6) 编译 + 运行截图会话基座测试（不依赖 compositor）
+( cd "$HERE" && ./ut_screenshot_session/build_run_ut.sh ) \
+    || echo "[WARN] ut_screenshot_session 运行失败，继续。"
+
 # 3) 聚合覆盖率（所有模块 .info 合并为一份统一报告）
 #
 # 各子模块在 build-ut/ 下已生成自己的 .info 文件，此处收集并合并。
@@ -202,6 +206,7 @@ RT_DIR="$HERE/ut_dde_dock_plugins/ut_record_time/build-ut"
 SS_DIR="$HERE/ut_dde_dock_plugins/ut_shot_start/build-ut"
 SSR_DOCK_DIR="$HERE/ut_dde_dock_plugins/ut_shot_start_record/build-ut"
 PIN_DIR="$HERE/ut_pin_screenshots/build-ut"
+SESSION_DIR="$HERE/ut_screenshot_session/build-ut"
 
 # ---- 收集 ssr 主程序覆盖率 ----
 lcov --capture --initial -d "$SSR_DIR" -o "$OUT/ssr_base.info" 2>/dev/null \
@@ -264,10 +269,24 @@ elif [ -f "$OUT/pin_screenshots.info" ]; then
     cp "$OUT/pin_screenshots.info" "$OUT/pin_screenshots_real.info"
 fi
 
+# ---- 收集 screenshot session 覆盖率 ----
+if [ -f "$SESSION_DIR/ut_screenshot_session_coverage.info" ]; then
+    cp "$SESSION_DIR/ut_screenshot_session_coverage.info" "$OUT/screenshot_session.info"
+fi
+lcov --capture --initial -d "$SESSION_DIR" -o "$OUT/screenshot_session_base.info" 2>/dev/null || true
+if [ -f "$OUT/screenshot_session_base.info" ] && [ -f "$OUT/screenshot_session.info" ]; then
+    lcov --add-tracefile "$OUT/screenshot_session_base.info" \
+        --add-tracefile "$OUT/screenshot_session.info" \
+        -o "$OUT/screenshot_session_real.info" 2>/dev/null
+elif [ -f "$OUT/screenshot_session.info" ]; then
+    cp "$OUT/screenshot_session.info" "$OUT/screenshot_session_real.info"
+fi
+
 # ---- 全局合并：所有模块真实覆盖率 ----
 ALL_ARGS=()
 for f in "$OUT"/ssr_real.info "$OUT"/rt_real.info "$OUT"/shot_start_real.info \
-         "$OUT"/shot_start_record_real.info "$OUT"/pin_screenshots_real.info; do
+         "$OUT"/shot_start_record_real.info "$OUT"/pin_screenshots_real.info \
+         "$OUT"/screenshot_session_real.info; do
     [ -f "$f" ] && ALL_ARGS+=(--add-tracefile "$f")
 done
 
