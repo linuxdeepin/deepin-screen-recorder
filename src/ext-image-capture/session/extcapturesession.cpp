@@ -37,6 +37,7 @@ public:
     QByteArray dmabufDevice;           // DMA设备
     
     bool constraintsReceived = false;
+    bool preferDmaBuffer = true;
     ExtCaptureFrame *currentFrame = nullptr;
     
     // Wayland 全局对象
@@ -117,12 +118,16 @@ ExtCaptureSession::~ExtCaptureSession()
     delete d;
 }
 
-bool ExtCaptureSession::initialize(void *manager, void *imageSource, bool paintCursors)
+bool ExtCaptureSession::initialize(void *manager,
+                                   void *imageSource,
+                                   bool paintCursors,
+                                   bool preferDmaBuffer)
 {
 #ifdef ENABLE_UNIT_TEST
     Q_UNUSED(manager)
     Q_UNUSED(imageSource)
     Q_UNUSED(paintCursors)
+    Q_UNUSED(preferDmaBuffer)
     return false;
 #else
     // qCWarning(dsrApp) << "ExtCaptureSession::initialize: *** INITIALIZING SESSION *** paintCursors =" << paintCursors;
@@ -133,6 +138,7 @@ bool ExtCaptureSession::initialize(void *manager, void *imageSource, bool paintC
     }
 
     setState(Initializing);
+    d->preferDmaBuffer = preferDmaBuffer;
     
     // 初始化 Wayland 全局对象（包括 wl_shm）
     d->initializeWaylandGlobals();
@@ -382,14 +388,30 @@ void ExtCaptureSession::setState(SessionState newState)
 void ExtCaptureSession::selectOptimalFormat()
 {
     // 优先选择DMA-BUF格式，然后是共享内存
-    if (!d->dmabufFormats.isEmpty()) {
+    if (d->preferDmaBuffer && !d->dmabufFormats.isEmpty()) {
         d->config.format = d->dmabufFormats.first();
         d->config.useDmaBuffer = true;
         // qCWarning(dsrApp) << "*** DMA-BUF FORMAT SELECTED ***";
         // qCWarning(dsrApp) << "Selected DMA-BUF format:" << d->config.format;
         // qCWarning(dsrApp) << "Available DMA-BUF formats count:" << d->dmabufFormats.size();
     } else if (!d->shmFormats.isEmpty()) {
+        // Still-image capture deliberately uses wl_shm. DMA-BUF remains the
+        // recording path, where frames are consumed as transparent handles.
+        // Pick a format with a known QImage mapping instead of trusting the
+        // arbitrary order in which the compositor advertised constraints.
+        const uint32_t preferredFormats[] = {
+            WL_SHM_FORMAT_XRGB8888,
+            WL_SHM_FORMAT_ARGB8888,
+            WL_SHM_FORMAT_XBGR8888,
+            WL_SHM_FORMAT_ABGR8888
+        };
         d->config.format = d->shmFormats.first();
+        for (uint32_t format : preferredFormats) {
+            if (d->shmFormats.contains(format)) {
+                d->config.format = format;
+                break;
+            }
+        }
         d->config.useDmaBuffer = false;
         // qCWarning(dsrApp) << "*** SHM FORMAT SELECTED (DMA-BUF not available) ***";
         // qCWarning(dsrApp) << "Selected SHM format:" << d->config.format;
@@ -462,4 +484,3 @@ const wl_registry_listener ExtCaptureSession::Private::s_registryListener = {
     ExtCaptureSession::Private::registryGlobal,
     ExtCaptureSession::Private::registryGlobalRemove
 };
-

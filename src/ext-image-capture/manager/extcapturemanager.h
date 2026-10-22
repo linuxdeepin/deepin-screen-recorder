@@ -38,9 +38,12 @@ public:
      * @brief 创建屏幕捕获会话
      * @param screen 要捕获的屏幕
      * @param paintCursors 是否包含光标
+     * @param preferDmaBuffer 是否优先 DMA-BUF；静态截图应传 false 以使用 wl_shm
      * @return 捕获会话对象，失败返回nullptr
      */
-    ExtCaptureSession* createScreenCaptureSession(QScreen *screen, bool paintCursors = false);
+    ExtCaptureSession* createScreenCaptureSession(QScreen *screen,
+                                                bool paintCursors = false,
+                                                bool preferDmaBuffer = true);
 
     /**
      * @brief 获取协议版本
