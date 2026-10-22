@@ -3463,7 +3463,9 @@ void MainWindow::saveScreenShot()
     }
     const bool r = saveAction(m_resultPixmap);
     sendNotify(m_saveIndex, m_saveFileName, r);
-    save2Clipboard(m_resultPixmap);
+    if (status::pinscreenshots != m_functionType) {
+        save2Clipboard(m_resultPixmap);
+    }
     if (status::pinscreenshots == m_functionType) return;
     this->hide();
 
