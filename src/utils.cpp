@@ -21,6 +21,7 @@
 #include <QDBusInterface>
 #include <QDBusConnection>
 #include <QDBusReply>
+#include <QtDBus>
 #include <QElapsedTimer>
 #include <QMutex>
 #include <QtX11Extras/QX11Info>

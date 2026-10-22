@@ -22,7 +22,7 @@ public:
      * @param ok 抓取成功返回 true
      * @return 原生分辨率图像，失败返回空 QPixmap
      */
-    QPixmap grabNativeFramebuffer(bool &ok);
+    static QPixmap grabNativeFramebuffer(bool &ok);
     
     /**
      * @brief 快速全屏截图，绕过MainWindow初始化，避免S3/S4问题
