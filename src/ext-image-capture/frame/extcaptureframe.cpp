@@ -408,7 +408,7 @@ bool ExtCaptureFrame::createShmBuffer()
         return false;
     }
     
-    d->buffer = wl_shm_pool_create_buffer(pool, 0, width, height, stride, WL_SHM_FORMAT_XBGR8888);
+    d->buffer = wl_shm_pool_create_buffer(pool, 0, width, height, stride, d->config.format);
     wl_shm_pool_destroy(pool);
     
     if (!d->buffer) {

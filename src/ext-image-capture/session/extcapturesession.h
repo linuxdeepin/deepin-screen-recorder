@@ -54,9 +54,11 @@ public:
      * @param manager 协议管理器
      * @param imageSource 图像捕获源
      * @param paintCursors 是否绘制光标
+     * @param preferDmaBuffer 是否优先 DMA-BUF；静态截图应传 false 以使用 wl_shm
      * @return 是否成功初始化
      */
-    bool initialize(void *manager, void *imageSource, bool paintCursors);
+    bool initialize(void *manager, void *imageSource, bool paintCursors,
+                    bool preferDmaBuffer = true);
 
     /**
      * @brief 获取会话状态

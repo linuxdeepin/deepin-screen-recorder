@@ -80,7 +80,9 @@ bool ExtCaptureManager::isProtocolAvailable() const
     return managerAvailable && outputSourceAvailable;
 }
 
-ExtCaptureSession* ExtCaptureManager::createScreenCaptureSession(QScreen *screen, bool paintCursors)
+ExtCaptureSession* ExtCaptureManager::createScreenCaptureSession(QScreen *screen,
+                                                                 bool paintCursors,
+                                                                 bool preferDmaBuffer)
 {
     if (!isProtocolAvailable()) {
         qWarning() << "ext-image-copy-capture protocol is not available";
@@ -94,6 +96,7 @@ ExtCaptureSession* ExtCaptureManager::createScreenCaptureSession(QScreen *screen
 #ifdef ENABLE_UNIT_TEST
     // 测试桩：Wayland output 绑定与协议会话创建不在单元测试覆盖
     Q_UNUSED(paintCursors)
+    Q_UNUSED(preferDmaBuffer)
     return nullptr;
 #else
 
@@ -119,7 +122,7 @@ ExtCaptureSession* ExtCaptureManager::createScreenCaptureSession(QScreen *screen
 
     // 创建捕获会话
     ExtCaptureSession *session = new ExtCaptureSession(this);
-    if (!session->initialize(d, imageSource, paintCursors)) {
+    if (!session->initialize(d, imageSource, paintCursors, preferDmaBuffer)) {
         delete session;
         return nullptr;
     }
