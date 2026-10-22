@@ -1590,6 +1590,7 @@ void ShapesWidget::mouseMoveEvent(QMouseEvent *e)
 
         if (m_isSelected && m_isPressed && m_selectedIndex != -1) {
             handleDrag(m_pressedPoint, m_movingPoint);
+            qApp->setOverrideCursor(Qt::ClosedHandCursor);
             //qDebug() << "move m_selectedOrder:" << m_selectedOrder;
             m_selectedShape = m_shapes[m_selectedOrder];
             m_hoveredShape = m_shapes[m_selectedOrder];
@@ -1618,54 +1619,54 @@ void ShapesWidget::mouseMoveEvent(QMouseEvent *e)
                         if (m_isSelected || m_isRotated) {
                             qApp->setOverrideCursor(Qt::SizeHorCursor);
                         } else {
-                            qApp->setOverrideCursor(Qt::ClosedHandCursor);
+                            qApp->setOverrideCursor(Qt::SizeHorCursor);
                         }
                     } else if (m_resizeDirection == Top) {
                         if (m_isSelected || m_isRotated) {
                             qApp->setOverrideCursor(Qt::SizeVerCursor);
                         } else {
-                            qApp->setOverrideCursor(Qt::ClosedHandCursor);
+                            qApp->setOverrideCursor(Qt::SizeVerCursor);
                         }
                     } else if (m_resizeDirection == Right) {
                         if (m_isSelected || m_isRotated) {
                             qApp->setOverrideCursor(Qt::SizeHorCursor);
                         } else {
-                            qApp->setOverrideCursor(Qt::ClosedHandCursor);
+                            qApp->setOverrideCursor(Qt::SizeHorCursor);
                         }
                     } else if (m_resizeDirection == Bottom) {
                         if (m_isSelected || m_isRotated) {
                             qApp->setOverrideCursor(Qt::SizeVerCursor);
                         } else {
-                            qApp->setOverrideCursor(Qt::ClosedHandCursor);
+                            qApp->setOverrideCursor(Qt::SizeVerCursor);
                         }
                     }  else if (m_resizeDirection == TopLeft) {
                         if (m_isSelected || m_isRotated) {
                             qApp->setOverrideCursor(Qt::SizeFDiagCursor);
                         } else {
-                            qApp->setOverrideCursor(Qt::ClosedHandCursor);
+                            qApp->setOverrideCursor(Qt::SizeFDiagCursor);
                         }
                     } else if (m_resizeDirection == BottomLeft) {
                         if (m_isSelected || m_isRotated) {
                             qApp->setOverrideCursor(Qt::SizeBDiagCursor);
                         } else {
-                            qApp->setOverrideCursor(Qt::ClosedHandCursor);
+                            qApp->setOverrideCursor(Qt::SizeBDiagCursor);
                         }
                     } else if (m_resizeDirection == TopRight) {
                         if (m_isSelected || m_isRotated) {
                             qApp->setOverrideCursor(Qt::SizeBDiagCursor);
                         } else {
-                            qApp->setOverrideCursor(Qt::ClosedHandCursor);
+                            qApp->setOverrideCursor(Qt::SizeBDiagCursor);
                         }
                     } else if (m_resizeDirection == BottomRight) {
                         if (m_isSelected || m_isRotated) {
                             qApp->setOverrideCursor(Qt::SizeFDiagCursor);
                         } else {
-                            qApp->setOverrideCursor(Qt::ClosedHandCursor);
+                            qApp->setOverrideCursor(Qt::SizeFDiagCursor);
                         }
                     } else if (m_resizeDirection == Rotate) {
                         qApp->setOverrideCursor(BaseUtils::setCursorShape("rotate"));
                     } else if (m_resizeDirection == Moving) {
-                        qApp->setOverrideCursor(Qt::ClosedHandCursor);
+                        qApp->setOverrideCursor(Qt::SizeAllCursor);
                     } else {
                         updateCursorShape();
                     }
