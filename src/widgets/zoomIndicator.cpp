@@ -34,7 +34,9 @@ constexpr int PREVIEW_HEIGHT = 105;
 constexpr int INFO_HEIGHT = 65;
 static_assert(PREVIEW_HEIGHT + INFO_HEIGHT == ZoomIndicator::PANEL_HEIGHT,
               "preview + info height must match the panel height");
-constexpr int PREVIEW_RADIUS = 8;
+constexpr int PREVIEW_RADIUS = 6;
+// 信息区仅底部两角圆角，设计稿「截图录屏-光标指针」为 7。
+constexpr int INFO_RADIUS = 7;
 
 // 以光标为中心取样约 15px 宽的区域，放大 10 倍渲染。
 constexpr int SAMPLE_WIDTH = 15;
@@ -86,6 +88,24 @@ QPainterPath previewPath()
     path.arcTo(w - 2 * r, 0, 2 * r, 2 * r, 90, -90);
     path.lineTo(w, h);
     path.lineTo(0, h);
+    path.closeSubpath();
+    return path;
+}
+
+QPainterPath infoPath()
+{
+    // 信息区 150x65，仅左下/右下圆角 7px，上边缘与预览区平接。
+    const qreal r = INFO_RADIUS;
+    const qreal w = ZoomIndicator::PANEL_WIDTH;
+    const qreal top = PREVIEW_HEIGHT;
+    const qreal bottom = PREVIEW_HEIGHT + INFO_HEIGHT;
+    QPainterPath path;
+    path.moveTo(0, top);
+    path.lineTo(w, top);
+    path.lineTo(w, bottom - r);
+    path.arcTo(w - 2 * r, bottom - 2 * r, 2 * r, 2 * r, 0, -90);
+    path.lineTo(r, bottom);
+    path.arcTo(0, bottom - 2 * r, 2 * r, 2 * r, 270, -90);
     path.closeSubpath();
     return path;
 }
@@ -226,14 +246,18 @@ void ZoomIndicator::drawCrosshair(QPainter &painter)
 
 void ZoomIndicator::drawInfoPanel(QPainter &painter)
 {
-    const QRectF infoRect(0, PREVIEW_HEIGHT, PANEL_WIDTH, INFO_HEIGHT);
+    const QPainterPath info = infoPath();
 
     painter.save();
-    painter.setRenderHint(QPainter::Antialiasing, false);
-    painter.fillRect(infoRect, INFO_FILL_COLOR);
+    // 底部圆角需要抗锯齿，否则 7px 弧线会出现台阶。
+    painter.setRenderHint(QPainter::Antialiasing, true);
+    painter.fillPath(info, INFO_FILL_COLOR);
     painter.setBrush(Qt::NoBrush);
+    // 设计稿：外侧 #000000 19.8%、内侧 #FFFFFF 10% 各 1px。
     painter.setPen(QPen(INFO_BORDER_COLOR, 1));
-    painter.drawRect(infoRect.adjusted(0.5, 0.5, -0.5, -0.5));
+    painter.drawPath(info);
+    painter.setPen(QPen(QColor(255, 255, 255, 26), 1));
+    painter.drawPath(info);
 
     QFont font = painter.font();
     font.setPixelSize(FONT_PIXEL_SIZE);

@@ -6,6 +6,7 @@
 #include "utils/log.h"
 
 #include <QFontMetrics>
+#include <QIcon>
 #include <QPainter>
 #include <QPainterPath>
 #include <QPen>
@@ -65,7 +66,7 @@ QColor textColor(bool enabled)
 } // namespace
 
 FineAdjustTips::FineAdjustTips(DWidget *parent)
-    : DWidget(parent)
+    : DBlurEffectWidget(parent)
 {
     qCDebug(dsrApp) << "FineAdjustTips constructor called.";
     setObjectName("FineAdjustTips");
@@ -73,6 +74,15 @@ FineAdjustTips::FineAdjustTips(DWidget *parent)
     setAttribute(Qt::WA_TransparentForMouseEvents, true);
     setAttribute(Qt::WA_TranslucentBackground, true);
     setFocusPolicy(Qt::NoFocus);
+
+    // 设计稿：黑色 40% 底板 + 高斯模糊，圆角 12。
+    setRadius(30);
+    DBlurEffectWidget::setMode(DBlurEffectWidget::GaussianBlur);
+    setBlurEnabled(true);
+    setBlurRectXRadius(PANEL_RADIUS);
+    setBlurRectYRadius(PANEL_RADIUS);
+    setMaskColor(PANEL_BACKGROUND);
+
     dockToBottomLeft();
 }
 
@@ -114,12 +124,12 @@ int FineAdjustTips::contentWidth() const
 {
     // 设计稿按中文文案定宽 395；当文案（如未翻译的英文）更长时自动加宽，避免被裁剪
     QFontMetrics metrics(descriptionFont());
-    int rightEdge = 241 + metrics.horizontalAdvance(
+    int rightEdge = PANEL_PADDING + 241 + metrics.horizontalAdvance(
                 m_mode == SelectionMode ? tr("Move the capture area by 1 pixel")
                                         : tr("Move the mouse pointer by 1 pixel"));
     if (m_mode == SelectionMode) {
-        rightEdge = qMax(rightEdge, 169 + metrics.horizontalAdvance(tr("Enlarge the capture area by 1 pixel")));
-        rightEdge = qMax(rightEdge, 226 + metrics.horizontalAdvance(tr("Shrink the capture area by 1 pixel")));
+        rightEdge = qMax(rightEdge, PANEL_PADDING + 169 + metrics.horizontalAdvance(tr("Enlarge the capture area by 1 pixel")));
+        rightEdge = qMax(rightEdge, PANEL_PADDING + 225 + metrics.horizontalAdvance(tr("Shrink the capture area by 1 pixel")));
     }
     return qMax(PANEL_WIDTH, rightEdge + PANEL_PADDING);
 }
@@ -147,6 +157,9 @@ void FineAdjustTips::paintEvent(QPaintEvent *event)
 {
     Q_UNUSED(event)
 
+    // 模糊底板由 DBlurEffectWidget 绘制；这里只画 1px 描边和前景内容。
+    DBlurEffectWidget::paintEvent(event);
+
     QPainter painter(this);
     painter.setRenderHint(QPainter::Antialiasing, true);
     painter.setRenderHint(QPainter::TextAntialiasing, true);
@@ -154,9 +167,11 @@ void FineAdjustTips::paintEvent(QPaintEvent *event)
     const QRectF panelRect = QRectF(rect()).adjusted(0.5, 0.5, -0.5, -0.5);
     QPainterPath panelPath;
     panelPath.addRoundedRect(panelRect, PANEL_RADIUS, PANEL_RADIUS);
-    painter.fillPath(panelPath, PANEL_BACKGROUND);
     painter.setPen(QPen(PANEL_BORDER, 1));
     painter.drawPath(panelPath);
+
+    // 设计稿 “编组” 位于面板 (10,10)，按键块从内容区 x=0 开始。
+    painter.translate(PANEL_PADDING, 0);
 
     // 第一行：W A S D / ↑ ↓ ← → 描述
     const int row1Y = PANEL_PADDING;
@@ -192,7 +207,7 @@ void FineAdjustTips::paintEvent(QPaintEvent *event)
     drawKeyCap(painter, QRect(51, row3Y, 42, KEY_CAP_SIZE), QStringLiteral("Shift"), m_resizeEnabled);
     drawPlus(painter, QRect(96, row3Y + 8, 9, 9), m_resizeEnabled);
     drawArrowKeys(painter, 108, row3Y, m_resizeEnabled);
-    drawDescription(painter, QPoint(226, row3Y), tr("Shrink the capture area by 1 pixel"), m_resizeEnabled);
+    drawDescription(painter, QPoint(225, row3Y), tr("Shrink the capture area by 1 pixel"), m_resizeEnabled);
 }
 
 void FineAdjustTips::drawKeyCap(QPainter &painter, const QRect &rect, const QString &text, bool enabled)
@@ -208,23 +223,22 @@ void FineAdjustTips::drawKeyCap(QPainter &painter, const QRect &rect, const QStr
 
 void FineAdjustTips::drawSeparator(QPainter &painter, const QRect &rect, bool enabled)
 {
-    QPen pen(textColor(enabled));
-    pen.setWidthF(1.5);
-    pen.setCapStyle(Qt::RoundCap);
-    painter.setPen(pen);
-    painter.drawLine(rect.bottomLeft(), rect.topRight());
+    // 设计稿“图标/截图提示语/或”：9x18 切图。
+    painter.save();
+    painter.setOpacity(enabled ? 1.0 : 0.57);
+    QIcon(QStringLiteral(":/icons/deepin/builtin/texts/shortcut-separator_9px.svg"))
+            .paint(&painter, rect);
+    painter.restore();
 }
 
 void FineAdjustTips::drawPlus(QPainter &painter, const QRect &rect, bool enabled)
 {
-    QPen pen(textColor(enabled));
-    pen.setWidthF(1.2);
-    pen.setCapStyle(Qt::RoundCap);
-    painter.setPen(pen);
-    const int centerX = rect.center().x();
-    const int centerY = rect.center().y();
-    painter.drawLine(rect.left(), centerY, rect.right(), centerY);
-    painter.drawLine(centerX, rect.top(), centerX, rect.bottom());
+    // 设计稿“图标/截图提示语/相加”：9x9 切图。
+    painter.save();
+    painter.setOpacity(enabled ? 1.0 : 0.57);
+    QIcon(QStringLiteral(":/icons/deepin/builtin/texts/shortcut-plus_9px.svg"))
+            .paint(&painter, rect);
+    painter.restore();
 }
 
 void FineAdjustTips::drawArrowKeys(QPainter &painter, int x, int y, bool enabled)

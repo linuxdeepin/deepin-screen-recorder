@@ -34,6 +34,25 @@ or press the shortcut again to stop recording</source>
     </message>
 </context>
 <context>
+    <name>FineAdjustTips</name>
+    <message>
+        <source>Move the capture area by 1 pixel</source>
+        <translation>將擷取區域移動 1 像素</translation>
+    </message>
+    <message>
+        <source>Move the mouse pointer by 1 pixel</source>
+        <translation>將滑鼠指標移動 1 像素</translation>
+    </message>
+    <message>
+        <source>Enlarge the capture area by 1 pixel</source>
+        <translation>將擷取區域放大 1 像素</translation>
+    </message>
+    <message>
+        <source>Shrink the capture area by 1 pixel</source>
+        <translation>將擷取區域縮小 1 像素</translation>
+    </message>
+</context>
+<context>
     <name>IconWidget</name>
     <message>
         <source>Screenshot</source>
@@ -52,7 +71,7 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Copy to clipboard (Enter)</source>
-        <translation>複製到剪貼板 (Enter)</translation>
+        <translation>複製到剪貼簿 (Enter)</translation>
     </message>
 </context>
 <context>
@@ -63,7 +82,7 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Save failed. Please save it in your home directory.</source>
-        <translation>保存失敗。請保存在當前用戶目錄下。</translation>
+        <translation>儲存失敗。請儲存在當前用戶目錄下。</translation>
     </message>
     <message>
         <source>View</source>
@@ -91,11 +110,11 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Save</source>
-        <translation>保存</translation>
+        <translation>儲存</translation>
     </message>
     <message>
         <source>Saved to %1</source>
-        <translation>圖片已保存到%1</translation>
+        <translation>圖片已儲存到%1</translation>
     </message>
     <message>
         <source>Ignore</source>
@@ -103,11 +122,11 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Clipboard</source>
-        <translation>剪貼板</translation>
+        <translation>剪貼簿</translation>
     </message>
     <message>
         <source>Saving the screen recording file, please wait...</source>
-        <translation>正在保存錄屏文件，請稍候...</translation>
+        <translation>正在儲存錄屏檔案，請稍候...</translation>
     </message>
     <message>
         <source>As the window effect is disabled during the process, the recording has to be stopped</source>
@@ -131,11 +150,11 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Open Folder</source>
-        <translation>打開資料夾</translation>
+        <translation>開啟資料夾</translation>
     </message>
     <message>
         <source>Screenshot finished and copy to clipboard</source>
-        <translation>截圖完成，文件已複製到剪貼板</translation>
+        <translation>截圖完成，檔案已複製到剪貼簿</translation>
     </message>
     <message>
         <source>Failed to recognize: no table content detected</source>
@@ -166,7 +185,7 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Save</source>
-        <translation>保存</translation>
+        <translation>儲存</translation>
     </message>
     <message>
         <source>Exit</source>
@@ -185,11 +204,11 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Set a path on save</source>
-        <translation>保存時設定位置</translation>
+        <translation>儲存時設定位置</translation>
     </message>
     <message>
         <source>Change the path on save</source>
-        <translation>保存時更新位置</translation>
+        <translation>儲存時更新位置</translation>
     </message>
     <message>
         <source>Desktop</source>
@@ -241,7 +260,7 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Saved to %1</source>
-        <translation>文件已保存到%1</translation>
+        <translation>檔案已儲存到%1</translation>
     </message>
     <message>
         <source>Record</source>
@@ -249,7 +268,30 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Open Folder</source>
-        <translation>打開資料夾</translation>
+        <translation>開啟資料夾</translation>
+    </message>
+</context>
+<context>
+    <name>RoundedCornerWidget</name>
+    <message>
+        <source>Radius</source>
+        <translation>圓角</translation>
+    </message>
+    <message>
+        <source>Size / ratio</source>
+        <translation>尺寸/比例</translation>
+    </message>
+    <message>
+        <source>Size</source>
+        <translation>尺寸</translation>
+    </message>
+    <message>
+        <source>Ratio</source>
+        <translation>比例</translation>
+    </message>
+    <message>
+        <source>Keep the selected size or ratio for the next screenshot</source>
+        <translation>選中後，下次截圖保持該尺寸/比例</translation>
     </message>
 </context>
 <context>
@@ -264,11 +306,11 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Select a location when saving</source>
-        <translation>保存時選擇位置</translation>
+        <translation>儲存時選擇位置</translation>
     </message>
     <message>
         <source>Update the location when saving</source>
-        <translation>保存時更新位置</translation>
+        <translation>儲存時更新位置</translation>
     </message>
     <message>
         <source>Desktop</source>
@@ -340,7 +382,7 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Exit/Save</source>
-        <translation>退出/保存</translation>
+        <translation>退出/儲存</translation>
     </message>
     <message>
         <source>Size Adjustment</source>
@@ -372,15 +414,7 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Save</source>
-        <translation>保存</translation>
-    </message>
-    <message>
-        <source>Rectangle</source>
-        <translation>矩形</translation>
-    </message>
-    <message>
-        <source>Ellipse</source>
-        <translation>橢圓</translation>
+        <translation>儲存</translation>
     </message>
     <message>
         <source>Line</source>
@@ -487,16 +521,36 @@ or press the shortcut again to stop recording</source>
         <translation>貼圖</translation>
     </message>
     <message>
-        <source>Start OCR</source>
-        <translation>快速啟動圖文識別</translation>
-    </message>
-    <message>
-        <source>Start scrollshot</source>
-        <translation>啟動滾動截圖</translation>
-    </message>
-    <message>
         <source>Arrow</source>
         <translation>箭頭</translation>
+    </message>
+    <message>
+        <source>Quick start scrollshot</source>
+        <translation>快速啟動滾動截圖</translation>
+    </message>
+    <message>
+        <source>Copy to clipboard</source>
+        <translation>複製到剪貼簿</translation>
+    </message>
+    <message>
+        <source>Geometric Tools</source>
+        <translation>幾何工具</translation>
+    </message>
+    <message>
+        <source>Blur</source>
+        <translation>模糊</translation>
+    </message>
+    <message>
+        <source>Sequence number</source>
+        <translation>序號</translation>
+    </message>
+    <message>
+        <source>Table recognition</source>
+        <translation>表格識別</translation>
+    </message>
+    <message>
+        <source>AI Screenshot</source>
+        <translation>AI 截圖</translation>
     </message>
 </context>
 <context>
@@ -577,12 +631,8 @@ Press and hold Shift to draw a straight line</source>
         <translation>截圖</translation>
     </message>
     <message>
-        <source>Settings</source>
-        <translation>設置</translation>
-    </message>
-    <message>
         <source>Settings (F3)</source>
-        <translation>設置 (F3)</translation>
+        <translation>設定 (F3)</translation>
     </message>
     <message>
         <source>Format</source>
@@ -658,7 +708,7 @@ Press and hold Shift to draw a straight line</source>
     </message>
     <message>
         <source>Save to</source>
-        <translation>保存方式</translation>
+        <translation>儲存方式</translation>
     </message>
     <message>
         <source>Desktop</source>
@@ -666,7 +716,7 @@ Press and hold Shift to draw a straight line</source>
     </message>
     <message>
         <source>Videos</source>
-        <translation>視頻</translation>
+        <translation>影片</translation>
     </message>
     <message>
         <source>Line (L)
@@ -714,7 +764,7 @@ Press and hold Shift to draw a vertical or horizontal arrow</source>
     </message>
     <message>
         <source>Change the path on save</source>
-        <translation>保存時更新位置</translation>
+        <translation>儲存時更新位置</translation>
     </message>
     <message>
         <source>PNG</source>
@@ -754,7 +804,7 @@ Press and hold Shift to draw a vertical or horizontal arrow</source>
     </message>
     <message>
         <source>Save to local</source>
-        <translation>保存到本地</translation>
+        <translation>儲存到本地</translation>
     </message>
     <message>
         <source>Specified Location</source>
@@ -768,15 +818,15 @@ Hold down Shift to draw squares or circles.</source>
     </message>
     <message>
         <source>Save to %1</source>
-        <translation>保存到%1</translation>
+        <translation>儲存到%1</translation>
     </message>
     <message>
         <source>Update the location when saving</source>
-        <translation>保存時更新位置</translation>
+        <translation>儲存時更新位置</translation>
     </message>
     <message>
         <source>Select a location when saving</source>
-        <translation>保存時選擇位置</translation>
+        <translation>儲存時選擇位置</translation>
     </message>
     <message>
         <source>AI Screenshot (Alt+A)</source>
@@ -784,11 +834,11 @@ Hold down Shift to draw squares or circles.</source>
     </message>
     <message>
         <source>Save to Desktop</source>
-        <translation>保存到桌面</translation>
+        <translation>儲存到桌面</translation>
     </message>
     <message>
         <source>Save to Pictures</source>
-        <translation>保存到圖片</translation>
+        <translation>儲存到圖片</translation>
     </message>
     <message>
         <source>Table recognition (Alt+T)</source>
@@ -796,7 +846,7 @@ Hold down Shift to draw squares or circles.</source>
     </message>
     <message>
         <source>Table recognition</source>
-        <translation type="unfinished">表格識別</translation>
+        <translation>表格識別</translation>
     </message>
 </context>
 <context>
@@ -833,7 +883,7 @@ Hold down Shift to draw squares or circles.</source>
     </message>
     <message>
         <source>Copy to clipboard (Enter)</source>
-        <translation>複製到剪貼板 (Enter)</translation>
+        <translation>複製到剪貼簿 (Enter)</translation>
     </message>
     <message>
         <source>OK (Enter)</source>
@@ -844,7 +894,7 @@ Hold down Shift to draw squares or circles.</source>
     <name>TopTips</name>
     <message>
         <source> Adjust the recording area within %1*%2 to get better video effect</source>
-        <translation> 調整錄製區域範圍在%1*%2以內，視頻效果更佳</translation>
+        <translation> 調整錄製區域範圍在%1*%2以內，影片效果更佳</translation>
     </message>
 </context>
 <context>
@@ -859,30 +909,10 @@ Hold down Shift to draw squares or circles.</source>
     </message>
 </context>
 <context>
-    <name>RoundedCornerWidget</name>
+    <name>ZoomIndicator</name>
     <message>
-        <source>Radius</source>
-        <translation>圓角</translation>
-    </message>
-    <message>
-        <source>Size / ratio</source>
-        <translation>尺寸/比例</translation>
-    </message>
-    <message>
-        <source>Size</source>
-        <translation>尺寸</translation>
-    </message>
-    <message>
-        <source>Lock ratio</source>
-        <translation>鎖定比例</translation>
-    </message>
-    <message>
-        <source>Ratio</source>
-        <translation>比例</translation>
-    </message>
-    <message>
-        <source>Keep the selected size or ratio for the next screenshot</source>
-        <translation>選中後，下次截圖保持該尺寸/比例</translation>
+        <source>Press Ctrl+c to copy color</source>
+        <translation>按 Ctrl+C 複製色值</translation>
     </message>
 </context>
 </TS>
