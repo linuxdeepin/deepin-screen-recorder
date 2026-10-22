@@ -118,6 +118,7 @@ public slots:
     void setRecordLaunchMode(const unsigned int funType);
     void setVideoButtonInitFromSub();
     void shapeClickedFromWidget(QString shape);
+    void clearShotToolSelection();
     void setMicroPhoneEnable(bool status);
     void setCameraDeviceEnable(bool status);
 
@@ -224,6 +225,7 @@ private:
     QAction *m_microphoneAction = nullptr;
     QAction *m_sysAudioAction = nullptr;
     QButtonGroup *m_shotBtnGroup = nullptr;
+    QAbstractButton *m_activeShotTool = nullptr;
 
     /**
      * @brief m_saveToSpecialPathMenu 截图选项: 保存到指定位置的菜单

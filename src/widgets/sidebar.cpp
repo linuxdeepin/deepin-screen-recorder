@@ -381,6 +381,14 @@ void SideBar::setColorFunc(const QString &func)
     m_sidebarWidget->changeShotToolWidget(func);
 }
 */
+void SideBar::hideEvent(QHideEvent *event)
+{
+    // 不论侧栏是通过再次点击、关闭按钮、模式切换还是其它逻辑隐藏，
+    // 都通知主窗口回收一级横向工具的选中态。
+    emit closed();
+    DLabel::hideEvent(event);
+}
+
 void SideBar::paintEvent(QPaintEvent *e)
 {
     qCDebug(dsrApp) << "SideBar::paintEvent called.";

@@ -208,6 +208,13 @@ void ToolBarWidget::setCameraDeviceEnable(bool status)
     m_subTool->setCameraDeviceEnable(status);
 }
 
+void ToolBarWidget::clearShotToolSelection()
+{
+    if (m_subTool) {
+        m_subTool->clearShotToolSelection();
+    }
+}
+
 void ToolBarWidget::changeShotToolEvent(const QString &func)
 {
     if(func.isEmpty() || !m_confirmButton || !m_subTool)
@@ -334,6 +341,13 @@ void ToolBar::mouseReleaseEvent(QMouseEvent *event)
         m_isPress = false;
         m_isDrag = false;
         QApplication::setOverrideCursor(Qt::OpenHandCursor);
+    }
+}
+
+void ToolBar::clearShotToolSelection()
+{
+    if (m_toolbarWidget) {
+        m_toolbarWidget->clearShotToolSelection();
     }
 }
 

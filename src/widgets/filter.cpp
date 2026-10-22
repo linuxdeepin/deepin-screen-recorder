@@ -70,7 +70,9 @@ void HintFilterPrivate::showHint(QWidget *hint)
         qCWarning(dsrApp) << "Cannot show hint: no parent widget";
         return;
     }
-    auto w = parentWidget;
+    // 默认以触发提示的控件作为定位锚点；竖排工具组可通过
+    // HintAnchorWidget 指定整个工具组，避免提示遮住相邻按钮。
+    auto w = anchorWidget ? anchorWidget : parentWidget;
     if (hintWidget && hintWidget != hint) {
         qCDebug(dsrApp) << "Hiding previous hint widget";
         hintWidget->hide();
@@ -147,6 +149,10 @@ bool HintFilter::eventFilter(QObject *obj, QEvent *event)
         d->parentWidget = w;
         if (!w) {
             break;
+        }
+        d->anchorWidget = w->property("HintAnchorWidget").value<QWidget *>();
+        if (!d->anchorWidget) {
+            d->anchorWidget = w;
         }
 
         d->hintWidget = w->property("HintWidget").value<QWidget *>();

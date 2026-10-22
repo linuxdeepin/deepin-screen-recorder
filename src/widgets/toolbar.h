@@ -64,6 +64,7 @@ public:
     QPoint getAiButtonGlobalCenter() const;
 
     void setHideToolbar(bool hidetoolbar);
+    void clearShotToolSelection();
 signals:
     void buttonChecked(QString shapeType);
     void closed();
@@ -133,6 +134,7 @@ public:
     void setTableScreenshotsEnable(const bool &state);
 
     void setButEnableOnLockScreen(const bool &state);
+    void clearShotToolSelection();
 
     /**
      * @brief 根据当前传入的按钮形状获取当前按钮坐标的x值

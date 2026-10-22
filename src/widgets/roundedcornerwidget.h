@@ -22,8 +22,10 @@
 
 DWIDGET_USE_NAMESPACE
 
+class QAction;
 class QMouseEvent;
 class ToolButton;
+class HintFilter;
 
 /**
  * @brief 选区右上角的圆角 / 尺寸比例工具组。
@@ -53,6 +55,8 @@ public:
     void setRadius(int radius);
 
     bool isRatioLocked() const;
+    // 当前锁定的宽高比（宽 / 高）；未锁定或无效时返回 0。
+    qreal lockedRatio() const;
     PanelType currentPanel() const { return m_panel; }
 
     // 本次启动是否还有待应用的记忆尺寸/比例。图钉开启且配置中有有效值时，
@@ -83,6 +87,9 @@ public:
     QRect currentGroupPlateRect() const;
     // 主窗口同步当前选区尺寸到尺寸/比例面板
     void setSelectionSize(int width, int height);
+    // 按父窗口坐标返回浮层当前应使用的光标：面板输入框 I 型、
+    // 按钮组张开/闭合手型、其余区域普通箭头。
+    Qt::CursorShape cursorShapeAt(const QPoint &parentPos) const;
 
     // 生成带圆角透明通道的图片；radius <= 0 时返回原图
     static QPixmap applyRoundedCorners(const QPixmap &source, int radius);
@@ -92,8 +99,10 @@ public:
 
 signals:
     void radiusChanged(int radius);
-    // 用户在尺寸/比例面板中输入了新的选区尺寸
+    // 用户在尺寸面板中输入了新的选区尺寸
     void selectionSizeChanged(int width, int height);
+    // 用户在比例面板中输入了新的锁定比例（宽:高）
+    void ratioChanged(int width, int height);
     void panelExpandedChanged(bool expanded);
     // 用户拖动按钮组结束，主窗口据此重新检查工具栏是否被遮挡
     void groupMoved();
@@ -107,7 +116,7 @@ protected:
     void mousePressEvent(QMouseEvent *event) override;
     void mouseMoveEvent(QMouseEvent *event) override;
     void mouseReleaseEvent(QMouseEvent *event) override;
-    // 鼠标停在按钮组底板上时显示“可拖动”手型（与主工具栏一致）
+    // 保护属性面板区域的光标，避免被主窗口的选区拖动全局光标覆盖
     bool eventFilter(QObject *watched, QEvent *event) override;
 
 private:
@@ -115,10 +124,14 @@ private:
     QWidget *buildGroup();
     QWidget *buildCornerPanel();
     QWidget *buildSizePanel();
+    void installPanelCursorFilters(QWidget *panel);
+    bool isTextInputWidget(const QObject *watched) const;
     void updateLayout();
     void reposition();
     void setPanel(PanelType panel);
     void syncFromConfig();
+    void applySizeMode(bool ratioMode);
+    void syncSizeModeControls();
     void persistRadius();
     void flushPendingPersist();
     void hideEvent(QHideEvent *event) override;
@@ -127,6 +140,7 @@ private:
     void persistFixedSize();
     void captureCurrentSetting();
     void syncButtonStates();
+    void syncRatioFromSelection();
     void updateDimensionFields();
 
     QWidget *m_groupFrame = nullptr;
@@ -137,11 +151,14 @@ private:
     DSlider *m_radiusSlider = nullptr;
     DSpinBox *m_radiusSpin = nullptr;
     DPushButton *m_sizeModeButton = nullptr;
+    QAction *m_sizeAction = nullptr;
+    QAction *m_ratioAction = nullptr;
     DLineEdit *m_widthEdit = nullptr;
     DLineEdit *m_heightEdit = nullptr;
     QIntValidator *m_widthValidator = nullptr;
     QIntValidator *m_heightValidator = nullptr;
     DIconButton *m_lockButton = nullptr;
+    HintFilter *m_hintFilter = nullptr;
 
     QTimer *m_persistTimer = nullptr;
     int m_radius = 0;
@@ -153,6 +170,9 @@ private:
     bool m_rememberedIsRatio = false;
     int m_fixedWidth = 0;
     int m_fixedHeight = 0;
+    // 用户在比例模式中确认的宽高比，必须与像素尺寸分开保存，避免换算后被反算覆盖。
+    int m_ratioWidth = 0;
+    int m_ratioHeight = 0;
     int m_selectionWidth = 0;
     int m_selectionHeight = 0;
     PanelType m_panel = NoPanel;
@@ -164,7 +184,10 @@ private:
     // 面板展开/收起导致控件尺寸变化时据此回算控件原点，按钮组不会跟着跑。
     bool m_userMoved = false;
     bool m_dragging = false;
-    bool m_hoverCursorPushed = false;
+    bool m_panelCursorActive = false;
+    Qt::CursorShape m_panelPreviousCursorShape = Qt::ArrowCursor;
+    bool m_groupCursorActive = false;
+    Qt::CursorShape m_groupPreviousCursorShape = Qt::ArrowCursor;
     QPoint m_dragMouseStart;
     QPoint m_dragWidgetStart;
     QPoint m_groupAnchor;
