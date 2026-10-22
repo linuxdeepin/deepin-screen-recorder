@@ -252,7 +252,34 @@ HEADERS += main_window.h \
     protocols/ext-image-copy-capture/qwayland-ext-foreign-toplevel-list-v1.h \
     protocols/ext-image-copy-capture/wayland-ext-foreign-toplevel-list-v1-client-protocol.h \
     protocols/linux-dmabuf/qwayland-linux-dmabuf-unstable-v1.h \
-    protocols/linux-dmabuf/wayland-linux-dmabuf-unstable-v1-client-protocol.h
+    protocols/linux-dmabuf/wayland-linux-dmabuf-unstable-v1-client-protocol.h \
+    protocols/treeland-snap-target/qwayland-treeland-snap-target-unstable-v1.h \
+    protocols/treeland-snap-target/wayland-treeland-snap-target-unstable-v1-client-protocol.h \
+    protocols/treeland-snap-target/qwayland-xdg-toplevel-tag-v1.h \
+    protocols/treeland-snap-target/wayland-xdg-toplevel-tag-v1-client-protocol.h \
+    protocols/treeland-snap-target/wayland-xdg-shell-client-protocol.h \
+    screenshot/core/screenshottypes.h \
+    screenshot/core/coordinatemapper.h \
+    screenshot/core/selectionmodel.h \
+    screenshot/core/selectionconstraints.h \
+    screenshot/ports/iscreenshotbackend.h \
+    screenshot/ports/iscreenshotoverlayhost.h \
+    screenshot/ports/iannotationeditor.h \
+    screenshot/ports/iscreenshotresultsink.h \
+    screenshot/ports/isnaphintsource.h \
+    screenshot/ports/iwindowtagger.h \
+    screenshot/session/annotationcoordinator.h \
+    screenshot/export/screenshotexportservice.h \
+    screenshot/export/localscreenshotresultsink.h \
+    screenshot/session/screenshotsessioncontroller.h \
+    screenshot/session/screenshotsessionfactory.h \
+    screenshot/platform/treeland/treelandstillcapture.h \
+    screenshot/platform/treeland/treelandsnapproxy.h \
+    screenshot/platform/treeland/treelandsnaphintsource.h \
+    screenshot/platform/treeland/treelandwindowtagger.h \
+    screenshot/platform/treeland/treelandmaskwindow.h \
+    screenshot/platform/treeland/treelandmaskoverlayhost.h \
+    screenshot/platform/treeland/treelandscreenshotbackend.h
 
 # Qt 版本特定的头文件
 lessThan(QT_MAJOR_VERSION, 6) {
@@ -358,7 +385,26 @@ SOURCES += main.cpp \
     protocols/ext-image-copy-capture/qwayland-ext-foreign-toplevel-list-v1.cpp \
     protocols/ext-image-copy-capture/wayland-ext-foreign-toplevel-list-v1-protocol.c \
     protocols/linux-dmabuf/qwayland-linux-dmabuf-unstable-v1.cpp \
-    protocols/linux-dmabuf/wayland-linux-dmabuf-unstable-v1-protocol.c
+    protocols/linux-dmabuf/wayland-linux-dmabuf-unstable-v1-protocol.c \
+    protocols/treeland-snap-target/qwayland-treeland-snap-target-unstable-v1.cpp \
+    protocols/treeland-snap-target/wayland-treeland-snap-target-unstable-v1-protocol.c \
+    protocols/treeland-snap-target/qwayland-xdg-toplevel-tag-v1.cpp \
+    protocols/treeland-snap-target/wayland-xdg-toplevel-tag-v1-protocol.c \
+    protocols/treeland-snap-target/wayland-xdg-shell-protocol.c \
+    screenshot/core/selectionmodel.cpp \
+    screenshot/core/selectionconstraints.cpp \
+    screenshot/export/screenshotexportservice.cpp \
+    screenshot/export/localscreenshotresultsink.cpp \
+    screenshot/session/annotationcoordinator.cpp \
+    screenshot/session/screenshotsessioncontroller.cpp \
+    screenshot/session/screenshotsessionfactory.cpp \
+    screenshot/platform/treeland/treelandstillcapture.cpp \
+    screenshot/platform/treeland/treelandsnapproxy.cpp \
+    screenshot/platform/treeland/treelandsnaphintsource.cpp \
+    screenshot/platform/treeland/treelandwindowtagger.cpp \
+    screenshot/platform/treeland/treelandmaskwindow.cpp \
+    screenshot/platform/treeland/treelandmaskoverlayhost.cpp \
+    screenshot/platform/treeland/treelandscreenshotbackend.cpp
 
 # Qt 版本特定的源文件
 lessThan(QT_MAJOR_VERSION, 6) {
