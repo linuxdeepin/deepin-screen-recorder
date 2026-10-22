@@ -609,43 +609,45 @@ void MainWindow::waylandwindowinfo(const QVector<ClientManagement::WindowState> 
     if (windowStates.count() == 0) {
         return;
     }
-    const qreal ratio = qApp->primaryScreen()->devicePixelRatio();
+    // kwin ClientManagement 返回的 geometry 已是逻辑坐标
+    // （实测 dde-dock 为 (0,920,1440,40)，与 dock DBus FrontendWindowRect 一致），
+    // 无需再除以缩放比换算
     for (int i = 0; i < windowStates.count(); ++i) {
         if (windowStates.at(i).isMinimized == false && windowStates.at(i).pid != getpid() && windowStates.at(i).resourceName[0] != '\0') {
             if (m_screenInfo.size() > 1) {
                 if (m_isScreenVertical == false) {
                     if (windowStates.at(i).geometry.x < m_screenInfo[1].x)
                         windowRects << QRect(
-                                        static_cast<int>(windowStates.at(i).geometry.x / ratio),
-                                        static_cast<int>(windowStates.at(i).geometry.y / ratio),
-                                        static_cast<int>(windowStates.at(i).geometry.width / ratio),
-                                        static_cast<int>(windowStates.at(i).geometry.height / ratio));
+                                        static_cast<int>(windowStates.at(i).geometry.x),
+                                        static_cast<int>(windowStates.at(i).geometry.y),
+                                        static_cast<int>(windowStates.at(i).geometry.width),
+                                        static_cast<int>(windowStates.at(i).geometry.height));
                     else
                         windowRects << QRect(
-                                        static_cast<int>(m_screenInfo[1].x + (windowStates.at(i).geometry.x  - m_screenInfo[1].x) / ratio),
-                                        static_cast<int>(windowStates.at(i).geometry.y / ratio),
-                                        static_cast<int>(windowStates.at(i).geometry.width / ratio),
-                                        static_cast<int>(windowStates.at(i).geometry.height / ratio));
+                                        static_cast<int>(m_screenInfo[1].x + (windowStates.at(i).geometry.x  - m_screenInfo[1].x)),
+                                        static_cast<int>(windowStates.at(i).geometry.y),
+                                        static_cast<int>(windowStates.at(i).geometry.width),
+                                        static_cast<int>(windowStates.at(i).geometry.height));
                 } else {
                     if (windowStates.at(i).geometry.y <= m_screenInfo[1].y)
                         windowRects << QRect(
-                                        static_cast<int>(windowStates.at(i).geometry.x / ratio),
-                                        static_cast<int>(windowStates.at(i).geometry.y / ratio),
-                                        static_cast<int>(windowStates.at(i).geometry.width / ratio),
-                                        static_cast<int>(windowStates.at(i).geometry.height / ratio));
+                                        static_cast<int>(windowStates.at(i).geometry.x),
+                                        static_cast<int>(windowStates.at(i).geometry.y),
+                                        static_cast<int>(windowStates.at(i).geometry.width),
+                                        static_cast<int>(windowStates.at(i).geometry.height));
                     else
                         windowRects << QRect(
-                                        static_cast<int>(windowStates.at(i).geometry.x / ratio),
-                                        static_cast<int>(m_screenInfo[1].y + (windowStates.at(i).geometry.y  - m_screenInfo[1].y) / ratio),
-                                        static_cast<int>(windowStates.at(i).geometry.width / ratio),
-                                        static_cast<int>(windowStates.at(i).geometry.height / ratio));
+                                        static_cast<int>(windowStates.at(i).geometry.x),
+                                        static_cast<int>(m_screenInfo[1].y + (windowStates.at(i).geometry.y  - m_screenInfo[1].y)),
+                                        static_cast<int>(windowStates.at(i).geometry.width),
+                                        static_cast<int>(windowStates.at(i).geometry.height));
                 }
             } else {
                 windowRects << QRect(
-                                static_cast<int>(windowStates.at(i).geometry.x / ratio),
-                                static_cast<int>(windowStates.at(i).geometry.y / ratio),
-                                static_cast<int>(windowStates.at(i).geometry.width / ratio),
-                                static_cast<int>(windowStates.at(i).geometry.height / ratio));
+                                static_cast<int>(windowStates.at(i).geometry.x),
+                                static_cast<int>(windowStates.at(i).geometry.y),
+                                static_cast<int>(windowStates.at(i).geometry.width),
+                                static_cast<int>(windowStates.at(i).geometry.height));
             }
             windowNames << windowStates.at(i).resourceName;
             if (windowNames.last().contains("dde-dock")) {
@@ -666,8 +668,8 @@ void MainWindow::waylandwindowinfo(const QVector<ClientManagement::WindowState> 
         const QScreen *t_virtualScreen = QGuiApplication::primaryScreen();
         const QSize t_virtualSize = (t_virtualScreen != nullptr)
                                     ? t_virtualScreen->virtualGeometry().size()
-                                    : QSize(static_cast<int>(m_screenSize.width() / ratio),
-                                            static_cast<int>(m_screenSize.height() / ratio));
+                                    : QSize(static_cast<int>(m_screenSize.width() / m_pixelRatio),
+                                            static_cast<int>(m_screenSize.height() / m_pixelRatio));
         QRect screenRect(0, 0, t_virtualSize.width(), t_virtualSize.height());
         //qDebug() << screenRect;
         //qDebug() << windowRects;
