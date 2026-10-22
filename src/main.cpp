@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2011-2026 ~ 2025 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2011-2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -12,6 +12,9 @@
 #include "utils/x_multi_screen_info.h"
 #include "utils/log.h"
 #include "utils/logger.h"
+#include "screenshot/core/screenshottypes.h"
+#include "screenshot/session/screenshotsessioncontroller.h"
+#include "screenshot/session/screenshotsessionfactory.h"
 
 #include <DWidget>
 #include <DLog>
@@ -29,6 +32,7 @@
 #include <QFile>
 #include <QDir>
 #include <QStandardPaths>
+#include <QTimer>
 
 DWIDGET_USE_NAMESPACE
 
@@ -251,6 +255,9 @@ int main(int argc, char *argv[])
         QCommandLineOption screenShotOption(QStringList() << "shot" << "screenShot" << "start screen shot");
         QCommandLineOption screenOcrOption(QStringList() << "ocr" << "screenOcr" << "start screen ocr");
         QCommandLineOption screenScrollOption(QStringList() << "scroll" << "screenScroll" << "start screen scroll");
+        QCommandLineOption screenshotSessionPreviewOption(
+            QStringList() << "screenshot-session-preview" << "treeland-snap-preview",
+            "Use the compositor-independent screenshot session preview path.");
         qCDebug(dsrApp) << "Command line options defined.";
 
         QCommandLineParser cmdParser;
@@ -269,6 +276,7 @@ int main(int argc, char *argv[])
         cmdParser.addOption(screenShotOption);
         cmdParser.addOption(screenOcrOption);
         cmdParser.addOption(screenScrollOption);
+        cmdParser.addOption(screenshotSessionPreviewOption);
         cmdParser.process(*app);
         qCDebug(dsrApp) << "Command line parser initialized and processed application arguments.";
 
@@ -310,6 +318,45 @@ int main(int argc, char *argv[])
         qCInfo(dsrApp) << "Is Root User:" << Utils::isRootUser;
         qCInfo(dsrApp) << "Is Exists FFmpeg Lib:" << Utils::isFFmpegEnv;
         qCDebug(dsrApp) << "Tablet environment:" << Utils::isTabletEnvironment << ", Root user:" << Utils::isRootUser << ", FFmpeg Lib exists:" << Utils::isFFmpegEnv;
+
+        if (cmdParser.isSet(screenshotSessionPreviewOption)) {
+            Dsr::Screenshot::Request request;
+            if (cmdParser.isSet(fullscreenOption))
+                request.mode = Dsr::Screenshot::Mode::FullScreen;
+            else if (cmdParser.isSet(topWindowOption))
+                request.mode = Dsr::Screenshot::Mode::TopWindow;
+            request.enableWindowSnap = request.mode == Dsr::Screenshot::Mode::Region;
+            request.outputPath = cmdParser.isSet(savePathOption)
+                    ? cmdParser.value(savePathOption)
+                    : QString();
+
+            QString factoryError;
+            auto *session = Dsr::Screenshot::ScreenshotSessionFactory::createForCurrentPlatform(
+                    app.data(), &factoryError);
+            if (!session) {
+                qCritical() << "Unable to create screenshot session:" << factoryError;
+                return 2;
+            }
+
+            DApplication *application = app.data();
+            QObject::connect(session, &Dsr::Screenshot::ScreenshotSessionController::saved,
+                             application, [](const QString &path) {
+                                 qInfo() << "Screenshot session result:" << path;
+                             });
+            QObject::connect(session, &Dsr::Screenshot::ScreenshotSessionController::failed,
+                             application, [application](const QString &error) {
+                                 qCritical() << "Screenshot session failed:" << error;
+                                 QTimer::singleShot(0, application, &QCoreApplication::quit);
+                             });
+            QObject::connect(session, &Dsr::Screenshot::ScreenshotSessionController::finished,
+                             application, &QCoreApplication::quit,
+                             Qt::QueuedConnection);
+            if (!session->start(request)) {
+                qCritical() << "Screenshot session is already active";
+                return 2;
+            }
+            return app->exec();
+        }
         if (cmdParser.isSet(useGStreamer)) {
             Utils::isFFmpegEnv = false;
             qCDebug(dsrApp) << "useGStreamer option set, isFFmpegEnv set to false.";
