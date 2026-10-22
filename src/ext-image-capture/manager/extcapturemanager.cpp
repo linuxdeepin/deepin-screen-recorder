@@ -1,4 +1,4 @@
-// Copyright (C) 2017 ~ 2018 Deepin Technology Co., Ltd.
+// Copyright (C) 2017-2026 ~ 2018 Deepin Technology Co., Ltd.
 // SPDX-FileCopyrightText: 2022 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
@@ -83,12 +83,12 @@ bool ExtCaptureManager::isProtocolAvailable() const
 ExtCaptureSession* ExtCaptureManager::createScreenCaptureSession(QScreen *screen, bool paintCursors)
 {
     if (!isProtocolAvailable()) {
-        qWarning() << "ext-image-copy-capture protocol is not available";
+        qCWarning(dsrApp) << "ext-image-copy-capture protocol is not available";
         return nullptr;
     }
 
     if (!screen) {
-        qWarning() << "Invalid screen provided";
+        qCWarning(dsrApp) << "Invalid screen provided";
         return nullptr;
     }
 #ifdef ENABLE_UNIT_TEST
@@ -100,20 +100,20 @@ ExtCaptureSession* ExtCaptureManager::createScreenCaptureSession(QScreen *screen
     // 获取 Wayland output
     wl_output *waylandOutput = getWaylandOutput(screen);
     if (!waylandOutput) {
-        qWarning() << "Failed to get Wayland output for screen";
+        qCWarning(dsrApp) << "Failed to get Wayland output for screen";
         return nullptr;
     }
 
     // 检查 output source manager 是否可用
     if (!d->outputSourceManager || !d->outputSourceManager->isProtocolAvailable()) {
-        qWarning() << "Output source manager is not available";
+        qCWarning(dsrApp) << "Output source manager is not available";
         return nullptr;
     }
 
     // 为输出创建图像捕获源
     void *imageSource = d->outputSourceManager->createSourceForOutput(waylandOutput);
     if (!imageSource) {
-        qWarning() << "Failed to create image capture source for output";
+        qCWarning(dsrApp) << "Failed to create image capture source for output";
         return nullptr;
     }
 
@@ -152,7 +152,7 @@ void ExtCaptureManager::bind(wl_registry *registry, int id, int version)
         qCWarning(dsrApp) << "ext-image-copy-capture-manager-v1 bound, id:" << id << "version:" << version;
         emit protocolAvailable();
     } else {
-        qWarning() << "Failed to get Wayland registry for ext-image-copy-capture-manager-v1";
+        qCWarning(dsrApp) << "Failed to get Wayland registry for ext-image-copy-capture-manager-v1";
         emit protocolUnavailable();
     }
 #endif

@@ -144,12 +144,12 @@ void SubToolWidget::initRecordLabel()
     connect(m_shotButton, &DPushButton::clicked, this, [ = ] {
         qCDebug(dsrApp) << "Screenshot button clicked.";
         m_pMainWindow->getToolBarPoint();
-        qInfo() << "shotbutton is clicked";
+        qCInfo(dsrApp) << "shotbutton is clicked";
         switchContent("shot");
         if (Utils::isTreelandMode) {
             m_pMainWindow->onTreelandSwitchToShotUI();
         }
-        qInfo() << "emit changeShotToolFunc(shot)";
+        qCInfo(dsrApp) << "emit changeShotToolFunc(shot)";
         emit changeShotToolFunc("shot");
     });
 
@@ -551,11 +551,11 @@ void SubToolWidget::initRecordOption()
     connect(t_saveGroup, QOverload<QAction *>::of(&QActionGroup::triggered),
     [ = ](QAction * t_act) {
         if (t_act == saveToDesktopAction) {
-            qInfo() << "save to desktop";
+            qCInfo(dsrApp) << "save to desktop";
             t_settings->setValue("recorder", "save_op", 1);
             t_settings->setValue("recorder", "save_dir", QStandardPaths::writableLocation(QStandardPaths::DesktopLocation));
         } else {
-            qInfo() << "save to video";
+            qCInfo(dsrApp) << "save to video";
             t_settings->setValue("recorder", "save_op", 0);
             t_settings->setValue("recorder", "save_dir", QStandardPaths::writableLocation(QStandardPaths::MoviesLocation));
         }
@@ -1171,7 +1171,7 @@ void SubToolWidget::initShotOption()
     if (Utils::isTreelandMode) {
 
     connect(m_optionMenu, &DMenu::aboutToShow, this, [this]() {
-        qWarning() << "截图设置按钮被点击，菜单即将显示！";
+        qCWarning(dsrApp) << "截图设置按钮被点击，菜单即将显示！";
         emit shotOptionMenuShown();
     });
 

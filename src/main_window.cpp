@@ -1,4 +1,4 @@
-// Copyright (C) 2020 ~ 2026 Uniontech Software Technology Co.,Ltd.
+// Copyright (C) 2020-2026 ~ 2026 Uniontech Software Technology Co.,Ltd.
 // SPDX-FileCopyrightText: 2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
@@ -932,7 +932,7 @@ void MainWindow::checkIsLockScreen()
     QDBusInterface sessionManagerIntert(SESSION_MANAGER_NAME, SESSION_MANAGER_PATH, SESSION_MANAGER_INTERFACE);
 
     if (!sessionManagerIntert.isValid()) {
-        qWarning() << "dbus interface not valid" << sessionManagerIntert.service()
+        qCWarning(dsrApp) << "dbus interface not valid" << sessionManagerIntert.service()
                    << sessionManagerIntert.lastError().message();
         return;
     }
@@ -951,11 +951,11 @@ void MainWindow::checkIsLockScreen()
     QDBusInterface ddeLockFront(
         LOCK_FRONT_NAME, LOCK_FRONT_PATH, LOCK_FRONT_INTERFACE, QDBusConnection::sessionBus());
     if (!ddeLockFront.isValid()) {
-        qWarning() << "(QDBusInterface) The 'ddeLockFront' interface does not exist";
+        qCWarning(dsrApp) << "(QDBusInterface) The 'ddeLockFront' interface does not exist";
         return;
     }
     if (ddeLockFront.property("Visible").isNull()) {
-        qWarning() << "(QDBusInterface) The 'Visible' property does not exist of lockFront";
+        qCWarning(dsrApp) << "(QDBusInterface) The 'Visible' property does not exist of lockFront";
         return;
     }
     bool isLockFront = ddeLockFront.property("Visible").toBool();
@@ -1011,7 +1011,7 @@ QString MainWindow::libPath(const QString &strlib)
     qCDebug(dsrApp) << strlib << " Is it in there?  there is " << list;
 
     if (list.isEmpty()) {
-        qWarning() << dir << "has not any lib with " << (strlib + "*") << ",so the list is empty!";
+        qCWarning(dsrApp) << dir << "has not any lib with " << (strlib + "*") << ",so the list is empty!";
     }
     if (list.contains(strlib))
         return strlib;
@@ -1382,7 +1382,7 @@ void MainWindow::onHelp()
             exitApp();
         }
     } else {
-        qWarning() << "manual service not available, cannot open manual";
+        qCWarning(dsrApp) << "manual service not available, cannot open manual";
     }
 }
 
@@ -2651,7 +2651,7 @@ void MainWindow::initBackground()
                                 QStringList(),
                                 QVariantMap(),
                                 5000);
-        qWarning() << "截图失败(防截图) 无法获取截图背景，应用退出！";
+        qCWarning(dsrApp) << "截图失败(防截图) 无法获取截图背景，应用退出！";
         _exit(0);
     }
     */
@@ -2707,7 +2707,7 @@ bool MainWindow::saveImg(const QPixmap &pix, const QString &fileName, const char
         qCInfo(dsrApp) << __FUNCTION__ << __LINE__ << "保存图片成功！保存质量: " << quality;
         return true;
     } else {
-        qWarning() << __FUNCTION__ << __LINE__ << "保存图片失败！";
+        qCWarning(dsrApp) << __FUNCTION__ << __LINE__ << "保存图片失败！";
         return false;
     }
 }
@@ -2715,13 +2715,13 @@ bool MainWindow::saveImg(const QPixmap &pix, const QString &fileName, const char
 int MainWindow::getWaitTimeByImageSize(const QPixmap &pix)
 {
     if (pix.isNull()) {
-        qWarning() << __FUNCTION__ << "Empty pixmap, using default wait time";
+        qCWarning(dsrApp) << __FUNCTION__ << "Empty pixmap, using default wait time";
         return 2; // 默认等待时间
     }
     
     // 计算图片像素总数
     qint64 totalPixels = static_cast<qint64>(pix.width()) * pix.height();
-    qInfo() << __FUNCTION__ << "Image size:" << pix.width() << "x" << pix.height() 
+    qCInfo(dsrApp) << __FUNCTION__ << "Image size:" << pix.width() << "x" << pix.height() 
             << "Total pixels:" << totalPixels;
     
     int waitTime = 2; // 默认等待时间
@@ -2744,7 +2744,7 @@ int MainWindow::getWaitTimeByImageSize(const QPixmap &pix)
         waitTime = qMin(waitTime, 15); // 最大不超过15秒
     }
     
-    qInfo() << __FUNCTION__ << "Calculated wait time:" << waitTime << "seconds for image size:" 
+    qCInfo(dsrApp) << __FUNCTION__ << "Calculated wait time:" << waitTime << "seconds for image size:" 
             << pix.width() << "x" << pix.height() << "(total pixels:" << totalPixels << ")";
     
     return waitTime;
@@ -2758,7 +2758,7 @@ void MainWindow::save2Clipboard(const QPixmap &pix)
 #else
     qCInfo(dsrApp) << __FUNCTION__ << __LINE__ << "正在执行保存到剪贴板...";
     if (pix.isNull()) {
-        qWarning() << __FUNCTION__ << "Copy Null Pix To Clipboard!";
+        qCWarning(dsrApp) << __FUNCTION__ << "Copy Null Pix To Clipboard!";
         return;
     }
     int quality = -1;
@@ -2785,7 +2785,7 @@ void MainWindow::save2Clipboard(const QPixmap &pix)
             if (isSuccess) {
                 qCInfo(dsrApp) << "The clipper feedback signal connection is successfully established!";
             } else {
-                qWarning() << "Clipper feedback signal connection failed!";
+                qCWarning(dsrApp) << "Clipper feedback signal connection failed!";
             }
         }
 
@@ -3823,7 +3823,7 @@ void MainWindow::handleOptionMenuShown(){
            // flags |= Qt::WindowStaysOnTopHint;
             // 应用新的窗口标志
             windowHandle()->setFlags(flags);
-            qWarning() << "Window flags set to:" << flags;
+            qCWarning(dsrApp) << "Window flags set to:" << flags;
         }
     }
 
@@ -3939,7 +3939,7 @@ void MainWindow::changeShotToolEvent(const QString &func)
             flags |= Qt::WindowStaysOnTopHint;
             // 应用新的窗口标志
             windowHandle()->setFlags(flags);
-            qWarning() << "Window flags set to:" << flags;
+            qCWarning(dsrApp) << "Window flags set to:" << flags;
         }
     }
 
@@ -4045,7 +4045,7 @@ void MainWindow::changeShotToolEvent(const QString &func)
         if (m_sideBar) {
             m_sideBar->changeShotToolFunc(func);
         } else {
-            qWarning() << "m_sideBar is null when trying to change shot tool function";
+            qCWarning(dsrApp) << "m_sideBar is null when trying to change shot tool function";
         }
         // 禁用滚动图按钮
        // m_toolBar->setScrollShotDisabled(true);
@@ -4612,7 +4612,7 @@ bool MainWindow::saveAction(const QPixmap &pix)
                         //检查后缀是以.png|.jpg|.jpeg|.bmp中的一种进行结尾
                     bool flag = checkSuffix(fileSuffix);
                     if (!flag) {
-                        qWarning() << "The fileName has invalid suffix! fileSuffix: " << fileSuffix;
+                        qCWarning(dsrApp) << "The fileName has invalid suffix! fileSuffix: " << fileSuffix;
                         switch (t_pictureFormat) {
                                 case 0:
                                     m_saveFileName = m_saveFileName + ".png";
@@ -4755,7 +4755,7 @@ bool MainWindow::saveAction(const QPixmap &pix)
                     //检查后缀是以.png|.jpg|.jpeg|.bmp中的一种进行结尾。false:否 true：是
                     bool flag = checkSuffix(fileSuffix);
                     if (!flag) {
-                        qWarning() << "The fileName has invalid suffix! fileSuffix: " << fileSuffix;
+                        qCWarning(dsrApp) << "The fileName has invalid suffix! fileSuffix: " << fileSuffix;
                         switch (t_pictureFormat) {
                             case 0:
                                 m_saveFileName = m_saveFileName + ".png";
@@ -4807,7 +4807,7 @@ bool MainWindow::saveAction(const QPixmap &pix)
     //    EventLogUtils::get().writeLogs(obj);
 
     if (m_saveIndex == SaveToSpecificDir && m_saveFileName.isEmpty()) {
-        qWarning() << __FUNCTION__ << __LINE__ << "（保存到指定文件夹）文件名称为空！";
+        qCWarning(dsrApp) << __FUNCTION__ << __LINE__ << "（保存到指定文件夹）文件名称为空！";
         return false;
     } else if (m_saveIndex == SaveToSpecificDir || !m_saveFileName.isEmpty()) {
         if (!saveImg(pix, m_saveFileName, QFileInfo(m_saveFileName).suffix().toLocal8Bit()))
@@ -4865,7 +4865,7 @@ bool MainWindow::saveAction(const QPixmap &pix)
         if (!saveDir.exists()) {
             bool mkdirSucc = saveDir.mkpath(".");
             if (!mkdirSucc) {
-                qCritical() << "Custom save path could not be created:" << savePath;
+                qCCritical(dsrApp) << "Custom save path could not be created:" << savePath;
                 savePath = QDir::tempPath();
             }
         }
@@ -4895,7 +4895,7 @@ bool MainWindow::saveAction(const QPixmap &pix)
             if (!saveDir.exists()) {
                 bool mkdirSucc = saveDir.mkpath(".");
                 if (!mkdirSucc) {
-                    qCritical() << "AutoSave: 无法创建目录:" << m_shotSavePath;
+                    qCCritical(dsrApp) << "AutoSave: 无法创建目录:" << m_shotSavePath;
                     return false;
                 }
             }
@@ -4919,7 +4919,7 @@ bool MainWindow::saveAction(const QPixmap &pix)
             if (!saveDir.exists()) {
                 bool mkdirSucc = saveDir.mkpath(".");
                 if (!mkdirSucc) {
-                    qCritical() << "AutoSave: 无法创建目录:" << savePath;
+                    qCCritical(dsrApp) << "AutoSave: 无法创建目录:" << savePath;
                     return false;
                 }
             }
@@ -5659,7 +5659,7 @@ int MainWindow::mouseMoveEF(QMouseEvent *mouseEvent, bool &needRepaint)
                                     }
                                 }
                                 if (!xIsInScreen) {
-                                    qWarning() << "窗口左上角的x坐标及其投影均不在屏幕上！";
+                                    qCWarning(dsrApp) << "窗口左上角的x坐标及其投影均不在屏幕上！";
                                 }
                                 for (int index = 0; index < m_screenCount; ++index) {
                                     // y坐标及其投影是否在某块屏幕内部
@@ -5683,7 +5683,7 @@ int MainWindow::mouseMoveEF(QMouseEvent *mouseEvent, bool &needRepaint)
                                     }
                                 }
                                 if (!yIsInScreen) {
-                                    qWarning() << "窗口左上角的y坐标及其投影均不在屏幕上！";
+                                    qCWarning(dsrApp) << "窗口左上角的y坐标及其投影均不在屏幕上！";
                                 }
                             }
                             // qCDebug(dsrApp)  << "1.3 >>>> recordX: " << recordX << " , recordY: "<< recordY;
@@ -6651,7 +6651,7 @@ void MainWindow::onPowersource(bool flag)
 //锁屏后结束录屏
 void MainWindow::onLockedStopRecord(const QString &name, QVariantMap map, const QStringList &list)
 {
-    qDebug() << "Locked will quit!"<<"----------------" << name << map << list;
+    qCDebug(dsrApp) << "Locked will quit!"<<"----------------" << name << map << list;
 
     if (map.value("Locked").value<bool>()) {
         onExit();
@@ -7577,7 +7577,7 @@ void MainWindow::stopApp()
     if (recordButtonStatus == RECORD_BUTTON_RECORDING) {
         stopRecord();
     } else {
-        qWarning() << "We might received stop request from annother process!";
+        qCWarning(dsrApp) << "We might received stop request from annother process!";
 
         QApplication::quit();
         if (Utils::isWaylandMode) {
@@ -7808,7 +7808,7 @@ void MainWindow::startCountdown()
 void MainWindow::hideAllWidget()
 {
 
-    qWarning()<<"HHHHHHHHHHHH         1";
+    qCWarning(dsrApp)<<"HHHHHHHHHHHH         1";
     if (Utils::isTreelandMode) {
         m_toolBar->hideWidget();
         m_sideBar->hideWidget();
@@ -7822,11 +7822,11 @@ void MainWindow::hideAllWidget()
     // m_recordButton->hide();
     // m_shotButton->hide();
     m_sizeTips->hide();
-    qWarning()<<"HHHHHHHHHHHH         2";
+    qCWarning(dsrApp)<<"HHHHHHHHHHHH         2";
     // TODO: 放开会触发崩溃，后续再处理
     if (!Utils::isTreelandMode)
         m_zoomIndicator->hideMagnifier();
-    qWarning()<<"HHHHHHHHHHHH         3";
+    qCWarning(dsrApp)<<"HHHHHHHHHHHH         3";
 
     // 隐藏键盘按钮控件
     if (m_keyButtonList.count() > 0) {

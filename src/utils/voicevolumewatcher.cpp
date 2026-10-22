@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2022-2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -50,7 +50,7 @@ voiceVolumeWatcher::voiceVolumeWatcher(const QString &service, const QString &pa
             connect(m_watchTimer, &QTimer::timeout, this, &voiceVolumeWatcher::slotVoiceVolumeWatcher);
             qCDebug(dsrApp) << "Audio service exists and watch timer connected.";
         } else {
-            qWarning() << "Failed to start the audio monitoring service!";
+            qCWarning(dsrApp) << "Failed to start the audio monitoring service!";
         }
 
     } else {

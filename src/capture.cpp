@@ -1,4 +1,4 @@
-// Copyright (C) 2020 ~ 2021 Uniontech Software Technology Co.,Ltd.
+// Copyright (C) 2020-2026 ~ 2021 Uniontech Software Technology Co.,Ltd.
 // SPDX-FileCopyrightText: 2022 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
@@ -39,7 +39,7 @@ TreelandCaptureManager::TreelandCaptureManager()
     , QtWayland::treeland_capture_manager_v1()
 {
     qCDebug(dsrApp) << "Entry: TreelandCaptureManager::TreelandCaptureManager";
-    qInfo() << "TreelandCaptureManager created.";
+    qCInfo(dsrApp) << "TreelandCaptureManager created.";
     // 输出日志，表示 TreelandCaptureManager 已创建
     connect(this, &TreelandCaptureManager::activeChanged, this, [this] {
         qCDebug(dsrApp) << "Log: TreelandCaptureManager::TreelandCaptureManager - Active status changed. Current active state:" << isActive();
@@ -409,7 +409,7 @@ void TreelandCaptureSession::treeland_capture_session_v1_ready(uint32_t tv_sec_h
                                                                uint32_t tv_sec_lo,
                                                                uint32_t tv_nsec)
 {
-    qInfo() << "Entry: TreelandCaptureSession::treeland_capture_session_v1_ready - Timestamp:" << tv_sec_hi << tv_sec_lo << tv_nsec;
+    qCInfo(dsrApp) << "Entry: TreelandCaptureSession::treeland_capture_session_v1_ready - Timestamp:" << tv_sec_hi << tv_sec_lo << tv_nsec;
     m_tvSecHi = tv_sec_hi;
     m_tvSecLo = tv_sec_lo;
     m_tvUsec = tv_nsec;
@@ -422,12 +422,12 @@ void TreelandCaptureSession::treeland_capture_session_v1_cancel(uint32_t reason)
 
 void TreelandCaptureManager::setRecord(bool newRecord)
 {
-    qInfo() << "Entry: TreelandCaptureManager::setRecord - New record state:" << newRecord;
+    qCInfo(dsrApp) << "Entry: TreelandCaptureManager::setRecord - New record state:" << newRecord;
     if (m_record == newRecord)
         return;
     // 如果新值与当前值相同，直接返回
     m_record = newRecord;
-    qInfo() << "Set record to" << m_record;
+    qCInfo(dsrApp) << "Set record to" << m_record;
     // 设置记录状态并输出日志
     emit recordChanged();
     qCDebug(dsrApp) << "Exit: TreelandCaptureManager::setRecord";

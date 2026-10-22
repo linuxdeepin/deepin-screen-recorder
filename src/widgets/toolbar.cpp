@@ -1,4 +1,4 @@
-// Copyright (C) 2020 ~ 2021 Uniontech Software Technology Co.,Ltd.
+// Copyright (C) 2020-2026 ~ 2021 Uniontech Software Technology Co.,Ltd.
 // SPDX-FileCopyrightText: 2022 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
@@ -87,7 +87,7 @@ ToolBarWidget::ToolBarWidget(MainWindow *pMainwindow, DWidget *parent, bool hide
         qCDebug(dsrApp) << "Setting minimum width for 3rd interface mode";
         m_subTool->setMinimumWidth(TOOLBAR_WIDTH - 160); //减去隐藏按钮的最小宽度和
     }
-    qWarning()<<"hideToolBar"<<m_hideToolBar;
+    qCWarning(dsrApp)<<"hideToolBar"<<m_hideToolBar;
     if (m_hideToolBar)
     {
         m_subTool->hide();

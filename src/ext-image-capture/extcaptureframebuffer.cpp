@@ -1,9 +1,10 @@
-// Copyright (C) 2017 ~ 2018 Deepin Technology Co., Ltd.
+// Copyright (C) 2017-2026 ~ 2018 Deepin Technology Co., Ltd.
 // SPDX-FileCopyrightText: 2022 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
 #include "extcaptureframebuffer.h"
+#include "../utils/log.h"
 
 #include <QDebug>
 #include <cstring>
@@ -30,12 +31,12 @@ ExtCaptureFrameBuffer::~ExtCaptureFrameBuffer()
 bool ExtCaptureFrameBuffer::initialize(int width, int height, int stride, int bufferSize)
 {
     if (m_initialized) {
-        qWarning() << "ExtCaptureFrameBuffer already initialized";
+        qCWarning(dsrApp) << "ExtCaptureFrameBuffer already initialized";
         return false;
     }
 
     if (width <= 0 || height <= 0 || stride <= 0) {
-        qWarning() << "Invalid frame dimensions:" << width << "x" << height << "stride:" << stride;
+        qCWarning(dsrApp) << "Invalid frame dimensions:" << width << "x" << height << "stride:" << stride;
         return false;
     }
 
@@ -49,7 +50,7 @@ bool ExtCaptureFrameBuffer::initialize(int width, int height, int stride, int bu
     // 创建工作缓冲区 (类似waylandintegration_p.h中的m_ffmFrame)
     m_workingBuffer = new unsigned char[m_frameDataSize];
     if (!m_workingBuffer) {
-        qWarning() << "Failed to allocate working buffer";
+        qCWarning(dsrApp) << "Failed to allocate working buffer";
         return false;
     }
 
@@ -59,14 +60,14 @@ bool ExtCaptureFrameBuffer::initialize(int width, int height, int stride, int bu
         if (buffer) {
             m_freeBuffers.append(buffer);
         } else {
-            qWarning() << "Failed to allocate buffer" << i;
+            qCWarning(dsrApp) << "Failed to allocate buffer" << i;
             cleanupBuffers();
             return false;
         }
     }
 
     m_initialized = true;
-    qDebug() << "ExtCaptureFrameBuffer initialized:"
+    qCDebug(dsrApp) << "ExtCaptureFrameBuffer initialized:"
              << "size:" << width << "x" << height
              << "stride:" << stride
              << "buffers:" << m_bufferSize
@@ -79,7 +80,7 @@ void ExtCaptureFrameBuffer::appendBuffer(const unsigned char *data, size_t size,
                                         int width, int height, int stride, int64_t timestamp)
 {
     if (!m_initialized || !data || size == 0) {
-        qWarning() << "Invalid append buffer parameters";
+        qCWarning(dsrApp) << "Invalid append buffer parameters";
         return;
     }
 
@@ -89,7 +90,7 @@ void ExtCaptureFrameBuffer::appendBuffer(const unsigned char *data, size_t size,
 
     // 检查帧尺寸是否匹配
     if (width != m_frameWidth || height != m_frameHeight || stride != m_frameStride) {
-        qWarning() << "Frame size mismatch:"
+        qCWarning(dsrApp) << "Frame size mismatch:"
                    << "expected:" << m_frameWidth << "x" << m_frameHeight << "stride:" << m_frameStride
                    << "received:" << width << "x" << height << "stride:" << stride;
         return;
@@ -97,7 +98,7 @@ void ExtCaptureFrameBuffer::appendBuffer(const unsigned char *data, size_t size,
 
     size_t expectedSize = static_cast<size_t>(height * stride);
     if (size != expectedSize) {
-        qWarning() << "Frame data size mismatch:"
+        qCWarning(dsrApp) << "Frame data size mismatch:"
                    << "expected:" << expectedSize
                    << "received:" << size;
         return;
@@ -112,7 +113,7 @@ void ExtCaptureFrameBuffer::appendBuffer(const unsigned char *data, size_t size,
             // 回收到空闲列表
             m_freeBuffers.append(oldFrame.data);
         }
-        qDebug() << "Buffer full, recycled frame" << oldFrame.index;
+        qCDebug(dsrApp) << "Buffer full, recycled frame" << oldFrame.index;
     }
 
     // 获取空闲缓冲区
@@ -120,7 +121,7 @@ void ExtCaptureFrameBuffer::appendBuffer(const unsigned char *data, size_t size,
     if (!m_freeBuffers.isEmpty()) {
         frameBuffer = m_freeBuffers.takeFirst();
     } else {
-        qWarning() << "No free buffers available";
+        qCWarning(dsrApp) << "No free buffers available";
         return;
     }
 
@@ -134,7 +135,7 @@ void ExtCaptureFrameBuffer::appendBuffer(const unsigned char *data, size_t size,
     emit frameAvailable();
     emit bufferStatusChanged(m_frameQueue.size(), m_frameQueue.size() >= m_bufferSize);
 
-    qDebug() << "Frame" << frameData.index << "appended, queue size:" << m_frameQueue.size();
+    qCDebug(dsrApp) << "Frame" << frameData.index << "appended, queue size:" << m_frameQueue.size();
 }
 
 bool ExtCaptureFrameBuffer::getFrame(ExtFrameData &frame)
@@ -168,7 +169,7 @@ bool ExtCaptureFrameBuffer::getFrame(ExtFrameData &frame)
 
     emit bufferStatusChanged(m_frameQueue.size(), false);
 
-    qDebug() << "Frame" << frame.index << "retrieved, remaining:" << m_frameQueue.size();
+    qCDebug(dsrApp) << "Frame" << frame.index << "retrieved, remaining:" << m_frameQueue.size();
     return true;
 }
 
@@ -197,14 +198,14 @@ void ExtCaptureFrameBuffer::clear()
     }
 
     emit bufferStatusChanged(0, false);
-    qDebug() << "Frame buffer cleared";
+    qCDebug(dsrApp) << "Frame buffer cleared";
 }
 
 void ExtCaptureFrameBuffer::setGetFrame(bool enabled)
 {
     QMutexLocker locker(&m_mutex);
     m_getFrameEnabled = enabled;
-    qDebug() << "GetFrame enabled:" << enabled;
+    qCDebug(dsrApp) << "GetFrame enabled:" << enabled;
 }
 
 bool ExtCaptureFrameBuffer::isGetFrameEnabled() const
@@ -219,7 +220,7 @@ void ExtCaptureFrameBuffer::recycleMemory()
     QMutexLocker locker(&m_mutex);
     
     // 确保所有缓冲区都在空闲列表中
-    qDebug() << "Memory recycling - free buffers:" << m_freeBuffers.size()
+    qCDebug(dsrApp) << "Memory recycling - free buffers:" << m_freeBuffers.size()
              << "queued frames:" << m_frameQueue.size();
 }
 
@@ -227,7 +228,7 @@ void ExtCaptureFrameBuffer::reset()
 {
     QMutexLocker locker(&m_mutex);
     
-    qDebug() << "ExtCaptureFrameBuffer::reset: Resetting for next recording session";
+    qCDebug(dsrApp) << "ExtCaptureFrameBuffer::reset: Resetting for next recording session";
     
     // 清理现有缓冲区
     cleanupBuffers();
@@ -235,7 +236,7 @@ void ExtCaptureFrameBuffer::reset()
     // 重置启用标志
     m_getFrameEnabled = true;
     
-    qDebug() << "ExtCaptureFrameBuffer::reset: Reset completed";
+    qCDebug(dsrApp) << "ExtCaptureFrameBuffer::reset: Reset completed";
 }
 
 void ExtCaptureFrameBuffer::cleanupBuffers()
@@ -262,6 +263,6 @@ void ExtCaptureFrameBuffer::cleanupBuffers()
     m_freeBuffers.clear();
 
     m_initialized = false;
-    qDebug() << "ExtCaptureFrameBuffer cleaned up";
+    qCDebug(dsrApp) << "ExtCaptureFrameBuffer cleaned up";
 }
 

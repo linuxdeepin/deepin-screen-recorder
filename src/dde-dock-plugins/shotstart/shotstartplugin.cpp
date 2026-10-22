@@ -1,4 +1,4 @@
-// Copyright (C) 2020 ~ 2021 Uniontech Software Technology Co.,Ltd.
+// Copyright (C) 2020-2026 ~ 2021 Uniontech Software Technology Co.,Ltd.
 // SPDX-FileCopyrightText: 2022 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
@@ -18,7 +18,7 @@ const QString QUICK_ITEM_KEY = QStringLiteral("quick_item_key");
 #endif
 const int DETECT_SERV_INTERVAL = 2000;  // 检测服务存在的定时器间隔
 
-Q_LOGGING_CATEGORY(dsrApp, "shot-start-plugin");
+Q_LOGGING_CATEGORY(dsrApp, "org.deepin.screen-recorder.shotstart");
 
 ShotStartPlugin::ShotStartPlugin(QObject *parent)
     : QObject(parent)

@@ -1,4 +1,4 @@
-// Copyright (C) 2020 ~ now Uniontech Software Technology Co.,Ltd.
+// Copyright (C) 2020-2026 ~ now Uniontech Software Technology Co.,Ltd.
 // SPDX-FileCopyrightText: 2022-2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
@@ -36,7 +36,7 @@ static gboolean gstBusMessageCb(GstBus *bus, GstMessage *message, GstRecordX *gs
         }
         if (error) {
             QString errMsg = error->message;
-            qCritical() << "Gstreamer pipeline error: " << errMsg;
+            qCCritical(dsrApp) << "Gstreamer pipeline error: " << errMsg;
             gstInterface::m_g_error_copy(error);
             qCDebug(dsrApp) << "GStreamer pipeline error copied.";
         }
@@ -116,7 +116,7 @@ void GstRecordX::x11GstStartRecord()
     if (createPipeline(arguments)) {
         qCDebug(dsrApp) << "Pipeline creation initiated.";
         if (nullptr == m_pipeline) {
-            qCritical() << "Error: Gstreamer's Pipeline create failure!";
+            qCCritical(dsrApp) << "Error: Gstreamer's Pipeline create failure!";
             return;
         }
         qCInfo(dsrApp) << "Gstreamer's Pipeline create successfully!";
@@ -129,7 +129,7 @@ void GstRecordX::x11GstStartRecord()
         }
         qCInfo(dsrApp) << "(x11) Gstreamer's Pipeline starup successfully!";
     } else {
-        qCritical() << "Error: Gstreamer's Pipeline create failure!";
+        qCCritical(dsrApp) << "Error: Gstreamer's Pipeline create failure!";
     }
     qCDebug(dsrApp) << "x11GstStartRecord finished.";
 }
@@ -173,7 +173,7 @@ void GstRecordX::waylandGstStartRecord()
     if (createPipeline(wlarguments)) {
         qCDebug(dsrApp) << "Pipeline creation initiated.";
         if (nullptr == m_pipeline) {
-            qCritical() << "Error: Gstreamer's Pipeline create failure!";
+            qCCritical(dsrApp) << "Error: Gstreamer's Pipeline create failure!";
             return;
         }
         qCInfo(dsrApp) << "GStreamer pipeline created successfully";
@@ -391,7 +391,7 @@ bool GstRecordX::createPipeline(QStringList arguments)
         qCDebug(dsrApp) << "Configuring mixed audio pipeline";
         //为保证Gstreamer管道顺利执行，做了规避处理，遇到音频设备名称不存在的情况下，输出错误日志，不在管道命令中添加音频混流器
         if (m_sysDevcieName.isEmpty() && m_micDeviceName.isEmpty()) {
-            qCritical() << "Error: The system audio device name and mic audio device name is empty in Mix audio!";
+            qCCritical(dsrApp) << "Error: The system audio device name and mic audio device name is empty in Mix audio!";
         } else {
             qCDebug(dsrApp) << "Adding audio mixer.";
             //音频的混流器
@@ -449,7 +449,7 @@ bool GstRecordX::createPipeline(QStringList arguments)
     //解析gstreamer管道命令
     m_pipeline = gstInterface::m_gst_parse_launch(line, &error);
     if (error != Q_NULLPTR) {
-        qCritical() << "gstreamer pares error: " << error->code << " , " << error->message;
+        qCCritical(dsrApp) << "gstreamer pares error: " << error->code << " , " << error->message;
         return false;
     }
     qCInfo(dsrApp) << "GStreamer pipeline created successfully";
@@ -463,7 +463,7 @@ QString GstRecordX::getAudioPipeline(const QString &audioDevName, const QString 
     QString result = "";
     //判断设备名称是否为空，为空不会生成管道命令
     if (audioDevName.isEmpty()) {
-        qCritical() << "Error: The " << audioType << " audio device name is empty! (" << arg << ")";
+        qCCritical(dsrApp) << "Error: The " << audioType << " audio device name is empty! (" << arg << ")";
     } else {
         qCDebug(dsrApp) << "Audio device name is not empty. Building pipeline.";
         //添加pulse源，采集设备的声音
@@ -478,7 +478,7 @@ QString GstRecordX::getAudioPipeline(const QString &audioDevName, const QString 
             result += " ! vorbisenc ! queue ! mux.";
             qCDebug(dsrApp) << "Audio pipeline configured for muxing";
         } else {
-            qCritical() << "Error: Parameter that does not exist!";
+            qCCritical(dsrApp) << "Error: Parameter that does not exist!";
             result = "";
         }
     }

@@ -1,4 +1,4 @@
-// Copyright (C) 2019 ~ 2019 Deepin Technology Co., Ltd.
+// Copyright (C) 2019-2026 ~ 2019 Deepin Technology Co., Ltd.
 // SPDX-FileCopyrightText: 2022 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
@@ -7,6 +7,7 @@
 #define PINSCREENSHOTSINTERFACE_H
 
 #include <QtDBus/QtDBus>
+#include "../../utils/log.h"
 #include <QImage>
 
 class PinScreenShotsInterface: public QDBusAbstractInterface
@@ -36,7 +37,7 @@ public Q_SLOTS: // METHODS
     */
     inline QDBusPendingReply<> openFile(const QString &filePath)
     {
-        qDebug() << "PinScreenShotsInterface: " << __FUNCTION__;
+        qCDebug(dsrApp) << "PinScreenShotsInterface: " << __FUNCTION__;
         return call(QStringLiteral("openFile"), filePath);
     }
     /**
@@ -47,7 +48,7 @@ public Q_SLOTS: // METHODS
     */
     inline QDBusPendingReply<> openImage(const QImage &image)
     {
-        qDebug() << "PinScreenShotsInterface: "  << __FUNCTION__;
+        qCDebug(dsrApp) << "PinScreenShotsInterface: "  << __FUNCTION__;
         QByteArray data;
         QBuffer buf(&data);
         if (image.save(&buf, "PNG")) {
@@ -66,7 +67,7 @@ public Q_SLOTS: // METHODS
     */
     inline QDBusPendingReply<> openImageAndName(const QImage &image, const QString &imageName, const QPoint &point)
     {
-        qDebug() << "PinScreenShotsInterface: "  << __FUNCTION__;
+        qCDebug(dsrApp) << "PinScreenShotsInterface: "  << __FUNCTION__;
         QByteArray data;
         QBuffer buf(&data);
         if (image.save(&buf, "PNG")) {

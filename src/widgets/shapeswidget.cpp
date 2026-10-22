@@ -1,4 +1,4 @@
-// Copyright (C) 2020 ~ 2021 Uniontech Software Technology Co.,Ltd.
+// Copyright (C) 2020-2026 ~ 2021 Uniontech Software Technology Co.,Ltd.
 // SPDX-FileCopyrightText: 2022-2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
@@ -118,7 +118,7 @@ void ShapesWidget::updateSelectedShape(const QString &group,
             }
 
         } else if (group == "text" && m_selectedShape.type == group && key == "fontsize")  {
-            qDebug() << "change font size";
+            qCDebug(dsrApp) << "change font size";
             int tmpIndex = m_shapes[m_selectedOrder].index;
             if (m_editMap.contains(tmpIndex)) {
                 m_editMap.value(tmpIndex)->setFontSize(index);
@@ -155,7 +155,7 @@ void ShapesWidget::updatePenColor()
 */
 void ShapesWidget::setCurrentShape(QString shapeType)
 {
-    qDebug() << __FUNCTION__ << __LINE__ << "type: " << shapeType;
+    qCDebug(dsrApp) << __FUNCTION__ << __LINE__ << "type: " << shapeType;
     m_currentType = shapeType;
     if (shapeType == "text") {
         resetForTextToolSwitch();
@@ -256,11 +256,11 @@ void ShapesWidget::setNoChangedTextEditRemove()
 
 void ShapesWidget::saveActionTriggered()
 {
-    qInfo() << __FUNCTION__ << __LINE__ << "正在执行清除图形编辑界面...";
+    qCInfo(dsrApp) << __FUNCTION__ << __LINE__ << "正在执行清除图形编辑界面...";
     setAllTextEditReadOnly();
     clearSelected();
     m_clearAllTextBorder = true;
-    qInfo() << __FUNCTION__ << __LINE__ << "已清楚图形编辑界面";
+    qCInfo(dsrApp) << __FUNCTION__ << __LINE__ << "已清楚图形编辑界面";
 }
 
 //点击某个形状
@@ -1077,7 +1077,7 @@ bool ShapesWidget::hoverOnRotatePoint(FourPoints mainPoints, QPointF pos)
 
 bool ShapesWidget::textEditIsReadOnly()
 {
-    qDebug() << "textEditIsReadOnly:" << m_editMap.count();
+    qCDebug(dsrApp) << "textEditIsReadOnly:" << m_editMap.count();
 
     QMap<int, TextEdit *>::iterator i = m_editMap.begin();
     while (i != m_editMap.end()) {
@@ -1358,7 +1358,7 @@ void ShapesWidget::mousePressEvent(QMouseEvent *e)
     //鼠标右键点击
     if (Qt::MouseEventSource::MouseEventSynthesizedByQt != e->source() && e->button() == Qt::RightButton) {
         m_pos1 = QPointF(0, 0); // 修复触控屏绘制矩形后，长按屏幕会出现多余矩形的问题
-        qDebug() << "RightButton clicked!" << e->source();
+        qCDebug(dsrApp) << "RightButton clicked!" << e->source();
         m_menuController->showMenu(QPoint(mapToGlobal(e->pos())));
         DFrame::mousePressEvent(e);
         return;
@@ -1426,7 +1426,7 @@ void ShapesWidget::mousePressEvent(QMouseEvent *e)
                     setNoChangedTextEditRemove();
                     m_currentShape.mainPoints[0] = m_pos1;
                     m_currentShape.index = m_currentIndex;
-                    qDebug() << "new textedit:" << m_currentIndex;
+                    qCDebug(dsrApp) << "new textedit:" << m_currentIndex;
                     TextEdit *edit = new TextEdit(m_currentIndex, this);
                     QString t_editText = QString(tr("Input text here"));
                     edit->appendPlainText(t_editText);
@@ -1537,7 +1537,7 @@ void ShapesWidget::mousePressEvent(QMouseEvent *e)
                         }
                     }
 
-                    qDebug() << "Insert text shape:" << m_shapes.size() << m_currentShape.type << m_currentShape.index;
+                    qCDebug(dsrApp) << "Insert text shape:" << m_shapes.size() << m_currentShape.type << m_currentShape.index;
                 } else {
                     m_editing = false;
                     setAllTextEditReadOnly();
@@ -1864,7 +1864,7 @@ void ShapesWidget::keyPressEvent(QKeyEvent *keyEvent)
     
     // 处理选中图形后的键盘调整
     if (m_selectedIndex == -1 || m_selectedOrder >= m_shapes.length()) {
-        qDebug() << "ShapeWidget Exist keyEvent:" << keyEvent->text();
+        qCDebug(dsrApp) << "ShapeWidget Exist keyEvent:" << keyEvent->text();
         return;
     }
     
@@ -1907,7 +1907,7 @@ void ShapesWidget::keyPressEvent(QKeyEvent *keyEvent)
     if (!direction.isEmpty()) {
         microAdjust(direction);
     } else {
-        qDebug() << "ShapeWidget Exist keyEvent:" << keyEvent->text();
+        qCDebug(dsrApp) << "ShapeWidget Exist keyEvent:" << keyEvent->text();
     }
 }
 
@@ -2095,7 +2095,7 @@ void ShapesWidget::paintText(QPainter &painter, FourPoints rectFPoints)
 
 void ShapesWidget::paintText(QPainter &painter, FourPoints rectFPoints, const QString &text, int fontsize)
 {
-    qDebug() << "fontsize: " << fontsize;
+    qCDebug(dsrApp) << "fontsize: " << fontsize;
     QFont font = painter.font() ;
     font.setPixelSize(fontsize);
     painter.setFont(font);
@@ -2414,11 +2414,11 @@ void ShapesWidget::tapTriggered(QTapGesture *tap)
 
 void ShapesWidget::deleteCurrentShape()
 {
-    qDebug() << "delete shape";
+    qCDebug(dsrApp) << "delete shape";
     if (m_selectedOrder >= 0 && m_selectedOrder < m_shapes.length()) {
         m_shapes.removeAt(m_selectedOrder);
     } else {
-        qWarning() << "Invalid index";
+        qCWarning(dsrApp) << "Invalid index";
     }
 
     if (m_selectedShape.type == "text" && m_editMap.contains(m_selectedShape.index)) {
@@ -2445,7 +2445,7 @@ void ShapesWidget::deleteCurrentShape()
 void ShapesWidget::undoDrawShapes()
 {
     textEditIsReadOnly();
-    qDebug() << "undoDrawShapes m_selectedIndex:" << m_selectedIndex << m_shapes.length();
+    qCDebug(dsrApp) << "undoDrawShapes m_selectedIndex:" << m_selectedIndex << m_shapes.length();
     if (m_selectedOrder >= 0 && m_selectedOrder < m_shapes.length() && m_selectedIndex != -1) {
         deleteCurrentShape();
     } else if (m_shapes.length() > 0) {
@@ -2458,7 +2458,7 @@ void ShapesWidget::undoDrawShapes()
 
         m_shapes.removeLast();
     }
-    qDebug() << "undoDrawShapes m_selectedIndex:" << m_selectedIndex << m_shapes.length();
+    qCDebug(dsrApp) << "undoDrawShapes m_selectedIndex:" << m_selectedIndex << m_shapes.length();
 
     if (m_shapes.length() == 0) {
         emit setShapesUndo(false);
@@ -2469,7 +2469,7 @@ void ShapesWidget::undoDrawShapes()
 }
 void ShapesWidget::undoAllDrawShapes()
 {
-    qDebug() << "undoAllDrawShapes undoDrawShapes m_selectedIndex:" << m_selectedIndex << m_shapes.length();
+    qCDebug(dsrApp) << "undoAllDrawShapes undoDrawShapes m_selectedIndex:" << m_selectedIndex << m_shapes.length();
     if (m_selectedOrder >= 0 && m_selectedOrder < m_shapes.length() && m_selectedIndex != -1) {
         deleteCurrentShape();
     } else if (m_shapes.length() > 0) {
@@ -2484,7 +2484,7 @@ void ShapesWidget::undoAllDrawShapes()
             m_shapes.removeLast();
         }
     }
-    qDebug() << "undoDrawShapes m_selectedIndex:" << m_selectedIndex << m_shapes.length();
+    qCDebug(dsrApp) << "undoDrawShapes m_selectedIndex:" << m_selectedIndex << m_shapes.length();
 
     if (m_shapes.length() == 0) {
         emit setShapesUndo(false);

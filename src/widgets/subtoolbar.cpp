@@ -1,4 +1,4 @@
-// Copyright (C) 2017 ~ 2018 Deepin Technology Co., Ltd.
+// Copyright (C) 2017-2026 ~ 2018 Deepin Technology Co., Ltd.
 // SPDX-FileCopyrightText: 2022 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
@@ -531,50 +531,50 @@ void SubToolBar::initSaveLabel()
 
     m_saveLabel->setLayout(saveLayout);
     addWidget(m_saveLabel);
-    qDebug() << "SubToolBar::initSaveLabel called.";
+    qCDebug(dsrApp) << "SubToolBar::initSaveLabel called.";
 }
 
 void SubToolBar::switchContent(QString shapeType)
 {
-    qDebug() << "SubToolBar::switchContent called with shapeType:" << shapeType;
+    qCDebug(dsrApp) << "SubToolBar::switchContent called with shapeType:" << shapeType;
     if (shapeType == "rectangle" || shapeType == "oval") {
-        qDebug() << "Switching to rectangle or oval content.";
+        qCDebug(dsrApp) << "Switching to rectangle or oval content.";
         setCurrentWidget(m_rectLabel);
         m_currentType = shapeType;
         emit shapeChanged();
     }   else if (shapeType == "arrow") {
-        qDebug() << "Switching to arrow content.";
+        qCDebug(dsrApp) << "Switching to arrow content.";
         setCurrentWidget(m_arrowLabel);
         m_currentType = shapeType;
         emit shapeChanged();
     } else if (shapeType == "line") {
-        qDebug() << "Switching to line content.";
+        qCDebug(dsrApp) << "Switching to line content.";
         setCurrentWidget(m_lineLabel);
         m_currentType = shapeType;
         emit shapeChanged();
     } else if (shapeType == "text") {
-        qDebug() << "Switching to text content.";
+        qCDebug(dsrApp) << "Switching to text content.";
         setCurrentWidget(m_textLabel);
         m_currentType = shapeType;
         emit shapeChanged();
     } else if (shapeType == "color") {
-        qDebug() << "Switching to color content.";
+        qCDebug(dsrApp) << "Switching to color content.";
         int defaultColorIndex = ConfigSettings::instance()->value("common",
                                                                   "color_index").toInt();
         emit defaultColorIndexChanged(defaultColorIndex);
         setCurrentWidget(m_colorLabel);
     } else if (shapeType == "saveList") {
-        qDebug() << "Switching to saveList content.";
+        qCDebug(dsrApp) << "Switching to saveList content.";
         setCurrentWidget(m_saveLabel);
     }
-    qDebug() << "subToolBar shape:" << shapeType;
+    qCDebug(dsrApp) << "subToolBar shape:" << shapeType;
 }
 
 void SubToolBar::setSaveOption(SaveAction action)
 {
     qCDebug(dsrApp) << "SubToolBar::setSaveOption called with action:" << static_cast<int>(action);
     if (QGuiApplication::keyboardModifiers().testFlag(Qt::ShiftModifier)) {
-        qDebug() << "Shift key holded: temporary action, will not remember the save_op.";
+        qCDebug(dsrApp) << "Shift key holded: temporary action, will not remember the save_op.";
         ConfigSettings::instance()->setTemporarySaveAction(std::pair<bool, SaveAction>(true, action));
     } else {
         ConfigSettings::instance()->setValue("save", "save_op", action);

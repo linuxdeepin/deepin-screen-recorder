@@ -1,4 +1,4 @@
-// Copyright (C) 2017 ~ 2018 Deepin Technology Co., Ltd.
+// Copyright (C) 2017-2026 ~ 2018 Deepin Technology Co., Ltd.
 // SPDX-FileCopyrightText: 2022 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
@@ -60,7 +60,7 @@ ExtCaptureRecorder::ExtCaptureRecorder(QObject *parent)
     connect(m_captureTimer, &QTimer::timeout,
             this, &ExtCaptureRecorder::onCaptureTimer);
 
-    qDebug() << "ExtCaptureRecorder initialized";
+    qCDebug(dsrApp) << "ExtCaptureRecorder initialized";
 }
 
 ExtCaptureRecorder::~ExtCaptureRecorder()
@@ -217,7 +217,7 @@ void ExtCaptureRecorder::onExtCaptureAvailable()
 
 void ExtCaptureRecorder::onExtCaptureUnavailable()
 {
-    qDebug() << "ExtCaptureRecorder: ext-capture unavailable";
+    qCDebug(dsrApp) << "ExtCaptureRecorder: ext-capture unavailable";
     
     if (m_state == Recording) {
         stopRecording();
@@ -283,12 +283,12 @@ void ExtCaptureRecorder::onFrameReady(const void *data, size_t size, int width, 
         m_frameStride = stride;
         
         if (!m_frameBuffer->initialize(width, height, stride)) {
-            qWarning() << "ExtCaptureRecorder: Failed to initialize frame buffer";
+            qCWarning(dsrApp) << "ExtCaptureRecorder: Failed to initialize frame buffer";
             emit error("Failed to initialize frame buffer");
             return;
         }
         
-        qDebug() << "ExtCaptureRecorder: Frame format:" << width << "x" << height << "stride:" << stride;
+        qCDebug(dsrApp) << "ExtCaptureRecorder: Frame format:" << width << "x" << height << "stride:" << stride;
     }
 
     if (m_streamingMode && !m_ffmpegStarted) {
@@ -344,7 +344,7 @@ void ExtCaptureRecorder::onDmaFrameReady(int dmaBufferFd, void *gbmBo, size_t si
         m_frameHeight = height;
         m_frameStride = stride;
         
-        qDebug() << "ExtCaptureRecorder: DMA Buffer frame format:" << width << "x" << height << "stride:" << stride;
+        qCDebug(dsrApp) << "ExtCaptureRecorder: DMA Buffer frame format:" << width << "x" << height << "stride:" << stride;
     }
 
     if (m_streamingMode && !m_ffmpegStarted) {
@@ -406,7 +406,7 @@ void ExtCaptureRecorder::initializeCapture()
 {
     // 这里可以添加录制初始化逻辑
     // 例如：创建输出文件、初始化编码器等
-    qDebug() << "ExtCaptureRecorder: Initialize capture for output:" << m_outputPath;
+    qCDebug(dsrApp) << "ExtCaptureRecorder: Initialize capture for output:" << m_outputPath;
 }
 
 void ExtCaptureRecorder::finalizeRecording()
@@ -466,7 +466,7 @@ void ExtCaptureRecorder::processFrameQueue()
     // 不再需要处理队列，帧数据直接存储在ExtCaptureFrameBuffer中
     // 外部编码器可以通过getFrameBuffer()获取帧数据
     if (m_frameBuffer) {
-        qDebug() << "ExtCaptureRecorder: Frame buffer status: " << m_frameBuffer->frameCount() << " frames available";
+        qCDebug(dsrApp) << "ExtCaptureRecorder: Frame buffer status: " << m_frameBuffer->frameCount() << " frames available";
     }
 }
 

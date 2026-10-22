@@ -1,4 +1,4 @@
-# SPDX-FileCopyrightText: 2022 UnionTech Software Technology Co., Ltd.
+# SPDX-FileCopyrightText: 2022-2026 UnionTech Software Technology Co., Ltd.
 #
 # SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -31,6 +31,7 @@ set ( deepin-screen-recorder_HDRS
     utils/dbusutils.h
     utils/desktopinfo.h
     utils/log.h
+    utils/logger.h
     RecorderRegionShow.h
     main_window.h
     record_process.h
@@ -90,6 +91,7 @@ set ( deepin-screen-recorder_HDRS
 
 set ( deepin-screen-recorder_SRCS
     utils/log.cpp
+    utils/logger.cpp
     utils/calculaterect.cpp
     utils/shapesutils.cpp
     main.cpp
@@ -171,3 +173,9 @@ target_include_directories(${PROJECT_NAME} PUBLIC ${3rd_lib_INCLUDE_DIRS} )
 target_link_libraries(${PROJECT_NAME} ${3rd_lib_LIBRARIES} ${LINK_DIR} )
 
 install(DIRECTORY ${CMAKE_SOURCE_DIR}/assets/deepin-screen-recorder DESTINATION /usr/share/deepin-manual/manual-assets/application)
+
+# DConfig meta：log_rules（deepin-debug-config 调试模式适配）与已有的 record 配置
+set(DCONFIG_APPID org.deepin.screen-recorder)
+set(DCONFIG_FILES
+    ${CMAKE_SOURCE_DIR}/assets/configs/org.deepin.screen-recorder.json)
+install(FILES ${DCONFIG_FILES} DESTINATION share/dsg/configs/${DCONFIG_APPID})

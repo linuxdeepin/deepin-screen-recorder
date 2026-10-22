@@ -1,4 +1,4 @@
-// Copyright (C) 2019 ~ 2019 Deepin Technology Co., Ltd.
+// Copyright (C) 2019-2026 ~ 2019 Deepin Technology Co., Ltd.
 // SPDX-FileCopyrightText: 2023 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
@@ -17,7 +17,7 @@ PinScreenShots::PinScreenShots(QObject *parent) : QObject(parent)
 
 bool PinScreenShots::openFile(QString filePath)
 {
-    qDebug() << __FUNCTION__ << __LINE__ << filePath;
+    qCDebug(dsrApp) << __FUNCTION__ << __LINE__ << filePath;
     bool bRet = false;
     MainWindow *win = new MainWindow();
     //增加判断，空图片不会启动
@@ -39,7 +39,7 @@ void PinScreenShots::openImage(QImage image)
 {
     //增加判断，空图片不会启动
     if (!image.isNull() && image.width() >= 1) {
-        qDebug() << __FUNCTION__ << __LINE__ << image.size();
+        qCDebug(dsrApp) << __FUNCTION__ << __LINE__ << image.size();
         MainWindow *win = new MainWindow();
         win->openImage(image);
         win->show();
