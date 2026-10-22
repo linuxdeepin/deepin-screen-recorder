@@ -49,6 +49,8 @@ void SubToolWidget::initShotLable()
 
     // 表格识别按钮（与主窗口工具栏“表格识别”一致，用于在贴图窗口内重新识别）
     m_tableButton = new ToolButton(this);
+    // 表格识别是瞬时动作，不应保持 checked 高亮状态。
+    m_tableButton->setCheckable(false);
     m_tableButton->setObjectName(AC_SUBTOOLWIDGET_PIN_TABLE_BUT);
     m_tableButton->setAccessibleName(AC_SUBTOOLWIDGET_PIN_TABLE_BUT);
     m_tableButton->setIconSize(QSize(36, 36));

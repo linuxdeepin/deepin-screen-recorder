@@ -9,7 +9,10 @@
 
 #include <DFontSizeManager>
 #include <DGuiApplicationHelper>
+#include <QGuiApplication>
 #include <QIcon>
+#include <QScreen>
+#include <QTimer>
 
 #include "../../utils/log.h"
 
@@ -60,6 +63,9 @@ TableRecognizingWidget::TableRecognizingWidget(DWidget *parent)
     // 先按预留边距确定控件尺寸，再设置投影，保证 maskPath 与控件尺寸一致。
     const int inset = tableShadowMargin(CARD_SHADOW_BLUR, CARD_SHADOW_OFFSET_Y);
     setFixedSize(CARD_WIDTH + inset * 2, CARD_HEIGHT + inset * 2);
+    // 识别卡片固定为设计稿尺寸。贴图窗口可能比卡片还小，作为子控件会被父窗口裁剪，
+    // 导致里面的加载动画和提示文字一起消失；这里改成不抢焦点的置顶浮层。
+    makeFloatingOverlay();
     setSoftShadow(CARD_SHADOW_BLUR, CARD_SHADOW_OFFSET_Y, CARD_SHADOW_COLOR);
 
     // 设计稿 ICON 为 DTK/加载动画/Blue：48x48 @ (38,27.5)。
@@ -115,6 +121,16 @@ void TableRecognizingWidget::startOn(QWidget *host)
     show();
     raise();
     m_spinner->start();
+
+    // 首次显示时贴图主窗可能仍在完成原生映射，合成器会把随后映射的主窗放到
+    // 本浮层之上。下一轮事件循环重新映射一次浮层，强制合成器刷新顶层顺序。
+    QTimer::singleShot(0, this, [this]() {
+        if (!isVisible())
+            return;
+        hide();
+        show();
+        raise();
+    });
 }
 
 void TableRecognizingWidget::repositionOn(QWidget *host)
@@ -123,15 +139,31 @@ void TableRecognizingWidget::repositionOn(QWidget *host)
         return;
 
     // 窗口内浮层：永远压在贴图窗口内容之上，且尺寸固定为设计稿大小，
-    // 只按宿主窗口居中，不随宿主窗口缩放。
+    // 只按宿主窗口居中，不随宿主窗口缩放。小贴图下卡片会自然超出宿主范围，
+    // 因为它是独立窗口，不会像子控件一样被裁剪。
     if (parentWidget() != host)
-        setParent(host);
+        setParent(host, windowFlags());
     setBackdropHost(host);
     const int inset = contentMargin();
     const int cardWidth = width() - inset * 2;
     const int cardHeight = height() - inset * 2;
-    move((host->width() - cardWidth) / 2 - inset,
-         (host->height() - cardHeight) / 2 - inset);
+    const QPoint hostTopLeft = host->mapToGlobal(QPoint(0, 0));
+    QPoint cardTopLeft = hostTopLeft + QPoint((host->width() - cardWidth) / 2,
+                                              (host->height() - cardHeight) / 2);
+
+    // 贴图窗口靠近屏幕边缘时，居中卡片会有一部分落到屏幕外。这里只约束卡片实体，
+    // 投影预留边距仍可超出屏幕，避免小贴图场景下提示文字和加载动画被裁掉。
+    QScreen *screen = QGuiApplication::screenAt(hostTopLeft + QPoint(host->width() / 2,
+                                                                    host->height() / 2));
+    if (!screen)
+        screen = QGuiApplication::primaryScreen();
+    if (screen) {
+        const QRect bounds = screen->availableGeometry();
+        cardTopLeft.setX(qBound(bounds.left(), cardTopLeft.x(), bounds.right() - cardWidth + 1));
+        cardTopLeft.setY(qBound(bounds.top(), cardTopLeft.y(), bounds.bottom() - cardHeight + 1));
+    }
+
+    move(cardTopLeft - QPoint(inset, inset));
 }
 
 void TableRecognizingWidget::stop()

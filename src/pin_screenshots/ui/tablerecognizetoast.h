@@ -9,6 +9,7 @@
 #include <DFloatingMessage>
 #include <DPushButton>
 #include <DWidget>
+#include <DBlurEffectWidget>
 
 #include <QColor>
 #include <QImage>
@@ -58,8 +59,15 @@ Q_SIGNALS:
 
 protected:
     void resizeEvent(QResizeEvent *event) override;
+    /// 所有关闭路径统一通知宿主，避免工具栏抑制状态残留
+    void closeEvent(QCloseEvent *event) override;
 
 private:
+    /// 小贴图窗口放不下提示条时，提示条必须脱离宿主窗口绘制，否则会被裁剪
+    void makeFloatingOverlay();
+    /// 提示条超出贴图范围时，从屏幕补采背景，保证整条提示仍有毛玻璃效果
+    void prepareBackdrop();
+    void updateBlurOffset();
     /// 浅色/深色切换时刷新填充与文字颜色
     void applyThemeColors();
     void updateLayoutPosition();
@@ -67,6 +75,9 @@ private:
 
     DPushButton *m_actionButton = nullptr;
     QPointer<QWidget> m_host;
+    QImage m_backdrop;
+    QPoint m_backdropOrigin;
+    DBlurEffectGroup *m_blurGroup = nullptr;
     Status m_status = Error;
 };
 
