@@ -31,6 +31,11 @@ bool isTreelandSession()
 
 } // namespace
 
+bool ScreenshotSessionFactory::isCurrentPlatformSupported()
+{
+    return isTreelandSession();
+}
+
 ScreenshotSessionController *ScreenshotSessionFactory::createForCurrentPlatform(QObject *parent,
                                                                                 QString *error)
 {
@@ -46,13 +51,14 @@ ScreenshotSessionController *ScreenshotSessionFactory::createForCurrentPlatform(
     auto *snapHints = new TreelandSnapHintSource(snapSession);
     auto *windowTagger = new TreelandWindowTagger(snapSession);
     auto *resultSink = new LocalScreenshotResultSink();
+    auto *annotationEditor = overlay->annotationEditor();
 
     auto *controller = new ScreenshotSessionController(backend,
                                                        overlay,
                                                        snapHints,
                                                        windowTagger,
                                                        resultSink,
-                                                       nullptr,
+                                                       annotationEditor,
                                                        parent);
     snapSession->setParent(controller);
     return controller;

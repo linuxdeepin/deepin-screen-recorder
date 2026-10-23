@@ -15,6 +15,7 @@ class ScreenshotSessionController;
 class ScreenshotSessionFactory
 {
 public:
+    static bool isCurrentPlatformSupported();
     static ScreenshotSessionController *createForCurrentPlatform(QObject *parent,
                                                                  QString *error = nullptr);
 };

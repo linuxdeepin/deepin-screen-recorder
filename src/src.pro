@@ -198,6 +198,7 @@ HEADERS += main_window.h \
     widgets/toptips.h \
     widgets/fineadjusttips.h \
     widgets/toolbar.h \
+    widgets/toolbarhost.h \
     widgets/shapeswidget.h \
     widgets/toolbutton.h \
     widgets/subtoolwidget.h \
@@ -268,6 +269,7 @@ HEADERS += main_window.h \
     screenshot/ports/iscreenshotresultsink.h \
     screenshot/ports/isnaphintsource.h \
     screenshot/ports/iwindowtagger.h \
+    screenshot/adapters/shapeswidgetannotationeditor.h \
     screenshot/session/annotationcoordinator.h \
     screenshot/export/screenshotexportservice.h \
     screenshot/export/localscreenshotresultsink.h \
@@ -277,6 +279,7 @@ HEADERS += main_window.h \
     screenshot/platform/treeland/treelandsnapproxy.h \
     screenshot/platform/treeland/treelandsnaphintsource.h \
     screenshot/platform/treeland/treelandwindowtagger.h \
+    screenshot/platform/treeland/treelandannotationeditor.h \
     screenshot/platform/treeland/treelandmaskwindow.h \
     screenshot/platform/treeland/treelandmaskoverlayhost.h \
     screenshot/platform/treeland/treelandscreenshotbackend.h
@@ -332,6 +335,7 @@ SOURCES += main.cpp \
     widgets/textedit.cpp \
     widgets/zoomIndicator.cpp \
     widgets/toolbar.cpp \
+    widgets/toolbarhost.cpp \
     widgets/subtoolwidget.cpp \
     widgets/aiassistantwidget.cpp \
     widgets/keybuttonwidget.cpp \
@@ -393,6 +397,7 @@ SOURCES += main.cpp \
     protocols/treeland-snap-target/wayland-xdg-shell-protocol.c \
     screenshot/core/selectionmodel.cpp \
     screenshot/core/selectionconstraints.cpp \
+    screenshot/adapters/shapeswidgetannotationeditor.cpp \
     screenshot/export/screenshotexportservice.cpp \
     screenshot/export/localscreenshotresultsink.cpp \
     screenshot/session/annotationcoordinator.cpp \
@@ -402,6 +407,7 @@ SOURCES += main.cpp \
     screenshot/platform/treeland/treelandsnapproxy.cpp \
     screenshot/platform/treeland/treelandsnaphintsource.cpp \
     screenshot/platform/treeland/treelandwindowtagger.cpp \
+    screenshot/platform/treeland/treelandannotationeditor.cpp \
     screenshot/platform/treeland/treelandmaskwindow.cpp \
     screenshot/platform/treeland/treelandmaskoverlayhost.cpp \
     screenshot/platform/treeland/treelandscreenshotbackend.cpp

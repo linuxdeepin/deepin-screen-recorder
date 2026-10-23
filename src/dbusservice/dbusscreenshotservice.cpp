@@ -35,6 +35,13 @@ DBusScreenshotService::DBusScreenshotService(Screenshot *parent)
         emit CustomDone(savePath);
         qCInfo(dsrApp) << "CustomDone signal emitted with path:" << savePath;
     });
+    connect(parent, &Screenshot::screenshotDone, this, [this](const QString &savePath) {
+        emit Done(savePath);
+        qCInfo(dsrApp) << "Done signal emitted with path:" << savePath;
+    });
+    connect(parent, &Screenshot::screenshotFinished, this, [this] {
+        m_singleInstance = false;
+    });
 }
 
 DBusScreenshotService::~DBusScreenshotService()

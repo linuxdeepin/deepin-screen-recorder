@@ -21,13 +21,14 @@
 
 DWIDGET_USE_NAMESPACE
 class MainWindow;
+class ToolBarHost;
 class ShapeToolWidget;
 class AIAssistantWidget;
 class SideBarWidget : public DFloatingWidget
 {
     Q_OBJECT
 public:
-    explicit SideBarWidget(MainWindow *pmainwindow, DWidget *parent = nullptr);
+    explicit SideBarWidget(ToolBarHost *host, DWidget *parent = nullptr);
     ~SideBarWidget() Q_DECL_OVERRIDE;
 
     void changeShotToolWidget(const QString &func);
@@ -59,7 +60,7 @@ private:
     AIAssistantWidget *m_aiAssistantTool = nullptr;
     QString m_currentFunc;
     bool  m_expanded;
-    MainWindow *m_pMainWindow = nullptr;
+    ToolBarHost *m_host = nullptr;
     
     void handleShapeChanged(const QString &shape);
 };
@@ -119,6 +120,7 @@ public slots:
     //void setExpand(bool expand, QString shapeType);
     void showAt(QPoint pos);
     void initSideBar(MainWindow *pmainWindow);
+    void initSideBar(ToolBarHost *host);
     //void setColorFunc(const QString &func);
 
 protected:
@@ -152,7 +154,7 @@ private:
 
     QPoint m_mouseStartPoint;
     QPoint m_windowStartPoint;
-    MainWindow *m_pMainWindow = nullptr;
+    ToolBarHost *m_host = nullptr;
 
 };
 

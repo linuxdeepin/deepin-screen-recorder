@@ -14,7 +14,6 @@
 class QKeyEvent;
 class QMouseEvent;
 class QPaintEvent;
-class QPushButton;
 
 namespace Dsr::Screenshot {
 
@@ -30,8 +29,8 @@ public:
     void setSelection(const QRect &globalSelection);
     void setSnapHint(const QRect &globalRegion);
     void setSelectionFinalized(bool finalized);
-    void setToolbarVisible(bool visible);
     void setCursorIntent(CursorIntent intent);
+    void setAnnotationView(QWidget *widget);
     void prepareWindow();
     void showWindow();
     void closeSilently();
@@ -43,6 +42,7 @@ signals:
     void confirmRequested();
     void copyRequested();
     void cancelRequested();
+    void undoRequested();
 
 protected:
     void paintEvent(QPaintEvent *event) override;
@@ -51,9 +51,9 @@ protected:
     void mouseReleaseEvent(QMouseEvent *event) override;
     void keyPressEvent(QKeyEvent *event) override;
     void closeEvent(QCloseEvent *event) override;
+    void resizeEvent(QResizeEvent *event) override;
 
 private:
-    void updateToolbar();
     QPoint toGlobal(const QPoint &localPos) const;
 
     OutputDescriptor m_output;
@@ -61,15 +61,11 @@ private:
     QRect m_selection;
     QRect m_snapHint;
     bool m_finalized = false;
-    bool m_toolbarVisible = true;
     bool m_silentClose = false;
+    CursorIntent m_cursorIntent = CursorIntent::Default;
     bool m_cancelEmitted = false;
 
-    QWidget *m_toolbar = nullptr;
-    QPushButton *m_saveButton = nullptr;
-    QPushButton *m_copyButton = nullptr;
-    QPushButton *m_cancelButton = nullptr;
-    QPushButton *m_closeButton = nullptr;
+    QWidget *m_annotationView = nullptr;
 };
 
 } // namespace Dsr::Screenshot

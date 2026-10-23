@@ -7,9 +7,14 @@
 
 #include "../../ports/iscreenshotoverlayhost.h"
 
+class ToolBar;
+class SideBar;
+class ToolBarHost;
+
 namespace Dsr::Screenshot {
 
 class TreelandMaskWindow;
+class TreelandAnnotationEditor;
 
 class TreelandMaskOverlayHost : public IScreenshotOverlayHost
 {
@@ -19,6 +24,7 @@ public:
     ~TreelandMaskOverlayHost() override;
 
     bool create(const QList<OutputDescriptor> &outputs) override;
+    IAnnotationEditor *annotationEditor() const override;
     QList<QWindow *> maskWindows() const override;
     void setFrozenFrames(const FrozenFrameSet &frames) override;
     void show() override;
@@ -29,13 +35,23 @@ public:
     void close() override;
 
 private:
+    friend class TreelandToolBarHost;
+
     TreelandMaskWindow *toolbarWindow() const;
-    void updateToolbarVisibility();
+    void ensureToolBar();
+    void updateToolBar();
+    void handleToolChanged(const QString &tool);
+    void undoAnnotation();
     void destroyWindows();
 
     QList<TreelandMaskWindow *> m_windows;
+    TreelandAnnotationEditor *m_annotationEditor = nullptr;
+    ToolBar *m_toolBar = nullptr;
+    SideBar *m_sideBar = nullptr;
+    ToolBarHost *m_toolBarHost = nullptr;
     QRect m_selection;
     bool m_finalized = false;
+    bool m_annotationToolActive = false;
 };
 
 } // namespace Dsr::Screenshot

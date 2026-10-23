@@ -4,6 +4,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 
 #include "toolbar.h"
+#include "toolbarhost.h"
 #include "../utils/baseutils.h"
 #include "../utils/saveutils.h"
 #include "../utils.h"
@@ -32,10 +33,12 @@ const int TOOLBAR_HEIGHT = 68;
 const int TOOLBAR_WIDTH = 425;
 }
 
-ToolBarWidget::ToolBarWidget(MainWindow *pMainwindow, DWidget *parent, bool hideToolBar)
+ToolBarWidget::ToolBarWidget(ToolBarHost *host, DWidget *parent, bool hideToolBar)
     : DFloatingWidget(parent)
     , m_hideToolBar(hideToolBar)
+    , m_host(host)
 {
+    Q_ASSERT(host);
     qCDebug(dsrApp) << "ToolBarWidget constructor called.";
     setBlurBackgroundEnabled(true);
     blurBackground()->setRadius(30);
@@ -52,10 +55,8 @@ ToolBarWidget::ToolBarWidget(MainWindow *pMainwindow, DWidget *parent, bool hide
     m_hSeparatorLine = new DLabel(this);
     m_hSeparatorLine->setObjectName("HorSeparatorLine");
     m_hSeparatorLine->setFixedHeight(1);
-    //分配pMainwindow主窗口指针给SubToolWidget（ToolTips需要该指针）
-    m_subTool = new SubToolWidget(pMainwindow, this);
-    // m_subTool->setVisible(false);
-    //关闭按钮
+    m_subTool = new SubToolWidget(host, this);
+    // 关闭按钮
     m_closeButton = new ToolButton(this);
     m_closeButton->setObjectName("CloseButton");
     m_closeButton->setAccessibleName("CloseButton");
@@ -78,50 +79,42 @@ ToolBarWidget::ToolBarWidget(MainWindow *pMainwindow, DWidget *parent, bool hide
     Utils::setAccessibility(m_closeButton, AC_TOOLBARWIDGET_CLOSE_BUTTON_TOOL);
     Utils::setAccessibility(m_confirmButton, AC_TOOLBARWIDGET_CLOSE_BUTTON_TOOL);
 
-    // 当从uos ai的调用过来则将该窗口隐藏
     if (false)
         m_subTool->setVisible(false);
 
     setFixedHeight(TOOLBAR_HEIGHT);
     if (Utils::is3rdInterfaceStart) {
         qCDebug(dsrApp) << "Setting minimum width for 3rd interface mode";
-        m_subTool->setMinimumWidth(TOOLBAR_WIDTH - 160); //减去隐藏按钮的最小宽度和
+        m_subTool->setMinimumWidth(TOOLBAR_WIDTH - 160);
     }
     qCWarning(dsrApp)<<"hideToolBar"<<m_hideToolBar;
     if (m_hideToolBar)
-    {
         m_subTool->hide();
-    }
+
     QHBoxLayout *hLayout = new QHBoxLayout();
     hLayout->setContentsMargins(0, 0, 0, 0);
     hLayout->setSpacing(0);
     hLayout->addWidget(m_subTool, 0, Qt::AlignCenter);
     hLayout->addSpacing(6);
-    hLayout->addWidget(m_closeButton, 0,  Qt::AlignCenter);
-    hLayout->addWidget(m_confirmButton, 0,  Qt::AlignCenter);
+    hLayout->addWidget(m_closeButton, 0, Qt::AlignCenter);
+    hLayout->addWidget(m_confirmButton, 0, Qt::AlignCenter);
     hLayout->addSpacing(10);
     setLayout(hLayout);
 
-    connect(m_confirmButton, &ToolButton::clicked, pMainwindow, &MainWindow::confirm);
-
-    connect(m_closeButton, &ToolButton::clicked, pMainwindow, [=](){
-        if (m_hideToolBar) {
-            emit pMainwindow->screenshotSaved("");
-        }
-        pMainwindow->exitApp();
+    connect(m_confirmButton, &ToolButton::clicked, host, &ToolBarHost::confirm);
+    connect(m_closeButton, &ToolButton::clicked, this, [this, host]() {
+        host->close(m_hideToolBar);
     });
-    connect(m_subTool, &SubToolWidget::keyBoardButtonClicked, pMainwindow, &MainWindow::changeKeyBoardShowEvent);
-    connect(m_subTool, &SubToolWidget::mouseBoardButtonClicked, pMainwindow, &MainWindow::changeMouseShowEvent);
-
-    // TODO:treeland适配
-    connect(m_subTool, &SubToolWidget::shotOptionMenuShown, pMainwindow, &MainWindow::handleOptionMenuShown);
-
-    QMetaObject::Connection connectHandle =  connect(m_subTool, SIGNAL(cameraActionChecked(bool)), pMainwindow, SLOT(changeCameraSelectEvent(bool)));
-    if (!connectHandle) {
-        qCDebug(dsrApp) << "Connect cameraActionChecked signal failed!";
-    }
-    connect(m_subTool, &SubToolWidget::changeShotToolFunc, pMainwindow, &MainWindow::changeShotToolEvent);
-    connect(m_subTool, &SubToolWidget::changeShotToolFunc, this, &ToolBarWidget::changeShotToolEvent);
+    connect(m_subTool, &SubToolWidget::changeShotToolFunc,
+            this, &ToolBarWidget::changeShotToolEvent);
+    connect(m_subTool, &SubToolWidget::keyBoardButtonClicked,
+            host, &ToolBarHost::keyboardToggled);
+    connect(m_subTool, &SubToolWidget::mouseBoardButtonClicked,
+            host, &ToolBarHost::mouseToggled);
+    connect(m_subTool, &SubToolWidget::shotOptionMenuShown,
+            host, &ToolBarHost::optionMenuShown);
+    connect(m_subTool, &SubToolWidget::cameraActionChecked,
+            host, &ToolBarHost::cameraToggled);
 }
 
 void ToolBarWidget::setScrollShotDisabled(const bool state)
@@ -225,6 +218,7 @@ void ToolBarWidget::changeShotToolEvent(const QString &func)
         m_subTool->installTipHint(m_confirmButton, tr("OK (Enter)"));
     else if (func == "shot")
         m_subTool->installTipHint(m_confirmButton, tr("Copy to clipboard (Enter)"));
+    m_host->toolChanged(func);
 }
 /*
 void ToolBarWidget::setExpand(bool expand, QString shapeType)
@@ -314,7 +308,8 @@ void ToolBar::mousePressEvent(QMouseEvent *event)
         m_mouseStartPoint = event->globalPos();
         //获得窗口的初始位置
         m_windowStartPoint = this->frameGeometry().topLeft();
-        m_pMainWindow->getSideBarStartPressPoint();
+        if (m_host)
+            m_host->sideBarStartPressPoint();
     }
 
 }
@@ -328,9 +323,8 @@ void ToolBar::mouseMoveEvent(QMouseEvent *event)
         QPoint move_distance = event->globalPos() - m_mouseStartPoint;
         //改变窗口的位置
 //        this->move(m_windowStartPoint + move_distance);
-        if (m_pMainWindow) {
-            m_pMainWindow->moveToolBars(m_windowStartPoint, move_distance);
-        }
+        if (!m_host || !m_host->moveToolBars(m_windowStartPoint, move_distance))
+            move(m_windowStartPoint + move_distance);
     }
 }
 
@@ -429,10 +423,17 @@ void ToolBar::currentFunctionMode(QString shapeType)
 
 void ToolBar::initToolBar(MainWindow *pmainWindow, bool hideToolbar)
 {
-    m_pMainWindow = pmainWindow;
+    m_host = new MainWindowToolBarHost(pmainWindow, this);
+    m_host->setParent(this);
+    initToolBar(m_host, hideToolbar);
+}
+
+void ToolBar::initToolBar(ToolBarHost *host, bool hideToolbar)
+{
+    m_host = host;
     setFixedHeight(TOOLBAR_HEIGHT);
 
-    m_toolbarWidget = new ToolBarWidget(pmainWindow, this, hideToolbar);
+    m_toolbarWidget = new ToolBarWidget(host, this, hideToolbar);
     QHBoxLayout *vLayout = new QHBoxLayout();
     vLayout->setSizeConstraint(QLayout::SetFixedSize);
     vLayout->setContentsMargins(0, 0, 0, 0);
