@@ -188,8 +188,9 @@ void MainWindow::initMainWindow()
         ScreenInfo screenInfo;
         screenInfo.x = rect.x();
         screenInfo.y = rect.y();
-        screenInfo.height =  static_cast<int>(rect.height() * m_pixelRatio);
-        screenInfo.width = static_cast<int>(rect.width() * m_pixelRatio);
+        screenInfo.devicePixelRatio = (*it)->devicePixelRatio();
+        screenInfo.height =  static_cast<int>(rect.height() * screenInfo.devicePixelRatio);
+        screenInfo.width = static_cast<int>(rect.width() * screenInfo.devicePixelRatio);
         screenInfo.name = (*it)->name();
 
         hTotal += screenInfo.height;
@@ -246,8 +247,7 @@ void MainWindow::initAttributes()
     m_isZhaoxin = Utils::checkCpuIsZhaoxin();
 
 
-    rootWindowRect = QRect(0, 0, static_cast<int>(qRound(m_screenSize.width() / m_pixelRatio)), static_cast<int>(qRound(m_screenSize.height() / m_pixelRatio)));
-    screenRect = QRect(screenRect.topLeft() / m_pixelRatio, screenRect.size());
+    rootWindowRect = qApp->primaryScreen()->virtualGeometry();
     qDebug() << "screen size" << rootWindowRect;
 
     //Qt::FramelessWindowHint ： 设置窗口无边框，
@@ -386,38 +386,13 @@ void MainWindow::initAttributes()
 
 
     m_backgroundRect = rootWindowRect;
-    m_backgroundRect = QRect(m_backgroundRect.topLeft() / m_pixelRatio, m_backgroundRect.size());
-    move(m_backgroundRect.topLeft() * m_pixelRatio);
+    move(m_backgroundRect.topLeft());
     this->setFixedSize(m_backgroundRect.size());
 
     initBackground();
     initShortcut();
 
 
-    // 多屏缩放模式下，界面坐标修正
-    if (m_screenCount > 1 && m_pixelRatio  > 1) {
-        if (m_isScreenVertical) {
-            int heightAfterFirst = 0;
-            for (int index = 1; index < m_screenCount; ++index) {
-                heightAfterFirst += m_screenInfo[index].height;
-            }
-            if (m_screenInfo[0].height < heightAfterFirst) {
-                // 多屏放缩情况下，小屏在上，整体需要偏移一定距离
-                this->move(0, m_screenInfo[0].height - static_cast<int>(m_screenInfo[0].height / m_pixelRatio));
-            }
-
-        } else {
-            int widthAfterFirst = 0;
-            for (int index = 1; index < m_screenCount; ++index) {
-                widthAfterFirst += m_screenInfo[index].width;
-            }
-            if (m_screenInfo[0].width < widthAfterFirst) {
-                // 多屏放缩情况下，小屏在前，整体需要偏移一定距离
-                this->move(m_screenInfo[0].width - static_cast<int>(m_screenInfo[0].width / m_pixelRatio), 0);
-            }
-
-        }
-    }
     //检测锁屏的属性是否发生改变
     bool isSuccess = QDBusConnection::sessionBus().connect("com.deepin.SessionManager",
                                                            "/com/deepin/SessionManager",
@@ -1976,6 +1951,7 @@ void MainWindow::initBackground()
     }
 
     m_backgroundPixmap = getPixmapofRect(target);
+    m_backgroundPixmap = normalizeMultiScreenPixmap(m_backgroundPixmap);
     qDebug() << "screen rect:" << m_backgroundPixmap.rect();
     if (m_backgroundPixmap.isNull()) {
         DBusNotify shotFailedNotify;
@@ -1993,6 +1969,72 @@ QPixmap MainWindow::getPixmapofRect(const QRect &rect)
 {
     bool ok;
     return m_screenGrabber.grabEntireDesktop(ok, rect, m_pixelRatio);
+}
+
+QPixmap MainWindow::normalizeMultiScreenPixmap(const QPixmap &src)
+{
+    if (m_screenInfo.size() <= 1 || !Utils::isWaylandMode || src.isNull()) {
+        return src;
+    }
+
+    bool allSameDpr = true;
+    for (const auto &info : m_screenInfo) {
+        if (!qFuzzyCompare(info.devicePixelRatio, m_pixelRatio)) {
+            allSameDpr = false;
+            break;
+        }
+    }
+    if (allSameDpr) {
+        return src;
+    }
+
+    int totalNormW = 0;
+    int totalNormH = 0;
+    for (const auto &info : m_screenInfo) {
+        int normW = static_cast<int>(info.width / info.devicePixelRatio * m_pixelRatio);
+        int normH = static_cast<int>(info.height / info.devicePixelRatio * m_pixelRatio);
+        if (m_isScreenVertical) {
+            totalNormW = qMax(totalNormW, normW);
+            totalNormH += normH;
+        } else {
+            totalNormW += normW;
+            totalNormH = qMax(totalNormH, normH);
+        }
+    }
+
+    QPixmap result(totalNormW, totalNormH);
+    result.fill(Qt::black);
+    QPainter painter(&result);
+
+    int accSrc = 0;
+    int accDst = 0;
+    for (const auto &info : m_screenInfo) {
+        int physW = info.width;
+        int physH = info.height;
+        int normW = static_cast<int>(info.width / info.devicePixelRatio * m_pixelRatio);
+        int normH = static_cast<int>(info.height / info.devicePixelRatio * m_pixelRatio);
+
+        QRect srcRect, dstRect;
+        if (m_isScreenVertical) {
+            srcRect = QRect(0, accSrc, physW, physH);
+            dstRect = QRect(0, accDst, normW, normH);
+            accSrc += physH;
+            accDst += normH;
+        } else {
+            srcRect = QRect(accSrc, 0, physW, physH);
+            dstRect = QRect(accDst, 0, normW, normH);
+            accSrc += physW;
+            accDst += normW;
+        }
+
+        if (srcRect.width() > 0 && srcRect.height() > 0 &&
+            srcRect.right() <= src.width() && srcRect.bottom() <= src.height()) {
+            painter.drawPixmap(dstRect, src.copy(srcRect));
+        }
+    }
+
+    painter.end();
+    return result;
 }
 
 bool MainWindow::saveImg(const QPixmap &pix, const QString &fileName, const char *format)
@@ -6010,6 +6052,7 @@ void MainWindow::shotFullScreen(bool isFull)
         m_resultPixmap = m_backgroundPixmap;
     } else {
         m_resultPixmap = getPixmapofRect(target);
+        m_resultPixmap = normalizeMultiScreenPixmap(m_resultPixmap);
     }
     qDebug() << "m_resultPixmap" << m_resultPixmap.rect();
     qInfo() << __FUNCTION__ << __LINE__ << "已截取全屏！";

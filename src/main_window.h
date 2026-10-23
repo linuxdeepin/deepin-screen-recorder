@@ -268,6 +268,7 @@ public:
         int width;
         int height;
         QString name;
+        qreal devicePixelRatio = 1.0;
         ~ScreenInfo() {}
     };
     // Split attributes and resource for speed up start.
@@ -618,6 +619,7 @@ protected:
     int getRecordInputType(bool selectedMic, bool selectedSystemAudio);
     void initBackground();
     QPixmap getPixmapofRect(const QRect &rect);
+    QPixmap normalizeMultiScreenPixmap(const QPixmap &src);
     bool saveImg(const QPixmap &pix, const QString &fileName, const char *format = nullptr);
     void save2Clipboard(const QPixmap &pix);
     
