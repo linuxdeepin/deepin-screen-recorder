@@ -258,9 +258,13 @@ void TimeWidget::paintEvent(QPaintEvent *e)
     if (position::top == m_position || position::bottom == m_position) {
         m_pixmap = QIcon::fromTheme(QString("recordertime"), *m_currentIcon).pixmap(size);
         //m_pixmap.setDevicePixelRatio(ratio);
+        // 缩放>1时,QIcon::pixmap返回的pixmap的devicePixelRatio(如2.0)可能与控件的
+        // devicePixelRatioF(如1.25)不一致,计算图标逻辑尺寸必须使用pixmap自身的devicePixelRatioF,
+        // 否则图标会偏离垂直居中位置,且时间文本起点x偏大导致尾部被控件边缘裁剪
+        const qreal pixmapRatio = m_pixmap.devicePixelRatioF() > 0.0 ? m_pixmap.devicePixelRatioF() : ratio;
         const QRectF &rf = QRectF(rect());
         qDebug() << ">>>>>>> rf: " << rf << rf.center();
-        const QRectF &prf = QRectF(m_pixmap.rect().x(), m_pixmap.rect().y(), m_pixmap.rect().width() / ratio, m_pixmap.rect().height() / ratio);
+        const QRectF &prf = QRectF(m_pixmap.rect().x(), m_pixmap.rect().y(), m_pixmap.rect().width() / pixmapRatio, m_pixmap.rect().height() / pixmapRatio);
         qDebug() << ">>>>>>> prf: " << prf << prf.center();
         QPointF pf = rf.center() - prf.center();
         //qDebug() << ">>>>>>> pf: " << pf ;
@@ -275,7 +279,7 @@ void TimeWidget::paintEvent(QPaintEvent *e)
         painter.setFont(font);
         QFontMetrics fm(font);
 //        painter.drawText(m_pixmap.width() * static_cast<int>(ratio) + RECORDER_TEXT_TOP_BOTTOM_X + RECORDER_ICON_TOP_BOTTOM_X, rect().y(), rect().width(), rect().height(), Qt::AlignLeft | Qt::AlignVCenter, m_showTimeStr);
-        int tx = static_cast<int>(m_pixmap.width() / ratio) + RECORDER_TEXT_TOP_BOTTOM_X;
+        int tx = static_cast<int>(m_pixmap.width() / pixmapRatio) + RECORDER_TEXT_TOP_BOTTOM_X;
         int ty = rect().y()-1;
         int twidth = rect().width();
         int theight = rect().height();
