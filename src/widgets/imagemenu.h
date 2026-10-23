@@ -38,7 +38,6 @@ public:
 signals:
     void updateBorderState(bool hasBorderChecked);
 public:
-    QSize m_screenSize;
 private:
     explicit ImageBorderHelper(QObject *parent = nullptr);
     ~ImageBorderHelper();
@@ -83,8 +82,6 @@ public:
     void setBorderTypeDetail(const int id);
 public slots:
     void ActionChecked(QAbstractButton* button);
-protected:
-    void paintEvent(QPaintEvent *event) override;
 private:
 
     QButtonGroup* m_actionGroup = nullptr;

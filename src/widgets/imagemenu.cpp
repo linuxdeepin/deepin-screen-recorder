@@ -178,27 +178,6 @@ void ImageMenu::ActionChecked(QAbstractButton *button)
     }
 }
 
-void ImageMenu::paintEvent(QPaintEvent *event)
-{
-    qCDebug(dsrApp) << "ImageMenu paintEvent called";
-    // 在绘制之前， 调整界面位置。
-    QRect r = this->geometry();
-    QPoint pointLocation = QPoint(r.x(), r.y());
-    // 一级菜单位置
-    QRect pr = static_cast<QWidget *>(this->parent())->geometry();
-    if (r.x() + r.width() > ImageBorderHelper::instance()->m_screenSize.width()) {
-        qCDebug(dsrApp) << "Adjusting menu position: X overflow";
-        pointLocation.setX(pr.x() - r.width());
-    }
-    if (r.y() + r.height() > ImageBorderHelper::instance()->m_screenSize.height()) {
-        qCDebug(dsrApp) << "Adjusting menu position: Y overflow";
-        pointLocation.setY(ImageBorderHelper::instance()->m_screenSize.height() - r.height());
-    }
-    this->move(pointLocation);
-
-    QMenu::paintEvent(event);
-}
-
 ActionWidget::ActionWidget(QWidget *parent) : DIconButton(parent)
 {
     qCDebug(dsrApp) << "ActionWidget constructor entered";
@@ -378,48 +357,6 @@ ImageBorderHelper::ImageBorderHelper(QObject *parent) : QObject(parent)
 {
     qCDebug(dsrApp) << "ImageBorderHelper constructor entered";
     m_borderhandle = nullptr;
-
-    // 计算屏幕大小
-    QList<QScreen *> screenList = qApp->screens();
-    QList<QRect> screenInfo;
-    QSize screenSize;
-    qCDebug(dsrApp) << "Number of screens detected:" << screenList.size();
-
-    // qt6中QApplication::desktop()已舍弃
-    //int m_screenCount = QApplication::desktop()->screenCount();
-
-    int m_screenCount = screenList.size();
-    for (QList<QScreen *>::const_iterator it = screenList.constBegin(); it != screenList.constEnd(); ++it) {
-        QRect rect = (*it)->geometry();
-        screenInfo.append(rect);
-        qCDebug(dsrApp) << "Screen geometry added:" << rect;
-    }
-
-#ifdef QT_TESTLIB_LIB
-    if (screenInfo.isEmpty()) {
-        qCWarning(dsrApp) << "No screens detected (qApp->screens() empty); using default 1920x1080.";
-        screenInfo.append(QRect(0, 0, 1920, 1080));
-        m_screenCount = 1;
-    }
-#endif
-
-    screenSize.setWidth(screenInfo[0].x() + screenInfo[0].width());
-    screenSize.setHeight(screenInfo[0].y() + screenInfo[0].height());
-    qCDebug(dsrApp) << "Initial screen size:" << screenSize;
-
-    for (int i = 1; i < m_screenCount; ++i) {
-        if ((screenInfo[i].height() + screenInfo[i].y()) > screenSize.height()) {
-            qCDebug(dsrApp) << "Adjusting screen size: height extended by screen" << i;
-            screenSize.setHeight(screenInfo[i].height() + screenInfo[i].y());
-        }
-
-        if ((screenInfo[i].width() + screenInfo[i].x()) > screenSize.width()) {
-            qCDebug(dsrApp) << "Adjusting screen size: width extended by screen" << i;
-            screenSize.setWidth(screenInfo[i].width() + screenInfo[i].x());
-        }
-    }
-    qCDebug(dsrApp) << "Final calculated screen size:" << screenSize;
-    m_screenSize = screenSize;
 }
 
 ImageBorderHelper::~ImageBorderHelper()

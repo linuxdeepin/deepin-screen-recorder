@@ -387,9 +387,9 @@ void TreelandMaskOverlayHost::updateToolBar()
     m_toolBar->showAt(QPoint(toolBarX, toolBarY));
     m_toolBar->raise();
     if (m_sideBar->isVisible()) {
-        // SideBar has no layout of its own; adjustSize() would collapse it to
-        // the empty DLabel size and clip SideBarWidget outside the output.
-        m_sideBar->resize(m_sideBar->getInnerWidgetRect().size());
+        // Keep the full DFloatingWidget geometry. SideBarWidget reserves a 6px
+        // shadow/rounded-corner margin around its contents; shrinking the
+        // wrapper to contentsRect clips the right and bottom rounded corners.
         const QSize sideBarSize = m_sideBar->size();
         int sideBarX = m_toolBar->x() + m_toolBar->width() - sideBarSize.width();
         sideBarX = qBound(ToolBarMargin,
@@ -416,7 +416,6 @@ void TreelandMaskOverlayHost::handleToolChanged(const QString &tool)
     m_annotationToolActive = true;
     m_sideBar->showWidget();
     m_sideBar->changeShotToolFunc(tool);
-    m_sideBar->resize(m_sideBar->getInnerWidgetRect().size());
     m_sideBar->show();
 
     if (tool == "gio") {
