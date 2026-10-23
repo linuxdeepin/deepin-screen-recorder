@@ -677,7 +677,7 @@ void SubToolWidget::initShotLabel()
 #ifdef  OCR_SCROLL_FLAGE_ON
     // TODO: 仅x11下开启，后续处理，目前还有问题
     if (!(Utils::isTreelandMode))
-    btnList.append(m_scrollShotButton);
+        btnList.append(m_scrollShotButton);
 #endif
     connect(m_scrollShotButton, &DPushButton::clicked, this, [ = ] {
         qCDebug(dsrApp) << "滚动截图的按钮按下！";
@@ -797,19 +797,20 @@ void SubToolWidget::initShotLabel()
     m_recorderButton->setIconSize(TOOL_ICON_SIZE);
     m_recorderButton->setIcon(QIcon::fromTheme("recorder"));
     Utils::setAccessibility(m_recorderButton, AC_SUBTOOLWIDGET_RECORDER_BUTTON);
-        m_recorderButton->setFixedSize(TOOL_BUTTON_SIZE);
-        installTipHint(m_recorderButton, tr("Record"));
-    if (!(Utils::isTreelandMode))
+    m_recorderButton->setFixedSize(TOOL_BUTTON_SIZE);
+    installTipHint(m_recorderButton, tr("Record"));
+    if (!(Utils::isTreelandMode)) {
         btnList.append(m_recorderButton);
-        connect(m_recorderButton, &ToolButton::clicked, this, [ = ] {
-            m_host->toolBarPointRequested();
-            switchContent("record");
-            // Treeland 环境下点击“切换到录屏”，进行前端UI切换与后端选择器退出
-            if (Utils::isTreelandMode) {
-                m_host->switchToRecordUI();
-            }
-            emit changeShotToolFunc("record");
-        });
+    }
+    connect(m_recorderButton, &ToolButton::clicked, this, [ = ] {
+        m_host->toolBarPointRequested();
+        switchContent("record");
+        // Treeland 环境下点击“切换到录屏”，进行前端UI切换与后端选择器退出
+        if (Utils::isTreelandMode) {
+            m_host->switchToRecordUI();
+        }
+        emit changeShotToolFunc("record");
+    });
 
     m_shotOptionButton = new ToolButton();
     m_shotOptionButton->setObjectName("ShotOptionButton");

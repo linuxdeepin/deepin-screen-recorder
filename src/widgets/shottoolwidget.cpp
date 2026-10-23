@@ -88,7 +88,7 @@ void ShotToolWidget::initEffectLabel()
     if (m_effectSubTool) return;
     qCDebug(dsrApp) << "ShotToolWidget::initEffectLabel called.";
     m_effectSubTool = new DLabel(this);
-    DBlurEffectWidget *t_blurArea = new DBlurEffectWidget(this);
+    DBlurEffectWidget *t_blurArea = new DBlurEffectWidget(m_effectSubTool);
     t_blurArea->setBlurRectXRadius(7);
     t_blurArea->setBlurRectYRadius(7);
     t_blurArea->setRadius(15);
@@ -97,27 +97,27 @@ void ShotToolWidget::initEffectLabel()
     t_blurArea->setBlendMode(DBlurEffectWidget::InWidgetBlend);
     t_blurArea->setMaskColor(QColor(255, 255, 255, 0));
 
-    QHBoxLayout *t_blurAreaLayout = new QHBoxLayout(this);
+    QHBoxLayout *t_blurAreaLayout = new QHBoxLayout(t_blurArea);
     t_blurAreaLayout->setContentsMargins(0, 0, 0, 0);
 
     //分割线
-    DVerticalLine *t_seperator = new DVerticalLine(this);
+    DVerticalLine *t_seperator = new DVerticalLine(t_blurArea);
     t_seperator->setFixedSize(3, 30);
-    DVerticalLine *t_seperator0 = new DVerticalLine(this);
+    DVerticalLine *t_seperator0 = new DVerticalLine(t_blurArea);
     t_seperator0->setFixedSize(3, 30);
-    DVerticalLine *t_seperator1 = new DVerticalLine(this);
+    DVerticalLine *t_seperator1 = new DVerticalLine(t_blurArea);
     t_seperator1->setFixedSize(3, 30);
     t_seperator1->hide();
 
     QButtonGroup *effectTypeBtnGroup = new QButtonGroup(this);
     effectTypeBtnGroup->setExclusive(true);
 
-    ToolButton *mosaicBut = new ToolButton(this);
+    ToolButton *mosaicBut = new ToolButton(t_blurArea);
     mosaicBut->setFixedSize(TOOL_BUTTON_SIZE);
     mosaicBut->setIconSize(TOOL_ICON_SIZE);
     mosaicBut->setIcon(QIcon::fromTheme(QString("Mosaic_normal")));
     effectTypeBtnGroup->addButton(mosaicBut);
-    ToolButton *blurBut = new ToolButton(this);
+    ToolButton *blurBut = new ToolButton(t_blurArea);
     blurBut->setFixedSize(TOOL_BUTTON_SIZE);
     blurBut->setIconSize(TOOL_ICON_SIZE);
     blurBut->setIcon(QIcon::fromTheme(QString("vague_normal")));
@@ -128,7 +128,7 @@ void ShotToolWidget::initEffectLabel()
     shapBtnGroup->setExclusive(true);
 
     // 创建矩形按钮
-    ToolButton *rectBut = new ToolButton(this);
+    ToolButton *rectBut = new ToolButton(t_blurArea);
     rectBut->setFixedSize(TOOL_BUTTON_SIZE);
     rectBut->setIconSize(TOOL_ICON_SIZE);
     rectBut->setIcon(QIcon::fromTheme(QString("rectangle-normal")));
@@ -136,14 +136,14 @@ void ShotToolWidget::initEffectLabel()
     shapBtnGroup->addButton(rectBut);
     
     // 创建椭圆按钮
-    ToolButton *ovalBut = new ToolButton(this);
+    ToolButton *ovalBut = new ToolButton(t_blurArea);
     ovalBut->setFixedSize(TOOL_BUTTON_SIZE);
     ovalBut->setIconSize(TOOL_ICON_SIZE);
     ovalBut->setIcon(QIcon::fromTheme(QString("oval-normal")));
     installTipHint(ovalBut, tr("Ellipse (O)\nPress and hold Shift to draw a circle"));
     shapBtnGroup->addButton(ovalBut);
     
-    ToolButton *penBut = new ToolButton(this);
+    ToolButton *penBut = new ToolButton(t_blurArea);
     penBut->setFixedSize(TOOL_BUTTON_SIZE);
     penBut->setIconSize(TOOL_ICON_SIZE);
     penBut->setIcon(QIcon::fromTheme(QString("effect_pen")));
@@ -151,7 +151,7 @@ void ShotToolWidget::initEffectLabel()
     shapBtnGroup->addButton(penBut);
 
     //模糊强度滑动条
-    Slider *t_radiusSize = new Slider(Qt::Horizontal, this);
+    Slider *t_radiusSize = new Slider(Qt::Horizontal, t_blurArea);
     t_radiusSize->slider()->setTickInterval(1);
     t_radiusSize->setMinimum(0);
     t_radiusSize->setMaximum(10);
@@ -164,7 +164,7 @@ void ShotToolWidget::initEffectLabel()
     t_radiusSize->setMouseWheelEnabled(true);
 
     //笔刷大小滑动条
-    Slider *t_lineWidthSize = new Slider(Qt::Horizontal, this);
+    Slider *t_lineWidthSize = new Slider(Qt::Horizontal, t_blurArea);
     //t_lineWidthSize->setStyleSheet("border-image: url(:/icons/deepin/builtin/texts/vague_normal_32px.svg)");
     t_lineWidthSize->slider()->setTickInterval(1);
     t_lineWidthSize->setMinimum(0);
@@ -178,13 +178,13 @@ void ShotToolWidget::initEffectLabel()
     t_lineWidthSize->setValue(t_width);
     t_lineWidthSize->setMouseWheelEnabled(true);
 
-    DLabel *penWidth = new DLabel(this);
+    DLabel *penWidth = new DLabel(t_blurArea);
     penWidth->setElideMode(Qt::TextElideMode::ElideLeft);
     penWidth->setFixedSize(24, 24);
     DFontSizeManager::instance()->bind(penWidth, DFontSizeManager::T7);
     penWidth->setText(QString("%1").arg((t_width + 1) * 2));
 
-    QHBoxLayout *widthSizeLayout = new QHBoxLayout(this);
+    QHBoxLayout *widthSizeLayout = new QHBoxLayout();
     widthSizeLayout->setContentsMargins(0, 0, 0, 0);
     widthSizeLayout->addWidget(t_lineWidthSize);
     widthSizeLayout->addWidget(penWidth);
@@ -293,13 +293,10 @@ void ShotToolWidget::initEffectLabel()
         ConfigSettings::instance()->setValue("effect", "line_width", t_value);
     });
 
-    QHBoxLayout *rectLayout = new QHBoxLayout(this);
+    QHBoxLayout *rectLayout = new QHBoxLayout(m_effectSubTool);
     rectLayout->setContentsMargins(3, 3, 3, 3);
 
     rectLayout->addWidget(t_blurArea);
-    m_effectSubTool->setLayout(rectLayout);
-
-    addWidget(m_effectSubTool);
 }
 
 //初始化文字工具工具栏
@@ -308,7 +305,7 @@ void ShotToolWidget::initTextLabel()
     qCDebug(dsrApp) << "ShotToolWidget::initTextLabel called.";
     m_textSubTool = new DLabel(this);
 
-    DBlurEffectWidget *t_blurArea = new DBlurEffectWidget(this);
+    DBlurEffectWidget *t_blurArea = new DBlurEffectWidget(m_textSubTool);
     t_blurArea->setBlurRectXRadius(7);
     t_blurArea->setBlurRectYRadius(7);
     t_blurArea->setRadius(15);
@@ -318,8 +315,8 @@ void ShotToolWidget::initTextLabel()
     t_blurArea->setMaskColor(QColor(255, 255, 255, 0));
     //t_blurArea->setFixedSize(TOOL_SLIDERBlUR_SIZE);
 
-    QHBoxLayout *t_blurAreaLayout = new QHBoxLayout(this);
-    Slider *t_textFontSize = new Slider(Qt::Horizontal, this);
+    QHBoxLayout *t_blurAreaLayout = new QHBoxLayout(t_blurArea);
+    Slider *t_textFontSize = new Slider(Qt::Horizontal, t_blurArea);
     t_textFontSize->slider()->setTickInterval(1);
     //t_textFontSize->setFixedSize(TOOL_SLIDER_SIZE);
     t_textFontSize->setMinimum(0);
@@ -347,12 +344,10 @@ void ShotToolWidget::initTextLabel()
         ConfigSettings::instance()->setValue("text", "fontsize", indexTofontsize[t_value]);
     });
 
-    QHBoxLayout *rectLayout = new QHBoxLayout(this);
+    QHBoxLayout *rectLayout = new QHBoxLayout(m_textSubTool);
     rectLayout->setContentsMargins(0, 0, 5, 0);
 
     rectLayout->addWidget(t_blurArea);
-
-    m_textSubTool->setLayout(rectLayout);
 }
 
 void ShotToolWidget::initThicknessLabel()
@@ -372,7 +367,7 @@ void ShotToolWidget::initThicknessLabel()
     QStringList thicknessBtnName;
     thicknessBtnName << "small" << "medium" << "big";
     for (int i = 0; i < thicknessBtnName.size(); i++) {
-        ToolButton *thicknessBtn = new ToolButton(this);
+        ToolButton *thicknessBtn = new ToolButton(m_thicknessLabel);
         Utils::setAccessibility(thicknessBtn, QString("%1_thicknessBtn").arg(thicknessBtnName[i]));
         thicknessBtn->setFixedSize(TOOL_BUTTON_SIZE);
         thicknessBtn->setIconSize(TOOL_ICON_SIZE);
@@ -391,7 +386,6 @@ void ShotToolWidget::initThicknessLabel()
             ConfigSettings::instance()->setValue(m_shapeName, "line_width", m_thicknessBtnGroup->id(thicknessBtn));
         }
     });
-    m_thicknessLabel->setLayout(hBox);
     addWidget(m_thicknessLabel);
 }
 
