@@ -47,6 +47,19 @@ const QColor SEQUENCE_LIMIT_BADGE_COLOR(0xFE, 0x00, 0x00);
 // 提示左上角对齐角标右下角：相对光标再偏移一个角标边长
 const int SEQUENCE_LIMIT_TIPS_ANCHOR = SEQUENCE_PREVIEW_ANCHOR + int(SEQUENCE_LIMIT_BADGE_SIZE);
 
+int configuredLineWidthIndex(const QString &group)
+{
+    // Persisted settings can be corrupted or written by older versions. The
+    // toolbar exposes exactly three line-width tiers, so never feed an
+    // out-of-range value into geometry calculations.
+    return qBound(0, ConfigSettings::instance()->getValue(group, "line_width").toInt(), 2);
+}
+
+int configuredLineWidth(const QString &group)
+{
+    return LINEWIDTH(configuredLineWidthIndex(group));
+}
+
 /**
  * @brief 序号超限禁用角标
  *
@@ -250,6 +263,7 @@ void ShapesWidget::updateSelectedShape(const QString &group,
             qCDebug(dsrApp) << "Shape updated at order:" << m_selectedOrder;
         }
         update();
+        emit shapesChanged();
     }
     //qDebug() << ">>>>> function: " << __func__ << ", line: " << __LINE__ << ", m_selectedShape.type: " << m_selectedShape.type;
 }
@@ -359,6 +373,7 @@ void ShapesWidget::setAllTextEditReadOnly()
 
     setNoChangedTextEditRemove();
     update();
+    emit shapesChanged();
 }
 
 void ShapesWidget::setNoChangedTextEditRemove()
@@ -397,6 +412,7 @@ void ShapesWidget::setNoChangedTextEditRemove()
     }
 
     update();
+    emit shapesChanged();
 }
 
 void ShapesWidget::saveActionTriggered()
@@ -1261,6 +1277,362 @@ bool ShapesWidget::textEditIsReadOnly()
     return false;
 }
 
+ShapesWidget::InteractionHit ShapesWidget::interactionAt(const QPointF &pos) const
+{
+    auto nearPoint = [&pos](const QPointF &point) {
+        return pointClickIn(point, pos);
+    };
+    auto closedShapeHit = [&pos](const Toolshape &shape) {
+        if (shape.mainPoints.size() < 4)
+            return false;
+        if (shape.type == "oval") {
+            if (pointOnEllipse(shape.mainPoints, pos))
+                return true;
+        } else if (shape.type == "effect" && shape.isOval == 0) {
+            if (pointOnEllipse(shape.mainPoints, pos) || pointInRect(shape.mainPoints, pos))
+                return true;
+        } else if (pointOnLine(shape.mainPoints[0], shape.mainPoints[1], pos)
+                   || pointOnLine(shape.mainPoints[1], shape.mainPoints[3], pos)
+                   || pointOnLine(shape.mainPoints[3], shape.mainPoints[2], pos)
+                   || pointOnLine(shape.mainPoints[2], shape.mainPoints[0], pos)) {
+            return true;
+        }
+        return shape.type == "effect" && shape.isOval == 1
+                && pointInRect(shape.mainPoints, pos);
+    };
+    auto handleHit = [&nearPoint](const Toolshape &shape) {
+        InteractionHit hit;
+        if (shape.mainPoints.size() < 4)
+            return hit;
+        const FourPoints middle = getAnotherFPoints(shape.mainPoints);
+        const QList<QPair<QPointF, InteractionHandle>> handles = {
+            {shape.mainPoints[0], InteractionHandle::TopLeft},
+            {shape.mainPoints[1], InteractionHandle::BottomLeft},
+            {shape.mainPoints[2], InteractionHandle::TopRight},
+            {shape.mainPoints[3], InteractionHandle::BottomRight},
+            {middle[0], InteractionHandle::Left},
+            {middle[1], InteractionHandle::Top},
+            {middle[2], InteractionHandle::Right},
+            {middle[3], InteractionHandle::Bottom}
+        };
+        for (const auto &entry : handles) {
+            if (nearPoint(entry.first)) {
+                hit.kind = InteractionKind::Resize;
+                hit.handle = entry.second;
+                return hit;
+            }
+        }
+        return hit;
+    };
+
+    for (const Toolshape &shape : m_shapes) {
+        if (shape.type == "arrow" || shape.type == "line") {
+            if (shape.points.size() != 2)
+                continue;
+            if (nearPoint(shape.points[0])) {
+                return {InteractionKind::Rotate, InteractionHandle::Left};
+            }
+            if (nearPoint(shape.points[1])) {
+                return {InteractionKind::Rotate, InteractionHandle::Right};
+            }
+            if (pointOnLine(shape.points[0], shape.points[1], pos))
+                return {InteractionKind::Move, InteractionHandle::None};
+            continue;
+        }
+
+        if (shape.type == "sequence") {
+            if (shape.mainPoints.size() >= 4
+                    && QRectF(shape.mainPoints[0], shape.mainPoints[3]).contains(pos)) {
+                return {InteractionKind::Move, InteractionHandle::None};
+            }
+            continue;
+        }
+
+        InteractionHit handle = handleHit(shape);
+        if (handle.isValid())
+            return handle;
+
+        if (shape.mainPoints.size() >= 4 && shape.type != "text"
+                && shape.type != "pen") {
+            const QPointF rotatePoint = getRotatePoint(shape.mainPoints[0],
+                                                       shape.mainPoints[1],
+                                                       shape.mainPoints[2],
+                                                       shape.mainPoints[3]);
+            if (QRectF(rotatePoint.x() - 17, rotatePoint.y() - 17,
+                       34, 34).contains(pos)) {
+                return {InteractionKind::Rotate, InteractionHandle::None};
+            }
+        }
+
+        if (shape.type == "pen" || (shape.type == "effect" && shape.isOval == 2)) {
+            for (int i = 1; i < shape.points.size(); ++i) {
+                if (pointOnLine(shape.points[i - 1], shape.points[i], pos))
+                    return {InteractionKind::Move, InteractionHandle::None};
+            }
+            if (shape.points.size() == 1 && pointClickIn(shape.points[0], pos))
+                return {InteractionKind::Move, InteractionHandle::None};
+            continue;
+        }
+
+        if (shape.type == "text") {
+            if (shape.mainPoints.size() >= 4
+                    && QRectF(shape.mainPoints[0], shape.mainPoints[3]).contains(pos)) {
+                return {InteractionKind::TextEditor, InteractionHandle::None};
+            }
+            continue;
+        }
+
+        if (closedShapeHit(shape))
+            return {InteractionKind::Move, InteractionHandle::None};
+    }
+
+    return {};
+}
+
+bool ShapesWidget::beginInteraction(const QPointF &pos)
+{
+    if (!clickedOnShapes(pos)) {
+        const bool canCreate = m_currentType == "rectangle"
+                || m_currentType == "oval"
+                || m_currentType == "arrow"
+                || m_currentType == "line"
+                || m_currentType == "pen"
+                || m_currentType == "effect";
+        if (!canCreate)
+            return false;
+
+        m_currentShape = Toolshape();
+        m_selectedShape = Toolshape();
+        m_hoveredShape = Toolshape();
+        m_currentShape.type = m_currentType;
+        m_currentShape.colorIndex = ConfigSettings::instance()
+                ->getValue(m_currentType, "color_index").toInt();
+        m_currentShape.lineWidth = configuredLineWidth(m_currentType);
+        if (m_currentType == "effect") {
+            m_currentShape.isBlur = ConfigSettings::instance()
+                    ->getValue("effect", "isBlur").toBool();
+            m_currentShape.isOval = ConfigSettings::instance()
+                    ->getValue("effect", "isOval").toInt();
+            m_currentShape.radius = ConfigSettings::instance()
+                    ->getValue("effect", "radius").toInt() * 3 + 10;
+        }
+
+        m_currentIndex = ++m_shapesIndex;
+        m_currentShape.index = m_currentIndex;
+        m_pos1 = pos;
+        m_pos2 = pos;
+        if (m_currentType == "arrow" || m_currentType == "line"
+                || m_currentType == "pen"
+                || (m_currentType == "effect" && m_currentShape.isOval == 2)) {
+            m_currentShape.points.append(pos);
+        }
+        m_currentShape.mainPoints = getMainPoints(pos, pos, false);
+        m_isRecording = true;
+        m_interactionActive = true;
+        m_interactionOrder = -1;
+        m_interactionStartPos = pos;
+        m_interactionLastPos = pos;
+        m_interactionBackup = Toolshape();
+        m_isPressed = true;
+        m_pressedPoint = pos;
+        m_movingPoint = pos;
+        return true;
+    }
+
+    m_interactionActive = true;
+    m_interactionOrder = m_selectedOrder;
+    m_interactionStartPos = pos;
+    m_interactionLastPos = pos;
+    m_interactionBackup = m_selectedOrder >= 0 && m_selectedOrder < m_shapes.size()
+            ? m_shapes[m_selectedOrder]
+            : Toolshape();
+    m_isPressed = true;
+    m_pressedPoint = pos;
+    m_movingPoint = pos;
+    return true;
+}
+
+void ShapesWidget::updateInteraction(const QPointF &pos)
+{
+    if (!m_interactionActive)
+        return;
+
+    m_isPressed = true;
+    m_movingPoint = pos;
+    if (m_isRecording) {
+        m_pos2 = pos;
+        if (m_currentShape.type == "arrow" || m_currentShape.type == "line") {
+            if (m_currentShape.points.size() == 1)
+                m_currentShape.points.append(pos);
+            else if (m_currentShape.points.size() >= 2)
+                m_currentShape.points[1] = pos;
+            m_currentShape.mainPoints = getMainPoints(m_currentShape.points[0],
+                                                      m_currentShape.points[1],
+                                                      m_isShiftPressed);
+        } else if (m_currentShape.type == "pen"
+                   || (m_currentShape.type == "effect" && m_currentShape.isOval == 2)) {
+            if (!m_currentShape.points.isEmpty()
+                    && getDistance(m_currentShape.points.last(), pos) > 2.0) {
+                m_currentShape.points.append(pos);
+            }
+        } else {
+            m_currentShape.mainPoints = getMainPoints(m_pos1, pos, m_isShiftPressed);
+        }
+        m_interactionLastPos = pos;
+        m_pressedPoint = pos;
+        update();
+        emit shapesChanged();
+        return;
+    }
+
+    if (m_selectedOrder < 0 || m_selectedOrder >= m_shapes.size())
+        return;
+    if (m_isRotated) {
+        handleRotate(pos);
+    } else if (m_isResize) {
+        handleResize(pos, m_clickedKey);
+    } else if (m_isSelected) {
+        handleDrag(m_interactionLastPos, pos);
+        m_selectedShape = m_shapes[m_selectedOrder];
+        m_hoveredShape = m_shapes[m_selectedOrder];
+        if (m_selectedShape.type == "text") {
+            TextEdit *edit = m_editMap.value(m_selectedIndex);
+            if (edit) {
+                edit->move(static_cast<int>(m_selectedShape.mainPoints[0].x()),
+                           static_cast<int>(m_selectedShape.mainPoints[0].y()));
+            }
+        }
+    }
+    m_interactionLastPos = pos;
+    m_pressedPoint = pos;
+    clampSelectedShapeToCanvas();
+    update();
+    emit shapesChanged();
+}
+
+void ShapesWidget::endInteraction()
+{
+    if (!m_interactionActive)
+        return;
+    if (m_isRecording) {
+        const QRectF creationRect = QRectF(m_pos1, m_pos2).normalized();
+        bool hasContent = creationRect.width() > 1.0 && creationRect.height() > 1.0;
+        if (m_currentShape.type == "arrow" || m_currentShape.type == "line")
+            hasContent = m_currentShape.points.size() == 2
+                    && QLineF(m_currentShape.points[0], m_currentShape.points[1]).length() > 1.0;
+        else if (m_currentShape.type == "pen"
+                 || (m_currentShape.type == "effect" && m_currentShape.isOval == 2))
+            hasContent = m_currentShape.points.size() > 1;
+
+        if (hasContent) {
+            m_shapes.append(m_currentShape);
+            m_selectedIndex = m_currentShape.index;
+            m_selectedOrder = m_shapes.size() - 1;
+            m_selectedShape = m_currentShape;
+            m_isSelected = true;
+        }
+        m_currentShape = Toolshape();
+        m_isRecording = false;
+        m_pos1 = QPointF();
+        m_pos2 = QPointF();
+    }
+    m_interactionActive = false;
+    m_interactionOrder = -1;
+    m_interactionBackup = Toolshape();
+    m_isPressed = false;
+    update();
+    emit shapesChanged();
+}
+
+void ShapesWidget::cancelInteraction()
+{
+    if (!m_interactionActive)
+        return;
+    if (m_isRecording) {
+        m_currentShape = Toolshape();
+        m_isRecording = false;
+        m_pos1 = QPointF();
+        m_pos2 = QPointF();
+    }
+    if (m_interactionOrder >= 0 && m_interactionOrder < m_shapes.size()) {
+        m_shapes[m_interactionOrder] = m_interactionBackup;
+        if (m_selectedOrder == m_interactionOrder)
+            m_selectedShape = m_interactionBackup;
+    }
+    m_interactionActive = false;
+    m_interactionOrder = -1;
+    m_interactionBackup = Toolshape();
+    m_isPressed = false;
+    update();
+    emit shapesChanged();
+}
+
+QRectF ShapesWidget::contentBounds() const
+{
+    QRectF bounds;
+    for (const Toolshape &shape : m_shapes) {
+        const QRectF shapeBounds = toolshapeContentBounds(shape);
+        if (shapeBounds.isEmpty())
+            continue;
+        bounds = bounds.isEmpty() ? shapeBounds : bounds.united(shapeBounds);
+    }
+
+    if (m_isRecording) {
+        bool hasContent = false;
+        if (m_currentShape.type == "arrow" || m_currentShape.type == "line") {
+            hasContent = m_currentShape.points.size() == 2
+                    && QLineF(m_currentShape.points[0], m_currentShape.points[1]).length() > 1.0;
+        } else if (m_currentShape.type == "pen"
+                   || (m_currentShape.type == "effect" && m_currentShape.isOval == 2)) {
+            hasContent = m_currentShape.points.size() > 1;
+        } else {
+            hasContent = qAbs(m_pos1.x() - m_pos2.x()) > 1.0
+                    || qAbs(m_pos1.y() - m_pos2.y()) > 1.0;
+        }
+
+        // A press alone is not committed content. Including the synthetic
+        // minimum-size geometry here used to expand the selection merely by
+        // clicking a drawing tool, even before the user dragged.
+        if (hasContent) {
+            const QRectF currentBounds = toolshapeContentBounds(m_currentShape);
+            if (!currentBounds.isEmpty())
+                bounds = bounds.isEmpty() ? currentBounds : bounds.united(currentBounds);
+        }
+    }
+    return bounds.normalized();
+}
+
+void ShapesWidget::clampSelectedShapeToCanvas()
+{
+    if (m_selectedOrder < 0 || m_selectedOrder >= m_shapes.size())
+        return;
+
+    Toolshape &shape = m_shapes[m_selectedOrder];
+    const QRectF canvas = rect();
+    QRectF bounds = toolshapeContentBounds(shape);
+    if (canvas.isEmpty() || bounds.isEmpty() || canvas.contains(bounds))
+        return;
+
+    QPointF delta;
+    if (bounds.left() < canvas.left())
+        delta.setX(canvas.left() - bounds.left());
+    else if (bounds.right() > canvas.right())
+        delta.setX(canvas.right() - bounds.right());
+    if (bounds.top() < canvas.top())
+        delta.setY(canvas.top() - bounds.top());
+    else if (bounds.bottom() > canvas.bottom())
+        delta.setY(canvas.bottom() - bounds.bottom());
+
+    for (QPointF &point : shape.mainPoints)
+        point += delta;
+    for (QPointF &point : shape.points)
+        point += delta;
+    if (!shape.arrowRotatePos.isNull())
+        shape.arrowRotatePos += delta;
+    m_selectedShape = shape;
+    m_hoveredShape = shape;
+}
+
 void ShapesWidget::handleDrag(QPointF oldPoint, QPointF newPoint)
 {
     //qDebug() << "handleDrag:" << m_selectedIndex << m_shapes.length();
@@ -1565,7 +1937,7 @@ void ShapesWidget::mousePressEvent(QMouseEvent *e)
 
         m_currentShape.type = m_currentType;
         m_currentShape.colorIndex = ConfigSettings::instance()->getValue(m_currentType, "color_index").toInt();
-        m_currentShape.lineWidth = LINEWIDTH(ConfigSettings::instance()->getValue(m_currentType, "line_width").toInt());
+        m_currentShape.lineWidth = configuredLineWidth(m_currentType);
 
         m_selectedIndex = -1;
         m_shapesIndex += 1;
@@ -1580,19 +1952,19 @@ void ShapesWidget::mousePressEvent(QMouseEvent *e)
                 m_currentShape.index = m_currentIndex;
                 m_currentShape.isShiftPressed = m_isShiftPressed;
                 m_currentShape.points.append(m_pos1);
-                m_currentShape.lineWidth = LINEWIDTH(ConfigSettings::instance()->getValue("arrow", "line_width").toInt());
+                m_currentShape.lineWidth = configuredLineWidth("arrow");
             } else if (m_currentType == "line") {
                 m_currentShape.index = m_currentIndex;
                 m_currentShape.isShiftPressed = m_isShiftPressed;
                 m_currentShape.points.append(m_pos1);
-                m_currentShape.lineWidth = LINEWIDTH(ConfigSettings::instance()->getValue("line", "line_width").toInt());
+                m_currentShape.lineWidth = configuredLineWidth("line");
             } else if (m_currentType == "effect") {
                 m_currentShape.isShiftPressed = m_isShiftPressed;
                 m_currentShape.index = m_currentIndex;
                 m_currentShape.isBlur = ConfigSettings::instance()->getValue("effect", "isBlur").toBool();
                 m_currentShape.isOval = ConfigSettings::instance()->getValue("effect", "isOval").toInt();
                 m_currentShape.radius = ConfigSettings::instance()->getValue("effect", "radius").toInt() * 3 + 10;
-                m_currentShape.lineWidth = LINEWIDTH(ConfigSettings::instance()->getValue("effect", "line_width").toInt());
+                m_currentShape.lineWidth = configuredLineWidth("effect");
                 if (m_currentShape.isBlur) {
                     emit reloadEffectImg("blur", m_currentShape.radius);
                 } else {
@@ -1619,7 +1991,7 @@ void ShapesWidget::mousePressEvent(QMouseEvent *e)
                     DFrame::mousePressEvent(e);
                     return;
                 }
-                int tier = ConfigSettings::instance()->getValue("sequence", "line_width").toInt();
+                int tier = qBound(0, ConfigSettings::instance()->getValue("sequence", "line_width").toInt(), 2);
                 // 序号圆圈直径由档位经 SEQUENCE_DIAMETER 编码进 mainPoints；
                 // m_currentShape.lineWidth（由公共放置路径写入）仅供配置记忆，渲染不使用。
                 qreal diameter = SEQUENCE_DIAMETER(tier);
@@ -1870,6 +2242,7 @@ void ShapesWidget::mouseReleaseEvent(QMouseEvent *e)
     m_pos2 = QPointF(0, 0);
 
     update();
+    emit shapesChanged();
     DFrame::mouseReleaseEvent(e);
     qCDebug(dsrApp) << "mouseReleaseEvent finished.";
 }
@@ -2140,6 +2513,7 @@ void ShapesWidget::translateAllShapes(const QPointF &delta)
         m_movingPoint += delta;
     }
     update();
+    emit shapesChanged();
 }
 
 //鼠标选中图形时，可以通过w/a/s/d及小键盘方向键控制光标移动
@@ -2223,6 +2597,7 @@ void ShapesWidget::updateTextRect(TextEdit *edit, QRectF newRect)
         }
     }
     update();
+    emit shapesChanged();
 }
 
 void ShapesWidget::paintImgPoint(QPainter &painter, QPointF pos, QPixmap img, bool isResize)
@@ -2237,7 +2612,7 @@ void ShapesWidget::paintImgPoint(QPainter &painter, QPointF pos, QPixmap img, bo
 }
 
 void ShapesWidget::paintRect(QPainter &painter, FourPoints rectFPoints, int index,
-                             ShapeBlurStatus rectStatus, bool isBlur, bool isMosaic, int radius)
+                             ShapeBlurStatus rectStatus, bool isBlur, bool isMosaic, int radius) const
 {
     QPainterPath rectPath;
     if (rectStatus  == Hovered || ((isBlur || isMosaic) && index == m_selectedIndex)) {
@@ -2268,7 +2643,7 @@ void ShapesWidget::paintRect(QPainter &painter, FourPoints rectFPoints, int inde
 }
 
 void ShapesWidget::paintEllipse(QPainter &painter, FourPoints ellipseFPoints, int index,
-                                ShapeBlurStatus  ovalStatus, bool isBlur, bool isMosaic, int radius)
+                                ShapeBlurStatus  ovalStatus, bool isBlur, bool isMosaic, int radius) const
 {
     if (ovalStatus  == Hovered || ((isBlur || isMosaic) && index == m_selectedIndex)) {
         painter.setPen(QColor("#01bdff"));
@@ -2319,7 +2694,7 @@ void ShapesWidget::paintEllipse(QPainter &painter, FourPoints ellipseFPoints, in
 }
 
 void ShapesWidget::paintArrow(QPainter &painter, QList<QPointF> lineFPoints,
-                              int lineWidth, bool isStraight)
+                              int lineWidth, bool isStraight) const
 {
     if (lineFPoints.length() == 2) {
         if (!isStraight) {
@@ -2342,7 +2717,7 @@ void ShapesWidget::paintArrow(QPainter &painter, QList<QPointF> lineFPoints,
     }
 }
 
-void ShapesWidget::paintLine(QPainter &painter, QList<QPointF> lineFPoints)
+void ShapesWidget::paintLine(QPainter &painter, QList<QPointF> lineFPoints) const
 {
     QPainterPath linePaths;
     if (lineFPoints.length() >= 1)
@@ -2356,7 +2731,7 @@ void ShapesWidget::paintLine(QPainter &painter, QList<QPointF> lineFPoints)
     painter.drawPath(linePaths);
 }
 
-void ShapesWidget::paintEffectLine(QPainter &painter, QList<QPointF> lineFPoints, bool isMosaic, int radius, int lineWidth)
+void ShapesWidget::paintEffectLine(QPainter &painter, QList<QPointF> lineFPoints, bool isMosaic, int radius, int lineWidth) const
 {
     QPainterPath linePaths;
     if (lineFPoints.length() >= 1)
@@ -2371,7 +2746,7 @@ void ShapesWidget::paintEffectLine(QPainter &painter, QList<QPointF> lineFPoints
     }
 }
 
-void ShapesWidget::paintText(QPainter &painter, FourPoints rectFPoints)
+void ShapesWidget::paintText(QPainter &painter, FourPoints rectFPoints) const
 {
     QPen textPen;
     textPen.setStyle(Qt::DashLine);
@@ -2386,7 +2761,7 @@ void ShapesWidget::paintText(QPainter &painter, FourPoints rectFPoints)
     }
 }
 
-void ShapesWidget::paintText(QPainter &painter, FourPoints rectFPoints, const QString &text, int fontsize)
+void ShapesWidget::paintText(QPainter &painter, FourPoints rectFPoints, const QString &text, int fontsize) const
 {
     qCDebug(dsrApp, ) << "fontsize: " << fontsize;
     QFont font = painter.font() ;
@@ -2408,11 +2783,12 @@ void ShapesWidget::paintEvent(QPaintEvent *)
     }
 }
 
-void ShapesWidget::handlePaint(QPainter &painter)
+void ShapesWidget::paintContent(QPainter &painter) const
 {
     painter.setRenderHints(QPainter::Antialiasing);
     QPen pen;
-    //绘制所有图形
+    // Only committed annotations are final content. Current drawing, hover,
+    // selection frames, rotate points and resize handles are editor-only.
     for (int i = 0; i < m_shapes.length(); i++) {
         pen.setColor(BaseUtils::colorIndexOf(m_shapes[i].colorIndex));
         pen.setWidthF(m_shapes[i].lineWidth - 0.5);
@@ -2449,26 +2825,39 @@ void ShapesWidget::handlePaint(QPainter &painter)
             pen.setJoinStyle(Qt::RoundJoin);
             painter.setPen(pen);
             paintLine(painter, m_shapes[i].points);
-        } else if (m_shapes[i].type == "text" && !m_clearAllTextBorder) {
-            //            qDebug() << "*&^" << m_shapes[i].type << m_shapes[i].index << m_selectedIndex << i;
-            QMap<int, TextEdit *>::iterator m = m_editMap.begin();
-            while (m != m_editMap.end()) {
-                if (m.key() == m_shapes[i].index) {
-                    if (!(m.value()->isReadOnly() && m_selectedIndex != i)) {
-                        paintText(painter, m_shapes[i].mainPoints);
-                    }
-                    break;
-                }
-                ++m;
-            }
+        } else if (m_shapes[i].type == "text") {
+            const TextEdit *edit = m_editMap.value(m_shapes[i].index);
+            if (!edit)
+                continue;
+            const QString text = edit->toPlainText();
+            if (text.isEmpty() || text == tr("Input text here"))
+                continue;
+            const int fontSize = m_shapes[i].fontSize > 1
+                    ? m_shapes[i].fontSize
+                    : qMax(1, edit->font().pixelSize());
+            paintText(painter, m_shapes[i].mainPoints, text, fontSize);
         } else if (m_shapes[i].type == "sequence") {
             paintSequence(painter, m_shapes[i].mainPoints, m_shapes[i].sequenceNumber, m_shapes[i].colorIndex);
         }
     }
+}
 
-    //绘制选中的图形
+void ShapesWidget::paintLiveContent(QPainter &painter) const
+{
+    paintContent(painter);
+    if (m_isRecording)
+        paintInProgressShape(painter);
+}
+
+void ShapesWidget::paintInProgressShape(QPainter &painter) const
+{
+    painter.setRenderHints(QPainter::Antialiasing);
+    QPen pen;
+
+    // 绘制进行中的图形。该入口同时供传统画布和 TreeLand 跨屏视图使用，
+    // 但不会绘制悬停、选中框、旋转点或缩放手柄等编辑态装饰。
     if ((m_pos1 != QPointF(0, 0) && m_pos2 != QPointF(0, 0)) || m_currentShape.type == "text") {
-        FourPoints currentFPoint =  getMainPoints(m_pos1, m_pos2, m_isShiftPressed);
+        FourPoints currentFPoint = getMainPoints(m_pos1, m_pos2, m_isShiftPressed);
         pen.setColor(BaseUtils::colorIndexOf(m_currentShape.colorIndex));
         pen.setWidthF(m_currentShape.lineWidth - 0.5);
 
@@ -2480,14 +2869,12 @@ void ShapesWidget::handlePaint(QPainter &painter)
             pen.setJoinStyle(Qt::MiterJoin);
             painter.setPen(pen);
             paintEllipse(painter, currentFPoint, m_shapes.length(), Normal, false, false);
-
         } else if (m_currentType == "effect") {
             if (m_currentShape.isOval == 0) {
                 paintEllipse(painter, currentFPoint, m_shapes.length(), Drawing, m_currentShape.isBlur, !m_currentShape.isBlur, m_currentShape.radius);
             } else if (m_currentShape.isOval == 1) {
                 paintRect(painter, currentFPoint, m_shapes.length(), Drawing, m_currentShape.isBlur, !m_currentShape.isBlur, m_currentShape.radius);
             } else {
-                //qDebug() << m_selectedIndex << m_currentShape.isOval << m_currentShape.points.size() << m_currentShape.radius << m_currentShape.lineWidth;
                 pen.setJoinStyle(Qt::RoundJoin);
                 painter.setPen(pen);
                 paintEffectLine(painter, m_currentShape.points, m_currentShape.isBlur, m_currentShape.radius, m_currentShape.lineWidth);
@@ -2505,12 +2892,19 @@ void ShapesWidget::handlePaint(QPainter &painter)
             painter.setPen(pen);
             paintLine(painter, m_currentShape.points);
         } else if (m_currentType == "text" && !m_clearAllTextBorder) {
-            if (m_editing) {
+            if (m_editing)
                 paintText(painter, m_currentShape.mainPoints);
-            }
         }
-
     }
+}
+
+void ShapesWidget::handlePaint(QPainter &painter)
+{
+    paintContent(painter);
+    paintInProgressShape(painter);
+
+    QPen pen;
+
     //绘制悬停状态的图形
     if ((m_hoveredShape.mainPoints[0] != QPointF(0, 0) ||  m_hoveredShape.points.length() != 0)
             && m_hoveredIndex != -1) {
@@ -2599,7 +2993,7 @@ void ShapesWidget::handlePaint(QPainter &painter)
 void ShapesWidget::paintImage(QImage &image)
 {
     QPainter painter(&image);
-    handlePaint(painter);
+    paintContent(painter);
     //    backgroundImage.save("/home/uos/Desktop/temp1.png");
 }
 
@@ -2751,6 +3145,7 @@ void ShapesWidget::deleteCurrentShape()
     }
 
     update();
+    emit shapesChanged();
     m_selectedIndex = -1;
     m_selectedOrder = -1;
 }
@@ -2782,6 +3177,7 @@ void ShapesWidget::undoDrawShapes()
     m_isSelected = false;
     clearSelected();
     update();
+    emit shapesChanged();
 }
 void ShapesWidget::undoAllDrawShapes()
 {
@@ -2811,6 +3207,7 @@ void ShapesWidget::undoAllDrawShapes()
     m_isSelected = false;
     clearSelected();
     update();
+    emit shapesChanged();
 }
 
 void ShapesWidget::isInUndoBtn(bool isUndo)
@@ -2907,6 +3304,7 @@ void ShapesWidget::microAdjust(QString direction)
     m_selectedShape.points = currentShape.points;
     m_hoveredShape.type = "";
     update();
+    emit shapesChanged();
 }
 
 void ShapesWidget::setShiftKeyPressed(bool isShift)
@@ -3067,14 +3465,14 @@ void ShapesWidget::resizeSelectedSequence(int lineWidthIndex)
     }
 }
 
-bool ShapesWidget::isLightSequenceColor(int colorIndex)
+bool ShapesWidget::isLightSequenceColor(int colorIndex) const
 {
     // 设计稿中仅白色、黄色、亮绿色使用黑色文字，其余颜色使用白色文字。
     return colorIndex == 2 || colorIndex == 5 || colorIndex == 6;
 }
 
 void ShapesWidget::paintSequence(QPainter &painter, FourPoints mainFPoints,
-                                  int sequenceNumber, int colorIndex)
+                                  int sequenceNumber, int colorIndex) const
 {
     if (mainFPoints.length() < 4) {
         return;

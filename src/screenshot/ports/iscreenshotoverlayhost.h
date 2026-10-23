@@ -14,6 +14,8 @@
 
 namespace Dsr::Screenshot {
 
+class IAnnotationEditor;
+
 class IScreenshotOverlayHost : public QObject
 {
     Q_OBJECT
@@ -22,6 +24,10 @@ public:
     ~IScreenshotOverlayHost() override = default;
 
     virtual bool create(const QList<OutputDescriptor> &outputs) = 0;
+    // The returned editor is owned by the overlay and must remain valid for
+    // the controller lifetime. Implementations may expose it only after
+    // create(); the controller resolves it again once windows exist.
+    virtual IAnnotationEditor *annotationEditor() const { return nullptr; }
     virtual QList<QWindow *> maskWindows() const = 0;
     virtual void setFrozenFrames(const FrozenFrameSet &frames) = 0;
     virtual void show() = 0;

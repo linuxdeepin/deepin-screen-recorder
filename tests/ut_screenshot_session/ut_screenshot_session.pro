@@ -18,7 +18,8 @@ SOURCES += \
     ../../src/screenshot/export/screenshotexportservice.cpp \
     ../../src/screenshot/session/annotationcoordinator.cpp \
     ../../src/screenshot/session/screenshotsessioncontroller.cpp \
-    ../../src/utils/log.cpp
+    ../../src/utils/log.cpp \
+    ../../src/utils/shapesutils.cpp
 
 HEADERS += \
     ../../src/screenshot/core/coordinatemapper.h \
@@ -34,4 +35,5 @@ HEADERS += \
     ../../src/screenshot/ports/iwindowtagger.h \
     ../../src/screenshot/session/annotationcoordinator.h \
     ../../src/screenshot/session/screenshotsessioncontroller.h \
-    ../../src/utils/log.h
+    ../../src/utils/log.h \
+    ../../src/utils/shapesutils.h

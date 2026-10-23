@@ -26,7 +26,19 @@ enum class CursorIntent {
     ResizeHorizontal,
     ResizeVertical,
     ResizeDiagonalForward,
-    ResizeDiagonalBackward
+    ResizeDiagonalBackward,
+    Text,
+    Rotate
+};
+
+enum class AnnotationTool {
+    Pointer,
+    Rectangle,
+    Ellipse,
+    Arrow,
+    Line,
+    Pen,
+    Effect
 };
 
 struct BackendCapabilities {

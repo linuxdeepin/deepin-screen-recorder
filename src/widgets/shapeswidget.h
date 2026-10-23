@@ -39,6 +39,36 @@ class ShapesWidget : public DFrame
 {
     Q_OBJECT
 public:
+    enum class InteractionKind {
+        None,
+        Move,
+        Resize,
+        Rotate,
+        TextEditor
+    };
+
+    enum class InteractionHandle {
+        None,
+        TopLeft,
+        BottomLeft,
+        TopRight,
+        BottomRight,
+        Left,
+        Top,
+        Right,
+        Bottom
+    };
+
+    struct InteractionHit {
+        InteractionKind kind = InteractionKind::None;
+        InteractionHandle handle = InteractionHandle::None;
+
+        bool isValid() const
+        {
+            return kind != InteractionKind::None;
+        }
+    };
+
     explicit ShapesWidget(DWidget *parent = 0);
     ~ShapesWidget();
 
@@ -73,6 +103,9 @@ signals:
     //选中某个形状后对应工具栏切换
     void shapeClicked(QString shape);
     void setShapesUndo(bool status);
+    // Committed annotation geometry changed. Adapters use this to refresh
+    // selection constraints without depending on ShapesWidget internals.
+    void shapesChanged();
 
 public slots:
     /**
@@ -195,6 +228,31 @@ public slots:
     void setGlobalRect(QRect rect);
 
     /**
+     * Side-effect-free hit testing for input arbitration.
+     */
+    InteractionHit interactionAt(const QPointF &pos) const;
+    bool beginInteraction(const QPointF &pos);
+    void updateInteraction(const QPointF &pos);
+    void endInteraction();
+    void cancelInteraction();
+
+    /**
+     * Bounds of committed content, excluding all editing decorations.
+     */
+    QRectF contentBounds() const;
+    /**
+     * Paint committed content only. Used for the final screenshot image.
+     */
+    void paintContent(QPainter &painter) const;
+    /**
+     * Paint committed content plus the shape currently being drawn.
+     *
+     * Live views use this while the pointer is down. Editing decorations such
+     * as hover frames, selection handles and rotation controls are excluded.
+     */
+    void paintLiveContent(QPainter &painter) const;
+
+    /**
      * @brief paintImage: 绘制图片
      * 将编辑的内容绘制到图片上
      */
@@ -247,6 +305,8 @@ protected:
 
 private:
     void resetForTextToolSwitch();
+    void clampSelectedShapeToCanvas();
+    void paintInProgressShape(QPainter &painter) const;
 
     QPointF m_pos1 = QPointF(0, 0);
     QPointF m_pos2 = QPointF(0, 0);
@@ -337,16 +397,22 @@ private:
     void paintImgPoint(QPainter &painter, QPointF pos, QPixmap img, bool isResize = true);
     //void paintImgPointArrow(QPainter &painter, QPointF pos, QPixmap img);
     void paintRect(QPainter &painter, FourPoints rectFPoints, int index,
-                   ShapeBlurStatus  rectStatus = Normal, bool isBlur = false, bool isMosaic = false, int radius = 10);
+                   ShapeBlurStatus  rectStatus = Normal, bool isBlur = false, bool isMosaic = false, int radius = 10) const;
     void paintEllipse(QPainter &painter, FourPoints ellipseFPoints, int index,
-                      ShapeBlurStatus  ovalStatus = Normal, bool isBlur = false, bool isMosaic = false, int radius = 10);
+                      ShapeBlurStatus  ovalStatus = Normal, bool isBlur = false, bool isMosaic = false, int radius = 10) const;
     void paintArrow(QPainter &painter, QList<QPointF> lineFPoints,
-                    int lineWidth, bool isStraight = false);
-    void paintLine(QPainter &painter, QList<QPointF> lineFPoints);
-    void paintEffectLine(QPainter &painter, QList<QPointF> lineFPoints, bool isMosaic, int radius, int lineWidth);
-    void paintText(QPainter &painter, FourPoints rectFPoints);
-    void paintText(QPainter &painter, FourPoints rectFPoints, const QString &text, int fontsize);
-    void paintSequence(QPainter &painter, FourPoints mainFPoints, int sequenceNumber, int colorIndex);
+                    int lineWidth, bool isStraight = false) const;
+    void paintLine(QPainter &painter, QList<QPointF> lineFPoints) const;
+    void paintEffectLine(QPainter &painter, QList<QPointF> lineFPoints, bool isMosaic, int radius, int lineWidth) const;
+    void paintText(QPainter &painter, FourPoints rectFPoints) const;
+    void paintText(QPainter &painter, FourPoints rectFPoints, const QString &text, int fontsize) const;
+    void paintSequence(QPainter &painter, FourPoints mainFPoints, int sequenceNumber, int colorIndex) const;
+
+    bool m_interactionActive = false;
+    int m_interactionOrder = -1;
+    QPointF m_interactionStartPos;
+    QPointF m_interactionLastPos;
+    Toolshape m_interactionBackup;
 
     bool m_isUnDo = false;
 
@@ -362,7 +428,7 @@ private:
     void renumberSequenceFrom(int startOrder, int firstNumber);
     void resizeSelectedSequence(int lineWidthIndex);
     bool m_sequenceToolEntry = false; // 进入序号工具时抑制恢复面板触发的误缩放
-    bool isLightSequenceColor(int colorIndex);
+    bool isLightSequenceColor(int colorIndex) const;
     void updateSequencePreview(const QPointF &pos);
     void moveSequenceLimitTips(const QPointF &pos);
     void updateSequenceLimitTips(const QPointF &pos);

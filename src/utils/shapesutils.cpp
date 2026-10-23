@@ -7,6 +7,9 @@
 #include "utils/log.h"
 
 #include <QDebug>
+#include <QPolygonF>
+
+#include <algorithm>
 
 Toolshape::Toolshape()
 {
@@ -16,6 +19,61 @@ Toolshape::Toolshape()
     mainPoints.append(QPointF(0, 0));
     mainPoints.append(QPointF(0, 0));
     portion.clear();
+}
+
+QRectF toolshapeContentBounds(const Toolshape &shape)
+{
+    QPolygonF geometry;
+    const bool usesMainPoints = shape.type == "rectangle"
+            || shape.type == "oval"
+            || shape.type == "text"
+            || shape.type == "sequence"
+            || shape.type == "pen"
+            || (shape.type == "effect" && shape.isOval != 2);
+    const bool usesPoints = shape.type == "arrow"
+            || shape.type == "line"
+            || shape.type == "pen"
+            || (shape.type == "effect" && shape.isOval == 2);
+
+    if (usesMainPoints) {
+        geometry = QPolygonF(shape.mainPoints);
+    }
+    if (usesPoints) {
+        for (const QPointF &point : shape.points)
+            geometry.append(point);
+    }
+    if (!shape.arrowRotatePos.isNull())
+        geometry.append(shape.arrowRotatePos);
+
+    if (geometry.isEmpty()) {
+        const bool hasNonZeroMainPoint = std::any_of(shape.mainPoints.cbegin(),
+                                                     shape.mainPoints.cend(),
+                                                     [](const QPointF &point) {
+            return !point.isNull();
+        });
+        if (shape.type.isEmpty()
+                || (!hasNonZeroMainPoint && shape.points.isEmpty()
+                    && shape.arrowRotatePos.isNull())) {
+            return QRectF();
+        }
+        // A single-point pen or sequence can legitimately start at (0, 0);
+        // fall back to the stored point set instead of treating it as empty.
+        geometry = QPolygonF(shape.points);
+        if (geometry.isEmpty() && !shape.mainPoints.isEmpty())
+            geometry = QPolygonF(shape.mainPoints);
+    }
+    if (geometry.isEmpty())
+        return QRectF();
+
+    QRectF bounds = geometry.boundingRect().normalized();
+    const qreal effectiveLineWidth = qBound<qreal>(1.0, shape.lineWidth, 32.0);
+    const qreal strokePadding = qMax<qreal>(2.0, effectiveLineWidth * 0.5 + 1.0);
+    qreal padding = strokePadding;
+    if (shape.type == "arrow")
+        padding = qMax<qreal>(padding, 10.0 + shape.lineWidth);
+    else if (shape.type == "text")
+        padding = qMax<qreal>(padding, 4.0);
+    return bounds.adjusted(-padding, -padding, padding, padding);
 }
 
 //Toolshape::~Toolshape()
