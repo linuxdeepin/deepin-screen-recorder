@@ -17,11 +17,12 @@
 
 DWIDGET_USE_NAMESPACE
 class MainWindow;
+class ToolBarHost;
 class ShotToolWidget : public DStackedWidget
 {
     Q_OBJECT
 public:
-    explicit ShotToolWidget(MainWindow *pmainwindow, DWidget *parent = nullptr);
+    explicit ShotToolWidget(ToolBarHost *host, DWidget *parent = nullptr);
     ~ShotToolWidget();
 
     void initWidget();
@@ -71,7 +72,7 @@ private:
 
     HintFilter *hintFilter = nullptr;
 
-    MainWindow *m_pMainWindow = nullptr;
+    ToolBarHost *m_host = nullptr;
 };
 
 #endif // SHOTTOOLWIDGET_H

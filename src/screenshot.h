@@ -9,6 +9,12 @@
 #include "main_window.h"
 
 #include <QObject>
+#include <QPointer>
+#include <QString>
+
+namespace Dsr::Screenshot {
+class ScreenshotSessionController;
+}
 
 
 class Screenshot : public QObject
@@ -47,9 +53,13 @@ signals:
     Q_SCRIPTABLE void RecorderState(const bool isStart); // true begin recorder; false stop recorder;
     Q_SCRIPTABLE void RecordingModeChanged(const bool isRecording); // 录屏模式变化
     void screenshotSaved(const QString &savePath); // 截图保存完成信号，返回保存路径
+    void screenshotDone(const QString &savePath);
+    void screenshotFinished();
 
 private:
     bool isRecording() const;
+    bool startTreelandScreenshot(int mode, bool enableWindowSnap,
+                                 const QString &outputPath = QString());
 
 private:
     //void initUI();
@@ -59,6 +69,7 @@ private:
     MainWindow m_window;
     bool m_isCustomScreenshot = false; // 标记是否是自定义截图
     bool m_isRecording = false; // 实际录屏状态
+    QPointer<Dsr::Screenshot::ScreenshotSessionController> m_treelandSession;
 
 };
 

@@ -4,6 +4,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 
 #include "shottoolwidget.h"
+#include "toolbarhost.h"
 #include "tooltips.h"
 #include "../utils/configsettings.h"
 #include "../utils.h"
@@ -35,11 +36,12 @@ const QSize TOOL_ICON_SIZE = QSize(30, 30);
 const QSize TOOL_BUTTON_SIZE = QSize(36, 36);
 }
 
-ShotToolWidget::ShotToolWidget(MainWindow *pmainwindow, DWidget *parent) :
+ShotToolWidget::ShotToolWidget(ToolBarHost *host, DWidget *parent) :
     DStackedWidget(parent),
     m_thicknessBtnGroup(nullptr),
-    m_pMainWindow(pmainwindow)
+    m_host(host)
 {
+    Q_ASSERT(m_host);
     qCDebug(dsrApp) << "ShotToolWidget constructor called.";
     initWidget();
 }
@@ -71,7 +73,7 @@ void ShotToolWidget::installTipHint(QWidget *w, const QString &hintstr)
 {
     qCDebug(dsrApp) << "Installing tip hint for widget:" << w << "with hint:" << hintstr;
     // TODO: parent must be mainframe
-    auto hintWidget = new ToolTips("", m_pMainWindow);
+    auto hintWidget = new ToolTips("", m_host->anchorWidget());
     hintWidget->hide();
     hintWidget->setText(hintstr);
 //    hintWidget->setFixedHeight(32);
@@ -433,6 +435,7 @@ void ShotToolWidget::switchContent(QString shapeType)
             qCDebug(dsrApp) << "Using line width for" << shapeType << ":" << linewidth_index;
         }
         
+        linewidth_index = qBound(0, linewidth_index, m_thicknessBtnGroup->buttons().size() - 1);
         if (linewidth_index != -1 && linewidth_index < m_thicknessBtnGroup->buttons().size()) {
             qCDebug(dsrApp) << "Setting line width to:" << linewidth_index;
             m_thicknessBtnGroup->button(linewidth_index)->click();
@@ -477,14 +480,9 @@ void ShotToolWidget::shapeSelected(const QString &shape)
 {
     qCDebug(dsrApp) << "ShotToolWidget::shapeSelected called with shape:" << shape;
     
-    if (m_pMainWindow) {
-        if (shape == "rectangle") {
-            m_pMainWindow->changeShotToolEvent("rectangle");
-        } else if (shape == "oval") {
-            m_pMainWindow->changeShotToolEvent("oval");
-        }
-        ConfigSettings::instance()->setValue("shape", "current", shape);
-    }
+    if (shape == "rectangle" || shape == "oval")
+        m_host->toolChanged(shape);
+    ConfigSettings::instance()->setValue("shape", "current", shape);
 }
 ShotToolWidget::~ShotToolWidget()
 {

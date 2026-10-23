@@ -4,6 +4,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 
 #include "sidebar.h"
+#include "toolbarhost.h"
 #include "../utils/configsettings.h"
 #include "../utils.h"
 #include "../utils/log.h"
@@ -51,12 +52,13 @@ const QSize TOOLBAR_WIDGET_AIMODE() {
 }
 
 
-SideBarWidget::SideBarWidget(MainWindow *pmainwindow, DWidget *parent)
+SideBarWidget::SideBarWidget(ToolBarHost *host, DWidget *parent)
     : DFloatingWidget(parent)
     , m_expanded(false)
+    , m_host(host)
 {
+    Q_ASSERT(m_host);
     qCDebug(dsrApp) << "SideBarWidget constructor called.";
-    m_pMainWindow = pmainwindow;
     initSideBarWidget();
 }
 
@@ -94,14 +96,14 @@ void SideBarWidget::initSideBarWidget()
     // 初始化各个工具组件
     m_shapeTool = new ShapeToolWidget(this);
     m_colorTool = new ColorToolWidget(this);
-    m_shotTool = new ShotToolWidget(m_pMainWindow, this);
+    m_shotTool = new ShotToolWidget(m_host, this);
     m_aiAssistantTool = new AIAssistantWidget(this);
     m_aiAssistantTool->hide();
     
     // 连接 AI 面板信号到 MainWindow
     connect(m_aiAssistantTool, &AIAssistantWidget::functionSelected, this,
             [this](AIAssistantWidget::AIFunction func) {
-        m_pMainWindow->onAiAssistantSelected(static_cast<int>(func));
+        m_host->aiAssistantSelected(static_cast<int>(func));
     });
 
     // 默认隐藏ShapeToolWidget和对应的分割线
@@ -366,9 +368,17 @@ QRect SideBar::getInnerWidgetRect() const
 
 void SideBar::initSideBar(MainWindow *pmainWindow)
 {
+    MainWindowToolBarHost *host = new MainWindowToolBarHost(pmainWindow, this);
+    host->setParent(this);
+    initSideBar(host);
+}
+
+void SideBar::initSideBar(ToolBarHost *host)
+{
+    Q_ASSERT(host);
     qCDebug(dsrApp) << "SideBar::initSideBar called.";
-    m_pMainWindow = pmainWindow;
-    m_sidebarWidget = new SideBarWidget(pmainWindow, this);
+    m_host = host;
+    m_sidebarWidget = new SideBarWidget(host, this);
     resize(m_sidebarWidget->size());
 
     connect(m_sidebarWidget, &SideBarWidget::changeArrowAndLineEvent, this, &SideBar::changeArrowAndLineToMain);
@@ -447,7 +457,7 @@ void SideBar::mousePressEvent(QMouseEvent *event)
         m_mouseStartPoint = event->globalPos();
         //获得窗口的初始位置
         m_windowStartPoint = this->frameGeometry().topLeft();
-        m_pMainWindow->getToolBarStartPressPoint();
+        m_host->toolBarStartPressPoint();
     }
 }
 
@@ -461,9 +471,8 @@ void SideBar::mouseMoveEvent(QMouseEvent *event)
         //获得鼠标移动的距离
         QPoint move_distance = event->globalPos() - m_mouseStartPoint;
         //改变窗口的位置
-        if (m_pMainWindow) {
-            m_pMainWindow->moveToolBars(m_windowStartPoint, move_distance);
-        }
+        if (!m_host || !m_host->moveToolBars(m_windowStartPoint, move_distance))
+            move(m_windowStartPoint + move_distance);
     }
 }
 

@@ -278,6 +278,12 @@ int main(int argc, char *argv[])
         cmdParser.addOption(screenScrollOption);
         cmdParser.addOption(screenshotSessionPreviewOption);
         cmdParser.process(*app);
+        if (cmdParser.isSet(dbusOption)) {
+            // The D-Bus service owns no visible window between screenshot
+            // sessions. Keep the process alive so subsequent calls reuse the
+            // same registered service and object instances.
+            app->setQuitOnLastWindowClosed(false);
+        }
         qCDebug(dsrApp) << "Command line parser initialized and processed application arguments.";
 
         // Load translator.
@@ -319,7 +325,15 @@ int main(int argc, char *argv[])
         qCInfo(dsrApp) << "Is Exists FFmpeg Lib:" << Utils::isFFmpegEnv;
         qCDebug(dsrApp) << "Tablet environment:" << Utils::isTabletEnvironment << ", Root user:" << Utils::isRootUser << ", FFmpeg Lib exists:" << Utils::isFFmpegEnv;
 
-        if (cmdParser.isSet(screenshotSessionPreviewOption)) {
+        const bool usePlatformScreenshotSession =
+                Dsr::Screenshot::ScreenshotSessionFactory::isCurrentPlatformSupported()
+                && !cmdParser.isSet(dbusOption)
+                && !cmdParser.isSet(screenRecordOption)
+                && !cmdParser.isSet(screenOcrOption)
+                && !cmdParser.isSet(screenScrollOption)
+                && !cmdParser.isSet(screenRecordFullScreenOption);
+        if (cmdParser.isSet(screenshotSessionPreviewOption)
+                || usePlatformScreenshotSession) {
             Dsr::Screenshot::Request request;
             if (cmdParser.isSet(fullscreenOption))
                 request.mode = Dsr::Screenshot::Mode::FullScreen;
@@ -355,7 +369,13 @@ int main(int argc, char *argv[])
                 qCritical() << "Screenshot session is already active";
                 return 2;
             }
-            return app->exec();
+            const int exitCode = app->exec();
+            // Tear down the session while QApplication and its platform
+            // integration are still alive.  Waiting for DApplication's member
+            // destruction leaves hidden annotation widgets alive until the
+            // platform teardown has already started.
+            delete session;
+            return exitCode;
         }
         if (cmdParser.isSet(useGStreamer)) {
             Utils::isFFmpegEnv = false;

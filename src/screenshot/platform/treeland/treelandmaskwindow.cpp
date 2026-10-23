@@ -5,20 +5,17 @@
 #include "treelandmaskwindow.h"
 
 #include "../../core/coordinatemapper.h"
+#include "../../../utils/log.h"
 
-#include <QApplication>
 #include <QCloseEvent>
 #include <QDebug>
 #include <QGuiApplication>
-#include <QHBoxLayout>
 #include <QKeyEvent>
 #include <QKeySequence>
-#include <QLabel>
 #include <QMouseEvent>
 #include <QPainter>
-#include <QPushButton>
+#include <QResizeEvent>
 #include <QScreen>
-#include <QStyle>
 #include <QtMath>
 
 namespace Dsr::Screenshot {
@@ -32,15 +29,6 @@ QPoint eventPosition(QMouseEvent *event)
 #else
     return event->pos();
 #endif
-}
-
-QPushButton *createToolbarButton(const QString &text, QWidget *parent)
-{
-    auto *button = new QPushButton(text, parent);
-    button->setCursor(Qt::PointingHandCursor);
-    button->setMinimumWidth(64);
-    button->setFixedHeight(30);
-    return button;
 }
 
 QScreen *screenForOutput(const OutputDescriptor &output)
@@ -70,46 +58,6 @@ TreelandMaskWindow::TreelandMaskWindow(const OutputDescriptor &output, QWidget *
     if (QScreen *screen = screenForOutput(output))
         setScreen(screen);
     setGeometry(output.logicalGeometry);
-
-    m_toolbar = new QWidget(this);
-    m_toolbar->setObjectName(QStringLiteral("selectionToolbar"));
-    m_toolbar->setStyleSheet(QStringLiteral(
-            "QWidget#selectionToolbar {"
-            "  background: rgba(32, 32, 32, 235);"
-            "  border: 1px solid rgba(255, 255, 255, 60);"
-            "  border-radius: 7px;"
-            "}"
-            "QPushButton {"
-            "  color: white; background: transparent; border: none;"
-            "  border-radius: 4px; padding: 2px 9px; font-size: 13px;"
-            "}"
-            "QPushButton:hover { background: rgba(255, 255, 255, 30); }"
-            "QPushButton#closeButton { font-size: 17px; min-width: 24px; max-width: 24px; }"));
-
-    auto *layout = new QHBoxLayout(m_toolbar);
-    layout->setContentsMargins(7, 5, 7, 5);
-    layout->setSpacing(4);
-
-    auto *status = new QLabel(m_toolbar);
-    status->setStyleSheet(QStringLiteral("color: #d8d8d8; font-size: 12px; padding-right: 5px;"));
-    status->setText(QStringLiteral("选区"));
-    layout->addWidget(status);
-
-    m_saveButton = createToolbarButton(QStringLiteral("保存"), m_toolbar);
-    m_copyButton = createToolbarButton(QStringLiteral("复制"), m_toolbar);
-    m_cancelButton = createToolbarButton(QStringLiteral("取消"), m_toolbar);
-    m_closeButton = createToolbarButton(QStringLiteral("×"), m_toolbar);
-    m_closeButton->setObjectName(QStringLiteral("closeButton"));
-    layout->addWidget(m_saveButton);
-    layout->addWidget(m_copyButton);
-    layout->addWidget(m_cancelButton);
-    layout->addWidget(m_closeButton);
-    m_toolbar->hide();
-
-    connect(m_saveButton, &QPushButton::clicked, this, &TreelandMaskWindow::confirmRequested);
-    connect(m_copyButton, &QPushButton::clicked, this, &TreelandMaskWindow::copyRequested);
-    connect(m_cancelButton, &QPushButton::clicked, this, &TreelandMaskWindow::cancelRequested);
-    connect(m_closeButton, &QPushButton::clicked, this, &TreelandMaskWindow::cancelRequested);
 }
 
 TreelandMaskWindow::~TreelandMaskWindow() = default;
@@ -127,15 +75,21 @@ void TreelandMaskWindow::setFrozenFrame(const QImage &image)
 
 void TreelandMaskWindow::setSelection(const QRect &globalSelection)
 {
-    m_selection = CoordinateMapper::globalToOutputLocal(globalSelection, m_output).intersected(rect());
-    if (m_finalized)
-        updateToolbar();
+    const QRect localSelection =
+            CoordinateMapper::globalToOutputLocal(globalSelection, m_output).intersected(rect());
+    if (m_selection == localSelection)
+        return;
+    m_selection = localSelection;
     update();
 }
 
 void TreelandMaskWindow::setSnapHint(const QRect &globalRegion)
 {
-    m_snapHint = CoordinateMapper::globalToOutputLocal(globalRegion, m_output).intersected(rect());
+    const QRect snapHint =
+            CoordinateMapper::globalToOutputLocal(globalRegion, m_output).intersected(rect());
+    if (m_snapHint == snapHint)
+        return;
+    m_snapHint = snapHint;
     update();
 }
 
@@ -144,20 +98,14 @@ void TreelandMaskWindow::setSelectionFinalized(bool finalized)
     if (m_finalized == finalized)
         return;
     m_finalized = finalized;
-    updateToolbar();
     update();
-}
-
-void TreelandMaskWindow::setToolbarVisible(bool visible)
-{
-    if (m_toolbarVisible == visible)
-        return;
-    m_toolbarVisible = visible;
-    updateToolbar();
 }
 
 void TreelandMaskWindow::setCursorIntent(CursorIntent intent)
 {
+    if (m_cursorIntent == intent)
+        return;
+    m_cursorIntent = intent;
     switch (intent) {
     case CursorIntent::Move:
         setCursor(Qt::SizeAllCursor);
@@ -174,10 +122,26 @@ void TreelandMaskWindow::setCursorIntent(CursorIntent intent)
     case CursorIntent::ResizeDiagonalBackward:
         setCursor(Qt::SizeBDiagCursor);
         break;
+    case CursorIntent::Text:
+        setCursor(Qt::IBeamCursor);
+        break;
+    case CursorIntent::Rotate:
+        setCursor(Qt::CrossCursor);
+        break;
     case CursorIntent::Default:
     case CursorIntent::Cross:
         setCursor(Qt::CrossCursor);
         break;
+    }
+}
+
+void TreelandMaskWindow::setAnnotationView(QWidget *widget)
+{
+    m_annotationView = widget;
+    if (m_annotationView) {
+        m_annotationView->setGeometry(rect());
+        m_annotationView->show();
+        m_annotationView->raise();
     }
 }
 
@@ -305,7 +269,8 @@ void TreelandMaskWindow::keyPressEvent(QKeyEvent *event)
         emit cancelRequested();
         return;
     }
-    if (event->key() == Qt::Key_Return || event->key() == Qt::Key_Enter) {
+    if (event->key() == Qt::Key_Return || event->key() == Qt::Key_Enter
+            || event->matches(QKeySequence::Save)) {
         emit confirmRequested();
         return;
     }
@@ -313,7 +278,16 @@ void TreelandMaskWindow::keyPressEvent(QKeyEvent *event)
         emit copyRequested();
         return;
     }
+    if (event->matches(QKeySequence::Undo)) {
+        emit undoRequested();
+        return;
+    }
     QWidget::keyPressEvent(event);
+}
+
+QPoint TreelandMaskWindow::toGlobal(const QPoint &localPos) const
+{
+    return CoordinateMapper::outputLocalToGlobal(localPos, m_output);
 }
 
 void TreelandMaskWindow::closeEvent(QCloseEvent *event)
@@ -325,32 +299,12 @@ void TreelandMaskWindow::closeEvent(QCloseEvent *event)
     QWidget::closeEvent(event);
 }
 
-void TreelandMaskWindow::updateToolbar()
+void TreelandMaskWindow::resizeEvent(QResizeEvent *event)
 {
-    if (!m_finalized || !m_toolbarVisible || m_selection.isEmpty()) {
-        m_toolbar->hide();
-        return;
-    }
-
-    m_toolbar->adjustSize();
-    const QSize size = m_toolbar->sizeHint();
-    m_toolbar->resize(size);
-
-    const int margin = 8;
-    int x = m_selection.center().x() - size.width() / 2;
-    x = qBound(margin, x, qMax(margin, width() - size.width() - margin));
-    int y = m_selection.top() - size.height() - margin;
-    if (y < margin)
-        y = m_selection.bottom() + margin;
-    y = qBound(margin, y, qMax(margin, height() - size.height() - margin));
-    m_toolbar->move(x, y);
-    m_toolbar->raise();
-    m_toolbar->show();
+    QWidget::resizeEvent(event);
+    if (m_annotationView)
+        m_annotationView->setGeometry(rect());
 }
 
-QPoint TreelandMaskWindow::toGlobal(const QPoint &localPos) const
-{
-    return CoordinateMapper::outputLocalToGlobal(localPos, m_output);
-}
 
 } // namespace Dsr::Screenshot

@@ -17,11 +17,12 @@
 
 DWIDGET_USE_NAMESPACE
 class MainWindow;
+class ToolBarHost;
 class SubToolWidget : public DStackedWidget
 {
     Q_OBJECT
 public:
-    explicit SubToolWidget(MainWindow *pmainwindow, DWidget *parent = nullptr);
+    explicit SubToolWidget(ToolBarHost *host, DWidget *parent = nullptr);
     ~SubToolWidget();
 
     void initWidget();
@@ -252,7 +253,7 @@ private:
      * @brief m_scrollChangeSaveToSpecialPath 滚动截图选项: 设置或更新指定位置
      */
     QAction *m_scrollChangeSaveToSpecialPath = nullptr;
-    MainWindow *m_pMainWindow = nullptr;
+    ToolBarHost *m_host = nullptr;
     DVerticalLine* m_saveSeperatorBeg= nullptr;
     DVerticalLine* m_saveSeperatorEnd= nullptr;
     DVerticalLine* m_recordSeperator= nullptr;

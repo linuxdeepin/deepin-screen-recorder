@@ -3,6 +3,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 
 #include "subtoolwidget.h"
+#include "toolbarhost.h"
 #include "../camera_process.h"
 #include "../utils/configsettings.h"
 #include "../utils/saveutils.h"
@@ -53,12 +54,14 @@ const QSize MEDIUM_TOOL_BUTTON_SIZE = QSize(56, 36);
 const QSize MIN_TOOL_BUTTON_SIZE = QSize(42, 40);
 }
 
-SubToolWidget::SubToolWidget(MainWindow *pmainwindow, DWidget *parent) : DStackedWidget(parent)
+SubToolWidget::SubToolWidget(ToolBarHost *host, DWidget *parent) : DStackedWidget(parent)
 {
+    Q_ASSERT(host);
     qCDebug(dsrApp) << "SubToolWidget constructor called.";
-    m_pMainWindow = pmainwindow;
+    m_host = host;
     initWidget();
-    connect(m_pMainWindow, SIGNAL(microPhoneEnable(bool)), this, SLOT(setMicroPhoneEnable(bool)));
+    connect(m_host, &ToolBarHost::microphoneEnabled,
+            this, &SubToolWidget::setMicroPhoneEnable);
 }
 
 void SubToolWidget::initWidget()
@@ -143,11 +146,11 @@ void SubToolWidget::initRecordLabel()
     btnList.append(m_shotButton);
     connect(m_shotButton, &DPushButton::clicked, this, [ = ] {
         qCDebug(dsrApp) << "Screenshot button clicked.";
-        m_pMainWindow->getToolBarPoint();
+        m_host->toolBarPointRequested();
         qCInfo(dsrApp) << "shotbutton is clicked";
         switchContent("shot");
         if (Utils::isTreelandMode) {
-            m_pMainWindow->onTreelandSwitchToShotUI();
+            m_host->switchToShotUI();
         }
         qCInfo(dsrApp) << "emit changeShotToolFunc(shot)";
         emit changeShotToolFunc("shot");
@@ -645,7 +648,9 @@ void SubToolWidget::initShotLabel()
     Utils::setAccessibility(m_textButton, AC_SUBTOOLWIDGET_TEXT_BUTTON);
     m_shotBtnGroup->addButton(m_textButton);
     m_textButton->setFixedSize(TOOL_BUTTON_SIZE);
-    btnList.append(m_textButton);
+    // TreeLand 的标注编辑当前只接入形状/线条/画笔；不要暴露未接通的文本入口。
+    if (!Utils::isTreelandMode)
+        btnList.append(m_textButton);
 
     //添加序号标注按钮
     m_sequenceButton = new ToolButton();
@@ -655,7 +660,9 @@ void SubToolWidget::initShotLabel()
     Utils::setAccessibility(m_sequenceButton, AC_SUBTOOLWIDGET_SEQUENCE_BUTTON);
     m_shotBtnGroup->addButton(m_sequenceButton);
     m_sequenceButton->setFixedSize(TOOL_BUTTON_SIZE);
-    btnList.append(m_sequenceButton);
+    // 序号工具尚未迁移到新的输入仲裁链路，TreeLand 下不显示无效入口。
+    if (!Utils::isTreelandMode)
+        btnList.append(m_sequenceButton);
 
     //添加滚动截图按钮
     m_scrollShotButton = new ToolButton();
@@ -708,10 +715,11 @@ void SubToolWidget::initShotLabel()
     });
 
 #ifdef  OCR_SCROLL_FLAGE_ON
-    // TODO: 仅x11下开启，后续处理，目前treeland下仍有崩溃情况
-    //if (!(Utils::isTreelandMode))
+    // TODO: OCR/表格识别尚未迁移到新的结果消费链路。
+    if (!Utils::isTreelandMode) {
         btnList.append(m_ocrButton);
         btnList.append(m_tableButton);
+    }
 #endif
 
     //添加贴图按钮
@@ -728,7 +736,8 @@ void SubToolWidget::initShotLabel()
         qCDebug(dsrApp) << "贴图按钮按下！";
         emit changeShotToolFunc("pinScreenshots");
     });
-    btnList.append(m_pinButton);
+    if (!Utils::isTreelandMode)
+        btnList.append(m_pinButton);
 
     m_aiAssistantButton = new ToolButton();
     m_aiAssistantButton->setObjectName("AiAssistantButton");
@@ -773,9 +782,9 @@ void SubToolWidget::initShotLabel()
     installTipHint(m_cancelButton, tr("Undo (Ctrl+Z)"));
     btnList.append(m_cancelButton);
     m_cancelButton->setEnabled(false);
-    connect(m_cancelButton, &ToolButton::clicked, m_pMainWindow, &MainWindow::unDo);
-    connect(m_cancelButton, &ToolButton::isInUndoBtn, m_pMainWindow, &MainWindow::isInUndoBtn);
-    connect(m_pMainWindow, &MainWindow::setUndoEnable, this, [ = ](bool isEnabled) {
+    connect(m_cancelButton, &ToolButton::clicked, m_host, &ToolBarHost::undo);
+    connect(m_cancelButton, &ToolButton::isInUndoBtn, m_host, &ToolBarHost::undoHover);
+    connect(m_host, &ToolBarHost::undoAvailabilityChanged, this, [ = ](bool isEnabled) {
         m_cancelButton->setEnabled(isEnabled);
     });
 
@@ -793,11 +802,11 @@ void SubToolWidget::initShotLabel()
     if (!(Utils::isTreelandMode))
         btnList.append(m_recorderButton);
         connect(m_recorderButton, &ToolButton::clicked, this, [ = ] {
-            m_pMainWindow->getToolBarPoint();
+            m_host->toolBarPointRequested();
             switchContent("record");
             // Treeland 环境下点击“切换到录屏”，进行前端UI切换与后端选择器退出
             if (Utils::isTreelandMode) {
-                m_pMainWindow->onTreelandSwitchToRecordUI();
+                m_host->switchToRecordUI();
             }
             emit changeShotToolFunc("record");
         });
@@ -830,7 +839,7 @@ void SubToolWidget::initShotLabel()
     m_shotBtnGroup->addButton(m_saveLocalDirButton);
     // m_saveLocalDirButton->setFixedSize(TOOL_BUTTON_SIZE);
     btnList.append(m_saveLocalDirButton);
-    connect(m_saveLocalDirButton, &SaveButton::clicked, m_pMainWindow, &MainWindow::saveScreenShotToFile);
+    connect(m_saveLocalDirButton, &SaveButton::clicked, m_host, &ToolBarHost::save);
 
     if (Utils::is3rdInterfaceStart) {
         m_shotOptionButton->hide();
@@ -1610,7 +1619,7 @@ void SubToolWidget::initScrollLabel()
     m_shotBtnGroup->addButton(m_saveLocalDirButton);
     // m_saveLocalDirButton->setFixedSize(TOOL_BUTTON_SIZE);
     btnList.append(m_saveLocalDirButton);
-    connect(m_saveLocalDirButton, &SaveButton::clicked, m_pMainWindow, &MainWindow::saveScreenShotToFile);
+    connect(m_saveLocalDirButton, &SaveButton::clicked, m_host, &ToolBarHost::save);
 
     m_saveSeperatorBeg = new DVerticalLine(this);
     m_saveSeperatorEnd = new DVerticalLine(this);
@@ -1971,7 +1980,7 @@ void SubToolWidget::installTipHint(QWidget *w, const QString &hintstr)
 {
     qCDebug(dsrApp) << "SubToolWidget::installTipHint called for widget:" << w << "with hint:" << hintstr;
     // TODO: parent must be mainframe
-    auto hintWidget = new ToolTips("", m_pMainWindow);
+    auto hintWidget = new ToolTips("", m_host->anchorWidget());
     hintWidget->hide();
     hintWidget->setText(hintstr);
 //    hintWidget->setFixedHeight(32);

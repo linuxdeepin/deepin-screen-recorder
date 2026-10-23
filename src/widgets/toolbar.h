@@ -21,12 +21,13 @@
 DWIDGET_USE_NAMESPACE
 
 class MainWindow;
+class ToolBarHost;
 enum SaveAction : unsigned int;
 class ToolBarWidget : public DFloatingWidget
 {
     Q_OBJECT
 public:
-    explicit ToolBarWidget(MainWindow *pMainwindow, DWidget *parent = nullptr, bool hideToolBar = false);
+    explicit ToolBarWidget(ToolBarHost *host, DWidget *parent = nullptr, bool hideToolBar = false);
     ~ToolBarWidget() Q_DECL_OVERRIDE;
 
     /**
@@ -102,6 +103,7 @@ private:
      */
     ToolButton *m_confirmButton;
     bool m_hideToolBar = false;
+    ToolBarHost *m_host = nullptr;
 };
 
 class ToolBar : public DLabel
@@ -112,6 +114,7 @@ public:
     ~ToolBar() Q_DECL_OVERRIDE;
     //public接口非slots
     void initToolBar(MainWindow *pmainWindow, bool hideToolbar = false);
+    void initToolBar(ToolBarHost *host, bool hideToolbar = false);
 
     /**
      * @brief show toolBarWidget and hide toolBarWidget
@@ -212,7 +215,7 @@ private:
 
     QPoint m_mouseStartPoint;
     QPoint m_windowStartPoint;
-    MainWindow *m_pMainWindow = nullptr;
+    ToolBarHost *m_host = nullptr;
 
 };
 #endif // TOOLBAR_H
