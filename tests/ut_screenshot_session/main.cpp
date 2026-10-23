@@ -12,6 +12,7 @@
 #include "screenshot/ports/iwindowtagger.h"
 #include "screenshot/session/annotationcoordinator.h"
 #include "screenshot/session/screenshotsessioncontroller.h"
+#include "utils/shapesutils.h"
 
 #include <QColor>
 #include <QImage>
@@ -44,6 +45,16 @@ public:
     QRectF bounds;
     QColor renderColor = Qt::transparent;
     mutable bool renderCalled = false;
+    AnnotationHit currentHit;
+    bool beginResult = false;
+    bool interacting = false;
+    mutable int hitTestCount = 0;
+    int beginCount = 0;
+    int updateCount = 0;
+    int endCount = 0;
+    int cancelCount = 0;
+    QList<QPoint> updatePositions;
+    AnnotationTool currentTool = AnnotationTool::Pointer;
 
     QRectF contentBoundsGlobal() const override
     {
@@ -52,7 +63,48 @@ public:
 
     bool isInteracting() const override
     {
-        return false;
+        return interacting;
+    }
+
+    void setTool(AnnotationTool tool) override
+    {
+        currentTool = tool;
+    }
+
+    AnnotationTool tool() const override
+    {
+        return currentTool;
+    }
+
+    AnnotationHit hitTest(const QPoint &) const override
+    {
+        ++hitTestCount;
+        return currentHit;
+    }
+
+    bool beginInteraction(const QPoint &) override
+    {
+        ++beginCount;
+        interacting = beginResult;
+        return beginResult;
+    }
+
+    void updateInteraction(const QPoint &globalPos) override
+    {
+        ++updateCount;
+        updatePositions.append(globalPos);
+    }
+
+    void endInteraction() override
+    {
+        ++endCount;
+        interacting = false;
+    }
+
+    void cancelInteraction() override
+    {
+        ++cancelCount;
+        interacting = false;
     }
 
     void render(QPainter &painter, const QRect &, qreal) const override
@@ -109,11 +161,23 @@ public:
     bool finalized = false;
     bool shown = false;
     bool closed = false;
+    bool clearSelectionOnCreate = false;
+    IAnnotationEditor *pendingEditor = nullptr;
+    IAnnotationEditor *providedEditor = nullptr;
+    CursorIntent cursorIntent = CursorIntent::Default;
 
     bool create(const QList<OutputDescriptor> &outputs) override
     {
+        if (clearSelectionOnCreate)
+            selection = QRect();
+        providedEditor = pendingEditor;
         createdOutputs = outputs;
         return !outputs.isEmpty();
+    }
+
+    IAnnotationEditor *annotationEditor() const override
+    {
+        return providedEditor;
     }
 
     QList<QWindow *> maskWindows() const override
@@ -145,8 +209,9 @@ public:
         finalized = value;
     }
 
-    void setCursorIntent(CursorIntent) override
+    void setCursorIntent(CursorIntent intent) override
     {
+        cursorIntent = intent;
     }
 
     void close() override
@@ -250,6 +315,38 @@ class ScreenshotSessionTest : public QObject
 {
     Q_OBJECT
 private slots:
+    void annotationContentBoundsCoverGeometryWithoutDecorations()
+    {
+        Toolshape rectangle;
+        rectangle.type = QStringLiteral("rectangle");
+        rectangle.lineWidth = 7;
+        rectangle.mainPoints = {QPointF(40, 20), QPointF(20, 80),
+                                QPointF(100, 40), QPointF(80, 100)};
+        const QRectF bounds = toolshapeContentBounds(rectangle);
+        QVERIFY(bounds.contains(QPointF(20, 80)));
+        QVERIFY(bounds.contains(QPointF(100, 40)));
+        QVERIFY(bounds.width() > 80);
+
+        Toolshape pen;
+        pen.type = QStringLiteral("pen");
+        pen.lineWidth = 3;
+        pen.points = {QPointF(10, 10), QPointF(30, 45), QPointF(90, 70)};
+        const QRectF penBounds = toolshapeContentBounds(pen);
+        QVERIFY(penBounds.contains(QPointF(10, 10)));
+        QVERIFY(penBounds.contains(QPointF(90, 70)));
+
+        Toolshape arrowFromOrigin;
+        arrowFromOrigin.type = QStringLiteral("arrow");
+        arrowFromOrigin.lineWidth = 2;
+        arrowFromOrigin.points = {QPointF(0, 0), QPointF(120, 90)};
+        const QRectF arrowBounds = toolshapeContentBounds(arrowFromOrigin);
+        QVERIFY(arrowBounds.contains(QPointF(0, 0)));
+        QVERIFY(arrowBounds.contains(QPointF(120, 90)));
+
+        Toolshape empty;
+        QVERIFY(toolshapeContentBounds(empty).isEmpty());
+    }
+
     void selectionShrinkCannotCropAnnotations()
     {
         SelectionModel model;
@@ -280,6 +377,23 @@ private slots:
 
         QVERIFY(model.geometry().contains(QPoint(750, 150)));
         QVERIFY(model.geometry().contains(QPoint(849, 249)));
+    }
+
+    void annotationBoundsAcrossOutputsExpandReadySelection()
+    {
+        SelectionModel model;
+        model.setDesktopBounds(QRect(0, 0, 3840, 1080));
+        model.setGeometry(QRect(100, 100, 300, 200));
+
+        FakeAnnotationEditor editor;
+        AnnotationCoordinator coordinator(&model, &editor);
+        editor.setBounds(QRectF(100, 100, 2100, 600));
+
+        const QRect selection = model.geometry();
+        QVERIFY(selection.left() <= 100);
+        QVERIFY(selection.right() >= 2199);
+        QVERIFY(selection.top() <= 100);
+        QVERIFY(selection.bottom() >= 699);
     }
 
     void exportJoinsOutputsAndRendersAnnotations()
@@ -375,6 +489,185 @@ private slots:
         QCOMPARE(sink->copyCount, 1);
         QCOMPARE(controller.state(), ScreenshotSessionController::State::Completed);
         QVERIFY(overlay->closed);
+    }
+
+    void selectionResizeHandleHasPriorityOverAnnotation()
+    {
+        FakeBackend *backend = new FakeBackend;
+        backend->frames.virtualDesktopRect = QRect(0, 0, 800, 600);
+        backend->frames.outputs = {makeFrame(QRect(0, 0, 800, 600), Qt::white)};
+        auto *overlay = new FakeOverlay;
+        auto *sink = new FakeResultSink;
+        auto *annotations = new FakeAnnotationEditor;
+        annotations->currentHit = {AnnotationHitKind::ResizeHandle,
+                                   CursorIntent::Move,
+                                   0};
+
+        ScreenshotSessionController controller(backend, overlay, nullptr, nullptr,
+                                               sink, annotations);
+        Request request;
+        request.mode = Mode::FullScreen;
+        QVERIFY(controller.start(request));
+
+        overlay->move(QPoint(799, 599));
+        QCOMPARE(overlay->cursorIntent, CursorIntent::ResizeDiagonalForward);
+
+        overlay->press(QPoint(799, 599));
+        QCOMPARE(annotations->beginCount, 0);
+        QCOMPARE(overlay->cursorIntent, CursorIntent::ResizeDiagonalForward);
+    }
+
+    void annotationHandleDrivesCursorInsideSelection()
+    {
+        FakeBackend *backend = new FakeBackend;
+        backend->frames.virtualDesktopRect = QRect(0, 0, 800, 600);
+        backend->frames.outputs = {makeFrame(QRect(0, 0, 800, 600), Qt::white)};
+        auto *overlay = new FakeOverlay;
+        auto *sink = new FakeResultSink;
+        auto *annotations = new FakeAnnotationEditor;
+        annotations->currentHit = {AnnotationHitKind::ResizeHandle,
+                                   CursorIntent::ResizeDiagonalBackward,
+                                   3};
+
+        ScreenshotSessionController controller(backend, overlay, nullptr, nullptr,
+                                               sink, annotations);
+        Request request;
+        request.mode = Mode::FullScreen;
+        QVERIFY(controller.start(request));
+
+        overlay->move(QPoint(300, 300));
+        QCOMPARE(overlay->cursorIntent, CursorIntent::ResizeDiagonalBackward);
+    }
+
+    void annotationActionAndCursorStayLockedUntilRelease()
+    {
+        FakeBackend *backend = new FakeBackend;
+        backend->frames.virtualDesktopRect = QRect(0, 0, 800, 600);
+        backend->frames.outputs = {makeFrame(QRect(0, 0, 800, 600), Qt::white)};
+        auto *overlay = new FakeOverlay;
+        auto *sink = new FakeResultSink;
+        auto *annotations = new FakeAnnotationEditor;
+        annotations->beginResult = true;
+        annotations->currentHit = {AnnotationHitKind::Content,
+                                   CursorIntent::Move,
+                                   -1};
+
+        ScreenshotSessionController controller(backend, overlay, nullptr, nullptr,
+                                               sink, annotations);
+        Request request;
+        request.mode = Mode::FullScreen;
+        QVERIFY(controller.start(request));
+
+        overlay->press(QPoint(200, 200));
+        QVERIFY(annotations->interacting);
+        QCOMPARE(overlay->cursorIntent, CursorIntent::Move);
+
+        annotations->currentHit = {AnnotationHitKind::ResizeHandle,
+                                   CursorIntent::ResizeDiagonalForward,
+                                   3};
+        overlay->move(QPoint(600, 500));
+        QCOMPARE(annotations->updateCount, 1);
+        QCOMPARE(annotations->updatePositions.last(), QPoint(600, 500));
+        QCOMPARE(overlay->cursorIntent, CursorIntent::Move);
+
+        overlay->release(QPoint(600, 500));
+        QVERIFY(!annotations->interacting);
+        QCOMPARE(annotations->endCount, 1);
+    }
+
+    void annotationBoundsExpandReadySelection()
+    {
+        FakeBackend *backend = new FakeBackend;
+        backend->frames.virtualDesktopRect = QRect(0, 0, 800, 600);
+        backend->frames.outputs = {makeFrame(QRect(0, 0, 800, 600), Qt::white)};
+        auto *overlay = new FakeOverlay;
+        auto *sink = new FakeResultSink;
+        auto *annotations = new FakeAnnotationEditor;
+        annotations->beginResult = true;
+        annotations->currentHit = {AnnotationHitKind::Content,
+                                   CursorIntent::Move,
+                                   -1};
+
+        ScreenshotSessionController controller(backend, overlay, nullptr, nullptr,
+                                               sink, annotations);
+        Request request;
+        request.initialRegion = QRect(100, 100, 200, 200);
+        QVERIFY(controller.start(request));
+        overlay->press(QPoint(150, 150));
+        overlay->release(QPoint(150, 150));
+        QCOMPARE(controller.state(), ScreenshotSessionController::State::Editing);
+
+        annotations->setBounds(QRectF(80, 90, 260, 240));
+        QVERIFY(overlay->selection.contains(QRect(80, 90, 260, 240)));
+    }
+
+    void annotationInteractionExpandsSelectionImmediately()
+    {
+        FakeBackend *backend = new FakeBackend;
+        backend->frames.virtualDesktopRect = QRect(0, 0, 800, 600);
+        backend->frames.outputs = {makeFrame(QRect(0, 0, 800, 600), Qt::white)};
+        auto *overlay = new FakeOverlay;
+        auto *sink = new FakeResultSink;
+        auto *annotations = new FakeAnnotationEditor;
+        annotations->beginResult = true;
+        annotations->currentHit = {AnnotationHitKind::Content,
+                                   CursorIntent::Move,
+                                   -1};
+
+        ScreenshotSessionController controller(backend, overlay, nullptr, nullptr,
+                                               sink, annotations);
+        Request request;
+        request.initialRegion = QRect(100, 100, 200, 200);
+        QVERIFY(controller.start(request));
+
+        overlay->press(QPoint(150, 150));
+        annotations->setBounds(QRectF(60, 70, 300, 260));
+        QVERIFY(overlay->selection.contains(QRect(60, 70, 300, 260)));
+
+        overlay->move(QPoint(420, 390));
+        QCOMPARE(annotations->updateCount, 1);
+        QVERIFY(overlay->selection.contains(QRect(60, 70, 300, 260)));
+    }
+
+    void initialSelectionIsSyncedAfterOverlayCreation()
+    {
+        FakeBackend *backend = new FakeBackend;
+        backend->frames.virtualDesktopRect = QRect(0, 0, 800, 600);
+        backend->frames.outputs = {makeFrame(QRect(0, 0, 800, 600), Qt::white)};
+        auto *overlay = new FakeOverlay;
+        overlay->clearSelectionOnCreate = true;
+        auto *sink = new FakeResultSink;
+
+        ScreenshotSessionController controller(backend, overlay, nullptr, nullptr, sink);
+        Request request;
+        request.mode = Mode::FullScreen;
+        QVERIFY(controller.start(request));
+
+        QCOMPARE(overlay->selection, backend->frames.virtualDesktopRect);
+        QVERIFY(overlay->finalized);
+    }
+
+    void overlayEditorPublishedDuringCreationIsBoundBeforeInput()
+    {
+        FakeBackend *backend = new FakeBackend;
+        backend->frames.virtualDesktopRect = QRect(0, 0, 800, 600);
+        backend->frames.outputs = {makeFrame(QRect(0, 0, 800, 600), Qt::white)};
+        auto *overlay = new FakeOverlay;
+        auto *sink = new FakeResultSink;
+        auto *annotations = new FakeAnnotationEditor;
+        annotations->beginResult = true;
+        annotations->currentHit = {AnnotationHitKind::Content,
+                                   CursorIntent::Move,
+                                   -1};
+        overlay->pendingEditor = annotations;
+
+        ScreenshotSessionController controller(backend, overlay, nullptr, nullptr, sink);
+
+        QVERIFY(controller.start(Request()));
+        overlay->press(QPoint(100, 100));
+
+        QCOMPARE(annotations->beginCount, 1);
+        QCOMPARE(overlay->cursorIntent, CursorIntent::Move);
     }
 
     void fullScreenRequestUsesVirtualDesktop()

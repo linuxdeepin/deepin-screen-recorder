@@ -19,6 +19,17 @@
 
 namespace Dsr::Screenshot {
 
+namespace {
+
+bool isSelectionResize(SelectionAction action)
+{
+    return action != SelectionAction::NoAction
+            && action != SelectionAction::CreateFreeform
+            && action != SelectionAction::Move;
+}
+
+} // namespace
+
 ScreenshotSessionController::ScreenshotSessionController(IScreenshotBackend *backend,
                                                          IScreenshotOverlayHost *overlay,
                                                          ISnapHintSource *snapHints,
@@ -46,7 +57,7 @@ ScreenshotSessionController::ScreenshotSessionController(IScreenshotBackend *bac
         m_snapHints->setParent(this);
     if (m_windowTagger)
         m_windowTagger->setParent(this);
-    if (m_annotationEditor)
+    if (m_annotationEditor && !m_annotationEditor->parent())
         m_annotationEditor->setParent(this);
     m_annotationCoordinator = new AnnotationCoordinator(m_selection,
                                                         m_annotationEditor,
@@ -97,6 +108,8 @@ bool ScreenshotSessionController::start(const Request &request)
     m_pressStartedEmpty = false;
     m_snapStarted = false;
     m_finished = false;
+    m_inputTarget = InputTarget::Inactive;
+    m_activeCursorIntent = CursorIntent::Cross;
     m_selection->clear();
     m_state = State::PreparingFrame;
     m_backend->prepare(m_request);
@@ -140,6 +153,14 @@ void ScreenshotSessionController::onBackendPrepared(const FrozenFrameSet &frames
         fail(QStringLiteral("创建截图覆盖窗口失败"));
         return;
     }
+    if (IAnnotationEditor *overlayEditor = m_overlay->annotationEditor()) {
+        m_annotationEditor = overlayEditor;
+        m_annotationCoordinator->setEditor(overlayEditor);
+    }
+    // Selection is prepared before the overlay exists. Push it again once the
+    // platform windows have been created so initial-region and full-screen
+    // sessions do not lose their initial geometry.
+    syncOverlaySelection();
     m_overlay->setFrozenFrames(m_frames);
     m_overlay->show();
 }
@@ -163,13 +184,24 @@ void ScreenshotSessionController::onPointerPressed(const QPoint &globalPos)
 {
     if (m_state != State::Selecting && m_state != State::Editing)
         return;
-
     m_pressed = true;
     m_dragged = false;
     m_pressPos = globalPos;
     m_pressStartedEmpty = m_selection->geometry().isEmpty();
     m_overlay->setSnapHint(QRect());
-    m_selection->beginInteraction(globalPos);
+
+    const SelectionAction selectionHit = m_selection->hitTest(globalPos);
+    if (isSelectionResize(selectionHit)) {
+        startSelectionInteraction(globalPos);
+    } else {
+        const AnnotationHit annotationHit = m_annotationEditor
+                ? m_annotationEditor->hitTest(globalPos)
+                : AnnotationHit();
+        if (annotationHit.isValid() && startAnnotationInteraction(globalPos))
+            m_activeCursorIntent = annotationHit.cursor;
+        else
+            startSelectionInteraction(globalPos);
+    }
     syncOverlayCursor(&globalPos);
 }
 
@@ -182,7 +214,10 @@ void ScreenshotSessionController::onPointerMoved(const QPoint &globalPos)
 
     if ((globalPos - m_pressPos).manhattanLength() >= 3)
         m_dragged = true;
-    m_selection->updateInteraction(globalPos);
+    if (m_inputTarget == InputTarget::Annotation && m_annotationEditor)
+        m_annotationEditor->updateInteraction(globalPos);
+    else if (m_inputTarget == InputTarget::Selection)
+        m_selection->updateInteraction(globalPos);
     syncOverlayCursor(&globalPos);
 }
 
@@ -190,12 +225,17 @@ void ScreenshotSessionController::onPointerReleased(const QPoint &globalPos)
 {
     if (!m_pressed)
         return;
-
     m_pressed = false;
-    if (!m_dragged && m_pressStartedEmpty && !m_snapHint.isEmpty())
-        m_selection->setGeometry(m_snapHint);
-    else
-        m_selection->endInteraction();
+    if (m_inputTarget == InputTarget::Annotation && m_annotationEditor) {
+        m_annotationEditor->endInteraction();
+        m_annotationCoordinator->syncBounds();
+    } else if (m_inputTarget == InputTarget::Selection) {
+        if (!m_dragged && m_pressStartedEmpty && !m_snapHint.isEmpty())
+            m_selection->setGeometry(m_snapHint);
+        else
+            m_selection->endInteraction();
+    }
+    m_inputTarget = InputTarget::Inactive;
 
     if (m_state == State::Selecting && m_selection->state() == InteractionState::Ready) {
         stopSnapHints();
@@ -283,6 +323,12 @@ void ScreenshotSessionController::onCancelRequested()
     if (m_finished)
         return;
 
+    if (m_inputTarget == InputTarget::Annotation && m_annotationEditor)
+        m_annotationEditor->cancelInteraction();
+    else if (m_inputTarget == InputTarget::Selection)
+        m_selection->cancelInteraction();
+    m_inputTarget = InputTarget::Inactive;
+    m_pressed = false;
     m_backend->cancel();
     finish(State::Cancelled);
 }
@@ -300,10 +346,50 @@ void ScreenshotSessionController::syncOverlayCursor(const QPoint *globalPos)
     if (!m_overlay)
         return;
 
+    if (m_pressed) {
+        m_overlay->setCursorIntent(m_activeCursorIntent);
+        return;
+    }
+
+    if (globalPos) {
+        const SelectionAction selectionHit = m_selection->hitTest(*globalPos);
+        if (isSelectionResize(selectionHit)) {
+            m_overlay->setCursorIntent(cursorIntentFor(selectionHit));
+            return;
+        }
+        if (m_annotationEditor) {
+            const AnnotationHit annotationHit = m_annotationEditor->hitTest(*globalPos);
+            if (annotationHit.isValid()) {
+                m_overlay->setCursorIntent(annotationHit.cursor);
+                return;
+            }
+        }
+        if (selectionHit != SelectionAction::NoAction) {
+            m_overlay->setCursorIntent(cursorIntentFor(selectionHit));
+            return;
+        }
+    }
+
     SelectionAction action = m_selection->action();
     if (action == SelectionAction::NoAction && globalPos)
         action = m_selection->hitTest(*globalPos);
     m_overlay->setCursorIntent(cursorIntentFor(action));
+}
+
+bool ScreenshotSessionController::startAnnotationInteraction(const QPoint &globalPos)
+{
+    if (!m_annotationEditor || !m_annotationEditor->beginInteraction(globalPos))
+        return false;
+    m_inputTarget = InputTarget::Annotation;
+    return true;
+}
+
+bool ScreenshotSessionController::startSelectionInteraction(const QPoint &globalPos)
+{
+    const SelectionAction action = m_selection->beginInteraction(globalPos);
+    m_inputTarget = InputTarget::Selection;
+    m_activeCursorIntent = cursorIntentFor(action);
+    return true;
 }
 
 void ScreenshotSessionController::startSnapHints()

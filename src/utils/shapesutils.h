@@ -48,4 +48,13 @@ typedef QList <Toolshape> Toolshapes;
 //Q_DECLARE_METATYPE(Toolshape)
 //Q_DECLARE_METATYPE(Toolshapes)
 
+/**
+ * Return the conservative content bounds of one committed shape.
+ *
+ * The result is in ShapesWidget-local coordinates and excludes selection
+ * handles, resize dots, rotate handles and hover decorations. Callers may use
+ * it as an annotation selection constraint.
+ */
+QRectF toolshapeContentBounds(const Toolshape &shape);
+
 #endif // SHAPESUTILS_H

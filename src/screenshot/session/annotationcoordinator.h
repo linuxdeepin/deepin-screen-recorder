@@ -23,6 +23,7 @@ public:
                           IAnnotationEditor *editor,
                           QObject *parent = nullptr);
 
+    void setEditor(IAnnotationEditor *editor);
     IAnnotationEditor *editor() const;
     void syncBounds();
 

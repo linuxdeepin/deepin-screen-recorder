@@ -14,14 +14,27 @@ AnnotationCoordinator::AnnotationCoordinator(SelectionModel *selection,
                                              QObject *parent)
     : QObject(parent)
     , m_selection(selection)
-    , m_editor(editor)
 {
     Q_ASSERT(m_selection);
-    if (!m_editor)
-        return;
+    setEditor(editor);
+}
 
-    connect(m_editor, &IAnnotationEditor::contentBoundsChanged,
-            m_selection, &SelectionModel::setAnnotationBounds);
+void AnnotationCoordinator::setEditor(IAnnotationEditor *editor)
+{
+    if (m_editor == editor) {
+        syncBounds();
+        return;
+    }
+
+    if (m_editor) {
+        disconnect(m_editor, &IAnnotationEditor::contentBoundsChanged,
+                   m_selection, &SelectionModel::setAnnotationBounds);
+    }
+    m_editor = editor;
+    if (m_editor) {
+        connect(m_editor, &IAnnotationEditor::contentBoundsChanged,
+                m_selection, &SelectionModel::setAnnotationBounds);
+    }
     syncBounds();
 }
 

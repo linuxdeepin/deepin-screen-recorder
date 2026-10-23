@@ -71,6 +71,8 @@ private:
 
     void syncOverlaySelection();
     void syncOverlayCursor(const QPoint *globalPos = nullptr);
+    bool startAnnotationInteraction(const QPoint &globalPos);
+    bool startSelectionInteraction(const QPoint &globalPos);
     void startSnapHints();
     void stopSnapHints();
     void fail(const QString &reason);
@@ -90,7 +92,14 @@ private:
     FrozenFrameSet m_frames;
     QRect m_snapHint;
     QPoint m_pressPos;
+    CursorIntent m_activeCursorIntent = CursorIntent::Cross;
     State m_state = State::Idle;
+    enum class InputTarget {
+        Inactive,
+        Selection,
+        Annotation
+    };
+    InputTarget m_inputTarget = InputTarget::Inactive;
     bool m_pressed = false;
     bool m_dragged = false;
     bool m_pressStartedEmpty = false;
