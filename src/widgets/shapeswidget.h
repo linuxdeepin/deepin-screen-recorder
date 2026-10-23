@@ -247,10 +247,18 @@ public slots:
     /**
      * Paint committed content plus the shape currently being drawn.
      *
-     * Live views use this while the pointer is down. Editing decorations such
-     * as hover frames, selection handles and rotation controls are excluded.
+     * This is the content-only live path. Editing decorations such as hover
+     * frames, selection handles and rotation controls are excluded.
      */
     void paintLiveContent(QPainter &painter) const;
+    /**
+     * Paint the complete interactive editor state.
+     *
+     * Platform-owned live views use this entry point so selection frames,
+     * resize handles and rotation controls remain owned by ShapesWidget.
+     * Final image export must continue to use paintContent().
+     */
+    void paintEditingContent(QPainter &painter) const;
 
     /**
      * @brief paintImage: 绘制图片
@@ -394,7 +402,7 @@ private:
      */
     QPoint m_currentCursor;
 
-    void paintImgPoint(QPainter &painter, QPointF pos, QPixmap img, bool isResize = true);
+    void paintImgPoint(QPainter &painter, QPointF pos, QPixmap img, bool isResize = true) const;
     //void paintImgPointArrow(QPainter &painter, QPointF pos, QPixmap img);
     void paintRect(QPainter &painter, FourPoints rectFPoints, int index,
                    ShapeBlurStatus  rectStatus = Normal, bool isBlur = false, bool isMosaic = false, int radius = 10) const;

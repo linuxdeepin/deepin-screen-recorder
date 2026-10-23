@@ -39,7 +39,7 @@ protected:
         painter.setRenderHint(QPainter::Antialiasing, true);
         painter.setClipRect(rect());
         painter.translate(-m_outputBounds.left(), -m_outputBounds.top());
-        m_document->paintLiveContent(painter);
+        m_document->paintEditingContent(painter);
     }
 
 private:
