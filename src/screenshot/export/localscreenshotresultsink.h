@@ -21,8 +21,16 @@ public:
               QString *error) override;
     bool copy(const Result &result, QString *error) override;
 
+signals:
+    void clipboardDataComing();
+
+private slots:
+    void onClipboardDataComing(const QByteArray &data);
+
 private:
     QString resolvedPath(const QString &requestedPath) const;
+
+    bool m_clipboardSignalConnected = false;
 };
 
 } // namespace Dsr::Screenshot
