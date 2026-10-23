@@ -2600,7 +2600,7 @@ void ShapesWidget::updateTextRect(TextEdit *edit, QRectF newRect)
     emit shapesChanged();
 }
 
-void ShapesWidget::paintImgPoint(QPainter &painter, QPointF pos, QPixmap img, bool isResize)
+void ShapesWidget::paintImgPoint(QPainter &painter, QPointF pos, QPixmap img, bool isResize) const
 {
     if (isResize) {
         painter.drawPixmap(QPointF(pos.x() - DRAG_BOUND_RADIUS,
@@ -2898,7 +2898,7 @@ void ShapesWidget::paintInProgressShape(QPainter &painter) const
     }
 }
 
-void ShapesWidget::handlePaint(QPainter &painter)
+void ShapesWidget::paintEditingContent(QPainter &painter) const
 {
     paintContent(painter);
     paintInProgressShape(painter);
@@ -2987,6 +2987,11 @@ void ShapesWidget::handlePaint(QPainter &painter)
             }
         }
     }
+}
+
+void ShapesWidget::handlePaint(QPainter &painter)
+{
+    paintEditingContent(painter);
 }
 
 //将编辑的内容绘制到图片上
