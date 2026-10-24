@@ -1,3 +1,65 @@
+deepin-screen-recorder (6.7.0) unstable; urgency=medium
+
+  * docs(shot): refresh help manual for new capture features
+  * feat(shot): polish fine-adjust tips and traditional translations
+  * fix(shot): correct DPI cropping and ratio-constrained selection
+  * fix(pin): improve table recognition overlays and results
+  * perf(shot): adopt native XImage buffers and tidy review findings
+  * perf(shot): reduce X11 screenshot startup overhead
+  * [skip CI] Translate deepin-screen-recorder.ts in ru
+  * fix(shot): round all four corners on high-DPI displays
+  * feat(shot): refine corner panel, toolbar and shortcut tips
+  * feat(shot): improve toolbar tooltips and shortcut panel
+  * fix(shot): remember save location only after a successful save
+  * fix(shot): keep sequence annotation dragging smooth
+  * feat(shot): copy cursor pixel color with Ctrl+C
+  * feat(shot): support resizing selection in annotation mode
+  * feat(shot): show magnifier while adjusting selection
+  * feat(shot): add pixel magnifier and color picker panel
+  * feat(shot): change AI screenshot shortcut to Alt+A
+  * feat(shot): add pixel-level adjustment shortcut tips
+  * fix(shot): align image border with rounded alpha outline
+  * feat(shot): integrate rounded corner and size ratio capture
+  * feat(shot): add rounded corner and size ratio widgets
+  * chore(i18n): refresh translations for sequence annotation
+  * feat(shot): add sequence number annotation tool
+  * chore(i18n): refresh translations for table recognition
+  * feat(shot): add table recognition entry to toolbar
+  * feat(pin): run table recognition on pin image
+  * feat(pin): add table recognition UI widgets
+  * test(ut): add PMS regression tests for sev1/sev2 bug hotspots
+  * chore: update SPDX copyright year range to 2022-2026 in
+    ut_calculaterect.h
+  * fix: init m_effectSubTool to nullptr preventing UT segfaults
+  * fix(mainwindow): fix re-entrancy latches, D-Bus payloads and input
+    helpers
+  * fix(widgets): fix cursor pairing, null guards and dead interactions in
+    widgets
+  * fix(draw): fix angle computation and stroke rendering in shape drawing
+  * fix(capture): harden ext-image-capture lifecycle and state handling
+  * fix(record): fix resource leaks and unsafe lifecycle in recording core
+  * [skip CI] Translate deepin-screen-recorder.ts in pt_BR
+  * style: normalize AT suite directory structure to short naming
+  * test: rewrite screenshot/screen-recorder unit tests for 100% function
+    coverage
+  * feat: add AT-SPI accessible names for interactive widgets
+  * test: add AT suites for record options and screenshot tools
+  * chore: Sync by
+    https://github.com/linuxdeepin/.github/commit/a300f8523d4876677112edab6a0772f7ad112976
+  * fix: resolve accessible factory build failure cleanly
+  * feat: add AT-SPI accessible names for interactive controls
+  * test(screen-shot-recorder): fix two failing cases in ut suite
+  * test(dde-dock-plugins): add interface and coverage tests for plugins
+  * test(screen-shot-recorder): dedup coverage tests and fix dangling
+    connect
+  * test(pin-screenshots): add adaptor, interface and menu manager cases
+  * fix: fix unit test failures and source bugs
+  * feat(test): add ut-summary.json generation for test results and
+    coverage
+  * test: fix missing unit test cases, increase from 26 to 1609
+
+ -- dengzhongyuan <dengzhongyuan@uniontech.com>  Sat, 24 Oct 2026 13:44:23 +0800
+
 deepin-screen-recorder (6.6.39) unstable; urgency=medium
 
   * test: add basic screenshot and recording AT suite
