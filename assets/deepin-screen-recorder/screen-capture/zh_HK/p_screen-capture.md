@@ -2,7 +2,7 @@
 
 ## 概述
 
-截圖錄屏係一款集截圖、錄屏於一體嘅小工具，支援圖片編輯、貼圖、滾動截圖、文字識別、錄屏等功能。
+截圖錄屏係一款集截圖、錄屏於一體嘅小工具，支援圖片編輯、序號標註、圓角截圖、固定尺寸、貼圖、滾動截圖、文字識別、表格識別、AI截圖、錄屏等功能。
 
 ![part_area](fig/partarea.png)
 
@@ -13,7 +13,7 @@
 ### 運行截圖錄屏
 
 1. 單擊任務欄上嘅啟動器圖標 ![deepin_launcher](../common/deepin_launcher.svg)，進入啟動器介面。
-2. 上下滾動滑鼠滾輪瀏覽或通過搜尋，搵到截圖錄屏圖標 ![deepin_screenshot](../common/deepin_screenshot.svg)，單擊運行。
+2. 上下滾動滑鼠滾輪瀏覽或通過搜尋，搵到截圖錄屏圖標 ![deepin_screenshot](../common/deepin_screenshot.svg)，單擊運行。
 3. 右鍵單擊 ![deepin_screenshot](../common/deepin_screenshot.svg)，您可以：
 
    - 單擊 **傳送到桌面**，在桌面建立捷徑。
@@ -26,7 +26,7 @@
 
 - 截圖錄屏會在截圖或錄屏結束後自動退出。
 - 在截圖錄屏介面，單擊 <img src="../common/close.svg" alt="close" style="zoom:67%;" />，關閉應用。
-- 在截圖介面，單擊滑鼠右鍵，選擇 **保存** 或 **退出**。
+- 在截圖介面，單擊滑鼠右鍵，選擇 **撤銷**、**保存** 或 **退出**。
 
 ### 快捷鍵
 
@@ -88,6 +88,7 @@
 - 將滑鼠指針置於截圖錄屏區域嘅白色邊框上，滑鼠指針變為 ![雙箭頭](../common/Mouse_Arrow.svg)，
 按住滑鼠左鍵唔放，拖動滑鼠放大或縮小區域。
 - 按下鍵盤上嘅 **Ctrl** + ![向上](../common/Up.svg) 或 ![向下](../common/Down.svg) 來上下擴展區域，按下鍵盤上嘅 **Ctrl** + ![向左](../common/Left.svg) 或 ![向右](../common/Right.svg) 來左右擴展區域。
+- 按下鍵盤上嘅 **Ctrl + Shift** + ![向上](../common/Up.svg)、![向下](../common/Down.svg)、![向左](../common/Left.svg) 或 ![向右](../common/Right.svg)，可以逐像素縮小區域嘅高度或寬度。
 
 #### 移動區域位置
 
@@ -95,22 +96,50 @@
 - 按住滑鼠左鍵唔放，拖動滑鼠來移動區域嘅位置。
 - 按下鍵盤上嘅 ![向上](../common/Up.svg) 或 ![向下](../common/Down.svg) 來上下移動區域，按下鍵盤上嘅 ![向左](../common/Left.svg) 或 ![向右](../common/Right.svg) 來左右移動區域。
 
+### 圓角截圖
+
+選中截圖錄屏區域後，區域右側會出現兩個快捷按鈕，上方嘅係圓角按鈕，提示為「圓角」。
+
+![0|選區快捷按鈕](fig/select_buttons.png)
+
+1. 單擊區域右側嘅圓角按鈕，展開圓角面板。
+2. 拖動滑塊，或直接在數值框中輸入數值，設置圓角半徑，最大可以設置為 60。
+3. 設置完成後，區域邊框會按該半徑顯示為圓角；保存或複製嘅圖片，四角同樣被裁為圓角，圓角以外嘅部分為透明。
+
+![0|圓角](fig/corner_tool.png)
+
+![0|圓角效果](fig/corner_result.png)
+
+### 固定尺寸/比例
+
+選中截圖錄屏區域後，區域右側下方嘅按鈕提示為「尺寸/比例」，用於將選區固定為指定嘅尺寸或寬高比。
+
+1. 單擊區域右側嘅尺寸/比例按鈕，展開面板。
+2. 單擊面板左側嘅下拉框，選擇 **尺寸** 或 **比例**。
+   - 選擇 **尺寸**，在數值框中輸入固定嘅寬度和高度，單位為像素。
+   - 選擇 **比例**，在數值框中輸入寬高比嘅兩個數值，例如 166 和 93。
+3. 單擊面板右側嘅保持按鈕，可以在下次截圖時沿用該尺寸或比例，該按鈕嘅提示為「選中後，下次截圖保持該尺寸/比例」。
+
+![0|尺寸](fig/size_tool.png)
+
+![0|比例](fig/ratio_tool.png)
+
 ## 截圖
 
-在截圖模式下，單擊工具欄上嘅按鈕，您可以在截圖區域內進行圖形繪製、文字批註等操作，同時可識別圖中文字、將圖片置頂貼於桌面、使用**AI 截圖**對截圖內容進行解釋、總結、翻譯等處理。
-
+在截圖模式下，單擊工具欄上嘅按鈕，您可以在截圖區域內進行圖形繪製、文字批註、序號標註等操作，同時可識別圖中文字、識別表格、將圖片置頂貼於桌面、使用**AI截圖**對截圖內容進行解釋、總結、翻譯等處理。
 
 ![0|截圖工具欄](fig/capturebar.png)
 
 <table class="block1">
     <caption>工具欄說明</caption>
     <tbody>
+
         <tr>
             <td style="text-align:center;"><img src="../common/bar_geometric.svg" alt="幾何工具" class="inline" /></td>
             <td>幾何工具</td>
-             <td style="text-align:center;"><img src="../common/line_mouse.svg" alt="直線" class="inline" /></td>
+            <td style="text-align:center;"><img src="../common/line_mouse.svg" alt="直線" class="inline" /></td>
             <td>直線</td>
-             <td style="text-align:center;"><img src="../common/Arrow_normal.svg" alt="箭頭" class="inline" /></td>
+            <td style="text-align:center;"><img src="../common/Arrow_normal.svg" alt="箭頭" class="inline" /></td>
             <td>箭頭</td>
         </tr>
         <tr>
@@ -122,43 +151,51 @@
             <td>文字</td>
         </tr>
         <tr>
+            <td style="text-align:center;"><img src="../common/seq_normal.svg" alt="序號標註" class="inline" /></td>
+            <td>序號標註</td>
             <td style="text-align:center;"><img src="../common/scrollshot.svg" alt="滾動截圖" class="inline" /></td>
             <td>滾動截圖</td>
-             <td style="text-align:center;"><img src="../common/ocr.svg" alt="識別文字" class="inline" /></td>
+            <td style="text-align:center;"><img src="../common/ocr.svg" alt="識別文字" class="inline" /></td>
             <td>識別文字</td>
-             <td style="text-align:center;"><img src="../common/pin.svg" alt="貼圖" class="inline" /></td>
-            <td>貼圖</td>
         </tr>
         <tr>
+            <td style="text-align:center;"><img src="../common/recognize_table.svg" alt="表格識別" class="inline" /></td>
+            <td>表格識別</td>
+            <td style="text-align:center;"><img src="../common/pin.svg" alt="貼圖" class="inline" /></td>
+            <td>貼圖</td>
             <td style="text-align:center;"><img src="../common/bar_ai.svg" alt="AI截圖" class="inline" /></td>
             <td>AI截圖</td>
-            <td style="text-align:center;"><img src="../common/bar_settings.svg" alt="設置" class="inline" /></td>
-            <td>設置</td>
-            <td style="text-align:center;"><img src="../common/bar_save.svg" alt="保存到本地" class="inline" /></td>
-            <td>保存到本地</td>            
         </tr>
         <tr>
+            <td style="text-align:center;"><img src="../common/undo_normal.svg" alt="撤銷" class="inline" /></td>
+            <td>撤銷</td>
+            <td style="text-align:center;"><img src="../common/recorder_button.svg" alt="錄屏" class="inline" /></td>
+            <td>錄屏</td>
+            <td style="text-align:center;"><img src="../common/bar_settings.svg" alt="設置" class="inline" /></td>
+            <td>設置</td>
+        </tr>
+        <tr>
+            <td style="text-align:center;"><img src="../common/bar_save.svg" alt="保存到本地" class="inline" /></td>
+            <td>保存到本地</td>
             <td style="text-align:center;"><img src="../common/close.svg" alt="關閉" class="inline" /></td>
             <td>關閉</td>
             <td style="text-align:center;"><img src="../common/done.svg" alt="複製到剪貼板" class="inline" /></td>
-            <td>複製到剪貼板</td>  
+            <td>複製到剪貼板</td>
         </tr>
     </tbody>
 </table>
-
 
 > ![notes](../common/notes.svg) 說明：如果您已經對工具欄和屬性欄中如線條粗細、字體大小等進行咗選擇，截圖錄屏會保存設置，再次啟動截圖錄屏，將默認使用該設置，您都可以重新進行選擇。
 
 ### 繪製圖形
 
-通過截圖工具欄上嘅**幾何工具**、**直線**、**箭頭**、**畫筆**按鈕，可繪製簡易圖形，並支援設定線條的粗細與顏色。
-
+通過截圖工具欄上嘅**幾何工具**、**直線**、**箭頭**、**畫筆**按鈕，可繪製簡易圖形，並支援設置線條嘅粗細與顏色。單擊**幾何工具**後，可以在展開嘅面板中選擇矩形或橢圓，再在截圖區域中拖動滑鼠完成繪製。
 
 ![1|繪製圖形](fig/ellipsetool.png)
 
 ### 修改圖形
 
-如果您在截圖中繪製咗其他嘅圖形，可以對圖形進行修改和移動。
+如果您在截圖中繪製咗圖形，可以對圖形進行修改和移動。
 
 #### 編輯圖形
 
@@ -174,13 +211,17 @@
 1. 將滑鼠指針置於圖形嘅邊線上，此時滑鼠指針變為 ![手指](fig/fingers.png)。
 2. 按住滑鼠左鍵唔放，將圖形移動到截圖區域嘅任何位置。
 
+### 撤銷操作
+
+單擊工具欄上嘅撤銷按鈕 <img src="../common/undo_normal.svg" alt="撤銷" class="inline" />，或按下快捷鍵 **Ctrl + Z**，可以撤銷上一步嘅繪製或標註操作。目前冇可以撤銷嘅操作時，該按鈕會變為灰色。
+
 ### 模糊工具
 
 1. 在截圖工具欄中，單擊 ![模糊](../common/Mosaic_normal.svg)。
 2. 在工具欄展開嘅面板中，可以選擇模糊嘅樣式，默認為![模糊](../common/Mosaic_normal.svg)馬賽克樣式，亦或係![模糊](../common/vague_normal.svg)高斯模糊樣式。
 3. 可以選擇繪製嘅方式，如![模糊](../common/rectangle_normal.svg)矩形框選，![模糊](../common/oval_normal.svg)橢圓形框選，![模糊](../common/brush.svg)自由塗抹。
 4. 工具欄展開嘅面板嘅最右側，可以左右拖動，選擇模糊嘅強度。
-5. 與其他圖形一致，已繪製的模糊圖形同樣支援修改與移動。
+5. 與其他圖形一致，已繪製嘅模糊圖形同樣支援修改與移動。
 
 ### 添加文字批註
 
@@ -209,6 +250,16 @@
    - 在文本框內，修改文字信息。
 3. 在文本框外單擊滑鼠左鍵，退出編輯模式。
 
+### 序號標註
+
+使用序號標註，可以在截圖中依次標出要點，便於講解和說明。
+
+1. 在截圖工具欄中，單擊 ![序號標註](../common/seq_normal.svg)，或按下快捷鍵 **Alt + S**。
+2. 在展開嘅面板中選擇標記嘅大小和顏色。
+3. 在截圖區域中單擊，截圖錄屏按順序添加帶圓圈嘅序號標記，依次為 ①、②、③ 等。
+
+![0|序號標註](fig/seq_tool.png)
+
 ### 滾動截圖
 
 滾動截圖功能唔單止可以截取屏幕內可見嘅內容，仲可以截取超過屏幕外嘅內容，滿足一次性截取長圖嘅需求。
@@ -216,7 +267,7 @@
 前提條件： **控制中心 > 個性化** 中嘅視窗特效功能已開啟。
 
 1. 選擇截圖區域後，單擊工具欄上嘅滾動截圖按鈕 ![icon](../common/scrollshot.svg)。
-2. 請將滑鼠游標保持在滾動區域內，您可以使用自動滾動或手動滾動截圖，都可以交替使用兩種方式：
+2. 請將滑鼠游標保持在滾動區域內，您可以使用自動滾動或手動滾動截圖，亦可以交替使用兩種方式：
 
    - **自動滾動**：在截圖區域中單擊滑鼠左鍵，游標所在嘅截圖區域自動向上滾動，此時截取嘅圖片會拼接為一張完整嘅長圖。自動滾動過程中，在截圖區域內單擊滑鼠左鍵，或者將游標移出截圖區域，暫停截圖；再次單擊截圖區域，繼續截圖。
 
@@ -238,16 +289,29 @@
 
 對於截圖區域中無法複製嘅內容，可以使用識別文字功能提取文字。
 
-1. 選擇截圖區域後，單擊工具欄上嘅文字識別按鈕 ![ocr](../common/ocr.svg)，彈出圖文識別視窗，識別圖片中嘅文字。
+1. 選擇截圖區域後，單擊工具欄上嘅文字識別按鈕 ![ocr](../common/ocr.svg)，或按下快捷鍵 **Alt + O**，彈出圖文識別視窗，識別圖片中嘅文字。
 2. 您可以對識別出嘅文字進行編輯、複製或保存為TXT等操作。
 
 ![ocr](fig/ocr.png)
+
+### 表格識別
+
+對於截圖區域中嘅表格，可以使用表格識別功能，將表格內容提取為可以粘貼嘅格式。
+
+1. 選擇截圖區域後，單擊工具欄上嘅表格識別按鈕 ![表格識別](../common/recognize_table.svg)，或按下快捷鍵 **Alt + T**。截圖錄屏同時將截圖複製到剪貼板。
+2. 介面顯示 **表格識別中…**，識別完成後彈出 **表格識別** 對話方塊，並顯示 **表格已識別成功！**。
+
+![0|表格識別中](fig/table_progress.png)
+
+3. 單擊 **複製為Excel格式**，識別結果以表格形式複製到剪貼板，您可以直接粘貼到表格軟件中；單擊 **取消**，關閉對話方塊，唔複製識別結果。
+
+![0|表格識別](fig/table_recognize.png)
 
 ### 貼圖
 
 通過貼圖功能將截圖變為桌面浮窗，方便您快速查閱、對比和梳理信息。
 
-選擇需要截取嘅區域後，單擊工具欄上嘅貼圖按鈕 ![icon](../common/pin.svg)，截圖浮於桌面上即為貼圖，您可以對貼圖進行如下操作：
+選擇需要截取嘅區域後，單擊工具欄上嘅貼圖按鈕 ![icon](../common/pin.svg)，或按下快捷鍵 **Alt + P**，截圖浮於桌面上即為貼圖，您可以對貼圖進行如下操作：
 
 - 通過滑鼠移動圖片嘅位置。
 - 將滑鼠指針置於圖片上，向上或向下滾動滑鼠滾輪等比縮放圖片。
@@ -257,11 +321,11 @@
 
 ### AI截圖
 
-在截圖工具欄中，單擊按鈕<img src="../common/bar_ai.svg" alt="AI截图" class="inline" />展開 AI菜單，您可以：
+在截圖工具欄中，單擊按鈕<img src="../common/bar_ai.svg" alt="AI截圖" class="inline" />或按下快捷鍵 **Alt + A** 展開 AI菜單，您可以：
 
-- 選擇 **解釋**，讓**AI 隨航**為您解釋截圖中的文字；
-- 選擇 **總結**，讓**AI 隨航**為您總結截圖中的文字；
-- 選擇 **翻譯**，讓**AI 隨航**為您翻譯截圖中的文字；
+- 選擇 **解釋**，讓**AI隨航**為您解釋截圖中的文字；
+- 選擇 **總結**，讓**AI隨航**為您總結截圖中的文字；
+- 選擇 **翻譯**，讓**AI隨航**為您翻譯截圖中的文字；
 - 選擇 **問問 AI**，直接喚起**小U助手**並將截圖傳送至對話方塊，以進行更深入的對話。
 
 ![0|AI截圖](fig/ai_tools.png)
@@ -275,7 +339,7 @@
 
 ### 設置
 
-您仲可以在截圖工具欄中，單擊按鈕<img src="../common/bar_settings.svg" alt="设置" class="inline" /> ，展開設置菜單：
+您仲可以在截圖工具欄中，單擊按鈕<img src="../common/bar_settings.svg" alt="設置" class="inline" />或按下快捷鍵 **F3**，展開設置菜單：
 
 ![0|設置](fig/screen_setting.png)
 
@@ -285,20 +349,20 @@
 
 ### 保存截圖
 
-單擊工具欄中嘅按鈕![icon](../common/bar_save.svg)或單擊滑鼠右鍵選擇 **保存**，可將截取嘅圖片保存在本地，單擊該按鈕右側的小圖示![icon](../common/dropdown.svg)展開選項，即可設定儲存規則。
+單擊工具欄中嘅按鈕![icon](../common/bar_save.svg)或單擊滑鼠右鍵選擇 **保存**，或按下快捷鍵 **Ctrl + S**，可將截取嘅圖片保存在本地，單擊該按鈕右側嘅小圖示![icon](../common/dropdown.svg)展開選項，即可設置保存規則。
 
-- 選擇 **每次詢問**，可於每次點選保存按鈕後選擇儲存路徑。
-- 選擇  **指定位置** > **桌面**，將圖片保存到桌面。
-- 選擇  **指定位置** >  **圖片**，截圖文件自動保存到圖片文件夾目錄下。
-- 選擇 **指定位置** > **保存時選擇位置**，可於本次點選保存按鈕後選擇儲存路徑，下次截圖保存時將預設儲存至該路徑，除非另行設置。
+- 選擇 **每次詢問**，可於每次點選保存按鈕後選擇保存路徑。
+- 選擇 **指定位置** > **桌面**，將圖片保存到桌面。
+- 選擇 **指定位置** > **圖片**，截圖文件自動保存到圖片文件夾目錄下。
+- 選擇 **指定位置** > **保存時選擇位置**，可於本次點選保存按鈕後選擇保存路徑，下次截圖保存時將預設保存至該路徑，除非另行設置。
 
 ### 複製到剪貼板
 
-單擊工具欄中嘅按鈕![icon](../common/done.svg)，或雙擊滑鼠左鍵，或使用快速鍵 **Ctrl + S**，將圖片儲存至剪貼板中。
+單擊工具欄中嘅按鈕![icon](../common/done.svg)，或雙擊滑鼠左鍵，或按下快捷鍵 **Enter**，將截圖複製到剪貼板中。
 
 ## 錄屏
 
-在錄屏模式下，單擊錄屏工具欄上嘅按鈕，您可以錄製聲音、鏡頭畫面、按鍵顯示、滑鼠點擊等。
+在錄屏模式下，單擊錄屏工具欄上嘅按鈕，您可以錄製聲音、攝像頭畫面、按鍵顯示、滑鼠點擊等。
 
 > ![notes](../common/notes.svg) 說明：採用唔同嘅解碼技術，其所支援嘅功能都會唔同，具體請參考應用介面。
 
@@ -311,33 +375,40 @@
             <td style="text-align:center;"><img src="../common/key_normal.svg" alt/></td>
             <td>顯示按鍵</td>
             <td style="text-align:center;"><img src="../common/webcam_normal.svg" alt/></td>
-            <td>開啟鏡頭</td>
+            <td>開啟攝像頭</td>
             <td style="text-align:center;"><img src="../common/switch.svg" alt/></td>
-            <td>切換截圖</td>
+            <td>截圖</td>
         </tr>
-          <tr>
-            <td style="text-align:center;"><img src="../common/bar_settings.svg" /></td>
+        <tr>
+            <td style="text-align:center;"><img src="../common/bar_settings.svg" alt="設置" class="inline" /></td>
             <td>設置</td>
-              <td style="text-align:center;"><img src="../common/close.svg" alt/></td>
+            <td style="text-align:center;"><img src="../common/close.svg" alt/></td>
             <td>關閉</td>
-              <td style="text-align:center;"><img src="../common/done.svg" alt/></td>
-            <td>開始錄屏</td>
+            <td style="text-align:center;"><img src="../common/done.svg" alt/></td>
+            <td>確認</td>
         </tr>
     </tbody>
 </table>
-
 
 ### 錄屏設置
 
 在錄屏工具欄中，您可以：
 
-- 顯示按鍵：單擊按鈕 ![icon](../common/key_normal.svg)，錄屏時顯示鍵盤按鍵操作，最多同時顯示5個按鍵操作。
+- 顯示按鍵：單擊按鈕 ![icon](../common/key_normal.svg)，或按下快捷鍵 **K**，錄屏時顯示鍵盤按鍵操作，最多同時顯示5個按鍵操作。
 
-- 開啟鏡頭：單擊按鈕 ![icon](../common/webcam_normal.svg) ，啟動鏡頭，錄屏時同時錄製鏡頭畫面同屏幕畫面，拖拽鏡頭視窗可以調整位置。
+- 開啟攝像頭：單擊按鈕 ![icon](../common/webcam_normal.svg)，或按下快捷鍵 **C**，啟動攝像頭，錄屏時同時錄製攝像頭畫面同屏幕畫面，拖拽攝像頭視窗可以調整位置。
 
-   > ![attention](../common/attention.svg) 注意：請先檢測接入嘅設備是否支援聲音錄製或鏡頭功能，若唔支援，則無法進行相應嘅操作。
+   > ![attention](../common/attention.svg) 注意：請先檢測接入嘅設備是否支援聲音錄製或攝像頭功能，若唔支援，則無法進行相應嘅操作。
 
-- 選項：在選項下拉菜單中選擇 **GIF** 、 **MP4** 或 **MKV** 影片格式，並選擇影片幀率、聲音錄製、顯示游標等。
+- 截圖：單擊按鈕<img src="../common/switch.svg" alt="截圖" class="inline" />，在錄屏過程中截取目前畫面。
+
+- 更多設置：單擊按鈕<img src="../common/bar_settings.svg" alt="設置" class="inline" />，或按下快捷鍵 **F3**，在設置菜單中可以進行以下設置：
+
+   - **格式**：選擇 **GIF**、**MP4** 或 **MKV** 影片格式。
+   - **幀數**：選擇 **5 fps**、**10 fps**、**20 fps**、**24 fps** 或 **30 fps**。
+   - **聲音**：選擇 **麥克風** 或 **系統音頻**，兩者可以同時勾選。
+   - **選項**：選擇 **顯示游標** 或 **顯示滑鼠點擊**。
+   - **保存方式**：選擇 **桌面** 或 **視頻**，設置錄製文件嘅保存位置。
 
    > ![notes](../common/notes.svg) 說明：MIPS架構唔支援GIF格式。
 
@@ -348,13 +419,13 @@
 1. 使用快捷鍵 **Ctrl + Alt + R** 啟動錄屏。
 2. 選擇錄屏區域。
 3. 在錄屏工具欄中，對錄屏進行相關嘅設置。
-4. 單擊錄屏按鈕 ![icon](../common/done.svg)，3秒倒計時結束後開始錄製，此時托盤區域出現錄製圖標並閃爍。
+4. 單擊錄屏按鈕 ![icon](../common/done.svg)，或按下快捷鍵 **Enter**，3秒倒計時結束後開始錄製，此時托盤區域出現錄製圖標並閃爍。
 5. 您可以使用以下方法結束錄製：
    - 使用快捷鍵 **Ctrl + Alt + R**。
    - 單擊任務欄上嘅截圖錄屏圖標。
    - 單擊托盤區域錄製圖標。
 
-錄屏結束後影片將自動保存到桌面。
+錄屏結束後，錄製文件自動保存到 **影片** 文件夾下嘅 **Screen Recordings** 目錄，文件名為「錄屏_<區域>_<時間戳>」。在上一步嘅 **保存方式** 中選擇 **桌面**，錄製文件則保存到桌面。
 
 > ![notes](../common/notes.svg) 說明：
 > - 當任務欄在桌面嘅上方或下方時，托盤區域嘅錄製圖標會顯示錄製時長。
