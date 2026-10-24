@@ -268,6 +268,11 @@ public:
         int width;
         int height;
         QString name;
+        /**
+         * @brief 该屏自身的缩放比。多屏混缩放（如内屏 150% + 外屏 100%）时
+         *        各屏不同，width/height 必须按各自的 scaleFactor 换算
+         */
+        qreal scaleFactor = 1.0;
         ~ScreenInfo() {}
     };
     // Split attributes and resource for speed up start.
@@ -283,6 +288,24 @@ public:
      * @brief 初始化滚动截图
      */
     void initScrollShot();
+
+    /**
+     * @brief 判断所有已连接屏幕的缩放比是否一致
+     *        多屏混缩放（如内屏 150% + 外屏 100%）时返回 false，
+     *        此时按单一 m_pixelRatio 换算多屏坐标的历史补偿逻辑不成立
+     */
+    bool isUniformScreenScale() const;
+
+    /**
+     * @brief 将 XEventMonitor 上报的全局物理坐标（kwin 设备像素空间，各屏按
+     *        原生分辨率相邻布局）换算为本窗口的逻辑坐标（与 Qt 鼠标事件
+     *        本地坐标同空间）。
+     *        多屏混缩放时各屏缩放比不同，不能统一除以 m_pixelRatio；
+     *        单屏/未命中任何屏时回落为 pos / m_pixelRatio（与旧行为一致）
+     * @param pos XEventMonitor（DBus）上报的物理坐标
+     * @return 窗口逻辑坐标
+     */
+    QPoint globalDeviceToLocalLogical(const QPoint &pos) const;
 
     /**
      * @brief 初始化应用内快捷键
@@ -1040,6 +1063,19 @@ private:
      *   1.2.如果需将1920*1080上的点换算到此屏幕应该除以m_pixelRatio
      */
     qreal m_pixelRatio = 1.0;
+    /**
+     * @brief 最近一次"真实" Qt 鼠标移动事件到达时间（ms，墙钟）。
+     *        XEventMonitor 的合成事件经 DBus/队列转发存在延迟且滞后于真实事件，
+     *        若真实事件正常到达则不再注入合成事件，避免滞后的合成事件
+     *        在鼠标停止后把拖拽框选坐标"顶"回旧位置
+     */
+    qint64 m_lastRealMouseMoveMs = 0;
+    /**
+     * @brief 正在同步派发（sendEvent）合成鼠标事件的标记。
+     *        sendEvent 会同步重入 eventFilter，用此标记把合成事件
+     *        与窗口系统投递的真实事件区分开
+     */
+    bool m_dispatchingSyntheticMouseEvent = false;
     /**
      * @brief 是否打开窗口特效；true:3d模式 false:2d模式
      */

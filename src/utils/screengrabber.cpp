@@ -29,17 +29,222 @@
 #include <QDateTime>
 #include <QFileInfo>
 #include <QCoreApplication>
+#include <QPainter>
+#include <QTemporaryFile>
+#include <QDBusUnixFileDescriptor>
 #include <ctime>
 ScreenGrabber::ScreenGrabber(QObject *parent)
     : QObject(parent)
 {
 }
 
+// 调用 KWin ScreenShot2 的指定方法并读取共享内存文件中的原生帧。
+// leadingArgs 为方法在 options/fd 之前的参数（如 CaptureOutput 的屏幕名）
+static QPixmap callScreenShot2(const QString &method, const QVariantList &leadingArgs, bool &ok)
+{
+    ok = false;
+    QDBusInterface ss2(QStringLiteral("org.kde.KWin"),
+                       QStringLiteral("/org/kde/KWin/ScreenShot2"),
+                       QStringLiteral("org.kde.KWin.ScreenShot2"));
+
+    QVariantMap options;
+    options.insert(QStringLiteral("include-cursor"), false);
+    options.insert(QStringLiteral("include-decoration"), true);
+    options.insert(QStringLiteral("include-shadow"), false);
+    options.insert(QStringLiteral("native-resolution"), true);
+
+    QTemporaryFile tmpFile;
+    if (!tmpFile.open()) {
+        qWarning() << method << "cannot create temp file for frame buffer";
+        return QPixmap();
+    }
+
+    QVariantList args = leadingArgs;
+    args << QVariant::fromValue(options)
+         << QVariant::fromValue(QDBusUnixFileDescriptor(tmpFile.handle()));
+
+    QDBusReply<QVariantMap> reply = ss2.call(method, args);
+    if (!reply.isValid()) {
+        qWarning() << method << "failed:" << reply.error().message();
+        return QPixmap();
+    }
+
+    const QVariantMap meta = reply.value();
+    const int width = meta.value(QStringLiteral("width")).toInt();
+    const int height = meta.value(QStringLiteral("height")).toInt();
+    const int stride = meta.value(QStringLiteral("stride")).toInt();
+    const int format = meta.value(QStringLiteral("format")).toInt();
+    qDebug() << method << "native frame:" << width << height << stride << format;
+    if (width <= 0 || height <= 0 || stride < width * 4
+            || format != static_cast<int>(QImage::Format_ARGB32)) {
+        qWarning() << method << "unexpected metadata";
+        return QPixmap();
+    }
+
+    // KWin 异步向共享内存文件写入帧数据，轮询等待写入完成
+    const qint64 needBytes = static_cast<qint64>(stride) * height;
+    for (int i = 0; i < 20; ++i) {
+        if (QFileInfo(tmpFile.fileName()).size() >= needBytes) {
+            break;
+        }
+        QThread::msleep(50);
+    }
+    if (QFileInfo(tmpFile.fileName()).size() < needBytes) {
+        qWarning() << method << "buffer incomplete";
+        return QPixmap();
+    }
+
+    QFile file(tmpFile.fileName());
+    if (!file.open(QIODevice::ReadOnly)) {
+        qWarning() << method << "buffer open failed";
+        return QPixmap();
+    }
+    QByteArray buffer;
+    buffer.resize(int(needBytes));
+    if (file.read(buffer.data(), buffer.size()) != buffer.size()) {
+        qWarning() << method << "buffer read failed";
+        return QPixmap();
+    }
+
+    QImage img(reinterpret_cast<const uchar *>(buffer.constData()), width, height, stride,
+               QImage::Format_ARGB32);
+    return QPixmap::fromImage(img.copy());
+}
+
+// 通过老接口 org.kde.kwin.Screenshot.screenshotFullscreen 抓整桌图（返回逻辑分辨率），
+// 成功后删除 kwin 生成的临时文件
+static QPixmap grabFullscreenViaKWin(bool &ok)
+{
+    ok = false;
+    QDBusInterface kwinInterface(QStringLiteral("org.kde.KWin"),
+                                 QStringLiteral("/Screenshot"),
+                                 QStringLiteral("org.kde.kwin.Screenshot"));
+    QDBusReply<QString> reply;
+    QPixmap res;
+    for (int count = 0; count < 6; ++count) {
+        reply = kwinInterface.call(QStringLiteral("screenshotFullscreen"));
+        res = QPixmap(reply.value());
+        if (!res.isNull()) {
+            break;
+        }
+        QThread::msleep(1000);
+    }
+    if (res.isNull()) {
+        qDebug() << "screenshotFullscreen failed after retries";
+        return QPixmap();
+    }
+    QFile dbusResult(reply.value());
+    dbusResult.remove();
+    ok = true;
+    return res;
+}
+
+// 分数缩放下 kwin screenshotFullscreen 返回的是原生帧左下角裁剪图（内容被放大），
+// 改用 ScreenShot2 接口按 native-resolution 抓取完整原生帧
+QPixmap ScreenGrabber::grabNativeFramebuffer(bool &ok)
+{
+    return callScreenShot2(QStringLiteral("CaptureActiveScreen"), QVariantList(), ok);
+}
+
+/**
+ * @brief 多屏（各屏缩放比可能不同，如内屏 150% + 外屏 100%）时按屏抓取原生分辨率图像，
+ *        拼接到统一缩放比为 canvasScale 的画布上：屏幕 i 的内容绘制在该屏逻辑区域
+ *        × canvasScale 的位置，原生图像缩放适配该区域。画布坐标系满足
+ *        "画布像素 = 逻辑坐标 × canvasScale"，下游按单一 devicePixelRatio 走的
+ *        裁剪/绘制逻辑无需感知各屏缩放比差异。
+ *        某块屏按屏抓取失败时整体回落 screenshotFullscreen 整桌图（逻辑分辨率），
+ *        等比放大到画布尺寸，几何仍正确。
+ */
+static QPixmap grabNativeDesktop(bool &ok, qreal canvasScale)
+{
+    ok = false;
+    if (canvasScale <= 0.0) {
+        canvasScale = 1.0;
+    }
+
+    const QList<QScreen *> screens = qApp->screens();
+    if (screens.size() < 2) {
+        return QPixmap();
+    }
+
+    QRect logicalUnion;
+    for (QScreen *screen : screens) {
+        logicalUnion = logicalUnion.united(screen->geometry());
+    }
+    if (logicalUnion.isEmpty()) {
+        return QPixmap();
+    }
+
+    QImage canvas(static_cast<int>(logicalUnion.width() * canvasScale),
+                  static_cast<int>(logicalUnion.height() * canvasScale),
+                  QImage::Format_ARGB32);
+    canvas.fill(Qt::black);
+
+    int grabbedScreens = 0;
+    QPainter painter(&canvas);
+    painter.setRenderHint(QPainter::SmoothPixmapTransform, true);
+    for (QScreen *screen : screens) {
+        const QRect geometry = screen->geometry();
+        bool screenOk = false;
+        const QPixmap native = callScreenShot2(QStringLiteral("CaptureOutput"),
+                                               QVariantList{QVariant(screen->name())}, screenOk);
+        if (!screenOk || native.isNull()) {
+            qWarning() << "CaptureOutput failed for screen" << screen->name();
+            break;
+        }
+        ++grabbedScreens;
+        const QRectF target((geometry.x() - logicalUnion.x()) * canvasScale,
+                            (geometry.y() - logicalUnion.y()) * canvasScale,
+                            geometry.width() * canvasScale,
+                            geometry.height() * canvasScale);
+        painter.drawPixmap(target, native, QRectF(0.0, 0.0, native.width(), native.height()));
+    }
+    painter.end();
+
+    if (grabbedScreens == screens.size()) {
+        ok = true;
+        qDebug() << "multi-screen native canvas" << canvas.size() << "scale" << canvasScale;
+        return QPixmap::fromImage(canvas);
+    }
+
+    // 按屏抓取不可用，回落整桌接口：逻辑整桌图放大到画布尺寸（几何一致，画质略降）
+    qWarning() << "per-screen capture unavailable, fallback to screenshotFullscreen";
+    bool fullOk = false;
+    QPixmap res = grabFullscreenViaKWin(fullOk);
+    if (!fullOk) {
+        return QPixmap();
+    }
+    if (res.width() != canvas.width() || res.height() != canvas.height()) {
+        res = res.scaled(canvas.width(), canvas.height(), Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
+    }
+    ok = true;
+    return res;
+}
+
 QPixmap ScreenGrabber::grabEntireDesktop(bool &ok, const QRect &rect, const qreal devicePixelRatio)
 {
     ok = true;
     if (Utils::isWaylandMode) {
-        int count = 0;
+        // 多屏时各屏缩放比可能不同（如内屏 150% + 外屏 100%），逻辑矩形无法用
+        // 单一 ratio 换算成设备像素区域；按屏抓原生帧拼接到统一比例为
+        // devicePixelRatio 的画布后，仍按 rect × devicePixelRatio 裁剪
+        if (qApp->screens().size() > 1) {
+            bool multiOk = false;
+            const QPixmap canvas = grabNativeDesktop(multiOk, devicePixelRatio);
+            if (!multiOk) {
+                ok = false;
+                qDebug() << __FUNCTION__ << __LINE__ << "multi-screen grab failed";
+                return QPixmap();
+            }
+            QRect recordRect {
+                static_cast<int>(rect.x() * devicePixelRatio),
+                static_cast<int>(rect.y() * devicePixelRatio),
+                static_cast<int>(rect.width() * devicePixelRatio),
+                static_cast<int>(rect.height() * devicePixelRatio)
+            };
+            return canvas.copy(recordRect);
+        }
+
         QRect recordRect {
             static_cast<int>(rect.x() * devicePixelRatio),
             static_cast<int>(rect.y() * devicePixelRatio),
@@ -47,26 +252,27 @@ QPixmap ScreenGrabber::grabEntireDesktop(bool &ok, const QRect &rect, const qrea
             static_cast<int>(rect.height() * devicePixelRatio)
         };
         QPixmap res;
-        QDBusInterface kwinInterface(QStringLiteral("org.kde.KWin"),
-                                     QStringLiteral("/Screenshot"),
-                                     QStringLiteral("org.kde.kwin.Screenshot"));
-        QDBusReply<QString> reply;
-        while (count < 6) {
-            reply = kwinInterface.call(QStringLiteral("screenshotFullscreen"));
-            res = QPixmap(reply.value());
-            qDebug() << __FUNCTION__ << __LINE__ << "screenshotFullscreen reply:" << reply;
-            if (!res.isNull()) {
-                break;
-            }
-            count++;
-            QThread::msleep(1000);
+        bool nativeOk = false;
+        // 分数缩放下优先用 ScreenShot2 抓原生分辨率帧，失败回落整桌接口
+        if (!qFuzzyCompare(devicePixelRatio, qreal(qRound(devicePixelRatio)))) {
+            res = grabNativeFramebuffer(nativeOk);
+            if (nativeOk)
+                qDebug() << __FUNCTION__ << __LINE__ << "native framebuffer image" << res.size();
         }
-        if (!res.isNull()) {
-            QFile dbusResult(reply.value());
-            dbusResult.remove();
-        } else {
+        if (!nativeOk) {
+        res = grabFullscreenViaKWin(nativeOk);
+        if (!nativeOk) {
             ok = false;
-            qDebug() << __FUNCTION__ << __LINE__ << "Get Pixmap:" << res.size() << "try failed at " << count << "times";
+            qDebug() << __FUNCTION__ << __LINE__ << "Get Pixmap:" << res.size() << "screenshotFullscreen try failed";
+            return QPixmap();
+        }
+        }
+        // kwin 分数缩放下 screenshotFullscreen 返回的是逻辑分辨率的图，
+        // 需先放大到物理桌面尺寸，再按物理坐标裁剪，避免分辨率不足
+        if (!nativeOk && !qFuzzyCompare(devicePixelRatio, qreal(qRound(devicePixelRatio)))) {
+            res = res.scaled(static_cast<int>(res.width() * devicePixelRatio),
+                             static_cast<int>(res.height() * devicePixelRatio),
+                             Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
         }
         return res.copy(recordRect);
     }
@@ -89,7 +295,21 @@ bool ScreenGrabber::quickFullScreenshot()
     QDBusReply<QString> reply = kwinInterface.call(QStringLiteral("screenshotFullscreen"));
     
     QPixmap screenshot;
-    while (count < 6) {
+    // 优先走 ScreenShot2 原生帧抓取，失败再回落旧接口
+    const qreal t_ratio = Utils::devicePixelRatioF();
+    bool nativeOk = false;
+    if (qApp->screens().size() > 1) {
+        // 多屏：CaptureActiveScreen 只能抓到一块屏，须按屏抓取后拼接；
+        // 各屏缩放比可能不同(如内屏 150% + 外屏 100%)，拼接到统一比例的画布
+        screenshot = grabNativeDesktop(nativeOk, t_ratio);
+        if (nativeOk)
+            qDebug() << "quick fullscreen multi-screen image" << screenshot.size();
+    } else if (!qFuzzyCompare(t_ratio, qreal(qRound(t_ratio)))) {
+        screenshot = grabNativeFramebuffer(nativeOk);
+        if (nativeOk)
+            qDebug() << "quick fullscreen native image" << screenshot.size();
+    }
+    while (count < 6 && screenshot.isNull()) {
         reply = kwinInterface.call(QStringLiteral("screenshotFullscreen"));
         screenshot = QPixmap(reply.value());
         qDebug() << __FUNCTION__ << __LINE__ << "screenshotFullscreen reply:" << reply;

@@ -19,6 +19,10 @@
 #include <QPainter>
 #include <QPainterPath>
 #include <QDBusInterface>
+#include <QDBusConnection>
+#include <QDBusReply>
+#include <QElapsedTimer>
+#include <QMutex>
 #include <QtX11Extras/QX11Info>
 #include <QStandardPaths>
 #include <QProcess>
@@ -482,13 +486,104 @@ void Utils::notSupportWarn()
 }
 
 //传入屏幕上理论未经缩放的点，获取缩放后实际的点
+// 从指定 DBus 会话服务读取各屏幕实际缩放系数表（按屏名索引）；查询失败返回空表
+static QMap<QString, double> queryScreenScaleFactorsFromDBus(const QString &service, const QString &path,
+                                                             const QString &interface)
+{
+    // 必须：QDBusReply<QMap<QString,double>> 反序列化 a{sd} 需要注册 metatype，
+    // 否则恒无效、静默回落 QScreen（返回整数 dpr=2，丢失小数）
+    qDBusRegisterMetaType<QMap<QString, double>>();
+
+    QMap<QString, double> factors;
+    QDBusInterface iface(service, path, interface, QDBusConnection::sessionBus());
+    if (!iface.isValid()) {
+        qDebug() << "invalid dbus interface:" << service << path << interface;
+        return factors;
+    }
+
+    QDBusReply<QMap<QString, double>> reply = iface.call(QStringLiteral("GetScreenScaleFactors"));
+    if (!reply.isValid() || reply.value().isEmpty()) {
+        qDebug() << "get screen scale factors failed from" << service << path << reply.error();
+        return factors;
+    }
+    return reply.value();
+}
+
+// 各屏缩放系数表（按屏名索引），带 500ms 缓存；该函数会被鼠标事件等高频路径调用
+static QMap<QString, double> allScreenScaleFactors()
+{
+    static QMap<QString, double> cachedFactors;
+    static QElapsedTimer cacheTimer;
+    static QMutex mutex;
+    QMutexLocker locker(&mutex);
+
+    const qint64 kCacheTimeoutMs = 500;
+    if (!cachedFactors.isEmpty() && cacheTimer.isValid() && !cacheTimer.hasExpired(kCacheTimeoutMs)) {
+        return cachedFactors;
+    }
+
+    QMap<QString, double> factors = queryScreenScaleFactorsFromDBus(QStringLiteral("com.deepin.daemon.Display"),
+                                                                    QStringLiteral("/com/deepin/XSettings"),
+                                                                    QStringLiteral("com.deepin.XSettings"));
+    if (factors.isEmpty()) {
+        factors = queryScreenScaleFactorsFromDBus(QStringLiteral("com.deepin.daemon.Appearance"),
+                                                  QStringLiteral("/com/deepin/daemon/Appearance"),
+                                                  QStringLiteral("com.deepin.daemon.Appearance"));
+    }
+
+    if (!factors.isEmpty()) {
+        cachedFactors = factors;
+        cacheTimer.start();
+    }
+    return factors;
+}
+
+// 按屏名（或单屏兜底）从系数表取该屏缩放比；表不可用时回落 QScreen::devicePixelRatio()
+static qreal scaleFactorForScreen(const QScreen *screen)
+{
+    if (!screen) {
+        return 1.0;
+    }
+
+    const QMap<QString, double> factors = allScreenScaleFactors();
+    if (factors.contains(screen->name())) {
+        return factors.value(screen->name());
+    }
+    // 未找到同名屏幕，但系数表只有一项时直接采用（单屏时屏名对不上也不影响）
+    if (factors.size() == 1) {
+        return factors.constBegin().value();
+    }
+
+    const qreal fallback = screen->devicePixelRatio();
+    return (fallback > 0.0 && fallback <= 10.0) ? fallback : 1.0;
+}
+
+/**
+ * @brief 获取主屏缩放比例，优先级：
+ *        1) com.deepin.daemon.Display 服务 /com/deepin/XSettings 对象（接口 com.deepin.XSettings）
+ *        2) com.deepin.daemon.Appearance 服务（接口 com.deepin.daemon.Appearance）
+ *        均不可用时回落到 QScreen::devicePixelRatio()。
+ */
+qreal Utils::devicePixelRatioF()
+{
+    QScreen *screen = qApp->primaryScreen();
+    if (!screen) {
+        return 1.0;
+    }
+    return scaleFactorForScreen(screen);
+}
+
+qreal Utils::screenFactor(const QScreen *screen)
+{
+    return scaleFactorForScreen(screen);
+}
+
 QPoint Utils::getPosWithScreen(QPoint pos)
 {
     QPoint dpos;
     QList<ScreenInfo> screensInfo;
     //获取所有实际屏幕的信息
     screensInfo = getScreensInfo();
-    qreal pixelRatio = qApp->primaryScreen()->devicePixelRatio();
 
     for (int i = 0; i < screensInfo.size(); i++) {
         //判断当前点在哪块屏幕上
@@ -496,6 +591,8 @@ QPoint Utils::getPosWithScreen(QPoint pos)
                 pos.y() > screensInfo[i].y && pos.y() < screensInfo[i].y + screensInfo[i].height) {
 
             qInfo() << "screenInfo: " << screensInfo[i].toString();
+            // 各屏缩放比可能不同（多屏混缩放），须用所在屏自己的比例换算
+            const qreal pixelRatio = screensInfo[i].scaleFactor;
             dpos.setX(static_cast<int>((pos.x() - screensInfo[i].x) / pixelRatio + screensInfo[i].x));
             dpos.setY(static_cast<int>((pos.y() - screensInfo[i].y) / pixelRatio) + + screensInfo[i].y);
         }
@@ -510,12 +607,13 @@ QPoint Utils::getPosWithScreenP(QPoint pos)
     QList<ScreenInfo> screensInfo;
     //获取所有实际屏幕的信息
     screensInfo = getScreensInfo();
-    qreal pixelRatio = qApp->primaryScreen()->devicePixelRatio();
     for (int i = 0; i < screensInfo.size(); i++) {
         //判断当前点在哪块屏幕上
         if (pos.x() > screensInfo[i].x && pos.x() < screensInfo[i].x + screensInfo[i].width &&
                 pos.y() > screensInfo[i].y && pos.y() < screensInfo[i].y + screensInfo[i].height) {
 
+            // 各屏缩放比可能不同（多屏混缩放），须用所在屏自己的比例换算
+            const qreal pixelRatio = screensInfo[i].scaleFactor;
             dpos.setX(static_cast<int>((pos.x() - screensInfo[i].x)*pixelRatio + screensInfo[i].x));
             dpos.setY(static_cast<int>((pos.y() - screensInfo[i].y)*pixelRatio + screensInfo[i].y));
         }
@@ -528,24 +626,27 @@ QList<Utils::ScreenInfo> Utils::getScreensInfo()
 {
     //获取所有实际屏幕的信息
     QList<QScreen *> screenList = qApp->screens();
-    qreal pixelRatio = qApp->primaryScreen()->devicePixelRatio();
     QList<ScreenInfo> screensInfo;
 
     /**
      * 例如：显示器实际屏幕参数为1920*1080记为 t1，调整缩放比例为1.25记为 p,那么此时显示器显示的屏幕大小将变为1536*864记为 t2，
      * 那么此时在 t2的点要变成t1上的点，需要 t2*p = t1,在多屏的情况且需要考虑究竟在那个屏幕上
+     * 注意：多屏混缩放（如内屏 150% + 外屏 100%）时各屏 p 不同，
+     * 物理尺寸必须按各屏自己的缩放比换算，不能统一乘主屏的比例
      */
     //将实际屏幕信息根据缩放比列转化为理论上屏幕信息
     int hTotal = 0;
     for (auto it = screenList.constBegin(); it != screenList.constEnd(); ++it) {
         QRect rect = (*it)->geometry();
         //qDebug() << (*it)->name() << rect;
+        const qreal pixelRatio = scaleFactorForScreen(*it);
         ScreenInfo screenInfo;
         screenInfo.x = rect.x(); //屏幕的起始x坐标始终是正确的，不管是否经过缩放
         screenInfo.y = rect.y(); //屏幕的起始y坐标始终是正确的，不管是否经过缩放
         screenInfo.height =  static_cast<int>(rect.height() * pixelRatio);
         screenInfo.width = static_cast<int>(rect.width() * pixelRatio);
         screenInfo.name = (*it)->name();
+        screenInfo.scaleFactor = pixelRatio;
         hTotal += screenInfo.height;
         screensInfo.append(screenInfo);
     }
