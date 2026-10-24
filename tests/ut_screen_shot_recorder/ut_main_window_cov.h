@@ -24,10 +24,10 @@ using namespace testing;
 ACCESS_PRIVATE_FUN(MainWindow, QString(const QString &), libPath);
 ACCESS_PRIVATE_FUN(MainWindow, int(QEvent *), getAction);
 ACCESS_PRIVATE_FUN(MainWindow, void(QEvent *), updateCursor);
-ACCESS_PRIVATE_FUN(MainWindow, void(QMouseEvent *), resizeTop);
-ACCESS_PRIVATE_FUN(MainWindow, void(QMouseEvent *), resizeBottom);
-ACCESS_PRIVATE_FUN(MainWindow, void(QMouseEvent *), resizeLeft);
-ACCESS_PRIVATE_FUN(MainWindow, void(QMouseEvent *), resizeRight);
+ACCESS_PRIVATE_FUN(MainWindow, void(const QPoint &), resizeTop);
+ACCESS_PRIVATE_FUN(MainWindow, void(const QPoint &), resizeBottom);
+ACCESS_PRIVATE_FUN(MainWindow, void(const QPoint &), resizeLeft);
+ACCESS_PRIVATE_FUN(MainWindow, void(const QPoint &), resizeRight);
 ACCESS_PRIVATE_FUN(MainWindow, void(const QString &), applyPathSettings);
 
 class MainWindowCovTest : public Test
@@ -133,8 +133,10 @@ TEST_F(MainWindowCovTest, getActionAndResize)
     QMouseEvent me(QEvent::MouseButtonPress, QPointF(50, 50), Qt::LeftButton, Qt::LeftButton, Qt::NoModifier);
     EXPECT_NO_FATAL_FAILURE(call_private_fun::MainWindowgetAction(*m_w, &me));
     EXPECT_NO_FATAL_FAILURE(call_private_fun::MainWindowupdateCursor(*m_w, &me));
-    EXPECT_NO_FATAL_FAILURE(call_private_fun::MainWindowresizeTop(*m_w, &me));
-    EXPECT_NO_FATAL_FAILURE(call_private_fun::MainWindowresizeBottom(*m_w, &me));
-    EXPECT_NO_FATAL_FAILURE(call_private_fun::MainWindowresizeLeft(*m_w, &me));
-    EXPECT_NO_FATAL_FAILURE(call_private_fun::MainWindowresizeRight(*m_w, &me));
+    // resize* 的真实签名是 void(const QPoint&)，取鼠标事件的位置传入
+    const QPoint pos = me.pos();
+    EXPECT_NO_FATAL_FAILURE(call_private_fun::MainWindowresizeTop(*m_w, pos));
+    EXPECT_NO_FATAL_FAILURE(call_private_fun::MainWindowresizeBottom(*m_w, pos));
+    EXPECT_NO_FATAL_FAILURE(call_private_fun::MainWindowresizeLeft(*m_w, pos));
+    EXPECT_NO_FATAL_FAILURE(call_private_fun::MainWindowresizeRight(*m_w, pos));
 }

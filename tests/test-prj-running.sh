@@ -57,12 +57,15 @@ SSR="$HERE/ut_screen_shot_recorder"
 SSR_DIR="$SSR/build-ut"
 rm -rf "$SSR_DIR"
 mkdir -p "$SSR_DIR"
+# ssr 编译失败不再静默跳过：仍继续运行其余模块以产出部分覆盖率，但整体退出码
+# 置非 0，避免 CI 上"用例数骤减/主工程用例全部缺失"被 exit 0 掩盖。
+SSR_BUILD_FAILED=0
 (
     cd "$SSR_DIR" || exit 1
     export QT_SELECT=qt6
     qmake6 ../
     make -j4
-) || echo "[WARN] ut_screen_shot_recorder 编译存在错误，将用已生成的 .gcno 继续。"
+) || { SSR_BUILD_FAILED=1; echo "[ERROR] ut_screen_shot_recorder 编译失败，其用例将全部缺失（仍继续其余模块以产出部分覆盖率）。" >&2; }
 
 # 1.5) 逐用例隔离运行 ssr（规避崩/hang 丢覆盖；.gcda 跨用例累积）
 SSR_BIN="$SSR_DIR/ut_screen_shot_recorder"
@@ -170,7 +173,8 @@ ET.ElementTree(root).write(out_path, encoding='UTF-8', xml_declaration=True)
 print(f"[INFO] 合并 ssr 报告：{total} 用例，{total_fail} 失败，{total_err} 错误 -> {out_path}")
 PYEOF
 else
-    echo "[WARN] ssr 二进制不存在，跳过其运行（仅 recordtime 覆盖）。"
+    echo "[ERROR] ssr 二进制不存在，跳过其运行（仅 recordtime 覆盖）。" >&2
+    SSR_BUILD_FAILED=1
 fi
 
 # 2) 编译 + 运行 dock 插件测试（ut_record_time + ut_shot_start + ut_shot_start_record）
@@ -312,4 +316,5 @@ export reportdir=build-ut
 
 python3 "$HERE/gen-ut-summary.py"
 
-exit 0
+# ssr 编译失败时以非 0 退出，让 CI 立即看到主工程用例缺失，而非 288/288 假绿。
+exit "$SSR_BUILD_FAILED"
