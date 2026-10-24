@@ -161,6 +161,8 @@ HEADERS += test_all_interfaces.h \
         ../../src/widgets/shottoolwidget.h \
         ../../src/widgets/toolbutton.h \
         ../../src/widgets/previewwidget.h \
+        ../../src/widgets/fineadjusttips.h \
+        ../../src/widgets/roundedcornerwidget.h \
         ../../src/menucontroller/menucontroller.h \
         ../../src/dbusinterface/dbusnotify.h \
         ../../src/dbusinterface/ocrinterface.h \
@@ -372,6 +374,8 @@ SOURCES += main.cpp \
     ../../src/widgets/shottoolwidget.cpp \
     ../../src/widgets/toolbutton.cpp \
     ../../src/widgets/previewwidget.cpp \
+    ../../src/widgets/fineadjusttips.cpp \
+    ../../src/widgets/roundedcornerwidget.cpp \
     ../../src/widgets/imagemenu.cpp \
     ../../src/widgets/aiassistantwidget.cpp \
     ../../src/camera/devnummonitor.cpp \

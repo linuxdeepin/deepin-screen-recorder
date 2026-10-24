@@ -310,25 +310,25 @@ TEST_F(MainWindowCov3Test, onScrollShotCheckScrollTypeSafe)
 TEST_F(MainWindowCov3Test, resizeTopSafe)
 {
     QMouseEvent me(QEvent::MouseMove, QPointF(50, 50), Qt::NoButton, Qt::NoButton, Qt::NoModifier);
-    EXPECT_NO_FATAL_FAILURE(call_private_fun::MainWindowresizeTop(*m_w, &me));
+    EXPECT_NO_FATAL_FAILURE(call_private_fun::MainWindowresizeTop(*m_w, me.pos()));
 }
 
 TEST_F(MainWindowCov3Test, resizeBottomSafe)
 {
     QMouseEvent me(QEvent::MouseMove, QPointF(50, 50), Qt::NoButton, Qt::NoButton, Qt::NoModifier);
-    EXPECT_NO_FATAL_FAILURE(call_private_fun::MainWindowresizeBottom(*m_w, &me));
+    EXPECT_NO_FATAL_FAILURE(call_private_fun::MainWindowresizeBottom(*m_w, me.pos()));
 }
 
 TEST_F(MainWindowCov3Test, resizeLeftSafe)
 {
     QMouseEvent me(QEvent::MouseMove, QPointF(50, 50), Qt::NoButton, Qt::NoButton, Qt::NoModifier);
-    EXPECT_NO_FATAL_FAILURE(call_private_fun::MainWindowresizeLeft(*m_w, &me));
+    EXPECT_NO_FATAL_FAILURE(call_private_fun::MainWindowresizeLeft(*m_w, me.pos()));
 }
 
 TEST_F(MainWindowCov3Test, resizeRightSafe)
 {
     QMouseEvent me(QEvent::MouseMove, QPointF(50, 50), Qt::NoButton, Qt::NoButton, Qt::NoModifier);
-    EXPECT_NO_FATAL_FAILURE(call_private_fun::MainWindowresizeRight(*m_w, &me));
+    EXPECT_NO_FATAL_FAILURE(call_private_fun::MainWindowresizeRight(*m_w, me.pos()));
 }
 
 TEST_F(MainWindowCov3Test, getActionSafe)

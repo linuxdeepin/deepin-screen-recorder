@@ -227,8 +227,8 @@ TEST_F(SaveMenuManagerCovTest, initializeSpecifiedInvalidPathFallback)
     setShot("save_dir", QStringLiteral("/no/such/dsr/path/xyz"));
     EXPECT_NO_FATAL_FAILURE(m_m->initializeFromConfig());
     EXPECT_EQ(m_m->getCurrentLocationState(), LocationState::ChooseOnSave);
-    EXPECT_TRUE(getShot(QStringLiteral("save_dir_change")).toBool());
-    EXPECT_EQ(getShot(QStringLiteral("location_state")).toInt(), static_cast<int>(LocationState::ChooseOnSave));
+    EXPECT_TRUE(getShot("save_dir_change").toBool());
+    EXPECT_EQ(getShot("location_state").toInt(), static_cast<int>(LocationState::ChooseOnSave));
 }
 
 // 「保存时选择位置 / 保存时更新位置」的勾选必须落在可见项上，
