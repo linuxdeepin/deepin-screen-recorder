@@ -29,10 +29,15 @@ public:
         int width;
         int height;
         QString name;
+        /**
+         * @brief 该屏自身的缩放比。多屏混缩放（如内屏 150% + 外屏 100%）时
+         *        各屏不同，width/height 必须按各自的 scaleFactor 换算
+         */
+        qreal scaleFactor = 1.0;
         ~ScreenInfo() {}
         QString toString()
         {
-            return QString("ScreenName: %1 ,width: %2 ,height: %3 ,x: %4 ,y: %5").arg(name).arg(width).arg(height).arg(x).arg(y);
+            return QString("ScreenName: %1 ,width: %2 ,height: %3 ,x: %4 ,y: %5 ,scaleFactor: %6").arg(name).arg(width).arg(height).arg(x).arg(y).arg(scaleFactor);
         }
     };
 public:
@@ -90,6 +95,22 @@ public:
      * @return 缩放后实际的点
      */
     static QPoint getPosWithScreen(QPoint pos);
+
+    /**
+     * @brief 获取主屏的缩放比例（优先会话 DBus，失败回落 QScreen::devicePixelRatio()）
+     * @return qreal 主屏缩放比例
+     */
+    static qreal devicePixelRatioF();
+
+    /**
+     * @brief 获取指定屏幕自身的缩放比例
+     *        多屏混缩放（各屏缩放比不一致）时，坐标换算必须用所在屏自己的
+     *        缩放比，不能统一用主屏的 devicePixelRatioF()
+     *        优先级与会话 DBus 与 devicePixelRatioF() 一致，仅按屏名取各自的值
+     * @param screen 目标屏幕，nullptr 时返回 1.0
+     * @return qreal 该屏幕的缩放比例
+     */
+    static qreal screenFactor(const QScreen *screen);
 
     /**
      * @brief 传入屏幕上已经缩放后的点，获取理论上实际的点
