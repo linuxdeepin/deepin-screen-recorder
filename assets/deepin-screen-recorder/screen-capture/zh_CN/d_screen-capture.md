@@ -2,7 +2,7 @@
 
 ## 概述
 
-截图录屏是一款集截图、录屏于一体的小工具，支持图片编辑、贴图、滚动截图、文字识别、录屏等功能。
+截图录屏是一款集截图、录屏于一体的小工具，支持图片编辑、序号标注、圆角截图、固定尺寸、贴图、滚动截图、文字识别、表格识别、AI截图、录屏等功能。
 
 ![part_area](fig/partarea.png)
 
@@ -15,7 +15,7 @@
 ### 运行截图录屏
 
 1. 单击任务栏上的启动器图标 ![deepin_launcher](../common/deepin_launcher.svg)，进入启动器界面。
-2. 上下滚动鼠标滚轮浏览或通过搜索，找到截图录屏图标 ![deepin_screenshot](../common/deepin_screenshot.svg)，单击运行。
+2. 上下滚动鼠标滚轮浏览或通过搜索，找到截图录屏图标 ![deepin_screenshot](../common/deepin_screenshot.svg)，单击运行。
 3. 右键单击 ![deepin_screenshot](../common/deepin_screenshot.svg)，您可以：
 
    - 单击 **发送到桌面**，在桌面创建快捷方式。
@@ -28,7 +28,7 @@
 
 - 截图录屏会在截图或录屏结束后自动退出。
 - 在截图录屏界面，单击 <img src="../common/close.svg" alt="close" style="zoom:67%;" />，关闭应用。
-- 在截图界面，单击鼠标右键，选择 **保存** 或 **退出**。
+- 在截图界面，单击鼠标右键，选择 **撤销**、**保存** 或 **退出**。
 
 
 ### 快捷键
@@ -93,6 +93,7 @@
 - 将鼠标指针置于截图录屏区域的白色边框上，鼠标指针变为 ![双箭头](../common/Mouse_Arrow.svg)，
 按住鼠标左键不放，拖动鼠标放大或缩小区域。
 - 按下键盘上的 **Ctrl** + ![向上](../common/Up.svg) 或 ![向下](../common/Down.svg) 来上下扩展区域，按下键盘上的 **Ctrl** + ![向左](../common/Left.svg) 或 ![向右](../common/Right.svg) 来左右扩展区域。&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+- 按下键盘上的 **Ctrl + Shift** + ![向上](../common/Up.svg)、![向下](../common/Down.svg)、![向左](../common/Left.svg) 或 ![向右](../common/Right.svg)，可以逐像素缩小区域的高度或宽度。
 
 #### 移动区域位置
 
@@ -102,9 +103,38 @@
 
 
 
+### 圆角截图
+
+选中截图录屏区域后，区域右侧会出现两个快捷按钮，上方的是圆角按钮。
+
+![0|选区快捷按钮](fig/select_buttons.png)
+
+1. 单击区域右侧的圆角按钮，展开圆角面板。
+2. 拖动滑块，或直接在数值框中输入数值，设置圆角半径，最大可设置为 60。
+3. 设置完成后，区域边框会按该半径显示为圆角；保存或复制的图片，四角同样被裁为圆角，圆角以外的部分为透明。
+
+![0|圆角](fig/corner_tool.png)
+
+![0|圆角效果](fig/corner_result.png)
+
+### 固定尺寸/比例
+
+选中截图录屏区域后，区域右侧下方的按钮用于把选区固定为指定的尺寸或宽高比。
+
+1. 单击区域右侧的尺寸/比例按钮，展开面板。
+2. 单击面板左侧的下拉框，选择 **尺寸** 或 **比例**。
+   - 选择 **尺寸**，在数值框中输入固定的宽度和高度，单位为像素。
+   - 选择 **比例**，在数值框中输入宽高比的两个数值，例如 166 和 93。
+3. 单击面板右侧的保持按钮，可在下次截图时沿用该尺寸或比例，该按钮的提示为「选中后，下次截图保持该尺寸/比例」。
+
+![0|尺寸](fig/size_tool.png)
+
+![0|比例](fig/ratio_tool.png)
+
+
 ## 截图
 
-在截图模式下，单击工具栏上的按钮，您可以在截图区域进行图形绘制、文字批注等操作，并可以识别图中文字、将图片置顶贴在桌面上、使用**AI截图**对截图内容进行解释、总结、翻译等。
+在截图模式下，单击工具栏上的按钮，您可以在截图区域进行图形绘制、文字批注、序号标注等操作，并可以识别图中文字、识别表格、将图片置顶贴在桌面上、使用**AI截图**对截图内容进行解释、总结、翻译等。
 
 
 ![0|截图工具栏](fig/capturebar.png)
@@ -112,6 +142,7 @@
 <table class="block1">
     <caption>工具栏说明</caption>
     <tbody>
+
         <tr>
             <td style="text-align:center;"><img src="../common/bar_geometric.svg" alt="几何工具" class="inline" /></td>
             <td>几何工具</td>
@@ -129,26 +160,36 @@
             <td>文字</td>
         </tr>
         <tr>
+            <td style="text-align:center;"><img src="../common/seq_normal.svg" alt="序号标注" class="inline" /></td>
+            <td>序号标注</td>
             <td style="text-align:center;"><img src="../common/scrollshot.svg" alt="滚动截图" class="inline" /></td>
             <td>滚动截图</td>
             <td style="text-align:center;"><img src="../common/ocr.svg" alt="识别文字" class="inline" /></td>
             <td>识别文字</td>
+        </tr>
+        <tr>
+            <td style="text-align:center;"><img src="../common/recognize_table.svg" alt="表格识别" class="inline" /></td>
+            <td>表格识别</td>
             <td style="text-align:center;"><img src="../common/pin.svg" alt="贴图" class="inline" /></td>
             <td>贴图</td>
-        </tr>
-        <tr>
             <td style="text-align:center;"><img src="../common/bar_ai.svg" alt="AI截图" class="inline" /></td>
             <td>AI截图</td>
-            <td style="text-align:center;"><img src="../common/bar_settings.svg" alt="设置" class="inline" /></td>
-            <td>设置</td>
-            <td style="text-align:center;"><img src="../common/bar_save.svg" alt="保存到本地" class="inline" /></td>
-            <td>保存到本地</td>            
         </tr>
         <tr>
+            <td style="text-align:center;"><img src="../common/undo_normal.svg" alt="撤销" class="inline" /></td>
+            <td>撤销</td>
+            <td style="text-align:center;"><img src="../common/recorder_button.svg" alt="录屏" class="inline" /></td>
+            <td>录屏</td>
+            <td style="text-align:center;"><img src="../common/bar_settings.svg" alt="设置" class="inline" /></td>
+            <td>设置</td>
+        </tr>
+        <tr>
+            <td style="text-align:center;"><img src="../common/bar_save.svg" alt="保存到本地" class="inline" /></td>
+            <td>保存到本地</td>
             <td style="text-align:center;"><img src="../common/close.svg" alt="关闭" class="inline" /></td>
             <td>关闭</td>
             <td style="text-align:center;"><img src="../common/done.svg" alt="复制到剪贴板" class="inline" /></td>
-            <td>复制到剪贴板</td>            
+            <td>复制到剪贴板</td>
         </tr>
     </tbody>
 </table>
@@ -158,7 +199,7 @@
 
 ### 绘制图形
 
-通过截图工具栏上的**几何工具**、**直线**、**箭头**、**画笔**按钮可以绘制简单的图形，并支持设置线条的粗细和颜色。
+通过截图工具栏上的**几何工具**、**直线**、**箭头**、**画笔**按钮可以绘制简单的图形，并支持设置线条的粗细和颜色。单击**几何工具**后，可在展开的面板中选择矩形或椭圆，再在截图区域中拖动鼠标完成绘制。
 
 ![1|绘制图形](fig/ellipsetool.png)
 
@@ -180,6 +221,10 @@
 
 1. 将鼠标指针置于图形的边线上，此时鼠标指针变为 ![手指](fig/fingers.png)。
 2. 按住鼠标左键不放，将图形移动到截图区域的任何位置。
+
+### 撤销操作
+
+单击工具栏上的撤销按钮 <img src="../common/undo_normal.svg" alt="撤销" class="inline" />，或按下快捷键 **Ctrl + Z**，可以撤销上一步的绘制或标注操作。当前没有可撤销的操作时，该按钮置灰。
 
 ### 模糊工具
 
@@ -217,6 +262,16 @@
    - 在文本框内，修改文字信息。
 3. 在文本框外单击鼠标左键，退出编辑模式。
 
+### 序号标注
+
+使用序号标注，可以在截图中依次标出要点，便于讲解和说明。
+
+1. 在截图工具栏中，单击 ![序号标注](../common/seq_normal.svg)，或按下快捷键 **Alt + S**。
+2. 在展开的面板中选择标记的大小和颜色。
+3. 在截图区域中单击，截图录屏按顺序添加带圆圈的序号标记，依次为 ①、②、③ 等。
+
+![0|序号标注](fig/seq_tool.png)
+
 ### 滚动截图
 
 滚动截图功能不仅可以截取屏幕内可见的内容，还能截取超过屏幕外的内容，满足一次性截取长图的需求。
@@ -247,16 +302,29 @@
 
 对于截图区域中无法复制的内容，可以使用识别文字功能提取文字。
 
-1. 选择截图区域后，单击工具栏上的文字识别按钮 ![ocr](../common/ocr.svg)，弹出图文识别窗口，识别图片中的文字。
+1. 选择截图区域后，单击工具栏上的文字识别按钮 ![ocr](../common/ocr.svg)，或按下快捷键 **Alt + O**，弹出图文识别窗口，识别图片中的文字。
 2. 您可以对识别出的文字进行编辑、复制或保存为TXT等操作。
 
 ![ocr](fig/ocr.png)
+
+### 表格识别
+
+对于截图区域中的表格，可以使用表格识别功能，将表格内容提取为可粘贴的格式。
+
+1. 选择截图区域后，单击工具栏上的表格识别按钮 ![表格识别](../common/recognize_table.svg)，或按下快捷键 **Alt + T**。截图录屏同时将截图复制到剪贴板。
+2. 界面显示 **表格识别中…**，识别完成后弹出 **表格识别** 对话框，并显示 **表格已识别成功！**。
+
+![0|表格识别中](fig/table_progress.png)
+
+3. 单击 **复制为Excel格式**，识别结果以表格形式复制到剪贴板，您可以直接粘贴到表格软件中；单击 **取消**，关闭对话框，不复制识别结果。
+
+![0|表格识别](fig/table_recognize.png)
 
 ### 贴图
 
 通过贴图功能将截图变为桌面浮窗，方便您快速查阅、对比和梳理信息。
 
-选择需要截取的区域后，单击工具栏上的贴图按钮 ![icon](../common/pin.svg)，截图浮于桌面上即为贴图，您可以对贴图进行如下操作：
+选择需要截取的区域后，单击工具栏上的贴图按钮 ![icon](../common/pin.svg)，或按下快捷键 **Alt + P**，截图浮于桌面上即为贴图，您可以对贴图进行如下操作：
 
 - 通过鼠标移动图片的位置。
 - 将鼠标指针置于图片上，向上或向下滚动鼠标滚轮等比缩放图片。
@@ -266,7 +334,7 @@
 
 ### AI截图
 
-在截图工具栏中，单击按钮<img src="../common/bar_ai.svg" alt="AI截图" class="inline" />展开AI菜单，您可以：
+在截图工具栏中，单击按钮<img src="../common/bar_ai.svg" alt="AI截图" class="inline" />或按下快捷键 **Alt + A** 展开AI菜单，您可以：
 
 - 选择 **解释**，让**AI随航**为您解释截图中的文字；
 - 选择 **总结**，让**AI随航**为您总结截图中的文字；
@@ -284,7 +352,7 @@
 
 ### 设置
 
-您还可以在截图工具栏中，单击按钮<img src="../common/bar_settings.svg" alt="设置" class="inline" />，展开设置菜单：
+您还可以在截图工具栏中，单击按钮<img src="../common/bar_settings.svg" alt="设置" class="inline" />或按下快捷键 **F3**，展开设置菜单：
 
 ![0|option](fig/screen_setting.png)
 
@@ -294,7 +362,7 @@
 
 ### 保存截图
 
-单击工具栏中的按钮![icon](../common/bar_save.svg)或单击鼠标右键选择 **保存**，可将截图保存在本地，单击该按钮右侧的小图标![icon](../common/dropdown.svg)展开选项可设置保存规则。
+单击工具栏中的按钮![icon](../common/bar_save.svg)或单击鼠标右键选择 **保存**，或按下快捷键 **Ctrl + S**，可将截图保存在本地，单击该按钮右侧的小图标![icon](../common/dropdown.svg)展开选项可设置保存规则。
 
 - 选择 **每次询问**，可在每次点击保存按钮后选择保存路径。
 - 选择 **指定位置** > **桌面**，将图片保存到桌面。
@@ -303,7 +371,7 @@
 
 ### 复制到剪贴板
 
-单击工具栏中的按钮 ![icon](../common/done.svg)，或双击鼠标左键，或使用快捷键 **Ctrl + S**，将图片保存到剪贴板中。
+单击工具栏中的按钮 ![icon](../common/done.svg)，或双击鼠标左键，或按下快捷键 **Enter**，将截图复制到剪贴板中。
 
 ## 录屏
 
@@ -323,7 +391,7 @@
             <td style="text-align:center;"><img src="../common/webcam_normal.svg" alt/></td>
             <td>开启摄像头</td>
             <td style="text-align:center;"><img src="../common/switch.svg" alt/></td>
-            <td>切换截图</td>
+            <td>截图</td>
         </tr>
           <tr>
             <td style="text-align:center;"><img src="../common/bar_settings.svg" alt="设置" class="inline" /></td>
@@ -331,7 +399,7 @@
             <td style="text-align:center;"><img src="../common/close.svg" alt/></td>
             <td>关闭</td>
             <td style="text-align:center;"><img src="../common/done.svg" alt/></td>
-            <td>开始录屏</td>
+            <td>确认</td>
         </tr>
     </tbody>
 </table>
@@ -342,13 +410,21 @@
 
 在录屏工具栏中，您可以：
 
-- 显示按键：单击按钮![icon](../common/key_normal.svg)，录屏时显示键盘按键操作，最多同时显示5个按键操作。
+- 显示按键：单击按钮![icon](../common/key_normal.svg)，或按下快捷键 **K**，录屏时显示键盘按键操作，最多同时显示5个按键操作。
 
-- 开启摄像头：单击按钮![icon](../common/webcam_normal.svg) ，启动摄像头，录屏时同时录制摄像头画面和屏幕画面，拖拽摄像头窗口可以调整位置。
+- 开启摄像头：单击按钮![icon](../common/webcam_normal.svg)，或按下快捷键 **C**，启动摄像头，录屏时同时录制摄像头画面和屏幕画面，拖拽摄像头窗口可以调整位置。
 
    > ![attention](../common/attention.svg) 注意：请先检测接入的设备是否支持声音录制或摄像头功能，若不支持，则无法进行相应的操作。
 
-- 更多设置：单击按钮<img src="../common/bar_settings.svg" alt="设置" class="inline" />，在设置菜单中选择 **GIF** 、 **MP4** 或 **MKV** 视频格式，并选择视频帧率、声音录制、显示光标等。
+- 截图：单击按钮<img src="../common/switch.svg" alt="截图" class="inline" />，在录屏过程中截取当前画面。
+
+- 更多设置：单击按钮<img src="../common/bar_settings.svg" alt="设置" class="inline" />，或按下快捷键 **F3**，在设置菜单中可以进行以下设置：
+
+   - **格式**：选择 **GIF**、**MP4** 或 **MKV** 视频格式。
+   - **帧数**：选择 **5 fps**、**10 fps**、**20 fps**、**24 fps** 或 **30 fps**。
+   - **声音**：选择 **麦克风** 或 **系统音频**，两者可以同时勾选。
+   - **选项**：选择 **显示光标** 或 **显示鼠标点击**。
+   - **保存方式**：选择 **桌面** 或 **视频**，设置录制文件的保存位置。
 
    > ![notes](../common/notes.svg) 说明：MIPS架构不支持GIF格式。
 
@@ -359,13 +435,13 @@
 1. 使用快捷键 **Ctrl + Alt + R** 启动录屏。
 2. 选择录屏区域。
 3. 在录屏工具栏中，对录屏进行相关的设置。
-4. 单击录屏按钮 ![icon](../common/done.svg)，3秒倒计时结束后开始录制，此时托盘区域出现录制图标并闪烁。
+4. 单击录屏按钮 ![icon](../common/done.svg)，或按下快捷键 **Enter**，3秒倒计时结束后开始录制，此时托盘区域出现录制图标并闪烁。
 5. 您可以使用以下方法结束录制：
    - 使用快捷键 **Ctrl + Alt + R**。
    - 单击任务栏上的截图录屏图标。
    - 单击托盘区域录制图标。
 
-录屏结束后视频将自动保存到桌面。
+录屏结束后，录制文件自动保存到 **视频** 文件夹下的 **Screen Recordings** 目录，文件名为“录屏_<区域>_<时间戳>”。在上一步的 **保存方式** 中选择 **桌面**，录制文件则保存到桌面。
 
 > ![notes](../common/notes.svg) 说明：
 > - 当任务栏在桌面的上方或下方时，托盘区域的录制图标会显示录制时长。

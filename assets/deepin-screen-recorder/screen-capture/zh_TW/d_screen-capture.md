@@ -2,7 +2,7 @@
 
 ## 概述
 
-截圖錄影是一款集截圖、螢幕錄影於一體的小工具，支援圖片編輯、貼圖、捲動截圖、文字辨識、螢幕錄影等功能。
+截圖錄影是一款集截圖、螢幕錄影於一體的小工具，支援圖片編輯、序號標註、圓角截圖、固定尺寸、貼圖、捲動截圖、文字辨識、表格辨識、AI截圖、螢幕錄影等功能。
 
 ![截圖](fig/partarea.png)
 
@@ -25,7 +25,7 @@
 
 - 截圖或錄影結束後自動關閉。
 - 在應用程式介面點選 <img src="../common/close.svg" alt="close" style="zoom:67%;" /> 關閉。
-- 截圖模式下右鍵點選，選擇 **儲存** 或 **結束**。
+- 截圖模式下右鍵點選，選擇 **撤銷**、**儲存** 或 **離開**。
 
 ### 快速鍵
 
@@ -77,15 +77,44 @@
 可微調區域大小或位置。
 
 #### 調整大小
-- 拖曳白色邊框 (游標變 ![双箭头](../common/Mouse_Arrow.svg))。
+- 拖曳白色邊框 (游標變 ![雙箭頭](../common/Mouse_Arrow.svg))。
 - 按 **Ctrl** + ![向上](../common/Up.svg)/![向下](../common/Down.svg) 垂直調整，**Ctrl** + ![向左](../common/Left.svg)/![向右](../common/Right.svg) 水平調整。&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+- 按 **Ctrl + Shift** + ![向上](../common/Up.svg)、![向下](../common/Down.svg)、![向左](../common/Left.svg) 或 ![向右](../common/Right.svg)，可逐像素縮小區域的高度或寬度。
 
 #### 移動位置
 - 游標為 ![手指](../common/hand.svg) 時拖曳區域。
 - 使用方向鍵 (![向上](../common/Up.svg)/![向下](../common/Down.svg) 等) 微調。
 
+### 圓角截圖
+
+選中截圖錄影區域後，區域右側會出現兩個快捷按鈕，上方的是圓角按鈕（提示為「圓角」）。
+
+![0|選區快捷按鈕](fig/select_buttons.png)
+
+1. 點選區域右側的圓角按鈕，展開圓角面板。
+2. 拖曳滑桿，或直接在數值框中輸入數值，設定圓角半徑，最大可設定為 60。
+3. 設定完成後，區域邊框會按該半徑顯示為圓角；儲存或複製的圖片，四角同樣被裁為圓角，圓角以外的部分為透明。
+
+![0|圓角](fig/corner_tool.png)
+
+![0|圓角效果](fig/corner_result.png)
+
+### 固定尺寸/比例
+
+選中截圖錄影區域後，區域右側下方的按鈕用於將選區固定為指定的尺寸或寬高比（提示為「尺寸/比例」）。
+
+1. 點選區域右側的尺寸/比例按鈕，展開面板。
+2. 點選面板左側的下拉式選單，選擇 **尺寸** 或 **比例**。
+   - 選擇 **尺寸**，在數值框中輸入固定的寬度和高度，單位為像素。
+   - 選擇 **比例**，在數值框中輸入寬高比的兩個數值，例如 166 和 93。
+3. 點選面板右側的保持按鈕，可在下次截圖時沿用該尺寸或比例，該按鈕的提示為「選中後，下次截圖保持該尺寸/比例」。
+
+![0|尺寸](fig/size_tool.png)
+
+![0|比例](fig/ratio_tool.png)
+
 ## 截圖功能
-截圖模式下使用工具列進行圖形繪製、文字註解等操作，同時可辨識圖中文字、將圖片置頂貼於桌面、使用**AI 擷圖**對擷圖內容進行解釋、總結、翻譯等處理。
+截圖模式下使用工具列進行圖形繪製、文字註解、序號標註等操作，同時可辨識圖中文字、辨識表格、將圖片置頂貼於桌面、使用**AI截圖**對截圖內容進行解釋、總結、翻譯等處理。
 
 
 ![0|截圖工具列](fig/capturebar.png)
@@ -93,12 +122,13 @@
 <table class="block1">
     <caption>工具列說明</caption>
     <tbody>
+
         <tr>
             <td style="text-align:center;"><img src="../common/bar_geometric.svg" alt="幾何工具" class="inline" /></td>
             <td>幾何工具</td>
-             <td style="text-align:center;"><img src="../common/line_mouse.svg" alt="直線" class="inline" /></td>
+            <td style="text-align:center;"><img src="../common/line_mouse.svg" alt="直線" class="inline" /></td>
             <td>直線</td>
-             <td style="text-align:center;"><img src="../common/Arrow_normal.svg" alt="箭頭" class="inline" /></td>
+            <td style="text-align:center;"><img src="../common/Arrow_normal.svg" alt="箭頭" class="inline" /></td>
             <td>箭頭</td>
         </tr>
         <tr>
@@ -110,26 +140,36 @@
             <td>文字</td>
         </tr>
         <tr>
+            <td style="text-align:center;"><img src="../common/seq_normal.svg" alt="序號標註" class="inline" /></td>
+            <td>序號標註</td>
             <td style="text-align:center;"><img src="../common/scrollshot.svg" alt="捲動截圖" class="inline" /></td>
             <td>捲動截圖</td>
-             <td style="text-align:center;"><img src="../common/ocr.svg" alt="辨識文字" class="inline" /></td>
+            <td style="text-align:center;"><img src="../common/ocr.svg" alt="辨識文字" class="inline" /></td>
             <td>辨識文字</td>
-             <td style="text-align:center;"><img src="../common/pin.svg" alt="貼圖" class="inline" /></td>
-            <td>貼圖</td>
         </tr>
         <tr>
+            <td style="text-align:center;"><img src="../common/recognize_table.svg" alt="表格辨識" class="inline" /></td>
+            <td>表格辨識</td>
+            <td style="text-align:center;"><img src="../common/pin.svg" alt="貼圖" class="inline" /></td>
+            <td>貼圖</td>
             <td style="text-align:center;"><img src="../common/bar_ai.svg" alt="AI截圖" class="inline" /></td>
             <td>AI截圖</td>
+        </tr>
+        <tr>
+            <td style="text-align:center;"><img src="../common/undo_normal.svg" alt="撤銷" class="inline" /></td>
+            <td>撤銷</td>
+            <td style="text-align:center;"><img src="../common/recorder_button.svg" alt="錄影" class="inline" /></td>
+            <td>錄影</td>
             <td style="text-align:center;"><img src="../common/bar_settings.svg" alt="設定" class="inline" /></td>
             <td>設定</td>
-            <td style="text-align:center;"><img src="../common/bar_save.svg" alt="保存到本地" class="inline" /></td>
-            <td>保存到本地</td>            
-        </tr>       
+        </tr>
         <tr>
+            <td style="text-align:center;"><img src="../common/bar_save.svg" alt="保存到本地" class="inline" /></td>
+            <td>保存到本地</td>
             <td style="text-align:center;"><img src="../common/close.svg" alt="關閉" class="inline" /></td>
             <td>關閉</td>
             <td style="text-align:center;"><img src="../common/done.svg" alt="複製到剪貼板" class="inline" /></td>
-            <td>複製到剪貼板</td> 
+            <td>複製到剪貼板</td>
         </tr>
     </tbody>
 </table>
@@ -138,7 +178,7 @@
 > ![notes](../common/notes.svg) 說明：若已設定線條粗細、字型大小等，應用程式會保存設定，下次啟動時自動套用，您也可重新設定。
 
 ### 繪製圖形
-通過擷圖工具列上的**幾何工具**、**直線**、**箭頭**、**畫筆**按鈕，可繪製簡易圖形，並支援設定線條的粗細與顏色。
+通過截圖工具列上的**幾何工具**、**直線**、**箭頭**、**畫筆**按鈕，可繪製簡易圖形，並支援設定線條的粗細與顏色。點選**幾何工具**後，可在展開的面板中選擇矩形或橢圓，再於截圖區域中拖曳滑鼠完成繪製。
 
 
 ![1|繪製圖形](fig/ellipsetool.png)
@@ -158,6 +198,10 @@
 
 1. 游標移至圖形邊線變 ![手指](fig/fingers.png)。
 2. 按住左鍵拖曳移動。
+
+### 撤銷操作
+
+點選工具列上的撤銷按鈕 <img src="../common/undo_normal.svg" alt="撤銷" class="inline" />，或按下快速鍵 **Ctrl + Z**，可撤銷上一步的繪製或標註操作。目前沒有可撤銷的操作時，該按鈕會變灰。
 
 ### 模糊工具
 
@@ -191,6 +235,16 @@
    - 直接修改文字內容
 3. 文字框外點選結束編輯。
 
+### 序號標註
+
+使用序號標註，可以在截圖中依序標出要點，便於講解和說明。
+
+1. 在截圖工具列中，點選 ![序號標註](../common/seq_normal.svg)，或按下快速鍵 **Alt + S**。
+2. 在展開的面板中選擇標記的大小和顏色。
+3. 在截圖區域中點選，截圖錄影會依序新增帶圓圈的序號標記，依次為 ①、②、③ 等。
+
+![0|序號標註](fig/seq_tool.png)
+
 ### 捲動截圖
 擷取超出螢幕的長內容（如網頁）。
 
@@ -215,16 +269,29 @@
 ### 辨識文字
 擷取圖片中的文字。
 
-1. 選取區域後點選 ![OCR](../common/ocr.svg)，彈出辨識視窗。
+1. 選取區域後點選 ![OCR](../common/ocr.svg)，或按下快速鍵 **Alt + O**，彈出辨識視窗。
 2. 可編輯、複製或另存為 TXT。
 
 ![OCR](fig/ocr.png)
+
+### 表格辨識
+
+對於截圖區域中的表格，可以使用表格辨識功能，將表格內容擷取為可貼上的格式。
+
+1. 選取區域後點選 ![表格辨識](../common/recognize_table.svg)，或按下快速鍵 **Alt + T**。截圖錄影會同時將截圖複製到剪貼板。
+2. 介面顯示 **表格辨識中…**，辨識完成後彈出 **表格辨識** 對話方塊，並顯示 **表格已辨識成功！**。
+
+![0|表格辨識中](fig/table_progress.png)
+
+3. 點選 **複製為Excel格式**，辨識結果會以表格形式複製到剪貼板，您可以直接貼上到表格軟體中；點選 **取消**，關閉對話方塊，不複製辨識結果。
+
+![0|表格辨識](fig/table_recognize.png)
 
 ### 貼圖
 
 將截圖固定為桌面浮動視窗，方便對照參考。
 
-選取區域後點選 ![貼圖](../common/pin.svg)，圖片將浮於桌面：
+選取區域後點選 ![貼圖](../common/pin.svg)，或按下快速鍵 **Alt + P**，圖片將浮於桌面：
 
 - 拖曳移動位置
 - 滾動滑鼠滾輪縮放
@@ -234,7 +301,7 @@
 
 ### AI截圖
 
-選取區域後點選<img src="../common/bar_ai.svg" alt="AI截图" class="inline" />，展開 AI菜單：
+選取區域後點選<img src="../common/bar_ai.svg" alt="AI截圖" class="inline" />，或按下快速鍵 **Alt + A**，展開 AI菜單：
 
 - **解釋**：調起**AI 隨航**解釋截圖中的文字
 - **總結**：調起**AI 隨航**總結截圖中的文字
@@ -252,17 +319,17 @@
 
 ### 設定
 
-選取區域後點選<img src="../common/bar_settings.svg" alt="设置" class="inline" /> ，展開設定菜單：
+選取區域後點選<img src="../common/bar_settings.svg" alt="設定" class="inline" />，或按下快速鍵 **F3**，展開設定菜單：
 
 ![設定](fig/screen_setting.png)
 
-- **邊框效果**：無邊框/投緣/外邊框/設備
+- **邊框效果**：無邊框/投影/外邊框/設備
 - **格式**：PNG/JPG/BMP
-- **顯示游標**：截圖包含游標
+- **顯示光標**：截圖包含游標
 
 ### 儲存截圖
 
-選取區域後點選![icon](../common/bar_save.svg)或單擊滑鼠右鍵選擇 **保存**，可將截圖儲存至本機，單擊該按鈕右側的小圖示![icon](../common/dropdown.svg)展開選項，即可設定儲存規則。
+選取區域後點選![icon](../common/bar_save.svg)或單擊滑鼠右鍵選擇 **儲存**，或按下快速鍵 **Ctrl + S**，可將截圖儲存至本機，單擊該按鈕右側的小圖示![icon](../common/dropdown.svg)展開選項，即可設定儲存規則。
 
 - **每次詢問**：每次點選儲存按鈕後選擇儲存路徑
 - **指定位置** > **桌面**：儲存至桌面
@@ -271,7 +338,7 @@
 
 ### 複製到剪貼板
 
-選取區域後點選![icon](../common/done.svg)，或雙擊滑鼠左鍵，或使用快速鍵 **Ctrl + S**，將圖片儲存至剪貼板中。
+選取區域後點選![icon](../common/done.svg)，或雙擊滑鼠左鍵，或使用快速鍵 **Enter**，將截圖複製到剪貼板中。
 
 ## 螢幕錄影
 
@@ -290,15 +357,15 @@
             <td style="text-align:center;"><img src="../common/webcam_normal.svg" alt/></td>
             <td>開啟鏡頭</td>
             <td style="text-align:center;"><img src="../common/switch.svg" alt/></td>
-            <td>切換截圖</td>
+            <td>截圖</td>
         </tr>
           <tr>
-            <td style="text-align:center;"><img src="../common/bar_settings.svg" /></td>
+            <td style="text-align:center;"><img src="../common/bar_settings.svg" alt="設定" class="inline" /></td>
             <td>設定</td>
-              <td style="text-align:center;"><img src="../common/done.svg" alt/></td>
-            <td>關閉</td>
               <td style="text-align:center;"><img src="../common/close.svg" alt/></td>
-            <td>開始錄影</td>
+            <td>關閉</td>
+              <td style="text-align:center;"><img src="../common/done.svg" alt/></td>
+            <td>確認</td>
         </tr>
     </tbody>
 </table>
@@ -306,25 +373,38 @@
 
 
 ### 錄影設定
-- **顯示按鍵**：![按鍵](../common/key_normal.svg) 最多同時顯示5個按鍵操作
-- **開啟鏡頭**：![鏡頭](../common/webcam_normal.svg) 同時錄製螢幕與鏡頭畫面（可拖曳調整位置）
+
+在錄影工具列中，您可以：
+
+- **顯示按鍵**：點選 ![按鍵](../common/key_normal.svg)，或按下快速鍵 **K**，錄影時顯示鍵盤按鍵操作，最多同時顯示5個按鍵操作。
+
+- **開啟鏡頭**：點選 ![鏡頭](../common/webcam_normal.svg)，或按下快速鍵 **C**，同時錄製螢幕與鏡頭畫面（可拖曳調整位置）。
   
   > ![attention](../common/attention.svg) 請確認裝置支援音訊/鏡頭錄製
-- **選項**：設定格式 (GIF/MP4/MKV)、影格率、音訊錄製、游標顯示等
-  
+
+- **截圖**：點選 <img src="../common/switch.svg" alt="截圖" class="inline" />，在錄影過程中擷取目前畫面。
+
+- **更多設定**：點選 <img src="../common/bar_settings.svg" alt="設定" class="inline" />，或按下快速鍵 **F3**，在設定菜單中可進行以下設定：
+
+  - **格式**：選擇 **GIF**、**MP4** 或 **MKV** 影片格式。
+  - **影格數**：選擇 **5 fps**、**10 fps**、**20 fps**、**24 fps** 或 **30 fps**。
+  - **聲音**：選擇 **麥克風** 或 **系統音訊**，兩者可以同時勾選。
+  - **選項**：選擇 **顯示光標** 或 **顯示滑鼠點擊**。
+  - **儲存方式**：選擇 **桌面** 或 **影片**，設定錄影檔案的儲存位置。
+
   > ![notes](../common/notes.svg) MIPS架構不支援GIF
 
 ### 開始錄影
 1. 按 **Ctrl + Alt + R**
 2. 選取錄影區域
 3. 設定選項
-4. 點選 ![開始](../common/done.svg)，3秒倒數後開始錄影，系統匣圖示 ![狀態](../common/status-screen-recording-dark.svg) 閃爍
+4. 點選 ![開始](../common/done.svg)，或按下快速鍵 **Enter**，3秒倒數後開始錄影，系統匣圖示 ![狀態](../common/status-screen-recording-dark.svg) 閃爍
 5. 結束錄影方式：
    - **Ctrl + Alt + R**
    - 點選工作列圖示
    - 點選系統匣圖示
 
-錄影完成後影片自動儲存至桌面。
+錄影結束後，錄影檔案會自動儲存至 **影片** 資料夾下的 **Screen Recordings** 目錄，檔名為「錄屏_<區域>_<時間戳>」。若在上一步的 **儲存方式** 中選擇 **桌面**，錄影檔案則儲存至桌面。
 
 > ![notes](../common/notes.svg) 
 > - 工作列位於頂部/底部時，系統匣圖示顯示錄影時間
