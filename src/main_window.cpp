@@ -52,6 +52,7 @@ extern "C" {
 #include <QShortcut>
 #include <QDesktopWidget>
 #include <QScreen>
+#include <QDateTime>
 #include <QtConcurrent>
 #include <X11/Xcursor/Xcursor.h>
 #include <stdio.h>
@@ -185,12 +186,16 @@ void MainWindow::initMainWindow()
     for (auto it = screenList.constBegin(); it != screenList.constEnd(); ++it) {
         QRect rect = (*it)->geometry();
         qDebug() << (*it)->name() << rect;
+        // 多屏混缩放（如内屏 150% + 外屏 100%）时各屏缩放比不同，
+        // 物理尺寸必须按各屏自己的缩放比换算，不能统一乘主屏的 m_pixelRatio
+        const qreal screenRatio = Utils::screenFactor(*it);
         ScreenInfo screenInfo;
         screenInfo.x = rect.x();
         screenInfo.y = rect.y();
-        screenInfo.height =  static_cast<int>(rect.height() * m_pixelRatio);
-        screenInfo.width = static_cast<int>(rect.width() * m_pixelRatio);
+        screenInfo.height =  static_cast<int>(rect.height() * screenRatio);
+        screenInfo.width = static_cast<int>(rect.width() * screenRatio);
         screenInfo.name = (*it)->name();
+        screenInfo.scaleFactor = screenRatio;
 
         hTotal += screenInfo.height;
         m_screenInfo.append(screenInfo);
@@ -237,6 +242,44 @@ void MainWindow::initMainWindow()
     qInfo() << __LINE__ << __FUNCTION__ << "截图录屏主窗口已初始化";
 }
 
+bool MainWindow::isUniformScreenScale() const
+{
+    for (const ScreenInfo &info : m_screenInfo) {
+        if (!qFuzzyCompare(info.scaleFactor, m_pixelRatio)) {
+            return false;
+        }
+    }
+    return true;
+}
+
+QPoint MainWindow::globalDeviceToLocalLogical(const QPoint &pos) const
+{
+    // 兜底换算（与旧的统一除以主屏比例一致）：单屏时 x/主屏比例 恰好等于逻辑坐标
+    const QPoint fallback(static_cast<int>(pos.x() / m_pixelRatio),
+                          static_cast<int>(pos.y() / m_pixelRatio));
+    if (m_screenInfo.isEmpty()) {
+        return fallback;
+    }
+
+    // 每块屏在 kwin 物理布局空间中的区间：沿布局轴（m_screenInfo 已按位置排序）
+    // 按原生尺寸累加，非布局轴按对齐处理（起点 = 逻辑起点 × 该屏比例）
+    int deviceOffset = 0;
+    for (const ScreenInfo &info : m_screenInfo) {
+        const qreal factor = (info.scaleFactor > 0.0) ? info.scaleFactor : m_pixelRatio;
+        const int deviceX = m_isScreenVertical ? static_cast<int>(info.x * factor) : deviceOffset;
+        const int deviceY = m_isScreenVertical ? deviceOffset : static_cast<int>(info.y * factor);
+        if (pos.x() >= deviceX && pos.x() < deviceX + info.width &&
+                pos.y() >= deviceY && pos.y() < deviceY + info.height) {
+            return QPoint(static_cast<int>((pos.x() - deviceX) / factor) + info.x,
+                          static_cast<int>((pos.y() - deviceY) / factor) + info.y);
+        }
+        deviceOffset += m_isScreenVertical ? info.height : info.width;
+    }
+
+    // 不在任何屏的物理区间内（屏幕空隙/越界），回落旧换算
+    return fallback;
+}
+
 void MainWindow::initAttributes()
 {
     qInfo() << __LINE__ << __FUNCTION__ << "正在初始化一些属性...";
@@ -246,7 +289,18 @@ void MainWindow::initAttributes()
     m_isZhaoxin = Utils::checkCpuIsZhaoxin();
 
 
-    rootWindowRect = QRect(0, 0, static_cast<int>(qRound(m_screenSize.width() / m_pixelRatio)), static_cast<int>(qRound(m_screenSize.height() / m_pixelRatio)));
+    // 逻辑桌面尺寸直接取 Qt 虚拟桌面几何（与录屏路径 fullScreenRecord 一致）。
+    // 不能用 "Σ各屏物理尺寸 ÷ m_pixelRatio"：多屏混缩放（各屏比例不一致）时
+    // 该式不再等于逻辑桌面尺寸（如内屏 2160x1440@150% + 外屏 1920x1080@100%
+    // 会算出 2880 而真实逻辑宽度是 3360，导致预览窗口盖不住桌面/内容错位）
+    const QScreen *t_virtualScreen = QGuiApplication::primaryScreen();
+    if (t_virtualScreen != nullptr) {
+        rootWindowRect = QRect(0, 0, t_virtualScreen->virtualGeometry().width(),
+                               t_virtualScreen->virtualGeometry().height());
+    } else {
+        rootWindowRect = QRect(0, 0, static_cast<int>(qRound(m_screenSize.width() / m_pixelRatio)),
+                               static_cast<int>(qRound(m_screenSize.height() / m_pixelRatio)));
+    }
     screenRect = QRect(screenRect.topLeft() / m_pixelRatio, screenRect.size());
     qDebug() << "screen size" << rootWindowRect;
 
@@ -394,8 +448,10 @@ void MainWindow::initAttributes()
     initShortcut();
 
 
-    // 多屏缩放模式下，界面坐标修正
-    if (m_screenCount > 1 && m_pixelRatio  > 1) {
+    // 多屏缩放模式下，界面坐标修正（历史补丁：统一缩放比场景下的小屏偏移补偿）。
+    // 各屏缩放比不一致（混缩放）时，screenInfo 尺寸由各屏自身比例推算，
+    // 该偏移量不再成立（会把窗口整体挪出桌面），须跳过修正
+    if (isUniformScreenScale() && m_screenCount > 1 && m_pixelRatio  > 1) {
         if (m_isScreenVertical) {
             int heightAfterFirst = 0;
             for (int index = 1; index < m_screenCount; ++index) {
@@ -605,7 +661,14 @@ void MainWindow::waylandwindowinfo(const QVector<ClientManagement::WindowState> 
             qInfo() << "Release the interface for DTK to obtain window information.";
             destoryDtkWmDisplay();
         }
-        QRect screenRect(0, 0, static_cast<int>(m_screenSize.width() / ratio), static_cast<int>(m_screenSize.height() / ratio));
+        // 窗口坐标为逻辑坐标，裁剪边界取 Qt 虚拟桌面逻辑尺寸；
+        // 混缩放下不能用 "Σ物理尺寸 ÷ ratio"（会小于真实逻辑桌面）
+        const QScreen *t_virtualScreen = QGuiApplication::primaryScreen();
+        const QSize t_virtualSize = (t_virtualScreen != nullptr)
+                                    ? t_virtualScreen->virtualGeometry().size()
+                                    : QSize(static_cast<int>(m_screenSize.width() / ratio),
+                                            static_cast<int>(m_screenSize.height() / ratio));
+        QRect screenRect(0, 0, t_virtualSize.width(), t_virtualSize.height());
         //qDebug() << screenRect;
         //qDebug() << windowRects;
 
@@ -1849,8 +1912,9 @@ void MainWindow::topWindow()
         delete prewindow;
         prewindow = nullptr;
     }
-    // 放缩情况下，修正顶层窗口位置。
-    if (!qFuzzyCompare(1.0, m_pixelRatio) && m_screenCount > 1) {
+    // 放缩情况下，修正顶层窗口位置（配合多屏 move 历史补丁，仅统一缩放比时成立）。
+    // 混缩放下背景画布按统一比例拼接，窗口逻辑坐标可直接乘比例映射到画布，无需此换算
+    if (isUniformScreenScale() && !qFuzzyCompare(1.0, m_pixelRatio) && m_screenCount > 1) {
         int x = recordX;
         int y = recordY;
         if (x >= m_screenInfo[1].x) {
@@ -4592,6 +4656,11 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
 
 
     } else if (event->type() == QEvent::MouseMove) {
+        // 记录真实鼠标移动事件的到达时间（sendEvent 同步重入的合成事件除外），
+        // onMouseMove 依此判断是否需要补充合成事件
+        if (!m_dispatchingSyntheticMouseEvent) {
+            m_lastRealMouseMoveMs = QDateTime::currentMSecsSinceEpoch();
+        }
         QMouseEvent *mouseEvent = static_cast<QMouseEvent *>(event);
         //没打开截图的编辑模式
         if (!m_isShapesWidgetExist) {
@@ -4606,20 +4675,12 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
                 if (status::shot == m_functionType) {
                     if (!m_toolBar->isVisible() && !isFirstReleaseButton) {
                         QPoint curPos = this->cursor().pos(); //采用全局坐标，替换局部坐标
-                        //mouseEvent->globalPos()此接口获取的光标坐标是已经缩放后的坐标，需还原
-//                        QPoint curPos = mouseEvent->globalPos();
-                        for (int index = 0; index < m_screenCount; ++index) {
-                            //判断在哪块屏幕上
-                            if (curPos.x() >= m_screenInfo[index].x &&
-                                    curPos.x() < (m_screenInfo[index].x + m_screenInfo[index].width) &&
-                                    curPos.y() >= m_screenInfo[index].y &&
-                                    curPos.y() < (m_screenInfo[index].y + m_screenInfo[index].height)) {
-                                //qDebug() << "m_screenInfo[index]" << m_screenInfo[index].x << m_screenInfo[index].y << m_screenInfo[index].width<< m_screenInfo[index].height;
-                                curPos.setX(static_cast<int>((curPos.x() - m_screenInfo[index].x) * m_pixelRatio + m_screenInfo[index].x));
-                                curPos.setY(static_cast<int>((curPos.y() - m_screenInfo[index].y) * m_pixelRatio + m_screenInfo[index].y));
-                                break;
-                            }
-                        }
+                        // curPos 已是全局逻辑坐标；背景画布按统一比例拼接
+                        // （画布像素 = 逻辑坐标 × m_pixelRatio），直接整体换算即可。
+                        // 不再按屏换算：混缩放下按屏换算在非主屏会错位，
+                        // 且旧的命中判断混用了逻辑坐标与各屏物理宽高
+                        curPos.setX(static_cast<int>(curPos.x() * m_pixelRatio));
+                        curPos.setY(static_cast<int>(curPos.y() * m_pixelRatio));
 
                         QPoint tmpPos;
                         //m_backgroundRect中的所有参数都是已经缩放后的
@@ -4961,10 +5022,13 @@ void MainWindow::onMouseDrag(int x, int y)
 //     if (!Utils::isWaylandMode) {
     // fix the bug-302745, on x64 platform, shapeswidget may not get the Qt mouse event
     if (m_shapesWidget && m_isShapesWidgetExist && status::shot == m_functionType){
+        // XEventMonitor 上报的是全局物理坐标，混缩放下须按屏换算成逻辑坐标
         QMouseEvent mouseMove(QEvent::MouseMove,
-                              m_shapesWidget->mapFromGlobal(QPoint(int(x/m_pixelRatio), int(y/m_pixelRatio))),
+                              m_shapesWidget->mapFromGlobal(globalDeviceToLocalLogical(QPoint(x, y))),
                               Qt::LeftButton, Qt::LeftButton, Qt::NoModifier);
+        m_dispatchingSyntheticMouseEvent = true;
         QApplication::sendEvent(focusWidget(), static_cast<QEvent*>(&mouseMove));
+        m_dispatchingSyntheticMouseEvent = false;
     }
 //     }
 // #endif
@@ -4996,10 +5060,13 @@ void MainWindow::onMouseRelease(int x, int y)
 //     if (!Utils::isWaylandMode) {
     // fix the bug-302745, on x64 platform, shapeswidget may not get the Qt mouse event
     if (m_shapesWidget && m_isShapesWidgetExist && status::shot == m_functionType){
+        // XEventMonitor 上报的是全局物理坐标，混缩放下须按屏换算成逻辑坐标
         QMouseEvent mouseMove(QEvent::MouseButtonRelease,
-                              QPoint(int(x/m_pixelRatio), int(y/m_pixelRatio)),
+                              globalDeviceToLocalLogical(QPoint(x, y)),
                               Qt::LeftButton, Qt::LeftButton, Qt::NoModifier);
+        m_dispatchingSyntheticMouseEvent = true;
         QApplication::sendEvent(focusWidget(), static_cast<QEvent*>(&mouseMove));
+        m_dispatchingSyntheticMouseEvent = false;
     }
 //     }
 // #endif
@@ -5014,15 +5081,21 @@ void MainWindow::onMouseRelease(int x, int y)
 //通过x11从底层获取鼠标移动事件
 void MainWindow::onMouseMove(int x, int y)
 {
-    static int count = 0;
     if (!m_isShapesWidgetExist && isFirstMove && status::shot == m_functionType && m_toolBar->isHidden() && !isFirstReleaseButton) {
-        if ((Utils::isWaylandMode && count % 10 == 2) || count % 10 == 9) {
-            QPoint point(int(x / m_pixelRatio), int(y / m_pixelRatio));
+        // 真实 Qt 鼠标事件正常到达（150ms 内有真实移动）时不再注入合成事件：
+        // 合成事件经 DBus/队列转发存在延迟且滞后于真实事件，鼠标停止后队列里
+        // 残留的合成事件携带旧坐标，会把拖拽框选"顶"回旧位置。
+        // 仅在真实事件缺失（如 bug-302745 场景）时按 DBus 上报坐标补充合成事件，
+        // 且不再做 1/10 抽稀，保证兜底路径的跟手性
+        const qint64 now = QDateTime::currentMSecsSinceEpoch();
+        if (now - m_lastRealMouseMoveMs > 150) {
+            // XEventMonitor 上报的是全局物理坐标，混缩放下须按屏换算成逻辑坐标
+            QPoint point = globalDeviceToLocalLogical(QPoint(x, y));
             QMouseEvent mouseMove(QEvent::MouseMove, point, Qt::LeftButton, Qt::LeftButton, Qt::NoModifier);
+            m_dispatchingSyntheticMouseEvent = true;
             QApplication::sendEvent(QWidget::focusWidget(), static_cast<QEvent*>(&mouseMove));
-            count = 0;
+            m_dispatchingSyntheticMouseEvent = false;
         }
-        count++;
     }
     if (!m_initResource) {
         return;
@@ -5039,7 +5112,9 @@ void MainWindow::onMouseMove(int x, int y)
     if (!isFirstMove) {
         QMouseEvent *mouseMove;
         mouseMove = new QMouseEvent(QEvent::MouseMove, QPoint(x, y), Qt::LeftButton, Qt::LeftButton, Qt::NoModifier);
+        m_dispatchingSyntheticMouseEvent = true;
         QApplication::sendEvent(QWidget::focusWidget(), mouseMove);
+        m_dispatchingSyntheticMouseEvent = false;
     }
 }
 
