@@ -1,0 +1,84 @@
+name: 圆角尺寸面板_suite
+app: deepin-screen-recorder
+module: 圆角尺寸面板
+setup:
+- action: session_start
+  command: bash -lc 'xdotool key --clearmodifiers ctrl+alt+a; sleep 1.2; xdotool mousemove
+    320 220 mousedown 1; sleep 0.1; xdotool mousemove 920 620 mouseup 1; sleep 1.0'
+  wait: 3.0
+suites:
+- id: suite_圆角尺寸面板_001_s1
+  name: 框选后圆角按钮和尺寸比例按钮显示
+  description: ''
+  steps: []
+  assert_steps:
+  - step_type: assert
+    action: assert_element
+    selector:
+      accessible_id: RoundedCornerButton
+  - step_type: assert
+    action: assert_element
+    selector:
+      accessible_id: SizeRatioButton
+- id: suite_圆角尺寸面板_002_s1
+  name: 圆角面板展开后滑块和输入框显示
+  description: ''
+  steps:
+  - step_type: action
+    action: element_action
+    selector:
+      accessible_id: RoundedCornerButton
+    do: click
+  assert_steps:
+  - step_type: assert
+    action: assert_element
+    selector:
+      accessible_id: CornerRadiusSlider
+  - step_type: assert
+    action: assert_element
+    selector:
+      accessible_id: CornerRadiusSpinBox
+- id: suite_圆角尺寸面板_003_s1
+  name: 尺寸面板展开后各控件显示
+  description: ''
+  steps:
+  - step_type: action
+    action: element_action
+    selector:
+      accessible_id: SizeRatioButton
+    do: click
+  assert_steps:
+  - step_type: assert
+    action: assert_element
+    selector:
+      accessible_id: SizeRatioModeButton
+  - step_type: assert
+    action: assert_element
+    selector:
+      accessible_id: SelectionWidthEdit
+  - step_type: assert
+    action: assert_element
+    selector:
+      accessible_id: SelectionHeightEdit
+  - step_type: assert
+    action: assert_element
+    selector:
+      accessible_id: RatioLockButton
+- id: suite_圆角尺寸面板_004_s1
+  name: 悬停按钮组显示可拖动光标
+  description: ''
+  steps:
+  - step_type: action
+    action: element_action
+    selector:
+      accessible_id: RoundedCornerButton
+    do: point
+  - step_type: action
+    action: screenshot
+  assert_steps:
+  - step_type: assert
+    action: assert_element
+    selector:
+      accessible_id: RoundedCornerButton
+teardown:
+- action: session_stop

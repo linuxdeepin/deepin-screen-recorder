@@ -1,0 +1,165 @@
+name: 快捷键面板_suite
+app: deepin-screen-recorder
+module: 快捷键面板
+setup:
+- action: session_start
+  command: bash -lc 'xdotool key --clearmodifiers ctrl+alt+a; sleep 1.2; xdotool mousemove
+    320 220 mousedown 1; sleep 0.1; xdotool mousemove 920 620 mouseup 1; sleep 1.0'
+  wait: 3.0
+suites:
+- id: suite_快捷键面板_001_s1
+  name: 框选后工具栏全部按钮显示
+  description: ''
+  steps: []
+  assert_steps:
+  - step_type: assert
+    action: assert_element
+    selector:
+      accessible_id: GioButton
+  - step_type: assert
+    action: assert_element
+    selector:
+      accessible_id: LineButton
+  - step_type: assert
+    action: assert_element
+    selector:
+      accessible_id: PenButton
+  - step_type: assert
+    action: assert_element
+    selector:
+      accessible_id: TextButton
+  - step_type: assert
+    action: assert_element
+    selector:
+      accessible_id: ScrollShotButton
+  - step_type: assert
+    action: assert_element
+    selector:
+      accessible_id: OcrButton
+  - step_type: assert
+    action: assert_element
+    selector:
+      accessible_id: ShotOptionButton
+  - step_type: assert
+    action: assert_element
+    selector:
+      accessible_id: save_local_button
+  - step_type: assert
+    action: assert_element
+    selector:
+      accessible_id: RecorderButton
+  - step_type: assert
+    action: assert_element
+    selector:
+      accessible_id: CancelButton
+- id: suite_快捷键面板_002_s1
+  name: Ctrl+S快捷键触发保存到文件
+  description: ''
+  steps:
+  - step_type: action
+    action: keyboard_hot_key
+    key: ctrl+s
+  assert_steps:
+  - step_type: assert
+    action: assert_element
+    selector:
+      accessible_id: save_local_button
+- id: suite_快捷键面板_003_s1
+  name: Enter快捷键触发复制到剪贴板
+  description: ''
+  steps:
+  - step_type: action
+    action: keyboard_press
+    key: return
+  assert_steps:
+  - step_type: assert
+    action: assert_element
+    selector:
+      accessible_id: save_local_button
+- id: suite_快捷键面板_004_s1
+  name: 工具栏按钮tooltip快捷键提示显示
+  description: ''
+  steps:
+  - step_type: action
+    action: element_action
+    selector:
+      accessible_id: GioButton
+    do: point
+  - step_type: action
+    action: screenshot
+  - step_type: action
+    action: element_action
+    selector:
+      accessible_id: PenButton
+    do: point
+  - step_type: action
+    action: screenshot
+  - step_type: action
+    action: element_action
+    selector:
+      accessible_id: ScrollShotButton
+    do: point
+  - step_type: action
+    action: screenshot
+  - step_type: action
+    action: element_action
+    selector:
+      accessible_id: OcrButton
+    do: point
+  - step_type: action
+    action: screenshot
+  - step_type: action
+    action: element_action
+    selector:
+      accessible_id: ShotOptionButton
+    do: point
+  - step_type: action
+    action: screenshot
+  - step_type: action
+    action: element_action
+    selector:
+      accessible_id: save_local_button
+    do: point
+  - step_type: action
+    action: screenshot
+  assert_steps:
+  - step_type: assert
+    action: assert_element
+    selector:
+      accessible_id: GioButton
+  - step_type: assert
+    action: assert_element
+    selector:
+      accessible_id: PenButton
+  - step_type: assert
+    action: assert_element
+    selector:
+      accessible_id: ScrollShotButton
+  - step_type: assert
+    action: assert_element
+    selector:
+      accessible_id: OcrButton
+  - step_type: assert
+    action: assert_element
+    selector:
+      accessible_id: ShotOptionButton
+  - step_type: assert
+    action: assert_element
+    selector:
+      accessible_id: save_local_button
+- id: suite_快捷键面板_005_s1
+  name: 保存菜单显示
+  description: ''
+  steps:
+  - step_type: action
+    action: element_action
+    selector:
+      accessible_id: save_local_button
+    do: click
+  assert_steps:
+  - step_type: assert
+    action: assert_element
+    selector:
+      accessible_id: SaveMenu
+teardown:
+- action: session_stop
