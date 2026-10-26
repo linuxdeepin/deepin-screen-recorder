@@ -89,6 +89,10 @@ if [ -x "$SSR_BIN" ]; then
           --gtest_output=xml:"$xml_path" >/dev/null 2>&1 )
         rc=$?
         case $rc in 0|1) ssr_ok=$((ssr_ok+1));; *) ssr_bad=$((ssr_bad+1));; esac
+        # 失败用例即时回显到主日志：逐用例输出已重定向 /dev/null，不回显的话
+        # CI 日志只有汇总计数，定位失败必须人工到机器上翻 XML/tsv。
+        # rc=1 断言失败；rc=124 超时 hang；rc=134/139 等为崩溃。
+        [ "$rc" -ne 0 ] && echo "[FAIL] $t rc=$rc"
         printf '%s\t%d\n' "$t" "$rc" >> "$SSR_DIR/ssr_results.tsv"
     done
     echo "[INFO] ssr 逐用例：$ssr_ok 正常退出，$ssr_bad 崩/hang 跳过（共 ${#SSR_TESTS[@]} 个）。"

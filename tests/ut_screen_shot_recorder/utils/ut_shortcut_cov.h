@@ -49,10 +49,14 @@ TEST_F(ShortcutCovTest, getDefaultValueFullscreen)
     EXPECT_EQ(QStringLiteral("PrintScreen"), shortcut.getDefaultValue("screenshot-fullscreen"));
 }
 
+TEST_F(ShortcutCovTest, getDefaultValueScroll)
+{
+    EXPECT_EQ(QStringLiteral("Ctrl+Alt+I"), shortcut.getDefaultValue("screenshot-scroll"));
+}
+
 TEST_F(ShortcutCovTest, getDefaultValueUnknownType)
 {
-    // scroll/ocr have no default branch -> returns empty string
-    EXPECT_TRUE(shortcut.getDefaultValue("screenshot-scroll").isEmpty());
+    // ocr and unknown types have no default branch -> returns empty string
     EXPECT_TRUE(shortcut.getDefaultValue("screenshot-ocr").isEmpty());
     EXPECT_TRUE(shortcut.getDefaultValue("totally-unknown").isEmpty());
 }

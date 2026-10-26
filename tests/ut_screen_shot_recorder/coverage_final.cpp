@@ -33,6 +33,7 @@
 #include <QVariantMap>
 #include <QScreen>
 #include <QImage>
+#include <QFileDialog>
 
 // All Qt headers are now processed. Safe to redefine.
 #define private public
@@ -77,6 +78,11 @@ public:
     static int msf_w() { return 1920; }
     static int msf_h() { return 1080; }
     static void msf_pi(int) {}
+    // 保存类 lambda → saveAction 弹模态保存对话框，offscreen 下嵌套事件循环
+    // 永不返回 → hang。桩掉对话框返回空串（模拟用户取消），不弹窗不写文件。
+    static QString msf_saveDlg(QWidget *, const QString &, const QString &,
+                               const QString &, QString *, QFileDialog::Options)
+    { return QString(); }
 
     void SetUp() override
     {
@@ -85,6 +91,7 @@ public:
         stub.set(ADDR(QWidget, width), msf_w);
         stub.set(ADDR(QWidget, height), msf_h);
         stub.set(ADDR(Utils, passInputEvent), msf_pi);
+        stub.set(ADDR(QFileDialog, getSaveFileName), msf_saveDlg);
         m_mw = new MainWindow;
         m_mw->initAttributes();
         m_mw->initResource();
