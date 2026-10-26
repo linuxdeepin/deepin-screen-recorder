@@ -8,6 +8,7 @@
 #include <QShortcut>
 #include <QTimer>
 #include <QEventLoop>
+#include <QFileDialog>
 #include <QPixmap>
 #include <QImage>
 #include <QTest>
@@ -31,6 +32,11 @@ public:
     static int mcft_width_stub() { return 1920; }
     static int mcft_height_stub() { return 1080; }
     static void mcft_passInput_stub(int) {}
+    // 回车/Ctrl+S 保存 lambda → saveAction 弹模态保存对话框，offscreen 下 hang；
+    // 桩掉对话框返回空串（模拟用户取消），见 ut_main_window_cov2.h 同名说明。
+    static QString mcft_saveDialog_stub(QWidget *, const QString &, const QString &,
+                                        const QString &, QString *, QFileDialog::Options)
+    { return QString(); }
 
     void SetUp() override
     {
@@ -39,6 +45,7 @@ public:
         stub.set(ADDR(QWidget, width), mcft_width_stub);
         stub.set(ADDR(QWidget, height), mcft_height_stub);
         stub.set(ADDR(Utils, passInputEvent), mcft_passInput_stub);
+        stub.set(ADDR(QFileDialog, getSaveFileName), mcft_saveDialog_stub);
         m_w = new MainWindow;
         m_w->initAttributes();
         m_w->initResource();

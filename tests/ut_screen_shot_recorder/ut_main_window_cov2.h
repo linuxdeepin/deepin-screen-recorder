@@ -11,6 +11,7 @@
 #include <QPaintEvent>
 #include <QPixmap>
 #include <QImage>
+#include <QFileDialog>
 #include <QVBoxLayout>
 #include <QtDBus/QDBusMessage>
 #include <QVariantMap>
@@ -167,6 +168,12 @@ public:
     static int cov2_width_stub() { return 1920; }
     static int cov2_height_stub() { return 1080; }
     static void cov2_passInput_stub(int) {}
+    // saveAction 的 Ask/SpecifyLocation+save_dir_change 路径会弹模态保存对话框，
+    // offscreen 无输入事件时嵌套事件循环永不返回 → 用例 hang。桩掉对话框，
+    // 返回空串模拟"用户取消"，走无对话框分支且不写文件。
+    static QString cov2_saveDialog_stub(QWidget *, const QString &, const QString &,
+                                        const QString &, QString *, QFileDialog::Options)
+    { return QString(); }
 
     void SetUp() override
     {
@@ -175,6 +182,7 @@ public:
         stub.set(ADDR(QWidget, width), cov2_width_stub);
         stub.set(ADDR(QWidget, height), cov2_height_stub);
         stub.set(ADDR(Utils, passInputEvent), cov2_passInput_stub);
+        stub.set(ADDR(QFileDialog, getSaveFileName), cov2_saveDialog_stub);
         m_w = new MainWindow;
         m_w->initAttributes();
         m_w->initResource();
