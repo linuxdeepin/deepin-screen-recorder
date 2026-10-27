@@ -40,11 +40,13 @@ QMAKE_LFLAGS += -g -Wall -Wl,--as-needed -pie -z noexecstack -z now
 # 添加 FORTIFY_SOURCE 保护
 DEFINES += _FORTIFY_SOURCE=2
 
-# 表格识别能力（dtkmultimedia 的 dtk6tablerecognizer）：按常规方式链接，
-# 由 pkg-config 提供头文件路径与库（dtk6tablerecognizer 的 .pc 里 Requires: dtk6ocr，
-# 所以 OCR 库会一并带进来）。构建期依赖 libdtk6tablerecognizer-dev，
-# 运行期依赖由 ${shlibs:Depends} 自动生成。
-PKGCONFIG += dtk6tablerecognizer
+# 表格识别能力（dtkmultimedia 的 dtk6tablerecognizer）：条件化链接，
+# 由 pkg-config 检测是否存在，存在时链接并定义 HAVE_DTK6TABLERECOGNIZER 宏，
+# 缺失时跳过表格识别功能的编译（优雅降级，不阻止整体构建）。
+system(pkg-config --exists dtk6tablerecognizer) {
+    PKGCONFIG += dtk6tablerecognizer
+    DEFINES += HAVE_DTK6TABLERECOGNIZER
+}
 
 SOURCES += \
     service/dbuspinscreenshotsadaptor.cpp \
