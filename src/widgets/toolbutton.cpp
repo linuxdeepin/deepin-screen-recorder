@@ -283,10 +283,6 @@ void ToolButton::paintEvent(QPaintEvent *event)
         opt.state &= ~QStyle::State_MouseOver;
         opt.state &= ~QStyle::State_Sunken;
         style()->drawControl(QStyle::CE_ToolButtonLabel, &opt, &p, this);
-    } else if (hasMenu) {
-        opt.state &= ~QStyle::State_MouseOver;
-        opt.state &= ~QStyle::State_Sunken;
-        style()->drawComplexControl(QStyle::CC_ToolButton, &opt, &p, this);
     } else {
         // disabled 状态：根据背景亮度对图标着色
         if (!isEnabled() && !opt.icon.isNull()) {
@@ -309,7 +305,11 @@ void ToolButton::paintEvent(QPaintEvent *event)
         
         opt.state &= ~QStyle::State_MouseOver;
         opt.state &= ~QStyle::State_Sunken;
-        style()->drawControl(QStyle::CE_ToolButtonLabel, &opt, &p, this);
+        if (hasMenu) {
+            style()->drawComplexControl(QStyle::CC_ToolButton, &opt, &p, this);
+        } else {
+            style()->drawControl(QStyle::CE_ToolButtonLabel, &opt, &p, this);
+        }
     }
 
     if (m_showRedDot) {
