@@ -625,6 +625,10 @@ QPixmap ScreenGrabber::grabWithXGetImage(bool &ok, const QRect &rect)
         return QPixmap();
     }
 
+    // 同步等待 X server 处理所有待处理请求（包括其他连接发送的 UnmapWindow），
+    // 确保工具栏窗口在截图前已被 X server 处理隐藏
+    XSync(dpy, False);
+
     Window root = DefaultRootWindow(dpy);
 
     // 获取根窗口尺寸

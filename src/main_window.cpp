@@ -2247,6 +2247,8 @@ void MainWindow::scrollShotGrabPixmap(PreviewWidget::PostionStatus previewPostio
         m_toolBar->hide();
         // m_shotButton->hide();
         m_scrollShotSizeTips->hide();
+        // 确保 hide() 的 UnmapWindow 请求被发送到 X server，用确定性同步替代固定延时
+        QCoreApplication::processEvents(QEventLoop::ExcludeUserInputEvents);
     }
     // 缩放偏移量
     // qCDebug(dsrApp) << "function: " << __func__ << " ,line: " << __LINE__;
