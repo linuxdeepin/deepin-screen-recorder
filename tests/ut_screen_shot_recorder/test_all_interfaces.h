@@ -52,6 +52,15 @@
 //#include "widgets/ut_sidebar.h" // SideBar initSideBar removed; enterEvent QEvent->QEnterEvent
 //#include "widgets/ut_sidebarwidget.h" // SideBarWidget ctor signature changed
 #include "widgets/ut_scrollshottip.h"
+// --- Screenshot session core tests (commit cba9925) ---
+#include "screenshot/ut_coordinatemapper.h"
+#include "screenshot/ut_selectionconstraints.h"
+#include "screenshot/ut_selectionmodel.h"
+#include "screenshot/ut_annotationcoordinator.h"
+#include "screenshot/ut_screenshotexportservice.h"
+#include "screenshot/ut_localscreenshotresultsink.h"
+#include "screenshot/ut_screenshotsessioncontroller.h"
+
 #include "ext-image-capture/ut_extcaptureframebuffer.h"
 #include "ext-image-capture/ut_multiscreenframecompositor.h"
 #include "ext-image-capture/ut_extcapturerecorder.h"
@@ -59,6 +68,7 @@
 #include "ext-image-capture/ut_extcaptureframe.h"
 #include "ext-image-capture/ut_extcaptureintegration.h"
 #include "ext-image-capture/ut_extcapturesession.h"
+#include "ext-image-capture/ut_extcapturesession_shm_pref.h"
 #include "ext-image-capture/ut_multiscreencapturecoordinator.h"
 #include "gstrecord/ut_gstinterface.h"
 #include "utils/ut_borderprocessinterface.h"

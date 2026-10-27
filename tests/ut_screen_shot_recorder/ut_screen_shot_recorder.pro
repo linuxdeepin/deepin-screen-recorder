@@ -330,7 +330,29 @@ HEADERS += test_all_interfaces.h \
     ut_misc_cov_final.h \
     ut_ext_capture_cov_final.h \
     ut_record_process_cov_final.h \
-    ut_scope_guard.h
+    ut_scope_guard.h \
+    screenshot/ut_coordinatemapper.h \
+    screenshot/ut_selectionconstraints.h \
+    screenshot/ut_selectionmodel.h \
+    screenshot/ut_annotationcoordinator.h \
+    screenshot/ut_screenshotexportservice.h \
+    screenshot/ut_localscreenshotresultsink.h \
+    screenshot/ut_screenshotsessioncontroller.h \
+    ext-image-capture/ut_extcapturesession_shm_pref.h \
+    ../../src/screenshot/ports/iscreenshotbackend.h \
+    ../../src/screenshot/ports/iscreenshotoverlayhost.h \
+    ../../src/screenshot/ports/iscreenshotresultsink.h \
+    ../../src/screenshot/ports/isnaphintsource.h \
+    ../../src/screenshot/ports/iwindowtagger.h \
+    ../../src/screenshot/ports/iannotationeditor.h \
+    ../../src/screenshot/core/selectionmodel.h \
+    ../../src/screenshot/core/selectionconstraints.h \
+    ../../src/screenshot/core/coordinatemapper.h \
+    ../../src/screenshot/core/screenshottypes.h \
+    ../../src/screenshot/session/annotationcoordinator.h \
+    ../../src/screenshot/session/screenshotsessioncontroller.h \
+    ../../src/screenshot/export/screenshotexportservice.h \
+    ../../src/screenshot/export/localscreenshotresultsink.h
 
 
 SOURCES += ../../src/utils/cpuvendor.cpp
@@ -440,4 +462,10 @@ SOURCES += main.cpp \
     coverage_final.cpp \
     protocols_handle_cov.cpp \
     remaining_cov.cpp \
-    remaining_private_cov.cpp
+    remaining_private_cov.cpp \
+    ../../src/screenshot/core/selectionconstraints.cpp \
+    ../../src/screenshot/core/selectionmodel.cpp \
+    ../../src/screenshot/session/annotationcoordinator.cpp \
+    ../../src/screenshot/session/screenshotsessioncontroller.cpp \
+    ../../src/screenshot/export/screenshotexportservice.cpp \
+    ../../src/screenshot/export/localscreenshotresultsink.cpp
