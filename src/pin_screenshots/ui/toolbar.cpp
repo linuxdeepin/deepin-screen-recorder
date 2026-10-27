@@ -56,7 +56,7 @@ void ToolBar::initToolBar(DWidget *parent)
     m_saveButton->setAccessibleName(AC_MAINWINDOW_PIN_SAVE_BUT);
     m_saveButton->setFocusPolicy(Qt::NoFocus);
     m_saveButton->setIconSize(QSize(38, 38));
-    m_saveButton->setFixedSize(76, 60);
+    m_saveButton->setFixedSize(76, 58);
     m_saveButton->setIcon(QIcon(":/newUI/checked/screenshot-checked.svg"));
     connect(m_saveButton, SIGNAL(clicked()), this, SIGNAL(sendSaveButtonClicked())); // 保存按钮被点击
 
@@ -66,6 +66,7 @@ void ToolBar::initToolBar(DWidget *parent)
     pa.setColor(DPalette::Dark, QColor(0, 129, 255, 204));
     pa.setColor(DPalette::Light, QColor(0, 129, 255, 204));
     m_saveButton->setPalette(pa);
+    m_saveButton->setStyleSheet("border-radius:18px;padding:2px 4px;background-color: rgba(0, 129, 255,204);");
     m_saveButton->setProperty("isShotState", true);
 
     // 为m_btWidget设置背景色，不然在2D模式下是黑色边框
