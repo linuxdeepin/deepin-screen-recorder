@@ -156,7 +156,12 @@ void MainWindow::initMainWindow()
         m_cursorBound = 5;
     }
     setDragCursor();
-    m_pixelRatio = qApp->primaryScreen()->devicePixelRatio();
+    // 缩放比必须取真实分数缩放比(如 150% 为 1.5)：
+    //  - QScreen::devicePixelRatio() 返回整数(1.5 舍为 2)，会导致采集/裁剪/显示
+    //    全链路按错误比例换算：跳过 ScreenShot2 原生抓帧而拿到 kwin 旧接口的
+    //    低分辨率图(150% 下为原生帧左下角裁剪图)，显示时再被拉伸放大导致模糊；
+    //  - 因此改用 Utils::devicePixelRatioF()，DBus 优先取真实缩放比，任何时刻都正确
+    m_pixelRatio = Utils::devicePixelRatioF();
     // 监控录屏过程中， 特效窗口的变化。
     connect(m_wmHelper, &DWindowManagerHelper::hasCompositeChanged, this, &MainWindow::compositeChanged);
 
@@ -1966,7 +1971,8 @@ void MainWindow::saveTopWindow()
     recordHeight = windowRects[topWindowIndex].height();
 
     //this->hide();
-    const qreal ratio = qApp->primaryScreen()->devicePixelRatio();
+    // m_backgroundPixmap 是设备像素图（缩放比为 m_pixelRatio），裁剪矩形须用同一比例
+    const qreal ratio = m_pixelRatio;
     qDebug() << ratio << recordX << recordY << recordWidth << recordHeight;
     QRect target(static_cast<int>(recordX * ratio),
                  static_cast<int>(recordY * ratio),
@@ -2033,13 +2039,9 @@ void MainWindow::noNotify()
 void MainWindow::initBackground()
 {
     //    QTimer::singleShot(200, this, [ = ] {
+    // grabEntireDesktop 的 wayland 分支内部会把逻辑矩形换算成设备像素区域，
+    // 这里不能再乘 m_pixelRatio，否则双重缩放
     QRect target = m_backgroundRect;
-    if (Utils::isWaylandMode) {
-        target = QRect(m_backgroundRect.x(),
-                       m_backgroundRect.y(),
-                       static_cast<int>(m_backgroundRect.width() * m_pixelRatio),
-                       static_cast<int>(m_backgroundRect.height() *  m_pixelRatio));
-    }
 
     m_backgroundPixmap = getPixmapofRect(target);
     qDebug() << "screen rect:" << m_backgroundPixmap.rect();
@@ -6073,14 +6075,10 @@ void MainWindow::shotFullScreen(bool isFull)
     };
     EventLogUtils::get().writeLogs(obj);
 
+    // grabEntireDesktop 的 wayland 分支内部会把逻辑矩形换算成设备像素区域，
+    // 这里不能再乘 m_pixelRatio，否则双重缩放（与 initBackground 一致）
     QRect target = m_backgroundRect;
     qDebug() << "m_backgroundRect" << m_backgroundRect;
-    if (Utils::isWaylandMode) {
-        target = QRect(m_backgroundRect.x(),
-                       m_backgroundRect.y(),
-                       static_cast<int>(m_backgroundRect.width() * m_pixelRatio),
-                       static_cast<int>(m_backgroundRect.height() * m_pixelRatio));
-    }
 
     //    m_resultPixmap = getPixmapofRect(m_backgroundRect);
     if (isFull) {
