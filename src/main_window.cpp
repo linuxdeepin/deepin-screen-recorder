@@ -4815,8 +4815,8 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
                                                   << " (" << m_screenInfo[index].x << m_screenInfo[index].y << m_screenInfo[index].width << m_screenInfo[index].height << ") 上";
                                         //可以准确的定位到在哪块屏幕上
                                         if (m_screenInfo[index].x == 0 && m_screenInfo[index].y == 0) {
-                                            recordX = static_cast<int>(x);
-                                            recordY = static_cast<int>(y);
+                                            recordX = static_cast<int>(x / m_pixelRatio);
+                                            recordY = static_cast<int>(y / m_pixelRatio);
                                             qDebug()  << "1.1.1 >>>> recordX: " << recordX << " , recordY: " << recordY;
                                         } else if (m_screenInfo[index].x == 0 && m_screenInfo[index].y != 0) {
                                             recordX = static_cast<int>(x);
@@ -4885,12 +4885,12 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
                                 }
                                 //qDebug()  << "1.3 >>>> recordX: " << recordX << " , recordY: "<< recordY;
                             } else {
-                                recordX = it->x() - static_cast<int>(screenRect.x() * m_pixelRatio);
-                                recordY = it->y() - static_cast<int>(screenRect.y() * m_pixelRatio);
+                                recordX = static_cast<int>(it->x() / m_pixelRatio) - static_cast<int>(screenRect.x() * m_pixelRatio);
+                                recordY = static_cast<int>(it->y() / m_pixelRatio) - static_cast<int>(screenRect.y() * m_pixelRatio);
                                 //qDebug()  << "1.4 >>>> recordX: " << recordX << " , recordY: "<< recordY;
                             }
-                            recordWidth = it->width();
-                            recordHeight = it->height();
+                            recordWidth = static_cast<int>(it->width() / m_pixelRatio);
+                            recordHeight = static_cast<int>(it->height() / m_pixelRatio);
                             needRepaint = true;
                             break;
                         }
