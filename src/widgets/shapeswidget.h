@@ -17,6 +17,8 @@
 #include <QMouseEvent>
 #include <QHash>
 #include <QLineEdit>
+#include <QColor>
+#include <QRectF>
 
 class ToolTips;
 
@@ -69,6 +71,29 @@ public:
         }
     };
 
+    enum class InteractionPlatform {
+        X11,
+        TreeLand
+    };
+
+    enum class InlineEditKind {
+        Text,
+        Sequence
+    };
+
+    struct InlineEditRequest {
+        InlineEditKind kind = InlineEditKind::Text;
+        int shapeIndex = -1;
+        QRectF localRect;
+        QString text;
+        QColor foregroundColor;
+        int fontSize = 14;
+        int minValue = 1;
+        int maxValue = 99;
+        bool selectAll = false;
+        bool isNew = false;
+    };
+
     explicit ShapesWidget(DWidget *parent = 0);
     ~ShapesWidget();
 
@@ -116,6 +141,13 @@ public slots:
      */
     void updateSelectedShape(const QString &group, const QString &key, int index);
     void setCurrentShape(QString shapeType);
+    /**
+     * Provide the frozen desktop image used by blur/mosaic annotations.
+     *
+     * TreeLand owns the frozen frame rather than the legacy MainWindow, so its
+     * annotations cannot rely on TempFile's process-global effect cache.
+     */
+    void setEffectSourceImage(const QImage &image);
     //void updatePenColor();
     //void setPenColor(QColor color);
     /**
@@ -221,7 +253,10 @@ public slots:
      */
     void translateAllShapes(const QPointF &delta);
     void setShiftKeyPressed(bool isShift);
+    void setInteractionPlatform(InteractionPlatform platform);
+    bool isTreeLandMode() const;
     void setCursorManagementEnabled(bool enabled);
+    void setTextSelectionFrameEnabled(bool enabled);
     void updateCursorShape();
     void menuSaveSlot();
     void menuCloseSlot();
@@ -236,6 +271,12 @@ public slots:
     void updateInteraction(const QPointF &pos);
     void endInteraction();
     void cancelInteraction();
+    bool takePendingInlineEdit(InlineEditRequest *request);
+    bool beginInlineEditAt(const QPointF &pos, InlineEditRequest *request);
+    void updateInlineText(int shapeIndex, const QString &text, const QRectF &localRect);
+    void finishInlineText(int shapeIndex);
+    bool updateInlineSequence(int shapeIndex, int sequenceNumber);
+    void setInlineEditingShape(int shapeIndex);
 
     /**
      * Bounds of committed content, excluding all editing decorations.
@@ -245,6 +286,7 @@ public slots:
      * Paint committed content only. Used for the final screenshot image.
      */
     void paintContent(QPainter &painter) const;
+    void paintContent(QPainter &painter, int excludedShapeIndex) const;
     /**
      * Paint committed content plus the shape currently being drawn.
      *
@@ -414,6 +456,7 @@ private:
                     int lineWidth, bool isStraight = false) const;
     void paintLine(QPainter &painter, QList<QPointF> lineFPoints) const;
     void paintEffectLine(QPainter &painter, QList<QPointF> lineFPoints, bool isMosaic, int radius, int lineWidth) const;
+    QPixmap effectPixmap(bool blur, int radius) const;
     void paintText(QPainter &painter, FourPoints rectFPoints) const;
     void paintText(QPainter &painter, FourPoints rectFPoints, const QString &text, int fontsize) const;
     void paintSequence(QPainter &painter, FourPoints mainFPoints, int sequenceNumber, int colorIndex) const;
@@ -423,9 +466,18 @@ private:
     QPointF m_interactionStartPos;
     QPointF m_interactionLastPos;
     Toolshape m_interactionBackup;
+    InlineEditRequest m_pendingInlineEdit;
+    bool m_hasPendingInlineEdit = false;
 
     bool m_isUnDo = false;
+    InteractionPlatform m_interactionPlatform = InteractionPlatform::X11;
     bool m_cursorManagementEnabled = true;
+    bool m_textSelectionFrameEnabled = false;
+    int m_inlineEditingShape = -1;
+
+    QImage m_effectSourceImage;
+    mutable QHash<int, QPixmap> m_blurEffectPixmaps;
+    mutable QHash<int, QPixmap> m_mosaicEffectPixmaps;
 
     // 序号标注相关
     QWidget *m_sequencePreview = nullptr; // 下一编号超过 99 时跟随光标的禁用角标（自绘）
@@ -434,8 +486,10 @@ private:
     ToolTips *m_sequenceLimitTips = nullptr; // 超出最大编号范围时的提示（复用工程内的 DTK 工具提示）
     QTimer *m_sequenceLimitTipsTimer = nullptr; // 超限气泡限时隐藏定时器（角标继续跟随）
     int sequenceCount();
+    int sequenceOrderForIndex(int shapeIndex) const;
     int sequenceNumberBeforeOrder(int order);
     int sequenceNextNumber();
+    bool placeSequenceAt(const QPointF &pos);
     void renumberSequenceFrom(int startOrder, int firstNumber);
     void resizeSelectedSequence(int lineWidthIndex);
     bool m_sequenceToolEntry = false; // 进入序号工具时抑制恢复面板触发的误缩放

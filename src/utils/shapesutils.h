@@ -8,6 +8,7 @@
 
 #include <QtCore>
 #include <QColor>
+#include <QImage>
 
 typedef QList<QPointF> FourPoints;
 //Q_DECLARE_METATYPE(FourPoints)
@@ -24,6 +25,7 @@ public:
     int lineWidth = 1; // 线宽
     int colorIndex = 0; // 颜色编号
     int sequenceNumber = 0; // 序号标注的显示编号（1..99）
+    QString text; // TreeLand visible inline text content
     bool isBlur = false; // 模糊类型
     int isOval = 0; // 模糊形状 0 椭圆，1 矩形， 2模糊笔
     bool isShiftPressed = false;
@@ -56,5 +58,15 @@ typedef QList <Toolshape> Toolshapes;
  * it as an annotation selection constraint.
  */
 QRectF toolshapeContentBounds(const Toolshape &shape);
+
+/**
+ * Build the blurred or mosaic source used by effect annotations.
+ *
+ * The screenshot editor works in logical desktop coordinates, while a frozen
+ * frame may have a different pixel scale. The returned image always has the
+ * same size as the input so callers can draw it directly into the annotation
+ * canvas without depending on the legacy global TempFile cache.
+ */
+QImage effectAnnotationImage(const QImage &source, bool blur, int radius);
 
 #endif // SHAPESUTILS_H

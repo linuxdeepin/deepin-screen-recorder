@@ -23,7 +23,7 @@ DGUI_USE_NAMESPACE
 //const QSize CURSOR_SIZE = QSize(5, 20);
 const int TEXT_MARGIN = 12;
 
-TextEdit::TextEdit(int index, DWidget *parent)
+TextEdit::TextEdit(int index, QWidget *parent)
     : DPlainTextEdit(parent),
       m_textColor(Qt::red)
 {
