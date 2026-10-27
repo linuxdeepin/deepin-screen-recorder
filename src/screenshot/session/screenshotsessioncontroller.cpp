@@ -28,6 +28,11 @@ bool isSelectionResize(SelectionAction action)
             && action != SelectionAction::Move;
 }
 
+CursorIntent cursorIntentWhilePressed(CursorIntent intent)
+{
+    return intent == CursorIntent::Move ? CursorIntent::Grabbing : intent;
+}
+
 } // namespace
 
 ScreenshotSessionController::ScreenshotSessionController(IScreenshotBackend *backend,
@@ -69,12 +74,19 @@ ScreenshotSessionController::ScreenshotSessionController(IScreenshotBackend *bac
             this, &ScreenshotSessionController::onBackendFailed);
     connect(m_overlay, &IScreenshotOverlayHost::inputReady,
             this, &ScreenshotSessionController::onOverlayReady);
+    connect(m_overlay, &IScreenshotOverlayHost::inputFailed,
+            this, &ScreenshotSessionController::onOverlayFailed);
     connect(m_overlay, &IScreenshotOverlayHost::pointerPressed,
             this, &ScreenshotSessionController::onPointerPressed);
     connect(m_overlay, &IScreenshotOverlayHost::pointerMoved,
             this, &ScreenshotSessionController::onPointerMoved);
     connect(m_overlay, &IScreenshotOverlayHost::pointerReleased,
             this, &ScreenshotSessionController::onPointerReleased);
+    connect(m_overlay,
+            &IScreenshotOverlayHost::maskWindowRoleCreated,
+            this,
+            &ScreenshotSessionController::onMaskWindowRoleCreated,
+            Qt::DirectConnection);
     connect(m_overlay, &IScreenshotOverlayHost::confirmRequested,
             this, &ScreenshotSessionController::onConfirmRequested);
     connect(m_overlay, &IScreenshotOverlayHost::copyRequested,
@@ -106,7 +118,11 @@ bool ScreenshotSessionController::start(const Request &request)
     m_pressed = false;
     m_dragged = false;
     m_pressStartedEmpty = false;
+    m_snapTagsPrepared = false;
     m_snapStarted = false;
+    m_expectedSnapMaskCount = 0;
+    m_taggedSnapMaskCount = 0;
+    m_snapMaskTagError.clear();
     m_finished = false;
     m_inputTarget = InputTarget::Inactive;
     m_activeCursorIntent = CursorIntent::Cross;
@@ -162,6 +178,25 @@ void ScreenshotSessionController::onBackendPrepared(const FrozenFrameSet &frames
     // sessions do not lose their initial geometry.
     syncOverlaySelection();
     m_overlay->setFrozenFrames(m_frames);
+    if (m_request.enableWindowSnap && m_snapHints)
+        m_expectedSnapMaskCount = outputs.size();
+    if (!m_overlay->prepare()) {
+        fail(QStringLiteral("截图覆盖窗口未能完成原生窗口准备"));
+        return;
+    }
+    if (m_request.enableWindowSnap && m_snapHints) {
+        if (!m_snapMaskTagError.isEmpty()) {
+            fail(QStringLiteral("截图 Mask 窗口准备失败：%1").arg(m_snapMaskTagError));
+            return;
+        }
+        if (m_taggedSnapMaskCount != m_expectedSnapMaskCount) {
+            fail(QStringLiteral("截图 Mask 窗口准备失败：仅完成 %1/%2 个窗口 tag")
+                         .arg(m_taggedSnapMaskCount)
+                         .arg(m_expectedSnapMaskCount));
+            return;
+        }
+        m_snapTagsPrepared = true;
+    }
     m_overlay->show();
 }
 
@@ -178,6 +213,16 @@ void ScreenshotSessionController::onOverlayReady()
     m_state = State::Selecting;
     if (m_request.enableWindowSnap)
         startSnapHints();
+}
+
+void ScreenshotSessionController::onOverlayFailed(const QString &reason)
+{
+    if (m_state != State::CreatingMasks
+            && m_state != State::Selecting
+            && m_state != State::Editing) {
+        return;
+    }
+    fail(reason);
 }
 
 void ScreenshotSessionController::onPointerPressed(const QPoint &globalPos)
@@ -347,7 +392,7 @@ void ScreenshotSessionController::syncOverlayCursor(const QPoint *globalPos)
         return;
 
     if (m_pressed) {
-        m_overlay->setCursorIntent(m_activeCursorIntent);
+        m_overlay->setCursorIntent(cursorIntentWhilePressed(m_activeCursorIntent));
         return;
     }
 
@@ -392,19 +437,32 @@ bool ScreenshotSessionController::startSelectionInteraction(const QPoint &global
     return true;
 }
 
+void ScreenshotSessionController::onMaskWindowRoleCreated(QWindow *window)
+{
+    if (m_state != State::CreatingMasks || !m_request.enableWindowSnap || !m_snapHints)
+        return;
+    if (!window || !m_snapMaskTagError.isEmpty())
+        return;
+    if (!m_windowTagger) {
+        m_snapMaskTagError = QStringLiteral("缺少 TreeLand Mask window tagger");
+        return;
+    }
+
+    QString error;
+    if (!m_windowTagger->tagMaskWindow(window, &error)) {
+        m_snapMaskTagError = error;
+        return;
+    }
+    ++m_taggedSnapMaskCount;
+}
+
 void ScreenshotSessionController::startSnapHints()
 {
-    if (m_snapStarted || !m_snapHints)
+    // Tags must be applied before the masks are mapped. Starting snap from an
+    // already-active ordinary toplevel moves it between TreeLand containers
+    // and can trip TreeLand's workspace assertion.
+    if (m_snapStarted || !m_snapHints || !m_snapTagsPrepared)
         return;
-
-    const QList<QWindow *> windows = m_overlay->maskWindows();
-    for (QWindow *window : windows) {
-        QString error;
-        if (m_windowTagger && !m_windowTagger->tagMaskWindow(window, &error)) {
-            qWarning() << "Screenshot mask tagging failed; free selection remains active:" << error;
-            return;
-        }
-    }
 
     QString error;
     if (!m_snapHints->start(&error)) {

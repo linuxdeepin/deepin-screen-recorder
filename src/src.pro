@@ -261,6 +261,7 @@ HEADERS += main_window.h \
     protocols/treeland-snap-target/wayland-xdg-shell-client-protocol.h \
     screenshot/core/screenshottypes.h \
     screenshot/core/coordinatemapper.h \
+    screenshot/core/selectionoverlaygeometry.h \
     screenshot/core/selectionmodel.h \
     screenshot/core/selectionconstraints.h \
     screenshot/ports/iscreenshotbackend.h \
@@ -396,6 +397,7 @@ SOURCES += main.cpp \
     protocols/treeland-snap-target/wayland-xdg-toplevel-tag-v1-protocol.c \
     protocols/treeland-snap-target/wayland-xdg-shell-protocol.c \
     screenshot/core/selectionmodel.cpp \
+    screenshot/core/selectionoverlaygeometry.cpp \
     screenshot/core/selectionconstraints.cpp \
     screenshot/adapters/shapeswidgetannotationeditor.cpp \
     screenshot/export/screenshotexportservice.cpp \

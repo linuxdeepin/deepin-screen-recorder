@@ -5,8 +5,11 @@
 #include "treelandmaskwindow.h"
 
 #include "../../core/coordinatemapper.h"
+#include "../../core/selectionoverlaygeometry.h"
+#include "../../../utils/baseutils.h"
 #include "../../../utils/log.h"
 
+#include <QApplication>
 #include <QCloseEvent>
 #include <QDebug>
 #include <QGuiApplication>
@@ -16,11 +19,26 @@
 #include <QPainter>
 #include <QResizeEvent>
 #include <QScreen>
+#include <QWindow>
 #include <QtMath>
+#include <QtWaylandClient/private/qwaylandwindow_p.h>
+
+struct xdg_toplevel;
 
 namespace Dsr::Screenshot {
 
 namespace {
+
+struct ::xdg_toplevel *getXdgToplevel(QWindow *window)
+{
+    if (!window || !window->handle())
+        return nullptr;
+
+    auto *waylandWindow = static_cast<QtWaylandClient::QWaylandWindow *>(window->handle());
+    if (!waylandWindow)
+        return nullptr;
+    return waylandWindow->surfaceRole<::xdg_toplevel>();
+}
 
 QPoint eventPosition(QMouseEvent *event)
 {
@@ -75,20 +93,24 @@ void TreelandMaskWindow::setFrozenFrame(const QImage &image)
 
 void TreelandMaskWindow::setSelection(const QRect &globalSelection)
 {
+    const QRect normalizedSelection = globalSelection.normalized();
     const QRect localSelection =
-            CoordinateMapper::globalToOutputLocal(globalSelection, m_output).intersected(rect());
-    if (m_selection == localSelection)
+            CoordinateMapper::globalToOutputLocal(normalizedSelection, m_output).intersected(rect());
+    if (m_globalSelection == normalizedSelection && m_selection == localSelection)
         return;
+    m_globalSelection = normalizedSelection;
     m_selection = localSelection;
     update();
 }
 
 void TreelandMaskWindow::setSnapHint(const QRect &globalRegion)
 {
+    const QRect normalizedRegion = globalRegion.normalized();
     const QRect snapHint =
-            CoordinateMapper::globalToOutputLocal(globalRegion, m_output).intersected(rect());
-    if (m_snapHint == snapHint)
+            CoordinateMapper::globalToOutputLocal(normalizedRegion, m_output).intersected(rect());
+    if (m_globalSnapHint == normalizedRegion && m_snapHint == snapHint)
         return;
+    m_globalSnapHint = normalizedRegion;
     m_snapHint = snapHint;
     update();
 }
@@ -101,14 +123,29 @@ void TreelandMaskWindow::setSelectionFinalized(bool finalized)
     update();
 }
 
+void TreelandMaskWindow::setSelectionHintOwner(bool owner)
+{
+    if (m_selectionHintOwner == owner)
+        return;
+    m_selectionHintOwner = owner;
+    update();
+}
+
 void TreelandMaskWindow::setCursorIntent(CursorIntent intent)
 {
     if (m_cursorIntent == intent)
         return;
     m_cursorIntent = intent;
+    const QCursor *overrideCursor = QApplication::overrideCursor();
+    qCDebug(dsrApp) << "Overlay cursor intent:" << static_cast<int>(intent)
+                    << "application override:"
+                    << (overrideCursor ? static_cast<int>(overrideCursor->shape()) : -1);
     switch (intent) {
     case CursorIntent::Move:
-        setCursor(Qt::SizeAllCursor);
+        setCursor(Qt::OpenHandCursor);
+        break;
+    case CursorIntent::Grabbing:
+        setCursor(Qt::ClosedHandCursor);
         break;
     case CursorIntent::ResizeHorizontal:
         setCursor(Qt::SizeHorCursor);
@@ -126,7 +163,7 @@ void TreelandMaskWindow::setCursorIntent(CursorIntent intent)
         setCursor(Qt::IBeamCursor);
         break;
     case CursorIntent::Rotate:
-        setCursor(Qt::CrossCursor);
+        setCursor(BaseUtils::setCursorShape(QStringLiteral("rotate")));
         break;
     case CursorIntent::Default:
     case CursorIntent::Cross:
@@ -145,9 +182,36 @@ void TreelandMaskWindow::setAnnotationView(QWidget *widget)
     }
 }
 
-void TreelandMaskWindow::prepareWindow()
+bool TreelandMaskWindow::prepareWindow()
 {
-    create();
+    if (!windowHandle())
+        create();
+    if (!windowHandle())
+        return false;
+
+    auto *waylandWindow =
+            windowHandle()->nativeInterface<QNativeInterface::Private::QWaylandWindow>();
+    if (!waylandWindow)
+        return false;
+
+    if (!m_roleCreatedConnected) {
+        connect(waylandWindow,
+                &QNativeInterface::Private::QWaylandWindow::surfaceRoleCreated,
+                this,
+                [this] {
+                    if (windowHandle())
+                        emit windowRoleCreated(windowHandle());
+                },
+                Qt::DirectConnection);
+        m_roleCreatedConnected = true;
+    }
+
+    // QtWayland creates xdg_toplevel from QWaylandWindow::initWindow(), which
+    // is called synchronously by setVisible(true). surfaceRoleCreated is
+    // emitted before the first wl_surface commit, so the tag must be sent from
+    // that callback rather than after expose.
+    showFullScreen();
+    return getXdgToplevel(windowHandle()) != nullptr;
 }
 
 void TreelandMaskWindow::showWindow()
@@ -162,6 +226,45 @@ void TreelandMaskWindow::closeSilently()
 {
     m_silentClose = true;
     close();
+}
+
+void TreelandMaskWindow::drawSelectionOutline(QPainter &painter,
+                                              const QRect &globalRect,
+                                              const QColor &color,
+                                              int width) const
+{
+    const SelectionOverlayGeometry::Outline outline =
+            SelectionOverlayGeometry::outlineForOutput(globalRect,
+                                                       m_output.logicalGeometry);
+    if (outline.localRect.isEmpty())
+        return;
+
+    const QRect borderRect = outline.localRect.adjusted(0, 0, -1, -1);
+    // Only an output that owns the real right/bottom edge needs the one-pixel
+    // inset that keeps the pen inside the window. Interior spans must reach
+    // the output edge so a selection crossing two outputs stays continuous.
+    const int horizontalRight = outline.right
+            ? borderRect.right() : outline.localRect.right();
+    const int verticalBottom = outline.bottom
+            ? borderRect.bottom() : outline.localRect.bottom();
+
+    painter.setPen(QPen(color, width));
+    if (outline.top) {
+        painter.drawLine(QPoint(borderRect.left(), borderRect.top()),
+                         QPoint(horizontalRight, borderRect.top()));
+    }
+    if (outline.bottom) {
+        painter.drawLine(QPoint(borderRect.left(), borderRect.bottom()),
+                         QPoint(horizontalRight, borderRect.bottom()));
+    }
+    if (outline.left) {
+        painter.drawLine(QPoint(borderRect.left(), borderRect.top()),
+                         QPoint(borderRect.left(), verticalBottom));
+    }
+    if (outline.right) {
+        painter.drawLine(QPoint(borderRect.right(), borderRect.top()),
+                         QPoint(borderRect.right(), verticalBottom));
+    }
 }
 
 void TreelandMaskWindow::paintEvent(QPaintEvent *event)
@@ -194,47 +297,43 @@ void TreelandMaskWindow::paintEvent(QPaintEvent *event)
 
     if (!m_finalized && !m_snapHint.isEmpty()) {
         painter.fillRect(m_snapHint, QColor(46, 132, 255, 42));
-        painter.setPen(QPen(QColor(75, 160, 255), 2));
-        painter.drawRect(m_snapHint.adjusted(1, 1, -1, -1));
+        drawSelectionOutline(painter, m_globalSnapHint, QColor(75, 160, 255), 2);
     }
 
     if (!visibleSelection.isEmpty()) {
-        painter.setPen(QPen(QColor(62, 156, 255), m_finalized ? 2 : 1));
-        painter.drawRect(visibleSelection.adjusted(0, 0, -1, -1));
+        drawSelectionOutline(painter, m_globalSelection, QColor(62, 156, 255),
+                             m_finalized ? 2 : 1);
 
         if (m_finalized) {
             painter.setBrush(QColor(245, 248, 252));
             painter.setPen(QPen(QColor(43, 124, 228), 1));
-            const QList<QPoint> handles = {
-                visibleSelection.topLeft(), visibleSelection.topRight(),
-                visibleSelection.bottomLeft(), visibleSelection.bottomRight(),
-                QPoint(visibleSelection.center().x(), visibleSelection.top()),
-                QPoint(visibleSelection.right(), visibleSelection.center().y()),
-                QPoint(visibleSelection.center().x(), visibleSelection.bottom()),
-                QPoint(visibleSelection.left(), visibleSelection.center().y())
-            };
-            for (const QPoint &point : handles)
-                painter.drawRect(QRect(point - QPoint(4, 4), QSize(9, 9)));
+            const QList<QPoint> localHandles =
+                    SelectionOverlayGeometry::handlesForOutput(
+                            m_globalSelection, m_output.logicalGeometry);
+            for (const QPoint &localPoint : localHandles)
+                painter.drawRect(QRect(localPoint - QPoint(4, 4), QSize(9, 9)));
         }
     }
 
-    QString hint = QStringLiteral("拖拽框选窗口或区域  ·  Enter 保存  ·  Ctrl+C 复制  ·  Esc 取消");
-    if (m_finalized) {
-        hint = QStringLiteral("%1 × %2 px  ·  可拖动选区或拖拽控制点调整大小")
-                .arg(m_selection.width())
-                .arg(m_selection.height());
-    }
+    if (m_selectionHintOwner) {
+        QString hint = QStringLiteral("拖拽框选窗口或区域  ·  Enter 复制  ·  Ctrl+S 保存  ·  Esc 取消");
+        if (m_finalized) {
+            hint = QStringLiteral("%1 × %2 px  ·  可拖动选区或拖拽控制点调整大小")
+                    .arg(m_globalSelection.width())
+                    .arg(m_globalSelection.height());
+        }
 
-    QFont font = painter.font();
-    font.setPixelSize(13);
-    painter.setFont(font);
-    const QRect hintRect(0, 22, width(), 36);
-    painter.setPen(Qt::NoPen);
-    painter.setBrush(QColor(0, 0, 0, 135));
-    const int textWidth = painter.fontMetrics().horizontalAdvance(hint) + 36;
-    painter.drawRoundedRect(QRect((width() - textWidth) / 2, hintRect.top(), textWidth, 32), 6, 6);
-    painter.setPen(Qt::white);
-    painter.drawText(hintRect, Qt::AlignHCenter | Qt::AlignVCenter, hint);
+        QFont font = painter.font();
+        font.setPixelSize(13);
+        painter.setFont(font);
+        const QRect hintRect(0, 22, width(), 36);
+        painter.setPen(Qt::NoPen);
+        painter.setBrush(QColor(0, 0, 0, 135));
+        const int textWidth = painter.fontMetrics().horizontalAdvance(hint) + 36;
+        painter.drawRoundedRect(QRect((width() - textWidth) / 2, hintRect.top(), textWidth, 32), 6, 6);
+        painter.setPen(Qt::white);
+        painter.drawText(hintRect, Qt::AlignHCenter | Qt::AlignVCenter, hint);
+    }
 }
 
 void TreelandMaskWindow::mousePressEvent(QMouseEvent *event)
@@ -269,8 +368,11 @@ void TreelandMaskWindow::keyPressEvent(QKeyEvent *event)
         emit cancelRequested();
         return;
     }
-    if (event->key() == Qt::Key_Return || event->key() == Qt::Key_Enter
-            || event->matches(QKeySequence::Save)) {
+    if (event->key() == Qt::Key_Return || event->key() == Qt::Key_Enter) {
+        emit copyRequested();
+        return;
+    }
+    if (event->matches(QKeySequence::Save)) {
         emit confirmRequested();
         return;
     }

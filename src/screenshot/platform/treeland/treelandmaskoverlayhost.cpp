@@ -9,6 +9,7 @@
 #include "widgets/sidebar.h"
 #include "widgets/toolbar.h"
 #include "widgets/toolbarhost.h"
+#include "../../core/selectionoverlaygeometry.h"
 #include "../../../utils/configsettings.h"
 #include "../../../utils/log.h"
 
@@ -21,6 +22,8 @@ namespace {
 
 constexpr int ToolBarMargin = 8;
 constexpr int ToolBarGap = 8;
+constexpr int InputReadyCheckIntervalMs = 8;
+constexpr int InputReadyMaxChecks = 250;
 
 bool isTreeLandAnnotationTool(const QString &tool)
 {
@@ -107,21 +110,72 @@ public:
 
     QPoint sideBarStartPressPoint() const override
     {
-        return QPoint();
+        rememberToolBarPositions();
+        return m_sideBarStartPoint;
     }
 
     QPoint toolBarStartPressPoint() const override
     {
-        return QPoint();
+        rememberToolBarPositions();
+        return m_toolBarStartPoint;
     }
 
-    bool moveToolBars(const QPoint &, const QPoint &) override
+    bool moveToolBars(const QPoint &, const QPoint &delta) override
     {
-        return false;
+        if (!m_overlay || !m_overlay->m_toolBar || !m_dragPositionsValid)
+            return false;
+
+        QWidget *toolBar = m_overlay->m_toolBar;
+        QWidget *sideBar = m_overlay->m_sideBar;
+
+        QWidget *anchor = anchorWidget();
+        if (!anchor)
+            return false;
+
+        const QRect available = anchor->rect();
+        const int minDx = -m_groupStartRect.left();
+        const int maxDx = available.width() - m_groupStartRect.right() - 1;
+        const int minDy = -m_groupStartRect.top();
+        const int maxDy = available.height() - m_groupStartRect.bottom() - 1;
+        const QPoint boundedDelta(clampToRange(delta.x(), minDx, maxDx),
+                                  clampToRange(delta.y(), minDy, maxDy));
+
+        toolBar->move(m_toolBarStartPoint + boundedDelta);
+        if (sideBar && m_sideBarVisibleAtDragStart)
+            sideBar->move(m_sideBarStartPoint + boundedDelta);
+        toolBar->raise();
+        if (sideBar && m_sideBarVisibleAtDragStart)
+            sideBar->raise();
+        return true;
     }
 
 private:
+    static int clampToRange(int value, int minimum, int maximum)
+    {
+        return maximum < minimum ? minimum : qBound(minimum, value, maximum);
+    }
+
+    void rememberToolBarPositions() const
+    {
+        if (!m_overlay || !m_overlay->m_toolBar)
+            return;
+        m_toolBarStartPoint = m_overlay->m_toolBar->pos();
+        m_sideBarStartPoint = m_overlay->m_sideBar ? m_overlay->m_sideBar->pos()
+                                                   : QPoint();
+        m_sideBarVisibleAtDragStart = m_overlay->m_sideBar
+                && m_overlay->m_sideBar->isVisible();
+        m_groupStartRect = m_overlay->m_toolBar->geometry();
+        if (m_sideBarVisibleAtDragStart)
+            m_groupStartRect = m_groupStartRect.united(m_overlay->m_sideBar->geometry());
+        m_dragPositionsValid = true;
+    }
+
     TreelandMaskOverlayHost *m_overlay = nullptr;
+    mutable QPoint m_toolBarStartPoint;
+    mutable QPoint m_sideBarStartPoint;
+    mutable QRect m_groupStartRect;
+    mutable bool m_sideBarVisibleAtDragStart = false;
+    mutable bool m_dragPositionsValid = false;
 };
 
 TreelandMaskOverlayHost::TreelandMaskOverlayHost(QObject *parent)
@@ -182,6 +236,11 @@ bool TreelandMaskOverlayHost::create(const QList<OutputDescriptor> &outputs)
                 this, &IScreenshotOverlayHost::cancelRequested);
         connect(window, &TreelandMaskWindow::undoRequested,
                 this, &TreelandMaskOverlayHost::undoAnnotation);
+        connect(window,
+                &TreelandMaskWindow::windowRoleCreated,
+                this,
+                &IScreenshotOverlayHost::maskWindowRoleCreated,
+                Qt::DirectConnection);
         m_windows.append(window);
     }
 
@@ -216,27 +275,81 @@ void TreelandMaskOverlayHost::setFrozenFrames(const FrozenFrameSet &frames)
     }
 }
 
-void TreelandMaskOverlayHost::show()
+bool TreelandMaskOverlayHost::prepare()
 {
     if (m_windows.isEmpty())
-        return;
+        return false;
 
     for (TreelandMaskWindow *window : m_windows) {
-        window->prepareWindow();
+        if (!window)
+            return false;
+        if (!window->prepareWindow())
+            return false;
+    }
+
+    m_prepared = true;
+    return true;
+}
+
+void TreelandMaskOverlayHost::show()
+{
+    if (m_windows.isEmpty()) {
+        emit inputFailed(QStringLiteral("截图覆盖窗口未创建"));
+        return;
+    }
+
+    if (!m_prepared && !prepare()) {
+        emit inputFailed(QStringLiteral("截图覆盖窗口未能创建原生窗口"));
+        return;
+    }
+
+    for (TreelandMaskWindow *window : m_windows) {
         window->showWindow();
     }
     updateToolBar();
-    QTimer::singleShot(0, this, [this]() { emit inputReady(); });
+
+    // xdg_toplevel and the compositor-side mask configuration become usable
+    // only after every per-output surface has been exposed. Starting snap from
+    // a single deferred callback can race the slower output in a multi-screen
+    // session, so wait for all windows explicitly.
+    m_inputReadyPending = true;
+    m_inputReadyChecks = 0;
+    QTimer::singleShot(0, this, &TreelandMaskOverlayHost::checkInputReady);
+}
+
+void TreelandMaskOverlayHost::checkInputReady()
+{
+    if (!m_inputReadyPending)
+        return;
+
+    for (TreelandMaskWindow *window : m_windows) {
+        if (!window || !window->windowHandle()
+                || !window->windowHandle()->isExposed()) {
+            if (++m_inputReadyChecks >= InputReadyMaxChecks) {
+                m_inputReadyPending = false;
+                emit inputFailed(QStringLiteral("截图覆盖窗口未能在超时前完成映射"));
+                return;
+            }
+            QTimer::singleShot(InputReadyCheckIntervalMs,
+                               this,
+                               &TreelandMaskOverlayHost::checkInputReady);
+            return;
+        }
+    }
+
+    m_inputReadyPending = false;
+    emit inputReady();
 }
 
 void TreelandMaskOverlayHost::setSelection(const QRect &globalSelection)
 {
-    if (m_selection == globalSelection)
-        return;
-    m_selection = globalSelection;
+    m_selection = globalSelection.normalized();
+    TreelandMaskWindow *hintOwner = selectionOwnerWindow();
     for (TreelandMaskWindow *window : m_windows) {
-        if (window)
-            window->setSelection(globalSelection);
+        if (!window)
+            continue;
+        window->setSelection(m_selection);
+        window->setSelectionHintOwner(window == hintOwner);
     }
     updateToolBar();
 }
@@ -271,6 +384,8 @@ void TreelandMaskOverlayHost::setCursorIntent(CursorIntent intent)
 
 void TreelandMaskOverlayHost::close()
 {
+    m_inputReadyPending = false;
+    m_prepared = false;
     // close() can run from a toolbar button's clicked handler (Save, Cancel,
     // Confirm).  Destroying the toolbar host synchronously invalidates the
     // object currently executing that handler and can crash in the remaining
@@ -307,23 +422,19 @@ void TreelandMaskOverlayHost::close()
     m_annotationEditor->clearViews();
     m_selection = QRect();
     m_finalized = false;
+    m_prepared = false;
 }
 
-TreelandMaskWindow *TreelandMaskOverlayHost::toolbarWindow() const
+TreelandMaskWindow *TreelandMaskOverlayHost::selectionOwnerWindow() const
 {
-    TreelandMaskWindow *best = nullptr;
-    qint64 bestArea = -1;
+    QList<QRect> outputGeometries;
+    outputGeometries.reserve(m_windows.size());
     for (TreelandMaskWindow *window : m_windows) {
-        if (!window)
-            continue;
-        const QRect intersection = m_selection.intersected(window->output().logicalGeometry);
-        const qint64 area = static_cast<qint64>(intersection.width()) * intersection.height();
-        if (area > bestArea) {
-            best = window;
-            bestArea = area;
-        }
+        outputGeometries.append(window ? window->output().logicalGeometry : QRect());
     }
-    return best;
+    const int ownerIndex = SelectionOverlayGeometry::largestSelectionIntersectionIndex(
+            m_selection, outputGeometries);
+    return ownerIndex >= 0 ? m_windows.value(ownerIndex) : nullptr;
 }
 
 void TreelandMaskOverlayHost::ensureToolBar()
@@ -352,7 +463,7 @@ void TreelandMaskOverlayHost::updateToolBar()
         return;
     }
 
-    TreelandMaskWindow *active = toolbarWindow();
+    TreelandMaskWindow *active = selectionOwnerWindow();
     if (!active)
         return;
 
@@ -463,6 +574,9 @@ void TreelandMaskOverlayHost::destroyWindows()
     m_annotationEditor->clearViews();
     m_selection = QRect();
     m_finalized = false;
+    m_prepared = false;
+    m_inputReadyPending = false;
+    m_inputReadyChecks = 0;
     if (m_toolBarHost) {
         delete m_toolBarHost;
         m_toolBarHost = nullptr;

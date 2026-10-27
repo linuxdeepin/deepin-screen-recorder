@@ -14,6 +14,8 @@
 class QKeyEvent;
 class QMouseEvent;
 class QPaintEvent;
+class QColor;
+class QPainter;
 
 namespace Dsr::Screenshot {
 
@@ -29,13 +31,15 @@ public:
     void setSelection(const QRect &globalSelection);
     void setSnapHint(const QRect &globalRegion);
     void setSelectionFinalized(bool finalized);
+    void setSelectionHintOwner(bool owner);
     void setCursorIntent(CursorIntent intent);
     void setAnnotationView(QWidget *widget);
-    void prepareWindow();
+    bool prepareWindow();
     void showWindow();
     void closeSilently();
 
 signals:
+    void windowRoleCreated(QWindow *window);
     void pointerPressed(const QPoint &globalPos);
     void pointerMoved(const QPoint &globalPos);
     void pointerReleased(const QPoint &globalPos);
@@ -55,15 +59,21 @@ protected:
 
 private:
     QPoint toGlobal(const QPoint &localPos) const;
+    void drawSelectionOutline(QPainter &painter, const QRect &globalRect,
+                              const QColor &color, int width) const;
 
     OutputDescriptor m_output;
     QImage m_sourceImage;
+    QRect m_globalSelection;
     QRect m_selection;
+    QRect m_globalSnapHint;
     QRect m_snapHint;
+    bool m_selectionHintOwner = false;
     bool m_finalized = false;
     bool m_silentClose = false;
     CursorIntent m_cursorIntent = CursorIntent::Default;
     bool m_cancelEmitted = false;
+    bool m_roleCreatedConnected = false;
 
     QWidget *m_annotationView = nullptr;
 };

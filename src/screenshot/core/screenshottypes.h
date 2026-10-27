@@ -23,6 +23,7 @@ enum class CursorIntent {
     Default,
     Cross,
     Move,
+    Grabbing,
     ResizeHorizontal,
     ResizeVertical,
     ResizeDiagonalForward,
