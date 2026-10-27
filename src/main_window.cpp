@@ -1181,6 +1181,7 @@ void MainWindow::onExit()
     qCInfo(dsrApp) << "exit screenshot app";
     if (RECORD_BUTTON_RECORDING == recordButtonStatus) {
         stopRecord();
+        QTimer::singleShot(3000, this, &MainWindow::onExitScreenCapture);
     } else {
         exitApp();
     }
