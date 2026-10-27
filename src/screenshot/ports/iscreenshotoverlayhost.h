@@ -52,6 +52,7 @@ signals:
     void pointerReleased(const QPoint &globalPos);
     void confirmRequested();
     void copyRequested();
+    void pinRequested();
     void cancelRequested();
 };
 

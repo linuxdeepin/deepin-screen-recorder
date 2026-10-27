@@ -9,6 +9,7 @@
 #include "widgets/sidebar.h"
 #include "widgets/toolbar.h"
 #include "widgets/toolbarhost.h"
+#include "../../export/screenshotexportservice.h"
 #include "../../core/selectionoverlaygeometry.h"
 #include "../../../utils/configsettings.h"
 #include "../../../utils/log.h"
@@ -33,7 +34,9 @@ bool isTreeLandAnnotationTool(const QString &tool)
             || tool == QStringLiteral("line")
             || tool == QStringLiteral("arrow")
             || tool == QStringLiteral("pen")
-            || tool == QStringLiteral("effect");
+            || tool == QStringLiteral("effect")
+            || tool == QStringLiteral("sequence")
+            || tool == QStringLiteral("text");
 }
 
 } // namespace
@@ -73,6 +76,10 @@ public:
 
     void toolChanged(const QString &tool) override
     {
+        if (tool == QStringLiteral("pinScreenshots")) {
+            emit m_overlay->pinRequested();
+            return;
+        }
         m_overlay->handleToolChanged(tool);
     }
 
@@ -182,6 +189,11 @@ TreelandMaskOverlayHost::TreelandMaskOverlayHost(QObject *parent)
     : IScreenshotOverlayHost(parent)
     , m_annotationEditor(new TreelandAnnotationEditor(this))
 {
+    connect(m_annotationEditor, &TreelandAnnotationEditor::shapeSelected,
+            this, [this](const QString &shape) {
+        if (m_toolBar && !shape.isEmpty())
+            m_toolBar->shapeClickedFromMain(shape);
+    });
     connect(m_annotationEditor, &IAnnotationEditor::contentBoundsChanged,
             this, [this](const QRectF &bounds) {
         if (m_toolBarHost)
@@ -228,6 +240,11 @@ bool TreelandMaskOverlayHost::create(const QList<OutputDescriptor> &outputs)
                 this, &IScreenshotOverlayHost::pointerMoved);
         connect(window, &TreelandMaskWindow::pointerReleased,
                 this, &IScreenshotOverlayHost::pointerReleased);
+        connect(window, &TreelandMaskWindow::pointerDoubleClicked,
+                this, [this](const QPoint &globalPos) {
+            if (m_annotationEditor)
+                m_annotationEditor->beginInlineEdit(globalPos);
+        });
         connect(window, &TreelandMaskWindow::confirmRequested,
                 this, &IScreenshotOverlayHost::confirmRequested);
         connect(window, &TreelandMaskWindow::copyRequested,
@@ -265,6 +282,9 @@ QList<QWindow *> TreelandMaskOverlayHost::maskWindows() const
 
 void TreelandMaskOverlayHost::setFrozenFrames(const FrozenFrameSet &frames)
 {
+    m_frozenFrames = frames;
+    m_effectSourceReady = false;
+
     for (const OutputFrame &frame : frames.outputs) {
         for (TreelandMaskWindow *window : m_windows) {
             if (window && window->output().outputId == frame.output.outputId) {
@@ -545,10 +565,34 @@ void TreelandMaskOverlayHost::handleToolChanged(const QString &tool)
     } else if (tool == "pen") {
         m_annotationEditor->setTool(AnnotationTool::Pen);
     } else if (tool == "effect") {
+        ensureEffectSource();
         m_annotationEditor->setTool(AnnotationTool::Effect);
+    } else if (tool == "sequence") {
+        m_annotationEditor->setTool(AnnotationTool::Sequence);
+    } else if (tool == "text") {
+        m_annotationEditor->setTool(AnnotationTool::Text);
     }
 
     updateToolBar();
+}
+
+void TreelandMaskOverlayHost::ensureEffectSource()
+{
+    if (m_effectSourceReady || m_frozenFrames.isEmpty() || !m_annotationEditor)
+        return;
+
+    // Effect annotations need the unfiltered frozen desktop as their source.
+    // Compose it lazily so ordinary rectangle/text screenshots do not pay for
+    // a full virtual-desktop image that they never use.
+    ScreenshotExportService exportService;
+    const Result effectSource = exportService.render(m_frozenFrames,
+                                                     m_frozenFrames.virtualDesktopRect,
+                                                     nullptr);
+    if (!effectSource.isValid())
+        return;
+
+    m_annotationEditor->setEffectSourceImage(effectSource.image);
+    m_effectSourceReady = true;
 }
 
 void TreelandMaskOverlayHost::undoAnnotation()
@@ -564,6 +608,7 @@ void TreelandMaskOverlayHost::destroyWindows()
     if (m_sideBar)
         m_sideBar->hide();
 
+    m_annotationEditor->clearViews();
     for (TreelandMaskWindow *window : m_windows) {
         if (!window)
             continue;
@@ -571,8 +616,9 @@ void TreelandMaskOverlayHost::destroyWindows()
         delete window;
     }
     m_windows.clear();
-    m_annotationEditor->clearViews();
     m_selection = QRect();
+    m_frozenFrames = FrozenFrameSet();
+    m_effectSourceReady = false;
     m_finalized = false;
     m_prepared = false;
     m_inputReadyPending = false;

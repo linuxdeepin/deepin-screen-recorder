@@ -69,6 +69,7 @@ private:
     void onSnapRegionChanged(const QRect &globalRegion);
     void onConfirmRequested();
     void onCopyRequested();
+    void onPinRequested();
     void onCancelRequested();
 
     void syncOverlaySelection();

@@ -634,9 +634,7 @@ void SubToolWidget::initShotLabel()
     Utils::setAccessibility(m_mosaicButton, AC_SUBTOOLWIDGET_MOSAIC_BUTTON);
     m_shotBtnGroup->addButton(m_mosaicButton);
     m_mosaicButton->setFixedSize(TOOL_BUTTON_SIZE);
-    // TODO: 初版treeland暂时屏蔽
-    if (!(Utils::isTreelandMode))
-          btnList.append(m_mosaicButton);
+    btnList.append(m_mosaicButton);
 
     //添加文字按钮
     m_textButton = new ToolButton();
@@ -648,9 +646,7 @@ void SubToolWidget::initShotLabel()
     Utils::setAccessibility(m_textButton, AC_SUBTOOLWIDGET_TEXT_BUTTON);
     m_shotBtnGroup->addButton(m_textButton);
     m_textButton->setFixedSize(TOOL_BUTTON_SIZE);
-    // TreeLand 的标注编辑当前只接入形状/线条/画笔；不要暴露未接通的文本入口。
-    if (!Utils::isTreelandMode)
-        btnList.append(m_textButton);
+    btnList.append(m_textButton);
 
     //添加序号标注按钮
     m_sequenceButton = new ToolButton();
@@ -660,9 +656,7 @@ void SubToolWidget::initShotLabel()
     Utils::setAccessibility(m_sequenceButton, AC_SUBTOOLWIDGET_SEQUENCE_BUTTON);
     m_shotBtnGroup->addButton(m_sequenceButton);
     m_sequenceButton->setFixedSize(TOOL_BUTTON_SIZE);
-    // 序号工具尚未迁移到新的输入仲裁链路，TreeLand 下不显示无效入口。
-    if (!Utils::isTreelandMode)
-        btnList.append(m_sequenceButton);
+    btnList.append(m_sequenceButton);
 
     //添加滚动截图按钮
     m_scrollShotButton = new ToolButton();
@@ -736,8 +730,7 @@ void SubToolWidget::initShotLabel()
         qCDebug(dsrApp) << "贴图按钮按下！";
         emit changeShotToolFunc("pinScreenshots");
     });
-    if (!Utils::isTreelandMode)
-        btnList.append(m_pinButton);
+    btnList.append(m_pinButton);
 
     m_aiAssistantButton = new ToolButton();
     m_aiAssistantButton->setObjectName("AiAssistantButton");

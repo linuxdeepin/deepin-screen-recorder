@@ -265,6 +265,7 @@ bool TreelandSnapSession::start(QString *error)
     if (!m_started) {
         m_started = true;
         m_snap.start(m_seat, TREELAND_SNAP_TARGET_V1_EVENT_TYPE_PIDFD);
+        qCInfo(dsrApp) << "Treeland snap: session started";
     }
     return true;
 }
@@ -274,6 +275,7 @@ void TreelandSnapSession::stop()
     if (m_started) {
         m_snap.stop();
         m_started = false;
+        qCInfo(dsrApp) << "Treeland snap: session stopped";
     }
     m_startRequested = false;
 }
@@ -333,6 +335,8 @@ void TreelandSnapSession::onSnapRegion(int x, int y, quint32 width, quint32 heig
     m_region = (width != 0 && height != 0)
             ? QRect(x, y, static_cast<int>(width), static_cast<int>(height))
             : QRect();
+    qCInfo(dsrApp) << "Treeland snap: region changed:" << m_region
+                   << "target:" << m_processName;
     emit regionChanged(m_region);
 }
 

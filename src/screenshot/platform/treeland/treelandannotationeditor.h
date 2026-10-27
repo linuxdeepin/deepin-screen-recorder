@@ -6,6 +6,7 @@
 #define TREELAND_ANNOTATION_EDITOR_H
 
 #include "../../ports/iannotationeditor.h"
+#include "widgets/shapeswidget.h"
 
 #include <QList>
 #include <QPointer>
@@ -13,7 +14,7 @@
 #include <QRectF>
 
 class QWidget;
-class ShapesWidget;
+class QEvent;
 
 namespace Dsr::Screenshot {
 
@@ -36,8 +37,10 @@ public:
     ~TreelandAnnotationEditor() override;
 
     void setDesktopBounds(const QRect &globalDesktopBounds);
+    void setEffectSourceImage(const QImage &image);
     QWidget *createView(QWidget *parent, const QRect &outputBounds);
     void clearViews();
+    bool beginInlineEdit(const QPoint &globalPos);
 
     QRectF contentBoundsGlobal() const override;
     bool isInteracting() const override;
@@ -53,13 +56,31 @@ public:
                 const QRect &globalSelection,
                 qreal pixelScale) const override;
 
+signals:
+    void shapeSelected(const QString &shape);
+
 private:
+    void showInlineEditor(const ShapesWidget::InlineEditRequest &request);
+    void finishInlineEdit(bool commit);
     void publishBounds();
     void refreshViews();
+
+protected:
+    bool eventFilter(QObject *watched, QEvent *event) override;
+
+private:
 
     ShapesWidget *m_documentWidget = nullptr;
     ShapesWidgetAnnotationEditor *m_document = nullptr;
     QList<QPointer<QWidget>> m_views;
+    QList<QRect> m_viewBounds;
+    QPointer<QWidget> m_inlineEditor;
+    int m_inlineShapeIndex = -1;
+    bool m_inlineIsSequence = false;
+    bool m_finishingInlineEdit = false;
+    QRect m_inlineOutputBounds;
+    QString m_inlineOriginalText;
+    QRectF m_inlineOriginalRect;
     QRect m_desktopBounds;
     QRectF m_lastBounds;
     AnnotationTool m_tool = AnnotationTool::Pointer;

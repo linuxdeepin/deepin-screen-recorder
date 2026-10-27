@@ -28,6 +28,10 @@ QString shapeTypeForTool(AnnotationTool tool)
         return QStringLiteral("pen");
     case AnnotationTool::Effect:
         return QStringLiteral("effect");
+    case AnnotationTool::Sequence:
+        return QStringLiteral("sequence");
+    case AnnotationTool::Text:
+        return QStringLiteral("text");
     case AnnotationTool::Pointer:
         return QString();
     }
@@ -110,6 +114,12 @@ void ShapesWidgetAnnotationEditor::setGlobalOrigin(const QPoint &globalOrigin)
 {
     m_globalOrigin = globalOrigin;
     m_lastBounds = contentBoundsGlobal();
+}
+
+void ShapesWidgetAnnotationEditor::setEffectSourceImage(const QImage &image)
+{
+    if (m_widget)
+        m_widget->setEffectSourceImage(image);
 }
 
 void ShapesWidgetAnnotationEditor::setTool(AnnotationTool tool)
@@ -196,6 +206,61 @@ void ShapesWidgetAnnotationEditor::undo()
     if (!m_widget)
         return;
     m_widget->undoDrawShapes();
+}
+
+bool ShapesWidgetAnnotationEditor::takePendingInlineEdit(
+        ShapesWidget::InlineEditRequest *request)
+{
+    if (!m_widget || !m_widget->takePendingInlineEdit(request)) {
+        return false;
+    }
+    if (request) {
+        request->localRect.translate(m_globalOrigin);
+    }
+    return true;
+}
+
+bool ShapesWidgetAnnotationEditor::beginInlineEditAt(
+        const QPoint &globalPos, ShapesWidget::InlineEditRequest *request)
+{
+    if (!m_widget
+            || !m_widget->beginInlineEditAt(localPosition(globalPos), request)) {
+        return false;
+    }
+    if (request) {
+        request->localRect.translate(m_globalOrigin);
+    }
+    return true;
+}
+
+void ShapesWidgetAnnotationEditor::updateInlineText(
+        int shapeIndex, const QString &text, const QRectF &globalRect)
+{
+    if (!m_widget) {
+        return;
+    }
+    m_widget->updateInlineText(shapeIndex,
+                               text,
+                               globalRect.translated(-m_globalOrigin));
+}
+
+void ShapesWidgetAnnotationEditor::finishInlineText(int shapeIndex)
+{
+    if (m_widget) {
+        m_widget->finishInlineText(shapeIndex);
+    }
+}
+
+bool ShapesWidgetAnnotationEditor::updateInlineSequence(int shapeIndex,
+                                                        int sequenceNumber)
+{
+    return m_widget && m_widget->updateInlineSequence(shapeIndex, sequenceNumber);
+}
+
+void ShapesWidgetAnnotationEditor::setInlineEditingShape(int shapeIndex)
+{
+    if (m_widget)
+        m_widget->setInlineEditingShape(shapeIndex);
 }
 
 void ShapesWidgetAnnotationEditor::render(QPainter &painter,

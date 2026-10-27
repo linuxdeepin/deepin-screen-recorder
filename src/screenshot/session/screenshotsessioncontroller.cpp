@@ -5,6 +5,7 @@
 #include "screenshotsessioncontroller.h"
 
 #include "annotationcoordinator.h"
+#include "../core/selectionoverlaygeometry.h"
 #include "../export/screenshotexportservice.h"
 #include "../ports/iannotationeditor.h"
 #include "../ports/iscreenshotbackend.h"
@@ -91,6 +92,8 @@ ScreenshotSessionController::ScreenshotSessionController(IScreenshotBackend *bac
             this, &ScreenshotSessionController::onConfirmRequested);
     connect(m_overlay, &IScreenshotOverlayHost::copyRequested,
             this, &ScreenshotSessionController::onCopyRequested);
+    connect(m_overlay, &IScreenshotOverlayHost::pinRequested,
+            this, &ScreenshotSessionController::onPinRequested);
     connect(m_overlay, &IScreenshotOverlayHost::cancelRequested,
             this, &ScreenshotSessionController::onCancelRequested);
     if (m_snapHints) {
@@ -299,7 +302,15 @@ void ScreenshotSessionController::onSnapRegionChanged(const QRect &globalRegion)
     if (m_state != State::Selecting || m_pressed || m_selection->state() == InteractionState::Ready)
         return;
 
-    m_snapHint = globalRegion.normalized().intersected(m_frames.virtualDesktopRect);
+    QList<QRect> outputGeometries;
+    outputGeometries.reserve(m_frames.outputs.size());
+    for (const OutputFrame &frame : m_frames.outputs)
+        outputGeometries.append(frame.output.logicalGeometry);
+
+    const QRect rawRegion =
+            globalRegion.normalized().intersected(m_frames.virtualDesktopRect);
+    m_snapHint = SelectionOverlayGeometry::snapRegionForOutputs(
+            rawRegion, outputGeometries).intersected(m_frames.virtualDesktopRect);
     m_overlay->setSnapHint(m_snapHint);
 }
 
@@ -369,6 +380,33 @@ void ScreenshotSessionController::onCopyRequested()
     qCInfo(dsrApp) << "Screenshot session copied:" << result.image.size()
                    << "generation:" << result.frameGeneration;
     emit copied();
+    finish(State::Completed);
+}
+
+void ScreenshotSessionController::onPinRequested()
+{
+    if (m_finished || m_selection->geometry().isEmpty())
+        return;
+    if (m_state != State::Selecting && m_state != State::Editing)
+        return;
+
+    Result result;
+    const State previousState = m_state;
+    m_state = State::Exporting;
+    if (!renderResult(&result)) {
+        qWarning() << "Screenshot pin returned an empty result";
+        m_state = previousState;
+        return;
+    }
+
+    QString error;
+    if (!m_resultSink->pin(result, &error)) {
+        fail(error);
+        return;
+    }
+    m_state = State::Completed;
+    qCInfo(dsrApp) << "Screenshot session pinned:" << result.image.size()
+                   << "generation:" << result.frameGeneration;
     finish(State::Completed);
 }
 

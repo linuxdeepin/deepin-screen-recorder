@@ -233,38 +233,15 @@ void TreelandMaskWindow::drawSelectionOutline(QPainter &painter,
                                               const QColor &color,
                                               int width) const
 {
-    const SelectionOverlayGeometry::Outline outline =
-            SelectionOverlayGeometry::outlineForOutput(globalRect,
-                                                       m_output.logicalGeometry);
-    if (outline.localRect.isEmpty())
+    const QList<QLineF> lines =
+            SelectionOverlayGeometry::strokedOutlineForOutput(
+                    globalRect, m_output.logicalGeometry, width);
+    if (lines.isEmpty())
         return;
 
-    const QRect borderRect = outline.localRect.adjusted(0, 0, -1, -1);
-    // Only an output that owns the real right/bottom edge needs the one-pixel
-    // inset that keeps the pen inside the window. Interior spans must reach
-    // the output edge so a selection crossing two outputs stays continuous.
-    const int horizontalRight = outline.right
-            ? borderRect.right() : outline.localRect.right();
-    const int verticalBottom = outline.bottom
-            ? borderRect.bottom() : outline.localRect.bottom();
-
     painter.setPen(QPen(color, width));
-    if (outline.top) {
-        painter.drawLine(QPoint(borderRect.left(), borderRect.top()),
-                         QPoint(horizontalRight, borderRect.top()));
-    }
-    if (outline.bottom) {
-        painter.drawLine(QPoint(borderRect.left(), borderRect.bottom()),
-                         QPoint(horizontalRight, borderRect.bottom()));
-    }
-    if (outline.left) {
-        painter.drawLine(QPoint(borderRect.left(), borderRect.top()),
-                         QPoint(borderRect.left(), verticalBottom));
-    }
-    if (outline.right) {
-        painter.drawLine(QPoint(borderRect.right(), borderRect.top()),
-                         QPoint(borderRect.right(), verticalBottom));
-    }
+    for (const QLineF &line : lines)
+        painter.drawLine(line);
 }
 
 void TreelandMaskWindow::paintEvent(QPaintEvent *event)
@@ -359,6 +336,16 @@ void TreelandMaskWindow::mouseReleaseEvent(QMouseEvent *event)
         return;
     }
     emit pointerReleased(toGlobal(eventPosition(event)));
+    event->accept();
+}
+
+void TreelandMaskWindow::mouseDoubleClickEvent(QMouseEvent *event)
+{
+    if (event->button() != Qt::LeftButton) {
+        QWidget::mouseDoubleClickEvent(event);
+        return;
+    }
+    emit pointerDoubleClicked(toGlobal(eventPosition(event)));
     event->accept();
 }
 
