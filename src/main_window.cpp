@@ -1,5 +1,5 @@
 // Copyright (C) 2020 ~ 2021 Uniontech Software Technology Co.,Ltd.
-// SPDX-FileCopyrightText: 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2022-2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -1906,10 +1906,10 @@ void MainWindow::topWindow()
                 continue;
             }
             selectAreaName = window->wmClass();
-            recordX = window->frameGeometry().x();
-            recordY = window->frameGeometry().y();
-            recordWidth = window->frameGeometry().width();
-            recordHeight = window->frameGeometry().height();
+            recordX = static_cast<int>(window->frameGeometry().x() / m_pixelRatio);
+            recordY = static_cast<int>(window->frameGeometry().y() / m_pixelRatio);
+            recordWidth = static_cast<int>(window->frameGeometry().width() / m_pixelRatio);
+            recordHeight = static_cast<int>(window->frameGeometry().height() / m_pixelRatio);
             break;
         } else {
             continue;
@@ -1965,10 +1965,10 @@ void MainWindow::saveTopWindow()
         topWindowIndex = 0;
     }
     selectAreaName = windowNames[topWindowIndex];
-    recordX = windowRects[topWindowIndex].x();
-    recordY = windowRects[topWindowIndex].y();
-    recordWidth = windowRects[topWindowIndex].width();
-    recordHeight = windowRects[topWindowIndex].height();
+    recordX = static_cast<int>(windowRects[topWindowIndex].x() / m_pixelRatio);
+    recordY = static_cast<int>(windowRects[topWindowIndex].y() / m_pixelRatio);
+    recordWidth = static_cast<int>(windowRects[topWindowIndex].width() / m_pixelRatio);
+    recordHeight = static_cast<int>(windowRects[topWindowIndex].height() / m_pixelRatio);
 
     //this->hide();
     // m_backgroundPixmap 是设备像素图（缩放比为 m_pixelRatio），裁剪矩形须用同一比例
@@ -4815,20 +4815,20 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
                                                   << " (" << m_screenInfo[index].x << m_screenInfo[index].y << m_screenInfo[index].width << m_screenInfo[index].height << ") 上";
                                         //可以准确的定位到在哪块屏幕上
                                         if (m_screenInfo[index].x == 0 && m_screenInfo[index].y == 0) {
-                                            recordX = static_cast<int>(x);
-                                            recordY = static_cast<int>(y);
+                                            recordX = static_cast<int>(x / m_pixelRatio);
+                                            recordY = static_cast<int>(y / m_pixelRatio);
                                             qDebug()  << "1.1.1 >>>> recordX: " << recordX << " , recordY: " << recordY;
                                         } else if (m_screenInfo[index].x == 0 && m_screenInfo[index].y != 0) {
-                                            recordX = static_cast<int>(x);
-                                            recordY = static_cast<int>((y - m_screenInfo[index].y) + m_screenInfo[index].y / m_pixelRatio);
+                                            recordX = static_cast<int>(x / m_pixelRatio);
+                                            recordY = static_cast<int>((y / m_pixelRatio - m_screenInfo[index].y) + m_screenInfo[index].y);
                                             qDebug()  << "1.1.2 >>>> recordX: " << recordX << " , recordY: " << recordY;
                                         } else if (m_screenInfo[index].x != 0 && m_screenInfo[index].y == 0) {
-                                            recordX = static_cast<int>((x - m_screenInfo[index].x) + m_screenInfo[index].x / m_pixelRatio);
-                                            recordY = static_cast<int>(y);
+                                            recordX = static_cast<int>((x / m_pixelRatio - m_screenInfo[index].x) + m_screenInfo[index].x);
+                                            recordY = static_cast<int>(y / m_pixelRatio);
                                             qDebug()  << "1.1.3 >>>> recordX: " << recordX << " , recordY: " << recordY;
                                         } else {
-                                            recordX = static_cast<int>((x - m_screenInfo[index].x) + m_screenInfo[index].x / m_pixelRatio);
-                                            recordY = static_cast<int>((y - m_screenInfo[index].y) + m_screenInfo[index].y / m_pixelRatio);
+                                            recordX = static_cast<int>((x / m_pixelRatio - m_screenInfo[index].x) + m_screenInfo[index].x);
+                                            recordY = static_cast<int>((y / m_pixelRatio - m_screenInfo[index].y) + m_screenInfo[index].y);
                                             qDebug()  << "1.1.4 >>>> recordX: " << recordX << " , recordY: " << recordY;
                                         }
 
@@ -4853,7 +4853,7 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
                                                 recordX = static_cast<int>(x / m_pixelRatio);
                                                 //qDebug()  << "1.2.1 >>>> recordX: " << recordX << " , recordY: "<< recordY;
                                             } else {
-                                                recordX = static_cast<int>((x - m_screenInfo[index].x) + m_screenInfo[index].x / m_pixelRatio);
+                                                recordX = static_cast<int>((x / m_pixelRatio - m_screenInfo[index].x) + m_screenInfo[index].x);
                                                 //qDebug()  << "1.2.2 >>>> recordX: " << recordX << " , recordY: "<< recordY;
                                             }
                                             xIsInScreen = true;
@@ -4873,7 +4873,7 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
                                                 recordY = static_cast<int>(y / m_pixelRatio);
                                                 //qDebug()  << "1.2.3 >>>> recordX: " << recordX << " , recordY: "<< recordY;
                                             } else {
-                                                recordY = static_cast<int>((y - m_screenInfo[index].y) + m_screenInfo[index].y / m_pixelRatio);
+                                                recordY = static_cast<int>((y / m_pixelRatio - m_screenInfo[index].y) + m_screenInfo[index].y);
                                                 //qDebug()  << "1.2.4 >>>> recordX: " << recordX << " , recordY: "<< recordY;
                                             }
                                             yIsInScreen = true;
@@ -4885,12 +4885,12 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
                                 }
                                 //qDebug()  << "1.3 >>>> recordX: " << recordX << " , recordY: "<< recordY;
                             } else {
-                                recordX = it->x() - static_cast<int>(screenRect.x() * m_pixelRatio);
-                                recordY = it->y() - static_cast<int>(screenRect.y() * m_pixelRatio);
+                                recordX = static_cast<int>(it->x() / m_pixelRatio) - screenRect.x();
+                                recordY = static_cast<int>(it->y() / m_pixelRatio) - screenRect.y();
                                 //qDebug()  << "1.4 >>>> recordX: " << recordX << " , recordY: "<< recordY;
                             }
-                            recordWidth = it->width();
-                            recordHeight = it->height();
+                            recordWidth = static_cast<int>(it->width() / m_pixelRatio);
+                            recordHeight = static_cast<int>(it->height() / m_pixelRatio);
                             needRepaint = true;
                             break;
                         }
