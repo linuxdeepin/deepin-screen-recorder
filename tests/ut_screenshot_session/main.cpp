@@ -3,6 +3,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 
 #include "screenshot/core/selectionmodel.h"
+#include "screenshot/core/selectionoverlaygeometry.h"
 #include "screenshot/export/screenshotexportservice.h"
 #include "screenshot/ports/iannotationeditor.h"
 #include "screenshot/ports/iscreenshotbackend.h"
@@ -162,6 +163,10 @@ public:
     bool shown = false;
     bool closed = false;
     bool clearSelectionOnCreate = false;
+    bool readyOnShow = true;
+    bool prepareResult = true;
+    int prepareCount = 0;
+    QStringList lifecycle;
     IAnnotationEditor *pendingEditor = nullptr;
     IAnnotationEditor *providedEditor = nullptr;
     CursorIntent cursorIntent = CursorIntent::Default;
@@ -189,10 +194,19 @@ public:
     {
     }
 
+    bool prepare() override
+    {
+        ++prepareCount;
+        lifecycle.append(QStringLiteral("prepare"));
+        return prepareResult;
+    }
+
     void show() override
     {
         shown = true;
-        emit inputReady();
+        lifecycle.append(QStringLiteral("show"));
+        if (readyOnShow)
+            emit inputReady();
     }
 
     void setSelection(const QRect &globalSelection) override
@@ -248,6 +262,11 @@ public:
     {
         emit cancelRequested();
     }
+
+    void failInput(const QString &reason)
+    {
+        emit inputFailed(reason);
+    }
 };
 
 class FakeSnapHints : public ISnapHintSource
@@ -287,18 +306,26 @@ public:
     int copyCount = 0;
     QString requestedPath;
     Result lastResult;
+    bool saveResult = true;
+    bool saveCancelled = false;
+    QString saveError;
 
     bool save(const Result &result,
               const QString &path,
               QString *savedPath,
-              QString *) override
+              QString *error,
+              bool *cancelled) override
     {
         ++saveCount;
         requestedPath = path;
         lastResult = result;
+        if (cancelled)
+            *cancelled = saveCancelled;
+        if (error)
+            *error = saveError;
         if (savedPath)
             *savedPath = path;
-        return true;
+        return saveResult;
     }
 
     bool copy(const Result &result, QString *) override
@@ -396,6 +423,105 @@ private slots:
         QVERIFY(selection.bottom() >= 699);
     }
 
+    void multiScreenOutlineOmitsInternalBoundaries()
+    {
+        const QRect selection(100, 20, 2200, 140);
+        const SelectionOverlayGeometry::Outline left =
+                SelectionOverlayGeometry::outlineForOutput(
+                        selection, QRect(0, 0, 1920, 1080));
+        QCOMPARE(left.localRect, QRect(100, 20, 1820, 140));
+        QVERIFY(left.top);
+        QVERIFY(left.bottom);
+        QVERIFY(left.left);
+        QVERIFY(!left.right);
+
+        const SelectionOverlayGeometry::Outline right =
+                SelectionOverlayGeometry::outlineForOutput(
+                        selection, QRect(1920, 0, 1920, 1080));
+        QCOMPARE(right.localRect, QRect(0, 20, 380, 140));
+        QVERIFY(right.top);
+        QVERIFY(right.bottom);
+        QVERIFY(!right.left);
+        QVERIFY(right.right);
+    }
+
+    void multiScreenOutlineSupportsVerticalAndNegativeOutputs()
+    {
+        const QRect selection(-50, -80, 900, 700);
+        const SelectionOverlayGeometry::Outline top =
+                SelectionOverlayGeometry::outlineForOutput(
+                        selection, QRect(-100, -100, 1000, 600));
+        QVERIFY(top.top);
+        QVERIFY(!top.bottom);
+        QVERIFY(top.left);
+        QVERIFY(top.right);
+
+        const SelectionOverlayGeometry::Outline bottom =
+                SelectionOverlayGeometry::outlineForOutput(
+                        selection, QRect(-100, 500, 1000, 600));
+        QVERIFY(!bottom.top);
+        QVERIFY(bottom.bottom);
+        QVERIFY(bottom.left);
+        QVERIFY(bottom.right);
+    }
+
+    void multiScreenHandlesBelongToOnlyOneVisibleOutput()
+    {
+        const QRect selection(100, 20, 2200, 140);
+        const QList<QPoint> left = SelectionOverlayGeometry::handlesForOutput(
+                selection, QRect(0, 0, 1920, 1080));
+        const QList<QPoint> right = SelectionOverlayGeometry::handlesForOutput(
+                selection, QRect(1920, 0, 1920, 1080));
+
+        QCOMPARE(left.size(), 5);
+        QCOMPARE(right.size(), 3);
+        QVERIFY(left.contains(QPoint(100, 20)));
+        QVERIFY(left.contains(QPoint(100, 159)));
+        QVERIFY(left.contains(QPoint(1199, 20)));
+        QVERIFY(right.contains(QPoint(379, 20)));
+        QVERIFY(right.contains(QPoint(379, 159)));
+        QVERIFY(right.contains(QPoint(379, 89)));
+    }
+
+    void selectionOwnerUsesLargestOutputIntersection()
+    {
+        const QList<QRect> outputs = {
+            QRect(0, 0, 1920, 1080),
+            QRect(1920, 0, 1920, 1080)
+        };
+        QCOMPARE(SelectionOverlayGeometry::largestSelectionIntersectionIndex(
+                         QRect(1000, 0, 2000, 100), outputs),
+                 1);
+        QCOMPARE(SelectionOverlayGeometry::largestSelectionIntersectionIndex(
+                         QRect(100, 100, 500, 500), outputs),
+                 0);
+        QCOMPARE(SelectionOverlayGeometry::largestSelectionIntersectionIndex(
+                         QRect(), outputs),
+                 0);
+        QCOMPARE(SelectionOverlayGeometry::largestSelectionIntersectionIndex(
+                         QRect(0, 0, 10, 10), {}),
+                 -1);
+    }
+
+    void exportScalesMixedDprOutputsIntoOneLogicalLayout()
+    {
+        FrozenFrameSet frames;
+        frames.virtualDesktopRect = QRect(0, 0, 200, 100);
+        frames.outputs = {
+            makeFrame(QRect(0, 0, 100, 100), Qt::red, 1.0),
+            makeFrame(QRect(100, 0, 100, 100), Qt::blue, 2.0)
+        };
+
+        ScreenshotExportService service;
+        const Result result = service.render(frames, QRect(50, 25, 100, 50));
+
+        QVERIFY(result.isValid());
+        QCOMPARE(result.image.size(), QSize(200, 100));
+        QCOMPARE(result.image.pixelColor(99, 50), QColor(Qt::red));
+        QCOMPARE(result.image.pixelColor(100, 50), QColor(Qt::blue));
+        QCOMPARE(result.image.pixelColor(199, 50), QColor(Qt::blue));
+    }
+
     void exportJoinsOutputsAndRendersAnnotations()
     {
         FrozenFrameSet frames;
@@ -443,6 +569,7 @@ private slots:
 
         Request request;
         request.outputPath = QStringLiteral("captured.png");
+        request.enableWindowSnap = false;
         QVERIFY(controller.start(request));
         QCOMPARE(controller.state(), ScreenshotSessionController::State::Selecting);
         QCOMPARE(overlay->createdOutputs.size(), 1);
@@ -539,6 +666,38 @@ private slots:
         QCOMPARE(overlay->cursorIntent, CursorIntent::ResizeDiagonalBackward);
     }
 
+    void annotationContentUsesOpenHandUntilPressed()
+    {
+        FakeBackend *backend = new FakeBackend;
+        backend->frames.virtualDesktopRect = QRect(0, 0, 800, 600);
+        backend->frames.outputs = {makeFrame(QRect(0, 0, 800, 600), Qt::white)};
+        auto *overlay = new FakeOverlay;
+        auto *sink = new FakeResultSink;
+        auto *annotations = new FakeAnnotationEditor;
+        annotations->beginResult = true;
+        annotations->currentHit = {AnnotationHitKind::Content,
+                                   CursorIntent::Move,
+                                   -1};
+
+        ScreenshotSessionController controller(backend, overlay, nullptr, nullptr,
+                                               sink, annotations);
+        Request request;
+        request.mode = Mode::FullScreen;
+        QVERIFY(controller.start(request));
+
+        overlay->move(QPoint(200, 200));
+        QCOMPARE(overlay->cursorIntent, CursorIntent::Move);
+
+        overlay->press(QPoint(200, 200));
+        QCOMPARE(overlay->cursorIntent, CursorIntent::Grabbing);
+
+        overlay->move(QPoint(300, 300));
+        QCOMPARE(overlay->cursorIntent, CursorIntent::Grabbing);
+
+        overlay->release(QPoint(300, 300));
+        QCOMPARE(overlay->cursorIntent, CursorIntent::Move);
+    }
+
     void annotationActionAndCursorStayLockedUntilRelease()
     {
         FakeBackend *backend = new FakeBackend;
@@ -560,7 +719,7 @@ private slots:
 
         overlay->press(QPoint(200, 200));
         QVERIFY(annotations->interacting);
-        QCOMPARE(overlay->cursorIntent, CursorIntent::Move);
+        QCOMPARE(overlay->cursorIntent, CursorIntent::Grabbing);
 
         annotations->currentHit = {AnnotationHitKind::ResizeHandle,
                                    CursorIntent::ResizeDiagonalForward,
@@ -568,11 +727,34 @@ private slots:
         overlay->move(QPoint(600, 500));
         QCOMPARE(annotations->updateCount, 1);
         QCOMPARE(annotations->updatePositions.last(), QPoint(600, 500));
-        QCOMPARE(overlay->cursorIntent, CursorIntent::Move);
+        QCOMPARE(overlay->cursorIntent, CursorIntent::Grabbing);
 
         overlay->release(QPoint(600, 500));
         QVERIFY(!annotations->interacting);
         QCOMPARE(annotations->endCount, 1);
+    }
+
+    void selectionMoveCursorChangesWhilePressed()
+    {
+        FakeBackend *backend = new FakeBackend;
+        backend->frames.virtualDesktopRect = QRect(0, 0, 800, 600);
+        backend->frames.outputs = {makeFrame(QRect(0, 0, 800, 600), Qt::white)};
+        auto *overlay = new FakeOverlay;
+        auto *sink = new FakeResultSink;
+
+        ScreenshotSessionController controller(backend, overlay, nullptr, nullptr, sink);
+        Request request;
+        request.mode = Mode::FullScreen;
+        QVERIFY(controller.start(request));
+
+        overlay->move(QPoint(400, 300));
+        QCOMPARE(overlay->cursorIntent, CursorIntent::Move);
+
+        overlay->press(QPoint(400, 300));
+        QCOMPARE(overlay->cursorIntent, CursorIntent::Grabbing);
+
+        overlay->release(QPoint(400, 300));
+        QCOMPARE(overlay->cursorIntent, CursorIntent::Move);
     }
 
     void annotationBoundsExpandReadySelection()
@@ -667,7 +849,7 @@ private slots:
         overlay->press(QPoint(100, 100));
 
         QCOMPARE(annotations->beginCount, 1);
-        QCOMPARE(overlay->cursorIntent, CursorIntent::Move);
+        QCOMPARE(overlay->cursorIntent, CursorIntent::Grabbing);
     }
 
     void fullScreenRequestUsesVirtualDesktop()
@@ -694,6 +876,99 @@ private slots:
         QCOMPARE(controller.state(), ScreenshotSessionController::State::Completed);
     }
 
+    void overlayMappingFailureFailsSession()
+    {
+        FakeBackend *backend = new FakeBackend;
+        backend->frames.virtualDesktopRect = QRect(0, 0, 1920, 1080);
+        backend->frames.outputs = {
+            makeFrame(QRect(0, 0, 1920, 1080), Qt::white)
+        };
+        auto *overlay = new FakeOverlay;
+        overlay->readyOnShow = false;
+        auto *sink = new FakeResultSink;
+        ScreenshotSessionController controller(backend, overlay, nullptr, nullptr, sink);
+        QSignalSpy failedSpy(&controller, &ScreenshotSessionController::failed);
+
+        QVERIFY(controller.start(Request()));
+        QCOMPARE(controller.state(), ScreenshotSessionController::State::CreatingMasks);
+
+        overlay->failInput(QStringLiteral("覆盖窗口映射失败"));
+
+        QCOMPARE(controller.state(), ScreenshotSessionController::State::Failed);
+        QCOMPARE(failedSpy.size(), 1);
+        QVERIFY(overlay->closed);
+        QCOMPARE(sink->saveCount, 0);
+        QCOMPARE(sink->copyCount, 0);
+    }
+
+    void overlayPreparationRunsBeforeShow()
+    {
+        FakeBackend *backend = new FakeBackend;
+        backend->frames.virtualDesktopRect = QRect(0, 0, 1920, 1080);
+        backend->frames.outputs = {
+            makeFrame(QRect(0, 0, 1920, 1080), Qt::white)
+        };
+        auto *overlay = new FakeOverlay;
+        auto *sink = new FakeResultSink;
+        ScreenshotSessionController controller(backend, overlay, nullptr, nullptr, sink);
+
+        QVERIFY(controller.start(Request()));
+
+        QCOMPARE(controller.state(), ScreenshotSessionController::State::Selecting);
+        QCOMPARE(overlay->prepareCount, 1);
+        QCOMPARE(overlay->lifecycle,
+                 QStringList({QStringLiteral("prepare"), QStringLiteral("show")}));
+    }
+
+    void overlayPreparationFailureAbortsBeforeShow()
+    {
+        FakeBackend *backend = new FakeBackend;
+        backend->frames.virtualDesktopRect = QRect(0, 0, 1920, 1080);
+        backend->frames.outputs = {
+            makeFrame(QRect(0, 0, 1920, 1080), Qt::white)
+        };
+        auto *overlay = new FakeOverlay;
+        overlay->prepareResult = false;
+        auto *sink = new FakeResultSink;
+        ScreenshotSessionController controller(backend, overlay, nullptr, nullptr, sink);
+        QSignalSpy failedSpy(&controller, &ScreenshotSessionController::failed);
+
+        QVERIFY(controller.start(Request()));
+
+        QCOMPARE(controller.state(), ScreenshotSessionController::State::Failed);
+        QCOMPARE(failedSpy.size(), 1);
+        QVERIFY(!overlay->shown);
+        QVERIFY(overlay->closed);
+        QCOMPARE(overlay->lifecycle, QStringList({QStringLiteral("prepare")}));
+    }
+
+    void snapMaskPreparationFailureAbortsBeforeShow()
+    {
+        FakeBackend *backend = new FakeBackend;
+        backend->frames.virtualDesktopRect = QRect(0, 0, 1920, 1080);
+        backend->frames.outputs = {
+            makeFrame(QRect(0, 0, 1920, 1080), Qt::white)
+        };
+        auto *overlay = new FakeOverlay;
+        auto *snapHints = new FakeSnapHints;
+        auto *tagger = new FakeWindowTagger;
+        auto *sink = new FakeResultSink;
+        ScreenshotSessionController controller(backend,
+                                               overlay,
+                                               snapHints,
+                                               tagger,
+                                               sink);
+        QSignalSpy failedSpy(&controller, &ScreenshotSessionController::failed);
+
+        QVERIFY(controller.start(Request()));
+
+        QCOMPARE(controller.state(), ScreenshotSessionController::State::Failed);
+        QCOMPARE(failedSpy.size(), 1);
+        QVERIFY(!overlay->shown);
+        QVERIFY(overlay->closed);
+        QCOMPARE(overlay->lifecycle, QStringList({QStringLiteral("prepare")}));
+    }
+
     void cancelClosesOverlayWithoutConsumingResult()
     {
         FakeBackend *backend = new FakeBackend;
@@ -709,6 +984,53 @@ private slots:
         QCOMPARE(controller.state(), ScreenshotSessionController::State::Cancelled);
         QCOMPARE(sink->saveCount, 0);
         QCOMPARE(sink->copyCount, 0);
+        QVERIFY(overlay->closed);
+    }
+
+    void saveCancellationEndsSessionWithoutFailure()
+    {
+        FakeBackend *backend = new FakeBackend;
+        backend->frames.virtualDesktopRect = QRect(0, 0, 800, 600);
+        backend->frames.outputs = {makeFrame(QRect(0, 0, 800, 600), Qt::white)};
+        auto *overlay = new FakeOverlay;
+        auto *sink = new FakeResultSink;
+        sink->saveResult = false;
+        sink->saveCancelled = true;
+        ScreenshotSessionController controller(backend, overlay, nullptr, nullptr, sink);
+        QSignalSpy failedSpy(&controller, &ScreenshotSessionController::failed);
+
+        QVERIFY(controller.start(Request()));
+        overlay->press(QPoint(10, 10));
+        overlay->move(QPoint(200, 150));
+        overlay->release(QPoint(200, 150));
+        overlay->confirm();
+
+        QCOMPARE(controller.state(), ScreenshotSessionController::State::Cancelled);
+        QCOMPARE(failedSpy.size(), 0);
+        QVERIFY(overlay->closed);
+    }
+
+    void saveFailureEndsSessionWithFailure()
+    {
+        FakeBackend *backend = new FakeBackend;
+        backend->frames.virtualDesktopRect = QRect(0, 0, 800, 600);
+        backend->frames.outputs = {makeFrame(QRect(0, 0, 800, 600), Qt::white)};
+        auto *overlay = new FakeOverlay;
+        auto *sink = new FakeResultSink;
+        sink->saveResult = false;
+        sink->saveError = QStringLiteral("保存失败");
+        ScreenshotSessionController controller(backend, overlay, nullptr, nullptr, sink);
+        QSignalSpy failedSpy(&controller, &ScreenshotSessionController::failed);
+
+        QVERIFY(controller.start(Request()));
+        overlay->press(QPoint(10, 10));
+        overlay->move(QPoint(200, 150));
+        overlay->release(QPoint(200, 150));
+        overlay->confirm();
+
+        QCOMPARE(controller.state(), ScreenshotSessionController::State::Failed);
+        QCOMPARE(failedSpy.size(), 1);
+        QCOMPARE(failedSpy.takeFirst().at(0).toString(), QStringLiteral("保存失败"));
         QVERIFY(overlay->closed);
     }
 };

@@ -15,6 +15,7 @@ SOURCES += \
     main.cpp \
     ../../src/screenshot/core/selectionconstraints.cpp \
     ../../src/screenshot/core/selectionmodel.cpp \
+    ../../src/screenshot/core/selectionoverlaygeometry.cpp \
     ../../src/screenshot/export/screenshotexportservice.cpp \
     ../../src/screenshot/session/annotationcoordinator.cpp \
     ../../src/screenshot/session/screenshotsessioncontroller.cpp \
@@ -26,6 +27,7 @@ HEADERS += \
     ../../src/screenshot/core/screenshottypes.h \
     ../../src/screenshot/core/selectionconstraints.h \
     ../../src/screenshot/core/selectionmodel.h \
+    ../../src/screenshot/core/selectionoverlaygeometry.h \
     ../../src/screenshot/export/screenshotexportservice.h \
     ../../src/screenshot/ports/iannotationeditor.h \
     ../../src/screenshot/ports/iscreenshotbackend.h \
