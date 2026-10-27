@@ -254,14 +254,21 @@ TEST_F(SideBarFinalCovTest, SideBarMouseMoveEvent)
 // ============================================================================
 // Slider coverage
 // ============================================================================
-TEST(SliderFinalCovTest, SliderLeaveAndDestructor)
+TEST(SliderFinalCovTest, SliderLeaveAfterCursorStackChanges)
 {
+    while (qApp->overrideCursor())
+        qApp->restoreOverrideCursor();
+
+    qApp->setOverrideCursor(Qt::IBeamCursor);
     Slider *s = new Slider(Qt::Horizontal);
-    QCursor cursor(Qt::ArrowCursor);
-    s->m_lastCursorShape = &cursor;
-    QEvent e(QEvent::Leave);
-    EXPECT_NO_FATAL_FAILURE(s->leaveEvent(&e));
-    while (qApp->overrideCursor()) qApp->restoreOverrideCursor();
+    QEnterEvent enter(QPointF(5, 5), QPointF(5, 5), QPointF(5, 5));
+    EXPECT_NO_FATAL_FAILURE(s->enterEvent(&enter));
+    while (qApp->overrideCursor())
+        qApp->restoreOverrideCursor();
+
+    QEvent leave(QEvent::Leave);
+    EXPECT_NO_FATAL_FAILURE(s->leaveEvent(&leave));
+    EXPECT_EQ(qApp->overrideCursor(), nullptr);
     EXPECT_NO_FATAL_FAILURE(delete s);
 }
 

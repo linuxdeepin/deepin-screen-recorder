@@ -25,24 +25,40 @@ public:
     {
     }
 
-    ~Slider() {}
+    ~Slider() override
+    {
+        restoreCursor();
+    }
+
 protected:
     void enterEvent(QEnterEvent *e) override
     {
-        m_lastCursorShape = qApp->overrideCursor();
-        qApp->setOverrideCursor(Qt::ArrowCursor);
+        // Never retain QApplication::overrideCursor()'s pointer: the override
+        // stack can be changed by sibling widgets, leaving that pointer
+        // dangling. Pair the temporary arrow cursor with a restore instead.
+        if (!m_cursorOverridden && qApp) {
+            qApp->setOverrideCursor(Qt::ArrowCursor);
+            m_cursorOverridden = true;
+        }
         DSlider::enterEvent(e);
     }
 
     void leaveEvent(QEvent *e) override
     {
-        if (m_lastCursorShape)
-            qApp->setOverrideCursor(m_lastCursorShape->shape());
+        restoreCursor();
         DSlider::leaveEvent(e);
     }
 
 private:
+    void restoreCursor()
+    {
+        if (m_cursorOverridden && qApp) {
+            qApp->restoreOverrideCursor();
+            m_cursorOverridden = false;
+        }
+    }
+
     bool m_isMousePress = false;
-    QCursor *m_lastCursorShape = nullptr;
+    bool m_cursorOverridden = false;
 };
 #endif // SLIDER_H
