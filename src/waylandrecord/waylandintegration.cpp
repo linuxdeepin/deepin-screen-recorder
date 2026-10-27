@@ -960,7 +960,8 @@ void WaylandIntegration::WaylandIntegrationPrivate::gstWriteVideoFrame()
                 qWarning() << "m_gstRecordX is nullptr!";
             }
         } else {
-            //qDebug() << "视频缓冲区无数据！";
+            // Yield CPU briefly when frame queue is empty (1ms << 16ms frame interval)
+            QThread::msleep(1);
         }
     }
     //等待wayland视频环形队列中的视频帧，全部写入管道
