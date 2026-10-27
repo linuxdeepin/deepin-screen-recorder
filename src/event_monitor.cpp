@@ -217,8 +217,10 @@ void EventMonitor::ButtonPressEvent(int type, int x, int y, QString str)
 {
     Q_UNUSED(str);
     // Button1为鼠标左键，Button3为鼠标右键
-    if (type == Button1 || type == Button3)
+    if (type == Button1 || type == Button3) {
+        isPress = true;
         emit mousePress(x, y);
+    }
     //Debug()<<"=====ButtonPressEvent=====";
 }
 
@@ -226,13 +228,19 @@ void EventMonitor::ButtonReleaseEvent(int type, int x, int y, QString str)
 {
     Q_UNUSED(str);
     // Button1为鼠标左键，Button3为鼠标右键
-    if (type == Button1 || type == Button3)
+    if (type == Button1 || type == Button3) {
+        isPress = false;
         emit mouseRelease(x, y);
+    }
     //qDebug()<<"=====ButtonReleaseEvent=====";
 }
 //  Wayland下全局鼠标移动事件通过Dbus信号接收
 void EventMonitor::CursorMoveEvent(int x, int y, QString str)
 {
     Q_UNUSED(str);
-    emit mouseMove(x, y);
+    if (isPress) {
+        emit mouseDrag(x, y);
+    } else {
+        emit mouseMove(x, y);
+    }
 }
