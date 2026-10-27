@@ -353,17 +353,21 @@ int main(int argc, char *argv[])
             }
 
             DApplication *application = app.data();
+            bool sessionFailed = false;
             QObject::connect(session, &Dsr::Screenshot::ScreenshotSessionController::saved,
                              application, [](const QString &path) {
                                  qInfo() << "Screenshot session result:" << path;
                              });
             QObject::connect(session, &Dsr::Screenshot::ScreenshotSessionController::failed,
-                             application, [application](const QString &error) {
+                             application, [&sessionFailed](const QString &error) {
                                  qCritical() << "Screenshot session failed:" << error;
-                                 QTimer::singleShot(0, application, &QCoreApplication::quit);
+                                 sessionFailed = true;
                              });
             QObject::connect(session, &Dsr::Screenshot::ScreenshotSessionController::finished,
-                             application, &QCoreApplication::quit,
+                             application,
+                             [application, &sessionFailed]() {
+                                 application->exit(sessionFailed ? 1 : 0);
+                             },
                              Qt::QueuedConnection);
             if (!session->start(request)) {
                 qCritical() << "Screenshot session is already active";

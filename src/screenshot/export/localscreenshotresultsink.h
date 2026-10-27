@@ -18,7 +18,8 @@ public:
     bool save(const Result &result,
               const QString &requestedPath,
               QString *savedPath,
-              QString *error) override;
+              QString *error,
+              bool *cancelled = nullptr) override;
     bool copy(const Result &result, QString *error) override;
 
 signals:
@@ -28,8 +29,6 @@ private slots:
     void onClipboardDataComing(const QByteArray &data);
 
 private:
-    QString resolvedPath(const QString &requestedPath) const;
-
     bool m_clipboardSignalConnected = false;
 };
 
