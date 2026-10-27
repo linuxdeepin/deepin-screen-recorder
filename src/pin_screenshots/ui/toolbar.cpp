@@ -1,5 +1,5 @@
 // Copyright (C) 2020 ~ 2021 Uniontech Software Technology Co., Ltd.
-// SPDX-FileCopyrightText: 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2022-2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -49,6 +49,7 @@ void ToolBar::initToolBar(DWidget *parent)
     }
     DPlatformWindowHandle handle(m_btWidget);
     handle.setEnableBlurWindow(true);
+    handle.setWindowRadius(30);
     //初始化保存按钮
     m_saveButton = new DPushButton(m_btWidget);
 
