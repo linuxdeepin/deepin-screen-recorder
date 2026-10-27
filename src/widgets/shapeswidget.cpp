@@ -811,6 +811,7 @@ bool ShapesWidget::clickedOnArrow(QList<QPointF> points, QPointF pos)
         m_isSelected = true;
         m_isRotated = true;
         m_isArrowRotated = false;
+        m_clickedKey = First;
         m_resizeDirection = Left;
         m_pressedPoint = pos;
         return true;
@@ -819,6 +820,7 @@ bool ShapesWidget::clickedOnArrow(QList<QPointF> points, QPointF pos)
         m_isSelected = true;
         m_isRotated = true;
         m_isArrowRotated = false;
+        m_clickedKey = Second;
         m_resizeDirection = Right;
         m_pressedPoint = pos;
         return true;
@@ -826,6 +828,7 @@ bool ShapesWidget::clickedOnArrow(QList<QPointF> points, QPointF pos)
         qCDebug(dsrApp) << "Clicked on arrow line.";
         m_isSelected = true;
         m_isRotated = false;
+        m_clickedKey = Unknow;
         m_resizeDirection = Moving;
         m_pressedPoint = pos;
         return true;
@@ -835,6 +838,7 @@ bool ShapesWidget::clickedOnArrow(QList<QPointF> points, QPointF pos)
         m_isRotated = false;
         m_isResize = false;
         m_isArrowRotated = false;
+        m_clickedKey = Unknow;
         m_resizeDirection = Outting;
         m_pressedPoint = pos;
         return false;
@@ -2364,56 +2368,56 @@ void ShapesWidget::mouseMoveEvent(QMouseEvent *e)
                     //悬停状态时，根据悬停的位置不同，光标的形状也不同
                     if (m_resizeDirection == Left) {
                         if (m_isSelected || m_isRotated) {
-                            qApp->setOverrideCursor(Qt::SizeHorCursor);
+                            applyOverrideCursor(Qt::SizeHorCursor);
                         } else {
-                            qApp->setOverrideCursor(Qt::ClosedHandCursor);
+                            applyOverrideCursor(Qt::ClosedHandCursor);
                         }
                     } else if (m_resizeDirection == Top) {
                         if (m_isSelected || m_isRotated) {
-                            qApp->setOverrideCursor(Qt::SizeVerCursor);
+                            applyOverrideCursor(Qt::SizeVerCursor);
                         } else {
-                            qApp->setOverrideCursor(Qt::ClosedHandCursor);
+                            applyOverrideCursor(Qt::ClosedHandCursor);
                         }
                     } else if (m_resizeDirection == Right) {
                         if (m_isSelected || m_isRotated) {
-                            qApp->setOverrideCursor(Qt::SizeHorCursor);
+                            applyOverrideCursor(Qt::SizeHorCursor);
                         } else {
-                            qApp->setOverrideCursor(Qt::ClosedHandCursor);
+                            applyOverrideCursor(Qt::ClosedHandCursor);
                         }
                     } else if (m_resizeDirection == Bottom) {
                         if (m_isSelected || m_isRotated) {
-                            qApp->setOverrideCursor(Qt::SizeVerCursor);
+                            applyOverrideCursor(Qt::SizeVerCursor);
                         } else {
-                            qApp->setOverrideCursor(Qt::ClosedHandCursor);
+                            applyOverrideCursor(Qt::ClosedHandCursor);
                         }
                     } else if (m_resizeDirection == TopLeft) {
                         if (m_isSelected || m_isRotated) {
-                            qApp->setOverrideCursor(Qt::SizeFDiagCursor);
+                            applyOverrideCursor(Qt::SizeFDiagCursor);
                         } else {
-                            qApp->setOverrideCursor(Qt::ClosedHandCursor);
+                            applyOverrideCursor(Qt::ClosedHandCursor);
                         }
                     } else if (m_resizeDirection == BottomLeft) {
                         if (m_isSelected || m_isRotated) {
-                            qApp->setOverrideCursor(Qt::SizeBDiagCursor);
+                            applyOverrideCursor(Qt::SizeBDiagCursor);
                         } else {
-                            qApp->setOverrideCursor(Qt::ClosedHandCursor);
+                            applyOverrideCursor(Qt::ClosedHandCursor);
                         }
                     } else if (m_resizeDirection == TopRight) {
                         if (m_isSelected || m_isRotated) {
-                            qApp->setOverrideCursor(Qt::SizeBDiagCursor);
+                            applyOverrideCursor(Qt::SizeBDiagCursor);
                         } else {
-                            qApp->setOverrideCursor(Qt::ClosedHandCursor);
+                            applyOverrideCursor(Qt::ClosedHandCursor);
                         }
                     } else if (m_resizeDirection == BottomRight) {
                         if (m_isSelected || m_isRotated) {
-                            qApp->setOverrideCursor(Qt::SizeFDiagCursor);
+                            applyOverrideCursor(Qt::SizeFDiagCursor);
                         } else {
-                            qApp->setOverrideCursor(Qt::ClosedHandCursor);
+                            applyOverrideCursor(Qt::ClosedHandCursor);
                         }
                     } else if (m_resizeDirection == Rotate) {
-                        qApp->setOverrideCursor(BaseUtils::setCursorShape("rotate"));
+                        applyOverrideCursor(BaseUtils::setCursorShape("rotate"));
                     } else if (m_resizeDirection == Moving) {
-                        qApp->setOverrideCursor(Qt::ClosedHandCursor);
+                        applyOverrideCursor(Qt::ClosedHandCursor);
                     } else {
                         updateCursorShape();
                     }
@@ -3016,7 +3020,7 @@ void ShapesWidget::enterEvent(QEvent *e)
 {
     Q_UNUSED(e);
     if (m_currentType == "pen") {
-        qApp->setOverrideCursor(BaseUtils::setCursorShape("pen",  BaseUtils::colorIndex(m_penColor)));
+        applyOverrideCursor(BaseUtils::setCursorShape("pen",  BaseUtils::colorIndex(m_penColor)));
     } else if (m_currentType == "effect") {
         int isOval = ConfigSettings::instance()->getValue("effect", "isOval").toInt();
         QCursor setCursorValue;
@@ -3027,9 +3031,9 @@ void ShapesWidget::enterEvent(QEvent *e)
         } else {
             setCursorValue = BaseUtils::setCursorShape("pen", 0);
         }
-        qApp->setOverrideCursor(setCursorValue);
+        applyOverrideCursor(setCursorValue);
     } else {
-        qApp->setOverrideCursor(BaseUtils::setCursorShape(m_currentType));
+        applyOverrideCursor(BaseUtils::setCursorShape(m_currentType));
     }
 }
 
@@ -3317,6 +3321,24 @@ void ShapesWidget::setShiftKeyPressed(bool isShift)
     m_isShiftPressed = isShift;
 }
 
+void ShapesWidget::setCursorManagementEnabled(bool enabled)
+{
+    m_cursorManagementEnabled = enabled;
+}
+
+void ShapesWidget::applyOverrideCursor(const QCursor &cursor)
+{
+    if (!m_cursorManagementEnabled)
+        return;
+
+    const QCursor *currentOverride = qApp->overrideCursor();
+    if (currentOverride == nullptr) {
+        qApp->setOverrideCursor(cursor);
+    } else if (*currentOverride != cursor) {
+        qApp->changeOverrideCursor(cursor);
+    }
+}
+
 void ShapesWidget::updateCursorShape()
 {
 //    qDebug() << "func" << __FUNCTION__ << "line" << __LINE__;
@@ -3344,10 +3366,7 @@ void ShapesWidget::updateCursorShape()
         // 避免相同的光标样式重复设置
         // qApp->overrideCursor() 在未设置任何 override cursor 时返回 nullptr，
         // 直接解引用会段错误，需先判空。
-        const QCursor *currentOverride = qApp->overrideCursor();
-        if (currentOverride == nullptr || *currentOverride != setCursorValue) {
-            qApp->changeOverrideCursor(setCursorValue);
-        }
+        applyOverrideCursor(setCursorValue);
     }
 }
 
