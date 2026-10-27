@@ -61,9 +61,11 @@ private:
     void onBackendPrepared(const FrozenFrameSet &frames);
     void onBackendFailed(const QString &reason);
     void onOverlayReady();
+    void onOverlayFailed(const QString &reason);
     void onPointerPressed(const QPoint &globalPos);
     void onPointerMoved(const QPoint &globalPos);
     void onPointerReleased(const QPoint &globalPos);
+    void onMaskWindowRoleCreated(QWindow *window);
     void onSnapRegionChanged(const QRect &globalRegion);
     void onConfirmRequested();
     void onCopyRequested();
@@ -103,7 +105,11 @@ private:
     bool m_pressed = false;
     bool m_dragged = false;
     bool m_pressStartedEmpty = false;
+    bool m_snapTagsPrepared = false;
     bool m_snapStarted = false;
+    int m_expectedSnapMaskCount = 0;
+    int m_taggedSnapMaskCount = 0;
+    QString m_snapMaskTagError;
     bool m_finished = false;
 };
 

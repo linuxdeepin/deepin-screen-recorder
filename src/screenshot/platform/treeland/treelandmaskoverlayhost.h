@@ -27,6 +27,7 @@ public:
     IAnnotationEditor *annotationEditor() const override;
     QList<QWindow *> maskWindows() const override;
     void setFrozenFrames(const FrozenFrameSet &frames) override;
+    bool prepare() override;
     void show() override;
     void setSelection(const QRect &globalSelection) override;
     void setSnapHint(const QRect &globalRegion) override;
@@ -37,10 +38,11 @@ public:
 private:
     friend class TreelandToolBarHost;
 
-    TreelandMaskWindow *toolbarWindow() const;
+    TreelandMaskWindow *selectionOwnerWindow() const;
     void ensureToolBar();
     void updateToolBar();
     void handleToolChanged(const QString &tool);
+    void checkInputReady();
     void undoAnnotation();
     void destroyWindows();
 
@@ -52,6 +54,9 @@ private:
     QRect m_selection;
     bool m_finalized = false;
     bool m_annotationToolActive = false;
+    bool m_prepared = false;
+    bool m_inputReadyPending = false;
+    int m_inputReadyChecks = 0;
 };
 
 } // namespace Dsr::Screenshot

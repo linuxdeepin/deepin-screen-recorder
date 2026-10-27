@@ -220,32 +220,48 @@ bool TreelandSnapSession::registerWindow(QWindow *window, QString *error)
         return false;
     }
 
-    if (!m_windows.contains(window))
-        m_windows.append(window);
-
     if (!m_initialized) {
         if (error)
             *error = QStringLiteral("Treeland snap 会话尚未就绪");
         return false;
     }
+    if (window->isExposed()) {
+        if (error)
+            *error = QStringLiteral("已 expose 的窗口不能设置 snap-mask tag");
+        return false;
+    }
 
-    tagWindow(window);
     if (!getXdgToplevel(window)) {
         if (error)
             *error = QStringLiteral("无法获取 xdg_toplevel，Mask 窗口未成功创建");
         return false;
     }
+
+    if (m_windows.contains(window))
+        return true;
+    if (!tagWindow(window)) {
+        if (error)
+            *error = QStringLiteral("无法设置 TreeLand snap-mask tag");
+        return false;
+    }
+    m_windows.append(window);
     return true;
 }
 
 bool TreelandSnapSession::start(QString *error)
 {
-    m_startRequested = true;
     if (!m_initialized) {
         if (error)
             *error = QStringLiteral("Treeland snap 会话尚未就绪");
         return false;
     }
+    if (m_windows.isEmpty()) {
+        if (error)
+            *error = QStringLiteral("没有已注册的 Mask 窗口");
+        return false;
+    }
+
+    m_startRequested = true;
     if (!m_started) {
         m_started = true;
         m_snap.start(m_seat, TREELAND_SNAP_TARGET_V1_EVENT_TYPE_PIDFD);
@@ -280,8 +296,8 @@ void TreelandSnapSession::maybeInitialize()
         return;
 
     for (const QPointer<QWindow> &window : m_windows) {
-        if (window)
-            tagWindow(window);
+        if (window && !tagWindow(window))
+            qWarning() << "Treeland snap: failed to tag a previously registered mask window";
     }
 
     m_initialized = true;
@@ -290,15 +306,20 @@ void TreelandSnapSession::maybeInitialize()
         start(nullptr);
 }
 
-void TreelandSnapSession::tagWindow(QWindow *window)
+bool TreelandSnapSession::tagWindow(QWindow *window)
 {
+    if (!window || window->isExposed()) {
+        qWarning() << "Treeland snap: refusing to tag an already-exposed mask window";
+        return false;
+    }
     auto *toplevel = getXdgToplevel(window);
     if (!toplevel) {
         qWarning() << "Treeland snap: xdg_toplevel is not available for mask window";
-        return;
+        return false;
     }
     m_tagManager.set_toplevel_tag(toplevel, SnapMaskTag);
-    qCInfo(dsrApp) << "Treeland snap: mask tag set after the overlay is mapped";
+    qCInfo(dsrApp) << "Treeland snap: mask tag set before the overlay is mapped";
+    return true;
 }
 
 void TreelandSnapSession::onSnapRegion(int x, int y, quint32 width, quint32 height)

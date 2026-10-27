@@ -57,9 +57,9 @@ protected:
 /**
  * Process-wide treeland_snap_target_v1 session.
  *
- * Treeland exposes one snap object per client, shared by all mask windows.
- * The first version creates one mask window, but the interface already keeps
- * the per-window registration shape needed for a later multi-output host.
+ * Treeland exposes one snap object per client, shared by all per-output mask
+ * windows. Every mask must be tagged before it is mapped; tagging an already
+ * active toplevel moves it between compositor containers and is unsafe.
  */
 class TreelandSnapSession : public QObject
 {
@@ -83,7 +83,7 @@ signals:
 
 private:
     void maybeInitialize();
-    void tagWindow(QWindow *window);
+    bool tagWindow(QWindow *window);
     void onSnapRegion(int x, int y, quint32 width, quint32 height);
     void onFailed(quint32 reason);
     void setProcessName(const QString &name);
