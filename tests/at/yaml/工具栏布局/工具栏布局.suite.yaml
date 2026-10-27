@@ -1,0 +1,43 @@
+name: 工具栏布局_suite
+app: deepin-screen-recorder
+module: 工具栏布局
+setup:
+- action: session_start
+  command: bash -lc 'xdotool key --clearmodifiers ctrl+alt+a; sleep 1.2; xdotool mousemove
+    320 220 mousedown 1; sleep 0.1; xdotool mousemove 920 620 mouseup 1; sleep 1.0'
+  wait: 3.0
+suites:
+- id: suite_工具栏布局_001_s1
+  name: 框选后工具栏关闭确认按钮和微调提示面板显示
+  description: ''
+  steps: []
+  assert_steps:
+  - step_type: assert
+    action: assert_element
+    selector:
+      accessible_id: CloseButton
+  - step_type: assert
+    action: assert_element
+    selector:
+      accessible_id: ConfirmButton
+  - step_type: assert
+    action: assert_element
+    selector:
+      accessible_id: FineAdjustTips
+- id: suite_工具栏布局_002_s1
+  name: 工具栏落入选区内侧贴底边显示与冲突顺移
+  description: ''
+  steps:
+  - step_type: action
+    action: screenshot
+  assert_steps:
+  - step_type: assert
+    action: assert_element
+    selector:
+      accessible_id: CloseButton
+  - step_type: assert
+    action: assert_element
+    selector:
+      accessible_id: ConfirmButton
+teardown:
+- action: session_stop

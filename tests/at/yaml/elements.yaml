@@ -1,0 +1,45 @@
+elements:
+  RoundedCornerButton:
+    accessible_id: RoundedCornerButton
+  SizeRatioButton:
+    accessible_id: SizeRatioButton
+  CornerRadiusSlider:
+    accessible_id: CornerRadiusSlider
+  CornerRadiusSpinBox:
+    accessible_id: CornerRadiusSpinBox
+  SizeRatioModeButton:
+    accessible_id: SizeRatioModeButton
+  SelectionWidthEdit:
+    accessible_id: SelectionWidthEdit
+  SelectionHeightEdit:
+    accessible_id: SelectionHeightEdit
+  RatioLockButton:
+    accessible_id: RatioLockButton
+  CloseButton:
+    accessible_id: CloseButton
+  ConfirmButton:
+    accessible_id: ConfirmButton
+  FineAdjustTips:
+    accessible_id: FineAdjustTips
+  GioButton:
+    accessible_id: GioButton
+  LineButton:
+    accessible_id: LineButton
+  PenButton:
+    accessible_id: PenButton
+  TextButton:
+    accessible_id: TextButton
+  ScrollShotButton:
+    accessible_id: ScrollShotButton
+  OcrButton:
+    accessible_id: OcrButton
+  ShotOptionButton:
+    accessible_id: ShotOptionButton
+  save_local_button:
+    accessible_id: save_local_button
+  RecorderButton:
+    accessible_id: RecorderButton
+  CancelButton:
+    accessible_id: CancelButton
+  SaveMenu:
+    accessible_id: SaveMenu
