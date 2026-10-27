@@ -17,7 +17,7 @@ class TextEdit : public DPlainTextEdit
 {
     Q_OBJECT
 public:
-    TextEdit(int index, DWidget *parent);
+    TextEdit(int index, QWidget *parent);
     ~TextEdit();
 
 public slots:

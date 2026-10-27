@@ -76,6 +76,28 @@ QRectF toolshapeContentBounds(const Toolshape &shape)
     return bounds.adjusted(-padding, -padding, padding, padding);
 }
 
+QImage effectAnnotationImage(const QImage &source, bool blur, int radius)
+{
+    if (source.isNull())
+        return QImage();
+
+    const int safeRadius = qMax(1, radius);
+    const QSize targetSize = source.size();
+    const QSize reducedSize(qMax(1, targetSize.width() / safeRadius),
+                            qMax(1, targetSize.height() / safeRadius));
+    QImage reduced = source.scaled(reducedSize,
+                                   Qt::IgnoreAspectRatio,
+                                   Qt::SmoothTransformation);
+    if (blur) {
+        return reduced.scaled(targetSize,
+                              Qt::IgnoreAspectRatio,
+                              Qt::SmoothTransformation);
+    }
+    return reduced.scaled(targetSize,
+                          Qt::IgnoreAspectRatio,
+                          Qt::FastTransformation);
+}
+
 //Toolshape::~Toolshape()
 //{
 //}

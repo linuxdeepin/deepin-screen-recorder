@@ -16,6 +16,7 @@
 #include <QPainterPath>
 #include <QDebug>
 #include <QGestureEvent>
+#include <QFontMetricsF>
 #include <QIntValidator>
 #include <QLineEdit>
 #include <QTimer>
@@ -235,11 +236,33 @@ void ShapesWidget::updateSelectedShape(const QString &group,
             }
 
         } else if (group == "text" && m_selectedShape.type == group && key == "fontsize")  {
-            qCDebug(dsrApp, ) << "change font size";
-            int tmpIndex = m_shapes[m_selectedOrder].index;
-            if (m_editMap.contains(tmpIndex)) {
-                m_editMap.value(tmpIndex)->setFontSize(index);
-                m_editMap.value(tmpIndex)->update();
+            const int tmpIndex = m_shapes[m_selectedOrder].index;
+            if (TextEdit *edit = m_editMap.value(tmpIndex, nullptr)) {
+                edit->setFontSize(index);
+                edit->update();
+            } else if (isTreeLandMode()
+                       && !m_selectedShape.text.isEmpty()
+                       && m_selectedShape.mainPoints.size() >= 4) {
+                const int fontSize = qMax(1, index);
+                m_selectedShape.fontSize = fontSize;
+                m_shapes[m_selectedOrder].fontSize = fontSize;
+                // TreeLand deletes the temporary inline editor after commit.
+                // Recompute the committed text box here so the selection border,
+                // content bounds and exported image all follow the new font size.
+                QFont font;
+                font.setPixelSize(fontSize);
+                const QFontMetricsF metrics(font);
+                const QStringList lines = m_selectedShape.text.split(QLatin1Char('\n'));
+                qreal textWidth = 0.0;
+                for (const QString &line : lines)
+                    textWidth = qMax(textWidth, metrics.horizontalAdvance(line));
+                const qreal width = std::ceil(textWidth + 12.0);
+                const qreal height = std::ceil(metrics.lineSpacing()
+                                               * qMax(1, lines.size()) + 12.0);
+                const QPointF topLeft = m_selectedShape.mainPoints[0];
+                m_selectedShape.mainPoints[1] = topLeft + QPointF(0.0, height);
+                m_selectedShape.mainPoints[2] = topLeft + QPointF(width, 0.0);
+                m_selectedShape.mainPoints[3] = topLeft + QPointF(width, height);
             }
         } else if (group != "text" && m_selectedShape.type == group && key == "color_index") {
             m_selectedShape.colorIndex = index;
@@ -317,12 +340,23 @@ void ShapesWidget::setCurrentShape(QString shapeType)
     }
 }
 
+void ShapesWidget::setEffectSourceImage(const QImage &image)
+{
+    m_effectSourceImage = image;
+    m_blurEffectPixmaps.clear();
+    m_mosaicEffectPixmaps.clear();
+    update();
+}
+
 void ShapesWidget::resetForTextToolSwitch()
 {
     // 切换到 text 时仍保留上一个图形的选中态，
     // 导致第一次点击先“清选中”，第二次点击才进入文本创建。
     // 这里在工具切换时清理选中态，保证首次点击直接进入文本输入。
-    clearSelected();
+    // 工具栏同步“已选中文字”也会切到 text；此时必须保留文字选中态，
+    // 否则紧接着的拖拽会被中断。
+    if (!isTreeLandMode() || m_selectedShape.type != "text")
+        clearSelected();
     m_isRotated = false;
     m_isResize = false;
     m_clickedKey = Unknow;
@@ -1381,7 +1415,13 @@ ShapesWidget::InteractionHit ShapesWidget::interactionAt(const QPointF &pos) con
         if (shape.type == "text") {
             if (shape.mainPoints.size() >= 4
                     && QRectF(shape.mainPoints[0], shape.mainPoints[3]).contains(pos)) {
-                return {InteractionKind::TextEditor, InteractionHandle::None};
+                // TreeLand hosts inline editing in a separate widget, so a
+                // committed text annotation is moved as a whole there.
+                // X11 keeps its legacy explicit TextEditor hit.
+                return {isTreeLandMode()
+                        ? InteractionKind::Move
+                        : InteractionKind::TextEditor,
+                        InteractionHandle::None};
             }
             continue;
         }
@@ -1401,7 +1441,9 @@ bool ShapesWidget::beginInteraction(const QPointF &pos)
                 || m_currentType == "arrow"
                 || m_currentType == "line"
                 || m_currentType == "pen"
-                || m_currentType == "effect";
+                || m_currentType == "effect"
+                || (isTreeLandMode()
+                    && (m_currentType == "sequence" || m_currentType == "text"));
         if (!canCreate)
             return false;
 
@@ -1423,6 +1465,57 @@ bool ShapesWidget::beginInteraction(const QPointF &pos)
 
         m_currentIndex = ++m_shapesIndex;
         m_currentShape.index = m_currentIndex;
+        if (isTreeLandMode() && m_currentType == "sequence") {
+            // Sequence is a single-click tool, so it is committed before the
+            // release event instead of waiting for a non-empty drag rectangle.
+            placeSequenceAt(pos);
+            m_currentShape = Toolshape();
+            m_isRecording = false;
+            update();
+            emit shapesChanged();
+            // Even at the 99-item limit the click belongs to the annotation
+            // tool; returning false would hand the same press to selection.
+            return true;
+        }
+        if (isTreeLandMode() && m_currentType == "text") {
+            const QString placeholder = tr("Input text here");
+            const int fontSize = qMax(1, ConfigSettings::instance()
+                                             ->getValue("text", "fontsize").toInt());
+            QFont font;
+            font.setPixelSize(fontSize);
+            const QFontMetricsF metrics(font);
+            const QSizeF initialSize(metrics.horizontalAdvance(placeholder) + 14.0,
+                                     metrics.height() + 12.0);
+            m_currentShape.text = placeholder;
+            m_currentShape.fontSize = fontSize;
+            m_currentShape.mainPoints = getMainPoints(pos, pos, false);
+            m_currentShape.mainPoints[0] = pos;
+            m_currentShape.mainPoints[1] = pos + QPointF(0, initialSize.height());
+            m_currentShape.mainPoints[2] = pos + QPointF(initialSize.width(), 0);
+            m_currentShape.mainPoints[3] = pos + QPointF(initialSize.width(), initialSize.height());
+            m_shapes.append(m_currentShape);
+            m_selectedIndex = m_currentShape.index;
+            m_selectedOrder = m_shapes.size() - 1;
+            m_selectedShape = m_currentShape;
+            m_isSelected = true;
+            m_isRecording = false;
+
+            m_pendingInlineEdit = InlineEditRequest();
+            m_pendingInlineEdit.kind = InlineEditKind::Text;
+            m_pendingInlineEdit.shapeIndex = m_currentShape.index;
+            m_pendingInlineEdit.localRect = QRectF(m_currentShape.mainPoints[0],
+                                                    m_currentShape.mainPoints[3]).normalized();
+            m_pendingInlineEdit.text = placeholder;
+            m_pendingInlineEdit.foregroundColor =
+                    BaseUtils::colorIndexOf(m_currentShape.colorIndex);
+            m_pendingInlineEdit.fontSize = fontSize;
+            m_pendingInlineEdit.selectAll = true;
+            m_pendingInlineEdit.isNew = true;
+            m_hasPendingInlineEdit = true;
+            update();
+            emit shapesChanged();
+            return true;
+        }
         m_pos1 = pos;
         m_pos2 = pos;
         if (m_currentType == "arrow" || m_currentType == "line"
@@ -1567,6 +1660,155 @@ void ShapesWidget::cancelInteraction()
     m_interactionOrder = -1;
     m_interactionBackup = Toolshape();
     m_isPressed = false;
+    update();
+    emit shapesChanged();
+}
+
+bool ShapesWidget::takePendingInlineEdit(InlineEditRequest *request)
+{
+    if (!m_hasPendingInlineEdit) {
+        return false;
+    }
+    if (request) {
+        *request = m_pendingInlineEdit;
+    }
+    m_pendingInlineEdit = InlineEditRequest();
+    m_hasPendingInlineEdit = false;
+    return true;
+}
+
+bool ShapesWidget::beginInlineEditAt(const QPointF &pos, InlineEditRequest *request)
+{
+    for (int i = m_shapes.size() - 1; i >= 0; --i) {
+        const Toolshape &shape = m_shapes[i];
+        if (shape.mainPoints.size() < 4) {
+            continue;
+        }
+        const QRectF shapeRect(shape.mainPoints[0], shape.mainPoints[3]);
+        if (!shapeRect.contains(pos)) {
+            continue;
+        }
+
+        clickedOnShapes(pos);
+        InlineEditRequest result;
+        result.shapeIndex = shape.index;
+        result.localRect = shapeRect.normalized();
+        result.selectAll = true;
+        result.isNew = false;
+        if (shape.type == "text") {
+            result.kind = InlineEditKind::Text;
+            result.text = shape.text;
+            result.foregroundColor = BaseUtils::colorIndexOf(shape.colorIndex);
+            result.fontSize = qMax(1, shape.fontSize);
+        } else if (shape.type == "sequence") {
+            int sequenceCount = 0;
+            for (const Toolshape &item : m_shapes) {
+                if (item.type == "sequence") {
+                    ++sequenceCount;
+                }
+            }
+            const int sequenceOrder = sequenceOrderForIndex(shape.index);
+            if (sequenceOrder < 0)
+                continue;
+            result.kind = InlineEditKind::Sequence;
+            result.text = QString::number(shape.sequenceNumber);
+            result.foregroundColor = isLightSequenceColor(shape.colorIndex)
+                    ? QColor(Qt::black) : QColor(Qt::white);
+            result.fontSize = qMax(8, qRound(shapeRect.height() * 0.54));
+            result.minValue = sequenceNumberBeforeOrder(sequenceOrder) + 1;
+            result.maxValue = SEQUENCE_MAX_NUMBER - (sequenceCount - 1 - sequenceOrder);
+        } else {
+            continue;
+        }
+        if (request) {
+            *request = result;
+        }
+        return true;
+    }
+    return false;
+}
+
+void ShapesWidget::updateInlineText(int shapeIndex, const QString &text, const QRectF &localRect)
+{
+    const QRectF rect = localRect.normalized();
+    for (int i = 0; i < m_shapes.size(); ++i) {
+        Toolshape &shape = m_shapes[i];
+        if (shape.type != "text" || shape.index != shapeIndex) {
+            continue;
+        }
+        shape.text = text;
+        shape.mainPoints[0] = rect.topLeft();
+        shape.mainPoints[1] = rect.bottomLeft();
+        shape.mainPoints[2] = rect.topRight();
+        shape.mainPoints[3] = rect.bottomRight();
+        if (m_selectedIndex == shapeIndex) {
+            m_selectedShape = shape;
+            m_selectedOrder = i;
+        }
+        update();
+        emit shapesChanged();
+        return;
+    }
+}
+
+void ShapesWidget::finishInlineText(int shapeIndex)
+{
+    for (int i = 0; i < m_shapes.size(); ++i) {
+        Toolshape &shape = m_shapes[i];
+        if (shape.type != "text" || shape.index != shapeIndex) {
+            continue;
+        }
+        const bool removeShape = shape.text.isEmpty()
+                || shape.text == tr("Input text here");
+        if (removeShape) {
+            m_shapes.removeAt(i);
+            if (m_selectedIndex == shapeIndex) {
+                clearSelected();
+                m_selectedIndex = -1;
+                m_selectedOrder = -1;
+                m_selectedShape = Toolshape();
+            }
+        }
+        if (m_editMap.contains(shapeIndex)) {
+            delete m_editMap.take(shapeIndex);
+        }
+        update();
+        emit shapesChanged();
+        if (m_shapes.isEmpty()) {
+            emit setShapesUndo(false);
+        }
+        return;
+    }
+}
+
+bool ShapesWidget::updateInlineSequence(int shapeIndex, int sequenceNumber)
+{
+    int sequenceCount = 0;
+    for (const Toolshape &shape : m_shapes) {
+        if (shape.type != "sequence") {
+            continue;
+        }
+        ++sequenceCount;
+    }
+    const int sequenceOrder = sequenceOrderForIndex(shapeIndex);
+    if (sequenceOrder < 0)
+        return false;
+    const int minValue = sequenceNumberBeforeOrder(sequenceOrder) + 1;
+    const int maxValue = SEQUENCE_MAX_NUMBER - (sequenceCount - 1 - sequenceOrder);
+    if (sequenceNumber < minValue || sequenceNumber > maxValue) {
+        return false;
+    }
+    renumberSequenceFrom(sequenceOrder, sequenceNumber);
+    update();
+    emit shapesChanged();
+    return true;
+}
+
+void ShapesWidget::setInlineEditingShape(int shapeIndex)
+{
+    if (m_inlineEditingShape == shapeIndex)
+        return;
+    m_inlineEditingShape = shapeIndex;
     update();
     emit shapesChanged();
 }
@@ -2635,12 +2877,12 @@ void ShapesWidget::paintRect(QPainter &painter, FourPoints rectFPoints, int inde
     //    using namespace utils;
     if (isBlur) {
         painter.setClipPath(rectPath);
-        painter.drawPixmap(0, 0,  width(), height(),  TempFile::instance()->getBlurPixmap(radius));
+        painter.drawPixmap(0, 0, width(), height(), effectPixmap(true, radius));
         painter.drawPath(rectPath);
     }
     if (isMosaic) {
         painter.setClipPath(rectPath);
-        painter.drawPixmap(0, 0,  width(), height(),  TempFile::instance()->getMosaicPixmap(radius));
+        painter.drawPixmap(0, 0, width(), height(), effectPixmap(false, radius));
         painter.drawPath(rectPath);
     }
     painter.setClipping(false);
@@ -2686,15 +2928,34 @@ void ShapesWidget::paintEllipse(QPainter &painter, FourPoints ellipseFPoints, in
     //    using namespace utils;
     if (isBlur) {
         painter.setClipPath(ellipsePath);
-        painter.drawPixmap(0, 0,  width(), height(),  TempFile::instance()->getBlurPixmap(radius));
+        painter.drawPixmap(0, 0, width(), height(), effectPixmap(true, radius));
         painter.drawPath(ellipsePath);
     }
     if (isMosaic) {
         painter.setClipPath(ellipsePath);
-        painter.drawPixmap(0, 0,  width(), height(),  TempFile::instance()->getMosaicPixmap(radius));
+        painter.drawPixmap(0, 0, width(), height(), effectPixmap(false, radius));
         painter.drawPath(ellipsePath);
     }
     painter.setClipping(false);
+}
+
+QPixmap ShapesWidget::effectPixmap(bool blur, int radius) const
+{
+    if (m_effectSourceImage.isNull()) {
+        return blur ? TempFile::instance()->getBlurPixmap(radius)
+                    : TempFile::instance()->getMosaicPixmap(radius);
+    }
+
+    QHash<int, QPixmap> &cache = blur ? m_blurEffectPixmaps
+                                      : m_mosaicEffectPixmaps;
+    const auto cached = cache.constFind(radius);
+    if (cached != cache.cend())
+        return cached.value();
+
+    const QPixmap pixmap = QPixmap::fromImage(
+            effectAnnotationImage(m_effectSourceImage, blur, radius));
+    cache.insert(radius, pixmap);
+    return pixmap;
 }
 
 void ShapesWidget::paintArrow(QPainter &painter, QList<QPointF> lineFPoints,
@@ -2745,7 +3006,8 @@ void ShapesWidget::paintEffectLine(QPainter &painter, QList<QPointF> lineFPoints
 
     for (int k = 1; k < lineFPoints.length() - 1; k++) {
         FourPoints rectFoints = getRectPoints(lineFPoints[k - 1], lineFPoints[k + 1], lineWidth);
-        paintRect(painter, rectFoints, 0, Drawing, isMosaic, !isMosaic, radius);
+        paintRect(painter, rectFoints, -1, Drawing,
+                  isMosaic, !isMosaic, radius);
         //paintRect(painter, rectFoints, 0, Hovered, false, false, radius);
     }
 }
@@ -2789,11 +3051,18 @@ void ShapesWidget::paintEvent(QPaintEvent *)
 
 void ShapesWidget::paintContent(QPainter &painter) const
 {
+    paintContent(painter, -1);
+}
+
+void ShapesWidget::paintContent(QPainter &painter, int excludedShapeIndex) const
+{
     painter.setRenderHints(QPainter::Antialiasing);
     QPen pen;
     // Only committed annotations are final content. Current drawing, hover,
     // selection frames, rotate points and resize handles are editor-only.
     for (int i = 0; i < m_shapes.length(); i++) {
+        if (m_shapes[i].index == excludedShapeIndex)
+            continue;
         pen.setColor(BaseUtils::colorIndexOf(m_shapes[i].colorIndex));
         pen.setWidthF(m_shapes[i].lineWidth - 0.5);
 
@@ -2808,10 +3077,15 @@ void ShapesWidget::paintContent(QPainter &painter) const
         } else if (m_shapes[i].type == "effect") {
             pen.setJoinStyle(Qt::MiterJoin);
             painter.setPen(pen);
+            const int effectIndex = isTreeLandMode() ? -1 : i;
             if (m_shapes[i].isOval == 0) {
-                paintEllipse(painter, m_shapes[i].mainPoints, i, Drawing, m_shapes[i].isBlur, !m_shapes[i].isBlur, m_shapes[i].radius);
+                paintEllipse(painter, m_shapes[i].mainPoints, effectIndex,
+                             Drawing, m_shapes[i].isBlur,
+                             !m_shapes[i].isBlur, m_shapes[i].radius);
             } else if (m_shapes[i].isOval == 1) {
-                paintRect(painter, m_shapes[i].mainPoints, i, Drawing, m_shapes[i].isBlur, !m_shapes[i].isBlur, m_shapes[i].radius);
+                paintRect(painter, m_shapes[i].mainPoints, effectIndex,
+                          Drawing, m_shapes[i].isBlur,
+                          !m_shapes[i].isBlur, m_shapes[i].radius);
             } else {
                 pen.setJoinStyle(Qt::RoundJoin);
                 painter.setPen(pen);
@@ -2831,14 +3105,21 @@ void ShapesWidget::paintContent(QPainter &painter) const
             paintLine(painter, m_shapes[i].points);
         } else if (m_shapes[i].type == "text") {
             const TextEdit *edit = m_editMap.value(m_shapes[i].index);
-            if (!edit)
+            if (!isTreeLandMode() && !edit)
                 continue;
-            const QString text = edit->toPlainText();
+            const QString text = isTreeLandMode()
+                    ? m_shapes[i].text
+                    : edit->toPlainText();
             if (text.isEmpty() || text == tr("Input text here"))
                 continue;
             const int fontSize = m_shapes[i].fontSize > 1
                     ? m_shapes[i].fontSize
-                    : qMax(1, edit->font().pixelSize());
+                    : (edit ? qMax(1, edit->font().pixelSize()) : 1);
+            if (isTreeLandMode()) {
+                // TreeLand paints committed text without a live TextEdit.
+                // Set the annotation color explicitly for both editor and export.
+                painter.setPen(pen);
+            }
             paintText(painter, m_shapes[i].mainPoints, text, fontSize);
         } else if (m_shapes[i].type == "sequence") {
             paintSequence(painter, m_shapes[i].mainPoints, m_shapes[i].sequenceNumber, m_shapes[i].colorIndex);
@@ -2904,8 +3185,24 @@ void ShapesWidget::paintInProgressShape(QPainter &painter) const
 
 void ShapesWidget::paintEditingContent(QPainter &painter) const
 {
-    paintContent(painter);
+    // A visible platform inline editor owns the text/number rendering while
+    // it is active. Keep the logical shape in the document for bounds and
+    // export, but avoid painting a second copy underneath the real editor.
+    paintContent(painter, m_inlineEditingShape);
     paintInProgressShape(painter);
+
+    // TreeLand hosts the real inline editor in a sibling widget. Draw the
+    // legacy canvas's dashed editing frame underneath it so text input has the
+    // same visible bounds as X11.
+    if (m_inlineEditingShape >= 0) {
+        for (const Toolshape &shape : m_shapes) {
+            if (shape.type == "text" && shape.index == m_inlineEditingShape
+                    && shape.mainPoints.size() >= 4) {
+                paintText(painter, shape.mainPoints);
+                break;
+            }
+        }
+    }
 
     QPen pen;
 
@@ -2962,7 +3259,11 @@ void ShapesWidget::paintEditingContent(QPainter &painter) const
                                                  m_selectedShape.mainPoints[2],
                                                  m_selectedShape.mainPoints[3]);
 
-            if (m_selectedShape.type == "oval" || m_selectedShape.type == "pen" || (m_selectedShape.type == "effect" && m_selectedShape.isOval == 2)) {
+            if (m_selectedShape.type == "oval"
+                    || m_selectedShape.type == "pen"
+                    || (isTreeLandMode() && m_selectedShape.type == "effect")
+                    || (m_selectedShape.type == "effect"
+                        && m_selectedShape.isOval == 2)) {
                 pen.setJoinStyle(Qt::MiterJoin);
                 pen.setWidth(1);
                 pen.setColor(QColor("#01bdff"));
@@ -2990,6 +3291,11 @@ void ShapesWidget::paintEditingContent(QPainter &painter) const
                 paintImgPoint(painter, anotherFPoints[j], resizePointImg);
             }
         }
+    } else if (m_textSelectionFrameEnabled
+               && m_selectedShape.type == "text"
+               && m_selectedIndex != m_inlineEditingShape
+               && m_selectedShape.mainPoints.size() >= 4) {
+        paintText(painter, m_selectedShape.mainPoints);
     }
 }
 
@@ -3321,9 +3627,27 @@ void ShapesWidget::setShiftKeyPressed(bool isShift)
     m_isShiftPressed = isShift;
 }
 
+void ShapesWidget::setInteractionPlatform(InteractionPlatform platform)
+{
+    m_interactionPlatform = platform;
+}
+
+bool ShapesWidget::isTreeLandMode() const
+{
+    return m_interactionPlatform == InteractionPlatform::TreeLand;
+}
+
 void ShapesWidget::setCursorManagementEnabled(bool enabled)
 {
     m_cursorManagementEnabled = enabled;
+}
+
+void ShapesWidget::setTextSelectionFrameEnabled(bool enabled)
+{
+    if (m_textSelectionFrameEnabled == enabled)
+        return;
+    m_textSelectionFrameEnabled = enabled;
+    update();
 }
 
 void ShapesWidget::applyOverrideCursor(const QCursor &cursor)
@@ -3395,6 +3719,19 @@ int ShapesWidget::sequenceCount()
     return count;
 }
 
+int ShapesWidget::sequenceOrderForIndex(int shapeIndex) const
+{
+    int order = 0;
+    for (const Toolshape &shape : m_shapes) {
+        if (shape.type != "sequence")
+            continue;
+        if (shape.index == shapeIndex)
+            return order;
+        ++order;
+    }
+    return -1;
+}
+
 int ShapesWidget::sequenceNumberBeforeOrder(int order)
 {
     if (order <= 0) {
@@ -3423,6 +3760,30 @@ int ShapesWidget::sequenceNextNumber()
         }
     }
     return lastNumber + 1;
+}
+
+bool ShapesWidget::placeSequenceAt(const QPointF &pos)
+{
+    const int sequenceNumber = sequenceNextNumber();
+    if (sequenceNumber > SEQUENCE_MAX_NUMBER) {
+        updateSequencePreview(pos);
+        showSequenceLimitTips(pos);
+        return false;
+    }
+
+    const int tier = qBound(0,
+                            ConfigSettings::instance()->getValue("sequence", "line_width").toInt(),
+                            2);
+    const qreal half = SEQUENCE_DIAMETER(tier) / 2.0;
+    m_currentShape.index = m_currentIndex;
+    m_currentShape.sequenceNumber = sequenceNumber;
+    m_currentShape.mainPoints[0] = QPointF(pos.x() - half, pos.y() - half);
+    m_currentShape.mainPoints[1] = QPointF(pos.x() - half, pos.y() + half);
+    m_currentShape.mainPoints[2] = QPointF(pos.x() + half, pos.y() - half);
+    m_currentShape.mainPoints[3] = QPointF(pos.x() + half, pos.y() + half);
+    m_shapes.append(m_currentShape);
+    updateSequencePreview(pos);
+    return true;
 }
 
 void ShapesWidget::renumberSequenceFrom(int startOrder, int firstNumber)

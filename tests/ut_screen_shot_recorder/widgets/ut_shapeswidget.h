@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2022-2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -576,6 +576,40 @@ TEST_F(ShapesWidgetTest, updateSelectedShape)
     delete textEdit0;
     delete textEdit1;
     delete textEdit2;
+}
+
+TEST_F(ShapesWidgetTest, updateSelectedTextFontSizeUpdatesCommittedGeometry)
+{
+    Toolshape textShape;
+    textShape.type = QStringLiteral("text");
+    textShape.index = 7;
+    textShape.text = QStringLiteral("fontsize-test");
+    textShape.fontSize = 9;
+    textShape.mainPoints = {
+        QPointF(100, 100),
+        QPointF(100, 125),
+        QPointF(180, 100),
+        QPointF(180, 125)
+    };
+
+    access_private_field::ShapesWidgetm_shapes(*shapesWidget) = {textShape};
+    shapesWidget->setInteractionPlatform(ShapesWidget::InteractionPlatform::TreeLand);
+    access_private_field::ShapesWidgetm_selectedShape(*shapesWidget) = textShape;
+    access_private_field::ShapesWidgetm_selectedIndex(*shapesWidget) = textShape.index;
+    access_private_field::ShapesWidgetm_selectedOrder(*shapesWidget) = 0;
+    shapesWidget->m_editMap.clear();
+    shapesWidget->m_isSelectedText = false;
+
+    shapesWidget->updateSelectedShape(QStringLiteral("text"),
+                                      QStringLiteral("fontsize"),
+                                      96);
+
+    const Toolshape &updated = access_private_field::ShapesWidgetm_shapes(*shapesWidget).at(0);
+    EXPECT_EQ(updated.fontSize, 96);
+    EXPECT_EQ(updated.mainPoints.at(0), QPointF(100, 100));
+    EXPECT_GT(updated.mainPoints.at(3).x(), 180);
+    EXPECT_GT(updated.mainPoints.at(3).y(), 125);
+    EXPECT_EQ(access_private_field::ShapesWidgetm_selectedShape(*shapesWidget).fontSize, 96);
 }
 
 TEST_F(ShapesWidgetTest, setCurrentShape)
