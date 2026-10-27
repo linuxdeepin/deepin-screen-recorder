@@ -5349,11 +5349,10 @@ bool MainWindow::saveAction(const QPixmap &pix)
         m_ocrInterface->openImageAndName(pix.toImage(), tempFileName);
         // m_ocrInterface->openFile(m_saveFileName);
     }
-    // 只有真正保存成功后才记住位置：写入 save_dir，并把「保存时更新位置」固化为该位置。
+    // 只有真正保存成功后才记住位置：写入 save_dir，保持「保存时更新位置」模式不变。
     // 保存失败时不写配置，保持 save_dir_change=true，下次仍然弹出位置选择框。
     if (!pendingSpecificSaveDir.isEmpty()) {
         ConfigSettings::instance()->setValue("shot", "save_dir", pendingSpecificSaveDir);
-        ConfigSettings::instance()->setValue("shot", "save_dir_change", false);
     }
     return true;
 }
