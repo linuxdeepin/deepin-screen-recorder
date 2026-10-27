@@ -4955,7 +4955,7 @@ bool MainWindow::saveAction(const QPixmap &pix)
                             break;
                     }
 
-             if (Utils::isWaylandMode) {
+             if (Utils::isWaylandMode || Utils::isTreelandMode) {
                         this->show();
                 }
 
@@ -5099,7 +5099,7 @@ bool MainWindow::saveAction(const QPixmap &pix)
                         break;
                 }
 
-                if (Utils::isWaylandMode) {
+                if (Utils::isWaylandMode || Utils::isTreelandMode) {
                     this->show();
                 }
 
