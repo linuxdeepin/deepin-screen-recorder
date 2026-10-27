@@ -39,13 +39,10 @@ ScreenGrabber::ScreenGrabber(QObject *parent)
 }
 
 // 调用 KWin ScreenShot2 的指定方法并读取共享内存文件中的原生帧。
-// leadingArgs 为方法在 options/fd 之前的参数（如 CaptureOutput 的屏幕名）
+// leadingArgs 为方法在 options/fd 之前的参数（如 CaptureScreen 的屏幕名）
 static QPixmap callScreenShot2(const QString &method, const QVariantList &leadingArgs, bool &ok)
 {
     ok = false;
-    QDBusInterface ss2(QStringLiteral("org.kde.KWin"),
-                       QStringLiteral("/org/kde/KWin/ScreenShot2"),
-                       QStringLiteral("org.kde.KWin.ScreenShot2"));
 
     QVariantMap options;
     options.insert(QStringLiteral("include-cursor"), false);
@@ -63,7 +60,15 @@ static QPixmap callScreenShot2(const QString &method, const QVariantList &leadin
     args << QVariant::fromValue(options)
          << QVariant::fromValue(QDBusUnixFileDescriptor(tmpFile.handle()));
 
-    QDBusReply<QVariantMap> reply = ss2.call(method, args);
+    // 注意：不能用 QDBusInterface::call(method, args)——它没有 QVariantList 重载，
+    // 整个参数列表会被当作单个 av 参数发出，kwin 报 No such method (signature 'av')。
+    // 必须用 QDBusMessage::setArguments 逐个编组（CaptureActiveScreen 为 a{sv},h）。
+    QDBusMessage msg = QDBusMessage::createMethodCall(
+                           QStringLiteral("org.kde.KWin"),
+                           QStringLiteral("/org/kde/KWin/ScreenShot2"),
+                           QStringLiteral("org.kde.KWin.ScreenShot2"), method);
+    msg.setArguments(args);
+    QDBusReply<QVariantMap> reply = QDBusConnection::sessionBus().call(msg);
     if (!reply.isValid()) {
         qWarning() << method << "failed:" << reply.error().message();
         return QPixmap();
@@ -108,6 +113,8 @@ static QPixmap callScreenShot2(const QString &method, const QVariantList &leadin
 
     QImage img(reinterpret_cast<const uchar *>(buffer.constData()), width, height, stride,
                QImage::Format_ARGB32);
+    // 注意：必须置 ok=true，否则调用方会把抓到的原生帧当作失败丢弃、回落旧接口
+    ok = true;
     return QPixmap::fromImage(img.copy());
 }
 
@@ -186,10 +193,10 @@ static QPixmap grabNativeDesktop(bool &ok, qreal canvasScale)
     for (QScreen *screen : screens) {
         const QRect geometry = screen->geometry();
         bool screenOk = false;
-        const QPixmap native = callScreenShot2(QStringLiteral("CaptureOutput"),
+        const QPixmap native = callScreenShot2(QStringLiteral("CaptureScreen"),
                                                QVariantList{QVariant(screen->name())}, screenOk);
         if (!screenOk || native.isNull()) {
-            qWarning() << "CaptureOutput failed for screen" << screen->name();
+            qWarning() << "CaptureScreen failed for screen" << screen->name();
             break;
         }
         ++grabbedScreens;
@@ -260,19 +267,26 @@ QPixmap ScreenGrabber::grabEntireDesktop(bool &ok, const QRect &rect, const qrea
                 qDebug() << __FUNCTION__ << __LINE__ << "native framebuffer image" << res.size();
         }
         if (!nativeOk) {
-        res = grabFullscreenViaKWin(nativeOk);
-        if (!nativeOk) {
-            ok = false;
-            qDebug() << __FUNCTION__ << __LINE__ << "Get Pixmap:" << res.size() << "screenshotFullscreen try failed";
-            return QPixmap();
-        }
-        }
-        // kwin 分数缩放下 screenshotFullscreen 返回的是逻辑分辨率的图，
-        // 需先放大到物理桌面尺寸，再按物理坐标裁剪，避免分辨率不足
-        if (!nativeOk && !qFuzzyCompare(devicePixelRatio, qreal(qRound(devicePixelRatio)))) {
-            res = res.scaled(static_cast<int>(res.width() * devicePixelRatio),
-                             static_cast<int>(res.height() * devicePixelRatio),
-                             Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
+            bool fullOk = false;
+            res = grabFullscreenViaKWin(fullOk);
+            if (!fullOk) {
+                ok = false;
+                qDebug() << __FUNCTION__ << __LINE__ << "Get Pixmap:" << res.size() << "screenshotFullscreen try failed";
+                return QPixmap();
+            }
+            // kwin 缩放下 screenshotFullscreen 返回的是逻辑分辨率的图（分数缩放下还是原生帧的
+            // 左下角裁剪图），需先放大到物理桌面尺寸，再按物理坐标裁剪；
+            // 否则按物理坐标裁剪会越界，越界部分被填黑（保存图片黑底/内容偏左上角的根源）。
+            // 整数缩放同样需保证尺寸，否则坐标系不一致。
+            // 注意：这里不能用 nativeOk 判断——它已被 grabFullscreenViaKWin 覆写成 true
+            const QSize physicalSize(static_cast<int>(rect.width() * devicePixelRatio),
+                                     static_cast<int>(rect.height() * devicePixelRatio));
+            if (res.size() != physicalSize) {
+                qWarning() << __FUNCTION__ << __LINE__ << "fallback image" << res.size()
+                           << "scaled to physical size" << physicalSize;
+                res = res.scaled(physicalSize.width(), physicalSize.height(),
+                                 Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
+            }
         }
         return res.copy(recordRect);
     }
