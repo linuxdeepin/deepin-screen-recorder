@@ -321,7 +321,16 @@ void ScreenshotSessionController::onConfirmRequested()
 
     QString path;
     QString error;
-    if (!m_resultSink->save(result, m_request.outputPath, &path, &error)) {
+    bool cancelled = false;
+    if (!m_resultSink->save(result,
+                            m_request.outputPath,
+                            &path,
+                            &error,
+                            &cancelled)) {
+        if (cancelled) {
+            finish(State::Cancelled);
+            return;
+        }
         fail(error);
         return;
     }
