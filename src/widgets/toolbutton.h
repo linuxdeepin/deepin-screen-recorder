@@ -58,7 +58,7 @@ private:
     bool m_isOptionButton = false;
     bool m_isUndoButton = false;
     bool m_isMousePress = false;
-    QCursor *m_lastCursorShape = nullptr;
+    bool m_cursorOverridden = false;
     bool m_menuActive = false;
     
     // 红点角标

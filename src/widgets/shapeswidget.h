@@ -221,6 +221,7 @@ public slots:
      */
     void translateAllShapes(const QPointF &delta);
     void setShiftKeyPressed(bool isShift);
+    void setCursorManagementEnabled(bool enabled);
     void updateCursorShape();
     void menuSaveSlot();
     void menuCloseSlot();
@@ -315,6 +316,7 @@ private:
     void resetForTextToolSwitch();
     void clampSelectedShapeToCanvas();
     void paintInProgressShape(QPainter &painter) const;
+    void applyOverrideCursor(const QCursor &cursor);
 
     QPointF m_pos1 = QPointF(0, 0);
     QPointF m_pos2 = QPointF(0, 0);
@@ -423,6 +425,7 @@ private:
     Toolshape m_interactionBackup;
 
     bool m_isUnDo = false;
+    bool m_cursorManagementEnabled = true;
 
     // 序号标注相关
     QWidget *m_sequencePreview = nullptr; // 下一编号超过 99 时跟随光标的禁用角标（自绘）

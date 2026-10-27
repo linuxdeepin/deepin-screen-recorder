@@ -6,10 +6,13 @@
 #include <gtest/gtest.h>
 #include <QPointF>
 #include <QList>
+#include "addr_pri.h"
 #include "../../src/utils/shapesutils.h"
 #include "../../src/widgets/shapeswidget.h"
 
 using namespace testing;
+
+ACCESS_PRIVATE_FIELD(ShapesWidget, ShapesWidget::ClickedKey, m_clickedKey);
 
 // 这些 are 纯几何命中检测辅助函数（clickedOn*/hoverOn*/rotateOnPoint 等），
 // 入参为 FourPoints / QList<QPointF> / QPointF，返回 bool，可直接在 ShapesWidget 实例上调用。
@@ -103,9 +106,13 @@ TEST_F(ShapesWidgetGeoTest, clickedOnArrow_branches)
     EXPECT_FALSE(m_w->clickedOnArrow(QList<QPointF>{QPointF(0, 0), QPointF(1, 1), QPointF(2, 2)}, QPointF(1, 1)));
     // 起点 / 终点 / 线上 / 未命中
     EXPECT_TRUE(m_w->clickedOnArrow(pts, QPointF(10, 10)));    // point0
+    EXPECT_EQ(access_private_field::ShapesWidgetm_clickedKey(*m_w), ShapesWidget::First);
     EXPECT_TRUE(m_w->clickedOnArrow(pts, QPointF(110, 110)));  // point1
+    EXPECT_EQ(access_private_field::ShapesWidgetm_clickedKey(*m_w), ShapesWidget::Second);
     EXPECT_TRUE(m_w->clickedOnArrow(pts, QPointF(60, 60)));    // 线上（y=x）
+    EXPECT_EQ(access_private_field::ShapesWidgetm_clickedKey(*m_w), ShapesWidget::Unknow);
     EXPECT_FALSE(m_w->clickedOnArrow(pts, QPointF(1000, 1000))); // 未命中
+    EXPECT_EQ(access_private_field::ShapesWidgetm_clickedKey(*m_w), ShapesWidget::Unknow);
 }
 
 // ---------------- clickedOnLine ----------------

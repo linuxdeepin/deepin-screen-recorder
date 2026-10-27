@@ -55,6 +55,9 @@ TreelandAnnotationEditor::TreelandAnnotationEditor(QObject *parent)
     m_documentWidget->setAttribute(Qt::WA_TransparentForMouseEvents, true);
     m_documentWidget->setAttribute(Qt::WA_TranslucentBackground, true);
     m_documentWidget->setAttribute(Qt::WA_NoSystemBackground, true);
+    // The TreeLand mask owns the visible cursor. The detached document is
+    // hidden and must never compete through QApplication::overrideCursor().
+    m_documentWidget->setCursorManagementEnabled(false);
 
     m_document = new ShapesWidgetAnnotationEditor(m_documentWidget, this);
     connect(m_document, &IAnnotationEditor::contentChanged, this, [this] {

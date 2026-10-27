@@ -240,11 +240,16 @@ TEST_F(ToolButtonExtTest, paintEventWithBackgroundPixmap)
     ToolButton::clearBackgroundPixmap();
 }
 
-TEST_F(ToolButtonExtTest, enterLeaveEventSafe)
+TEST_F(ToolButtonExtTest, enterLeaveEventRestoresOverrideCursor)
 {
-    // enterEvent/leaveEvent set/clear override cursor; safe in offscreen
+    while (qApp->overrideCursor())
+        qApp->restoreOverrideCursor();
+
     QEnterEvent enterEvent(QPointF(5, 5), QPointF(5, 5), QPointF(5, 5));
-    EXPECT_NO_FATAL_FAILURE(QCoreApplication::sendEvent(m_btn, &enterEvent));
+    QCoreApplication::sendEvent(m_btn, &enterEvent);
+    ASSERT_NE(qApp->overrideCursor(), nullptr);
+
     QEvent leaveEvent(QEvent::Leave);
-    EXPECT_NO_FATAL_FAILURE(QCoreApplication::sendEvent(m_btn, &leaveEvent));
+    QCoreApplication::sendEvent(m_btn, &leaveEvent);
+    EXPECT_EQ(qApp->overrideCursor(), nullptr);
 }

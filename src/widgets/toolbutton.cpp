@@ -49,7 +49,7 @@ ToolButton::ToolButton(QWidget *parent)
     , m_isOptionButton(false)
     , m_isUndoButton(false)
     , m_isMousePress(false)
-    , m_lastCursorShape(nullptr)
+    , m_cursorOverridden(false)
 {
     setCheckable(true);
     setFocusPolicy(Qt::NoFocus);
@@ -57,6 +57,8 @@ ToolButton::ToolButton(QWidget *parent)
 
 ToolButton::~ToolButton()
 {
+    if (m_cursorOverridden)
+        qApp->restoreOverrideCursor();
 }
 
 void ToolButton::setHoverState(const bool hasHover)
@@ -322,8 +324,10 @@ void ToolButton::paintEvent(QPaintEvent *event)
 
 void ToolButton::enterEvent(QEnterEvent *e)
 {
-    m_lastCursorShape = qApp->overrideCursor();
-    qApp->setOverrideCursor(Qt::ArrowCursor);
+    if (!m_cursorOverridden) {
+        qApp->setOverrideCursor(Qt::ArrowCursor);
+        m_cursorOverridden = true;
+    }
     if (this->isEnabled() && m_hasHoverState) {
         // setFlat(false);
     }
@@ -340,10 +344,11 @@ void ToolButton::leaveEvent(QEvent *e)
     }
     DToolButton::leaveEvent(e);
 
-    if (m_isMousePress) {
+    if (m_cursorOverridden) {
         qApp->restoreOverrideCursor();
-        m_isMousePress = false;
+        m_cursorOverridden = false;
     }
+    m_isMousePress = false;
 
     if (m_isUndoButton) {
         emit isInUndoBtn(false);
