@@ -27,6 +27,8 @@ void WriteFrameThread::run()
     while (m_context->isWriteVideo()) {
         if (m_context->getFrame(frame)) {
             m_context->m_recordAdmin->m_pOutputStream->writeVideoFrame(frame);
+        } else {
+            QThread::msleep(5);
         }
     }
     m_context->m_recordAdmin->m_cacheMutex.unlock();

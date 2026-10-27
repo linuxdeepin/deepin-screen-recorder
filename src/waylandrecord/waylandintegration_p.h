@@ -16,6 +16,7 @@
 #include <epoxy/gl.h>
 #include <QMutex>
 #include <EGL/egl.h>
+#include <cstring>
 
 enum audioType {
     //麦克风
@@ -214,6 +215,35 @@ private:
      * @brief appendRemoteBuffer 在线程中拷贝远程buffer（remoteaccess传过来的屏幕buffer）的数据
      */
     void appendRemoteBuffer();
+
+    static void copyImageRows(unsigned char *destination,
+                              const unsigned char *source,
+                              int rowBytes,
+                              int height,
+                              int sourceStride)
+    {
+        if (sourceStride == rowBytes) {
+            std::memcpy(destination, source, static_cast<size_t>(rowBytes) * height);
+            return;
+        }
+
+        for (int row = 0; row < height; ++row) {
+            std::memcpy(destination, source, static_cast<size_t>(rowBytes));
+            source += sourceStride;
+            destination += rowBytes;
+        }
+    }
+
+    static bool isScreenFrameReady(bool boardVendorType,
+                                   int screenCount,
+                                   bool firstScreenReady,
+                                   bool secondScreenReady,
+                                   int availableImageCount)
+    {
+        return boardVendorType
+               ? firstScreenReady && secondScreenReady
+               : availableImageCount == screenCount;
+    }
 public:
     /**
      * @ 内存由getFrame函数内部申请
@@ -366,5 +396,4 @@ private:
 }
 
 #endif // XDG_DESKTOP_PORTAL_KDE_WAYLAND_INTEGRATION_P_H
-
 
