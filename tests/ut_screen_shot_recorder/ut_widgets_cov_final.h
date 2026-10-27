@@ -64,15 +64,12 @@ ACCESS_PRIVATE_FUN(CameraWidget, void(), restartDevices);
 ACCESS_PRIVATE_FUN(ImageMenu, void(QPaintEvent *), paintEvent);
 ACCESS_PRIVATE_FUN(ActionWidget, void(QPaintEvent *), paintEvent);
 
-ACCESS_PRIVATE_FUN(Slider, void(QEvent *), leaveEvent);
-
 ACCESS_PRIVATE_FIELD(ShapesWidget, int, m_selectedIndex);
 ACCESS_PRIVATE_FIELD(ShapesWidget, int, m_selectedOrder);
 ACCESS_PRIVATE_FIELD(SideBar, bool, m_isPress);
 ACCESS_PRIVATE_FIELD(SideBar, MainWindow *, m_pMainWindow);
 ACCESS_PRIVATE_FIELD(CameraWidget, MajorImageProcessingThread *, m_imgPrcThread);
 ACCESS_PRIVATE_FIELD(ToolBarWidget, ToolButton *, m_closeButton);
-ACCESS_PRIVATE_FIELD(Slider, QCursor *, m_lastCursorShape);
 ACCESS_PRIVATE_FIELD(SubToolWidget, ToolButton *, m_cameraButton);
 ACCESS_PRIVATE_FIELD(SubToolWidget, ToolButton *, m_shotButton);
 ACCESS_PRIVATE_FIELD(SubToolWidget, ToolButton *, m_recorderButton);
@@ -245,14 +242,26 @@ TEST_F(SideBarWithMainCovFinalTest, SideBarWidgetPaintEvent)
     SUCCEED() << "SideBarWidget::paintEvent crashes in offscreen mode (DFloatingWidget blur rendering)";
 }
 
-TEST(SliderCovFinalTest, SliderLeaveAndDestructor)
+TEST(SliderCovFinalTest, SliderEnterLeaveRestoresCursorWithoutDanglingPointer)
 {
+    while (qApp->overrideCursor())
+        qApp->restoreOverrideCursor();
+
+    qApp->setOverrideCursor(Qt::IBeamCursor);
     Slider *s = new Slider(Qt::Horizontal);
-    QCursor cursor(Qt::ArrowCursor);
-    access_private_field::Sliderm_lastCursorShape(*s) = &cursor;
+    QEnterEvent enter(QPointF(5, 5), QPointF(5, 5), QPointF(5, 5));
+    EXPECT_NO_FATAL_FAILURE(qApp->sendEvent(s, &enter));
+    ASSERT_NE(qApp->overrideCursor(), nullptr);
+    EXPECT_EQ(qApp->overrideCursor()->shape(), Qt::ArrowCursor);
+
+    // Simulate another cursor owner clearing the override stack. The old
+    // implementation retained a pointer into this stack and crashed here.
+    while (qApp->overrideCursor())
+        qApp->restoreOverrideCursor();
+
     QEvent leave(QEvent::Leave);
-    EXPECT_NO_FATAL_FAILURE(call_private_fun::SliderleaveEvent(*s, &leave));
-    while (qApp->overrideCursor()) qApp->restoreOverrideCursor();
+    EXPECT_NO_FATAL_FAILURE(qApp->sendEvent(s, &leave));
+    EXPECT_EQ(qApp->overrideCursor(), nullptr);
     EXPECT_NO_FATAL_FAILURE(delete s);
 }
 

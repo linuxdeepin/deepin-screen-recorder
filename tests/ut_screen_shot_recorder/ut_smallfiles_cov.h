@@ -108,21 +108,26 @@ TEST(SliderCovTest, construct)
     delete s;
 }
 
-// Slider 析构函数（inline）与 enterEvent 覆盖。
-// 源码缺陷：leaveEvent 解引用 m_lastCursorShape->shape()，当 qApp->overrideCursor()
-// 为空时空指针解引用崩溃（leaveEvent 无空指针保护）。
-// 本用例仅覆盖 enterEvent 与析构函数，避免 leaveEvent 崩溃。
-TEST(SliderCovTest, enterEventAndDestructor)
+// Regression: the slider must not retain a pointer into QApplication's
+// override-cursor stack. Clearing the stack between enter and leave used to
+// leave a dangling pointer and crash in Slider::leaveEvent().
+TEST(SliderCovTest, enterLeaveAfterOverrideStackCleared)
 {
+    while (qApp->overrideCursor())
+        qApp->restoreOverrideCursor();
+
     qApp->setOverrideCursor(Qt::IBeamCursor);
     Slider *s = new Slider(nullptr);
     s->resize(50, 50);
     QEnterEvent enter(QPointF(5, 5), QPointF(5, 5), QPointF(5, 5));
     EXPECT_NO_FATAL_FAILURE(qApp->sendEvent(s, &enter));
-    EXPECT_NO_FATAL_FAILURE(delete s);
-    while (qApp->overrideCursor()) {
+    while (qApp->overrideCursor())
         qApp->restoreOverrideCursor();
-    }
+
+    QEvent leave(QEvent::Leave);
+    EXPECT_NO_FATAL_FAILURE(qApp->sendEvent(s, &leave));
+    EXPECT_EQ(qApp->overrideCursor(), nullptr);
+    delete s;
 }
 
 // ---------- utils_interface (3.1%) ----------
