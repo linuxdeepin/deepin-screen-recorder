@@ -10,10 +10,14 @@
 
 #include <QDebug>
 #include <QEventLoop>
+#include <QHash>
 #include <QScreen>
-#include <QTransform>
+#include <QSet>
 #include <QTimer>
+#include <QTransform>
 #include <wayland-client.h>
+
+#include <utility>
 
 namespace Dsr::Screenshot {
 
@@ -25,119 +29,210 @@ TreelandStillCapture::TreelandStillCapture(QObject *parent)
 
 TreelandStillCapture::~TreelandStillCapture() = default;
 
-QImage TreelandStillCapture::capture(QScreen *screen, QString *error)
+QList<TreelandStillCapture::CapturedOutput> TreelandStillCapture::capture(
+        const QList<QScreen *> &screens, QString *error)
 {
-    if (!screen) {
+    if (error)
+        error->clear();
+    if (screens.isEmpty()) {
         if (error)
             *error = QStringLiteral("没有可用的输出屏幕");
-        return QImage();
+        return {};
     }
     if (!waitForManager(error))
-        return QImage();
+        return {};
 
-    ExtCaptureSession *session = m_manager->createScreenCaptureSession(screen, false, false);
-    if (!session) {
-        if (error)
-            *error = QStringLiteral("创建 ext-image-copy-capture 会话失败");
-        return QImage();
-    }
+    constexpr int captureTimeoutMs = 3000;
+    QList<ExtCaptureSession *> sessions;
+    sessions.reserve(screens.size());
 
-    if (session->state() != ExtCaptureSession::Ready) {
-        QEventLoop readyLoop;
-        QTimer readyTimer;
-        readyTimer.setSingleShot(true);
-        QString sessionError;
-        connect(&readyTimer, &QTimer::timeout, &readyLoop, &QEventLoop::quit);
-        connect(session, &ExtCaptureSession::ready, &readyLoop, &QEventLoop::quit);
-        connect(session, &ExtCaptureSession::error, &readyLoop, [&](const QString &message) {
-            sessionError = message;
-            readyLoop.quit();
-        });
-        readyTimer.start(3000);
-        readyLoop.exec();
-
-        if (session->state() != ExtCaptureSession::Ready) {
-            if (error) {
-                *error = sessionError.isEmpty()
-                        ? QStringLiteral("等待截图协议约束超时")
-                        : sessionError;
-            }
+    auto stopSessions = [&sessions]() {
+        for (ExtCaptureSession *session : std::as_const(sessions)) {
             session->stop();
-            return QImage();
+            session->deleteLater();
         }
+    };
+
+    // Match the snap-target demo: create every output session before waiting
+    // for any individual session to become ready.
+    for (QScreen *screen : screens) {
+        ExtCaptureSession *session = m_manager->createScreenCaptureSession(screen, false, false);
+        if (!session) {
+            if (error) {
+                *error = QStringLiteral("为输出 %1 创建 ext-image-copy-capture 会话失败")
+                                 .arg(screen ? screen->name() : QStringLiteral("<null>"));
+            }
+            stopSessions();
+            return {};
+        }
+        sessions.append(session);
     }
 
-    QImage image;
-    QString frameError;
+    QSet<ExtCaptureSession *> pendingConstraints;
+    QEventLoop constraintsLoop;
+    QTimer constraintsTimer;
+    QString batchError;
+    constraintsTimer.setSingleShot(true);
+    connect(&constraintsTimer, &QTimer::timeout, &constraintsLoop, &QEventLoop::quit);
+
+    for (int i = 0; i < sessions.size(); ++i) {
+        ExtCaptureSession *session = sessions.at(i);
+        if (session->state() == ExtCaptureSession::Ready)
+            continue;
+        if (session->state() == ExtCaptureSession::Error
+                || session->state() == ExtCaptureSession::Stopped) {
+            batchError = QStringLiteral("输出 %1 截图会话未能就绪").arg(screens.at(i)->name());
+            break;
+        }
+
+        pendingConstraints.insert(session);
+        connect(session, &ExtCaptureSession::ready, &constraintsLoop, [&, session]() {
+            pendingConstraints.remove(session);
+            if (pendingConstraints.isEmpty())
+                constraintsLoop.quit();
+        });
+        connect(session, &ExtCaptureSession::error, &constraintsLoop,
+                [&, i](const QString &message) {
+                    if (batchError.isEmpty()) {
+                        batchError = QStringLiteral("输出 %1 截图会话准备失败：%2")
+                                             .arg(screens.at(i)->name(), message);
+                    }
+                    constraintsLoop.quit();
+                });
+    }
+
+    if (batchError.isEmpty() && !pendingConstraints.isEmpty()) {
+        constraintsTimer.start(captureTimeoutMs);
+        constraintsLoop.exec();
+    }
+
+    if (batchError.isEmpty() && !pendingConstraints.isEmpty())
+        batchError = QStringLiteral("等待多屏截图协议约束超时");
+    if (!batchError.isEmpty()) {
+        if (error)
+            *error = batchError;
+        stopSessions();
+        return {};
+    }
+
+    QSet<ExtCaptureSession *> pendingFrames;
+    QHash<ExtCaptureSession *, QImage> images;
+    QHash<ExtCaptureSession *, quint64> timestamps;
     QEventLoop frameLoop;
     QTimer frameTimer;
     frameTimer.setSingleShot(true);
     connect(&frameTimer, &QTimer::timeout, &frameLoop, &QEventLoop::quit);
-    connect(session, &ExtCaptureSession::frameReady, &frameLoop, [&](ExtCaptureFrame *frame) {
-        if (!frame || frame->isDmaBuffer()) {
-            frameError = QStringLiteral("静态截图收到了不支持的 DMA-BUF 帧");
-            frameLoop.quit();
-            return;
+
+    for (int i = 0; i < sessions.size(); ++i) {
+        ExtCaptureSession *session = sessions.at(i);
+        pendingFrames.insert(session);
+        connect(session, &ExtCaptureSession::frameReady, &frameLoop,
+                [&, session, i](ExtCaptureFrame *frame) {
+                    QString imageError;
+                    const QImage image = imageFromFrame(frame, &imageError);
+                    if (image.isNull()) {
+                        if (batchError.isEmpty()) {
+                            batchError = QStringLiteral("抓取输出 %1 失败：%2")
+                                                 .arg(screens.at(i)->name(), imageError);
+                        }
+                        frameLoop.quit();
+                        return;
+                    }
+
+                    images.insert(session, image);
+                    timestamps.insert(session, frame->timestamp());
+                    pendingFrames.remove(session);
+                    if (pendingFrames.isEmpty())
+                        frameLoop.quit();
+                });
+        connect(session, &ExtCaptureSession::error, &frameLoop,
+                [&, i](const QString &message) {
+                    if (batchError.isEmpty()) {
+                        batchError = QStringLiteral("抓取输出 %1 失败：%2")
+                                             .arg(screens.at(i)->name(), message);
+                    }
+                    frameLoop.quit();
+                });
+    }
+
+    // All frame requests are submitted before the loop waits for any of them.
+    for (int i = 0; i < sessions.size() && batchError.isEmpty(); ++i) {
+        ExtCaptureFrame *frame = sessions.at(i)->createFrame();
+        if (!frame) {
+            batchError = QStringLiteral("输出 %1 创建截图帧失败").arg(screens.at(i)->name());
+            break;
         }
-
-        const FrameData &data = frame->frameData();
-        const QImage::Format format = imageFormatForShm(data.format);
-        if (!data.data || data.dimensions.isEmpty() || format == QImage::Format_Invalid) {
-            frameError = QStringLiteral("截图帧格式无效：%1").arg(data.format);
-            frameLoop.quit();
-            return;
-        }
-
-        QImage wrapped(static_cast<const uchar *>(data.data),
-                       data.dimensions.width(),
-                       data.dimensions.height(),
-                       static_cast<int>(data.stride),
-                       format);
-        image = wrapped.copy();
-
-        switch (data.transform) {
-        case FrameTransform::Rotate90:
-            image = image.transformed(QTransform().rotate(90));
-            break;
-        case FrameTransform::Rotate180:
-            image = image.transformed(QTransform().rotate(180));
-            break;
-        case FrameTransform::Rotate270:
-            image = image.transformed(QTransform().rotate(270));
-            break;
-        default:
+        if (!frame->capture()) {
+            batchError = QStringLiteral("输出 %1 提交截图帧请求失败").arg(screens.at(i)->name());
             break;
         }
-        frameLoop.quit();
-    });
-    connect(session, &ExtCaptureSession::error, &frameLoop, [&](const QString &message) {
-        frameError = message;
-        frameLoop.quit();
-    });
+    }
 
-    frameTimer.start(3000);
-    ExtCaptureFrame *frame = session->createFrame();
+    if (batchError.isEmpty() && !pendingFrames.isEmpty()) {
+        frameTimer.start(captureTimeoutMs);
+        frameLoop.exec();
+    }
+    if (batchError.isEmpty() && !pendingFrames.isEmpty())
+        batchError = QStringLiteral("等待多屏截图帧超时");
+
+    if (!batchError.isEmpty()) {
+        if (error)
+            *error = batchError;
+        stopSessions();
+        return {};
+    }
+
+    QList<CapturedOutput> outputs;
+    outputs.reserve(screens.size());
+    for (int i = 0; i < screens.size(); ++i) {
+        ExtCaptureSession *session = sessions.at(i);
+        outputs.append({screens.at(i), images.value(session), timestamps.value(session)});
+    }
+
+    stopSessions();
+    return outputs;
+}
+
+QImage TreelandStillCapture::imageFromFrame(ExtCaptureFrame *frame, QString *error)
+{
     if (!frame) {
         if (error)
-            *error = QStringLiteral("创建 ext-image-copy-capture 帧失败");
-        session->stop();
-        return QImage();
+            *error = QStringLiteral("截图帧对象无效");
+        return {};
     }
-    if (!frame->capture()) {
+    if (frame->isDmaBuffer()) {
         if (error)
-            *error = frameError.isEmpty()
-                    ? QStringLiteral("提交 ext-image-copy-capture 抓帧请求失败")
-                    : frameError;
-        session->stop();
-        return QImage();
+            *error = QStringLiteral("静态截图收到了不支持的 DMA-BUF 帧");
+        return {};
     }
-    frameLoop.exec();
-    session->stop();
 
-    if (image.isNull() && error) {
-        *error = frameError.isEmpty()
-                ? QStringLiteral("等待截图帧超时")
-                : frameError;
+    const FrameData &data = frame->frameData();
+    const QImage::Format format = imageFormatForShm(data.format);
+    if (!data.data || data.dimensions.isEmpty() || format == QImage::Format_Invalid) {
+        if (error)
+            *error = QStringLiteral("截图帧格式无效：%1").arg(data.format);
+        return {};
+    }
+
+    QImage image(static_cast<const uchar *>(data.data),
+                 data.dimensions.width(),
+                 data.dimensions.height(),
+                 static_cast<int>(data.stride),
+                 format);
+    image = image.copy();
+
+    switch (data.transform) {
+    case FrameTransform::Rotate90:
+        image = image.transformed(QTransform().rotate(90));
+        break;
+    case FrameTransform::Rotate180:
+        image = image.transformed(QTransform().rotate(180));
+        break;
+    case FrameTransform::Rotate270:
+        image = image.transformed(QTransform().rotate(270));
+        break;
+    default:
+        break;
     }
     return image;
 }
