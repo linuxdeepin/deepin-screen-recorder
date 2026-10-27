@@ -39,6 +39,7 @@ private:
     friend class TreelandToolBarHost;
 
     TreelandMaskWindow *selectionOwnerWindow() const;
+    void ensureEffectSource();
     void ensureToolBar();
     void updateToolBar();
     void handleToolChanged(const QString &tool);
@@ -52,9 +53,11 @@ private:
     SideBar *m_sideBar = nullptr;
     ToolBarHost *m_toolBarHost = nullptr;
     QRect m_selection;
+    FrozenFrameSet m_frozenFrames;
     bool m_finalized = false;
     bool m_annotationToolActive = false;
     bool m_prepared = false;
+    bool m_effectSourceReady = false;
     bool m_inputReadyPending = false;
     int m_inputReadyChecks = 0;
 };

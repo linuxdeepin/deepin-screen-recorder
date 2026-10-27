@@ -43,6 +43,7 @@ signals:
     void pointerPressed(const QPoint &globalPos);
     void pointerMoved(const QPoint &globalPos);
     void pointerReleased(const QPoint &globalPos);
+    void pointerDoubleClicked(const QPoint &globalPos);
     void confirmRequested();
     void copyRequested();
     void cancelRequested();
@@ -53,6 +54,7 @@ protected:
     void mousePressEvent(QMouseEvent *event) override;
     void mouseMoveEvent(QMouseEvent *event) override;
     void mouseReleaseEvent(QMouseEvent *event) override;
+    void mouseDoubleClickEvent(QMouseEvent *event) override;
     void keyPressEvent(QKeyEvent *event) override;
     void closeEvent(QCloseEvent *event) override;
     void resizeEvent(QResizeEvent *event) override;

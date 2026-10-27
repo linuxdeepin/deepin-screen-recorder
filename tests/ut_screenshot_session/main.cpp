@@ -159,6 +159,7 @@ class FakeOverlay : public IScreenshotOverlayHost
 public:
     QList<OutputDescriptor> createdOutputs;
     QRect selection;
+    QRect snapHint;
     bool finalized = false;
     bool shown = false;
     bool closed = false;
@@ -214,8 +215,9 @@ public:
         selection = globalSelection;
     }
 
-    void setSnapHint(const QRect &) override
+    void setSnapHint(const QRect &globalRegion) override
     {
+        snapHint = globalRegion;
     }
 
     void setSelectionFinalized(bool value) override
@@ -258,6 +260,11 @@ public:
         emit copyRequested();
     }
 
+    void pin()
+    {
+        emit pinRequested();
+    }
+
     void cancel()
     {
         emit cancelRequested();
@@ -286,6 +293,11 @@ public:
     {
         return {};
     }
+
+    void setRegion(const QRect &region)
+    {
+        emit regionChanged(region);
+    }
 };
 
 class FakeWindowTagger : public IWindowTagger
@@ -304,6 +316,7 @@ class FakeResultSink : public IScreenshotResultSink
 public:
     int saveCount = 0;
     int copyCount = 0;
+    int pinCount = 0;
     QString requestedPath;
     Result lastResult;
     bool saveResult = true;
@@ -331,6 +344,13 @@ public:
     bool copy(const Result &result, QString *) override
     {
         ++copyCount;
+        lastResult = result;
+        return true;
+    }
+
+    bool pin(const Result &result, QString *) override
+    {
+        ++pinCount;
         lastResult = result;
         return true;
     }
@@ -372,6 +392,26 @@ private slots:
 
         Toolshape empty;
         QVERIFY(toolshapeContentBounds(empty).isEmpty());
+    }
+
+    void effectAnnotationImageProducesStableMosaicBlocks()
+    {
+        QImage source(64, 64, QImage::Format_ARGB32_Premultiplied);
+        source.fill(Qt::red);
+        QPainter painter(&source);
+        painter.fillRect(QRect(32, 0, 32, 64), Qt::blue);
+        painter.end();
+
+        const QImage mosaic = effectAnnotationImage(source, false, 16);
+
+        QCOMPARE(mosaic.size(), source.size());
+        QCOMPARE(mosaic.pixelColor(0, 0), mosaic.pixelColor(15, 15));
+        QCOMPARE(mosaic.pixelColor(48, 0), mosaic.pixelColor(63, 15));
+        QVERIFY(mosaic.pixelColor(0, 0) != mosaic.pixelColor(48, 0));
+
+        const QImage blur = effectAnnotationImage(source, true, 16);
+        QCOMPARE(blur.size(), source.size());
+        QVERIFY(blur.pixelColor(30, 32) != blur.pixelColor(34, 32));
     }
 
     void selectionShrinkCannotCropAnnotations()
@@ -443,6 +483,58 @@ private slots:
         QVERIFY(right.bottom);
         QVERIFY(!right.left);
         QVERIFY(right.right);
+    }
+
+    void secondOutputBottomOutlineReachesLastScreenPixel()
+    {
+        const QRect selection(1920, 580, 720, 500);
+        const QRect secondOutput(1920, 0, 1920, 1080);
+        const QList<QLineF> lines =
+                SelectionOverlayGeometry::strokedOutlineForOutput(
+                        selection, secondOutput, 2.0);
+
+        QCOMPARE(lines.size(), 4);
+        const QLineF bottom = lines.at(2);
+        QCOMPARE(bottom.p1(), QPointF(1, 1079));
+        QCOMPARE(bottom.p2(), QPointF(719, 1079));
+    }
+
+    void strokedOutlineKeepsOnePixelBorderOnScreenBottom()
+    {
+        const QRect selection(100, 600, 300, 480);
+        const QList<QLineF> lines =
+                SelectionOverlayGeometry::strokedOutlineForOutput(
+                        selection, QRect(0, 0, 1920, 1080), 1.0);
+
+        QCOMPARE(lines.size(), 4);
+        QCOMPARE(lines.at(2).p1().y(), 1079.5);
+        QCOMPARE(lines.at(2).p2().y(), 1079.5);
+    }
+
+    void crossOutputSnapTargetUsesDominantOutput()
+    {
+        const QList<QRect> outputs = {
+            QRect(0, 0, 1920, 1080),
+            QRect(1920, 0, 1920, 1080)
+        };
+        const QRect resolved = SelectionOverlayGeometry::snapRegionForOutputs(
+                QRect(1904, -10, 1952, 1085), outputs);
+
+        QCOMPARE(resolved, QRect(1920, 0, 1920, 1080));
+        QVERIFY(!resolved.intersects(outputs.first()));
+    }
+
+    void singleOutputSnapTargetKeepsWindowBounds()
+    {
+        const QList<QRect> outputs = {
+            QRect(0, 0, 1920, 1080),
+            QRect(1920, 0, 1920, 1080)
+        };
+        const QRect target(2100, 200, 720, 460);
+        const QRect resolved = SelectionOverlayGeometry::snapRegionForOutputs(
+                target, outputs);
+
+        QCOMPARE(resolved, target);
     }
 
     void multiScreenOutlineSupportsVerticalAndNegativeOutputs()
@@ -614,6 +706,33 @@ private slots:
 
         QCOMPARE(copiedSpy.count(), 1);
         QCOMPARE(sink->copyCount, 1);
+        QCOMPARE(controller.state(), ScreenshotSessionController::State::Completed);
+        QVERIFY(overlay->closed);
+    }
+
+    void controllerDrivesPinThroughPorts()
+    {
+        FakeBackend *backend = new FakeBackend;
+        backend->frames.virtualDesktopRect = QRect(0, 0, 800, 600);
+        backend->frames.outputs = {makeFrame(QRect(0, 0, 800, 600), Qt::cyan)};
+
+        auto *overlay = new FakeOverlay;
+        auto *sink = new FakeResultSink;
+        ScreenshotSessionController controller(backend,
+                                               overlay,
+                                               nullptr,
+                                               nullptr,
+                                               sink);
+
+        QVERIFY(controller.start(Request()));
+        overlay->press(QPoint(20, 30));
+        overlay->move(QPoint(220, 180));
+        overlay->release(QPoint(220, 180));
+        overlay->pin();
+
+        QCOMPARE(sink->pinCount, 1);
+        QVERIFY(sink->lastResult.isValid());
+        QCOMPARE(sink->lastResult.image.pixelColor(0, 0), QColor(Qt::cyan));
         QCOMPARE(controller.state(), ScreenshotSessionController::State::Completed);
         QVERIFY(overlay->closed);
     }
@@ -827,6 +946,31 @@ private slots:
 
         QCOMPARE(overlay->selection, backend->frames.virtualDesktopRect);
         QVERIFY(overlay->finalized);
+    }
+
+    void crossOutputCompositorSnapIsResolvedOnDominantOutput()
+    {
+        FakeBackend *backend = new FakeBackend;
+        backend->frames.virtualDesktopRect = QRect(0, 0, 3840, 1080);
+        backend->frames.outputs = {
+            makeFrame(QRect(0, 0, 1920, 1080), Qt::red),
+            makeFrame(QRect(1920, 0, 1920, 1080), Qt::blue)
+        };
+        auto *overlay = new FakeOverlay;
+        auto *snapHints = new FakeSnapHints;
+        auto *sink = new FakeResultSink;
+        ScreenshotSessionController controller(backend,
+                                               overlay,
+                                               snapHints,
+                                               nullptr,
+                                               sink);
+
+        Request request;
+        request.enableWindowSnap = false;
+        QVERIFY(controller.start(request));
+        snapHints->setRegion(QRect(1904, -10, 1952, 1085));
+
+        QCOMPARE(overlay->snapHint, QRect(1920, 0, 1920, 1080));
     }
 
     void overlayEditorPublishedDuringCreationIsBoundBeforeInput()

@@ -4,6 +4,8 @@
 
 #include "selectionoverlaygeometry.h"
 
+#include <QtGlobal>
+
 namespace Dsr::Screenshot::SelectionOverlayGeometry {
 
 namespace {
@@ -41,6 +43,69 @@ Outline outlineForOutput(const QRect &globalSelection,
     outline.right = selection.right() >= output.left()
             && selection.right() <= output.right();
     return outline;
+}
+
+QList<QLineF> strokedOutlineForOutput(const QRect &globalSelection,
+                                      const QRect &outputGeometry,
+                                      qreal strokeWidth)
+{
+    QList<QLineF> result;
+    const Outline outline = outlineForOutput(globalSelection, outputGeometry);
+    if (outline.localRect.isEmpty())
+        return result;
+
+    const qreal inset = qMax<qreal>(strokeWidth, 1.0) / 2.0;
+    const qreal left = outline.localRect.left();
+    const qreal top = outline.localRect.top();
+    const qreal rightExclusive = outline.localRect.right() + 1.0;
+    const qreal bottomExclusive = outline.localRect.bottom() + 1.0;
+    const qreal horizontalStart = outline.left ? left + inset : left;
+    const qreal horizontalEnd = outline.right ? rightExclusive - inset : rightExclusive;
+    const qreal verticalStart = outline.top ? top + inset : top;
+    const qreal verticalEnd = outline.bottom ? bottomExclusive - inset : bottomExclusive;
+
+    if (outline.top) {
+        result.append(QLineF(horizontalStart, top + inset,
+                             horizontalEnd, top + inset));
+    }
+    if (outline.right) {
+        result.append(QLineF(rightExclusive - inset, verticalStart,
+                             rightExclusive - inset, verticalEnd));
+    }
+    if (outline.bottom) {
+        result.append(QLineF(horizontalStart, bottomExclusive - inset,
+                             horizontalEnd, bottomExclusive - inset));
+    }
+    if (outline.left) {
+        result.append(QLineF(left + inset, verticalStart,
+                             left + inset, verticalEnd));
+    }
+    return result;
+}
+
+QRect snapRegionForOutputs(const QRect &globalRegion,
+                           const QList<QRect> &outputGeometries)
+{
+    const QRect region = normalizedNonEmpty(globalRegion);
+    if (region.isEmpty() || outputGeometries.isEmpty())
+        return region;
+
+    int intersectingOutputs = 0;
+    QRect singleOutput;
+    for (const QRect &geometry : outputGeometries) {
+        const QRect output = normalizedNonEmpty(geometry);
+        if (!region.intersects(output))
+            continue;
+        ++intersectingOutputs;
+        singleOutput = output;
+    }
+    if (intersectingOutputs == 0)
+        return region;
+    if (intersectingOutputs == 1)
+        return region.intersected(singleOutput);
+
+    const int owner = largestSelectionIntersectionIndex(region, outputGeometries);
+    return owner >= 0 ? normalizedNonEmpty(outputGeometries.at(owner)) : region;
 }
 
 QList<QPoint> handlesForOutput(const QRect &globalSelection,

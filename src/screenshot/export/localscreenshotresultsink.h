@@ -21,6 +21,7 @@ public:
               QString *error,
               bool *cancelled = nullptr) override;
     bool copy(const Result &result, QString *error) override;
+    bool pin(const Result &result, QString *error) override;
 
 signals:
     void clipboardDataComing();
@@ -30,6 +31,9 @@ private slots:
 
 private:
     bool m_clipboardSignalConnected = false;
+    bool m_clipboardReborned = false;
+    bool m_clipboardRebornSucceeded = false;
+    QString m_clipboardRebornError;
 };
 
 } // namespace Dsr::Screenshot

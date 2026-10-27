@@ -31,6 +31,7 @@ public:
                       QString *error,
                       bool *cancelled = nullptr) = 0;
     virtual bool copy(const Result &result, QString *error) = 0;
+    virtual bool pin(const Result &result, QString *error) = 0;
 };
 
 } // namespace Dsr::Screenshot

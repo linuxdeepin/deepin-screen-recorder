@@ -6,11 +6,10 @@
 #define SHAPES_WIDGET_ANNOTATION_EDITOR_H
 
 #include "../ports/iannotationeditor.h"
+#include "widgets/shapeswidget.h"
 
 #include <QPointer>
 #include <QRect>
-
-class ShapesWidget;
 
 namespace Dsr::Screenshot {
 
@@ -30,6 +29,7 @@ public:
 
     void setDesktopBounds(const QRect &globalDesktopBounds);
     void setGlobalOrigin(const QPoint &globalOrigin);
+    void setEffectSourceImage(const QImage &image);
     void setTool(AnnotationTool tool) override;
     AnnotationTool tool() const override;
 
@@ -41,6 +41,17 @@ public:
     void endInteraction() override;
     void cancelInteraction() override;
     void undo() override;
+
+    bool takePendingInlineEdit(ShapesWidget::InlineEditRequest *request);
+    bool beginInlineEditAt(const QPoint &globalPos,
+                           ShapesWidget::InlineEditRequest *request);
+    void updateInlineText(int shapeIndex,
+                          const QString &text,
+                          const QRectF &globalRect);
+    void finishInlineText(int shapeIndex);
+    bool updateInlineSequence(int shapeIndex, int sequenceNumber);
+    void setInlineEditingShape(int shapeIndex);
+
     void render(QPainter &painter,
                 const QRect &globalSelection,
                 qreal pixelScale) const override;

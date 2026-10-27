@@ -5,6 +5,7 @@
 #include "localscreenshotresultsink.h"
 
 #include "../../dbus_name.h"
+#include "../../dbusinterface/pinscreenshotsinterface.h"
 #include "../../utils/configsettings.h"
 #include "../../utils/saveutils.h"
 #include "../../widgets/imagemenu.h"
@@ -15,6 +16,7 @@
 #include <QCoreApplication>
 #include <QDateTime>
 #include <QDBusConnection>
+#include <QDBusMessage>
 #include <QDir>
 #include <QEventLoop>
 #include <QFileDialog>
@@ -360,6 +362,9 @@ bool LocalScreenshotResultSink::copy(const Result &result, QString *error)
     QEventLoop waitLoop;
     QTimer timeout;
     bool clipboardConfirmed = false;
+    m_clipboardReborned = false;
+    m_clipboardRebornSucceeded = false;
+    m_clipboardRebornError.clear();
     if (m_clipboardSignalConnected) {
         timeout.setSingleShot(true);
         connect(&timeout, &QTimer::timeout, &waitLoop, &QEventLoop::quit);
@@ -383,6 +388,14 @@ bool LocalScreenshotResultSink::copy(const Result &result, QString *error)
             }
             return false;
         }
+        if (!m_clipboardRebornSucceeded) {
+            if (error) {
+                *error = m_clipboardRebornError.isEmpty()
+                        ? QStringLiteral("剪贴板服务未能重新持有截图数据")
+                        : m_clipboardRebornError;
+            }
+            return false;
+        }
     } else {
         // 没有 clipboard loader 时给 Wayland 数据源至少一次事件循环，
         // 避免调用方立即退出导致刚设置的 MIME 数据被销毁。
@@ -392,9 +405,57 @@ bool LocalScreenshotResultSink::copy(const Result &result, QString *error)
     return true;
 }
 
+bool LocalScreenshotResultSink::pin(const Result &result, QString *error)
+{
+    if (!result.isValid()) {
+        if (error)
+            *error = QStringLiteral("截图结果无效");
+        return false;
+    }
+
+    const Result decorated = applyConfiguredBorder(result);
+    PinScreenShotsInterface pinInterface(QStringLiteral("com.deepin.PinScreenShots"),
+                                         QStringLiteral("/com/deepin/PinScreenShots"),
+                                         QDBusConnection::sessionBus());
+    QDBusPendingReply<> reply = pinInterface.openImageAndName(
+            decorated.image,
+            defaultFileName(ScreenshotFormat::Png),
+            decorated.globalSelection.topLeft());
+    reply.waitForFinished();
+    if (!reply.isValid() || reply.isError()) {
+        if (error) {
+            *error = reply.isError()
+                    ? QStringLiteral("贴图服务调用失败：%1").arg(reply.error().message())
+                    : QStringLiteral("贴图服务调用未返回有效结果");
+        }
+        return false;
+    }
+
+    return true;
+}
+
 void LocalScreenshotResultSink::onClipboardDataComing(const QByteArray &data)
 {
-    Q_UNUSED(data)
+    if (!m_clipboardReborned) {
+        m_clipboardReborned = true;
+        // dataComing only means the clipboard daemon has cached the payload.
+        // Under Wayland the source is owned by this process, so the daemon must
+        // explicitly take ownership before the screenshot process exits.
+        QDBusMessage message = QDBusMessage::createMethodCall(
+                QString::fromLatin1(CLIPBOARD_NAME),
+                QString::fromLatin1(CLIPBOARD_PATH),
+                QString::fromLatin1(CLIPBOARD_INTERFACE),
+                QStringLiteral("dataReborned"));
+        message << data;
+        const QDBusMessage reply = QDBusConnection::sessionBus().call(
+                message, QDBus::Block, 3000);
+        m_clipboardRebornSucceeded = reply.type() != QDBusMessage::ErrorMessage;
+        if (!m_clipboardRebornSucceeded) {
+            m_clipboardRebornError = QStringLiteral("剪贴板服务重新接管失败：%1")
+                    .arg(reply.errorMessage());
+            qWarning() << m_clipboardRebornError;
+        }
+    }
     emit clipboardDataComing();
 }
 

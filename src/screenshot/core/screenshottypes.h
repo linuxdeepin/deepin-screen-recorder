@@ -39,7 +39,9 @@ enum class AnnotationTool {
     Arrow,
     Line,
     Pen,
-    Effect
+    Effect,
+    Sequence,
+    Text
 };
 
 struct BackendCapabilities {
