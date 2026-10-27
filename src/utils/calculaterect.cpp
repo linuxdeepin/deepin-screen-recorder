@@ -33,7 +33,7 @@ bool pointClickIn(QPointF point2, QPointF point1, int padding)
         //平板需求暂定20，根据测试反馈可调
         pointPadding = 20;
     } else {
-        pointPadding = 4;
+        pointPadding = 8;
     }
 
     if (point2.x() >= point1.x() - pointPadding && point2.x() <= point1.x() + pointPadding &&
