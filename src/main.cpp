@@ -283,6 +283,17 @@ int main(int argc, char *argv[])
             // sessions. Keep the process alive so subsequent calls reuse the
             // same registered service and object instances.
             app->setQuitOnLastWindowClosed(false);
+
+            QDBusConnection::systemBus().connect(
+                    QStringLiteral("org.freedesktop.login1"),
+                    QStringLiteral("/org/freedesktop/login1"),
+                    QStringLiteral("org.freedesktop.login1.Manager"),
+                    QStringLiteral("SessionRemoved"),
+                    app.data(),
+                    []() {
+                        qCInfo(dsrApp) << "login1 SessionRemoved received, quitting persistent dbus process.";
+                        qApp->quit();
+                    });
         }
         qCDebug(dsrApp) << "Command line parser initialized and processed application arguments.";
 
