@@ -262,6 +262,7 @@ ToolBar::ToolBar(DWidget *parent)
     //setAttribute(Qt::WA_TranslucentBackground);
     //setWindowFlags(Qt::FramelessWindowHint | Qt::Tool | Qt::WindowStaysOnTopHint);
     m_toolbarWidget = nullptr;
+    setAttribute(Qt::WA_AcceptTouchEvents, true);
 }
 
 void ToolBar::paintEvent(QPaintEvent *e)
@@ -308,6 +309,12 @@ bool ToolBar::eventFilter(QObject *obj, QEvent *event)
 void ToolBar::mousePressEvent(QMouseEvent *event)
 {
     if (event->button() == Qt::LeftButton) {
+        // 触控/鼠标落在子控件（按钮）上时不拦截为拖拽，让事件传递给按钮
+        QWidget *child = childAt(event->pos());
+        if (child && child != m_toolbarWidget) {
+            DLabel::mousePressEvent(event);
+            return;
+        }
         QApplication::setOverrideCursor(Qt::ClosedHandCursor);
         m_isPress = true;
         //获得鼠标的初始位置
