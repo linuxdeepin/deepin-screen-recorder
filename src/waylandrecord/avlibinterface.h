@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2022-2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -69,6 +69,7 @@ public:
     typedef int (*p_avcodec_encode_audio2)(AVCodecContext *, AVPacket *, const AVFrame *, int *);
     typedef int (*p_avcodec_close)(AVCodecContext *);
     typedef AVCodec *(*p_avcodec_find_encoder)(enum AVCodecID id);
+    typedef AVCodec *(*p_avcodec_find_encoder_by_name)(const char *name);
     typedef int (*p_avpicture_get_size)(enum AVPixelFormat, int, int);
     typedef int (*p_avpicture_fill)(AVPicture *, const uint8_t *, enum AVPixelFormat , int, int);
 
@@ -150,6 +151,7 @@ public:
     static p_avcodec_encode_audio2 m_avcodec_encode_audio2;
     static p_avcodec_close m_avcodec_close;
     static p_avcodec_find_encoder m_avcodec_find_encoder;
+    static p_avcodec_find_encoder_by_name m_avcodec_find_encoder_by_name;
     static p_avpicture_get_size m_avpicture_get_size;
     static p_avpicture_fill m_avpicture_fill;
 
