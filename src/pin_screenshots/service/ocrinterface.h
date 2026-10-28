@@ -1,4 +1,4 @@
-// Copyright (C) 2020 ~ 2021 Deepin Technology Co., Ltd.
+// Copyright (C) 2020-2026 ~ 2021 Deepin Technology Co., Ltd.
 // SPDX-FileCopyrightText: 2022 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
@@ -7,6 +7,7 @@
 #define OCRINTERFACE_H
 
 #include <QtCore/QObject>
+#include "../../utils/log.h"
 #include <QtCore/QByteArray>
 #include <QtCore/QList>
 #include <QtCore/QMap>
@@ -56,7 +57,7 @@ public Q_SLOTS: // METHODS
     */
     inline QDBusPendingReply<> openImage(const QImage &image)
     {
-        qDebug() << __FUNCTION__;
+        qCDebug(dsrApp) << __FUNCTION__;
         QByteArray data;
         QBuffer buf(&data);
         if (image.save(&buf, "PNG")) {
@@ -75,7 +76,7 @@ public Q_SLOTS: // METHODS
     */
     inline QDBusPendingReply<> openImageAndName(const QImage &image,const QString &imageName)
     {
-        qDebug() << __FUNCTION__;
+        qCDebug(dsrApp) << __FUNCTION__;
         QByteArray data;
         QBuffer buf(&data);
         if (image.save(&buf, "PNG")) {

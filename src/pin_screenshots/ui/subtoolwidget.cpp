@@ -1,4 +1,4 @@
-// Copyright (C) 2020 ~ 2021 Uniontech Software Technology Co., Ltd.
+// Copyright (C) 2020-2026 ~ 2021 Uniontech Software Technology Co., Ltd.
 // SPDX-FileCopyrightText: 2022 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
@@ -172,7 +172,7 @@ void SubToolWidget::initShotLable()
     m_shotSubTool->setLayout(hLayout);
     addWidget(m_shotSubTool);
     updateOptionChecked();
-    qInfo() << __LINE__ << __FUNCTION__ << "贴图工具栏初始化完成";
+    qCInfo(dsrApp) << __LINE__ << __FUNCTION__ << "贴图工具栏初始化完成";
 }
 
 void SubToolWidget::initChangeSaveToSpecialAction(const QString specialPath)
@@ -290,9 +290,9 @@ void SubToolWidget::onOptionButtonClicked()
 //根据配置文件更新当前选中的选项
 void SubToolWidget::updateOptionChecked()
 {
-    qInfo() << __LINE__ << __FUNCTION__ << "更新菜单选项";
+    qCInfo(dsrApp) << __LINE__ << __FUNCTION__ << "更新菜单选项";
     QPair<int, int> saveInfo = Settings::instance()->getSaveOption();
-    qWarning() << "saveInfo: " << saveInfo;
+    qCWarning(dsrApp) << "saveInfo: " << saveInfo;
     if (saveInfo.second != PNG && saveInfo.second != JPG && saveInfo.second != BMP) { //不存在保存格式的情况
         saveInfo.second = PNG; // 默认保存格式
         qCDebug(dsrApp) << "Invalid save format, defaulting to PNG";
@@ -302,13 +302,13 @@ void SubToolWidget::updateOptionChecked()
         // 首次使用时，默认选择"每次询问"选项
         m_SaveInfo.first = ASK;
         m_SaveInfo.second = PNG; // 默认保存格式
-        qWarning(dsrApp) << "No configuration found, using defaults: ASK and PNG";
+        qCWarning(dsrApp) << "No configuration found, using defaults: ASK and PNG";
         // 保存默认设置到配置文件
         Settings::instance()->setSaveOption(m_SaveInfo);
     } else {
         m_SaveInfo = saveInfo;
     }
-    qWarning() << "m_SaveInfo: " << m_SaveInfo;
+    qCWarning(dsrApp) << "m_SaveInfo: " << m_SaveInfo;
     
     // 设置保存格式
     if (m_SaveFormatActions.contains(m_SaveInfo.second)) {
