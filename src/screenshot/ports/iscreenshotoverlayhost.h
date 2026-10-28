@@ -39,6 +39,19 @@ public:
     virtual void setSnapHint(const QRect &globalRegion) = 0;
     virtual void setSelectionFinalized(bool finalized) = 0;
     virtual void setCursorIntent(CursorIntent intent) = 0;
+    // Host the existing CountdownTooltip inside the platform overlay. A
+    // separate top-level tool window cannot be kept above TreeLand's
+    // per-output mask surfaces.
+    virtual bool startRecordingCountdown(const QRect &globalSelection)
+    {
+        Q_UNUSED(globalSelection);
+        return false;
+    }
+    virtual void stopRecordingCountdown() {}
+    virtual bool beginRecording(const QRect &globalSelection) { Q_UNUSED(globalSelection); return false; }
+    virtual void finishRecording() {}
+    virtual bool isRecordingActive() const { return false; }
+    virtual void setRecordingControlsActive(bool active) { Q_UNUSED(active); }
     virtual void close() = 0;
 
 signals:
@@ -54,6 +67,10 @@ signals:
     void copyRequested();
     void pinRequested();
     void cancelRequested();
+    void recordModeChanged(bool enabled);
+    void recordStartRequested();
+    void recordStopRequested();
+    void recordingCountdownFinished();
 };
 
 } // namespace Dsr::Screenshot

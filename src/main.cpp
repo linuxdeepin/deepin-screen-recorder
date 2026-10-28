@@ -35,7 +35,6 @@
 #include <QFile>
 #include <QDir>
 #include <QStandardPaths>
-#include <QTimer>
 
 DWIDGET_USE_NAMESPACE
 
@@ -381,6 +380,14 @@ int main(int argc, char *argv[])
                                  application->exit(sessionFailed ? 1 : 0);
                              },
                              Qt::QueuedConnection);
+            if (!QDBusConnection::sessionBus().registerObject(
+                        QStringLiteral("/com/deepin/ScreenRecorder"),
+                        session,
+                        QDBusConnection::ExportScriptableSlots
+                                | QDBusConnection::ExportScriptableSignals
+                                | QDBusConnection::ExportScriptableProperties)) {
+                qWarning() << "Unable to export screenshot session recording D-Bus object";
+            }
             if (!session->start(request)) {
                 qCritical() << "Screenshot session is already active";
                 return 2;

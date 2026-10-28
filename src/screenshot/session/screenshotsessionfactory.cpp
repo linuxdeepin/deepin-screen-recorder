@@ -11,6 +11,7 @@
 #include "../platform/treeland/treelandsnaphintsource.h"
 #include "../platform/treeland/treelandsnapproxy.h"
 #include "../platform/treeland/treelandwindowtagger.h"
+#include "../platform/treeland/treelandrecordingsession.h"
 
 #include <QGuiApplication>
 #include <QProcessEnvironment>
@@ -47,9 +48,9 @@ ScreenshotSessionController *ScreenshotSessionFactory::createForCurrentPlatform(
 
     auto *snapSession = new TreelandSnapSession();
     auto *backend = new TreelandScreenshotBackend(snapSession);
-    auto *overlay = new TreelandMaskOverlayHost();
     auto *snapHints = new TreelandSnapHintSource(snapSession);
     auto *windowTagger = new TreelandWindowTagger(snapSession);
+    auto *overlay = new TreelandMaskOverlayHost(windowTagger);
     auto *resultSink = new LocalScreenshotResultSink();
     auto *annotationEditor = overlay->annotationEditor();
 
@@ -60,6 +61,7 @@ ScreenshotSessionController *ScreenshotSessionFactory::createForCurrentPlatform(
                                                        resultSink,
                                                        annotationEditor,
                                                        parent);
+    controller->setRecordingSession(new TreelandRecordingSession);
     snapSession->setParent(controller);
     return controller;
 }

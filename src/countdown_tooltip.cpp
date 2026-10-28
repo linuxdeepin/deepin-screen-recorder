@@ -24,7 +24,7 @@ const int CountdownTooltip::NUMBER_PADDING_Y = 30;
 
 DWIDGET_USE_NAMESPACE
 
-CountdownTooltip::CountdownTooltip(DWidget *parent) : DWidget(parent),
+CountdownTooltip::CountdownTooltip(QWidget *parent) : DWidget(parent),
     showCountdownTimer(nullptr)
 {
     qCInfo(dsrApp) << Q_FUNC_INFO << "Entry.";
@@ -54,6 +54,13 @@ CountdownTooltip::CountdownTooltip(DWidget *parent) : DWidget(parent),
     int height = size.height() + Constant::RECTANGLE_PADDING * 2 + countdown1Img.height() + NUMBER_PADDING_Y;
     setFixedSize(width, height);
     qCInfo(dsrApp) << Q_FUNC_INFO << "Exit. Initial size:" << size << ", Width:" << width << ", Height:" << height;
+}
+
+void CountdownTooltip::setBackgroundPixmap(const QPixmap &pixmap,
+                                           const QPoint &globalOrigin)
+{
+    backgroundPixmap = pixmap;
+    backgroundGlobalOrigin = globalOrigin;
 }
 
 //2021.6.24注释
@@ -132,17 +139,32 @@ void CountdownTooltip::paintEvent(QPaintEvent *)
 QPixmap CountdownTooltip::getTooltipBackground()
 {
     qCInfo(dsrApp) << Q_FUNC_INFO << "Entry."; // Log function entry
-    TempFile *tempFile = TempFile::instance();
     const int radius = 50;
 
-    //用当前提示窗口的位置和提示框的大小构建一个矩形框
+    // 用当前提示窗口的位置和提示框的大小构建一个矩形框
     auto ratio = qApp->devicePixelRatio();
-    QRect target( static_cast<int>(this->x() * ratio),
-                      static_cast<int>(this->y() * ratio),
-                      static_cast<int>(this->width() * ratio),
-                      static_cast<int>(this->height() * ratio));
-
-    QPixmap tmpImg = tempFile->getFullscreenPixmap().copy(target);
+    QRect target;
+    QPixmap source;
+    if (backgroundPixmap.isNull()) {
+        // Preserve the legacy X11 path exactly. Its parent owns the screenshot
+        // canvas, so x()/y() are the coordinates expected by TempFile.
+        target = QRect(static_cast<int>(this->x() * ratio),
+                       static_cast<int>(this->y() * ratio),
+                       static_cast<int>(this->width() * ratio),
+                       static_cast<int>(this->height() * ratio));
+        source = TempFile::instance()->getFullscreenPixmap();
+    } else {
+        // TreeLand has no fullscreen MainWindow; its frozen output image is
+        // injected explicitly and positioned relative to the output origin.
+        const QPoint globalTopLeft = mapToGlobal(QPoint(0, 0));
+        const QPoint sourceTopLeft = globalTopLeft - backgroundGlobalOrigin;
+        target = QRect(static_cast<int>(sourceTopLeft.x() * ratio),
+                       static_cast<int>(sourceTopLeft.y() * ratio),
+                       static_cast<int>(this->width() * ratio),
+                       static_cast<int>(this->height() * ratio));
+        source = backgroundPixmap;
+    }
+    QPixmap tmpImg = source.copy(target);
     if (!tmpImg.isNull()) {
         qCInfo(dsrApp) << Q_FUNC_INFO << "Temporary image is not null. Scaling image."; // Log branch
         int imgWidth = tmpImg.width();
