@@ -1,5 +1,5 @@
 // Copyright (C) 2020 ~ 2021 Deepin Technology Co., Ltd.
-// SPDX-FileCopyrightText: 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2022-2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -346,21 +346,34 @@ bool PixMergeThread::splicePictureDown(const cv::Mat &image)
     //imwrite("m_curImg.png",m_curImg);
     //imwrite("image.png",image);
     /*
-     * 取图像2的全部行，1到35列作为模板
-     * 这样image1作为原图，temp作为模板图像
+     * 取图像2的不同区域作为模板
+     * 当顶部区域包含动态内容导致匹配失败时，
+     * 依次尝试中部、底部区域作为备选模板，取最优结果
      */
-    cv::Mat temp = image2_gray(cv::Range(0, TEMPLATE_HEIGHT), cv::Range::all());
-    /*结果矩阵图像,大小，数据类型*/
-    cv::Mat res(image1_gray.rows - temp.rows + 1, image2_gray.cols - temp.cols + 1, CV_32FC1);
-    /*模板匹配，采用归一化相关系数匹配*/
-    matchTemplate(image1_gray, temp, res, CV_TM_CCOEFF_NORMED);
-    /*结果矩阵阈值化处理*/
-    threshold(res, res, 0.8, 1, CV_THRESH_TOZERO);
-    double minVal, maxVal, thresholdv = 0.8;
-
-    /*查找最大值及位置*/
+    double minVal, maxVal = 0, thresholdv = 0.8;
     cv::Point minLoc, maxLoc;
-    minMaxLoc(res, &minVal, &maxVal, &minLoc, &maxLoc);
+    int regionStarts[] = {0,
+                          (image2_gray.rows - TEMPLATE_HEIGHT) / 2,
+                          image2_gray.rows - TEMPLATE_HEIGHT};
+    for (int i = 0; i < 3; ++i) {
+        cv::Mat temp = image2_gray(cv::Range(regionStarts[i],
+                                  regionStarts[i] + TEMPLATE_HEIGHT),
+                                  cv::Range::all());
+        cv::Mat res(image1_gray.rows - temp.rows + 1,
+                    image2_gray.cols - temp.cols + 1, CV_32FC1);
+        matchTemplate(image1_gray, temp, res, CV_TM_CCOEFF_NORMED);
+        threshold(res, res, 0.8, 1, CV_THRESH_TOZERO);
+        double curMaxVal;
+        cv::Point curMaxLoc;
+        minMaxLoc(res, &minVal, &curMaxVal, &minLoc, &curMaxLoc);
+        if (curMaxVal > maxVal) {
+            maxVal = curMaxVal;
+            maxLoc = curMaxLoc;
+        }
+        if (maxVal >= thresholdv) {
+            break;
+        }
+    }
     if (!m_isManualScrollModel && m_MeragerCount == 1 && maxVal >= thresholdv && maxLoc.y == 0) {
         if (++m_firstFrameRetryCount > FIRST_FRAME_RETRY_LIMIT) {
             qDebug() << "2 自动滚动首帧多次未产生位移";
