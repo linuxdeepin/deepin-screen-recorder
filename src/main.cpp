@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2011 ~ 2025 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2011-2026 ~ 2025 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -11,6 +11,7 @@
 #include "utils/eventlogutils.h"
 #include "utils/x_multi_screen_info.h"
 #include "utils/log.h"
+#include "utils/logger.h"
 
 #include <DWidget>
 #include <DLog>
@@ -82,16 +83,16 @@ static bool CheckFFmpegEnv()
     bool flag = false;
     QDir dir;
     QString path = QLibraryInfo::location(QLibraryInfo::LibrariesPath);
-    qDebug() << "QLibraryInfo::LibrariesPath: " << path;
+    qCDebug(dsrApp) << "QLibraryInfo::LibrariesPath: " << path;
     qCDebug(dsrApp) << "Libraries path:" << path;
     dir.setPath(path);
-    qDebug() << "where is libs? where is " << dir;
+    qCDebug(dsrApp) << "where is libs? where is " << dir;
     QStringList list = dir.entryList(QStringList() << (QString("libavcodec") + "*"), QDir::NoDotAndDotDot | QDir::Files);
-    qDebug() << "Is libavcodec in there?  there is :" << list;
+    qCDebug(dsrApp) << "Is libavcodec in there?  there is :" << list;
     qCDebug(dsrApp) << "Found libavcodec files:" << list;
 
     if (list.contains("libavcodec.so.58")) {
-        qInfo() << "list contains libavcodec.so.58";
+        qCInfo(dsrApp) << "list contains libavcodec.so.58";
         qCDebug(dsrApp) << "libavcodec.so.58 found.";
         flag = true;
     }
@@ -100,7 +101,7 @@ static bool CheckFFmpegEnv()
     if (!isWaylandProtocol()) {
         qCDebug(dsrApp) << "Not Wayland protocol, checking for ffmpeg executable.";
         flag = !QStandardPaths::findExecutable("ffmpeg").isEmpty();
-        qInfo() << "Is exists ffmpeg in PATH(" << qgetenv("PATH") << "):" << flag;
+        qCInfo(dsrApp) << "Is exists ffmpeg in PATH(" << qgetenv("PATH") << "):" << flag;
         qCDebug(dsrApp) << "FFmpeg executable existence check:" << flag;
     }
     qCDebug(dsrApp) << "CheckFFmpegEnv finished. Returning:" << flag;
@@ -124,7 +125,7 @@ void resetScaleFactor()
     if (!data.isEmpty()) {
         double factor = data.split(' ').last().toDouble();
         if (factor > 1) {
-            qDebug() << "scaleFactor available value: " << factor;
+            qCDebug(dsrApp) << "scaleFactor available value: " << factor;
             qCDebug(dsrApp) << "Scale factor is greater than 1:" << factor << ", setting QT_SCALE_FACTOR.";
             qputenv("QT_SCALE_FACTOR", QString::number(1 / factor, 'g', 2).toLatin1());
         }
@@ -134,6 +135,11 @@ void resetScaleFactor()
 
 int main(int argc, char *argv[])
 {
+    // deepin-debug-config 调试模式适配：日志格式带分类，便于按分类过滤
+    Dtk::Core::DLogManager::setLogFormat(
+        "%{time}{yy-MM-ddTHH:mm:ss.zzz} [%{type:-7}] [%{category}] <%{function}:%{line}> %{message}");
+    // 动态日志规则监听需在任何日志打印之前初始化，且生命周期需覆盖整个 main
+    MLogger logger;
     qCDebug(dsrApp) << "main function started.";
     // wayland调试输出
     // qputenv("WAYLAND_DEBUG", "1");
@@ -178,7 +184,7 @@ int main(int argc, char *argv[])
     }
 
     Utils::isFFmpegEnv = CheckFFmpegEnv();
-    qDebug() << "Is FFmpeg Environment:" << Utils::isFFmpegEnv;
+    qCDebug(dsrApp) << "Is FFmpeg Environment:" << Utils::isFFmpegEnv;
     qCDebug(dsrApp) << "FFmpeg environment check complete:" << Utils::isFFmpegEnv;
 
     // 适配deepin-turbo 启动加速
@@ -269,7 +275,7 @@ int main(int argc, char *argv[])
         // Load translator.
         app->loadTranslator();
         Utils::appName = MainWindow::tr("deepin-screen-recorder");
-        qInfo() << "Original Application Name is: " << QCoreApplication::applicationName()
+        qCInfo(dsrApp) << "Original Application Name is: " << QCoreApplication::applicationName()
                 << ". International Application Name is: " << Utils::appName;
         qCDebug(dsrApp) << "Translator loaded and application name set.";
 
@@ -292,17 +298,17 @@ int main(int argc, char *argv[])
         Utils::showCurrentSys();
         qCDebug(dsrApp) << "Current system information displayed.";
 
-        qInfo() << "截图录屏版本: " << DApplication::buildVersion(APP_VERSION);
+        qCInfo(dsrApp) << "截图录屏版本: " << DApplication::buildVersion(APP_VERSION);
 #ifdef KF5_WAYLAND_FLAGE_ON
-        qInfo() << "KF5_WAYLAND_FLAGE_ON is open!!";
+        qCInfo(dsrApp) << "KF5_WAYLAND_FLAGE_ON is open!!";
         qCDebug(dsrApp) << "KF5_WAYLAND_FLAGE_ON is defined.";
 #else
-        qInfo() << "KF5_WAYLAND_FLAGE_ON is close!!";
+        qCInfo(dsrApp) << "KF5_WAYLAND_FLAGE_ON is close!!";
         qCDebug(dsrApp) << "KF5_WAYLAND_FLAGE_ON is not defined.";
 #endif
-        qInfo() << "Is Table:" << Utils::isTabletEnvironment;
-        qInfo() << "Is Root User:" << Utils::isRootUser;
-        qInfo() << "Is Exists FFmpeg Lib:" << Utils::isFFmpegEnv;
+        qCInfo(dsrApp) << "Is Table:" << Utils::isTabletEnvironment;
+        qCInfo(dsrApp) << "Is Root User:" << Utils::isRootUser;
+        qCInfo(dsrApp) << "Is Exists FFmpeg Lib:" << Utils::isFFmpegEnv;
         qCDebug(dsrApp) << "Tablet environment:" << Utils::isTabletEnvironment << ", Root user:" << Utils::isRootUser << ", FFmpeg Lib exists:" << Utils::isFFmpegEnv;
         if (cmdParser.isSet(useGStreamer)) {
             Utils::isFFmpegEnv = false;
@@ -333,7 +339,7 @@ int main(int argc, char *argv[])
         QDBusConnection conn = QDBusConnection::sessionBus();
 
         if (!conn.registerService("com.deepin.Screenshot") || !conn.registerObject("/com/deepin/Screenshot", &window)) {
-            qDebug() << "deepin-screenshot is running!";
+            qCDebug(dsrApp) << "deepin-screenshot is running!";
             qCDebug(dsrApp) << "deepin-screenshot service already running. Quitting app.";
             qApp->quit();
             if (Utils::isWaylandMode) {
@@ -345,7 +351,7 @@ int main(int argc, char *argv[])
         qCDebug(dsrApp) << "deepin-screenshot service registered successfully.";
 
         if (cmdParser.isSet(dbusOption)) {
-            qDebug() << "dbus register waiting!";
+            qCDebug(dsrApp) << "dbus register waiting!";
             qCDebug(dsrApp) << "DBus option set, waiting for DBus registration.";
             return app->exec();
 
@@ -377,27 +383,27 @@ int main(int argc, char *argv[])
             
             // 处理截图模式参数
             if (cmdParser.isSet(delayOption)) {
-                qDebug() << "cmd delay screenshot";
+                qCDebug(dsrApp) << "cmd delay screenshot";
                 window.delayScreenshot(cmdParser.value(delayOption).toInt());
                 qCDebug(dsrApp) << "Delay screenshot initiated with delay:" << cmdParser.value(delayOption).toInt();
             } else if (cmdParser.isSet(fullscreenOption)) {
                 window.fullscreenScreenshot();
                 qCDebug(dsrApp) << "Fullscreen screenshot initiated.";
             } else if (cmdParser.isSet(topWindowOption)) {
-                qDebug() << "cmd topWindow screenshot";
+                qCDebug(dsrApp) << "cmd topWindow screenshot";
                 window.topWindowScreenshot();
                 qCDebug(dsrApp) << "Top window screenshot initiated.";
             } else if (cmdParser.isSet(prohibitNotifyOption)) {
-                qDebug() << "screenshot no notify!";
+                qCDebug(dsrApp) << "screenshot no notify!";
                 window.noNotifyScreenshot();
                 qCDebug(dsrApp) << "No notify screenshot initiated.";
             } else if (cmdParser.isSet(screenRecordFullScreenOption)) {
-                qDebug() << "screenRecordFullScreenOption!!!!" << cmdParser.value(screenRecordFullScreenOption);
+                qCDebug(dsrApp) << "screenRecordFullScreenOption!!!!" << cmdParser.value(screenRecordFullScreenOption);
                 window.fullScreenRecord(cmdParser.value(screenRecordFullScreenOption));
                 qCDebug(dsrApp) << "Full screen record initiated with file:" << cmdParser.value(screenRecordFullScreenOption);
             } else if (cmdParser.isSet(savePathOption)) {
                 // 只设置了 save-path，没有其他截图模式，启动保存路径截图
-                qDebug() << "cmd savepath screenshot";
+                qCDebug(dsrApp) << "cmd savepath screenshot";
                 window.savePathScreenshot(cmdParser.value(savePathOption));
                 qCDebug(dsrApp) << "Save path screenshot initiated with path:" << cmdParser.value(savePathOption);
             } else {

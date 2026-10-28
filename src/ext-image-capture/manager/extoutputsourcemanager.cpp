@@ -1,4 +1,4 @@
-// Copyright (C) 2017 ~ 2018 Deepin Technology Co., Ltd.
+// Copyright (C) 2017-2026 ~ 2018 Deepin Technology Co., Ltd.
 // SPDX-FileCopyrightText: 2022 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
@@ -50,12 +50,12 @@ bool ExtOutputSourceManager::isProtocolAvailable() const
 void* ExtOutputSourceManager::createSourceForOutput(wl_output *output)
 {
     if (!isProtocolAvailable()) {
-        qWarning() << "Output source manager protocol is not available";
+        qCWarning(dsrApp) << "Output source manager protocol is not available";
         return nullptr;
     }
     
     if (!output) {
-        qWarning() << "Invalid output provided";
+        qCWarning(dsrApp) << "Invalid output provided";
         return nullptr;
     }
 #ifdef ENABLE_UNIT_TEST

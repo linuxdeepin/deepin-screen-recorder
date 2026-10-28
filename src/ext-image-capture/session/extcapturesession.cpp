@@ -1,4 +1,4 @@
-// Copyright (C) 2017 ~ 2018 Deepin Technology Co., Ltd.
+// Copyright (C) 2017-2026 ~ 2018 Deepin Technology Co., Ltd.
 // SPDX-FileCopyrightText: 2022 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
@@ -133,7 +133,7 @@ bool ExtCaptureSession::initialize(void *manager,
     // qCWarning(dsrApp) << "ExtCaptureSession::initialize: *** INITIALIZING SESSION *** paintCursors =" << paintCursors;
     
     if (d->state != Uninitialized) {
-        qWarning() << "Session already initialized";
+        qCWarning(dsrApp) << "Session already initialized";
         return false;
     }
 
@@ -145,7 +145,7 @@ bool ExtCaptureSession::initialize(void *manager,
 
     auto *managerPrivate = static_cast<QtWayland::ext_image_copy_capture_manager_v1*>(manager);
     if (!managerPrivate) {
-        qWarning() << "Invalid manager provided";
+        qCWarning(dsrApp) << "Invalid manager provided";
         setState(Error);
         return false;
     }
@@ -163,7 +163,7 @@ bool ExtCaptureSession::initialize(void *manager,
         // 使用传入的 imageSource
         auto *source = reinterpret_cast<ext_image_capture_source_v1*>(imageSource);
         if (!source) {
-            qWarning() << "Invalid image sourcea provided";
+            qCWarning(dsrApp) << "Invalid image sourcea provided";
             setState(Error);
             return false;
         }
@@ -172,7 +172,7 @@ bool ExtCaptureSession::initialize(void *manager,
         auto *session = managerPrivate->create_session(source, options);
         
         if (!session) {
-            qWarning() << "Failed to create capture session";
+            qCWarning(dsrApp) << "Failed to create capture session";
             setState(Error);
             return false;
         }
@@ -186,7 +186,7 @@ bool ExtCaptureSession::initialize(void *manager,
         return true;
 
     } catch (const std::exception &e) {
-        qWarning() << "Exception during session initialization:" << e.what();
+        qCWarning(dsrApp) << "Exception during session initialization:" << e.what();
         setState(Error);
         return false;
     }
@@ -206,12 +206,12 @@ const CaptureConfig& ExtCaptureSession::config() const
 ExtCaptureFrame* ExtCaptureSession::createFrame()
 {
     if (d->state != Ready && d->state != Capturing) {
-        qWarning() << "Session not ready for frame creation, current state:" << d->state;
+        qCWarning(dsrApp) << "Session not ready for frame creation, current state:" << d->state;
         return nullptr;
     }
 
     if (d->currentFrame) {
-        qWarning() << "Frame already exists, destroy previous frame first";
+        qCWarning(dsrApp) << "Frame already exists, destroy previous frame first";
         return nullptr;
     }
 
@@ -222,7 +222,7 @@ ExtCaptureFrame* ExtCaptureSession::createFrame()
     try {
         auto *frame = d->create_frame();
         if (!frame) {
-            qWarning() << "Failed to create frame";
+            qCWarning(dsrApp) << "Failed to create frame";
             return nullptr;
         }
 
@@ -350,14 +350,14 @@ void ExtCaptureSession::handleShmFormat(uint32_t format)
 void ExtCaptureSession::handleDmabufDevice(const QByteArray &device)
 {
     d->dmabufDevice = device;
-    qDebug() << "DMA-BUF device set";
+    qCDebug(dsrApp) << "DMA-BUF device set";
 }
 
 void ExtCaptureSession::handleDmabufFormat(uint32_t format, const QList<uint64_t> &modifiers)
 {
     if (!d->dmabufFormats.contains(format)) {
         d->dmabufFormats.append(format);
-        qDebug() << "DMA-BUF format supported:" << format << "with" << modifiers.size() << "modifiers";
+        qCDebug(dsrApp) << "DMA-BUF format supported:" << format << "with" << modifiers.size() << "modifiers";
     }
 }
 
@@ -374,14 +374,14 @@ void ExtCaptureSession::handleStopped()
 {
     setState(Stopped);
     emit stopped();
-    qDebug() << "Session stopped by compositor";
+    qCDebug(dsrApp) << "Session stopped by compositor";
 }
 
 void ExtCaptureSession::setState(SessionState newState)
 {
     if (d->state != newState) {
         d->state = newState;
-        qDebug() << "Session state changed to:" << newState;
+        qCDebug(dsrApp) << "Session state changed to:" << newState;
     }
 }
 

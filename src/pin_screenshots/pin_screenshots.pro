@@ -66,6 +66,7 @@ SOURCES += \
     ui/tablerecognizetoast.cpp \
     ui/tableresultdialog.cpp \
     ../utils/log.cpp \
+    ../utils/logger.cpp \
     ../widgets/toolbutton.cpp \
     ../widgets/savebutton.cpp
 
@@ -88,6 +89,7 @@ HEADERS += \
     ui/tableresultdialog.h \
     ui/mainToolWidget.h \
     ../utils/log.h \
+    ../utils/logger.h \
     ../widgets/toolbutton.h \
     ../widgets/savebutton.h
 

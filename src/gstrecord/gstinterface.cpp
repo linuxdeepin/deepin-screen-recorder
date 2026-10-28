@@ -50,13 +50,13 @@ gstInterface::gstInterface()
 QString gstInterface::libPath(const QString &sLib)
 {
     qCDebug(dsrApp) << "libPath method called with sLib:" << sLib;
-    qInfo() << "gstreamer lib name is " << sLib;
+    qCInfo(dsrApp) << "gstreamer lib name is " << sLib;
     QDir dir;
     QString path  = QLibraryInfo::location(QLibraryInfo::LibrariesPath);
     dir.setPath(path);
     QStringList list = dir.entryList(QStringList() << (sLib + "*"), QDir::NoDotAndDotDot | QDir::Files); //filter name with strlib
     if (list.isEmpty()) {
-        qWarning() << "list is empty!";
+        qCWarning(dsrApp) << "list is empty!";
         qCDebug(dsrApp) << "Library list is empty for:" << sLib;
     }
     if (list.contains(sLib)) {

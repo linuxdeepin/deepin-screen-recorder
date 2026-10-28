@@ -1,4 +1,4 @@
-// Copyright (C) 2019 ~ 2026 Deepin Technology Co., Ltd.
+// Copyright (C) 2019-2026 ~ 2026 Deepin Technology Co., Ltd.
 // SPDX-FileCopyrightText: 2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
@@ -8,6 +8,7 @@
 #include "service/dbuspinscreenshotsadaptor.h"
 #include "putils.h"
 #include "../utils/log.h"
+#include "../utils/logger.h"
 
 #include <DWidget>
 #include <DLog>
@@ -50,6 +51,11 @@ bool isWaylandProtocol()
 
 int main(int argc, char *argv[])
 {
+    // deepin-debug-config 调试模式适配：日志格式带分类，便于按分类过滤
+    Dtk::Core::DLogManager::setLogFormat(
+        "%{time}{yy-MM-ddTHH:mm:ss.zzz} [%{type:-7}] [%{category}] <%{function}:%{line}> %{message}");
+    // 动态日志规则监听需在任何日志打印之前初始化，且生命周期需覆盖整个 main
+    MLogger logger;
 
     if (argc < 2) {
         qCDebug(dsrApp) << "Cant open a null file";
