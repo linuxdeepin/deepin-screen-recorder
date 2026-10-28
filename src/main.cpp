@@ -15,6 +15,9 @@
 #include "screenshot/core/screenshottypes.h"
 #include "screenshot/session/screenshotsessioncontroller.h"
 #include "screenshot/session/screenshotsessionfactory.h"
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+#include "screenshot/platform/treeland/treelandclipboardholder.h"
+#endif
 
 #include <DWidget>
 #include <DLog>
@@ -145,6 +148,15 @@ int main(int argc, char *argv[])
     // 动态日志规则监听需在任何日志打印之前初始化，且生命周期需覆盖整个 main
     MLogger logger;
     qCDebug(dsrApp) << "main function started.";
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+    if (argc == 5
+            && QString::fromLocal8Bit(argv[1]) == QStringLiteral("--clipboard-hold")) {
+        return Dsr::Screenshot::runTreelandClipboardHolder(
+                QString::fromLocal8Bit(argv[2]),
+                QString::fromLocal8Bit(argv[3]),
+                QString::fromLocal8Bit(argv[4]));
+    }
+#endif
     // wayland调试输出
     // qputenv("WAYLAND_DEBUG", "1");
     if (!QString(qgetenv("XDG_CURRENT_DESKTOP")).toLower().startsWith("deepin")) {

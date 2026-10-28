@@ -85,7 +85,7 @@ equals(QT_MAJOR_VERSION, 6) {
           sql xml opengl openglwidgets waylandclient waylandclient-private
     
     # Qt6 specific configurations
-    PKGCONFIG += dtk6widget dtk6core dtk6gui xcb xcb-util gstreamer-app-1.0 libusb-1.0
+    PKGCONFIG += dtk6widget dtk6core dtk6gui xcb xcb-util gstreamer-app-1.0 libusb-1.0 wayland-client
     
     QMAKE_LRELEASE = /usr/lib/qt6/bin/lrelease
     
@@ -283,6 +283,8 @@ HEADERS += main_window.h \
     screenshot/platform/treeland/treelandannotationeditor.h \
     screenshot/platform/treeland/treelandmaskwindow.h \
     screenshot/platform/treeland/treelandmaskoverlayhost.h \
+    screenshot/platform/treeland/treelandclipboardholder.h \
+    protocols/data-control/ext-data-control-v1-client-protocol.h \
     screenshot/platform/treeland/treelandscreenshotbackend.h
 
 # Qt 版本特定的头文件
@@ -412,6 +414,8 @@ SOURCES += main.cpp \
     screenshot/platform/treeland/treelandannotationeditor.cpp \
     screenshot/platform/treeland/treelandmaskwindow.cpp \
     screenshot/platform/treeland/treelandmaskoverlayhost.cpp \
+    screenshot/platform/treeland/treelandclipboardholder.cpp \
+    protocols/data-control/ext-data-control-v1-protocol.c \
     screenshot/platform/treeland/treelandscreenshotbackend.cpp
 
 # Qt 版本特定的源文件
