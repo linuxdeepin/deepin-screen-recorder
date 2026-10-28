@@ -38,15 +38,15 @@ ToolBarWidget::ToolBarWidget(MainWindow *pMainwindow, DWidget *parent, bool hide
 {
     qCDebug(dsrApp) << "ToolBarWidget constructor called.";
     setBlurBackgroundEnabled(true);
-    blurBackground()->setRadius(30);
+    blurBackground()->setRadius(45);
     blurBackground()->setMode(DBlurEffectWidget::GaussianBlur);
     blurBackground()->setBlurEnabled(true);
     blurBackground()->setBlendMode(DBlurEffectWidget::InWidgetBlend);
 
     if (Utils::themeType == 1) {
-        blurBackground()->setMaskColor(QColor(0xF7, 0xF7, 0xF7, 153));
+        blurBackground()->setMaskColor(QColor(0xF7, 0xF7, 0xF7, 200));
     } else {
-        blurBackground()->setMaskColor(QColor(0, 0, 0, 76));
+        blurBackground()->setMaskColor(QColor(0, 0, 0, 120));
     }
 
     m_hSeparatorLine = new DLabel(this);

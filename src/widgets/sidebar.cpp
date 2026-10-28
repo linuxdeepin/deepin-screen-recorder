@@ -71,15 +71,16 @@ void SideBarWidget::initSideBarWidget()
 //    this->setAttribute(Qt::WA_StyledBackground, true);
 //    this->setStyleSheet("background-color: rgb(255,0, 0)");
     setBlurBackgroundEnabled(true);
-    blurBackground()->setRadius(30);
+    blurBackground()->setRadius(45);
     blurBackground()->setMode(DBlurEffectWidget::GaussianBlur);
     blurBackground()->setBlurEnabled(true);
+    blurBackground()->setBlendMode(DBlurEffectWidget::InWidgetBlend);
     if (Utils::themeType == 1) {
         qCDebug(dsrApp) << "Setting blur background mask color for light theme.";
-        blurBackground()->setMaskColor(QColor(0xF7, 0xF7, 0xF7, 153));
+        blurBackground()->setMaskColor(QColor(0xF7, 0xF7, 0xF7, 200));
     } else {
         qCDebug(dsrApp) << "Setting blur background mask color for dark theme.";
-        blurBackground()->setMaskColor(QColor(0, 0, 0, 76));
+        blurBackground()->setMaskColor(QColor(0, 0, 0, 120));
     }
     //设置侧边栏大小
     //setFixedSize(TOOLBAR_WIDGET_SIZE);

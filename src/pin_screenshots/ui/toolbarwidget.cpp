@@ -47,7 +47,7 @@ ToolBarWidget::ToolBarWidget(DWidget *parent): DBlurEffectWidget(parent)
         this->setWindowFlags(windowFlags() | Qt::BypassWindowManagerHint);
     }
 
-    this->setRadius(30);
+    this->setRadius(45);
     this->setBlurEnabled(!PUtils::isTreelandMode);
     this->setMode(DBlurEffectWidget::GaussianBlur);
     this->setBlendMode(DBlurEffectWidget::InWidgetBlend);
@@ -58,10 +58,10 @@ ToolBarWidget::ToolBarWidget(DWidget *parent): DBlurEffectWidget(parent)
     qCDebug(dsrApp) << "Blur effect properties set.";
     // 初始化主题样式
     if (DGuiApplicationHelper::instance()->themeType() == THEMETYPE) {
-        this->setMaskColor(QColor(255, 255, 255, 76));
+        this->setMaskColor(QColor(255, 255, 255, 200));
         qCDebug(dsrApp) << "Mask color set to light theme.";
     } else {
-        this->setMaskColor(QColor(0, 0, 0, 76));
+        this->setMaskColor(QColor(0, 0, 0, 120));
         qCDebug(dsrApp) << "Mask color set to dark theme.";
     }
 
@@ -115,10 +115,10 @@ void ToolBarWidget::onThemeTypeChange(DGuiApplicationHelper::ColorType themeType
 {
     qCDebug(dsrApp) << "Theme type changed to:" << themeType;
     if (themeType == THEMETYPE) {
-        this->setMaskColor(QColor(255, 255, 255, 76));
+        this->setMaskColor(QColor(255, 255, 255, 200));
         qCDebug(dsrApp) << "Mask color set to light theme due to theme change.";
     } else {
-        this->setMaskColor(QColor(0, 0, 0, 76));
+        this->setMaskColor(QColor(0, 0, 0, 120));
         qCDebug(dsrApp) << "Mask color set to dark theme due to theme change.";
     }
 }
