@@ -588,8 +588,10 @@ QPoint Utils::getPosWithScreen(QPoint pos)
 
     for (int i = 0; i < screensInfo.size(); i++) {
         //判断当前点在哪块屏幕上
-        if (pos.x() > screensInfo[i].x && pos.x() < screensInfo[i].x + screensInfo[i].width &&
-                pos.y() > screensInfo[i].y && pos.y() < screensInfo[i].y + screensInfo[i].height) {
+        // pos 来自 XEventMonitor，为物理坐标；screensInfo 的 width/height 为逻辑坐标，
+        // 边界判断时须乘以 scaleFactor 恢复物理值，否则非整数缩放时匹配失效
+        if (pos.x() > screensInfo[i].x && pos.x() < screensInfo[i].x + static_cast<int>(screensInfo[i].width * screensInfo[i].scaleFactor) &&
+                pos.y() > screensInfo[i].y && pos.y() < screensInfo[i].y + static_cast<int>(screensInfo[i].height * screensInfo[i].scaleFactor)) {
 
             qInfo() << "screenInfo: " << screensInfo[i].toString();
             // 各屏缩放比可能不同（多屏混缩放），须用所在屏自己的比例换算
@@ -610,8 +612,10 @@ QPoint Utils::getPosWithScreenP(QPoint pos)
     screensInfo = getScreensInfo();
     for (int i = 0; i < screensInfo.size(); i++) {
         //判断当前点在哪块屏幕上
-        if (pos.x() > screensInfo[i].x && pos.x() < screensInfo[i].x + screensInfo[i].width &&
-                pos.y() > screensInfo[i].y && pos.y() < screensInfo[i].y + screensInfo[i].height) {
+        // pos 来自 XEventMonitor，为物理坐标；screensInfo 的 width/height 为逻辑坐标，
+        // 边界判断时须乘以 scaleFactor 恢复物理值，否则非整数缩放时匹配失效
+        if (pos.x() > screensInfo[i].x && pos.x() < screensInfo[i].x + static_cast<int>(screensInfo[i].width * screensInfo[i].scaleFactor) &&
+                pos.y() > screensInfo[i].y && pos.y() < screensInfo[i].y + static_cast<int>(screensInfo[i].height * screensInfo[i].scaleFactor)) {
 
             // 各屏缩放比可能不同（多屏混缩放），须用所在屏自己的比例换算
             const qreal pixelRatio = screensInfo[i].scaleFactor;
@@ -636,6 +640,9 @@ QList<Utils::ScreenInfo> Utils::getScreensInfo()
      * 物理尺寸必须按各屏自己的缩放比换算，不能统一乘主屏的比例
      */
     //将实际屏幕信息根据缩放比列转化为理论上屏幕信息
+    // 注意：返回的 ScreenInfo.width/height 为逻辑坐标（rect.size），
+    // x/y 也为逻辑坐标；调用者若持物理坐标（如 XEventMonitor 上报的点），
+    // 须乘以 scaleFactor 恢复物理值后再做边界比较（见 getPosWithScreen/getPosWithScreenP）
     int hTotal = 0;
     for (auto it = screenList.constBegin(); it != screenList.constEnd(); ++it) {
         QRect rect = (*it)->geometry();
@@ -644,8 +651,8 @@ QList<Utils::ScreenInfo> Utils::getScreensInfo()
         ScreenInfo screenInfo;
         screenInfo.x = rect.x(); //屏幕的起始x坐标始终是正确的，不管是否经过缩放
         screenInfo.y = rect.y(); //屏幕的起始y坐标始终是正确的，不管是否经过缩放
-        screenInfo.height =  static_cast<int>(rect.height() * pixelRatio);
-        screenInfo.width = static_cast<int>(rect.width() * pixelRatio);
+        screenInfo.height = rect.height();
+        screenInfo.width = rect.width();
         screenInfo.name = (*it)->name();
         screenInfo.scaleFactor = pixelRatio;
         hTotal += screenInfo.height;
