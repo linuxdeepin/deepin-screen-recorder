@@ -10,11 +10,29 @@
 #include <QObject>
 #include <QString>
 
-// 表格识别能力由 dtkmultimedia 的 dtk6tablerecognizer 提供，走常规链接
-// （见 pin_screenshots.pro 的 PKGCONFIG += dtk6tablerecognizer）。
-// 头文件由构建依赖 libdtk6tablerecognizer-dev 提供，缺失时构建直接失败；
-// 运行期依赖由打包时的 ${shlibs:Depends} 自动生成。
+#ifdef HAVE_DTK6TABLERECOGNIZER
+// 表格识别能力由 dtkmultimedia 的 dtk6tablerecognizer 提供，走条件链接
+// （见 pin_screenshots.pro 的 pkg-config 检测块）。头文件由构建依赖
+// libdtk6tablerecognizer-dev 提供；V25 环境无此包时回退为 stub。
 #include <dtablerecognizer.h>
+#else
+// Stub：dtk6tablerecognizer 不可用时提供最小类型定义，使编译通过。
+// 运行期表格识别按钮返回"不可用"错误，不影响其他功能。
+namespace Dtk {
+namespace TableRecognizer {
+enum class TableError {
+    NoError = 0,
+    InvalidImage,
+    NoTextDetected,
+    NoTableDetected,
+    Timeout,
+    Busy,
+    NotAvailable,
+    Unknown,
+};
+}
+}
+#endif
 
 /**
  * @brief 表格识别能力（dtkmultimedia）的封装
@@ -42,7 +60,9 @@ Q_SIGNALS:
                              Dtk::TableRecognizer::TableError error);
 
 private:
+#ifdef HAVE_DTK6TABLERECOGNIZER
     Dtk::TableRecognizer::DTableRecognizer *m_recognizer = nullptr;
+#endif
 };
 
 #endif // TABLERECOGNIZERLOADER_H
