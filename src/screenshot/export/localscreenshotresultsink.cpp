@@ -4,27 +4,23 @@
 
 #include "localscreenshotresultsink.h"
 
-#include "../../dbus_name.h"
 #include "../../dbusinterface/pinscreenshotsinterface.h"
 #include "../../utils/configsettings.h"
 #include "../../utils/saveutils.h"
 #include "../../widgets/imagemenu.h"
+#include "../platform/treeland/treelandclipboardholder.h"
 
 #include <QApplication>
 #include <QBuffer>
-#include <QClipboard>
 #include <QCoreApplication>
 #include <QDateTime>
 #include <QDBusConnection>
 #include <QDBusMessage>
 #include <QDir>
-#include <QEventLoop>
+#include <QFile>
 #include <QFileDialog>
 #include <QFileInfo>
-#include <QGuiApplication>
-#include <QMimeData>
 #include <QStandardPaths>
-#include <QTimer>
 
 namespace Dsr::Screenshot {
 
@@ -209,22 +205,6 @@ SavePlan makeSavePlan(const QString &requestedPath, ScreenshotFormat format)
     return plan;
 }
 
-int clipboardTimeoutMs(const QImage &image)
-{
-    const qint64 pixels = static_cast<qint64>(image.width()) * image.height();
-    if (pixels <= 921600)
-        return 2000;
-    if (pixels <= 2073600)
-        return 4000;
-    if (pixels <= 3686400)
-        return 6000;
-    if (pixels <= 8294400)
-        return 8000;
-    if (pixels <= 33177600)
-        return 10000;
-    return 15000;
-}
-
 Result applyConfiguredBorder(const Result &result)
 {
     Result decorated = result;
@@ -238,13 +218,6 @@ Result applyConfiguredBorder(const Result &result)
 LocalScreenshotResultSink::LocalScreenshotResultSink(QObject *parent)
     : IScreenshotResultSink(parent)
 {
-    m_clipboardSignalConnected = QDBusConnection::sessionBus().connect(
-            QString::fromLatin1(CLIPBOARD_NAME),
-            QString::fromLatin1(CLIPBOARD_PATH),
-            QString::fromLatin1(CLIPBOARD_INTERFACE),
-            QStringLiteral("dataComing"),
-            this,
-            SLOT(onClipboardDataComing(const QByteArray &)));
 }
 
 bool LocalScreenshotResultSink::save(const Result &result,
@@ -336,11 +309,6 @@ bool LocalScreenshotResultSink::copy(const Result &result, QString *error)
     }
 
     const Result decorated = applyConfiguredBorder(result);
-
-    // Wayland 下 QClipboard::setImage 只暴露 application/x-qt-image，
-    // DDE 剪贴板服务无法稳定接管。沿用旧链路的 image/png MIME 数据，并
-    // 等待 clipboard loader 的 dataComing 反馈。只有服务确认接管后才结束
-    // 会话，否则 Wayland 数据源会随进程退出而失效。
     QByteArray png;
     QBuffer buffer(&png);
     if (!buffer.open(QIODevice::WriteOnly) || !decorated.image.save(&buffer, "PNG")) {
@@ -349,60 +317,25 @@ bool LocalScreenshotResultSink::copy(const Result &result, QString *error)
         return false;
     }
 
-    QClipboard *clipboard = QGuiApplication::clipboard();
-    const QMimeData *currentMimeData = clipboard->mimeData(QClipboard::Clipboard);
-    if (currentMimeData
-            && currentMimeData->data(QStringLiteral("image/png")) == png) {
-        // dde-clipboard-daemon intentionally ignores identical clipboard data
-        // and therefore does not emit dataComing for a repeated copy. The
-        // requested payload is already available, so this copy has succeeded.
-        return true;
+    const QString clipboardImage = QDir(QStandardPaths::writableLocation(
+                                                QStandardPaths::TempLocation))
+                                           .filePath(QStringLiteral("dsr-clipboard-%1-%2.png")
+                                                             .arg(QCoreApplication::applicationPid())
+                                                             .arg(QDateTime::currentMSecsSinceEpoch()));
+    QFile imageFile(clipboardImage);
+    if (!imageFile.open(QIODevice::WriteOnly | QIODevice::Truncate)
+            || imageFile.write(png) != png.size()) {
+        if (error)
+            *error = QStringLiteral("无法创建截图剪贴板临时文件");
+        return false;
     }
+    imageFile.close();
 
-    QEventLoop waitLoop;
-    QTimer timeout;
-    bool clipboardConfirmed = false;
-    m_clipboardReborned = false;
-    m_clipboardRebornSucceeded = false;
-    m_clipboardRebornError.clear();
-    if (m_clipboardSignalConnected) {
-        timeout.setSingleShot(true);
-        connect(&timeout, &QTimer::timeout, &waitLoop, &QEventLoop::quit);
-        connect(this, &LocalScreenshotResultSink::clipboardDataComing,
-                &waitLoop, [&clipboardConfirmed, &waitLoop]() {
-                    clipboardConfirmed = true;
-                    waitLoop.quit();
-                });
-        timeout.start(clipboardTimeoutMs(decorated.image));
-    }
-
-    auto *mimeData = new QMimeData;
-    mimeData->setData(QStringLiteral("image/png"), png);
-    clipboard->setMimeData(mimeData, QClipboard::Clipboard);
-
-    if (m_clipboardSignalConnected) {
-        waitLoop.exec();
-        if (!clipboardConfirmed) {
-            if (error) {
-                *error = QStringLiteral("剪贴板服务未确认接管截图数据");
-            }
-            return false;
-        }
-        if (!m_clipboardRebornSucceeded) {
-            if (error) {
-                *error = m_clipboardRebornError.isEmpty()
-                        ? QStringLiteral("剪贴板服务未能重新持有截图数据")
-                        : m_clipboardRebornError;
-            }
-            return false;
-        }
-    } else {
-        // 没有 clipboard loader 时给 Wayland 数据源至少一次事件循环，
-        // 避免调用方立即退出导致刚设置的 MIME 数据被销毁。
-        QCoreApplication::processEvents(QEventLoop::AllEvents, 100);
-    }
-
-    return true;
+    const bool copied = launchTreelandClipboardHolder(QStringLiteral("image"),
+                                                       clipboardImage,
+                                                       error);
+    QFile::remove(clipboardImage);
+    return copied;
 }
 
 bool LocalScreenshotResultSink::pin(const Result &result, QString *error)
@@ -432,31 +365,6 @@ bool LocalScreenshotResultSink::pin(const Result &result, QString *error)
     }
 
     return true;
-}
-
-void LocalScreenshotResultSink::onClipboardDataComing(const QByteArray &data)
-{
-    if (!m_clipboardReborned) {
-        m_clipboardReborned = true;
-        // dataComing only means the clipboard daemon has cached the payload.
-        // Under Wayland the source is owned by this process, so the daemon must
-        // explicitly take ownership before the screenshot process exits.
-        QDBusMessage message = QDBusMessage::createMethodCall(
-                QString::fromLatin1(CLIPBOARD_NAME),
-                QString::fromLatin1(CLIPBOARD_PATH),
-                QString::fromLatin1(CLIPBOARD_INTERFACE),
-                QStringLiteral("dataReborned"));
-        message << data;
-        const QDBusMessage reply = QDBusConnection::sessionBus().call(
-                message, QDBus::Block, 3000);
-        m_clipboardRebornSucceeded = reply.type() != QDBusMessage::ErrorMessage;
-        if (!m_clipboardRebornSucceeded) {
-            m_clipboardRebornError = QStringLiteral("剪贴板服务重新接管失败：%1")
-                    .arg(reply.errorMessage());
-            qWarning() << m_clipboardRebornError;
-        }
-    }
-    emit clipboardDataComing();
 }
 
 } // namespace Dsr::Screenshot
