@@ -1,4 +1,4 @@
-// Copyright (C) 2020 ~ 2021 Uniontech Software Technology Co.,Ltd.
+// Copyright (C) 2020-2026 ~ 2021 Uniontech Software Technology Co.,Ltd.
 // SPDX-FileCopyrightText: 2022-2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
@@ -145,7 +145,7 @@ void SideBarWidget::changeShotToolWidget(const QString &func)
 
     // 显示或隐藏各面板
     if (func == "gio" || func == "rectangle" || func == "oval") {
-        qDebug(dsrApp) << "Geometry mode: showing ShapeToolWidget";
+        qCDebug(dsrApp) << "Geometry mode: showing ShapeToolWidget";
         m_shapeTool->show();
         m_seperator1->show();
         m_aiAssistantTool->hide();
@@ -156,12 +156,12 @@ void SideBarWidget::changeShotToolWidget(const QString &func)
         
         // 无论是几何图形模式还是直接选择矩形/椭圆，都读取上次选中的形状
         QString currentShape = ConfigSettings::instance()->getValue("shape", "current").toString();
-        qDebug(dsrApp) << "Current shape from config:" << currentShape;
+        qCDebug(dsrApp) << "Current shape from config:" << currentShape;
         
         // 如果没有历史记录，则默认使用矩形
         if (currentShape.isEmpty() || (currentShape != "rectangle" && currentShape != "oval")) {
             currentShape = "rectangle"; // 默认使用矩形
-            qDebug(dsrApp) << "No valid shape in config, using rectangle as default.";
+            qCDebug(dsrApp) << "No valid shape in config, using rectangle as default.";
             ConfigSettings::instance()->setValue("shape", "current", currentShape);
         }
         
@@ -169,17 +169,17 @@ void SideBarWidget::changeShotToolWidget(const QString &func)
         if (func == "rectangle" || func == "oval") {
             // 直接设置按钮状态，但不发送信号
             if (func == "rectangle") {
-                qDebug(dsrApp) << "Directly selecting rectangle button.";
+                qCDebug(dsrApp) << "Directly selecting rectangle button.";
                 m_shapeTool->selectRectangleWithoutSignal();
             } else if (func == "oval") {
-                qDebug(dsrApp) << "Directly selecting oval button.";
+                qCDebug(dsrApp) << "Directly selecting oval button.";
                 m_shapeTool->selectOvalWithoutSignal();
             }
             // 更新配置
             ConfigSettings::instance()->setValue("shape", "current", func);
         } else {
             // 如果是gio模式，则选择上次使用的形状
-            qDebug(dsrApp) << "Selecting shape based on history:" << currentShape;
+            qCDebug(dsrApp) << "Selecting shape based on history:" << currentShape;
             m_shapeTool->selectShape(currentShape);
         }
     } else if (func == "aiassistant") {

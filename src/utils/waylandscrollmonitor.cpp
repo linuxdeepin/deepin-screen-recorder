@@ -1,9 +1,10 @@
-// Copyright (C) 2020 ~ 2021 Uniontech Software Technology Co., Ltd.
+// Copyright (C) 2020-2026 ~ 2021 Uniontech Software Technology Co., Ltd.
 // SPDX-FileCopyrightText: 2022 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
 #include "waylandscrollmonitor.h"
+#include "log.h"
 
 #if defined(KF5_WAYLAND_FLAGE_ON) && !defined(DWAYLAND_SUPPORT)
 
@@ -47,7 +48,7 @@ void WaylandScrollMonitor::setupRegistry()
     qCDebug(dsrApp) << "Event queue created and setup.";
 
     m_registry = new KWayland::Client::Registry(this);
-    qDebug() << "==========setupRegistry=====";
+    qCDebug(dsrApp) << "==========setupRegistry=====";
     connect(m_registry, &KWayland::Client::Registry::fakeInputAnnounced, this, &WaylandScrollMonitor::setupFakeinput);
     // connect(m_registry, &KWayland::Client::Registry::fakeInputRemoved, this, &WaylandMonitor::removeOutput);
     //    connect(m_registry, &KWayland::Client::Registry::interfacesAnnounced, this, [this] {
