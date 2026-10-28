@@ -1,4 +1,4 @@
-// Copyright (C) 2020 ~ 2021 Uniontech Software Technology Co.,Ltd.
+// Copyright (C) 2020-2026 ~ 2021 Uniontech Software Technology Co.,Ltd.
 // SPDX-FileCopyrightText: 2022-2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
@@ -40,7 +40,7 @@ void EventMonitor::releaseRes()
 {
     qCDebug(dsrApp) << "releaseRes method called.";
     if (m_display_datalink && m_display) {
-        qInfo() << __FUNCTION__ << __LINE__ << "执行 XRecordDisableContext ...";
+        qCInfo(dsrApp) << __FUNCTION__ << __LINE__ << "执行 XRecordDisableContext ...";
         qCDebug(dsrApp) << "XRecordDisableContext executed.";
         XRecordDisableContext(m_display, m_context);
 
@@ -108,18 +108,18 @@ void EventMonitor::run()
         qCDebug(dsrApp) << "Failed to enable XRecord context.";
         return;
     }
-    qInfo() << "XRecordEnableContext() finished.";
+    qCInfo(dsrApp) << "XRecordEnableContext() finished.";
     qCDebug(dsrApp) << "XRecord context enabled.";
 #endif
 
-    qInfo() << __FUNCTION__ << __LINE__ << "执行 XRecordFreeContext ...";
+    qCInfo(dsrApp) << __FUNCTION__ << __LINE__ << "执行 XRecordFreeContext ...";
     XRecordFreeContext(m_display, m_context);
-    qInfo() << __FUNCTION__ << __LINE__ << "执行 XSync ...";
+    qCInfo(dsrApp) << __FUNCTION__ << __LINE__ << "执行 XSync ...";
     XSync(m_display, true);
     XSync(m_display_datalink, true);
-    qInfo() << __FUNCTION__ << __LINE__ << "执行 XCloseDisplay m_display_datalink...";
+    qCInfo(dsrApp) << __FUNCTION__ << __LINE__ << "执行 XCloseDisplay m_display_datalink...";
     XCloseDisplay(m_display_datalink);
-    qInfo() << __FUNCTION__ << __LINE__ << "执行 XCloseDisplay m_display...";
+    qCInfo(dsrApp) << __FUNCTION__ << __LINE__ << "执行 XCloseDisplay m_display...";
     XCloseDisplay(m_display);
     m_display_datalink = nullptr;
     m_display = nullptr;
@@ -270,9 +270,9 @@ QImage EventMonitor::getCursorImageWayland()
 
     QPixmap res;
     QDBusReply<QByteArray> reply = kwinInterface.call(QStringLiteral("cursorImage"));
-    qDebug() << "reply: " << reply.isValid();
-    qDebug() << "reply.value().isNull(): " << reply.value().isNull();
-    qDebug() << "reply.value().isNull(): " << reply.value().isEmpty();
+    qCDebug(dsrApp) << "reply: " << reply.isValid();
+    qCDebug(dsrApp) << "reply.value().isNull(): " << reply.value().isNull();
+    qCDebug(dsrApp) << "reply.value().isNull(): " << reply.value().isEmpty();
     qCDebug(dsrApp) << "Cursor image DBus reply received. isValid:" << reply.isValid() << ", isNull:" << reply.value().isNull() << ", isEmpty:" << reply.value().isEmpty();
     res.loadFromData(reply.value());
     if (!res.isNull()) {
@@ -290,7 +290,7 @@ void EventMonitor::initWaylandEventMonitor()
     qCDebug(dsrApp) << "initWaylandEventMonitor method called.";
     QDBusConnection sessionBus = QDBusConnection::sessionBus();
     if (!sessionBus.interface()->isServiceRegistered(INPUT_DEVICES_NAME)) {
-        qDebug() << "DBusError" << INPUT_DEVICES_NAME;
+        qCDebug(dsrApp) << "DBusError" << INPUT_DEVICES_NAME;
         return;
     }
     qCDebug(dsrApp) << "InputDevices DBus service is registered.";

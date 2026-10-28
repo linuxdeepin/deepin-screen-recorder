@@ -1,4 +1,4 @@
-// Copyright (C) 2017 ~ 2018 Deepin Technology Co., Ltd.
+// Copyright (C) 2017-2026 ~ 2018 Deepin Technology Co., Ltd.
 // SPDX-FileCopyrightText: 2022 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
@@ -57,18 +57,18 @@ bool ExtCaptureIntegration::startScreenRecording(QScreen *screen, bool includeCu
     // qCWarning(dsrApp) << "ExtCaptureIntegration::startScreenRecording: *** STARTING *** includeCursor =" << includeCursor;
     
     if (m_recording) {
-        qWarning() << "Already recording";
+        qCWarning(dsrApp) << "Already recording";
         return false;
     }
 
     if (!isAvailable()) {
-        qWarning() << "ext-image-copy-capture protocol not available";
+        qCWarning(dsrApp) << "ext-image-copy-capture protocol not available";
         emit error("Protocol not available");
         return false;
     }
 
     if (!screen) {
-        qWarning() << "Invalid screen provided";
+        qCWarning(dsrApp) << "Invalid screen provided";
         emit error("Invalid screen");
         return false;
     }
@@ -77,7 +77,7 @@ bool ExtCaptureIntegration::startScreenRecording(QScreen *screen, bool includeCu
     // qCWarning(dsrApp) << "ExtCaptureIntegration: Creating capture session with includeCursor =" << includeCursor;
     m_session = m_manager->createScreenCaptureSession(screen, includeCursor);
     if (!m_session) {
-        qWarning() << "Failed to create capture session";
+        qCWarning(dsrApp) << "Failed to create capture session";
         emit error("Failed to create capture session");
         return false;
     }
@@ -138,7 +138,7 @@ void ExtCaptureIntegration::stopRecording()
 bool ExtCaptureIntegration::captureFrame()
 {
     if (!m_recording || !m_session) {
-        qWarning() << "Not recording or no active session";
+        qCWarning(dsrApp) << "Not recording or no active session";
         return false;
     }
 
@@ -180,13 +180,13 @@ bool ExtCaptureIntegration::isRecording() const
 
 void ExtCaptureIntegration::onProtocolAvailable()
 {
-    qDebug() << "ext-image-copy-capture protocol available";
+    qCDebug(dsrApp) << "ext-image-copy-capture protocol available";
     emit available();
 }
 
 void ExtCaptureIntegration::onProtocolUnavailable()
 {
-    qDebug() << "ext-image-copy-capture protocol unavailable";
+    qCDebug(dsrApp) << "ext-image-copy-capture protocol unavailable";
     
     // 停止当前录制
     if (m_recording) {
@@ -204,7 +204,7 @@ void ExtCaptureIntegration::onSessionReady()
 
 void ExtCaptureIntegration::onSessionStopped()
 {
-    qDebug() << "Capture session stopped";
+    qCDebug(dsrApp) << "Capture session stopped";
     if (m_recording) {
         stopRecording();
     }
@@ -212,7 +212,7 @@ void ExtCaptureIntegration::onSessionStopped()
 
 void ExtCaptureIntegration::onSessionError(const QString &message)
 {
-    qWarning() << "Session error:" << message;
+    qCWarning(dsrApp) << "Session error:" << message;
     emit error(message);
     
     if (m_recording) {
@@ -223,7 +223,7 @@ void ExtCaptureIntegration::onSessionError(const QString &message)
 void ExtCaptureIntegration::onFrameReady(ExtCaptureFrame *frame)
 {
     if (!frame) {
-        qWarning() << "Invalid frame received";
+        qCWarning(dsrApp) << "Invalid frame received";
         return;
     }
 
@@ -241,7 +241,7 @@ void ExtCaptureIntegration::onFrameReady(ExtCaptureFrame *frame)
         void *data = frame->mapBuffer();
         
         if (!data) {
-            qWarning() << "Failed to map frame buffer";
+            qCWarning(dsrApp) << "Failed to map frame buffer";
             frame->deleteLater();
             return;
         }
@@ -258,14 +258,14 @@ void ExtCaptureIntegration::onFrameReady(ExtCaptureFrame *frame)
     // 清理
     frame->deleteLater();
 
-    qDebug() << "Frame processed:" << frameData.dimensions 
+    qCDebug(dsrApp) << "Frame processed:" << frameData.dimensions 
              << "format:" << frameData.format
              << "timestamp:" << frameData.timestamp;
 }
 
 void ExtCaptureIntegration::onFrameFailed(const QString &reason)
 {
-    qWarning() << "Frame capture failed:" << reason;
+    qCWarning(dsrApp) << "Frame capture failed:" << reason;
     emit error(QString("Frame capture failed: %1").arg(reason));
 }
 

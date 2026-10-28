@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2021-2024 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2021-2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -17,7 +17,7 @@ const QString QUICK_ITEM_KEY = QStringLiteral("quick_item_key");
 #endif
 const int DETECT_SERV_INTERVAL = 2000;  // 检测服务存在的定时器间隔
 
-Q_LOGGING_CATEGORY(dsrApp, "shot-start-record-plugin");
+Q_LOGGING_CATEGORY(dsrApp, "org.deepin.screen-recorder.shotstartrecord");
 
 ShotStartRecordPlugin::ShotStartRecordPlugin(QObject *parent)
     : QObject(parent)
@@ -466,7 +466,7 @@ bool ShotStartRecordPlugin::getTrayIconVisible()
     QDBusReply<QList<DockItemInfo> > msg = interface.call("plugins");
 
     if (!msg.isValid()) {
-        qWarning() << "get tray item info failed: " << msg.error().message();
+        qCWarning(dsrApp) << "get tray item info failed: " << msg.error().message();
         return false;
     }
 
@@ -476,7 +476,7 @@ bool ShotStartRecordPlugin::getTrayIconVisible()
     });
 
     if (currentPluginItr == itemList.end()) {
-        qWarning() << "can not find current plugin info";
+        qCWarning(dsrApp) << "can not find current plugin info";
         return false;
     }
     qCDebug(dsrApp) << "Found tray icon, visibility:" << currentPluginItr->visible;
