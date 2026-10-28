@@ -1,4 +1,4 @@
-// Copyright (C) 2011 ~ 2018 Deepin, Inc.
+// Copyright (C) 2011-2026 ~ 2018 Deepin, Inc.
 // SPDX-FileCopyrightText: 2022 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
@@ -103,10 +103,10 @@ void ProcessTree::getChildPids(int pid)
  * never used
 void ProcessTree::printNode(int pid)
 {
-    qDebug() << "* Node " << pid;
+    qCDebug(dsrApp) << "* Node " << pid;
 
     if (processMap->contains(pid)) {
-        qDebug() << "### Child " << (*processMap)[pid].childProcesses;
+        qCDebug(dsrApp) << "### Child " << (*processMap)[pid].childProcesses;
 
         for (int childPid : ((*processMap)[pid].childProcesses)) {
             printNode(childPid);

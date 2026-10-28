@@ -1,4 +1,4 @@
-// Copyright (C) 2020 ~ 2021 Uniontech Software Technology Co.,Ltd.
+// Copyright (C) 2020-2026 ~ 2021 Uniontech Software Technology Co.,Ltd.
 // SPDX-FileCopyrightText: 2022 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
@@ -59,7 +59,7 @@ void AudioUtils::initAudioDBusInterface()
     
     // 检查是否存在音频服务
     if (m_audioDBusInterface->isValid()) {
-        qInfo() << "音频服务初始化成功！音频服务： " << AudioService << " 地址：" << AudioPath << " 接口：" << AudioInterface;
+        qCInfo(dsrApp) << "音频服务初始化成功！音频服务： " << AudioService << " 地址：" << AudioPath << " 接口：" << AudioInterface;
         m_defaultSourcePath = m_audioDBusInterface->property("DefaultSource").value<QDBusObjectPath>().path();
         initDefaultSourceDBusInterface();
         m_defaultSinkPath = m_audioDBusInterface->property("DefaultSink").value<QDBusObjectPath>().path();
@@ -68,7 +68,7 @@ void AudioUtils::initAudioDBusInterface()
 
         initConnections();
     } else {
-        qWarning() << "初始化失败！音频服务 (" << AudioService << ") 不存在";
+        qCWarning(dsrApp) << "初始化失败！音频服务 (" << AudioService << ") 不存在";
     }
 }
 
@@ -87,10 +87,10 @@ void AudioUtils::initDefaultSourceDBusInterface()
     m_defaultSourceDBusInterface->setTimeout(AudioDBusTimeout);
     
     if (m_defaultSourceDBusInterface->isValid()) {
-        qInfo() << "默认音频输入源初始化成功！音频服务： " << AudioService << " 默认输入源地址" << m_defaultSourcePath
+        qCInfo(dsrApp) << "默认音频输入源初始化成功！音频服务： " << AudioService << " 默认输入源地址" << m_defaultSourcePath
                 << " 默认输入源接口：" << SourceInterface;
     } else {
-        qWarning() << "默认音频输入源初始化失败！默认输入源地址 (" << m_defaultSourcePath << ") 不存在";
+        qCWarning(dsrApp) << "默认音频输入源初始化失败！默认输入源地址 (" << m_defaultSourcePath << ") 不存在";
     }
 }
 
@@ -143,7 +143,7 @@ QString AudioUtils::currentAudioChannel()
     QString str_output = "-1";
     if (m_defaultSinkDBusInterface && m_defaultSinkDBusInterface->isValid()) {
         QString sinkName = m_defaultSinkDBusInterface->property("Name").toString();
-        qDebug() << "系统声卡名称: " << sinkName;
+        qCDebug(dsrApp) << "系统声卡名称: " << sinkName;
         QStringList options;
         options << "-c";
         options << QString("pacmd list-sources | grep -PB 1 %1 | head -n 1 | perl -pe 's/.* //g'").arg(sinkName);

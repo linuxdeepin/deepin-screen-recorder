@@ -171,6 +171,7 @@ HEADERS += main_window.h \
     record_process.h \
     utils.h \
     utils/log.h \
+    utils/logger.h \
     countdown_tooltip.h \
     constant.h \
     event_monitor.h \
@@ -265,6 +266,7 @@ lessThan(QT_MAJOR_VERSION, 6) {
 # Sources
 SOURCES += main.cpp \
     capture.cpp \
+    utils/logger.cpp \
     main_window.cpp \
     qwayland-treeland-capture-unstable-v1.cpp \
     record_process.cpp \
@@ -443,6 +445,11 @@ manual_dir.path = $$PREFIX/share/deepin-manual/manual-assets/application/
 
 # Treeland override: disable prelaunch splash
 equals(QT_MAJOR_VERSION, 6) {
+    # deepin-debug-config 调试模式适配：安装 DConfig meta（log_rules）
+    dconfig_meta.files = $$PWD/../assets/configs/org.deepin.screen-recorder.json
+    dconfig_meta.appid = org.deepin.screen-recorder
+    DCONFIG_META_FILES += dconfig_meta
+
     CONFIG += dtk_install_dconfig
     treeland_splash.files = $$PWD/../assets/treeland/org.deepin.dde.treeland/org.deepin.dde.treeland.app/deepin-screen-recorder/90-disable-splash.json
     treeland_splash.base = $$PWD/../assets/treeland/org.deepin.dde.treeland/org.deepin.dde.treeland.app
