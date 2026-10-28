@@ -98,7 +98,7 @@ void QuickPanelWidget::changeType(int type)
         setIcon(QIcon::fromTheme(recordIcon, QIcon(QString(":/res/%1.svg").arg(recordIcon))));
         qCDebug(dsrApp) << "Type is RECORD, setting icon to:" << recordIcon;
     }else {
-        qWarning() << "Type Unkonw! Please select SHOT or RECORD";
+        qCWarning(dsrApp) << "Type Unkonw! Please select SHOT or RECORD";
         qCDebug(dsrApp) << "Unknown type provided:" << type;
     }
     qCDebug(dsrApp) << "changeType method finished.";
@@ -145,7 +145,7 @@ void QuickPanelWidget::onTimeout()
     int time = m_baseTime.secsTo(QTime::currentTime());
     showTime = showTime.addSecs(time);
     m_showTimeStr = showTime.toString("hh:mm:ss");
-    qInfo() << "Current show time: " << m_showTimeStr;
+    qCInfo(dsrApp) << "Current show time: " << m_showTimeStr;
     setDescription(m_showTimeStr);
     update();
     qCDebug(dsrApp) << "Time updated to:" << m_showTimeStr;

@@ -1,4 +1,4 @@
-// Copyright (C) 2020 ~ 2021 Uniontech Software Technology Co.,Ltd.
+// Copyright (C) 2020-2026 ~ 2021 Uniontech Software Technology Co.,Ltd.
 // SPDX-FileCopyrightText: 2022 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
@@ -190,7 +190,7 @@ void TimeWidget::updateIcon() {
 void TimeWidget::onPositionChanged(int value)
 {
     qCDebug(dsrApp) << "onPositionChanged method called with value:" << value;
-    qInfo() << "====================== onPositionChanged ====start=================";
+    qCInfo(dsrApp) << "====================== onPositionChanged ====start=================";
     m_position = value;
 
     if (m_position == Dock::Position::Top || m_position == Dock::Position::Bottom) {
@@ -201,7 +201,7 @@ void TimeWidget::onPositionChanged(int value)
         qCDebug(dsrApp) << "Position is not Top or Bottom, hiding text label.";
     }
 
-    qInfo() << "====================== onPositionChanged ====end=================";
+    qCInfo(dsrApp) << "====================== onPositionChanged ====end=================";
     qCDebug(dsrApp) << "onPositionChanged method finished.";
 }
 

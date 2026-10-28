@@ -1,4 +1,4 @@
-// Copyright (C) 2020 ~ 2021 Uniontech Software Technology Co.,Ltd.
+// Copyright (C) 2020-2026 ~ 2021 Uniontech Software Technology Co.,Ltd.
 // SPDX-FileCopyrightText: 2022 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
@@ -56,7 +56,7 @@ void MajorImageProcessingThread::run()
     m_stopped = 1;
     v4l2_dev_t *vd =  get_v4l2_device_handler();
     if (vd == nullptr) {
-        qWarning() << "启动采集摄像头画面线程失败！摄像头设备不存在！";
+        qCWarning(dsrApp) << "启动采集摄像头画面线程失败！摄像头设备不存在！";
         return;
     }
     qCDebug(dsrApp) << "已启动采集摄像头画面线程，开始采集画面";
@@ -105,7 +105,7 @@ void MajorImageProcessingThread::run()
 
         tempImg = QImage(rgbPtr, m_frame->width, m_frame->height, QImage::Format_RGB888);
         if (tempImg.isNull()) {
-            qWarning() << __FUNCTION__ << __LINE__ <<  " 未采集到摄像头画面！" ;
+            qCWarning(dsrApp) << __FUNCTION__ << __LINE__ <<  " 未采集到摄像头画面！" ;
         } else {
             //tempImg.save(QString("/home/uos/Desktop/test1/test_%1.png").arg(QDateTime::currentDateTime().toString(QLatin1String("hh:mm:ss.zzz "))));
             QPixmap pixmap = QPixmap::fromImage(tempImg);
