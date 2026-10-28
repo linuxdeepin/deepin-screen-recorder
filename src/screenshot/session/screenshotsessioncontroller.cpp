@@ -8,13 +8,20 @@
 #include "../core/selectionoverlaygeometry.h"
 #include "../export/screenshotexportservice.h"
 #include "../ports/iannotationeditor.h"
+#include "../ports/irecordingsession.h"
 #include "../ports/iscreenshotbackend.h"
 #include "../ports/iscreenshotoverlayhost.h"
 #include "../ports/iscreenshotresultsink.h"
 #include "../ports/isnaphintsource.h"
 #include "../ports/iwindowtagger.h"
 #include "../../utils/log.h"
+#include "../../utils/configsettings.h"
+#include "../../utils.h"
+#include "../../recordertablet.h"
 
+#include <QGuiApplication>
+#include <QScreen>
+#include <QTimer>
 #include <QDebug>
 #include <QWindow>
 
@@ -32,6 +39,29 @@ bool isSelectionResize(SelectionAction action)
 CursorIntent cursorIntentWhilePressed(CursorIntent intent)
 {
     return intent == CursorIntent::Move ? CursorIntent::Grabbing : intent;
+}
+
+QList<QScreen *> recordingScreensForSelection(const QRect &selection,
+                                               const QList<OutputFrame> &outputs)
+{
+    QList<QScreen *> result;
+    const QRect normalized = selection.normalized();
+    for (const OutputFrame &output : outputs) {
+        if (output.output.logicalGeometry.intersected(normalized).isEmpty())
+            continue;
+
+        QScreen *matched = nullptr;
+        for (QScreen *screen : QGuiApplication::screens()) {
+            if (screen->name() == output.output.outputId
+                    || screen->geometry() == output.output.logicalGeometry) {
+                matched = screen;
+                break;
+            }
+        }
+        if (matched && !result.contains(matched))
+            result.append(matched);
+    }
+    return result;
 }
 
 } // namespace
@@ -96,6 +126,14 @@ ScreenshotSessionController::ScreenshotSessionController(IScreenshotBackend *bac
             this, &ScreenshotSessionController::onPinRequested);
     connect(m_overlay, &IScreenshotOverlayHost::cancelRequested,
             this, &ScreenshotSessionController::onCancelRequested);
+    connect(m_overlay, &IScreenshotOverlayHost::recordModeChanged,
+            this, &ScreenshotSessionController::onRecordModeChanged);
+    connect(m_overlay, &IScreenshotOverlayHost::recordStartRequested,
+            this, &ScreenshotSessionController::onRecordStartRequested);
+    connect(m_overlay, &IScreenshotOverlayHost::recordStopRequested,
+            this, &ScreenshotSessionController::onRecordStopRequested);
+    connect(m_overlay, &IScreenshotOverlayHost::recordingCountdownFinished,
+            this, &ScreenshotSessionController::startRecordingAfterCountdown);
     if (m_snapHints) {
         connect(m_snapHints, &ISnapHintSource::regionChanged,
                 this, &ScreenshotSessionController::onSnapRegionChanged);
@@ -104,9 +142,17 @@ ScreenshotSessionController::ScreenshotSessionController(IScreenshotBackend *bac
             this, [this](const QRect &, const QRect &) { syncOverlaySelection(); });
     connect(m_selection, &SelectionModel::stateChanged,
             this, [this](InteractionState) { syncOverlaySelection(); });
+
 }
 
-ScreenshotSessionController::~ScreenshotSessionController() = default;
+ScreenshotSessionController::~ScreenshotSessionController()
+{
+    if (m_recordingSession
+            && (m_recordingSession->state() == IRecordingSession::State::Starting
+                || m_recordingSession->state() == IRecordingSession::State::Recording)) {
+        m_recordingSession->cancel();
+    }
+}
 
 bool ScreenshotSessionController::start(const Request &request)
 {
@@ -129,6 +175,8 @@ bool ScreenshotSessionController::start(const Request &request)
     m_finished = false;
     m_inputTarget = InputTarget::Inactive;
     m_activeCursorIntent = CursorIntent::Cross;
+    m_recordMode = false;
+    stopRecordingCountdown();
     m_selection->clear();
     m_state = State::PreparingFrame;
     m_backend->prepare(m_request);
@@ -143,6 +191,46 @@ void ScreenshotSessionController::cancel()
 ScreenshotSessionController::State ScreenshotSessionController::state() const
 {
     return m_state;
+}
+
+bool ScreenshotSessionController::isRecording() const
+{
+    return m_recordingStateActive;
+}
+
+void ScreenshotSessionController::setRecordingSession(IRecordingSession *recordingSession)
+{
+    if (m_recordingSession == recordingSession)
+        return;
+    if (m_recordingSession)
+        m_recordingSession->deleteLater();
+    m_recordingSession = recordingSession;
+    if (!m_recordingSession)
+        return;
+    m_recordingSession->setParent(this);
+    connect(m_recordingSession, &IRecordingSession::started,
+            this, &ScreenshotSessionController::onRecordingStarted);
+    connect(m_recordingSession, &IRecordingSession::saved,
+            this, &ScreenshotSessionController::onRecordingSaved);
+    connect(m_recordingSession, &IRecordingSession::failed,
+            this, &ScreenshotSessionController::onRecordingFailed);
+    connect(m_recordingSession, &IRecordingSession::cancelled,
+            this, &ScreenshotSessionController::onRecordingCancelled);
+}
+
+void ScreenshotSessionController::stopRecord()
+{
+    onRecordStopRequested();
+}
+
+void ScreenshotSessionController::stopApp()
+{
+    cancel();
+}
+
+QString ScreenshotSessionController::getRecorderNormalIcon()
+{
+    return RecorderTablet::getRecorderNormalIcon();
 }
 
 void ScreenshotSessionController::onBackendPrepared(const FrozenFrameSet &frames)
@@ -314,10 +402,178 @@ void ScreenshotSessionController::onSnapRegionChanged(const QRect &globalRegion)
     m_overlay->setSnapHint(m_snapHint);
 }
 
+void ScreenshotSessionController::onRecordModeChanged(bool enabled)
+{
+    if (m_state != State::Selecting && m_state != State::Editing)
+        return;
+    m_recordMode = enabled;
+}
+
+void ScreenshotSessionController::onRecordStartRequested()
+{
+    if (!m_recordMode || m_finished)
+        return;
+    if (m_state != State::Selecting && m_state != State::Editing)
+        return;
+    if (!m_recordingSession) {
+        fail(QStringLiteral("当前平台没有可用的录屏后端"));
+        return;
+    }
+
+    const QRect selection = m_selection->geometry().normalized();
+    if (selection.isEmpty()) {
+        fail(QStringLiteral("录屏前请先选择区域"));
+        return;
+    }
+
+    const QList<QScreen *> screens =
+            recordingScreensForSelection(selection, m_frames.outputs);
+    if (screens.isEmpty()) {
+        fail(QStringLiteral("录屏选区没有可用的输出屏幕"));
+        return;
+    }
+
+    stopSnapHints();
+    m_state = State::Countdown;
+    m_overlay->setSelectionFinalized(true);
+    if (!m_overlay->startRecordingCountdown(selection))
+        fail(QStringLiteral("无法显示录屏倒计时"));
+}
+
+void ScreenshotSessionController::stopRecordingCountdown()
+{
+    if (m_overlay)
+        m_overlay->stopRecordingCountdown();
+}
+
+void ScreenshotSessionController::startRecordingAfterCountdown()
+{
+    if (m_state != State::Countdown || m_finished)
+        return;
+    stopRecordingCountdown();
+
+    const QRect selection = m_selection->geometry().normalized();
+    const QList<QScreen *> screens =
+            recordingScreensForSelection(selection, m_frames.outputs);
+    if (screens.isEmpty()) {
+        fail(QStringLiteral("录屏选区不再对应可用输出"));
+        return;
+    }
+    if (!m_overlay->beginRecording(selection)) {
+        fail(QStringLiteral("无法切换 TreeLand 录屏界面"));
+        return;
+    }
+
+    ConfigSettings *settings = ConfigSettings::instance();
+    RecordingRequest request;
+    request.screens = screens;
+    request.screen = QGuiApplication::screenAt(selection.center());
+    if (!request.screen || !screens.contains(request.screen))
+        request.screen = screens.first();
+    request.outputGeometry = request.screen->geometry();
+    request.selection = selection;
+    request.includeCursor = settings->getValue(QStringLiteral("recorder"),
+                                                QStringLiteral("cursor"))
+                                    .toInt()
+            != 0;
+    request.frameRate = settings->getValue(QStringLiteral("recorder"),
+                                           QStringLiteral("frame_rate"))
+                                .toInt();
+    if (request.frameRate <= 0)
+        request.frameRate = 30;
+    request.format = settings->getValue(QStringLiteral("recorder"),
+                                        QStringLiteral("format"))
+                             .toInt();
+
+    // Let the compositor remove the full-screen mask before the first frame is
+    // requested; otherwise the frozen screenshot surface can leak into video.
+    QTimer::singleShot(120, this, [this, request] {
+        if (m_finished || m_state != State::Countdown)
+            return;
+        if (!m_recordingSession->start(request)) {
+            fail(QStringLiteral("启动 TreeLand 录屏失败"));
+            return;
+        }
+    });
+}
+
+void ScreenshotSessionController::onRecordStopRequested()
+{
+    if (m_state == State::Countdown) {
+        stopRecordingCountdown();
+        if (m_recordingSession) {
+            const IRecordingSession::State recordingState = m_recordingSession->state();
+            if (recordingState == IRecordingSession::State::Starting
+                    || recordingState == IRecordingSession::State::Recording
+                    || recordingState == IRecordingSession::State::Stopping) {
+                m_state = State::Exporting;
+                m_recordingSession->cancel();
+                return;
+            }
+        }
+        finish(State::Cancelled);
+        return;
+    }
+    if (m_state != State::Recording || !m_recordingSession)
+        return;
+    m_state = State::Exporting;
+    m_recordingSession->stop();
+}
+
+void ScreenshotSessionController::onRecordingStarted()
+{
+    if (m_finished || m_state != State::Countdown)
+        return;
+    m_state = State::Recording;
+    setRecordingState(true);
+}
+
+void ScreenshotSessionController::onRecordingSaved(const QString &path)
+{
+    if (m_finished)
+        return;
+    setRecordingState(false);
+    m_state = State::Completed;
+    emit saved(path);
+    finish(State::Completed);
+}
+
+void ScreenshotSessionController::onRecordingFailed(const QString &reason)
+{
+    if (m_finished)
+        return;
+    setRecordingState(false);
+    fail(reason);
+}
+
+void ScreenshotSessionController::onRecordingCancelled()
+{
+    if (m_finished)
+        return;
+    setRecordingState(false);
+    finish(State::Cancelled);
+}
+
+void ScreenshotSessionController::setRecordingState(bool recording)
+{
+    if (m_recordingStateActive == recording)
+        return;
+    m_recordingStateActive = recording;
+    if (m_overlay)
+        m_overlay->setRecordingControlsActive(recording);
+    emit RecorderState(recording);
+    emit RecordingModeChanged(recording);
+    emit recordingStateChanged();
+}
+
 void ScreenshotSessionController::onConfirmRequested()
 {
     if (m_finished || m_selection->geometry().isEmpty())
         return;
+    if (m_recordMode) {
+        onRecordStartRequested();
+        return;
+    }
     if (m_state != State::Selecting && m_state != State::Editing)
         return;
 
@@ -414,6 +670,31 @@ void ScreenshotSessionController::onCancelRequested()
 {
     if (m_finished)
         return;
+
+    if ((m_state == State::Countdown
+         || m_state == State::Recording
+         || m_state == State::Exporting)
+            && m_recordingSession) {
+        const IRecordingSession::State recordingState = m_recordingSession->state();
+        if (recordingState == IRecordingSession::State::Starting
+                || recordingState == IRecordingSession::State::Recording
+                || recordingState == IRecordingSession::State::Stopping) {
+            m_state = State::Exporting;
+            m_recordingSession->cancel();
+            return;
+        }
+    }
+    if (m_state == State::Recording && m_recordingSession) {
+        m_recordingSession->cancel();
+        setRecordingState(false);
+        finish(State::Cancelled);
+        return;
+    }
+    if (m_state == State::Countdown) {
+        stopRecordingCountdown();
+        finish(State::Cancelled);
+        return;
+    }
 
     if (m_inputTarget == InputTarget::Annotation && m_annotationEditor)
         m_annotationEditor->cancelInteraction();
@@ -534,6 +815,14 @@ void ScreenshotSessionController::fail(const QString &reason)
 
     qCritical() << "Screenshot session failed:" << reason;
     m_backend->cancel();
+    setRecordingState(false);
+    if (m_recordingSession
+            && (m_recordingSession->state() == IRecordingSession::State::Starting
+                || m_recordingSession->state() == IRecordingSession::State::Recording
+                || m_recordingSession->state() == IRecordingSession::State::Stopping)) {
+        disconnect(m_recordingSession, nullptr, this, nullptr);
+        m_recordingSession->cancel();
+    }
     emit failed(reason);
     finish(State::Failed);
 }
@@ -542,9 +831,13 @@ void ScreenshotSessionController::finish(State state)
 {
     if (m_finished)
         return;
+    stopRecordingCountdown();
     stopSnapHints();
-    if (m_overlay)
+    setRecordingState(false);
+    if (m_overlay) {
+        m_overlay->finishRecording();
         m_overlay->close();
+    }
     m_finished = true;
     m_state = state;
     emit finished();

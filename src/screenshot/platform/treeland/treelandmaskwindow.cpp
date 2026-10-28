@@ -17,11 +17,14 @@
 #include <QKeySequence>
 #include <QMouseEvent>
 #include <QPainter>
+#include <QRegion>
 #include <QResizeEvent>
 #include <QScreen>
 #include <QWindow>
 #include <QtMath>
+#include <QtWaylandClient/private/qwaylanddisplay_p.h>
 #include <QtWaylandClient/private/qwaylandwindow_p.h>
+#include <wayland-client-protocol.h>
 
 struct xdg_toplevel;
 
@@ -67,7 +70,9 @@ TreelandMaskWindow::TreelandMaskWindow(const OutputDescriptor &output, QWidget *
 {
     setWindowFlags(Qt::Window | Qt::FramelessWindowHint | Qt::WindowStaysOnTopHint);
     setAttribute(Qt::WA_DeleteOnClose, false);
-    setAttribute(Qt::WA_OpaquePaintEvent, true);
+    setAttribute(Qt::WA_TranslucentBackground, true);
+    setAttribute(Qt::WA_OpaquePaintEvent, false);
+    setAttribute(Qt::WA_NoSystemBackground, true);
     setMouseTracking(true);
     setFocusPolicy(Qt::StrongFocus);
     setCursor(Qt::CrossCursor);
@@ -129,6 +134,56 @@ void TreelandMaskWindow::setSelectionHintOwner(bool owner)
         return;
     m_selectionHintOwner = owner;
     update();
+}
+
+void TreelandMaskWindow::setRecordingMode(bool enabled,
+                                          const QRect &globalSelection,
+                                          bool dimOutside)
+{
+    m_recordingMode = enabled;
+    m_recordingDimOutside = enabled && dimOutside;
+    m_recordingSelection = enabled
+            ? CoordinateMapper::globalToOutputLocal(globalSelection.normalized(), m_output)
+                      .intersected(rect())
+            : QRect();
+    qCDebug(dsrApp) << "Recording overlay mode:" << enabled
+                    << "global selection:" << globalSelection
+                    << "local selection:" << m_recordingSelection
+                    << "dim outside:" << m_recordingDimOutside;
+    repaint();
+}
+
+void TreelandMaskWindow::setInputRegion(const QRegion &region)
+{
+    if (!windowHandle())
+        return;
+
+    auto *waylandWindow =
+            static_cast<QtWaylandClient::QWaylandWindow *>(windowHandle()->handle());
+    if (!waylandWindow || !waylandWindow->display() || !waylandWindow->wlSurface())
+        return;
+
+    wl_region *waylandRegion = waylandWindow->display()->createRegion(region);
+    if (!waylandRegion)
+        return;
+
+    wl_surface_set_input_region(waylandWindow->wlSurface(), waylandRegion);
+    wl_region_destroy(waylandRegion);
+    wl_surface_commit(waylandWindow->wlSurface());
+}
+
+void TreelandMaskWindow::resetInputRegion()
+{
+    if (!windowHandle())
+        return;
+
+    auto *waylandWindow =
+            static_cast<QtWaylandClient::QWaylandWindow *>(windowHandle()->handle());
+    if (!waylandWindow || !waylandWindow->wlSurface())
+        return;
+
+    wl_surface_set_input_region(waylandWindow->wlSurface(), nullptr);
+    wl_surface_commit(waylandWindow->wlSurface());
 }
 
 void TreelandMaskWindow::setCursorIntent(CursorIntent intent)
@@ -252,6 +307,23 @@ void TreelandMaskWindow::paintEvent(QPaintEvent *event)
     painter.setRenderHint(QPainter::Antialiasing, true);
     painter.setRenderHint(QPainter::SmoothPixmapTransform, true);
 
+    if (m_recordingMode) {
+        painter.setCompositionMode(QPainter::CompositionMode_Source);
+        painter.fillRect(rect(), Qt::transparent);
+        painter.setCompositionMode(QPainter::CompositionMode_SourceOver);
+
+        if (m_recordingDimOutside && !m_recordingSelection.isEmpty()) {
+            QRegion outside(rect());
+            outside -= QRegion(m_recordingSelection);
+            painter.setClipRegion(outside);
+            painter.fillRect(rect(), QColor(0, 0, 0, 105));
+            painter.setBrush(Qt::NoBrush);
+            painter.setPen(QPen(QColor(255, 87, 54), 2));
+            painter.drawRect(m_recordingSelection.adjusted(-2, -2, 1, 1));
+        }
+        return;
+    }
+
     if (!m_sourceImage.isNull())
         painter.drawImage(rect(), m_sourceImage);
     else
@@ -311,6 +383,7 @@ void TreelandMaskWindow::paintEvent(QPaintEvent *event)
         painter.setPen(Qt::white);
         painter.drawText(hintRect, Qt::AlignHCenter | Qt::AlignVCenter, hint);
     }
+
 }
 
 void TreelandMaskWindow::mousePressEvent(QMouseEvent *event)
@@ -319,7 +392,8 @@ void TreelandMaskWindow::mousePressEvent(QMouseEvent *event)
         QWidget::mousePressEvent(event);
         return;
     }
-    emit pointerPressed(toGlobal(eventPosition(event)));
+    const QPoint globalPos = toGlobal(eventPosition(event));
+    emit pointerPressed(globalPos);
     event->accept();
 }
 
@@ -335,7 +409,8 @@ void TreelandMaskWindow::mouseReleaseEvent(QMouseEvent *event)
         QWidget::mouseReleaseEvent(event);
         return;
     }
-    emit pointerReleased(toGlobal(eventPosition(event)));
+    const QPoint globalPos = toGlobal(eventPosition(event));
+    emit pointerReleased(globalPos);
     event->accept();
 }
 

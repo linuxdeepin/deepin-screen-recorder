@@ -23,6 +23,7 @@
 #include <QTimer>
 #include <QSettings>
 #include <QBitmap>
+#include <QStyle>
 
 #include <dgraphicsgloweffect.h>
 
@@ -140,6 +141,29 @@ void ToolBarWidget::setTableScreenshotsEnable(const bool &state)
 {
     qCDebug(dsrApp) << "ToolBarWidget::setTableScreenshotsEnable called with state:" << state;
     m_subTool->setTableScreenshotEnable(state);
+}
+
+void ToolBarWidget::setRecordingActive(bool active)
+{
+    if (active)
+        m_subTool->switchContent(QStringLiteral("record"));
+    m_subTool->setRecordingActive(active);
+
+    if (active) {
+        m_confirmButton->setIcon(QIcon::fromTheme(
+                QStringLiteral("screen-recording"),
+                QIcon::fromTheme(
+                        QStringLiteral("media-playback-stop"),
+                        QApplication::style()->standardIcon(QStyle::SP_MediaStop))));
+        m_confirmButton->setAccessibleName(QStringLiteral("RecordingStopButton"));
+        m_subTool->installTipHint(m_confirmButton, tr("Stop recording"));
+    } else {
+        m_confirmButton->setIcon(QIcon::fromTheme(QStringLiteral("confirm")));
+        m_confirmButton->setAccessibleName(QStringLiteral("ConfirmButton"));
+        m_subTool->installTipHint(m_confirmButton, tr("Copy to clipboard (Enter)"));
+    }
+    updateGeometry();
+    adjustSize();
 }
 
 void ToolBarWidget::setButEnableOnLockScreen(const bool &state)
@@ -372,6 +396,12 @@ void ToolBar::setTableScreenshotsEnable(const bool &state)
     }
 }
 
+void ToolBar::setRecordingActive(bool active)
+{
+    if (m_toolbarWidget)
+        m_toolbarWidget->setRecordingActive(active);
+}
+
 void ToolBar::setButEnableOnLockScreen(const bool &state)
 {
     if (m_toolbarWidget)
@@ -499,4 +529,3 @@ QRect ToolBar::getShotOptionRect(){
 ToolBar::~ToolBar()
 {
 }
-

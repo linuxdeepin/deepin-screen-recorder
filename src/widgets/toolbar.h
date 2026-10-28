@@ -43,6 +43,8 @@ public:
 
     void setTableScreenshotsEnable(const bool &state);
 
+    void setRecordingActive(bool active);
+
     void setButEnableOnLockScreen(const bool &state);
     /**
      * @brief getShotOptionRect 获取选项菜单的位置及大小
@@ -135,6 +137,8 @@ public:
     void setOcrScreenshotsEnable(const bool &state);
 
     void setTableScreenshotsEnable(const bool &state);
+
+    void setRecordingActive(bool active);
 
     void setButEnableOnLockScreen(const bool &state);
     void clearShotToolSelection();

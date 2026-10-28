@@ -7,6 +7,7 @@
 #define COUNTDOWNTOOLTIP_H
 
 #include <DWidget>
+#include <QPixmap>
 #include <QTimer>
 
 DWIDGET_USE_NAMESPACE
@@ -18,7 +19,8 @@ class CountdownTooltip : public DWidget
     static const int NUMBER_PADDING_Y;
 
 public:
-    explicit CountdownTooltip(DWidget *parent = 0);
+    explicit CountdownTooltip(QWidget *parent = nullptr);
+    void setBackgroundPixmap(const QPixmap &pixmap, const QPoint &globalOrigin);
     void start();
     /**
      * @brief startAtOnce 立即开始，不需要3s倒计时
@@ -58,8 +60,8 @@ private:
 
     QTimer *showCountdownTimer;
     QString text;
-
-
+    QPixmap backgroundPixmap;
+    QPoint backgroundGlobalOrigin;
 };
 
 #endif // COUNTDOWNTOOLTIP_H

@@ -32,6 +32,10 @@ public:
     void setSnapHint(const QRect &globalRegion);
     void setSelectionFinalized(bool finalized);
     void setSelectionHintOwner(bool owner);
+    void setRecordingMode(bool enabled, const QRect &globalSelection = QRect(),
+                          bool dimOutside = false);
+    void setInputRegion(const QRegion &region);
+    void resetInputRegion();
     void setCursorIntent(CursorIntent intent);
     void setAnnotationView(QWidget *widget);
     bool prepareWindow();
@@ -70,8 +74,11 @@ private:
     QRect m_selection;
     QRect m_globalSnapHint;
     QRect m_snapHint;
+    QRect m_recordingSelection;
     bool m_selectionHintOwner = false;
     bool m_finalized = false;
+    bool m_recordingMode = false;
+    bool m_recordingDimOutside = false;
     bool m_silentClose = false;
     CursorIntent m_cursorIntent = CursorIntent::Default;
     bool m_cancelEmitted = false;

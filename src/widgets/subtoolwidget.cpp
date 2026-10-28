@@ -39,6 +39,7 @@
 #include <QFileDialog>
 #include <QThread>
 #include <QToolTip>
+#include <QTimer>
 
 #include <unistd.h>
 #include <QMediaDevices>
@@ -80,6 +81,20 @@ void SubToolWidget::initRecordLabel()
     qCDebug(dsrApp) << "SubToolWidget::initRecordLabel called (initializing record toolbar UI).";
     m_recordSubTool = new DLabel(this);
     QList<ToolButton *> btnList;
+
+    m_recordingStatusLabel = new DLabel(m_recordSubTool);
+    m_recordingStatusLabel->setObjectName("RecordingStatus");
+    m_recordingStatusLabel->setAccessibleName("RecordingStatus");
+    m_recordingStatusLabel->setAlignment(Qt::AlignCenter);
+    m_recordingStatusLabel->setFixedSize(QSize(132, 36));
+    m_recordingStatusLabel->setStyleSheet(
+            QStringLiteral("color: #d32f2f; font-weight: 600;"));
+    m_recordingStatusLabel->hide();
+
+    m_recordingElapsedTimer = new QTimer(this);
+    m_recordingElapsedTimer->setInterval(1000);
+    connect(m_recordingElapsedTimer, &QTimer::timeout,
+            this, &SubToolWidget::updateRecordingStatus);
 
     //添加显示键盘按钮
     m_keyBoardButton = new ToolButton();
@@ -178,6 +193,7 @@ void SubToolWidget::initRecordLabel()
     rectLayout->setSpacing(0);
     rectLayout->setAlignment(Qt::AlignVCenter);
     rectLayout->addSpacing(10);
+    rectLayout->addWidget(m_recordingStatusLabel, 0, Qt::AlignVCenter);
     for (int i = 0; i < btnList.length(); i++) {
         rectLayout->addWidget(btnList[i]);
         rectLayout->setAlignment(btnList[i], Qt::AlignVCenter);
@@ -194,6 +210,48 @@ void SubToolWidget::initRecordLabel()
     initRecordOption();
 
     qCDebug(dsrApp) << "Record toolbar UI initialized.";
+}
+
+void SubToolWidget::setRecordingActive(bool active)
+{
+    if (!m_recordSubTool || !m_recordingStatusLabel || !m_recordingElapsedTimer)
+        return;
+
+    m_recordingElapsedTimer->stop();
+    m_recordingElapsedSeconds = 0;
+
+    const bool showTools = !active;
+    m_keyBoardButton->setVisible(showTools);
+    m_cameraButton->setVisible(showTools);
+    m_shotButton->setVisible(showTools);
+    m_optionButton->setVisible(showTools);
+    m_recordSeperator->setVisible(showTools);
+    m_recordingStatusLabel->setVisible(active);
+
+    if (active) {
+        updateRecordingStatus();
+        m_recordingElapsedTimer->start();
+    }
+
+    if (m_recordSubTool->layout())
+        m_recordSubTool->layout()->activate();
+    m_recordSubTool->adjustSize();
+    updateGeometry();
+}
+
+void SubToolWidget::updateRecordingStatus()
+{
+    if (!m_recordingStatusLabel)
+        return;
+
+    const int minutes = m_recordingElapsedSeconds / 60;
+    const int seconds = m_recordingElapsedSeconds % 60;
+    const QString status =
+            tr("● REC %1:%2").arg(minutes, 2, 10, QLatin1Char('0'))
+                    .arg(seconds, 2, 10, QLatin1Char('0'));
+    m_recordingStatusLabel->setText(status);
+    m_recordingStatusLabel->setAccessibleDescription(status);
+    ++m_recordingElapsedSeconds;
 }
 void SubToolWidget::initRecordOption()
 {
@@ -782,7 +840,6 @@ void SubToolWidget::initShotLabel()
     });
 
     //切换到录屏按钮
-    // TODO:treeland暂时屏蔽录屏功能
     m_recorderButton = new ToolButton();
     m_recorderButton->setObjectName("RecorderButton");
     m_recorderButton->setAccessibleName("RecorderButton");
@@ -792,9 +849,7 @@ void SubToolWidget::initShotLabel()
     Utils::setAccessibility(m_recorderButton, AC_SUBTOOLWIDGET_RECORDER_BUTTON);
     m_recorderButton->setFixedSize(TOOL_BUTTON_SIZE);
     installTipHint(m_recorderButton, tr("Record"));
-    if (!(Utils::isTreelandMode)) {
-        btnList.append(m_recorderButton);
-    }
+    btnList.append(m_recorderButton);
     connect(m_recorderButton, &ToolButton::clicked, this, [ = ] {
         m_host->toolBarPointRequested();
         switchContent("record");
