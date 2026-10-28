@@ -257,10 +257,14 @@ QImage MultiScreenFrameCompositor::convertDmaBufferToQImage(const DmaFrameInfo& 
         qCDebug(dsrApp) << "MultiScreenFrameCompositor: Using CPU-accessible frame data for screen"
                         << frameInfo.screen->name();
         
-        // Create QImage from the frame data
-        // Assuming RGBA format as per DRM_FORMAT_XBGR8888 -> RGBA conversion
+        // Capture frames use DRM_FORMAT_XBGR8888. On little-endian systems the
+        // memory order is R,G,B,X, while the final X byte is unused rather
+        // than alpha. RGBX8888 preserves that byte order and keeps the image
+        // opaque; RGB32 would swap red and blue, and RGBA8888 would treat the
+        // final zero byte as transparency.
         return QImage(reinterpret_cast<const uchar*>(frameInfo.frameData.constData()),
-                     frameInfo.width, frameInfo.height, frameInfo.stride, QImage::Format_RGBA8888).copy();
+                     frameInfo.width, frameInfo.height, frameInfo.stride,
+                     QImage::Format_RGBX8888).copy();
     }
     
     // If no CPU data available, we need to handle DMA Buffer conversion

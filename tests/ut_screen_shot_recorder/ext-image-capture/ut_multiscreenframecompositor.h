@@ -95,6 +95,44 @@ TEST_F(MultiScreenFrameCompositorTest, fullDesktopComposition)
     EXPECT_FALSE(m_c->isCompositionReady());
 }
 
+TEST_F(MultiScreenFrameCompositorTest, xbgrFrameKeepsRedAndBlueChannels)
+{
+    QList<QScreen*> screens = QGuiApplication::screens();
+    if (screens.isEmpty()) GTEST_SKIP();
+    QScreen *screen = screens.first();
+    const QRect geometry = screen->geometry();
+
+    m_c->setScreenLayouts({screen});
+    m_c->setCropRegion(QRect(geometry.topLeft(), QSize(2, 2)));
+
+    DmaFrameInfo frame = makeFrame(screen,
+                                   geometry,
+                                   geometry.width(),
+                                   geometry.height(),
+                                   12345);
+    // DRM_FORMAT_XBGR8888 is stored as R,G,B,X on little-endian systems.
+    // Fill the top-left source pixels with opaque red.
+    for (int pixel = 0; pixel < 4; ++pixel) {
+        const int offset = pixel * 4;
+        frame.frameData[offset] = static_cast<char>(0xff);
+        frame.frameData[offset + 1] = 0;
+        frame.frameData[offset + 2] = 0;
+        frame.frameData[offset + 3] = 0;
+    }
+
+    ASSERT_TRUE(m_c->addScreenFrame(frame));
+    const QByteArray output = m_c->composeFrames();
+    ASSERT_FALSE(output.isEmpty());
+
+    const QImage image(reinterpret_cast<const uchar *>(output.constData()),
+                       2,
+                       2,
+                       m_c->getOutputStride(),
+                       QImage::Format_RGBA8888);
+    EXPECT_EQ(image.pixelColor(0, 0), QColor(255, 0, 0));
+    EXPECT_EQ(image.pixelColor(1, 1), QColor(255, 0, 0));
+}
+
 TEST_F(MultiScreenFrameCompositorTest, performCompositionSignal)
 {
     QList<QScreen*> screens = QGuiApplication::screens();
