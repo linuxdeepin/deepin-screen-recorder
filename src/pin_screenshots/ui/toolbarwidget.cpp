@@ -15,7 +15,7 @@
 
 const QSize MIN_TOOLBAR_WIDGET_SIZE = QSize(194, 60);
 
-ToolBarWidget::ToolBarWidget(DWidget *parent): DBlurEffectWidget(parent)
+ToolBarWidget::ToolBarWidget(DWidget *parent): DFloatingWidget(parent)
 {
     if (PUtils::isWaylandMode) {
         setWindowFlags(Qt::Sheet | Qt::WindowStaysOnTopHint | Qt::WindowDoesNotAcceptFocus);
@@ -23,15 +23,16 @@ ToolBarWidget::ToolBarWidget(DWidget *parent): DBlurEffectWidget(parent)
         setWindowFlags(Qt::ToolTip);
     }
 
-    this->setRadius(30);
-    this->setBlurEnabled(true);
-    this->setMode(DBlurEffectWidget::GaussianBlur);
-    this->setBlendMode(DBlurEffectWidget::InWindowBlend);
+    setBlurBackgroundEnabled(true);
+    blurBackground()->setRadius(30);
+    blurBackground()->setBlurEnabled(true);
+    blurBackground()->setMode(DBlurEffectWidget::GaussianBlur);
+    blurBackground()->setBlendMode(DBlurEffectWidget::InWindowBlend);
     // 初始化主题样式
     if (DGuiApplicationHelper::instance()->themeType() == THEMETYPE) {
-        this->setMaskColor(QColor(255, 255, 255, 76));
+        blurBackground()->setMaskColor(QColor(255, 255, 255, 76));
     } else {
-        this->setMaskColor(QColor(0, 0, 0, 76));
+        blurBackground()->setMaskColor(QColor(0, 0, 0, 76));
     }
 
     initToolBarWidget(); // 初始化按钮菜单
@@ -55,12 +56,12 @@ void ToolBarWidget::onOptionButtonClicked()
 void ToolBarWidget::onThemeTypeChange(DGuiApplicationHelper::ColorType themeType)
 {
     if (themeType == THEMETYPE) {
-        this->setMaskColor(QColor(255, 255, 255, 76));
+        blurBackground()->setMaskColor(QColor(255, 255, 255, 76));
         m_closeButton->setHoverPic(":/newUI/hover/close-hover.svg");
         m_closeButton->setNormalPic(":/newUI/normal/close-normal.svg");
 
     } else {
-        this->setMaskColor(QColor(0, 0, 0, 76));
+        blurBackground()->setMaskColor(QColor(0, 0, 0, 76));
         m_closeButton->setHoverPic(":/newUI/dark/hover/close-hover_dark.svg");
         m_closeButton->setNormalPic(":/newUI/dark/normal/close-normal_dark.svg");
     }
