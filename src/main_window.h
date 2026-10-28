@@ -1,4 +1,4 @@
-// Copyright (C) 2020 ~ 2021 Uniontech Software Technology Co.,Ltd.
+// Copyright (C) 2020-2026 ~ 2021 Uniontech Software Technology Co.,Ltd.
 // SPDX-FileCopyrightText: 2022 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
@@ -11,6 +11,7 @@
 #include "widgets/previewwidget.h"
 #endif
 #include "capture.h"
+#include "utils/log.h"
 
 #include "record_process.h"
 #include "countdown_tooltip.h"
@@ -159,7 +160,7 @@ public:
     explicit MainWindow(DWidget *parent = nullptr);
     ~MainWindow()
     {
-        qInfo() << __FUNCTION__ << __LINE__ << "===正在释放截图录屏相关资源===";
+        qCInfo(dsrApp) << __FUNCTION__ << __LINE__ << "===正在释放截图录屏相关资源===";
         
         ToolButton::clearBackgroundPixmap();
         
@@ -181,18 +182,18 @@ public:
             delete m_devnumMonitor;
             m_devnumMonitor = nullptr;
         }
-        qInfo() << __FUNCTION__ << __LINE__ << "正在释放截图录屏全局事件监听线程...";
+        qCInfo(dsrApp) << __FUNCTION__ << __LINE__ << "正在释放截图录屏全局事件监听线程...";
         if (m_pScreenCaptureEvent) {
             m_pScreenCaptureEvent->releaseRes();
             m_pScreenCaptureEvent->wait(30 * 1000);
             if (m_pScreenCaptureEvent->isRunning()) {
-                qCritical() << "Detect X release hangs.";
+                qCCritical(dsrApp) << "Detect X release hangs.";
                 m_pScreenCaptureEvent->terminate();
             }
             delete m_pScreenCaptureEvent;
             m_pScreenCaptureEvent = nullptr;
         }
-        qInfo() << __FUNCTION__ << __LINE__ << "截图录屏全局事件监听线程已释放！";
+        qCInfo(dsrApp) << __FUNCTION__ << __LINE__ << "截图录屏全局事件监听线程已释放！";
 #ifdef KF5_WAYLAND_FLAGE_ON
         if (Utils::isWaylandMode && m_connectionThread) {
 
@@ -278,8 +279,8 @@ public:
 
         //以前的流程没执行到此处，没暴露延迟500ms的问题，以前的无用代码
         QThread::currentThread()->msleep(500);
-        qInfo() << __FUNCTION__ << __LINE__ << "===截图录屏相关资源已释放===";
-        qInfo() << __FUNCTION__ << __LINE__ << "截图录屏已退出";
+        qCInfo(dsrApp) << __FUNCTION__ << __LINE__ << "===截图录屏相关资源已释放===";
+        qCInfo(dsrApp) << __FUNCTION__ << __LINE__ << "截图录屏已退出";
     }
 
     enum ShotMouseStatus {
