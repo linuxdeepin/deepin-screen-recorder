@@ -1,3 +1,10 @@
+deepin-screen-recorder (6.6.40) unstable; urgency=medium
+
+  * docs: add Portuguese (pt_BR) help manual
+  * chore: Sync by https://github.com/linuxdeepin/.github/commit/a300f8523d4876677112edab6a0772f7ad112976
+
+ -- re2zero <yangwu@uniontech.com>  Wed, 28 Oct 2026 10:55:17 +0800
+
 deepin-screen-recorder (6.6.39) unstable; urgency=medium
 
   * test: add basic screenshot and recording AT suite
