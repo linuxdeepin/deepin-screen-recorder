@@ -4885,12 +4885,12 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
                                 }
                                 //qDebug()  << "1.3 >>>> recordX: " << recordX << " , recordY: "<< recordY;
                             } else {
-                                recordX = it->x() - static_cast<int>(screenRect.x() * m_pixelRatio);
-                                recordY = it->y() - static_cast<int>(screenRect.y() * m_pixelRatio);
+                                recordX = static_cast<int>(it->x() / m_pixelRatio - screenRect.x());
+                                recordY = static_cast<int>(it->y() / m_pixelRatio - screenRect.y());
                                 //qDebug()  << "1.4 >>>> recordX: " << recordX << " , recordY: "<< recordY;
                             }
-                            recordWidth = it->width();
-                            recordHeight = it->height();
+                            recordWidth = static_cast<int>(it->width() / m_pixelRatio);
+                            recordHeight = static_cast<int>(it->height() / m_pixelRatio);
                             needRepaint = true;
                             break;
                         }
