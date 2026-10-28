@@ -1,4 +1,4 @@
-// Copyright (C) 2020 ~ 2021 Uniontech Software Technology Co.,Ltd.
+// Copyright (C) 2020-2026 ~ 2021 Uniontech Software Technology Co.,Ltd.
 // SPDX-FileCopyrightText: 2022 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
@@ -8,7 +8,7 @@
 #include "../../utils/log.h"
 #include <QWidget>
 
-Q_LOGGING_CATEGORY(dsrApp, "record-time-plugin");
+Q_LOGGING_CATEGORY(dsrApp, "org.deepin.screen-recorder.recordtime");
 
 RecordTimePlugin::RecordTimePlugin(QObject *parent)
     : QObject(parent)
@@ -45,9 +45,9 @@ void RecordTimePlugin::init(PluginProxyInterface *proxyInter)
     QDBusConnection sessionBus = QDBusConnection::sessionBus();
     if (sessionBus.registerService("com.deepin.ScreenRecorder.time") &&
         sessionBus.registerObject("/com/deepin/ScreenRecorder/time", this, QDBusConnection::ExportAdaptors)) {
-        qInfo() << "dbus service registration success!";
+        qCInfo(dsrApp) << "dbus service registration success!";
     } else {
-        qWarning() << "dbus service registration failed!";
+        qCWarning(dsrApp) << "dbus service registration failed!";
     }
     qCDebug(dsrApp) << "init method finished.";
 }
@@ -125,7 +125,7 @@ void RecordTimePlugin::onStart(bool resetTime)
     bool widgetEnabled = m_timeWidget->enabled();
     qCInfo(dsrApp) << "RecordTimePlugin::onStart() - m_timeWidget->enabled() returns:" << widgetEnabled;
     if (widgetEnabled) {
-        qInfo() << "load plugin";
+        qCInfo(dsrApp) << "load plugin";
         qCDebug(dsrApp) << "Time widget enabled, loading plugin.";
         m_proxyInter->itemRemoved(this, pluginName());
         m_proxyInter->itemAdded(this, pluginName());
@@ -144,13 +144,13 @@ void RecordTimePlugin::onStop()
     // 例如主程序先正常停录、随后退出，watcher 会再触发一次进来——
     // 此时直接解引用会崩，先保护再判 enabled。
     if (m_timeWidget && m_timeWidget->enabled()) {
-        qInfo() << "unload plugin";
+        qCInfo(dsrApp) << "unload plugin";
         qCDebug(dsrApp) << "Time widget enabled, unloading plugin.";
         m_proxyInter->itemRemoved(this, pluginName());
         m_bshow = false;
         clear();
     }
-    qInfo() << "stop record time";
+    qCInfo(dsrApp) << "stop record time";
     qCDebug(dsrApp) << "onStop method finished.";
 }
 
@@ -201,7 +201,7 @@ void RecordTimePlugin::refresh()
     qCDebug(dsrApp) << "refresh method called.";
     QSize size = m_timeWidget->sizeHint();
     if (size.width() > m_timeWidget->width() && 1 != position() && 3 != position() && m_bshow) {
-        qInfo() << "refresh plugin";
+        qCInfo(dsrApp) << "refresh plugin";
         m_proxyInter->itemRemoved(this, pluginName());
         m_proxyInter->itemAdded(this, pluginName());
     }

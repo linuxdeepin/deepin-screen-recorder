@@ -1,4 +1,4 @@
-// Copyright (C) 2020 ~ 2021 Deepin Technology Co., Ltd.
+// Copyright (C) 2020-2026 ~ 2021 Deepin Technology Co., Ltd.
 // SPDX-FileCopyrightText: 2022 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
@@ -7,6 +7,7 @@
 #define AIASSISTANTINTERFACE_H
 
 #include <QtCore/QObject>
+#include "../utils/log.h"
 #include <QtCore/QByteArray>
 #include <QtCore/QList>
 #include <QtCore/QMap>
@@ -52,7 +53,7 @@ public Q_SLOTS: // METHODS
                                                 const QPoint &pos,
                                                 bool isCustom, const QString &imagePath)
     {
-        qDebug() << __FUNCTION__ << "type:" << type << "query:" << query 
+        qCDebug(dsrApp) << __FUNCTION__ << "type:" << type << "query:" << query 
                  << "pos:" << pos << "isCustom:" << isCustom << "imagePath:" << imagePath;
         return call(QStringLiteral("launchAiQuickOCR"), type, query, 
                    pos, isCustom, imagePath);
@@ -68,7 +69,7 @@ public Q_SLOTS: // METHODS
     */
     inline QDBusPendingReply<> launchAiQuickOCRWithImage(int type, const QImage &image, const QString &imageName)
     {
-        qDebug() << __FUNCTION__ << "type:" << type << "imageName:" << imageName;
+        qCDebug(dsrApp) << __FUNCTION__ << "type:" << type << "imageName:" << imageName;
         QByteArray data;
         QBuffer buf(&data);
         if (image.save(&buf, "PNG")) {
@@ -90,7 +91,7 @@ public Q_SLOTS: // METHODS
     */
     inline QDBusPendingReply<> launchChatUploadImage(const QString &imagePath)
     {
-        qDebug() << __FUNCTION__ << "imagePath:" << imagePath;
+        qCDebug(dsrApp) << __FUNCTION__ << "imagePath:" << imagePath;
         return call(QStringLiteral("launchChatUploadImage"), imagePath);
     }
 
