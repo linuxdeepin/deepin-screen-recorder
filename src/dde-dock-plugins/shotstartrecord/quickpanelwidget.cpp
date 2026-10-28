@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2021-2024 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2021-2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -107,7 +107,7 @@ void QuickPanelWidget::changeType(FuctionType type)
         qCDebug(dsrApp) << "Type is RECORDING, setting icon to:" << recordIcon;
         setIcon(QIcon::fromTheme(recordIcon, QIcon(QString(":/res/%1.svg").arg(recordIcon))));
     } else {
-        qWarning() << "Type Unkonw! Please select RECORD or RECORDING";
+        qCWarning(dsrApp) << "Type Unkonw! Please select RECORD or RECORDING";
         qCDebug(dsrApp) << "Unknown type provided:" << type;
     }
     qCDebug(dsrApp) << "changeType method finished.";
@@ -170,7 +170,7 @@ void QuickPanelWidget::onTimeout()
     int time = m_baseTime.secsTo(QTime::currentTime());
     showTime = showTime.addSecs(time);
     m_showTimeStr = showTime.toString("hh:mm:ss");
-    qInfo() << "Current show time: " << m_showTimeStr;
+    qCInfo(dsrApp) << "Current show time: " << m_showTimeStr;
     setDescription(m_showTimeStr);
     update();
     qCDebug(dsrApp) << "Time updated to:" << m_showTimeStr;

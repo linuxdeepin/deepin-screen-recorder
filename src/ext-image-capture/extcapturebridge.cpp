@@ -1,4 +1,4 @@
-// Copyright (C) 2017 ~ 2018 Deepin Technology Co., Ltd.
+// Copyright (C) 2017-2026 ~ 2018 Deepin Technology Co., Ltd.
 // SPDX-FileCopyrightText: 2022 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
@@ -40,19 +40,19 @@ ExtCaptureBridge::ExtCaptureBridge(QObject *parent)
     m_processTimer->setInterval(16);
     connect(m_processTimer, &QTimer::timeout, this, &ExtCaptureBridge::processFrames);
     
-    qDebug() << "ExtCaptureBridge created";
+    qCDebug(dsrApp) << "ExtCaptureBridge created";
 }
 
 ExtCaptureBridge::~ExtCaptureBridge()
 {
     stopBridge();
-    qDebug() << "ExtCaptureBridge destroyed";
+    qCDebug(dsrApp) << "ExtCaptureBridge destroyed";
 }
 
 void ExtCaptureBridge::setExtCaptureRecorder(ExtCaptureRecorder *recorder)
 {
     if (m_bridging) {
-        qWarning() << "ExtCaptureBridge: Cannot set recorder while bridging";
+        qCWarning(dsrApp) << "ExtCaptureBridge: Cannot set recorder while bridging";
         return;
     }
 
@@ -78,35 +78,35 @@ void ExtCaptureBridge::setExtCaptureRecorder(ExtCaptureRecorder *recorder)
         connect(recorder, &ExtCaptureRecorder::error, 
                 this, &ExtCaptureBridge::onRecordingError);
                 
-        qDebug() << "ExtCaptureBridge: ExtCaptureRecorder set";
+        qCDebug(dsrApp) << "ExtCaptureBridge: ExtCaptureRecorder set";
     } else {
         m_frameBuffer = nullptr;
-        qDebug() << "ExtCaptureBridge: ExtCaptureRecorder cleared";
+        qCDebug(dsrApp) << "ExtCaptureBridge: ExtCaptureRecorder cleared";
     }
 }
 
 void ExtCaptureBridge::setRecordAdmin(RecordAdmin *recordAdmin)
 {
     if (m_bridging) {
-        qWarning() << "ExtCaptureBridge: Cannot set RecordAdmin while bridging";
+        qCWarning(dsrApp) << "ExtCaptureBridge: Cannot set RecordAdmin while bridging";
         return;
     }
 
     m_recordAdmin = recordAdmin;
     m_recordAdminInitialized = false;
     
-    qDebug() << "ExtCaptureBridge: RecordAdmin" << (recordAdmin ? "set" : "cleared");
+    qCDebug(dsrApp) << "ExtCaptureBridge: RecordAdmin" << (recordAdmin ? "set" : "cleared");
 }
 
 bool ExtCaptureBridge::startBridge(int screenWidth, int screenHeight)
 {
     if (m_bridging) {
-        qWarning() << "ExtCaptureBridge: Already bridging";
+        qCWarning(dsrApp) << "ExtCaptureBridge: Already bridging";
         return false;
     }
 
     if (!m_extCaptureRecorder || !m_frameBuffer || !m_recordAdmin) {
-        qCritical() << "ExtCaptureBridge: Missing required components";
+        qCCritical(dsrApp) << "ExtCaptureBridge: Missing required components";
         emit bridgeError("Missing required components");
         return false;
     }

@@ -1,4 +1,4 @@
-// Copyright (C) 2017 ~ 2018 Deepin Technology Co., Ltd.
+// Copyright (C) 2017-2026 ~ 2018 Deepin Technology Co., Ltd.
 // SPDX-FileCopyrightText: 2022 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
@@ -116,13 +116,13 @@ ExtCaptureFrame::~ExtCaptureFrame()
 bool ExtCaptureFrame::initialize(void *frame, const CaptureConfig &config)
 {
     if (d->state != Uninitialized) {
-        qWarning() << "Frame already initialized";
+        qCWarning(dsrApp) << "Frame already initialized";
         return false;
     }
 
     auto *frameObj = static_cast<ext_image_copy_capture_frame_v1*>(frame);
     if (!frameObj) {
-        qWarning() << "Invalid frame object";
+        qCWarning(dsrApp) << "Invalid frame object";
         return false;
     }
 
@@ -139,7 +139,7 @@ bool ExtCaptureFrame::initialize(void *frame, const CaptureConfig &config)
 
     // 创建缓冲区
     if (!createBuffer()) {
-        qWarning() << "Failed to create buffer";
+        qCWarning(dsrApp) << "Failed to create buffer";
         return false;
     }
 
@@ -289,14 +289,14 @@ void* ExtCaptureFrame::getGbmBufferObject() const
 void ExtCaptureFrame::handleTransform(uint32_t transform)
 {
     d->frameData.transform = static_cast<FrameTransform>(transform);
-    qDebug() << "Frame transform:" << transform;
+    qCDebug(dsrApp) << "Frame transform:" << transform;
 }
 
 void ExtCaptureFrame::handleDamage(int32_t x, int32_t y, int32_t width, int32_t height)
 {
     QRect damageRect(x, y, width, height);
     d->frameData.damageRegions.append(damageRect);
-    qDebug() << "Frame damage:" << damageRect;
+    qCDebug(dsrApp) << "Frame damage:" << damageRect;
 }
 
 void ExtCaptureFrame::handlePresentationTime(uint32_t tv_sec_hi, uint32_t tv_sec_lo, uint32_t tv_nsec)
@@ -304,7 +304,7 @@ void ExtCaptureFrame::handlePresentationTime(uint32_t tv_sec_hi, uint32_t tv_sec
     // 组合时间戳
     uint64_t seconds = (static_cast<uint64_t>(tv_sec_hi) << 32) | tv_sec_lo;
     d->frameData.timestamp = seconds * 1000000000ULL + tv_nsec;
-    qDebug() << "Frame presentation time:" << d->frameData.timestamp;
+    qCDebug(dsrApp) << "Frame presentation time:" << d->frameData.timestamp;
 }
 
 void ExtCaptureFrame::handleReady()
@@ -360,12 +360,12 @@ bool ExtCaptureFrame::createShmBuffer()
     // 创建共享内存文件
     d->bufferFd = memfd_create("ext-capture-buffer", MFD_CLOEXEC);
     if (d->bufferFd < 0) {
-        qWarning() << "Failed to create memfd";
+        qCWarning(dsrApp) << "Failed to create memfd";
         return false;
     }
     
     if (ftruncate(d->bufferFd, d->bufferSize) < 0) {
-        qWarning() << "Failed to resize buffer";
+        qCWarning(dsrApp) << "Failed to resize buffer";
         close(d->bufferFd);
         d->bufferFd = -1;
         return false;
@@ -374,7 +374,7 @@ bool ExtCaptureFrame::createShmBuffer()
     // 映射内存
     d->mappedData = mmap(nullptr, d->bufferSize, PROT_READ | PROT_WRITE, MAP_SHARED, d->bufferFd, 0);
     if (d->mappedData == MAP_FAILED) {
-        qWarning() << "Failed to map buffer";
+        qCWarning(dsrApp) << "Failed to map buffer";
         close(d->bufferFd);
         d->bufferFd = -1;
         return false;
@@ -404,7 +404,7 @@ bool ExtCaptureFrame::createShmBuffer()
     
     auto *pool = wl_shm_create_pool(shm, d->bufferFd, d->bufferSize);
     if (!pool) {
-        qWarning() << "Failed to create shm pool";
+        qCWarning(dsrApp) << "Failed to create shm pool";
         return false;
     }
     
@@ -412,11 +412,11 @@ bool ExtCaptureFrame::createShmBuffer()
     wl_shm_pool_destroy(pool);
     
     if (!d->buffer) {
-        qWarning() << "Failed to create buffer";
+        qCWarning(dsrApp) << "Failed to create buffer";
         return false;
     }
     
-    qDebug() << "Buffer created:" << width << "x" << height << "stride:" << stride << "size:" << d->bufferSize;
+    qCDebug(dsrApp) << "Buffer created:" << width << "x" << height << "stride:" << stride << "size:" << d->bufferSize;
     return true;
 #endif
 }
@@ -425,7 +425,7 @@ void ExtCaptureFrame::setState(FrameState newState)
 {
     if (d->state != newState) {
         d->state = newState;
-        qDebug() << "Frame state changed to:" << newState;
+        qCDebug(dsrApp) << "Frame state changed to:" << newState;
     }
 }
 
