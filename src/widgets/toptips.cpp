@@ -1,4 +1,4 @@
-// Copyright (C) 2020 ~ 2021 Uniontech Software Technology Co.,Ltd.
+// Copyright (C) 2020-2026 ~ 2021 Uniontech Software Technology Co.,Ltd.
 // SPDX-FileCopyrightText: 2022 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
@@ -97,7 +97,7 @@ void TopTips::updateTips(QPoint pos, const QSize &size)
 void TopTips::mousePressEvent(QMouseEvent *ev)
 {
     Q_UNUSED(ev);
-    qDebug() << "";
+    qCDebug(dsrApp) << "";
     return;
 }
 */
