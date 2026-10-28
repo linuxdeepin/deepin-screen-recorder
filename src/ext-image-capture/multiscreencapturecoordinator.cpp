@@ -16,6 +16,7 @@
 #include <errno.h>
 #include <cstring>
 #include <algorithm>
+#include <utility>
 #include <QDateTime>
 #include <gbm.h>
 
@@ -24,6 +25,12 @@
 #include <QMutexLocker>
 #include <QTimer>
 #include <qpa/qplatformnativeinterface.h>
+
+namespace {
+
+constexpr int FrameSyncTimeoutMs = 250;
+
+} // namespace
 
 MultiScreenCaptureCoordinator::MultiScreenCaptureCoordinator(QObject *parent)
     : QObject(parent)
@@ -39,15 +46,16 @@ MultiScreenCaptureCoordinator::MultiScreenCaptureCoordinator(QObject *parent)
     
     // 连接拼接器信号
     connect(m_compositor, &MultiScreenFrameCompositor::compositionComplete,
-            this, &MultiScreenCaptureCoordinator::compositeFrameReady);
+            this, &MultiScreenCaptureCoordinator::onCompositeFrameReady);
     connect(m_compositor, &MultiScreenFrameCompositor::compositionError,
             this, &MultiScreenCaptureCoordinator::error);
     
-    // 配置同步定时器
+    // 输出帧可能异步到达。超时只解除当前轮次，不终止录制，让定时器
+    // 在下一拍重新提交帧请求。
     m_syncTimer->setSingleShot(true);
-    m_syncTimer->setInterval(5); // 5ms超时，确保帧同步
+    m_syncTimer->setInterval(FrameSyncTimeoutMs);
     connect(m_syncTimer, &QTimer::timeout,
-            this, &MultiScreenCaptureCoordinator::checkFrameSyncAndCompose);
+            this, &MultiScreenCaptureCoordinator::onFrameSyncTimeout);
 }
 
 MultiScreenCaptureCoordinator::~MultiScreenCaptureCoordinator()
@@ -62,7 +70,9 @@ void MultiScreenCaptureCoordinator::setCaptureManager(ExtCaptureManager* manager
     qCDebug(dsrApp) << "MultiScreenCaptureCoordinator: Capture manager set";
 }
 
-bool MultiScreenCaptureCoordinator::startMultiScreenCapture(const QList<QScreen*>& screens, bool includeCursor)
+bool MultiScreenCaptureCoordinator::startMultiScreenCapture(const QList<QScreen*>& screens,
+                                                            bool includeCursor,
+                                                            const QRect& cropRegion)
 {
     qCWarning(dsrApp) << "MultiScreenCaptureCoordinator::startMultiScreenCapture: Starting with" 
                       << screens.size() << "screens, includeCursor:" << includeCursor;
@@ -87,8 +97,19 @@ bool MultiScreenCaptureCoordinator::startMultiScreenCapture(const QList<QScreen*
     // 清理现有会话
     cleanupSessions();
 
+    m_readySessionCount = 0;
+    m_captureInFlight = false;
+    m_captureStartedEmitted = false;
+
     // 计算虚拟桌面布局
     calculateVirtualDesktopLayout(screens);
+
+    if (m_compositor) {
+        if (cropRegion.isValid() && !cropRegion.isEmpty())
+            m_compositor->setCropRegion(cropRegion.normalized());
+        else
+            m_compositor->clearCropRegion();
+    }
 
     // 为每个屏幕创建捕获会话
     int successCount = 0;
@@ -101,7 +122,9 @@ bool MultiScreenCaptureCoordinator::startMultiScreenCapture(const QList<QScreen*
         if (!session) {
             qCWarning(dsrApp) << "MultiScreenCaptureCoordinator: Failed to create session for screen" 
                               << screen->name();
-            continue;
+            cleanupSessions();
+            emit error(QStringLiteral("无法为输出 %1 创建录屏会话").arg(screen->name()));
+            return false;
         }
 
         // 查找对应的布局信息
@@ -117,13 +140,18 @@ bool MultiScreenCaptureCoordinator::startMultiScreenCapture(const QList<QScreen*
             qCWarning(dsrApp) << "MultiScreenCaptureCoordinator: No layout found for screen" 
                               << screen->name();
             session->deleteLater();
-            continue;
+            cleanupSessions();
+            emit error(QStringLiteral("输出 %1 缺少录屏布局").arg(screen->name()));
+            return false;
         }
 
         // 设置会话信息
         layout->session = session;
         layout->includeCursor = includeCursor;
         layout->frameReady = false;
+
+        connect(session, &ExtCaptureSession::ready,
+                this, &MultiScreenCaptureCoordinator::onSessionReady);
 
         // 连接会话信号 - 使用lambda捕获screen指针
         connect(session, &ExtCaptureSession::dmaFrameReady,
@@ -143,9 +171,11 @@ bool MultiScreenCaptureCoordinator::startMultiScreenCapture(const QList<QScreen*
                         << screen->name();
     }
 
-    if (successCount == 0) {
-        qCCritical(dsrApp) << "MultiScreenCaptureCoordinator: No sessions created successfully";
-        emit error("Failed to create any capture sessions");
+    if (successCount != screens.size()) {
+        qCCritical(dsrApp) << "MultiScreenCaptureCoordinator: Only" << successCount
+                           << "of" << screens.size() << "sessions were created";
+        cleanupSessions();
+        emit error(QStringLiteral("并非所有输出都成功创建录屏会话"));
         return false;
     }
 
@@ -153,7 +183,9 @@ bool MultiScreenCaptureCoordinator::startMultiScreenCapture(const QList<QScreen*
     qCWarning(dsrApp) << "MultiScreenCaptureCoordinator: Started capturing" << successCount << "screens";
     qCWarning(dsrApp) << "MultiScreenCaptureCoordinator: Virtual desktop size:" << m_virtualDesktopSize;
 
-    emit captureStarted();
+    // 创建会话时约束事件可能已经完成。延迟一次就绪检查，覆盖信号早于
+    // connect() 的竞态。
+    QTimer::singleShot(0, this, &MultiScreenCaptureCoordinator::onSessionReady);
     return true;
 }
 
@@ -166,6 +198,7 @@ void MultiScreenCaptureCoordinator::stopMultiScreenCapture()
     }
 
     m_capturing = false;
+    m_captureInFlight = false;
     m_syncTimer->stop();
 
     cleanupSessions();
@@ -181,22 +214,32 @@ bool MultiScreenCaptureCoordinator::captureMultiScreenFrame()
         return false;
     }
 
+    if (m_captureInFlight) {
+        return true;
+    }
+
     qCDebug(dsrApp) << "MultiScreenCaptureCoordinator::captureMultiScreenFrame: Triggering capture for" 
                     << m_screenLayouts.size() << "screens";
 
     // 重置帧准备标记
     resetFrameReadyFlags();
+    m_captureInFlight = true;
 
     // 触发所有屏幕的帧捕获
     int captureCount = 0;
-    for (const auto& layout : m_screenLayouts) {
+    for (auto& layout : m_screenLayouts) {
         if (layout.session) {
             // 使用createFrame方法创建帧并触发捕获
             ExtCaptureFrame* frame = layout.session->createFrame();
             if (frame) {
-                captureCount++;
-                qCDebug(dsrApp) << "MultiScreenCaptureCoordinator: Created frame for screen" 
-                                << layout.screen->name();
+                if (frame->capture()) {
+                    captureCount++;
+                    qCDebug(dsrApp) << "MultiScreenCaptureCoordinator: Submitted frame for screen"
+                                    << layout.screen->name();
+                } else {
+                    qCWarning(dsrApp) << "MultiScreenCaptureCoordinator: Failed to submit frame for screen"
+                                      << layout.screen->name();
+                }
             } else {
                 qCWarning(dsrApp) << "MultiScreenCaptureCoordinator: Failed to create frame for screen" 
                                   << layout.screen->name();
@@ -204,14 +247,19 @@ bool MultiScreenCaptureCoordinator::captureMultiScreenFrame()
         }
     }
 
-    if (captureCount == 0) {
-        qCWarning(dsrApp) << "MultiScreenCaptureCoordinator: No frames captured";
+    if (captureCount != m_screenLayouts.size()) {
+        qCWarning(dsrApp) << "MultiScreenCaptureCoordinator: Submitted only"
+                          << captureCount << "of" << m_screenLayouts.size() << "frames";
+        if (captureCount > 0)
+            m_syncTimer->start();
+        else
+            m_captureInFlight = false;
         return false;
     }
 
     qCDebug(dsrApp) << "MultiScreenCaptureCoordinator: Triggered capture for" << captureCount << "screens";
     
-    // 启动同步检查定时器
+    // 启动本轮帧采集超时保护。
     m_syncTimer->start();
     
     return true;
@@ -250,14 +298,11 @@ void MultiScreenCaptureCoordinator::onScreenFrameReady(QScreen* screen, int dmaB
     // 从DMA Buffer或GBM Buffer Object中提取CPU可访问的像素数据
     // 使用与ExtCaptureRecorder相同的完整实现
     frameInfo.frameData = extractDmaBufferData(dmaBufferFd, gbmBo, width, height, stride, size);
-    
-    // 将帧数据传递给compositor
-    if (m_compositor) {
-        bool success = m_compositor->addScreenFrame(frameInfo);
-        if (!success) {
-            qCWarning(dsrApp) << "MultiScreenCaptureCoordinator: Failed to add frame to compositor for screen" 
-                              << screen->name();
-        }
+
+    if (frameInfo.frameData.isEmpty()) {
+        qCWarning(dsrApp) << "MultiScreenCaptureCoordinator: Failed to map frame for screen"
+                          << screen->name();
+        return;
     }
     
     // 保持原有的帧数据结构用于兼容性
@@ -279,75 +324,79 @@ void MultiScreenCaptureCoordinator::onScreenFrameReady(QScreen* screen, int dmaB
         }
     }
 
-    qCDebug(dsrApp) << "MultiScreenCaptureCoordinator: Frame data updated for screen" << screen->name()
-                    << "and passed to compositor";
+    if (!m_compositor || !m_compositor->addScreenFrame(frameInfo)) {
+        qCWarning(dsrApp) << "MultiScreenCaptureCoordinator: Failed to add frame to compositor for screen"
+                          << screen->name();
+        return;
+    }
+
+    qCDebug(dsrApp) << "MultiScreenCaptureCoordinator: Frame data updated for screen"
+                    << screen->name() << "and passed to compositor";
 }
 
 void MultiScreenCaptureCoordinator::onSessionError(const QString& message)
 {
     qCWarning(dsrApp) << "MultiScreenCaptureCoordinator::onSessionError:" << message;
+    m_captureInFlight = false;
+    m_syncTimer->stop();
     emit error(QString("Session error: %1").arg(message));
 }
 
 void MultiScreenCaptureCoordinator::onSessionStopped()
 {
     qCDebug(dsrApp) << "MultiScreenCaptureCoordinator::onSessionStopped";
-    // 会话停止，可能需要清理或重新启动
+    if (!m_capturing)
+        return;
+
+    m_captureInFlight = false;
+    m_syncTimer->stop();
+    emit error(QStringLiteral("录屏输出会话意外停止"));
 }
 
-void MultiScreenCaptureCoordinator::checkFrameSyncAndCompose()
+void MultiScreenCaptureCoordinator::onSessionReady()
 {
-    QMutexLocker locker(&m_frameMutex);
-    
-    if (!m_capturing) {
+    if (!m_capturing || m_captureStartedEmitted)
         return;
+
+    int readyCount = 0;
+    for (const ScreenLayout &layout : std::as_const(m_screenLayouts)) {
+        if (layout.session && layout.session->state() == ExtCaptureSession::Ready)
+            ++readyCount;
     }
 
-    // 检查哪些屏幕的帧准备好了
-    QStringList readyScreens, notReadyScreens;
-    for (const auto& layout : m_screenLayouts) {
-        if (layout.frameReady) {
-            readyScreens << layout.screen->name();
-        } else {
-            notReadyScreens << layout.screen->name();
-        }
-    }
+    m_readySessionCount = readyCount;
+    if (m_readySessionCount < m_screenLayouts.size())
+        return;
 
-    qCDebug(dsrApp) << "MultiScreenCaptureCoordinator::checkFrameSyncAndCompose:";
-    qCDebug(dsrApp) << "  Ready screens:" << readyScreens;
-    qCDebug(dsrApp) << "  Not ready screens:" << notReadyScreens;
+    m_captureStartedEmitted = true;
+    qCWarning(dsrApp) << "MultiScreenCaptureCoordinator: All" << m_screenLayouts.size()
+                      << "output sessions are ready";
+    emit captureStarted();
+}
 
-    if (allScreenFramesReady()) {
-        qCDebug(dsrApp) << "MultiScreenCaptureCoordinator: All frames ready, composing...";
-        
-        // 合成多屏帧
-        QByteArray compositeFrame = composeMultiScreenFrame();
-        
-        if (!compositeFrame.isEmpty()) {
-            // 计算合成帧的尺寸
-            int compositeWidth = m_virtualDesktopSize.width();
-            int compositeHeight = m_virtualDesktopSize.height();
-            int compositeStride = compositeWidth * 4; // RGBA格式
-            
-            // 使用最新的时间戳
-            uint64_t latestTimestamp = 0;
-            for (const auto& frameData : m_screenFrames) {
-                if (frameData.timestamp > latestTimestamp) {
-                    latestTimestamp = frameData.timestamp;
-                }
-            }
-            
-            qCWarning(dsrApp) << "MultiScreenCaptureCoordinator: Composite frame ready, size:" 
-                              << compositeFrame.size() << "dimensions:" << compositeWidth << "x" << compositeHeight;
-            
-            emit compositeFrameReady(compositeFrame, compositeWidth, compositeHeight, compositeStride, latestTimestamp);
-        } else {
-            qCWarning(dsrApp) << "MultiScreenCaptureCoordinator: Failed to compose frame";
-        }
-    } else {
-        qCDebug(dsrApp) << "MultiScreenCaptureCoordinator: Timeout waiting for all frames, proceeding with available frames";
-        // 可以选择用现有帧进行部分合成，或者等待下一次捕获
-    }
+void MultiScreenCaptureCoordinator::onCompositeFrameReady(const QByteArray& compositeFrameData,
+                                                          int width,
+                                                          int height,
+                                                          int stride,
+                                                          uint64_t timestamp)
+{
+    if (!m_capturing || compositeFrameData.isEmpty())
+        return;
+
+    m_captureInFlight = false;
+    m_syncTimer->stop();
+    qCWarning(dsrApp) << "MultiScreenCaptureCoordinator: Composite frame ready, size:"
+                      << compositeFrameData.size() << "dimensions:" << width << "x" << height;
+    emit compositeFrameReady(compositeFrameData, width, height, stride, timestamp);
+}
+
+void MultiScreenCaptureCoordinator::onFrameSyncTimeout()
+{
+    if (!m_captureInFlight)
+        return;
+
+    qCWarning(dsrApp) << "MultiScreenCaptureCoordinator: Timed out waiting for output frames; retrying on the next tick";
+    m_captureInFlight = false;
 }
 
 void MultiScreenCaptureCoordinator::calculateVirtualDesktopLayout(const QList<QScreen*>& screens)
@@ -421,6 +470,8 @@ void MultiScreenCaptureCoordinator::cleanupSessions()
     // 清理现有会话
     for (auto& layout : m_screenLayouts) {
         if (layout.session) {
+            disconnect(layout.session, nullptr, this, nullptr);
+            layout.session->stop();
             layout.session->deleteLater();
             layout.session = nullptr;
         }
@@ -429,6 +480,8 @@ void MultiScreenCaptureCoordinator::cleanupSessions()
     m_screenLayouts.clear();
     m_screenFrames.clear();
     m_virtualDesktopSize = QSize();
+    m_readySessionCount = 0;
+    m_captureStartedEmitted = false;
 }
 
 void* MultiScreenCaptureCoordinator::getWaylandOutput(QScreen* screen)
@@ -455,17 +508,6 @@ void* MultiScreenCaptureCoordinator::getWaylandOutput(QScreen* screen)
 #endif
 }
 
-bool MultiScreenCaptureCoordinator::allScreenFramesReady() const
-{
-    // 基于waylandintegration.cpp:1020的flag检查模式
-    for (const auto& layout : m_screenLayouts) {
-        if (!layout.frameReady) {
-            return false;
-        }
-    }
-    return true;
-}
-
 void MultiScreenCaptureCoordinator::resetFrameReadyFlags()
 {
     // 重置所有帧准备标记
@@ -478,41 +520,6 @@ void MultiScreenCaptureCoordinator::resetFrameReadyFlags()
     }
     
     qCDebug(dsrApp) << "MultiScreenCaptureCoordinator: Frame ready flags reset";
-}
-
-QByteArray MultiScreenCaptureCoordinator::composeMultiScreenFrame()
-{
-    // 基于waylandintegration.cpp:1039-1047的成功拼接模式
-    qCDebug(dsrApp) << "MultiScreenCaptureCoordinator::composeMultiScreenFrame: Starting composition";
-    
-    if (m_virtualDesktopSize.isEmpty()) {
-        qCWarning(dsrApp) << "MultiScreenCaptureCoordinator: Virtual desktop size is empty";
-        return QByteArray();
-    }
-
-    // TODO: 这里将在阶段2实现完整的帧拼接逻辑
-    // 当前返回占位符数据以验证架构正确性
-    
-    int frameSize = m_virtualDesktopSize.width() * m_virtualDesktopSize.height() * 4; // RGBA
-    QByteArray placeholderFrame(frameSize, 0);
-    
-    // 创建简单的测试图案以验证多屏坐标系统
-    char* data = placeholderFrame.data();
-    for (int y = 0; y < m_virtualDesktopSize.height(); ++y) {
-        for (int x = 0; x < m_virtualDesktopSize.width(); ++x) {
-            int offset = (y * m_virtualDesktopSize.width() + x) * 4;
-            
-            // 创建渐变测试图案
-            data[offset + 0] = (x * 255) / m_virtualDesktopSize.width();      // R
-            data[offset + 1] = (y * 255) / m_virtualDesktopSize.height();     // G  
-            data[offset + 2] = 128;                                           // B
-            data[offset + 3] = 255;                                           // A
-        }
-    }
-    
-    qCDebug(dsrApp) << "MultiScreenCaptureCoordinator: Generated placeholder composite frame, size:" << frameSize;
-    
-    return placeholderFrame;
 }
 
 QByteArray MultiScreenCaptureCoordinator::extractDmaBufferData(int dmaBufferFd, void* gbmBo, int width, int height, int stride, size_t size)

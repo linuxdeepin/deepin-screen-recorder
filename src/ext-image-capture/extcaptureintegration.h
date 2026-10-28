@@ -48,7 +48,9 @@ public:
      * @param includeCursor 是否包含光标
      * @return 是否成功开始
      */
-    bool startMultiScreenRecording(const QList<QScreen*>& screens, bool includeCursor = false);
+    bool startMultiScreenRecording(const QList<QScreen*>& screens,
+                                   bool includeCursor = false,
+                                   const QRect& cropRegion = QRect());
 
     /**
      * @brief 停止录制
