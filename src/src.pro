@@ -267,6 +267,7 @@ HEADERS += main_window.h \
     screenshot/ports/iscreenshotbackend.h \
     screenshot/ports/iscreenshotoverlayhost.h \
     screenshot/ports/iannotationeditor.h \
+    screenshot/ports/irecordingsession.h \
     screenshot/ports/iscreenshotresultsink.h \
     screenshot/ports/isnaphintsource.h \
     screenshot/ports/iwindowtagger.h \
@@ -283,6 +284,8 @@ HEADERS += main_window.h \
     screenshot/platform/treeland/treelandannotationeditor.h \
     screenshot/platform/treeland/treelandmaskwindow.h \
     screenshot/platform/treeland/treelandmaskoverlayhost.h \
+    screenshot/platform/treeland/treelandrecordingsession.h \
+    screenshot/platform/treeland/recordingfiletransaction.h \
     screenshot/platform/treeland/treelandclipboardholder.h \
     protocols/data-control/ext-data-control-v1-client-protocol.h \
     screenshot/platform/treeland/treelandscreenshotbackend.h
@@ -414,6 +417,8 @@ SOURCES += main.cpp \
     screenshot/platform/treeland/treelandannotationeditor.cpp \
     screenshot/platform/treeland/treelandmaskwindow.cpp \
     screenshot/platform/treeland/treelandmaskoverlayhost.cpp \
+    screenshot/platform/treeland/treelandrecordingsession.cpp \
+    screenshot/platform/treeland/recordingfiletransaction.cpp \
     screenshot/platform/treeland/treelandclipboardholder.cpp \
     protocols/data-control/ext-data-control-v1-protocol.c \
     screenshot/platform/treeland/treelandscreenshotbackend.cpp

@@ -19,6 +19,7 @@ SOURCES += \
     ../../src/screenshot/export/screenshotexportservice.cpp \
     ../../src/screenshot/session/annotationcoordinator.cpp \
     ../../src/screenshot/session/screenshotsessioncontroller.cpp \
+    ../../src/screenshot/platform/treeland/recordingfiletransaction.cpp \
     ../../src/utils/log.cpp \
     ../../src/utils/shapesutils.cpp
 
@@ -37,5 +38,6 @@ HEADERS += \
     ../../src/screenshot/ports/iwindowtagger.h \
     ../../src/screenshot/session/annotationcoordinator.h \
     ../../src/screenshot/session/screenshotsessioncontroller.h \
+    ../../src/screenshot/platform/treeland/recordingfiletransaction.h \
     ../../src/utils/log.h \
     ../../src/utils/shapesutils.h

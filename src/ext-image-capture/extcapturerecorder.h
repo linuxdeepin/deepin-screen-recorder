@@ -10,10 +10,12 @@
 #include <QScreen>
 #include <QTimer>
 #include <QQueue>
+#include <QList>
 #include <QMutex>
 #include <QThread>
 #include <QProcess>
 #include <QElapsedTimer>
+#include <QRect>
 
 // DMA Buffer相关头文件
 #include <gbm.h>
@@ -65,8 +67,23 @@ public:
      * @param frameRate 帧率(fps)
      * @return 是否成功开始
      */
-    bool startRecording(QScreen *screen, bool includeCursor = false, 
-                       const QString &outputPath = QString(), int frameRate = 30);
+    bool startRecording(QScreen *screen, bool includeCursor = false,
+                       const QString &outputPath = QString(), int frameRate = 30,
+                       const QRect &captureRegion = QRect());
+
+    /**
+     * @brief 开始跨输出录制
+     * @param screens 与录制选区相交的输出
+     * @param includeCursor 是否包含光标
+     * @param outputPath 输出文件路径
+     * @param frameRate 帧率(fps)
+     * @param captureRegion 全局坐标下的录制选区
+     */
+    bool startMultiScreenRecording(const QList<QScreen *> &screens,
+                                   bool includeCursor,
+                                   const QString &outputPath,
+                                   int frameRate,
+                                   const QRect &captureRegion);
 
     /**
      * @brief 停止录制
@@ -142,6 +159,8 @@ private slots:
     void onRecordingStopped();
     void onFrameReady(const void *data, size_t size, int width, int height, int stride, uint64_t timestamp);
     void onDmaFrameReady(int dmaBufferFd, void *gbmBo, size_t size, int width, int height, int stride, uint64_t timestamp);
+    void onMultiScreenFrameReady(const QByteArray &data, int width, int height,
+                                 int stride, uint64_t timestamp);
     void onExtCaptureError(const QString &message);
     void onCaptureTimer();
 
@@ -156,6 +175,7 @@ private:
     bool processDmaBufferFrame(int dmaBufferFd, void *gbmBo, int width, int height, int stride);
     void updateFrameTimestamps(int64_t timestamp);
     bool adjustVideoDurationIfNeeded();
+    void updateCropFilter(int frameWidth, int frameHeight);
     ExtCaptureIntegration *m_extCapture;
     ExtCaptureFrameBuffer *m_frameBuffer;  // 保留用于兼容性
     QTimer *m_captureTimer;
@@ -166,6 +186,10 @@ private:
     int m_frameCount;
     qint64 m_startTime;
     bool m_includeCursor;
+    bool m_multiScreenRecording = false;
+    QRect m_captureRegionGlobal;
+    QRect m_captureOutputGeometry;
+    QString m_cropFilter;
     
     // 录制参数
     int m_frameWidth;

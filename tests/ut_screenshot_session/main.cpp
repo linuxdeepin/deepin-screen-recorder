@@ -11,6 +11,7 @@
 #include "screenshot/ports/iscreenshotresultsink.h"
 #include "screenshot/ports/isnaphintsource.h"
 #include "screenshot/ports/iwindowtagger.h"
+#include "screenshot/platform/treeland/recordingfiletransaction.h"
 #include "screenshot/session/annotationcoordinator.h"
 #include "screenshot/session/screenshotsessioncontroller.h"
 #include "utils/shapesutils.h"
@@ -19,6 +20,7 @@
 #include <QImage>
 #include <QPainter>
 #include <QSignalSpy>
+#include <QTemporaryDir>
 #include <QtTest>
 
 using namespace Dsr::Screenshot;
@@ -1176,6 +1178,69 @@ private slots:
         QCOMPARE(failedSpy.size(), 1);
         QCOMPARE(failedSpy.takeFirst().at(0).toString(), QStringLiteral("保存失败"));
         QVERIFY(overlay->closed);
+    }
+
+    void recordingTransactionDiscardPreservesExistingDestination()
+    {
+        QTemporaryDir directory;
+        QVERIFY(directory.isValid());
+
+        const QString finalPath = directory.filePath(QStringLiteral("recording.mp4"));
+        QFile finalFile(finalPath);
+        QVERIFY(finalFile.open(QIODevice::WriteOnly));
+        QCOMPARE(finalFile.write("previous recording"), qint64(18));
+        finalFile.close();
+
+        RecordingFileTransaction transaction(finalPath);
+        const QString capturePath = transaction.createTemporaryPath(QStringLiteral("mp4"));
+        const QString convertedPath = transaction.createTemporaryPath(QStringLiteral("gif"));
+        QVERIFY(!capturePath.isEmpty());
+        QVERIFY(!convertedPath.isEmpty());
+
+        QFile captureFile(capturePath);
+        QVERIFY(captureFile.open(QIODevice::WriteOnly));
+        QCOMPARE(captureFile.write("partial capture"), qint64(15));
+        captureFile.close();
+
+        QFile convertedFile(convertedPath);
+        QVERIFY(convertedFile.open(QIODevice::WriteOnly));
+        QCOMPARE(convertedFile.write("partial transcode"), qint64(17));
+        convertedFile.close();
+
+        QVERIFY(transaction.discard());
+        QVERIFY(QFileInfo::exists(finalPath));
+        QVERIFY(!QFileInfo::exists(capturePath));
+        QVERIFY(!QFileInfo::exists(convertedPath));
+
+        QVERIFY(finalFile.open(QIODevice::ReadOnly));
+        QCOMPARE(finalFile.readAll(), QByteArrayLiteral("previous recording"));
+    }
+
+    void recordingTransactionPublishesOnlyAfterSuccess()
+    {
+        QTemporaryDir directory;
+        QVERIFY(directory.isValid());
+
+        const QString finalPath = directory.filePath(QStringLiteral("recording.mkv"));
+        QFile finalFile(finalPath);
+        QVERIFY(finalFile.open(QIODevice::WriteOnly));
+        QCOMPARE(finalFile.write("previous recording"), qint64(18));
+        finalFile.close();
+
+        RecordingFileTransaction transaction(finalPath);
+        const QString capturePath = transaction.createTemporaryPath(QStringLiteral("mkv"));
+        QVERIFY(!capturePath.isEmpty());
+
+        QFile captureFile(capturePath);
+        QVERIFY(captureFile.open(QIODevice::WriteOnly));
+        QCOMPARE(captureFile.write("completed recording"), qint64(19));
+        captureFile.close();
+
+        QString error;
+        QVERIFY2(transaction.publish(capturePath, &error), qPrintable(error));
+        QVERIFY(!QFileInfo::exists(capturePath));
+        QVERIFY(finalFile.open(QIODevice::ReadOnly));
+        QCOMPARE(finalFile.readAll(), QByteArrayLiteral("completed recording"));
     }
 };
 
