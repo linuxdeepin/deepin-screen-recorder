@@ -18,7 +18,7 @@
 
 
 DWIDGET_USE_NAMESPACE
-class ToolBarWidget : public DBlurEffectWidget
+class ToolBarWidget : public DFloatingWidget
 {
     Q_OBJECT
 public:
