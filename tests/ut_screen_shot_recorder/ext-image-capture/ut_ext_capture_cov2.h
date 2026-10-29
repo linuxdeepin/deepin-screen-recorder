@@ -293,10 +293,8 @@ TEST_F(ExtCaptureRecorderCov2Test, onDmaFrameReadyInvalidFdSafe)
 }
 
 // ===== MultiScreenCaptureCoordinator 补充 =====
-// 既有 ut_multiscreencapturecoordinator.h 已声明 calculateVirtualDesktopLayout/
-// composeMultiScreenFrame/resetFrameReadyFlags/cleanupSessions/getWaylandOutput，
-// ut_multiscreencapturecoordinator_cov.h 已声明 allScreenFramesReady/m_capturing，
-// 同一 TU 内不重复声明。
+// 既有测试头已声明 calculateVirtualDesktopLayout/resetFrameReadyFlags/
+// cleanupSessions/getWaylandOutput；拼接由 MultiScreenFrameCompositor 独立覆盖。
 
 class MultiScreenCaptureCoordinatorCov2Test : public Test
 {
@@ -310,26 +308,6 @@ public:
 TEST_F(MultiScreenCaptureCoordinatorCov2Test, resetFrameReadyFlagsEmptySafe)
 {
     EXPECT_NO_FATAL_FAILURE(call_private_fun::MultiScreenCaptureCoordinatorresetFrameReadyFlags(*m_c));
-}
-
-// composeMultiScreenFrame：virtualDesktopSize 空 -> 返回空
-TEST_F(MultiScreenCaptureCoordinatorCov2Test, composeEmptyWhenNoLayout)
-{
-    QByteArray out;
-    EXPECT_NO_FATAL_FAILURE(out = call_private_fun::MultiScreenCaptureCoordinatorcomposeMultiScreenFrame(*m_c));
-    EXPECT_TRUE(out.isEmpty());
-}
-
-// composeMultiScreenFrame：设置 virtualDesktopSize 后返回非空
-TEST_F(MultiScreenCaptureCoordinatorCov2Test, composeReturnsPlaceholderWhenSized)
-{
-    // 通过 calculateVirtualDesktopLayout 间接设置 virtualDesktopSize
-    QList<QScreen *> screens = QGuiApplication::screens();
-    if (screens.isEmpty()) GTEST_SKIP();
-    call_private_fun::MultiScreenCaptureCoordinatorcalculateVirtualDesktopLayout(*m_c, screens);
-    QByteArray out;
-    EXPECT_NO_FATAL_FAILURE(out = call_private_fun::MultiScreenCaptureCoordinatorcomposeMultiScreenFrame(*m_c));
-    EXPECT_FALSE(out.isEmpty());
 }
 
 // cleanupSessions：空状态安全

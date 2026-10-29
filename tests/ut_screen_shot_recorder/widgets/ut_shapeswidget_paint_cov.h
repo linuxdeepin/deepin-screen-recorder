@@ -17,12 +17,10 @@ using namespace testing;
 // handlePaint 依据 m_shapes 中每个 shape 的 type 分发到 paintRect/paintEllipse/
 // paintArrow/paintLine/paintEffectLine/paintText。一次性塞入各种 type 的 shape 再
 // 调用 handlePaint，即可覆盖整个绘制子系统。
-// 注：ut_shapeswidget.h 因 API drift 被禁用，故 m_shapes/m_pos1/m_currentShape/m_currentType
-// 在本 TU 中尚无声明，需在此补齐（其余 paint*/event 访问器由 _ext/_ext2 提供）。
+// m_shapes 已由先包含的 _ext2 声明；同一 TU 不能重复注册 ACCESS_PRIVATE_FIELD。
 ACCESS_PRIVATE_FUN(ShapesWidget, void(QPainter &), handlePaint);
 ACCESS_PRIVATE_FIELD(ShapesWidget, QPointF, m_pos2);
 ACCESS_PRIVATE_FIELD(ShapesWidget, bool, m_clearAllTextBorder);
-ACCESS_PRIVATE_FIELD(ShapesWidget, Toolshapes, m_shapes);
 ACCESS_PRIVATE_FIELD(ShapesWidget, QPointF, m_pos1);
 ACCESS_PRIVATE_FIELD(ShapesWidget, Toolshape, m_currentShape);
 ACCESS_PRIVATE_FIELD(ShapesWidget, QString, m_currentType);

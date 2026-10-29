@@ -17,13 +17,10 @@ using namespace testing;
 //  - extractDmaBufferData：伪造 fd（mmap 必然失败）+ 伪造 gbmBo（gbm_bo_* 会段错误）
 //    -> 仅测 fd>=0 且 gbmBo=null 的早退路径（已在 _ext 覆盖），这里补 gbmBo 伪造
 //    但 gbmBo 伪造会调 gbm_bo_get_width -> 段错误，故不测该路径。
-//  - checkFrameSyncAndCompose：m_capturing=true 且 allReady 且 compose 非空 -> emit compositeFrameReady
-//  - onScreenFrameReady：有 layout 且 fd 有效但 gbmBo=null -> extractDmaBuffer 早退，
-//    compositor.addScreenFrame 仍执行，frameReady 置位
-//  - allScreenFramesReady：空 layout -> true
+//  - onScreenFrameReady：DMA/GBM 提取失败时不得把帧错误标记为就绪
+//  - onCompositeFrameReady：向上层转发合成帧
 // 注意：ut_multiscreencapturecoordinator.h 与 _ext.h 已声明部分私有函数，
-// 同一 TU 内不能重复 ACCESS_PRIVATE_FUN，故此处仅访问字段与尚未声明的私有函数。
-ACCESS_PRIVATE_FUN(MultiScreenCaptureCoordinator, bool() const, allScreenFramesReady);
+// 同一 TU 内不能重复 ACCESS_PRIVATE_FUN，故此处仅访问字段。
 ACCESS_PRIVATE_FIELD(MultiScreenCaptureCoordinator, bool, m_capturing);
 
 class MultiScreenCaptureCoordinatorCovTest : public Test
@@ -39,38 +36,26 @@ public:
     }
 };
 
-// allScreenFramesReady：空 layout -> true（无屏幕需就绪）
-TEST_F(MultiScreenCaptureCoordinatorCovTest, allReadyWhenNoLayouts)
+TEST_F(MultiScreenCaptureCoordinatorCovTest, compositeFrameReadyIsForwarded)
 {
-    EXPECT_TRUE(call_private_fun::MultiScreenCaptureCoordinatorallScreenFramesReady(*m_c));
-}
-
-// checkFrameSyncAndCompose：m_capturing=true，无 layout -> allReady=true，
-// 但 composeMultiScreenFrame 因 virtualDesktopSize 空 -> 返回空 -> 不 emit
-TEST_F(MultiScreenCaptureCoordinatorCovTest, checkSyncNoEmitWhenComposeEmpty)
-{
-    access_private_field::MultiScreenCaptureCoordinatorm_capturing(*m_c) = true;
     QSignalSpy compSpy(m_c, &MultiScreenCaptureCoordinator::compositeFrameReady);
-    EXPECT_NO_FATAL_FAILURE(
-        QMetaObject::invokeMethod(m_c, "checkFrameSyncAndCompose", Qt::DirectConnection));
-    EXPECT_EQ(compSpy.count(), 0);
+    const QByteArray frame(8, 'x');
+    QMetaObject::invokeMethod(m_c, "onCompositeFrameReady", Qt::DirectConnection,
+                              Q_ARG(QByteArray, frame), Q_ARG(int, 2),
+                              Q_ARG(int, 1), Q_ARG(int, 8),
+                              Q_ARG(uint64_t, 1234));
+    ASSERT_EQ(compSpy.count(), 1);
+    EXPECT_EQ(compSpy.first().at(0).toByteArray(), frame);
+    EXPECT_EQ(compSpy.first().at(3).toInt(), 8);
 }
 
-// checkFrameSyncAndCompose：m_capturing=true，有 layout（frames 未就绪）-> allReady=false -> 不 emit
-TEST_F(MultiScreenCaptureCoordinatorCovTest, checkSyncNoEmitWhenFramesNotReady)
+TEST_F(MultiScreenCaptureCoordinatorCovTest, frameSyncTimeoutWithoutInflightIsSafe)
 {
-    QList<QScreen *> screens = realScreens();
-    if (screens.isEmpty()) GTEST_SKIP();
-    call_private_fun::MultiScreenCaptureCoordinatorcalculateVirtualDesktopLayout(*m_c, screens);
-    access_private_field::MultiScreenCaptureCoordinatorm_capturing(*m_c) = true;
-    QSignalSpy compSpy(m_c, &MultiScreenCaptureCoordinator::compositeFrameReady);
     EXPECT_NO_FATAL_FAILURE(
-        QMetaObject::invokeMethod(m_c, "checkFrameSyncAndCompose", Qt::DirectConnection));
-    EXPECT_EQ(compSpy.count(), 0);
+        QMetaObject::invokeMethod(m_c, "onFrameSyncTimeout", Qt::DirectConnection));
 }
 
-// onScreenFrameReady：有 layout，fd=-1（extract 早退返回空）-> compositor 收到空 frameData
-// frameData 为空时 convertDmaBuffer 走占位符，addScreenFrame 仍返回 true
+// onScreenFrameReady：有 layout，fd=-1（extract 早退返回空）-> 不得标记 ready
 TEST_F(MultiScreenCaptureCoordinatorCovTest, onScreenFrameReadyPlaceholderPath)
 {
     QList<QScreen *> screens = realScreens();
@@ -85,11 +70,10 @@ TEST_F(MultiScreenCaptureCoordinatorCovTest, onScreenFrameReadyPlaceholderPath)
         Q_ARG(int, 4), Q_ARG(int, 4), Q_ARG(int, 16), Q_ARG(size_t, 64),
         Q_ARG(uint64_t, 9999)));
 
-    // 对应 layout.frameReady 应被置 true
     bool found = false;
     for (const auto &layout : m_c->getScreenLayouts()) {
         if (layout.screen == screen) {
-            EXPECT_TRUE(layout.frameReady);
+            EXPECT_FALSE(layout.frameReady);
             found = true;
             break;
         }

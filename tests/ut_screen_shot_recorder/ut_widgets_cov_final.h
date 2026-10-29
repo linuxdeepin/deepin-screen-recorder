@@ -242,13 +242,14 @@ TEST_F(SideBarWithMainCovFinalTest, SideBarWidgetPaintEvent)
     SUCCEED() << "SideBarWidget::paintEvent crashes in offscreen mode (DFloatingWidget blur rendering)";
 }
 
-TEST(SliderCovFinalTest, SliderEnterLeaveRestoresCursorWithoutDanglingPointer)
+TEST(SliderCovFinalTest, TreeLandSliderEnterLeaveRestoresCursorWithoutDanglingPointer)
 {
     while (qApp->overrideCursor())
         qApp->restoreOverrideCursor();
 
     qApp->setOverrideCursor(Qt::IBeamCursor);
     Slider *s = new Slider(Qt::Horizontal);
+    s->setSafeCursorManagement(true);
     QEnterEvent enter(QPointF(5, 5), QPointF(5, 5), QPointF(5, 5));
     EXPECT_NO_FATAL_FAILURE(qApp->sendEvent(s, &enter));
     ASSERT_NE(qApp->overrideCursor(), nullptr);

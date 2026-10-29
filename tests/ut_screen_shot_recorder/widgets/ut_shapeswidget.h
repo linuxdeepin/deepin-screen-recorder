@@ -22,12 +22,12 @@ ACCESS_PRIVATE_FUN(ShapesWidget, void(QPaintEvent *e), paintEvent);
 ACCESS_PRIVATE_FUN(ShapesWidget, void(QEvent *e), enterEvent);
 ACCESS_PRIVATE_FUN(ShapesWidget, bool(QPointF pos), clickedShapes);
 ACCESS_PRIVATE_FUN(ShapesWidget, void(TextEdit *edit, QRectF newRect), updateTextRect);
-ACCESS_PRIVATE_FUN(ShapesWidget, void(QPainter &, QPointF, QPixmap, bool), paintImgPoint);
-ACCESS_PRIVATE_FUN(ShapesWidget, void(QPainter &, FourPoints, int, ShapesWidget::ShapeBlurStatus, bool, bool), paintRect);
-ACCESS_PRIVATE_FUN(ShapesWidget, void(QPainter &, FourPoints, int, ShapesWidget::ShapeBlurStatus, bool, bool), paintEllipse);
-ACCESS_PRIVATE_FUN(ShapesWidget, void(QPainter &, QList<QPointF>, int, bool), paintArrow);
-ACCESS_PRIVATE_FUN(ShapesWidget, void(QPainter &, QList<QPointF>), paintLine);
-ACCESS_PRIVATE_FUN(ShapesWidget, void(QPainter &, FourPoints), paintText);
+ACCESS_PRIVATE_FUN(ShapesWidget, void(QPainter &, QPointF, QPixmap, bool) const, paintImgPoint);
+ACCESS_PRIVATE_FUN(ShapesWidget, void(QPainter &, FourPoints, int, ShapesWidget::ShapeBlurStatus, bool, bool, int) const, paintRect);
+ACCESS_PRIVATE_FUN(ShapesWidget, void(QPainter &, FourPoints, int, ShapesWidget::ShapeBlurStatus, bool, bool, int) const, paintEllipse);
+ACCESS_PRIVATE_FUN(ShapesWidget, void(QPainter &, QList<QPointF>, int, bool) const, paintArrow);
+ACCESS_PRIVATE_FUN(ShapesWidget, void(QPainter &, QList<QPointF>) const, paintLine);
+ACCESS_PRIVATE_FUN(ShapesWidget, void(QPainter &, FourPoints) const, paintText);
 ACCESS_PRIVATE_FUN(ShapesWidget, void(QPinchGesture *pinch), pinchTriggered);
 ACCESS_PRIVATE_FUN(ShapesWidget, void(QTapGesture *tap), tapTriggered);
 
@@ -35,7 +35,10 @@ ACCESS_PRIVATE_FIELD(ShapesWidget, bool, m_isSelectedText)
 ACCESS_PRIVATE_FIELD(ShapesWidget, Toolshape, m_selectedShape)
 ACCESS_PRIVATE_FIELD(ShapesWidget, int, m_selectedIndex)
 ACCESS_PRIVATE_FIELD(ShapesWidget, int, m_selectedOrder)
+#ifndef DSR_UT_SHAPESWIDGET_M_SHAPES_ACCESS
+#define DSR_UT_SHAPESWIDGET_M_SHAPES_ACCESS
 ACCESS_PRIVATE_FIELD(ShapesWidget, Toolshapes, m_shapes)
+#endif
 ACCESS_PRIVATE_FIELD(ShapesWidget, QString, m_currentType)
 ACCESS_PRIVATE_FIELD(ShapesWidget, QPointF, m_pos1)
 ACCESS_PRIVATE_FIELD(ShapesWidget, Toolshape, m_currentShape)
@@ -647,10 +650,10 @@ TEST_F(ShapesWidgetTest, paintRect)
     mainPoints << QPointF(265, 335);
     int index = 0;
     ShapesWidget::ShapeBlurStatus status = ShapesWidget::Hovered;
-    call_private_fun::ShapesWidgetpaintRect(*shapesWidget, painter, mainPoints, index, status, false, false);
+    call_private_fun::ShapesWidgetpaintRect(*shapesWidget, painter, mainPoints, index, status, false, false, 10);
     ShapesWidget::ShapeBlurStatus status1 = ShapesWidget::Drawing;
-    call_private_fun::ShapesWidgetpaintRect(*shapesWidget, painter, mainPoints, index, status1, false, false);
-    call_private_fun::ShapesWidgetpaintRect(*shapesWidget, painter, mainPoints, index, status, true, true);
+    call_private_fun::ShapesWidgetpaintRect(*shapesWidget, painter, mainPoints, index, status1, false, false, 10);
+    call_private_fun::ShapesWidgetpaintRect(*shapesWidget, painter, mainPoints, index, status, true, true, 10);
 }
 
 TEST_F(ShapesWidgetTest, paintEllipse)
@@ -663,16 +666,16 @@ TEST_F(ShapesWidgetTest, paintEllipse)
     ellipseFPoints << QPointF(265, 335);
     int index = 0;
     ShapesWidget::ShapeBlurStatus status = ShapesWidget::Hovered;
-    call_private_fun::ShapesWidgetpaintEllipse(*shapesWidget, painter, ellipseFPoints, index, status, false, false);
+    call_private_fun::ShapesWidgetpaintEllipse(*shapesWidget, painter, ellipseFPoints, index, status, false, false, 10);
     ShapesWidget::ShapeBlurStatus status1 = ShapesWidget::Drawing;
-    call_private_fun::ShapesWidgetpaintEllipse(*shapesWidget, painter, ellipseFPoints, index, status1, true, true);
+    call_private_fun::ShapesWidgetpaintEllipse(*shapesWidget, painter, ellipseFPoints, index, status1, true, true, 10);
 
     FourPoints ellipseFPoints1;
     ellipseFPoints1 << QPointF(0, 10);
     ellipseFPoints1 << QPointF(0, 0);
     ellipseFPoints1 << QPointF(0, 0);
     ellipseFPoints1 << QPointF(0, 0);
-    call_private_fun::ShapesWidgetpaintEllipse(*shapesWidget, painter, ellipseFPoints1, index, status1, true, true);
+    call_private_fun::ShapesWidgetpaintEllipse(*shapesWidget, painter, ellipseFPoints1, index, status1, true, true, 10);
 }
 
 TEST_F(ShapesWidgetTest, paintArrow)
@@ -1791,6 +1794,5 @@ TEST_F(ShapesWidgetTest, clickedShapes)
     call_private_fun::ShapesWidgetclickedShapes(*shapesWidget, QPointF(10, 10));
     stub.reset(ADDR(ShapesWidget, clickedOnText));
 }
-
 
 

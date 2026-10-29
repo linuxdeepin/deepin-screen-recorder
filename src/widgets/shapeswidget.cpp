@@ -48,6 +48,23 @@ const QColor SEQUENCE_LIMIT_BADGE_COLOR(0xFE, 0x00, 0x00);
 // 提示左上角对齐角标右下角：相对光标再偏移一个角标边长
 const int SEQUENCE_LIMIT_TIPS_ANCHOR = SEQUENCE_PREVIEW_ANCHOR + int(SEQUENCE_LIMIT_BADGE_SIZE);
 
+bool pointInEllipse(const FourPoints &points, const QPointF &pos)
+{
+    if (points.size() < 4)
+        return false;
+
+    const QRectF rect(points[0], points[3]);
+    const QRectF normalized = rect.normalized();
+    if (normalized.width() <= 0.0 || normalized.height() <= 0.0)
+        return false;
+
+    const qreal radiusX = normalized.width() / 2.0;
+    const qreal radiusY = normalized.height() / 2.0;
+    const qreal normalizedX = (pos.x() - normalized.center().x()) / radiusX;
+    const qreal normalizedY = (pos.y() - normalized.center().y()) / radiusY;
+    return normalizedX * normalizedX + normalizedY * normalizedY <= 1.0;
+}
+
 int configuredLineWidthIndex(const QString &group)
 {
     // Persisted settings can be corrupted or written by older versions. The
@@ -459,7 +476,7 @@ void ShapesWidget::saveActionTriggered()
 }
 
 //点击某个形状
-bool ShapesWidget::clickedOnShapes(QPointF pos)
+bool ShapesWidget::clickedOnShapes(QPointF pos, bool includeClosedShapeInterior)
 {
     qCDebug(dsrApp) << "Checking for shape click at position:" << pos;
     bool onShapes = false;
@@ -478,15 +495,30 @@ bool ShapesWidget::clickedOnShapes(QPointF pos)
         //当前是否有形状被选中
         bool currentOnShape = false;
         if (m_shapes[i].type == "rectangle") {
-            if (clickedOnRect(m_shapes[i].mainPoints, pos, false)) {
+            if (clickedOnRect(m_shapes[i].mainPoints, pos,
+                              includeClosedShapeInterior)) {
                 qCDebug(dsrApp) << "Clicked on rectangle at index:" << i;
                 currentOnShape = true;
                 emit shapeClicked("rect");
             }
         }
         if (m_shapes[i].type == "oval") {
-            if (clickedOnEllipse(m_shapes[i].mainPoints, pos, false)) {
+            const bool hitBoundary = clickedOnEllipse(m_shapes[i].mainPoints,
+                                                       pos, false);
+            const bool hitInterior = includeClosedShapeInterior
+                    && pointInEllipse(m_shapes[i].mainPoints, pos);
+            if (hitBoundary || hitInterior) {
                 qCDebug(dsrApp) << "Clicked on oval at index:" << i;
+                if (hitInterior && !hitBoundary) {
+                    // TreeLand moves a closed shape when its interior is
+                    // dragged. clickedOnEllipse only initializes that state
+                    // for an edge hit, so do it explicitly for the interior.
+                    m_isSelected = true;
+                    m_isResize = false;
+                    m_isRotated = false;
+                    m_resizeDirection = Moving;
+                    m_pressedPoint = pos;
+                }
                 currentOnShape = true;
                 emit shapeClicked("circ");
             }
@@ -845,7 +877,8 @@ bool ShapesWidget::clickedOnArrow(QList<QPointF> points, QPointF pos)
         m_isSelected = true;
         m_isRotated = true;
         m_isArrowRotated = false;
-        m_clickedKey = First;
+        if (isTreeLandMode())
+            m_clickedKey = First;
         m_resizeDirection = Left;
         m_pressedPoint = pos;
         return true;
@@ -854,7 +887,8 @@ bool ShapesWidget::clickedOnArrow(QList<QPointF> points, QPointF pos)
         m_isSelected = true;
         m_isRotated = true;
         m_isArrowRotated = false;
-        m_clickedKey = Second;
+        if (isTreeLandMode())
+            m_clickedKey = Second;
         m_resizeDirection = Right;
         m_pressedPoint = pos;
         return true;
@@ -862,7 +896,8 @@ bool ShapesWidget::clickedOnArrow(QList<QPointF> points, QPointF pos)
         qCDebug(dsrApp) << "Clicked on arrow line.";
         m_isSelected = true;
         m_isRotated = false;
-        m_clickedKey = Unknow;
+        if (isTreeLandMode())
+            m_clickedKey = Unknow;
         m_resizeDirection = Moving;
         m_pressedPoint = pos;
         return true;
@@ -872,7 +907,8 @@ bool ShapesWidget::clickedOnArrow(QList<QPointF> points, QPointF pos)
         m_isRotated = false;
         m_isResize = false;
         m_isArrowRotated = false;
-        m_clickedKey = Unknow;
+        if (isTreeLandMode())
+            m_clickedKey = Unknow;
         m_resizeDirection = Outting;
         m_pressedPoint = pos;
         return false;
@@ -1320,11 +1356,13 @@ ShapesWidget::InteractionHit ShapesWidget::interactionAt(const QPointF &pos) con
     auto nearPoint = [&pos](const QPointF &point) {
         return pointClickIn(point, pos);
     };
-    auto closedShapeHit = [&pos](const Toolshape &shape) {
+    auto closedShapeHit = [&pos, this](const Toolshape &shape) {
         if (shape.mainPoints.size() < 4)
             return false;
         if (shape.type == "oval") {
             if (pointOnEllipse(shape.mainPoints, pos))
+                return true;
+            if (isTreeLandMode() && pointInEllipse(shape.mainPoints, pos))
                 return true;
         } else if (shape.type == "effect" && shape.isOval == 0) {
             if (pointOnEllipse(shape.mainPoints, pos) || pointInRect(shape.mainPoints, pos))
@@ -1335,8 +1373,10 @@ ShapesWidget::InteractionHit ShapesWidget::interactionAt(const QPointF &pos) con
                    || pointOnLine(shape.mainPoints[2], shape.mainPoints[0], pos)) {
             return true;
         }
-        return shape.type == "effect" && shape.isOval == 1
-                && pointInRect(shape.mainPoints, pos);
+        return (shape.type == "effect" && shape.isOval == 1
+                && pointInRect(shape.mainPoints, pos))
+                || (shape.type == "rectangle" && isTreeLandMode()
+                    && pointInRect(shape.mainPoints, pos));
     };
     auto handleHit = [&nearPoint](const Toolshape &shape) {
         InteractionHit hit;
@@ -1435,7 +1475,7 @@ ShapesWidget::InteractionHit ShapesWidget::interactionAt(const QPointF &pos) con
 
 bool ShapesWidget::beginInteraction(const QPointF &pos)
 {
-    if (!clickedOnShapes(pos)) {
+    if (!clickedOnShapes(pos, isTreeLandMode())) {
         const bool canCreate = m_currentType == "rectangle"
                 || m_currentType == "oval"
                 || m_currentType == "arrow"
@@ -3006,7 +3046,7 @@ void ShapesWidget::paintEffectLine(QPainter &painter, QList<QPointF> lineFPoints
 
     for (int k = 1; k < lineFPoints.length() - 1; k++) {
         FourPoints rectFoints = getRectPoints(lineFPoints[k - 1], lineFPoints[k + 1], lineWidth);
-        paintRect(painter, rectFoints, -1, Drawing,
+        paintRect(painter, rectFoints, isTreeLandMode() ? -1 : 0, Drawing,
                   isMosaic, !isMosaic, radius);
         //paintRect(painter, rectFoints, 0, Hovered, false, false, radius);
     }
@@ -3655,6 +3695,13 @@ void ShapesWidget::applyOverrideCursor(const QCursor &cursor)
     if (!m_cursorManagementEnabled)
         return;
 
+    // Preserve the legacy X11 cursor stack behavior exactly. TreeLand detaches
+    // its document widget and owns the cursor in the mask overlay instead.
+    if (!isTreeLandMode()) {
+        qApp->setOverrideCursor(cursor);
+        return;
+    }
+
     const QCursor *currentOverride = qApp->overrideCursor();
     if (currentOverride == nullptr) {
         qApp->setOverrideCursor(cursor);
@@ -3687,10 +3734,15 @@ void ShapesWidget::updateCursorShape()
         } else {
             setCursorValue = BaseUtils::setCursorShape(m_currentType);
         }
-        // 避免相同的光标样式重复设置
-        // qApp->overrideCursor() 在未设置任何 override cursor 时返回 nullptr，
-        // 直接解引用会段错误，需先判空。
-        applyOverrideCursor(setCursorValue);
+        // Preserve the original X11 changeOverrideCursor path exactly.
+        if (!isTreeLandMode()) {
+            const QCursor *currentOverride = qApp->overrideCursor();
+            if (currentOverride == nullptr || *currentOverride != setCursorValue) {
+                qApp->changeOverrideCursor(setCursorValue);
+            }
+        } else {
+            applyOverrideCursor(setCursorValue);
+        }
     }
 }
 

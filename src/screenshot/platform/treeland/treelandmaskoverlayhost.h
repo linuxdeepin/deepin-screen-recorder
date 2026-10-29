@@ -51,8 +51,6 @@ private:
     TreelandMaskWindow *selectionOwnerWindow() const;
     void ensureEffectSource();
     void ensureToolBar();
-    void ensureRecordingToolBar(TreelandMaskWindow *owner);
-    void destroyRecordingToolBar();
     void destroyRecordingCountdown();
     void updateToolBar();
     void handleToolChanged(const QString &tool);
@@ -65,9 +63,6 @@ private:
     ToolBar *m_toolBar = nullptr;
     SideBar *m_sideBar = nullptr;
     ToolBarHost *m_toolBarHost = nullptr;
-    ToolBar *m_recordingToolBar = nullptr;
-    ToolBarHost *m_recordingToolBarHost = nullptr;
-    TreelandMaskWindow *m_recordingToolBarOwner = nullptr;
     CountdownTooltip *m_countdown = nullptr;
     QRect m_selection;
     FrozenFrameSet m_frozenFrames;

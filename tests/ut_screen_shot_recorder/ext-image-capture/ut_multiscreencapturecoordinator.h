@@ -14,7 +14,6 @@ using namespace testing;
 
 // private 辅助：纯几何/图案逻辑
 ACCESS_PRIVATE_FUN(MultiScreenCaptureCoordinator, void(const QList<QScreen *> &), calculateVirtualDesktopLayout);
-ACCESS_PRIVATE_FUN(MultiScreenCaptureCoordinator, QByteArray(), composeMultiScreenFrame);
 ACCESS_PRIVATE_FUN(MultiScreenCaptureCoordinator, void(), resetFrameReadyFlags);
 ACCESS_PRIVATE_FUN(MultiScreenCaptureCoordinator, void(), cleanupSessions);
 ACCESS_PRIVATE_FUN(MultiScreenCaptureCoordinator, void *(QScreen *), getWaylandOutput);
@@ -47,24 +46,18 @@ TEST_F(MultiScreenCaptureCoordinatorTest, startGuards)
     EXPECT_NO_FATAL_FAILURE(m_c->stopMultiScreenCapture());   // guard
 }
 
-TEST_F(MultiScreenCaptureCoordinatorTest, composePlaceholderWhenEmpty)
-{
-    // virtualDesktopSize 未设 -> 返回空
-    EXPECT_TRUE(call_private_fun::MultiScreenCaptureCoordinatorcomposeMultiScreenFrame(*m_c).isEmpty());
-}
-
-TEST_F(MultiScreenCaptureCoordinatorTest, layoutAndCompose)
+TEST_F(MultiScreenCaptureCoordinatorTest, layoutConfiguresVirtualDesktop)
 {
     QList<QScreen*> screens = QGuiApplication::screens();
     if (screens.isEmpty()) GTEST_SKIP();
     call_private_fun::MultiScreenCaptureCoordinatorcalculateVirtualDesktopLayout(*m_c, screens);
     EXPECT_FALSE(m_c->getVirtualDesktopSize().isEmpty());
     EXPECT_EQ(m_c->getScreenLayouts().size(), screens.size());
-
-    QByteArray frame = call_private_fun::MultiScreenCaptureCoordinatorcomposeMultiScreenFrame(*m_c);
-    EXPECT_FALSE(frame.isEmpty());
-    EXPECT_EQ(frame.size(), m_c->getVirtualDesktopSize().width() *
-                            m_c->getVirtualDesktopSize().height() * 4);
+    for (const auto &layout : m_c->getScreenLayouts()) {
+        EXPECT_NE(layout.screen, nullptr);
+        EXPECT_FALSE(layout.geometry.isEmpty());
+        EXPECT_FALSE(layout.frameReady);
+    }
 }
 
 TEST_F(MultiScreenCaptureCoordinatorTest, frameReadyFlags)

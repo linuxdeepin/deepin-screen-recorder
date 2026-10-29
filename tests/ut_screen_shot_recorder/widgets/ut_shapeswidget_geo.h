@@ -13,6 +13,16 @@
 using namespace testing;
 
 ACCESS_PRIVATE_FIELD(ShapesWidget, ShapesWidget::ClickedKey, m_clickedKey);
+#ifndef DSR_UT_SHAPESWIDGET_M_SHAPES_ACCESS
+#define DSR_UT_SHAPESWIDGET_M_SHAPES_ACCESS
+ACCESS_PRIVATE_FIELD(ShapesWidget, Toolshapes, m_shapes);
+#endif
+#ifndef DSR_UT_SHAPESWIDGET_SELECTION_STATE_ACCESS
+#define DSR_UT_SHAPESWIDGET_SELECTION_STATE_ACCESS
+ACCESS_PRIVATE_FIELD(ShapesWidget, bool, m_isSelected);
+ACCESS_PRIVATE_FIELD(ShapesWidget, bool, m_isResize);
+ACCESS_PRIVATE_FIELD(ShapesWidget, ResizeDirection, m_resizeDirection);
+#endif
 
 // 这些 are 纯几何命中检测辅助函数（clickedOn*/hoverOn*/rotateOnPoint 等），
 // 入参为 FourPoints / QList<QPointF> / QPointF，返回 bool，可直接在 ShapesWidget 实例上调用。
@@ -75,6 +85,23 @@ TEST_F(ShapesWidgetGeoTest, clickedOnRect_edgeAndBlurAndMiss)
     EXPECT_FALSE(m_w->clickedOnRect(fp, QPointF(1000, 1000)));
 }
 
+TEST_F(ShapesWidgetGeoTest, clickedOnShapesRectInteriorIsTreeLandOnly)
+{
+    Toolshape rect;
+    rect.type = QStringLiteral("rectangle");
+    rect.mainPoints = rectPoints();
+
+    access_private_field::ShapesWidgetm_shapes(*m_w) = {rect};
+    EXPECT_FALSE(m_w->clickedOnShapes(QPointF(60, 60)));
+
+    m_w->setInteractionPlatform(ShapesWidget::InteractionPlatform::TreeLand);
+    EXPECT_TRUE(m_w->clickedOnShapes(QPointF(60, 60), true));
+    EXPECT_TRUE(access_private_field::ShapesWidgetm_isSelected(*m_w));
+    EXPECT_FALSE(access_private_field::ShapesWidgetm_isResize(*m_w));
+    EXPECT_EQ(access_private_field::ShapesWidgetm_resizeDirection(*m_w),
+              Moving);
+}
+
 // ---------------- clickedOnEllipse ----------------
 TEST_F(ShapesWidgetGeoTest, clickedOnEllipse_cornersAndMids)
 {
@@ -96,22 +123,51 @@ TEST_F(ShapesWidgetGeoTest, clickedOnEllipse_edgeBlurMiss)
     EXPECT_FALSE(m_w->clickedOnEllipse(fp, QPointF(1000, 1000)));    // 远处
 }
 
+TEST_F(ShapesWidgetGeoTest, clickedOnShapesOvalInteriorIsTreeLandOnly)
+{
+    Toolshape oval;
+    oval.type = QStringLiteral("oval");
+    oval.mainPoints = rectPoints();
+
+    access_private_field::ShapesWidgetm_shapes(*m_w) = {oval};
+    EXPECT_FALSE(m_w->clickedOnShapes(QPointF(60, 60)));
+    EXPECT_FALSE(m_w->clickedOnShapes(QPointF(20, 20)));
+
+    m_w->setInteractionPlatform(ShapesWidget::InteractionPlatform::TreeLand);
+    EXPECT_TRUE(m_w->clickedOnShapes(QPointF(60, 60), true));
+    EXPECT_TRUE(access_private_field::ShapesWidgetm_isSelected(*m_w));
+    EXPECT_FALSE(access_private_field::ShapesWidgetm_isResize(*m_w));
+    EXPECT_EQ(access_private_field::ShapesWidgetm_resizeDirection(*m_w),
+              Moving);
+    EXPECT_FALSE(m_w->clickedOnShapes(QPointF(20, 5), true));
+}
+
 // ---------------- clickedOnArrow ----------------
-TEST_F(ShapesWidgetGeoTest, clickedOnArrow_branches)
+TEST_F(ShapesWidgetGeoTest, clickedOnArrow_preservesX11ClickedKey)
 {
     QList<QPointF> pts;
     pts << QPointF(10, 10) << QPointF(110, 110);
     // length != 2 提前返回 false
     EXPECT_FALSE(m_w->clickedOnArrow(QList<QPointF>{QPointF(0, 0)}, QPointF(0, 0)));
     EXPECT_FALSE(m_w->clickedOnArrow(QList<QPointF>{QPointF(0, 0), QPointF(1, 1), QPointF(2, 2)}, QPointF(1, 1)));
-    // 起点 / 终点 / 线上 / 未命中
+    // X11 原有 clickedOnArrow 只更新按下位置和方向，不写 m_clickedKey。
+    access_private_field::ShapesWidgetm_clickedKey(*m_w) = ShapesWidget::Third;
     EXPECT_TRUE(m_w->clickedOnArrow(pts, QPointF(10, 10)));    // point0
-    EXPECT_EQ(access_private_field::ShapesWidgetm_clickedKey(*m_w), ShapesWidget::First);
+    EXPECT_EQ(access_private_field::ShapesWidgetm_clickedKey(*m_w), ShapesWidget::Third);
     EXPECT_TRUE(m_w->clickedOnArrow(pts, QPointF(110, 110)));  // point1
-    EXPECT_EQ(access_private_field::ShapesWidgetm_clickedKey(*m_w), ShapesWidget::Second);
+    EXPECT_EQ(access_private_field::ShapesWidgetm_clickedKey(*m_w), ShapesWidget::Third);
     EXPECT_TRUE(m_w->clickedOnArrow(pts, QPointF(60, 60)));    // 线上（y=x）
-    EXPECT_EQ(access_private_field::ShapesWidgetm_clickedKey(*m_w), ShapesWidget::Unknow);
+    EXPECT_EQ(access_private_field::ShapesWidgetm_clickedKey(*m_w), ShapesWidget::Third);
     EXPECT_FALSE(m_w->clickedOnArrow(pts, QPointF(1000, 1000))); // 未命中
+    EXPECT_EQ(access_private_field::ShapesWidgetm_clickedKey(*m_w), ShapesWidget::Third);
+
+    // TreeLand 的跨屏编辑链路依赖 clickedKey 区分起终点。
+    m_w->setInteractionPlatform(ShapesWidget::InteractionPlatform::TreeLand);
+    EXPECT_TRUE(m_w->clickedOnArrow(pts, QPointF(10, 10)));
+    EXPECT_EQ(access_private_field::ShapesWidgetm_clickedKey(*m_w), ShapesWidget::First);
+    EXPECT_TRUE(m_w->clickedOnArrow(pts, QPointF(110, 110)));
+    EXPECT_EQ(access_private_field::ShapesWidgetm_clickedKey(*m_w), ShapesWidget::Second);
+    EXPECT_TRUE(m_w->clickedOnArrow(pts, QPointF(60, 60)));
     EXPECT_EQ(access_private_field::ShapesWidgetm_clickedKey(*m_w), ShapesWidget::Unknow);
 }
 

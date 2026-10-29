@@ -32,7 +32,7 @@ public:
 };
 
 // onScreenFrameReady：fd=-1 且 gbmBo=null -> extractDmaBufferData 早退（安全，无 mmap）
-// 走完整个 slot：compositor.addScreenFrame + m_screenFrames 更新 + layout.frameReady 置位
+// 提取失败后不得更新缓存或把 layout.frameReady 置位。
 TEST_F(MultiScreenCaptureCoordinatorExtTest, onScreenFrameReadyInvalidFdSafePath)
 {
     QList<QScreen *> screens = realScreens();
@@ -49,11 +49,10 @@ TEST_F(MultiScreenCaptureCoordinatorExtTest, onScreenFrameReadyInvalidFdSafePath
         Q_ARG(int, 4), Q_ARG(int, 4), Q_ARG(int, 16), Q_ARG(size_t, 64),
         Q_ARG(uint64_t, 1234)));
 
-    // 对应 layout 的 frameReady 应被置 true
     bool found = false;
     for (const auto &layout : m_c->getScreenLayouts()) {
         if (layout.screen == screen) {
-            EXPECT_TRUE(layout.frameReady);
+            EXPECT_FALSE(layout.frameReady);
             found = true;
             break;
         }
@@ -92,26 +91,25 @@ TEST_F(MultiScreenCaptureCoordinatorExtTest, onSessionStoppedIsSafe)
     EXPECT_FALSE(m_c->isCapturing());
 }
 
-// checkFrameSyncAndCompose：m_capturing=false -> 早退，不 emit
-TEST_F(MultiScreenCaptureCoordinatorExtTest, checkFrameSyncAndComposeGuardWhenNotCapturing)
+// onCompositeFrameReady：转发拼接器产出的帧数据
+TEST_F(MultiScreenCaptureCoordinatorExtTest, onCompositeFrameReadyForwardsFrame)
 {
     QSignalSpy compSpy(m_c, &MultiScreenCaptureCoordinator::compositeFrameReady);
-    EXPECT_NO_FATAL_FAILURE(
-        QMetaObject::invokeMethod(m_c, "checkFrameSyncAndCompose", Qt::DirectConnection));
-    EXPECT_EQ(compSpy.count(), 0);
+    const QByteArray frame(16, 'a');
+    EXPECT_NO_FATAL_FAILURE(QMetaObject::invokeMethod(
+        m_c, "onCompositeFrameReady", Qt::DirectConnection,
+        Q_ARG(QByteArray, frame), Q_ARG(int, 2), Q_ARG(int, 2),
+        Q_ARG(int, 8), Q_ARG(uint64_t, 5678)));
+    ASSERT_EQ(compSpy.count(), 1);
+    EXPECT_EQ(compSpy.first().at(0).toByteArray(), frame);
+    EXPECT_EQ(compSpy.first().at(4).toULongLong(), 5678ull);
 }
 
-// checkFrameSyncAndCompose：m_capturing=true 但无 layout -> allScreenFramesReady 返回 true（空）
-// composeMultiScreenFrame 因 virtualDesktopSize 为空返回空 -> 不 emit compositeFrameReady
-TEST_F(MultiScreenCaptureCoordinatorExtTest, checkFrameSyncAndComposeCapturingNoLayout)
+// onFrameSyncTimeout：没有在途帧时安全早退
+TEST_F(MultiScreenCaptureCoordinatorExtTest, onFrameSyncTimeoutIdleSafe)
 {
-    QSignalSpy compSpy(m_c, &MultiScreenCaptureCoordinator::compositeFrameReady);
-    // 直接置 m_capturing=true 无法访问私有字段，改用 startMultiScreenCapture 失败路径不可行；
-    // 通过 invokeMethod 触发，slot 内自己持锁，空 layout 走 allReady=true 但 compose 返回空
     EXPECT_NO_FATAL_FAILURE(
-        QMetaObject::invokeMethod(m_c, "checkFrameSyncAndCompose", Qt::DirectConnection));
-    // m_capturing 仍为 false -> 早退；即便不早退，空 layout 也无 emit
-    EXPECT_EQ(compSpy.count(), 0);
+        QMetaObject::invokeMethod(m_c, "onFrameSyncTimeout", Qt::DirectConnection));
 }
 
 // getWaylandOutput：null screen -> nullptr；真实 screen 在 offscreen 平台 -> nullptr（安全，无 roundtrip）
@@ -176,12 +174,6 @@ TEST_F(MultiScreenCaptureCoordinatorExtTest, calculateLayoutEmpty)
     call_private_fun::MultiScreenCaptureCoordinatorcalculateVirtualDesktopLayout(*m_c, empty);
     EXPECT_TRUE(m_c->getVirtualDesktopSize().isEmpty());
     EXPECT_TRUE(m_c->getScreenLayouts().isEmpty());
-}
-
-// composeMultiScreenFrame：virtualDesktopSize 为空 -> 返回空 QByteArray
-TEST_F(MultiScreenCaptureCoordinatorExtTest, composeEmptyWhenNoDesktopSize)
-{
-    EXPECT_TRUE(call_private_fun::MultiScreenCaptureCoordinatorcomposeMultiScreenFrame(*m_c).isEmpty());
 }
 
 // captureMultiScreenFrame：未 capturing -> false（额外覆盖一次守卫，与原测试互补）

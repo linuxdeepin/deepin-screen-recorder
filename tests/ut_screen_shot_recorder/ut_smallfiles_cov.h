@@ -21,6 +21,8 @@
 
 using namespace testing;
 
+ACCESS_PRIVATE_FIELD(Slider, bool, m_safeCursorManagement);
+
 // ---------- KeyButtonWidget (0%) ----------
 TEST(KeyButtonWidgetCovLegacyTest, constructAndSet)
 {
@@ -108,16 +110,16 @@ TEST(SliderCovTest, construct)
     delete s;
 }
 
-// Regression: the slider must not retain a pointer into QApplication's
-// override-cursor stack. Clearing the stack between enter and leave used to
-// leave a dangling pointer and crash in Slider::leaveEvent().
-TEST(SliderCovTest, enterLeaveAfterOverrideStackCleared)
+// TreeLand uses the safe path because sibling widgets can replace the global
+// override-cursor stack while the slider is hovered.
+TEST(SliderCovTest, treelandEnterLeaveAfterOverrideStackCleared)
 {
     while (qApp->overrideCursor())
         qApp->restoreOverrideCursor();
 
     qApp->setOverrideCursor(Qt::IBeamCursor);
     Slider *s = new Slider(nullptr);
+    s->setSafeCursorManagement(true);
     s->resize(50, 50);
     QEnterEvent enter(QPointF(5, 5), QPointF(5, 5), QPointF(5, 5));
     EXPECT_NO_FATAL_FAILURE(qApp->sendEvent(s, &enter));
@@ -128,6 +130,15 @@ TEST(SliderCovTest, enterLeaveAfterOverrideStackCleared)
     EXPECT_NO_FATAL_FAILURE(qApp->sendEvent(s, &leave));
     EXPECT_EQ(qApp->overrideCursor(), nullptr);
     delete s;
+}
+
+// X11 keeps the legacy stack semantics unless TreeLand explicitly opts in.
+TEST(SliderCovTest, cursorManagementDefaultsToLegacyMode)
+{
+    Slider slider(Qt::Horizontal);
+    EXPECT_FALSE(access_private_field::Sliderm_safeCursorManagement(slider));
+    slider.setSafeCursorManagement(true);
+    EXPECT_TRUE(access_private_field::Sliderm_safeCursorManagement(slider));
 }
 
 // ---------- utils_interface (3.1%) ----------

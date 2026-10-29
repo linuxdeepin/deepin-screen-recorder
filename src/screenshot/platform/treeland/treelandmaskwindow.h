@@ -66,7 +66,8 @@ protected:
 private:
     QPoint toGlobal(const QPoint &localPos) const;
     void drawSelectionOutline(QPainter &painter, const QRect &globalRect,
-                              const QColor &color, int width) const;
+                              const QColor &color, int width,
+                              bool dashed = false) const;
 
     OutputDescriptor m_output;
     QImage m_sourceImage;
@@ -74,6 +75,7 @@ private:
     QRect m_selection;
     QRect m_globalSnapHint;
     QRect m_snapHint;
+    QRect m_globalRecordingSelection;
     QRect m_recordingSelection;
     bool m_selectionHintOwner = false;
     bool m_finalized = false;
