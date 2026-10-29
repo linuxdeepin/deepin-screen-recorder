@@ -61,6 +61,7 @@ extern "C" {
 #include <QDebug>
 #include <QProcess>
 #include <QMouseEvent>
+#include <QTouchEvent>
 #include <QClipboard>
 #include <QFileDialog>
 #include <QLineEdit>
@@ -368,6 +369,7 @@ void MainWindow::initTreelandtAttributes() //initTreelandtAttributes
         setAttribute(Qt::WA_TranslucentBackground, true);
     }
     setMouseTracking(true);
+    setAttribute(Qt::WA_AcceptTouchEvents, true);
     installEventFilter(this);
     createWinId();
 
@@ -483,6 +485,7 @@ void MainWindow::initAttributes()
             qCInfo(dsrApp) << "2d模式不支持窗口透明！";
         }
         setMouseTracking(true);    // make MouseMove can response
+        setAttribute(Qt::WA_AcceptTouchEvents, true);
         installEventFilter(this);  // add event filter
         createWinId();
 
@@ -5606,6 +5609,36 @@ bool MainWindow::eventFilter(QObject *obj, QEvent *event)
         return DWidget::eventFilter(obj, event);
     }
 
+    // 触控事件适配：将触控事件转发为鼠标事件，使截图录屏支持触控屏操作
+    if (event->type() == QEvent::TouchBegin || event->type() == QEvent::TouchUpdate || event->type() == QEvent::TouchEnd) {
+        QTouchEvent *touchEvent = static_cast<QTouchEvent *>(event);
+#if (QT_VERSION_MAJOR == 5)
+        if (touchEvent->touchPoints().isEmpty()) {
+            return false;
+        }
+        QPointF touchPos = touchEvent->touchPoints().first().pos();
+#elif (QT_VERSION_MAJOR == 6)
+        if (touchEvent->points().isEmpty()) {
+            return false;
+        }
+        QPointF touchPos = touchEvent->points().first().position();
+#endif
+        if (event->type() == QEvent::TouchBegin) {
+            QMouseEvent *pressEvent = new QMouseEvent(QEvent::MouseButtonPress, touchPos.toPoint(), Qt::LeftButton, Qt::LeftButton, Qt::NoModifier);
+            QApplication::sendEvent(this, pressEvent);
+            delete pressEvent;
+        } else if (event->type() == QEvent::TouchUpdate) {
+            QMouseEvent *moveEvent = new QMouseEvent(QEvent::MouseMove, touchPos.toPoint(), Qt::LeftButton, Qt::LeftButton, Qt::NoModifier);
+            QApplication::sendEvent(this, moveEvent);
+            delete moveEvent;
+        } else if (event->type() == QEvent::TouchEnd) {
+            QMouseEvent *releaseEvent = new QMouseEvent(QEvent::MouseButtonRelease, touchPos.toPoint(), Qt::LeftButton, Qt::LeftButton, Qt::NoModifier);
+            QApplication::sendEvent(this, releaseEvent);
+            delete releaseEvent;
+        }
+        return true;
+    }
+
     bool needRepaint = false;
 
     if (event->type() == QEvent::KeyPress) {
@@ -6751,7 +6784,7 @@ void MainWindow::onMouseMove(int x, int y)
     // 启动截图或者录屏后第一次鼠标移动时需要通过此方法，后面都不会在进入此方法
     if (!isFirstMove) {
         QMouseEvent *mouseMove;
-        mouseMove = new QMouseEvent(QEvent::MouseMove, QPoint(x, y), Qt::LeftButton, Qt::LeftButton, Qt::NoModifier);
+        mouseMove = new QMouseEvent(QEvent::MouseMove, QPoint(x * m_pixelRatio, y * m_pixelRatio), Qt::LeftButton, Qt::LeftButton, Qt::NoModifier);
         QApplication::sendEvent(QWidget::focusWidget(), mouseMove);
     }
 }

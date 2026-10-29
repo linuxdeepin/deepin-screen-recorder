@@ -44,7 +44,14 @@ DEFINES += _FORTIFY_SOURCE=2
 # 由 pkg-config 提供头文件路径与库（dtk6tablerecognizer 的 .pc 里 Requires: dtk6ocr，
 # 所以 OCR 库会一并带进来）。构建期依赖 libdtk6tablerecognizer-dev，
 # 运行期依赖由 ${shlibs:Depends} 自动生成。
-PKGCONFIG += dtk6tablerecognizer
+# 改为可选依赖：某些架构（如 loong64）的 V25 源中不提供
+# libdtk6tablerecognizer-dev，此处用 packagesExist 检测，
+# 存在时才链接并定义 HAVE_DTK6_TABLERECOGNIZER 宏；
+# 不存在时表格识别功能降级为不可用，其余功能不受影响。
+packagesExist(dtk6tablerecognizer) {
+    PKGCONFIG += dtk6tablerecognizer
+    DEFINES += HAVE_DTK6_TABLERECOGNIZER
+}
 
 SOURCES += \
     service/dbuspinscreenshotsadaptor.cpp \

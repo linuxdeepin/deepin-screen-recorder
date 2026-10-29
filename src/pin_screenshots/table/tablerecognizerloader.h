@@ -14,7 +14,26 @@
 // （见 pin_screenshots.pro 的 PKGCONFIG += dtk6tablerecognizer）。
 // 头文件由构建依赖 libdtk6tablerecognizer-dev 提供，缺失时构建直接失败；
 // 运行期依赖由打包时的 ${shlibs:Depends} 自动生成。
+#ifdef HAVE_DTK6_TABLERECOGNIZER
 #include <dtablerecognizer.h>
+#else
+// Fallback when dtk6tablerecognizer is unavailable (e.g. loong64 in V25):
+// provide a minimal TableError enum so callers compile without the header.
+// recognize() always returns false; table recognition feature is disabled.
+namespace Dtk {
+namespace TableRecognizer {
+enum TableError : int {
+    NoError = 0,
+    InvalidImage,
+    NoTextDetected,
+    NoTableDetected,
+    Timeout,
+    Busy,
+    UnknownError,
+};
+} // namespace TableRecognizer
+} // namespace Dtk
+#endif
 
 /**
  * @brief 表格识别能力（dtkmultimedia）的封装
@@ -42,7 +61,9 @@ Q_SIGNALS:
                              Dtk::TableRecognizer::TableError error);
 
 private:
+#ifdef HAVE_DTK6_TABLERECOGNIZER
     Dtk::TableRecognizer::DTableRecognizer *m_recognizer = nullptr;
+#endif
 };
 
 #endif // TABLERECOGNIZERLOADER_H
