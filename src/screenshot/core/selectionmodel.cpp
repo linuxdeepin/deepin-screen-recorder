@@ -160,7 +160,7 @@ void SelectionModel::cancelInteraction()
         emit geometryChanged(oldRect, m_geometry);
 }
 
-void SelectionModel::setGeometry(const QRect &globalRect)
+void SelectionModel::setGeometry(const QRect &globalRect, SelectionGeometryMode mode)
 {
     if (globalRect.isEmpty()) {
         clear();
@@ -171,6 +171,8 @@ void SelectionModel::setGeometry(const QRect &globalRect)
     SelectionConstraints constraints;
     constraints.desktopBounds = m_desktopBounds;
     constraints.annotationBounds = m_annotationBounds;
+    constraints.expandSelectionForAnnotations =
+            mode == SelectionGeometryMode::ConstrainToAnnotations;
     constraints.minimumSize = QSize(1, 1);
     QRect resolved = resolveSelectionGeometry(globalRect, constraints);
     if (resolved.width() < CreationMinimumSize || resolved.height() < CreationMinimumSize)

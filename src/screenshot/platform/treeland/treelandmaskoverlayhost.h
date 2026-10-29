@@ -89,6 +89,7 @@ private:
     bool m_recordModeActive = false;
     bool m_hintsVisible = false;
     bool m_hintsSelectionMode = false;
+    bool m_toolBarManuallyMoved = false;
     int m_inputReadyChecks = 0;
     IWindowTagger *m_windowTagger = nullptr;
 };

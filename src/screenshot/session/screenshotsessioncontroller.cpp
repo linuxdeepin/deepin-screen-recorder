@@ -150,6 +150,8 @@ ScreenshotSessionController::ScreenshotSessionController(IScreenshotBackend *bac
             this, &ScreenshotSessionController::onSelectionResizeRequested);
     connect(m_overlay, &IScreenshotOverlayHost::selectionSizeChangeRequested,
             this, &ScreenshotSessionController::onSelectionSizeChangeRequested);
+    connect(m_overlay, &IScreenshotOverlayHost::selectionRatioChangeRequested,
+            this, &ScreenshotSessionController::onSelectionRatioChangeRequested);
     connect(m_overlay, &IScreenshotOverlayHost::roundedCornerRadiusChanged,
             this, &ScreenshotSessionController::onRoundedCornerRadiusChanged);
     connect(m_overlay,
@@ -541,7 +543,45 @@ void ScreenshotSessionController::onSelectionSizeChangeRequested(
     const int logicalWidth = qMax(MinimumSelectionSize, qRound(width / scale));
     const int logicalHeight = qMax(MinimumSelectionSize, qRound(height / scale));
     m_selection->setGeometry(QRect(current.topLeft(),
-                                   QSize(logicalWidth, logicalHeight)));
+                                   QSize(logicalWidth, logicalHeight)),
+                             SelectionGeometryMode::IgnoreAnnotationBounds);
+}
+
+void ScreenshotSessionController::onSelectionRatioChangeRequested(int width, int height)
+{
+    if (m_state != State::Selecting && m_state != State::Editing)
+        return;
+
+    const QRect current = m_selection->geometry();
+    if (current.isEmpty() || width <= 0 || height <= 0)
+        return;
+
+    const qreal ratio = static_cast<qreal>(width) / static_cast<qreal>(height);
+    if (ratio <= 0.0)
+        return;
+
+    const QRect bounds = m_frames.virtualDesktopRect;
+    const int maxWidth = qMax(MinimumSelectionSize,
+                              bounds.isValid() ? bounds.right() - current.left() + 1
+                                               : current.width());
+    const int maxHeight = qMax(MinimumSelectionSize,
+                               bounds.isValid() ? bounds.bottom() - current.top() + 1
+                                                : current.height());
+
+    int logicalWidth = qMax(MinimumSelectionSize, current.width());
+    int logicalHeight = qMax(MinimumSelectionSize, qRound(logicalWidth / ratio));
+    if (logicalHeight > maxHeight) {
+        logicalHeight = maxHeight;
+        logicalWidth = qMax(MinimumSelectionSize, qRound(logicalHeight * ratio));
+    }
+    if (logicalWidth > maxWidth) {
+        logicalWidth = maxWidth;
+        logicalHeight = qMax(MinimumSelectionSize, qRound(logicalWidth / ratio));
+    }
+
+    m_selection->setGeometry(QRect(current.topLeft(),
+                                   QSize(logicalWidth, logicalHeight)),
+                             SelectionGeometryMode::IgnoreAnnotationBounds);
 }
 
 void ScreenshotSessionController::onRoundedCornerRadiusChanged(int radius)

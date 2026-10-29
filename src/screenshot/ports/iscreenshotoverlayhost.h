@@ -77,6 +77,7 @@ signals:
     void selectionMoveRequested(const QPoint &delta);
     void selectionResizeRequested(Qt::Key key, Qt::KeyboardModifiers modifiers);
     void selectionSizeChangeRequested(int width, int height, qreal pixelScale);
+    void selectionRatioChangeRequested(int width, int height);
     void roundedCornerRadiusChanged(int radius);
     void confirmRequested();
     void copyRequested();

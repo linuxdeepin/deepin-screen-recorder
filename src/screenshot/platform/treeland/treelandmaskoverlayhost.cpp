@@ -172,6 +172,10 @@ public:
         const QPoint boundedDelta(clampToRange(delta.x(), minDx, maxDx),
                                   clampToRange(delta.y(), minDy, maxDy));
 
+        // Match MainWindow::moveToolBars(): once the user has positioned the
+        // toolbar manually, later selection changes must not pull it back to
+        // the automatic position.
+        m_overlay->m_toolBarManuallyMoved = true;
         toolBar->move(m_toolBarStartPoint + boundedDelta);
         if (sideBar && m_sideBarVisibleAtDragStart)
             sideBar->move(m_sideBarStartPoint + boundedDelta);
@@ -690,6 +694,7 @@ void TreelandMaskOverlayHost::close()
     m_finalized = false;
     m_recordModeActive = false;
     m_hintsVisible = false;
+    m_toolBarManuallyMoved = false;
     m_prepared = false;
 }
 
@@ -741,6 +746,10 @@ void TreelandMaskOverlayHost::ensureSelectionWidgets()
         connect(m_roundedCornerWidget, &RoundedCornerWidget::selectionSizeChanged,
                 this, [this](int width, int height) {
             emit selectionSizeChangeRequested(width, height, selectionPixelScale());
+        });
+        connect(m_roundedCornerWidget, &RoundedCornerWidget::ratioChanged,
+                this, [this](int width, int height) {
+            emit selectionRatioChangeRequested(width, height);
         });
         connect(m_roundedCornerWidget, &RoundedCornerWidget::panelExpandedChanged,
                 this, [this](bool) { updateToolBar(); });
@@ -853,7 +862,11 @@ void TreelandMaskOverlayHost::updateFineAdjustTips()
 
     const QRect tipsRect(m_fineAdjustTips->pos(), m_fineAdjustTips->size());
     QRect blockedRect;
-    if (m_hintsSelectionMode && !m_selection.isEmpty()) {
+    // Match MainWindow::updateFineAdjustTips(): during the first drag the
+    // selection is not finalized yet, but the growing selection rectangle
+    // must already hide the hint as soon as it reaches the panel.
+    const bool selectionDrag = !m_finalized && !m_selection.isEmpty();
+    if ((m_hintsSelectionMode || selectionDrag) && !m_selection.isEmpty()) {
         blockedRect = m_selection.translated(-owner->output().logicalGeometry.topLeft());
     } else if (m_globalCursor.x() >= 0 && m_globalCursor.y() >= 0) {
         blockedRect = QRect(m_globalCursor
@@ -899,31 +912,37 @@ void TreelandMaskOverlayHost::updateToolBar()
     }
     m_toolBar->showWidget();
     m_toolBar->adjustSize();
-    const QSize toolBarSize = m_toolBar->size();
 
-    int toolBarX = localSelection.center().x() - toolBarSize.width() / 2;
-    toolBarX = qBound(ToolBarMargin,
-                      toolBarX,
-                      qMax(ToolBarMargin, active->width() - toolBarSize.width() - ToolBarMargin));
-    int toolBarY = localSelection.top() - toolBarSize.height() - ToolBarGap;
-    if (toolBarY < ToolBarMargin)
-        toolBarY = localSelection.bottom() + ToolBarGap;
-    toolBarY = qBound(ToolBarMargin,
-                      toolBarY,
-                      qMax(ToolBarMargin, active->height() - toolBarSize.height() - ToolBarMargin));
+    // X11 keeps the user's manual toolbar position for the rest of the
+    // session. Only automatic placement participates in rounded-corner group
+    // avoidance.
+    if (!m_toolBarManuallyMoved) {
+        const QSize toolBarSize = m_toolBar->size();
 
-    if (m_roundedCornerWidget && m_roundedCornerWidget->isVisible()) {
-        const QRect groupPlate = m_roundedCornerWidget->isUserMoved()
-                ? m_roundedCornerWidget->currentGroupPlateRect()
-                : m_roundedCornerWidget->groupPlateRect(localSelection, active->rect());
-        const QRect toolbarRect(QPoint(toolBarX, toolBarY), toolBarSize);
-        if (!groupPlate.isEmpty() && toolbarRect.intersects(groupPlate)) {
-            toolBarY = qMin(groupPlate.bottom() + 1 + ToolBarGap,
-                            qMax(ToolBarMargin,
-                                 active->height() - toolBarSize.height() - ToolBarMargin));
+        int toolBarX = localSelection.center().x() - toolBarSize.width() / 2;
+        toolBarX = qBound(ToolBarMargin,
+                          toolBarX,
+                          qMax(ToolBarMargin, active->width() - toolBarSize.width() - ToolBarMargin));
+        int toolBarY = localSelection.top() - toolBarSize.height() - ToolBarGap;
+        if (toolBarY < ToolBarMargin)
+            toolBarY = localSelection.bottom() + ToolBarGap;
+        toolBarY = qBound(ToolBarMargin,
+                          toolBarY,
+                          qMax(ToolBarMargin, active->height() - toolBarSize.height() - ToolBarMargin));
+
+        if (m_roundedCornerWidget && m_roundedCornerWidget->isVisible()) {
+            const QRect groupPlate = m_roundedCornerWidget->isUserMoved()
+                    ? m_roundedCornerWidget->currentGroupPlateRect()
+                    : m_roundedCornerWidget->groupPlateRect(localSelection, active->rect());
+            const QRect toolbarRect(QPoint(toolBarX, toolBarY), toolBarSize);
+            if (!groupPlate.isEmpty() && toolbarRect.intersects(groupPlate)) {
+                toolBarY = qMin(groupPlate.bottom() + 1 + ToolBarGap,
+                                qMax(ToolBarMargin,
+                                     active->height() - toolBarSize.height() - ToolBarMargin));
+            }
         }
+        m_toolBar->showAt(QPoint(toolBarX, toolBarY));
     }
-    m_toolBar->showAt(QPoint(toolBarX, toolBarY));
     m_toolBar->raise();
     if (m_sideBar->isVisible()) {
         // Keep the full DFloatingWidget geometry. SideBarWidget reserves a 6px
@@ -1040,6 +1059,7 @@ void TreelandMaskOverlayHost::destroyWindows()
     m_recordModeActive = false;
     m_hintsVisible = false;
     m_hintsSelectionMode = false;
+    m_toolBarManuallyMoved = false;
     m_annotationToolActive = false;
     m_prepared = false;
     m_inputReadyPending = false;
