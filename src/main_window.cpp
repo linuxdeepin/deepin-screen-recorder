@@ -4741,7 +4741,7 @@ void MainWindow::saveScreenShot()
     }
     const bool r = saveAction(m_resultPixmap);
     // Treeland 下跳过 save2Clipboard，避免耗时阻塞
-    if (!Utils::isTreelandMode) {
+    if (!Utils::isTreelandMode && m_functionType != status::pinscreenshots) {
         save2Clipboard(m_resultPixmap);
     } else {
         qCWarning(dsrApp) << "贴图 Treeland 模式，跳过 save2Clipboard";
