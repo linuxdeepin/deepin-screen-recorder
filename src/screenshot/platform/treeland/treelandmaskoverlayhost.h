@@ -12,6 +12,8 @@ class SideBar;
 class ToolBarHost;
 class QWidget;
 class CountdownTooltip;
+class FineAdjustTips;
+class RoundedCornerWidget;
 
 namespace Dsr::Screenshot {
 
@@ -37,6 +39,10 @@ public:
     void setSnapHint(const QRect &globalRegion) override;
     void setSelectionFinalized(bool finalized) override;
     void setCursorIntent(CursorIntent intent) override;
+    void setSelectionHints(bool visible,
+                           bool selectionMode,
+                           const QPoint &globalCursor) override;
+    void setRecordModeActive(bool active) override;
     bool startRecordingCountdown(const QRect &globalSelection) override;
     void stopRecordingCountdown() override;
     bool beginRecording(const QRect &globalSelection) override;
@@ -49,10 +55,15 @@ private:
     friend class TreelandToolBarHost;
 
     TreelandMaskWindow *selectionOwnerWindow() const;
+    TreelandMaskWindow *windowForGlobalPoint(const QPoint &globalPos) const;
     void ensureEffectSource();
     void ensureToolBar();
+    void ensureSelectionWidgets();
     void destroyRecordingCountdown();
     void updateToolBar();
+    void updateRoundedCornerWidget();
+    void updateFineAdjustTips();
+    qreal selectionPixelScale() const;
     void handleToolChanged(const QString &tool);
     void checkInputReady();
     void undoAnnotation();
@@ -63,8 +74,11 @@ private:
     ToolBar *m_toolBar = nullptr;
     SideBar *m_sideBar = nullptr;
     ToolBarHost *m_toolBarHost = nullptr;
+    RoundedCornerWidget *m_roundedCornerWidget = nullptr;
+    FineAdjustTips *m_fineAdjustTips = nullptr;
     CountdownTooltip *m_countdown = nullptr;
     QRect m_selection;
+    QPoint m_globalCursor = QPoint(-1, -1);
     FrozenFrameSet m_frozenFrames;
     bool m_finalized = false;
     bool m_annotationToolActive = false;
@@ -72,6 +86,9 @@ private:
     bool m_effectSourceReady = false;
     bool m_inputReadyPending = false;
     bool m_recordingActive = false;
+    bool m_recordModeActive = false;
+    bool m_hintsVisible = false;
+    bool m_hintsSelectionMode = false;
     int m_inputReadyChecks = 0;
     IWindowTagger *m_windowTagger = nullptr;
 };

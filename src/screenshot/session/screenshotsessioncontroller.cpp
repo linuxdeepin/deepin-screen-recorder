@@ -29,6 +29,8 @@ namespace Dsr::Screenshot {
 
 namespace {
 
+constexpr int MinimumSelectionSize = 10;
+
 bool isSelectionResize(SelectionAction action)
 {
     return action != SelectionAction::NoAction
@@ -39,6 +41,35 @@ bool isSelectionResize(SelectionAction action)
 CursorIntent cursorIntentWhilePressed(CursorIntent intent)
 {
     return intent == CursorIntent::Move ? CursorIntent::Grabbing : intent;
+}
+
+QRect clampedSelectionMove(const QRect &selection,
+                           const QPoint &delta,
+                           const QRect &desktopBounds,
+                           const QRect &annotationBounds)
+{
+    QRect moved = selection.translated(delta);
+    if (desktopBounds.isValid()) {
+        if (moved.left() < desktopBounds.left())
+            moved.moveLeft(desktopBounds.left());
+        if (moved.top() < desktopBounds.top())
+            moved.moveTop(desktopBounds.top());
+        if (moved.right() > desktopBounds.right())
+            moved.moveRight(desktopBounds.right());
+        if (moved.bottom() > desktopBounds.bottom())
+            moved.moveBottom(desktopBounds.bottom());
+    }
+    if (!annotationBounds.isEmpty()) {
+        if (moved.left() > annotationBounds.left())
+            moved.moveLeft(annotationBounds.left());
+        if (moved.top() > annotationBounds.top())
+            moved.moveTop(annotationBounds.top());
+        if (moved.right() < annotationBounds.right())
+            moved.moveRight(annotationBounds.right());
+        if (moved.bottom() < annotationBounds.bottom())
+            moved.moveBottom(annotationBounds.bottom());
+    }
+    return moved;
 }
 
 QList<QScreen *> recordingScreensForSelection(const QRect &selection,
@@ -113,6 +144,14 @@ ScreenshotSessionController::ScreenshotSessionController(IScreenshotBackend *bac
             this, &ScreenshotSessionController::onPointerMoved);
     connect(m_overlay, &IScreenshotOverlayHost::pointerReleased,
             this, &ScreenshotSessionController::onPointerReleased);
+    connect(m_overlay, &IScreenshotOverlayHost::selectionMoveRequested,
+            this, &ScreenshotSessionController::onSelectionMoveRequested);
+    connect(m_overlay, &IScreenshotOverlayHost::selectionResizeRequested,
+            this, &ScreenshotSessionController::onSelectionResizeRequested);
+    connect(m_overlay, &IScreenshotOverlayHost::selectionSizeChangeRequested,
+            this, &ScreenshotSessionController::onSelectionSizeChangeRequested);
+    connect(m_overlay, &IScreenshotOverlayHost::roundedCornerRadiusChanged,
+            this, &ScreenshotSessionController::onRoundedCornerRadiusChanged);
     connect(m_overlay,
             &IScreenshotOverlayHost::maskWindowRoleCreated,
             this,
@@ -167,6 +206,7 @@ bool ScreenshotSessionController::start(const Request &request)
     m_pressed = false;
     m_dragged = false;
     m_pressStartedEmpty = false;
+    m_globalCursor = QPoint(-1, -1);
     m_snapTagsPrepared = false;
     m_snapStarted = false;
     m_expectedSnapMaskCount = 0;
@@ -176,6 +216,7 @@ bool ScreenshotSessionController::start(const Request &request)
     m_inputTarget = InputTarget::Inactive;
     m_activeCursorIntent = CursorIntent::Cross;
     m_recordMode = false;
+    m_roundedCornerRadius = 0;
     stopRecordingCountdown();
     m_selection->clear();
     m_state = State::PreparingFrame;
@@ -302,6 +343,8 @@ void ScreenshotSessionController::onOverlayReady()
         return;
 
     m_state = State::Selecting;
+    m_overlay->setRecordModeActive(false);
+    updateOverlayHints();
     if (m_request.enableWindowSnap)
         startSnapHints();
 }
@@ -320,6 +363,7 @@ void ScreenshotSessionController::onPointerPressed(const QPoint &globalPos)
 {
     if (m_state != State::Selecting && m_state != State::Editing)
         return;
+    m_globalCursor = globalPos;
     m_pressed = true;
     m_dragged = false;
     m_pressPos = globalPos;
@@ -339,12 +383,15 @@ void ScreenshotSessionController::onPointerPressed(const QPoint &globalPos)
             startSelectionInteraction(globalPos);
     }
     syncOverlayCursor(&globalPos);
+    updateOverlayHints();
 }
 
 void ScreenshotSessionController::onPointerMoved(const QPoint &globalPos)
 {
+    m_globalCursor = globalPos;
     if (!m_pressed) {
         syncOverlayCursor(&globalPos);
+        updateOverlayHints();
         return;
     }
 
@@ -355,12 +402,14 @@ void ScreenshotSessionController::onPointerMoved(const QPoint &globalPos)
     else if (m_inputTarget == InputTarget::Selection)
         m_selection->updateInteraction(globalPos);
     syncOverlayCursor(&globalPos);
+    updateOverlayHints();
 }
 
 void ScreenshotSessionController::onPointerReleased(const QPoint &globalPos)
 {
     if (!m_pressed)
         return;
+    m_globalCursor = globalPos;
     m_pressed = false;
     if (m_inputTarget == InputTarget::Annotation && m_annotationEditor) {
         m_annotationEditor->endInteraction();
@@ -383,6 +432,121 @@ void ScreenshotSessionController::onPointerReleased(const QPoint &globalPos)
     }
     syncOverlaySelection();
     syncOverlayCursor(&globalPos);
+    updateOverlayHints();
+}
+
+void ScreenshotSessionController::onSelectionMoveRequested(const QPoint &delta)
+{
+    if (m_state != State::Selecting && m_state != State::Editing)
+        return;
+    if (m_annotationEditor && m_annotationEditor->isInteracting())
+        return;
+    const QRect selection = m_selection->geometry();
+    if (selection.isEmpty() || delta.isNull())
+        return;
+
+    const QRect annotationBounds = m_annotationEditor
+            ? m_annotationEditor->contentBoundsGlobal().toAlignedRect().normalized()
+            : QRect();
+    m_selection->setGeometry(clampedSelectionMove(selection,
+                                                  delta,
+                                                  m_frames.virtualDesktopRect,
+                                                  annotationBounds));
+}
+
+void ScreenshotSessionController::onSelectionResizeRequested(
+        Qt::Key key, Qt::KeyboardModifiers modifiers)
+{
+    if (m_state != State::Selecting && m_state != State::Editing)
+        return;
+    if (m_annotationEditor && m_annotationEditor->hasSelectedContent())
+        return;
+    if (key != Qt::Key_Left && key != Qt::Key_Right
+            && key != Qt::Key_Up && key != Qt::Key_Down) {
+        return;
+    }
+
+    const bool enlarge = modifiers == Qt::ControlModifier;
+    const bool shrink = modifiers == (Qt::ControlModifier | Qt::ShiftModifier);
+    if (!enlarge && !shrink)
+        return;
+
+    QRect selection = m_selection->geometry();
+    if (selection.isEmpty())
+        return;
+
+    const QRect desktopBounds = m_frames.virtualDesktopRect;
+    const QRect annotationBounds = m_annotationEditor
+            ? m_annotationEditor->contentBoundsGlobal().toAlignedRect().normalized()
+            : QRect();
+    int left = selection.left();
+    int top = selection.top();
+    int right = selection.right();
+    int bottom = selection.bottom();
+
+    switch (key) {
+    case Qt::Key_Left:
+        if (enlarge) {
+            left = qMax(desktopBounds.left(), left - 1);
+        } else if (selection.width() > MinimumSelectionSize
+                   && (!annotationBounds.isValid() || left < annotationBounds.left())) {
+            ++left;
+        }
+        break;
+    case Qt::Key_Right:
+        if (enlarge) {
+            right = qMin(desktopBounds.right(), right + 1);
+        } else if (selection.width() > MinimumSelectionSize
+                   && (!annotationBounds.isValid() || right > annotationBounds.right())) {
+            --right;
+        }
+        break;
+    case Qt::Key_Up:
+        if (enlarge) {
+            top = qMax(desktopBounds.top(), top - 1);
+        } else if (selection.height() > MinimumSelectionSize
+                   && (!annotationBounds.isValid() || top < annotationBounds.top())) {
+            ++top;
+        }
+        break;
+    case Qt::Key_Down:
+        if (enlarge) {
+            bottom = qMin(desktopBounds.bottom(), bottom + 1);
+        } else if (selection.height() > MinimumSelectionSize
+                   && (!annotationBounds.isValid() || bottom > annotationBounds.bottom())) {
+            --bottom;
+        }
+        break;
+    default:
+        return;
+    }
+
+    const QRect resized(QPoint(left, top), QPoint(right, bottom));
+    if (resized.width() >= MinimumSelectionSize
+            && resized.height() >= MinimumSelectionSize) {
+        m_selection->setGeometry(resized);
+    }
+}
+
+void ScreenshotSessionController::onSelectionSizeChangeRequested(
+        int width, int height, qreal pixelScale)
+{
+    if (m_state != State::Selecting && m_state != State::Editing)
+        return;
+    const QRect current = m_selection->geometry();
+    if (current.isEmpty() || width <= 0 || height <= 0)
+        return;
+
+    const qreal scale = pixelScale > 0.0 ? pixelScale : 1.0;
+    const int logicalWidth = qMax(MinimumSelectionSize, qRound(width / scale));
+    const int logicalHeight = qMax(MinimumSelectionSize, qRound(height / scale));
+    m_selection->setGeometry(QRect(current.topLeft(),
+                                   QSize(logicalWidth, logicalHeight)));
+}
+
+void ScreenshotSessionController::onRoundedCornerRadiusChanged(int radius)
+{
+    m_roundedCornerRadius = qMax(0, radius);
 }
 
 void ScreenshotSessionController::onSnapRegionChanged(const QRect &globalRegion)
@@ -407,6 +571,8 @@ void ScreenshotSessionController::onRecordModeChanged(bool enabled)
     if (m_state != State::Selecting && m_state != State::Editing)
         return;
     m_recordMode = enabled;
+    m_overlay->setRecordModeActive(enabled);
+    updateOverlayHints();
 }
 
 void ScreenshotSessionController::onRecordStartRequested()
@@ -712,6 +878,18 @@ void ScreenshotSessionController::syncOverlaySelection()
         return;
     m_overlay->setSelection(m_selection->geometry());
     m_overlay->setSelectionFinalized(m_selection->state() == InteractionState::Ready);
+    updateOverlayHints();
+}
+
+void ScreenshotSessionController::updateOverlayHints()
+{
+    if (!m_overlay)
+        return;
+    const bool visible = (m_state == State::Selecting || m_state == State::Editing)
+            && !m_recordMode;
+    m_overlay->setSelectionHints(visible,
+                                 m_selection->state() == InteractionState::Ready,
+                                 m_globalCursor);
 }
 
 void ScreenshotSessionController::syncOverlayCursor(const QPoint *globalPos)
@@ -848,7 +1026,10 @@ bool ScreenshotSessionController::renderResult(Result *result) const
     if (!result)
         return false;
     ScreenshotExportService service;
-    *result = service.render(m_frames, m_selection->geometry(), m_annotationEditor);
+    *result = service.render(m_frames,
+                             m_selection->geometry(),
+                             m_annotationEditor,
+                             m_roundedCornerRadius);
     return result->isValid();
 }
 

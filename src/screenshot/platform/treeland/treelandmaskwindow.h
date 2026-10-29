@@ -31,12 +31,12 @@ public:
     void setSelection(const QRect &globalSelection);
     void setSnapHint(const QRect &globalRegion);
     void setSelectionFinalized(bool finalized);
-    void setSelectionHintOwner(bool owner);
     void setRecordingMode(bool enabled, const QRect &globalSelection = QRect(),
                           bool dimOutside = false);
     void setInputRegion(const QRegion &region);
     void resetInputRegion();
     void setCursorIntent(CursorIntent intent);
+    void setRoundedCornerRadius(int radius);
     void setAnnotationView(QWidget *widget);
     bool prepareWindow();
     void showWindow();
@@ -48,6 +48,8 @@ signals:
     void pointerMoved(const QPoint &globalPos);
     void pointerReleased(const QPoint &globalPos);
     void pointerDoubleClicked(const QPoint &globalPos);
+    void selectionMoveRequested(const QPoint &delta);
+    void selectionResizeRequested(Qt::Key key, Qt::KeyboardModifiers modifiers);
     void confirmRequested();
     void copyRequested();
     void cancelRequested();
@@ -77,7 +79,6 @@ private:
     QRect m_snapHint;
     QRect m_globalRecordingSelection;
     QRect m_recordingSelection;
-    bool m_selectionHintOwner = false;
     bool m_finalized = false;
     bool m_recordingMode = false;
     bool m_recordingDimOutside = false;
@@ -85,6 +86,7 @@ private:
     CursorIntent m_cursorIntent = CursorIntent::Default;
     bool m_cancelEmitted = false;
     bool m_roleCreatedConnected = false;
+    int m_roundedCornerRadius = 0;
 
     QWidget *m_annotationView = nullptr;
 };

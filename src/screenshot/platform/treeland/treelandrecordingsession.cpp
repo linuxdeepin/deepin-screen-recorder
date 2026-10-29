@@ -3,21 +3,24 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 
 #include "treelandrecordingsession.h"
-#include "treelandclipboardholder.h"
 
 #include "../../../ext-image-capture/extcapturerecorder.h"
 #include "../../../utils/configsettings.h"
 #include "../../../utils/log.h"
 #include "../../../utils.h"
 
+#include <QClipboard>
 #include <QDBusConnection>
 #include <QDBusInterface>
 #include <QDateTime>
 #include <QDir>
 #include <QFile>
+#include <QGuiApplication>
+#include <QMimeData>
 #include <QScreen>
 #include <QStandardPaths>
 #include <QTimer>
+#include <QUrl>
 
 namespace Dsr::Screenshot {
 
@@ -118,7 +121,6 @@ bool TreelandRecordingSession::start(const RecordingRequest &request)
     m_finalPath.clear();
     m_publishPath.clear();
     m_fileTransaction.setFinalPath(QString());
-    m_clipboardError.clear();
     m_terminal = false;
     m_cancelled = false;
     if (request.screens.isEmpty() || request.selection.isEmpty()) {
@@ -319,10 +321,7 @@ void TreelandRecordingSession::finishSaved()
     m_terminal = true;
     setState(State::Completed);
     notifySaved(m_finalPath);
-    if (!copyToClipboard(m_finalPath)) {
-        qWarning() << "TreeLand recording clipboard handoff failed:"
-                   << m_clipboardError;
-    }
+    copyToClipboard(m_finalPath);
     cleanupRecorder();
     emit saved(m_finalPath);
 }
@@ -416,11 +415,21 @@ void TreelandRecordingSession::notifySaved(const QString &path)
                             -1});
 }
 
-bool TreelandRecordingSession::copyToClipboard(const QString &path)
+void TreelandRecordingSession::copyToClipboard(const QString &path)
 {
-    return launchTreelandClipboardHolder(QStringLiteral("file"),
-                                         path,
-                                         &m_clipboardError);
+    QClipboard *clipboard = QGuiApplication::clipboard();
+    auto *mimeData = new QMimeData;
+
+    QByteArray gnomeFormat("copy\n");
+    const QUrl url = QUrl::fromLocalFile(path);
+    const QList<QUrl> urls{url};
+    gnomeFormat.append(url.toEncoded()).append('\n');
+
+    mimeData->setText(QString());
+    mimeData->setUrls(urls);
+    gnomeFormat.chop(1);
+    mimeData->setData(QStringLiteral("x-special/gnome-copied-files"), gnomeFormat);
+    clipboard->setMimeData(mimeData, QClipboard::Clipboard);
 }
 
 QString TreelandRecordingSession::createOutputPath(int format) const
