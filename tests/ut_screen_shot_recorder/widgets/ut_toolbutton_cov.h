@@ -95,6 +95,29 @@ TEST_F(ToolButtonCovTest, enterLeaveEvents)
     SUCCEED();
 }
 
+TEST_F(ToolButtonCovTest, x11EnterLeaveKeepsLegacyCursorStack)
+{
+    while (qApp->overrideCursor())
+        qApp->restoreOverrideCursor();
+
+    qApp->setOverrideCursor(Qt::IBeamCursor);
+    QEnterEvent enter(QPointF(5, 5), QPointF(5, 5), QPointF(5, 5));
+    EXPECT_NO_FATAL_FAILURE(QApplication::sendEvent(m_btn, &enter));
+    ASSERT_NE(qApp->overrideCursor(), nullptr);
+    EXPECT_EQ(qApp->overrideCursor()->shape(), Qt::ArrowCursor);
+
+    QEvent leave(QEvent::Leave);
+    EXPECT_NO_FATAL_FAILURE(QApplication::sendEvent(m_btn, &leave));
+    ASSERT_NE(qApp->overrideCursor(), nullptr);
+    EXPECT_EQ(qApp->overrideCursor()->shape(), Qt::ArrowCursor);
+
+    qApp->restoreOverrideCursor();
+    ASSERT_NE(qApp->overrideCursor(), nullptr);
+    EXPECT_EQ(qApp->overrideCursor()->shape(), Qt::IBeamCursor);
+    while (qApp->overrideCursor())
+        qApp->restoreOverrideCursor();
+}
+
 TEST_F(ToolButtonCovTest, undoButtonEmitsSignalOnEnterLeave)
 {
     m_btn->setUndoButtonFlag(true);

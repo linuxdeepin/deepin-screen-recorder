@@ -352,15 +352,6 @@ bool TimeWidget::createCacheFile()
 void TimeWidget::mouseReleaseEvent(QMouseEvent *e)
 {
     qCDebug(dsrApp) << "Mouse release event received";
-    if(e->button() == Qt::LeftButton && m_pressed && m_hover){
-        qCDebug(dsrApp) << "Left button released while pressed and hovered. Resetting flags.";
-        m_pressed = false;
-        m_hover = false;
-        update();
-        QWidget::mouseReleaseEvent(e);
-        qCDebug(dsrApp) << "mouseReleaseEvent method finished (early exit).";
-        return;
-    }
     int width = rect().width();
     bool flag = true;
     if (e->pos().x() > 0 && e->pos().x() < width) {

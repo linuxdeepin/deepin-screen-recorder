@@ -17,12 +17,12 @@
 using namespace testing;
 
 // 私有 paint* 方法：纯 QPainter 渲染，不触光标，offscreen 可测
-ACCESS_PRIVATE_FUN(ShapesWidget, void(QPainter &, FourPoints, int, ShapesWidget::ShapeBlurStatus, bool, bool, int), paintRect);
-ACCESS_PRIVATE_FUN(ShapesWidget, void(QPainter &, FourPoints, int, ShapesWidget::ShapeBlurStatus, bool, bool, int), paintEllipse);
-ACCESS_PRIVATE_FUN(ShapesWidget, void(QPainter &, QList<QPointF>, int, bool), paintArrow);
-ACCESS_PRIVATE_FUN(ShapesWidget, void(QPainter &, QList<QPointF>), paintLine);
-ACCESS_PRIVATE_FUN(ShapesWidget, void(QPainter &, QList<QPointF>, bool, int, int), paintEffectLine);
-ACCESS_PRIVATE_FUN(ShapesWidget, void(QPainter &, QPointF, QPixmap, bool), paintImgPoint);
+ACCESS_PRIVATE_FUN(ShapesWidget, void(QPainter &, FourPoints, int, ShapesWidget::ShapeBlurStatus, bool, bool, int) const, paintRect);
+ACCESS_PRIVATE_FUN(ShapesWidget, void(QPainter &, FourPoints, int, ShapesWidget::ShapeBlurStatus, bool, bool, int) const, paintEllipse);
+ACCESS_PRIVATE_FUN(ShapesWidget, void(QPainter &, QList<QPointF>, int, bool) const, paintArrow);
+ACCESS_PRIVATE_FUN(ShapesWidget, void(QPainter &, QList<QPointF>) const, paintLine);
+ACCESS_PRIVATE_FUN(ShapesWidget, void(QPainter &, QList<QPointF>, bool, int, int) const, paintEffectLine);
+ACCESS_PRIVATE_FUN(ShapesWidget, void(QPainter &, QPointF, QPixmap, bool) const, paintImgPoint);
 // paintText 是重载，ACCESS_PRIVATE_FUN 无法消歧，故不测
 
 static FourPoints rectPoints(qreal x, qreal y, qreal w, qreal h)

@@ -82,19 +82,21 @@ void SubToolWidget::initRecordLabel()
     m_recordSubTool = new DLabel(this);
     QList<ToolButton *> btnList;
 
-    m_recordingStatusLabel = new DLabel(m_recordSubTool);
-    m_recordingStatusLabel->setObjectName("RecordingStatus");
-    m_recordingStatusLabel->setAccessibleName("RecordingStatus");
-    m_recordingStatusLabel->setAlignment(Qt::AlignCenter);
-    m_recordingStatusLabel->setFixedSize(QSize(132, 36));
-    m_recordingStatusLabel->setStyleSheet(
-            QStringLiteral("color: #d32f2f; font-weight: 600;"));
-    m_recordingStatusLabel->hide();
+    if (Utils::isTreelandMode) {
+        m_recordingStatusLabel = new DLabel(m_recordSubTool);
+        m_recordingStatusLabel->setObjectName("RecordingStatus");
+        m_recordingStatusLabel->setAccessibleName("RecordingStatus");
+        m_recordingStatusLabel->setAlignment(Qt::AlignCenter);
+        m_recordingStatusLabel->setFixedSize(QSize(132, 36));
+        m_recordingStatusLabel->setStyleSheet(
+                QStringLiteral("color: #d32f2f; font-weight: 600;"));
+        m_recordingStatusLabel->hide();
 
-    m_recordingElapsedTimer = new QTimer(this);
-    m_recordingElapsedTimer->setInterval(1000);
-    connect(m_recordingElapsedTimer, &QTimer::timeout,
-            this, &SubToolWidget::updateRecordingStatus);
+        m_recordingElapsedTimer = new QTimer(this);
+        m_recordingElapsedTimer->setInterval(1000);
+        connect(m_recordingElapsedTimer, &QTimer::timeout,
+                this, &SubToolWidget::updateRecordingStatus);
+    }
 
     //添加显示键盘按钮
     m_keyBoardButton = new ToolButton();
@@ -193,7 +195,8 @@ void SubToolWidget::initRecordLabel()
     rectLayout->setSpacing(0);
     rectLayout->setAlignment(Qt::AlignVCenter);
     rectLayout->addSpacing(10);
-    rectLayout->addWidget(m_recordingStatusLabel, 0, Qt::AlignVCenter);
+    if (m_recordingStatusLabel)
+        rectLayout->addWidget(m_recordingStatusLabel, 0, Qt::AlignVCenter);
     for (int i = 0; i < btnList.length(); i++) {
         rectLayout->addWidget(btnList[i]);
         rectLayout->setAlignment(btnList[i], Qt::AlignVCenter);
@@ -214,7 +217,8 @@ void SubToolWidget::initRecordLabel()
 
 void SubToolWidget::setRecordingActive(bool active)
 {
-    if (!m_recordSubTool || !m_recordingStatusLabel || !m_recordingElapsedTimer)
+    if (!Utils::isTreelandMode || !m_recordSubTool
+            || !m_recordingStatusLabel || !m_recordingElapsedTimer)
         return;
 
     m_recordingElapsedTimer->stop();

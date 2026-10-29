@@ -2,8 +2,9 @@
 #
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-QT += core gui testlib
-CONFIG += c++17 testcase console
+QT += core gui widgets dbus testlib
+CONFIG += c++17 testcase console link_pkgconfig
+PKGCONFIG += dtk6widget dtk6gui dtk6core
 TARGET = ut_screenshot_session
 
 INCLUDEPATH += ../../src
@@ -20,6 +21,8 @@ SOURCES += \
     ../../src/screenshot/session/annotationcoordinator.cpp \
     ../../src/screenshot/session/screenshotsessioncontroller.cpp \
     ../../src/screenshot/platform/treeland/recordingfiletransaction.cpp \
+    ../../src/recordertablet.cpp \
+    ../../src/utils/configsettings.cpp \
     ../../src/utils/log.cpp \
     ../../src/utils/shapesutils.cpp
 
@@ -30,7 +33,9 @@ HEADERS += \
     ../../src/screenshot/core/selectionmodel.h \
     ../../src/screenshot/core/selectionoverlaygeometry.h \
     ../../src/screenshot/export/screenshotexportservice.h \
+    ../../src/recordertablet.h \
     ../../src/screenshot/ports/iannotationeditor.h \
+    ../../src/screenshot/ports/irecordingsession.h \
     ../../src/screenshot/ports/iscreenshotbackend.h \
     ../../src/screenshot/ports/iscreenshotoverlayhost.h \
     ../../src/screenshot/ports/iscreenshotresultsink.h \
@@ -39,5 +44,6 @@ HEADERS += \
     ../../src/screenshot/session/annotationcoordinator.h \
     ../../src/screenshot/session/screenshotsessioncontroller.h \
     ../../src/screenshot/platform/treeland/recordingfiletransaction.h \
+    ../../src/utils/configsettings.h \
     ../../src/utils/log.h \
     ../../src/utils/shapesutils.h

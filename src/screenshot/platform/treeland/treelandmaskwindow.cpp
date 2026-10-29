@@ -20,6 +20,7 @@
 #include <QRegion>
 #include <QResizeEvent>
 #include <QScreen>
+#include <QVector>
 #include <QWindow>
 #include <QtMath>
 #include <QtWaylandClient/private/qwaylanddisplay_p.h>
@@ -142,8 +143,9 @@ void TreelandMaskWindow::setRecordingMode(bool enabled,
 {
     m_recordingMode = enabled;
     m_recordingDimOutside = enabled && dimOutside;
+    m_globalRecordingSelection = enabled ? globalSelection.normalized() : QRect();
     m_recordingSelection = enabled
-            ? CoordinateMapper::globalToOutputLocal(globalSelection.normalized(), m_output)
+            ? CoordinateMapper::globalToOutputLocal(m_globalRecordingSelection, m_output)
                       .intersected(rect())
             : QRect();
     qCDebug(dsrApp) << "Recording overlay mode:" << enabled
@@ -286,7 +288,8 @@ void TreelandMaskWindow::closeSilently()
 void TreelandMaskWindow::drawSelectionOutline(QPainter &painter,
                                               const QRect &globalRect,
                                               const QColor &color,
-                                              int width) const
+                                              int width,
+                                              bool dashed) const
 {
     const QList<QLineF> lines =
             SelectionOverlayGeometry::strokedOutlineForOutput(
@@ -294,9 +297,18 @@ void TreelandMaskWindow::drawSelectionOutline(QPainter &painter,
     if (lines.isEmpty())
         return;
 
-    painter.setPen(QPen(color, width));
+    painter.save();
+    // X11 的选区边框为 1px 白色 DashLine，并关闭抗锯齿，避免虚线被灰边糊开。
+    painter.setRenderHint(QPainter::Antialiasing, !dashed);
+    QPen pen(color, width);
+    if (dashed) {
+        pen.setStyle(Qt::DashLine);
+        pen.setDashOffset(0);
+    }
+    painter.setPen(pen);
     for (const QLineF &line : lines)
         painter.drawLine(line);
+    painter.restore();
 }
 
 void TreelandMaskWindow::paintEvent(QPaintEvent *event)
@@ -312,14 +324,40 @@ void TreelandMaskWindow::paintEvent(QPaintEvent *event)
         painter.fillRect(rect(), Qt::transparent);
         painter.setCompositionMode(QPainter::CompositionMode_SourceOver);
 
-        if (m_recordingDimOutside && !m_recordingSelection.isEmpty()) {
-            QRegion outside(rect());
-            outside -= QRegion(m_recordingSelection);
-            painter.setClipRegion(outside);
-            painter.fillRect(rect(), QColor(0, 0, 0, 105));
-            painter.setBrush(Qt::NoBrush);
-            painter.setPen(QPen(QColor(255, 87, 54), 2));
-            painter.drawRect(m_recordingSelection.adjusted(-2, -2, 1, 1));
+        if (m_recordingDimOutside) {
+            const QColor maskColor(0, 0, 0, 105);
+            if (m_recordingSelection.isEmpty()) {
+                // 不属于选中区域的输出也要保留整屏遮罩。多屏录制时，
+                // 只有选区覆盖的输出需要挖空，其余输出应全部变暗。
+                painter.fillRect(rect(), maskColor);
+            } else {
+                QRegion outside(rect());
+                outside -= QRegion(m_recordingSelection);
+                painter.setClipRegion(outside);
+                painter.fillRect(rect(), maskColor);
+                // 与 X11 RecorderRegionShow 保持一致：2px 白色虚线，
+                // dash pattern 为 1,2，启用抗锯齿，并仅绘制真实选区边界。
+                QPen recordingPen(Qt::white, 2.0);
+                recordingPen.setStyle(Qt::DashLine);
+                QVector<qreal> dashes;
+                dashes << 1 << 2;
+                recordingPen.setDashPattern(dashes);
+                recordingPen.setDashOffset(0);
+
+                painter.save();
+                painter.setClipping(false);
+                painter.setRenderHint(QPainter::Antialiasing, true);
+                painter.setBrush(Qt::NoBrush);
+                painter.setPen(recordingPen);
+                const QRect recordingOutline =
+                        m_globalRecordingSelection.adjusted(-1, -1, 1, 1);
+                const QList<QLineF> recordingLines =
+                        SelectionOverlayGeometry::strokedOutlineForOutput(
+                                recordingOutline, m_output.logicalGeometry, 2.0);
+                for (const QLineF &line : recordingLines)
+                    painter.drawLine(line);
+                painter.restore();
+            }
         }
         return;
     }
@@ -346,12 +384,11 @@ void TreelandMaskWindow::paintEvent(QPaintEvent *event)
 
     if (!m_finalized && !m_snapHint.isEmpty()) {
         painter.fillRect(m_snapHint, QColor(46, 132, 255, 42));
-        drawSelectionOutline(painter, m_globalSnapHint, QColor(75, 160, 255), 2);
+        drawSelectionOutline(painter, m_globalSnapHint, QColor(75, 160, 255), 2, false);
     }
 
     if (!visibleSelection.isEmpty()) {
-        drawSelectionOutline(painter, m_globalSelection, QColor(62, 156, 255),
-                             m_finalized ? 2 : 1);
+        drawSelectionOutline(painter, m_globalSelection, Qt::white, 1, true);
 
         if (m_finalized) {
             painter.setBrush(QColor(245, 248, 252));

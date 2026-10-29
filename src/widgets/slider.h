@@ -27,38 +27,54 @@ public:
 
     ~Slider() override
     {
-        restoreCursor();
+        restoreSafeCursor();
+    }
+
+    void setSafeCursorManagement(bool enabled)
+    {
+        m_safeCursorManagement = enabled;
     }
 
 protected:
     void enterEvent(QEnterEvent *e) override
     {
-        // Never retain QApplication::overrideCursor()'s pointer: the override
-        // stack can be changed by sibling widgets, leaving that pointer
-        // dangling. Pair the temporary arrow cursor with a restore instead.
-        if (!m_cursorOverridden && qApp) {
+        if (m_safeCursorManagement) {
+            // The TreeLand toolbar can replace the application cursor stack
+            // while this slider is hovered. Never retain that raw pointer.
+            if (!m_cursorOverridden) {
+                qApp->setOverrideCursor(Qt::ArrowCursor);
+                m_cursorOverridden = true;
+            }
+        } else {
+            // Keep the original X11 behavior unchanged.
+            m_lastCursorShape = qApp->overrideCursor();
             qApp->setOverrideCursor(Qt::ArrowCursor);
-            m_cursorOverridden = true;
         }
         DSlider::enterEvent(e);
     }
 
     void leaveEvent(QEvent *e) override
     {
-        restoreCursor();
+        if (m_safeCursorManagement) {
+            restoreSafeCursor();
+        } else if (m_lastCursorShape) {
+            qApp->setOverrideCursor(m_lastCursorShape->shape());
+        }
         DSlider::leaveEvent(e);
     }
 
 private:
-    void restoreCursor()
+    void restoreSafeCursor()
     {
-        if (m_cursorOverridden && qApp) {
+        if (m_safeCursorManagement && m_cursorOverridden) {
             qApp->restoreOverrideCursor();
             m_cursorOverridden = false;
         }
     }
 
     bool m_isMousePress = false;
+    bool m_safeCursorManagement = false;
     bool m_cursorOverridden = false;
+    QCursor *m_lastCursorShape = nullptr;
 };
 #endif // SLIDER_H

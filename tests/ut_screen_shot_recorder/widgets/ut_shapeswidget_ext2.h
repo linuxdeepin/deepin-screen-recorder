@@ -26,7 +26,11 @@ ACCESS_PRIVATE_FUN(ShapesWidget, void(QMouseEvent *), mousePressEvent);
 ACCESS_PRIVATE_FUN(ShapesWidget, void(QMouseEvent *), mouseReleaseEvent);
 ACCESS_PRIVATE_FUN(ShapesWidget, void(QMouseEvent *), mouseMoveEvent);
 ACCESS_PRIVATE_FUN(ShapesWidget, void(QKeyEvent *), keyPressEvent);
+
+#ifndef DSR_UT_SHAPESWIDGET_M_SHAPES_ACCESS
+#define DSR_UT_SHAPESWIDGET_M_SHAPES_ACCESS
 ACCESS_PRIVATE_FIELD(ShapesWidget, Toolshapes, m_shapes);
+#endif
 
 class ShapesWidgetEventTest : public Test
 {

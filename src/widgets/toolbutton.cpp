@@ -14,7 +14,16 @@
 #include <QScreen>
 #include <QIcon>
 
+
 namespace {
+bool isTreeLandWaylandSession()
+{
+    return QGuiApplication::platformName().startsWith(
+                   QStringLiteral("wayland"), Qt::CaseInsensitive)
+            && qEnvironmentVariable("DDE_CURRENT_COMPOSITOR")
+                    == QStringLiteral("TreeLand");
+}
+
 // 红点常量定义（基于SVG设计）
 constexpr float SVG_WIDTH = 24.0f;
 constexpr float SVG_HEIGHT = 24.0f;
@@ -49,6 +58,8 @@ ToolButton::ToolButton(QWidget *parent)
     , m_isOptionButton(false)
     , m_isUndoButton(false)
     , m_isMousePress(false)
+    , m_lastCursorShape(nullptr)
+    , m_safeCursorManagement(isTreeLandWaylandSession())
     , m_cursorOverridden(false)
 {
     setCheckable(true);
@@ -57,7 +68,7 @@ ToolButton::ToolButton(QWidget *parent)
 
 ToolButton::~ToolButton()
 {
-    if (m_cursorOverridden)
+    if (m_safeCursorManagement && m_cursorOverridden)
         qApp->restoreOverrideCursor();
 }
 
@@ -324,9 +335,15 @@ void ToolButton::paintEvent(QPaintEvent *event)
 
 void ToolButton::enterEvent(QEnterEvent *e)
 {
-    if (!m_cursorOverridden) {
+    if (m_safeCursorManagement) {
+        if (!m_cursorOverridden) {
+            qApp->setOverrideCursor(Qt::ArrowCursor);
+            m_cursorOverridden = true;
+        }
+    } else {
+        // Keep the original X11 behavior unchanged.
+        m_lastCursorShape = qApp->overrideCursor();
         qApp->setOverrideCursor(Qt::ArrowCursor);
-        m_cursorOverridden = true;
     }
     if (this->isEnabled() && m_hasHoverState) {
         // setFlat(false);
@@ -344,11 +361,17 @@ void ToolButton::leaveEvent(QEvent *e)
     }
     DToolButton::leaveEvent(e);
 
-    if (m_cursorOverridden) {
+    if (m_safeCursorManagement) {
+        if (m_cursorOverridden) {
+            qApp->restoreOverrideCursor();
+            m_cursorOverridden = false;
+        }
+        m_isMousePress = false;
+    } else if (m_isMousePress) {
+        // Keep the original X11 behavior unchanged.
         qApp->restoreOverrideCursor();
-        m_cursorOverridden = false;
+        m_isMousePress = false;
     }
-    m_isMousePress = false;
 
     if (m_isUndoButton) {
         emit isInUndoBtn(false);

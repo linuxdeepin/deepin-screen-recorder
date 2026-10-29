@@ -32,78 +32,6 @@ constexpr int ToolBarGap = 8;
 constexpr int InputReadyCheckIntervalMs = 8;
 constexpr int InputReadyMaxChecks = 250;
 
-QRect toolbarGeometryOutsideSelection(QWidget *toolBar,
-                                      const QRect &selection,
-                                      const QList<QRect> &outputGeometries)
-{
-    if (!toolBar)
-        return QRect();
-
-    const QRect normalized = selection.normalized();
-    const QSize size = toolBar->size();
-    const int centeredX = normalized.center().x() - size.width() / 2;
-    const int centeredY = normalized.center().y() - size.height() / 2;
-    const QList<QRect> candidates{
-        QRect(centeredX,
-              normalized.bottom() + 1 + ToolBarGap,
-              size.width(),
-              size.height()),
-        QRect(centeredX,
-              normalized.top() - size.height() - ToolBarGap,
-              size.width(),
-              size.height()),
-        QRect(normalized.right() + 1 + ToolBarGap,
-              centeredY,
-              size.width(),
-              size.height()),
-        QRect(normalized.left() - size.width() - ToolBarGap,
-              centeredY,
-              size.width(),
-              size.height()),
-    };
-
-    // Prefer the recording output. If the recording selection fills that
-    // output, place the controls completely on another output. The ext capture
-    // backend records only the selected output, so this keeps the toolbar out
-    // of the video without relying on compositor-specific exclusion tags.
-    for (const QRect &outputGeometry : outputGeometries) {
-        const QRect output = outputGeometry.normalized();
-        for (QRect candidate : candidates) {
-            candidate.moveLeft(qBound(output.left(),
-                                      candidate.left(),
-                                      qMax(output.left(),
-                                           output.right() - candidate.width() + 1)));
-            candidate.moveTop(qBound(output.top(),
-                                     candidate.top(),
-                                     qMax(output.top(),
-                                          output.bottom() - candidate.height() + 1)));
-            if (output.contains(candidate) && !candidate.intersects(normalized))
-                return candidate;
-        }
-    }
-    return QRect();
-}
-
-QRect toolbarGeometryInsideSelection(QWidget *toolBar,
-                                     const QRect &selection,
-                                     const QRect &outputGeometry)
-{
-    if (!toolBar)
-        return QRect();
-
-    const QRect output = outputGeometry.normalized();
-    const QRect normalized = selection.normalized();
-    if (!output.intersects(normalized))
-        return QRect();
-
-    const QSize size = toolBar->size();
-    int x = normalized.center().x() - size.width() / 2;
-    int y = normalized.bottom() - size.height() - ToolBarGap;
-    x = qBound(output.left(), x, qMax(output.left(), output.right() - size.width() + 1));
-    y = qBound(output.top(), y, qMax(output.top(), output.bottom() - size.height() + 1));
-    return QRect(QPoint(x, y), size);
-}
-
 bool isTreeLandAnnotationTool(const QString &tool)
 {
     return tool == QStringLiteral("gio")
@@ -598,65 +526,21 @@ void TreelandMaskOverlayHost::destroyRecordingCountdown()
 
 bool TreelandMaskOverlayHost::beginRecording(const QRect &globalSelection)
 {
-    if (m_recordingActive || !m_toolBar || globalSelection.isEmpty())
+    if (m_recordingActive || globalSelection.isEmpty())
         return m_recordingActive;
-
-    TreelandMaskWindow *active = selectionOwnerWindow();
-    if (!active)
-        return false;
 
     if (m_sideBar)
         m_sideBar->hide();
+    if (m_toolBar) {
+        m_toolBar->hide();
+        m_toolBar->setEnabled(false);
+    }
 
     const QRect selection = globalSelection.normalized();
 
-    m_toolBar->setEnabled(true);
-    m_toolBar->showWidget();
-    setRecordingControlsActive(true);
-    m_toolBar->adjustSize();
-
-    QRect toolbarGeometry;
-    TreelandMaskWindow *toolbarOwner = nullptr;
-    for (TreelandMaskWindow *window : std::as_const(m_windows)) {
-        if (!window)
-            continue;
-        const QRect outputGeometry = window->output().logicalGeometry.normalized();
-        toolbarGeometry = toolbarGeometryOutsideSelection(
-                m_toolBar, selection, {outputGeometry});
-        if (!toolbarGeometry.isEmpty()) {
-            toolbarOwner = window;
-            break;
-        }
-    }
-
-    m_toolBar->hide();
-    if (toolbarGeometry.isEmpty()) {
-        // A full-desktop cross-output selection leaves no output space outside
-        // the recording area. Keep controls usable and exclude them from the
-        // recorded content through the compositor mask when the backend can do
-        // so; otherwise they remain a small overlay inside the selected area.
-        toolbarOwner = active;
-        toolbarGeometry = toolbarGeometryInsideSelection(
-                m_toolBar, selection, active->output().logicalGeometry);
-    }
-
-    if (!toolbarGeometry.isEmpty()) {
-        ensureRecordingToolBar(toolbarOwner);
-        m_recordingToolBar->setRecordingActive(true);
-        m_recordingToolBar->showWidget();
-        m_recordingToolBar->adjustSize();
-        toolbarGeometry = toolbarGeometryOutsideSelection(
-                m_recordingToolBar,
-                selection,
-                {toolbarOwner->output().logicalGeometry.normalized()});
-    }
-    qCDebug(dsrApp) << "Recording toolbar geometry:" << toolbarGeometry
-                    << "owner:" << (toolbarOwner ? toolbarOwner->output().outputId
-                                                 : QString());
-
-    // Keep the dimming/border visuals, but do not let the mask consume input.
-    // Only the recording toolbar is interactive; every other pixel is passed
-    // through to the desktop, regardless of which output it belongs to.
+    // X11 uses the tray recording plugin as the stop entry. Keep the TreeLand
+    // recording frame and input pass-through, but do not create a second
+    // in-overlay recording toolbar.
     for (TreelandMaskWindow *window : std::as_const(m_windows)) {
         if (!window)
             continue;
@@ -664,28 +548,7 @@ bool TreelandMaskOverlayHost::beginRecording(const QRect &globalSelection)
         window->clearMask();
         window->show();
         window->raise();
-    }
-
-    if (toolbarOwner && !toolbarGeometry.isEmpty()) {
-        const QRect localToolbar = toolbarGeometry.translated(
-                -toolbarOwner->output().logicalGeometry.topLeft());
-        for (TreelandMaskWindow *window : std::as_const(m_windows)) {
-            if (!window)
-                continue;
-            window->setInputRegion(window == toolbarOwner
-                                           ? QRegion(localToolbar)
-                                           : QRegion());
-        }
-        m_recordingToolBar->setGeometry(localToolbar);
-        m_recordingToolBar->show();
-        m_recordingToolBar->raise();
-    } else {
-        for (TreelandMaskWindow *window : std::as_const(m_windows)) {
-            if (window)
-                window->setInputRegion(QRegion());
-        }
-        if (m_recordingToolBar)
-            m_recordingToolBar->hide();
+        window->setInputRegion(QRegion());
     }
 
     m_recordingActive = true;
@@ -711,10 +574,6 @@ void TreelandMaskOverlayHost::finishRecording()
         m_toolBar->hide();
         m_toolBar->setEnabled(false);
     }
-    if (m_recordingToolBar) {
-        m_recordingToolBar->hide();
-        m_recordingToolBar->setEnabled(false);
-    }
 }
 
 bool TreelandMaskOverlayHost::isRecordingActive() const
@@ -726,8 +585,6 @@ void TreelandMaskOverlayHost::setRecordingControlsActive(bool active)
 {
     if (m_toolBar)
         m_toolBar->setRecordingActive(active);
-    if (m_recordingToolBar)
-        m_recordingToolBar->setRecordingActive(active);
 }
 
 void TreelandMaskOverlayHost::close()
@@ -763,8 +620,6 @@ void TreelandMaskOverlayHost::close()
         disconnect(toolBarHost, nullptr, this, nullptr);
         toolBarHost->deleteLater();
     }
-    destroyRecordingToolBar();
-
     for (TreelandMaskWindow *window : m_windows) {
         if (!window)
             continue;
@@ -804,39 +659,6 @@ void TreelandMaskOverlayHost::ensureToolBar()
     m_sideBar->initSideBar(m_toolBarHost);
     m_toolBar->hide();
     m_sideBar->hide();
-}
-
-void TreelandMaskOverlayHost::ensureRecordingToolBar(TreelandMaskWindow *owner)
-{
-    if (!owner || (m_recordingToolBar && m_recordingToolBarOwner == owner))
-        return;
-
-    destroyRecordingToolBar();
-    m_recordingToolBarOwner = owner;
-    m_recordingToolBarHost = new TreelandToolBarHost(this, owner);
-    m_recordingToolBarHost->setParent(this);
-    m_recordingToolBar = new ToolBar(owner);
-    m_recordingToolBar->initToolBar(m_recordingToolBarHost);
-    m_recordingToolBar->hide();
-}
-
-void TreelandMaskOverlayHost::destroyRecordingToolBar()
-{
-    ToolBar *toolBar = m_recordingToolBar;
-    ToolBarHost *toolBarHost = m_recordingToolBarHost;
-    m_recordingToolBar = nullptr;
-    m_recordingToolBarHost = nullptr;
-    m_recordingToolBarOwner = nullptr;
-
-    if (toolBar) {
-        toolBar->hide();
-        toolBar->setEnabled(false);
-        toolBar->deleteLater();
-    }
-    if (toolBarHost) {
-        disconnect(toolBarHost, nullptr, this, nullptr);
-        toolBarHost->deleteLater();
-    }
 }
 
 void TreelandMaskOverlayHost::updateToolBar()
@@ -969,7 +791,6 @@ void TreelandMaskOverlayHost::undoAnnotation()
 
 void TreelandMaskOverlayHost::destroyWindows()
 {
-    destroyRecordingToolBar();
     if (m_toolBar)
         m_toolBar->hide();
     if (m_sideBar)
