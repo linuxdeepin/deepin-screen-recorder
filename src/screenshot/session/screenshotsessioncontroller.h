@@ -84,6 +84,7 @@ private:
     void onSelectionMoveRequested(const QPoint &delta);
     void onSelectionResizeRequested(Qt::Key key, Qt::KeyboardModifiers modifiers);
     void onSelectionSizeChangeRequested(int width, int height, qreal pixelScale);
+    void onSelectionRatioChangeRequested(int width, int height);
     void onRoundedCornerRadiusChanged(int radius);
     void onMaskWindowRoleCreated(QWindow *window);
     void onSnapRegionChanged(const QRect &globalRegion);

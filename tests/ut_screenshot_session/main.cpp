@@ -299,6 +299,11 @@ public:
         emit selectionSizeChangeRequested(width, height, pixelScale);
     }
 
+    void requestSelectionRatio(int width, int height)
+    {
+        emit selectionRatioChangeRequested(width, height);
+    }
+
     void requestRoundedCornerRadius(int radius)
     {
         emit roundedCornerRadiusChanged(radius);
@@ -769,6 +774,46 @@ private slots:
         QCOMPARE(sink->copyCount, 1);
         QCOMPARE(controller.state(), ScreenshotSessionController::State::Completed);
         QVERIFY(overlay->closed);
+    }
+
+    void controllerAppliesSelectionSizeWithoutAnnotationExpansion()
+    {
+        FakeBackend *backend = new FakeBackend;
+        backend->frames.virtualDesktopRect = QRect(0, 0, 800, 600);
+        backend->frames.outputs = {makeFrame(QRect(0, 0, 800, 600), Qt::red, 2.0)};
+        auto *overlay = new FakeOverlay;
+        auto *sink = new FakeResultSink;
+        auto *annotations = new FakeAnnotationEditor;
+        annotations->bounds = QRectF(300, 100, 300, 200);
+        ScreenshotSessionController controller(backend, overlay, nullptr, nullptr,
+                                               sink, annotations);
+
+        Request request;
+        request.mode = Mode::FullScreen;
+        QVERIFY(controller.start(request));
+        overlay->requestSelectionSize(400, 300, 2.0);
+        // X11 的尺寸输入只约束桌面和最小尺寸，不会因已有标注反向撑大选区。
+        QCOMPARE(overlay->selection, QRect(0, 0, 200, 150));
+    }
+
+    void controllerAppliesSelectionRatioWithoutAnnotationExpansion()
+    {
+        FakeBackend *backend = new FakeBackend;
+        backend->frames.virtualDesktopRect = QRect(0, 0, 800, 600);
+        backend->frames.outputs = {makeFrame(QRect(0, 0, 800, 600), Qt::red)};
+        auto *overlay = new FakeOverlay;
+        auto *sink = new FakeResultSink;
+        auto *annotations = new FakeAnnotationEditor;
+        annotations->bounds = QRectF(350, 100, 200, 200);
+        ScreenshotSessionController controller(backend, overlay, nullptr, nullptr,
+                                               sink, annotations);
+
+        Request request;
+        request.mode = Mode::FullScreen;
+        QVERIFY(controller.start(request));
+        overlay->requestSelectionRatio(1, 2);
+        // 比例输入同样保持 X11 语义：不因标注外接矩形改变计算结果。
+        QCOMPARE(overlay->selection, QRect(0, 0, 300, 600));
     }
 
     void controllerDrivesPinThroughPorts()

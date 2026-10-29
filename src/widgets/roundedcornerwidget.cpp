@@ -26,6 +26,7 @@
 
 #include <QActionGroup>
 #include <QApplication>
+#include <QKeyEvent>
 #include <QMouseEvent>
 #include <QLineEdit>
 #include <QIntValidator>
@@ -526,8 +527,9 @@ void RoundedCornerWidget::initUi()
         flushPendingPersist();
     });
 
-    // 面板输入框里回车代表“确认当前数值”：确认后主动移出焦点，
-    // 这样紧接着再按一次回车才会轮到主窗口的“保存截图”快捷方式。
+    // 面板输入框里回车代表“确认当前数值”。eventFilter 会消费这次按键，
+    // 避免事件继续冒泡到截图窗口并被当成“复制截图”；失焦后下一次回车
+    // 才会轮到主窗口的“保存截图”快捷方式。
     const QList<QLineEdit *> panelEditors = {
         m_radiusSpin->lineEdit(),
         m_widthEdit->lineEdit(),
@@ -1269,6 +1271,27 @@ bool RoundedCornerWidget::eventFilter(QObject *watched, QEvent *event)
     if (isPanelChild && (event->type() == QEvent::Enter || event->type() == QEvent::MouseMove)) {
         applyOverrideCursorShape(isTextInputWidget(watched) ? Qt::IBeamCursor : Qt::ArrowCursor);
     }
+
+    // QLineEdit 的 returnPressed 只会发出提交信号，不会阻止按键继续向
+    // TreeLand Mask 窗口冒泡。Mask 窗口当前把 Enter 定义为复制截图，因此
+    // 必须在编辑器的前置事件过滤器里消费掉它，只把焦点移出并提交数值。
+    auto *editor = qobject_cast<QLineEdit *>(watched);
+    const bool isPanelEditor = editor
+            && ((m_widthEdit && editor == m_widthEdit->lineEdit())
+                || (m_heightEdit && editor == m_heightEdit->lineEdit())
+                || (m_radiusSpin && editor == m_radiusSpin->lineEdit()));
+    if (isPanelEditor && event->type() == QEvent::KeyPress) {
+        auto *keyEvent = static_cast<QKeyEvent *>(event);
+        if (keyEvent->key() == Qt::Key_Return || keyEvent->key() == Qt::Key_Enter) {
+            if (m_radiusSpin && editor == m_radiusSpin->lineEdit())
+                m_radiusSpin->interpretText();
+            // 失焦会触发 DLineEdit::editingFinished 并提交当前尺寸。
+            editor->clearFocus();
+            keyEvent->accept();
+            return true;
+        }
+    }
+
     return QWidget::eventFilter(watched, event);
 }
 
