@@ -1,5 +1,5 @@
 // Copyright (C) 2020 ~ 2021 Deepin Technology Co., Ltd.
-// SPDX-FileCopyrightText: 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2022-2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -12,6 +12,7 @@
 #include <X11/Xlibint.h>
 #include <X11/extensions/XTest.h>
 
+const int ScrollScreenshot::STABILITY_RETRY_LIMIT = 10;
 
 ScrollScreenshot::ScrollScreenshot(QObject *parent)  : QObject(parent)
 {
@@ -84,10 +85,34 @@ void ScrollScreenshot::addPixmap(const QPixmap &piximg, int wheelDirection)
         if (m_curStatus == Wait) {
             m_mouseWheelTimer->start(300);
             m_curStatus = Merging;
-        }
-        if (m_curStatus == Merging) {
             m_lastDirection = PixMergeThread::PictureDirection::ScrollDown; // 记录滚动方向
             m_PixMerageThread->addShotImg(piximg, PixMergeThread::PictureDirection::ScrollDown);
+        } else if (m_curStatus == Merging) {
+            m_lastDirection = PixMergeThread::PictureDirection::ScrollDown; // 记录滚动方向
+            // 帧稳定性检测：等待平滑滚动动画结束后再拼接
+            if (m_hasLastStabilityPixmap) {
+                if (piximg.toImage() == m_lastStabilityPixmap.toImage() ||
+                        m_stabilityRetryCount >= STABILITY_RETRY_LIMIT) {
+                    // 帧已稳定或达到重试上限，转发到拼接线程
+                    m_hasLastStabilityPixmap = false;
+                    m_stabilityRetryCount = 0;
+                    m_PixMerageThread->addShotImg(piximg, PixMergeThread::PictureDirection::ScrollDown);
+                    // 恢复滚轮定时器继续滚动
+                    m_mouseWheelTimer->start(300);
+                } else {
+                    // 帧仍在变化（平滑滚动动画进行中），延迟后重新截取
+                    m_stabilityRetryCount++;
+                    m_lastStabilityPixmap = piximg;
+                    QTimer::singleShot(200, this, [this]() { emit getOneImg(); });
+                }
+            } else {
+                // 首次稳定性检测：保存当前帧，暂停滚轮定时器让动画完成
+                m_lastStabilityPixmap = piximg;
+                m_hasLastStabilityPixmap = true;
+                m_stabilityRetryCount = 0;
+                m_mouseWheelTimer->stop();
+                QTimer::singleShot(200, this, [this]() { emit getOneImg(); });
+            }
         }
     } else if (m_isManualScrollModel == true) {//手动
         //qDebug() << "function piximg is null: " << __func__ << " ,line: " << __LINE__;
@@ -108,6 +133,8 @@ void ScrollScreenshot::addLastPixmap(const QPixmap &piximg)
 
 void ScrollScreenshot::clearPixmap()
 {
+    m_hasLastStabilityPixmap = false;
+    m_stabilityRetryCount = 0;
     m_PixMerageThread->clearCurImg();
 }
 
@@ -118,6 +145,8 @@ void ScrollScreenshot::changeState(const bool isStop)
     if (isStop && m_curStatus == Merging) {
         m_curStatus = Stop;
         m_mouseWheelTimer->stop();
+        m_hasLastStabilityPixmap = false;
+        m_stabilityRetryCount = 0;
     }
 
     // 开始

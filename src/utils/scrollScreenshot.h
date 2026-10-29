@@ -1,5 +1,5 @@
 // Copyright (C) 2020 ~ 2021 Deepin Technology Co., Ltd.
-// SPDX-FileCopyrightText: 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2022-2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -92,6 +92,12 @@ private:
      * @brief 用来记录当前滚动方向
      */
     PixMergeThread::PictureDirection m_lastDirection = PixMergeThread::PictureDirection::ScrollDown;
+
+    // 帧稳定性检测：自动滚动模式下等待平滑滚动动画结束
+    QPixmap m_lastStabilityPixmap;
+    bool m_hasLastStabilityPixmap = false;
+    int m_stabilityRetryCount = 0;
+    static const int STABILITY_RETRY_LIMIT;
 };
 
 #endif // AUDIOUTILS_H
