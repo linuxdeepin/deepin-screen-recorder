@@ -428,6 +428,7 @@ void MainWindow::initAttributes()
         setWindowTitle(tr("Screen Capture"));
         m_keyButtonList.clear();
         m_isZhaoxin = Utils::checkCpuIsZhaoxin();
+        rootWindowRect = QRect(0, 0, m_screenSize.width(), m_screenSize.height());
         screenRect = QRect(screenRect.topLeft() / m_pixelRatio, screenRect.size());
         qCDebug(dsrApp) << __FUNCTION__ << __LINE__ << "screen size" << rootWindowRect;
 
