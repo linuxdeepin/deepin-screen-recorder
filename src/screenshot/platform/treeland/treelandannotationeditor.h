@@ -46,6 +46,7 @@ public:
     bool isInteracting() const override;
     void setTool(AnnotationTool tool) override;
     AnnotationTool tool() const override;
+    bool hasSelectedContent() const override;
     AnnotationHit hitTest(const QPoint &globalPos) const override;
     bool beginInteraction(const QPoint &globalPos) override;
     void updateInteraction(const QPoint &globalPos) override;

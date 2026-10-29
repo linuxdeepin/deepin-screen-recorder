@@ -17,6 +17,7 @@
 #include <QKeySequence>
 #include <QMouseEvent>
 #include <QPainter>
+#include <QPainterPath>
 #include <QRegion>
 #include <QResizeEvent>
 #include <QScreen>
@@ -129,14 +130,6 @@ void TreelandMaskWindow::setSelectionFinalized(bool finalized)
     update();
 }
 
-void TreelandMaskWindow::setSelectionHintOwner(bool owner)
-{
-    if (m_selectionHintOwner == owner)
-        return;
-    m_selectionHintOwner = owner;
-    update();
-}
-
 void TreelandMaskWindow::setRecordingMode(bool enabled,
                                           const QRect &globalSelection,
                                           bool dimOutside)
@@ -227,6 +220,15 @@ void TreelandMaskWindow::setCursorIntent(CursorIntent intent)
         setCursor(Qt::CrossCursor);
         break;
     }
+}
+
+void TreelandMaskWindow::setRoundedCornerRadius(int radius)
+{
+    const int normalized = qMax(0, radius);
+    if (m_roundedCornerRadius == normalized)
+        return;
+    m_roundedCornerRadius = normalized;
+    update();
 }
 
 void TreelandMaskWindow::setAnnotationView(QWidget *widget)
@@ -336,7 +338,8 @@ void TreelandMaskWindow::paintEvent(QPaintEvent *event)
                 painter.setClipRegion(outside);
                 painter.fillRect(rect(), maskColor);
                 // 与 X11 RecorderRegionShow 保持一致：2px 白色虚线，
-                // dash pattern 为 1,2，启用抗锯齿，并仅绘制真实选区边界。
+                // dash pattern 为 1,2，启用抗锯齿。边框必须完全位于录制
+                // crop 外侧，否则抗锯齿边缘会进入视频首帧。
                 QPen recordingPen(Qt::white, 2.0);
                 recordingPen.setStyle(Qt::DashLine);
                 QVector<qreal> dashes;
@@ -350,7 +353,7 @@ void TreelandMaskWindow::paintEvent(QPaintEvent *event)
                 painter.setBrush(Qt::NoBrush);
                 painter.setPen(recordingPen);
                 const QRect recordingOutline =
-                        m_globalRecordingSelection.adjusted(-1, -1, 1, 1);
+                        m_globalRecordingSelection.adjusted(-3, -3, 3, 3);
                 const QList<QLineF> recordingLines =
                         SelectionOverlayGeometry::strokedOutlineForOutput(
                                 recordingOutline, m_output.logicalGeometry, 2.0);
@@ -388,6 +391,26 @@ void TreelandMaskWindow::paintEvent(QPaintEvent *event)
     }
 
     if (!visibleSelection.isEmpty()) {
+        if (m_roundedCornerRadius > 0) {
+            const QRect localSelection =
+                    CoordinateMapper::globalToOutputLocal(m_globalSelection, m_output);
+            const qreal radius = m_roundedCornerRadius;
+            QPainterPath squarePath;
+            squarePath.addRect(QRectF(localSelection));
+            QPainterPath roundedPath;
+            roundedPath.addRoundedRect(QRectF(localSelection), radius, radius);
+            painter.save();
+            painter.setClipRect(rect());
+            painter.setRenderHint(QPainter::Antialiasing, true);
+            painter.setPen(Qt::NoPen);
+            painter.setBrush(QColor(0, 0, 0, 120));
+            painter.drawPath(squarePath.subtracted(roundedPath));
+            painter.restore();
+        }
+
+        // Draw the selection outline after the rounded-corner mask. Otherwise
+        // the extra corner mask covers the white dashes and makes four corner
+        // segments look grey.
         drawSelectionOutline(painter, m_globalSelection, Qt::white, 1, true);
 
         if (m_finalized) {
@@ -399,26 +422,6 @@ void TreelandMaskWindow::paintEvent(QPaintEvent *event)
             for (const QPoint &localPoint : localHandles)
                 painter.drawRect(QRect(localPoint - QPoint(4, 4), QSize(9, 9)));
         }
-    }
-
-    if (m_selectionHintOwner) {
-        QString hint = QStringLiteral("拖拽框选窗口或区域  ·  Enter 复制  ·  Ctrl+S 保存  ·  Esc 取消");
-        if (m_finalized) {
-            hint = QStringLiteral("%1 × %2 px  ·  可拖动选区或拖拽控制点调整大小")
-                    .arg(m_globalSelection.width())
-                    .arg(m_globalSelection.height());
-        }
-
-        QFont font = painter.font();
-        font.setPixelSize(13);
-        painter.setFont(font);
-        const QRect hintRect(0, 22, width(), 36);
-        painter.setPen(Qt::NoPen);
-        painter.setBrush(QColor(0, 0, 0, 135));
-        const int textWidth = painter.fontMetrics().horizontalAdvance(hint) + 36;
-        painter.drawRoundedRect(QRect((width() - textWidth) / 2, hintRect.top(), textWidth, 32), 6, 6);
-        painter.setPen(Qt::white);
-        painter.drawText(hintRect, Qt::AlignHCenter | Qt::AlignVCenter, hint);
     }
 
 }
@@ -482,6 +485,42 @@ void TreelandMaskWindow::keyPressEvent(QKeyEvent *event)
     if (event->matches(QKeySequence::Undo)) {
         emit undoRequested();
         return;
+    }
+
+    const Qt::KeyboardModifiers modifiers = event->modifiers();
+    if (modifiers == Qt::NoModifier) {
+        QPoint delta;
+        switch (event->key()) {
+        case Qt::Key_Left:
+        case Qt::Key_A:
+            delta = QPoint(-1, 0);
+            break;
+        case Qt::Key_Right:
+        case Qt::Key_D:
+            delta = QPoint(1, 0);
+            break;
+        case Qt::Key_Up:
+        case Qt::Key_W:
+            delta = QPoint(0, -1);
+            break;
+        case Qt::Key_Down:
+        case Qt::Key_S:
+            delta = QPoint(0, 1);
+            break;
+        default:
+            break;
+        }
+        if (!delta.isNull()) {
+            emit selectionMoveRequested(delta);
+            return;
+        }
+    } else if (modifiers == Qt::ControlModifier
+               || modifiers == (Qt::ControlModifier | Qt::ShiftModifier)) {
+        if (event->key() == Qt::Key_Left || event->key() == Qt::Key_Right
+                || event->key() == Qt::Key_Up || event->key() == Qt::Key_Down) {
+            emit selectionResizeRequested(static_cast<Qt::Key>(event->key()), modifiers);
+            return;
+        }
     }
     QWidget::keyPressEvent(event);
 }

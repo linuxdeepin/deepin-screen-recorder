@@ -162,6 +162,11 @@ AnnotationTool TreelandAnnotationEditor::tool() const
     return m_tool;
 }
 
+bool TreelandAnnotationEditor::hasSelectedContent() const
+{
+    return m_document && m_document->hasSelectedContent();
+}
+
 AnnotationHit TreelandAnnotationEditor::hitTest(const QPoint &globalPos) const
 {
     return m_document ? m_document->hitTest(globalPos) : AnnotationHit();

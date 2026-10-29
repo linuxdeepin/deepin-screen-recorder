@@ -40,7 +40,7 @@ private:
     void finishFailed(const QString &reason);
     void startGifTranscode();
     void notifySaved(const QString &path);
-    bool copyToClipboard(const QString &path);
+    void copyToClipboard(const QString &path);
     QString createOutputPath(int format) const;
     void cleanupTemporaryFiles();
     void setState(State state);
@@ -61,7 +61,6 @@ private:
     bool m_startIssued = false;
     bool m_cancelled = false;
     bool m_terminal = false;
-    QString m_clipboardError;
 };
 
 } // namespace Dsr::Screenshot

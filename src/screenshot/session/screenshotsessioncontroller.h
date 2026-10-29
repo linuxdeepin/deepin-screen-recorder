@@ -81,6 +81,10 @@ private:
     void onPointerPressed(const QPoint &globalPos);
     void onPointerMoved(const QPoint &globalPos);
     void onPointerReleased(const QPoint &globalPos);
+    void onSelectionMoveRequested(const QPoint &delta);
+    void onSelectionResizeRequested(Qt::Key key, Qt::KeyboardModifiers modifiers);
+    void onSelectionSizeChangeRequested(int width, int height, qreal pixelScale);
+    void onRoundedCornerRadiusChanged(int radius);
     void onMaskWindowRoleCreated(QWindow *window);
     void onSnapRegionChanged(const QRect &globalRegion);
     void onConfirmRequested();
@@ -99,6 +103,7 @@ private:
     void setRecordingState(bool recording);
 
     void syncOverlaySelection();
+    void updateOverlayHints();
     void syncOverlayCursor(const QPoint *globalPos = nullptr);
     bool startAnnotationInteraction(const QPoint &globalPos);
     bool startSelectionInteraction(const QPoint &globalPos);
@@ -122,6 +127,7 @@ private:
     FrozenFrameSet m_frames;
     QRect m_snapHint;
     QPoint m_pressPos;
+    QPoint m_globalCursor = QPoint(-1, -1);
     CursorIntent m_activeCursorIntent = CursorIntent::Cross;
     State m_state = State::Idle;
     enum class InputTarget {
@@ -141,6 +147,7 @@ private:
     bool m_finished = false;
     bool m_recordMode = false;
     bool m_recordingStateActive = false;
+    int m_roundedCornerRadius = 0;
 };
 
 } // namespace Dsr::Screenshot

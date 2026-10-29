@@ -134,6 +134,11 @@ AnnotationTool ShapesWidgetAnnotationEditor::tool() const
     return m_tool;
 }
 
+bool ShapesWidgetAnnotationEditor::hasSelectedContent() const
+{
+    return m_widget && m_widget->hasSelectedShape();
+}
+
 QRectF ShapesWidgetAnnotationEditor::contentBoundsGlobal() const
 {
     if (!m_widget)

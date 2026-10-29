@@ -8,6 +8,7 @@
 #include "filter.h"
 #include "tooltips.h"
 #include "../utils/configsettings.h"
+#include "../utils/imageeffects.h"
 #include "../utils.h"
 #include "../utils/log.h"
 
@@ -1353,52 +1354,24 @@ QRect RoundedCornerWidget::groupPlateRect(const QRect &selection, const QRect &s
 
 QPixmap RoundedCornerWidget::applyRoundedCorners(const QPixmap &source, int radius)
 {
-    if (source.isNull() || radius <= 0) {
+    if (source.isNull() || radius <= 0)
         return source;
-    }
-    QImage image = source.toImage().convertToFormat(QImage::Format_ARGB32_Premultiplied);
+
     const qreal dpr = source.devicePixelRatio() > 0 ? source.devicePixelRatio() : 1.0;
-    // 全程在「设备像素」坐标系下裁剪，最后再恢复 devicePixelRatio。
-    // 若在绘制前给 out 设置 dpr，QPainter 会切换到逻辑坐标，而下面的
-    // QPainterPath 仍以设备像素构造（宽高、radius*dpr），路径会被放大 dpr 倍，
-    // 导致只有左上角落在画布内、其余三个圆角被裁到画布外（高 DPI 下只圆了左上角）。
-    image.setDevicePixelRatio(1.0);
-    const qreal scaledRadius = radius * dpr;
-    QImage out(image.size(), QImage::Format_ARGB32_Premultiplied);
-    out.fill(Qt::transparent);
-    out.setDevicePixelRatio(1.0);
-
-    QPainter painter(&out);
-    painter.setRenderHint(QPainter::Antialiasing, true);
-    painter.setRenderHint(QPainter::SmoothPixmapTransform, true);
-    QPainterPath path;
-    path.addRoundedRect(QRectF(0, 0, image.width(), image.height()), scaledRadius, scaledRadius);
-    painter.setClipPath(path);
-    painter.drawImage(0, 0, image);
-    painter.end();
-
-    out.setDevicePixelRatio(dpr);
-    QPixmap result = QPixmap::fromImage(out);
+    QPixmap result = QPixmap::fromImage(
+            Dsr::ImageEffects::roundedCorners(source.toImage(), radius));
     result.setDevicePixelRatio(dpr);
     return result;
 }
 
 QPixmap RoundedCornerWidget::compositeOnWhite(const QPixmap &source)
 {
-    if (source.isNull() || !source.hasAlphaChannel()) {
+    if (source.isNull() || !source.hasAlphaChannel())
         return source;
-    }
-    QImage image = source.toImage().convertToFormat(QImage::Format_ARGB32_Premultiplied);
-    const qreal dpr = image.devicePixelRatio() > 0 ? image.devicePixelRatio() : 1.0;
-    QImage out(image.size(), QImage::Format_ARGB32_Premultiplied);
-    out.fill(Qt::white);
-    out.setDevicePixelRatio(dpr);
 
-    QPainter painter(&out);
-    painter.drawImage(0, 0, image);
-    painter.end();
-
-    QPixmap result = QPixmap::fromImage(out);
+    const qreal dpr = source.devicePixelRatio() > 0 ? source.devicePixelRatio() : 1.0;
+    QPixmap result = QPixmap::fromImage(
+            Dsr::ImageEffects::compositeOnWhite(source.toImage()));
     result.setDevicePixelRatio(dpr);
     return result;
 }

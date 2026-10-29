@@ -23,6 +23,7 @@ SOURCES += \
     ../../src/screenshot/platform/treeland/recordingfiletransaction.cpp \
     ../../src/recordertablet.cpp \
     ../../src/utils/configsettings.cpp \
+    ../../src/utils/imageeffects.cpp \
     ../../src/utils/log.cpp \
     ../../src/utils/shapesutils.cpp
 
@@ -45,5 +46,6 @@ HEADERS += \
     ../../src/screenshot/session/screenshotsessioncontroller.h \
     ../../src/screenshot/platform/treeland/recordingfiletransaction.h \
     ../../src/utils/configsettings.h \
+    ../../src/utils/imageeffects.h \
     ../../src/utils/log.h \
     ../../src/utils/shapesutils.h
