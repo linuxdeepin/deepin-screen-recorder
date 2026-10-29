@@ -1,5 +1,5 @@
 // Copyright (C) 2020 ~ 2021 Uniontech Software Technology Co.,Ltd.
-// SPDX-FileCopyrightText: 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2022-2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -4905,7 +4905,7 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
                 static_cast<int>(recordX * m_pixelRatio),
                 static_cast<int>(recordY * m_pixelRatio),
                 static_cast<int>(recordWidth * m_pixelRatio),
-                static_cast<int>(recordHeight + 1 * m_pixelRatio)
+                static_cast<int>((recordHeight + 1) * m_pixelRatio)
             };
 
             //如果鼠标位置移出捕捉区域则不显示捕捉区域的骨架节点（骨架节点是显示状态，鼠标移出捕捉区域）
