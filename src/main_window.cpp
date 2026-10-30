@@ -62,7 +62,10 @@ extern "C" {
 #include <QProcess>
 #include <QMouseEvent>
 #include <QClipboard>
+#include <QDir>
+#include <QFile>
 #include <QFileDialog>
+#include <QFileInfo>
 #include <QLineEdit>
 #include <QShortcut>
 #include <QDBusInterface>
@@ -143,6 +146,44 @@ void applyOverrideCursorShape(int shape)
     } else if (*current != cursor) {
         qApp->changeOverrideCursor(cursor);
     }
+}
+
+QString customScreenshotSaveDirectory()
+{
+    const uid_t uid = getuid();
+    const QString savePath = QStringLiteral("%1/customsave_%2")
+        .arg(QDir::tempPath())
+        .arg(static_cast<qulonglong>(uid));
+
+    if (!QDir().mkpath(savePath)) {
+        qCWarning(dsrApp) << "Failed to create custom screenshot directory:"
+                          << savePath;
+        return QString();
+    }
+
+    const QFileInfo dirInfo(savePath);
+    if (!dirInfo.isDir()
+        || dirInfo.isSymLink()
+        || dirInfo.ownerId() != uid
+        || !dirInfo.isWritable()) {
+        qCWarning(dsrApp) << "Custom screenshot directory is not usable:"
+                          << savePath
+                          << "expected owner:" << uid
+                          << "actual owner:" << dirInfo.ownerId()
+                          << "group:" << dirInfo.groupId()
+                          << "permissions:" << dirInfo.permissions();
+        return QString();
+    }
+
+    // 截图可能包含隐私信息，确保目录只允许当前用户访问。
+    if (!QFile::setPermissions(savePath,
+                               QFile::ReadOwner | QFile::WriteOwner | QFile::ExeOwner)) {
+        qCWarning(dsrApp) << "Failed to secure custom screenshot directory:"
+                          << savePath;
+        return QString();
+    }
+
+    return savePath;
 }
 }  // namespace
 #ifdef KF5_WAYLAND_FLAGE_ON
@@ -5238,15 +5279,11 @@ bool MainWindow::saveAction(const QPixmap &pix)
         if (!saveImg(pix, m_saveFileName, t_formatStr.toLatin1().data()))
             return false;
     } else if (m_saveIndex == CustomScreenSave && m_saveFileName.isEmpty()) {
-        // 为自定义截图创建临时保存目录
-        QString savePath = QDir::tempPath() + "/customsave";
-        QDir saveDir(savePath);
-        if (!saveDir.exists()) {
-            bool mkdirSucc = saveDir.mkpath(".");
-            if (!mkdirSucc) {
-                qCCritical(dsrApp) << "Custom save path could not be created:" << savePath;
-                savePath = QDir::tempPath();
-            }
+        // 使用带 UID 的用户私有目录，并拒绝被其他用户预创建的路径。
+        const QString savePath = customScreenshotSaveDirectory();
+        if (savePath.isEmpty()) {
+            qCWarning(dsrApp) << "No safe directory available for custom screenshot";
+            return false;
         }
 
         QString t_formatStr = "PNG";
@@ -5258,8 +5295,10 @@ bool MainWindow::saveAction(const QPixmap &pix)
             m_saveFileName = QString("%1/%2_%3_%4.%5").arg(savePath, functionTypeStr, selectAreaName, currentTime, t_formatBuffix);
         }
 
-        if (!saveImg(pix, m_saveFileName, t_formatStr.toLatin1().data()))
+        if (!saveImg(pix, m_saveFileName, t_formatStr.toLatin1().data())) {
+            m_saveFileName.clear();
             return false;
+        }
 
         return true;
     } else if (m_saveIndex == AutoSave && m_saveFileName.isEmpty()) {
