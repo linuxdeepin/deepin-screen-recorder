@@ -1577,11 +1577,6 @@ private:
     void onFinishClicked();
     
     /**
-     * @brief Initializes screen capture
-     */
-    void initializeCapture();
-    
-    /**
      * @brief Handles when capture is finished
      */
     void handleCaptureFinish();
