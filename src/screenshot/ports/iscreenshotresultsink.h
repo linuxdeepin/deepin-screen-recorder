@@ -34,6 +34,7 @@ public:
     virtual bool pin(const Result &result, QString *error) = 0;
     virtual bool ocr(const Result &result, QString *error) = 0;
     virtual bool tableRecognize(const Result &result, QString *error) = 0;
+    virtual bool aiAssistant(const Result &result, int function, QString *error) = 0;
 };
 
 } // namespace Dsr::Screenshot

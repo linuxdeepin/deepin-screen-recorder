@@ -284,6 +284,11 @@ public:
         emit tableRecognizeRequested();
     }
 
+    void aiAssistant(int function)
+    {
+        emit aiAssistantRequested(function);
+    }
+
     void cancel()
     {
         emit cancelRequested();
@@ -363,15 +368,19 @@ public:
     int pinCount = 0;
     int ocrCount = 0;
     int tableRecognizeCount = 0;
+    int aiAssistantCount = 0;
+    int aiAssistantFunction = -1;
     QString requestedPath;
     Result lastResult;
     bool saveResult = true;
     bool saveCancelled = false;
     bool ocrResult = true;
     bool tableRecognizeResult = true;
+    bool aiAssistantResult = true;
     QString saveError;
     QString ocrError;
     QString tableRecognizeError;
+    QString aiAssistantError;
 
     bool save(const Result &result,
               const QString &path,
@@ -421,6 +430,16 @@ public:
         if (error)
             *error = tableRecognizeError;
         return tableRecognizeResult;
+    }
+
+    bool aiAssistant(const Result &result, int function, QString *error) override
+    {
+        ++aiAssistantCount;
+        aiAssistantFunction = function;
+        lastResult = result;
+        if (error)
+            *error = aiAssistantError;
+        return aiAssistantResult;
     }
 };
 
@@ -972,6 +991,53 @@ private slots:
 
         QCOMPARE(failedSpy.count(), 1);
         QCOMPARE(failedSpy.first().at(0).toString(), sink->tableRecognizeError);
+        QCOMPARE(controller.state(), ScreenshotSessionController::State::Failed);
+        QVERIFY(overlay->closed);
+    }
+
+    void controllerDrivesAiAssistantThroughPorts()
+    {
+        FakeBackend *backend = new FakeBackend;
+        backend->frames.virtualDesktopRect = QRect(0, 0, 800, 600);
+        backend->frames.outputs = {makeFrame(QRect(0, 0, 800, 600), Qt::green)};
+        auto *overlay = new FakeOverlay;
+        auto *sink = new FakeResultSink;
+        ScreenshotSessionController controller(backend, overlay, nullptr, nullptr, sink);
+
+        QVERIFY(controller.start(Request()));
+        overlay->press(QPoint(20, 30));
+        overlay->move(QPoint(220, 180));
+        overlay->release(QPoint(220, 180));
+        overlay->aiAssistant(2);
+
+        QCOMPARE(sink->aiAssistantCount, 1);
+        QCOMPARE(sink->aiAssistantFunction, 2);
+        QVERIFY(sink->lastResult.isValid());
+        QCOMPARE(sink->lastResult.globalSelection, QRect(20, 30, 201, 151));
+        QCOMPARE(controller.state(), ScreenshotSessionController::State::Completed);
+        QVERIFY(overlay->closed);
+    }
+
+    void aiAssistantFailureFailsClosedSession()
+    {
+        FakeBackend *backend = new FakeBackend;
+        backend->frames.virtualDesktopRect = QRect(0, 0, 800, 600);
+        backend->frames.outputs = {makeFrame(QRect(0, 0, 800, 600), Qt::red)};
+        auto *overlay = new FakeOverlay;
+        auto *sink = new FakeResultSink;
+        sink->aiAssistantResult = false;
+        sink->aiAssistantError = QStringLiteral("AI service unavailable");
+        ScreenshotSessionController controller(backend, overlay, nullptr, nullptr, sink);
+        QSignalSpy failedSpy(&controller, &ScreenshotSessionController::failed);
+
+        QVERIFY(controller.start(Request()));
+        overlay->press(QPoint(10, 10));
+        overlay->move(QPoint(100, 100));
+        overlay->release(QPoint(100, 100));
+        overlay->aiAssistant(0);
+
+        QCOMPARE(failedSpy.count(), 1);
+        QCOMPARE(failedSpy.first().at(0).toString(), sink->aiAssistantError);
         QCOMPARE(controller.state(), ScreenshotSessionController::State::Failed);
         QVERIFY(overlay->closed);
     }

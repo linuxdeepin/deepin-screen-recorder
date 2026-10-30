@@ -93,6 +93,7 @@ private:
     void onPinRequested();
     void onOcrRequested();
     void onTableRecognizeRequested();
+    void onAiAssistantRequested(int function);
     void onCancelRequested();
     void onRecordModeChanged(bool enabled);
     void onRecordStartRequested();

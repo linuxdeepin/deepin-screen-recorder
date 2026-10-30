@@ -24,6 +24,7 @@ public:
     bool pin(const Result &result, QString *error) override;
     bool ocr(const Result &result, QString *error) override;
     bool tableRecognize(const Result &result, QString *error) override;
+    bool aiAssistant(const Result &result, int function, QString *error) override;
 
 signals:
     void clipboardDataComing();
