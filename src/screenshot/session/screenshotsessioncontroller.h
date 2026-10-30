@@ -91,6 +91,8 @@ private:
     void onConfirmRequested();
     void onCopyRequested();
     void onPinRequested();
+    void onOcrRequested();
+    void onTableRecognizeRequested();
     void onCancelRequested();
     void onRecordModeChanged(bool enabled);
     void onRecordStartRequested();
@@ -112,7 +114,7 @@ private:
     void stopSnapHints();
     void fail(const QString &reason);
     void finish(State state);
-    bool renderResult(Result *result) const;
+    bool renderResult(Result *result, bool applyRoundedCorners = true) const;
 
     IScreenshotBackend *m_backend = nullptr;
     IScreenshotOverlayHost *m_overlay = nullptr;

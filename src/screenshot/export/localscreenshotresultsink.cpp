@@ -5,6 +5,7 @@
 #include "localscreenshotresultsink.h"
 
 #include "../../dbus_name.h"
+#include "../../dbusinterface/ocrinterface.h"
 #include "../../dbusinterface/pinscreenshotsinterface.h"
 #include "../../utils/configsettings.h"
 #include "../../utils/imageeffects.h"
@@ -18,6 +19,7 @@
 #include <QDateTime>
 #include <QDBusConnection>
 #include <QDBusMessage>
+#include <QDBusPendingCallWatcher>
 #include <QDir>
 #include <QEventLoop>
 #include <QFileDialog>
@@ -235,6 +237,47 @@ Result applyConfiguredBorder(const Result &result)
     return decorated;
 }
 
+constexpr int DBusServiceTimeoutMs = 15000;
+
+bool waitForDBusService(const QDBusPendingCall &pendingCall,
+                        const QString &serviceName,
+                        QString *error)
+{
+    // A pending call for an activatable service can remain transiently
+    // invalid until the service owner is resolved. The watcher's terminal
+    // state is authoritative; checking here races D-Bus service activation.
+    QDBusPendingCallWatcher watcher(pendingCall);
+    if (!watcher.isFinished()) {
+        QEventLoop waitLoop;
+        QTimer timeout;
+        timeout.setSingleShot(true);
+        QObject::connect(&watcher, &QDBusPendingCallWatcher::finished,
+                         &waitLoop, &QEventLoop::quit);
+        QObject::connect(&timeout, &QTimer::timeout,
+                         &waitLoop, &QEventLoop::quit);
+        timeout.start(DBusServiceTimeoutMs);
+        waitLoop.exec();
+
+        if (!watcher.isFinished()) {
+            if (error) {
+                *error = QStringLiteral("%1 服务调用超时（%2 秒）")
+                        .arg(serviceName)
+                        .arg(DBusServiceTimeoutMs / 1000);
+            }
+            return false;
+        }
+    }
+
+    if (watcher.isError()) {
+        if (error) {
+            *error = QStringLiteral("%1 服务调用失败：%2")
+                    .arg(serviceName, watcher.error().message());
+        }
+        return false;
+    }
+    return true;
+}
+
 } // namespace
 
 LocalScreenshotResultSink::LocalScreenshotResultSink(QObject *parent)
@@ -427,21 +470,48 @@ bool LocalScreenshotResultSink::pin(const Result &result, QString *error)
     PinScreenShotsInterface pinInterface(QStringLiteral("com.deepin.PinScreenShots"),
                                          QStringLiteral("/com/deepin/PinScreenShots"),
                                          QDBusConnection::sessionBus());
-    QDBusPendingReply<> reply = pinInterface.openImageAndName(
+    const QDBusPendingReply<> reply = pinInterface.openImageAndName(
             decorated.image,
             defaultFileName(ScreenshotFormat::Png),
             decorated.globalSelection.topLeft());
-    reply.waitForFinished();
-    if (!reply.isValid() || reply.isError()) {
-        if (error) {
-            *error = reply.isError()
-                    ? QStringLiteral("贴图服务调用失败：%1").arg(reply.error().message())
-                    : QStringLiteral("贴图服务调用未返回有效结果");
-        }
+    return waitForDBusService(reply, QStringLiteral("贴图服务"), error);
+}
+
+bool LocalScreenshotResultSink::ocr(const Result &result, QString *error)
+{
+    if (!result.isValid()) {
+        if (error)
+            *error = QStringLiteral("截图结果无效");
         return false;
     }
 
-    return true;
+    const Result decorated = applyConfiguredBorder(result);
+    OcrInterface ocrInterface(QStringLiteral("com.deepin.Ocr"),
+                              QStringLiteral("/com/deepin/Ocr"),
+                              QDBusConnection::sessionBus());
+    const QDBusPendingReply<> reply = ocrInterface.openImageAndName(
+            decorated.image,
+            defaultFileName(ScreenshotFormat::Png));
+    return waitForDBusService(reply, QStringLiteral("OCR 服务"), error);
+}
+
+bool LocalScreenshotResultSink::tableRecognize(const Result &result, QString *error)
+{
+    if (!result.isValid()) {
+        if (error)
+            *error = QStringLiteral("截图结果无效");
+        return false;
+    }
+
+    const Result decorated = applyConfiguredBorder(result);
+    PinScreenShotsInterface pinInterface(QStringLiteral("com.deepin.PinScreenShots"),
+                                         QStringLiteral("/com/deepin/PinScreenShots"),
+                                         QDBusConnection::sessionBus());
+    const QDBusPendingReply<> reply = pinInterface.openImageAndNameForTable(
+            decorated.image,
+            defaultFileName(ScreenshotFormat::Png),
+            decorated.globalSelection.topLeft());
+    return waitForDBusService(reply, QStringLiteral("表格识别服务"), error);
 }
 
 void LocalScreenshotResultSink::onClipboardDataComing(const QByteArray &data)

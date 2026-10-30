@@ -22,6 +22,8 @@ public:
               bool *cancelled = nullptr) override;
     bool copy(const Result &result, QString *error) override;
     bool pin(const Result &result, QString *error) override;
+    bool ocr(const Result &result, QString *error) override;
+    bool tableRecognize(const Result &result, QString *error) override;
 
 signals:
     void clipboardDataComing();

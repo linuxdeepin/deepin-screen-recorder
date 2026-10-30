@@ -165,6 +165,10 @@ ScreenshotSessionController::ScreenshotSessionController(IScreenshotBackend *bac
             this, &ScreenshotSessionController::onCopyRequested);
     connect(m_overlay, &IScreenshotOverlayHost::pinRequested,
             this, &ScreenshotSessionController::onPinRequested);
+    connect(m_overlay, &IScreenshotOverlayHost::ocrRequested,
+            this, &ScreenshotSessionController::onOcrRequested);
+    connect(m_overlay, &IScreenshotOverlayHost::tableRecognizeRequested,
+            this, &ScreenshotSessionController::onTableRecognizeRequested);
     connect(m_overlay, &IScreenshotOverlayHost::cancelRequested,
             this, &ScreenshotSessionController::onCancelRequested);
     connect(m_overlay, &IScreenshotOverlayHost::recordModeChanged,
@@ -872,6 +876,67 @@ void ScreenshotSessionController::onPinRequested()
     finish(State::Completed);
 }
 
+void ScreenshotSessionController::onOcrRequested()
+{
+    if (m_finished || m_selection->geometry().isEmpty())
+        return;
+    if (m_state != State::Selecting && m_state != State::Editing)
+        return;
+
+    Result result;
+    const State previousState = m_state;
+    m_state = State::Exporting;
+    // Match X11: OCR consumes the original annotation-composited pixels and
+    // does not apply the rounded-corner screenshot effect.
+    if (!renderResult(&result, false)) {
+        qWarning() << "Screenshot OCR returned an empty result";
+        m_state = previousState;
+        return;
+    }
+
+    QString error;
+    if (!m_resultSink->ocr(result, &error)) {
+        fail(error);
+        return;
+    }
+    m_state = State::Completed;
+    qCInfo(dsrApp) << "Screenshot session sent to OCR:" << result.image.size()
+                   << "selection:" << result.globalSelection
+                   << "generation:" << result.frameGeneration;
+    finish(State::Completed);
+}
+
+void ScreenshotSessionController::onTableRecognizeRequested()
+{
+    if (m_finished || m_selection->geometry().isEmpty())
+        return;
+    if (m_state != State::Selecting && m_state != State::Editing)
+        return;
+
+    Result result;
+    const State previousState = m_state;
+    m_state = State::Exporting;
+    // Match X11: table recognition consumes the original image without the
+    // rounded-corner screenshot effect.
+    if (!renderResult(&result, false)) {
+        qWarning() << "Screenshot table recognition returned an empty result";
+        m_state = previousState;
+        return;
+    }
+
+    QString error;
+    if (!m_resultSink->tableRecognize(result, &error)) {
+        fail(error);
+        return;
+    }
+    m_state = State::Completed;
+    qCInfo(dsrApp) << "Screenshot session sent to table recognition:"
+                   << result.image.size()
+                   << "selection:" << result.globalSelection
+                   << "generation:" << result.frameGeneration;
+    finish(State::Completed);
+}
+
 void ScreenshotSessionController::onCancelRequested()
 {
     if (m_finished)
@@ -1061,7 +1126,8 @@ void ScreenshotSessionController::finish(State state)
     emit finished();
 }
 
-bool ScreenshotSessionController::renderResult(Result *result) const
+bool ScreenshotSessionController::renderResult(Result *result,
+                                                bool applyRoundedCorners) const
 {
     if (!result)
         return false;
@@ -1069,7 +1135,7 @@ bool ScreenshotSessionController::renderResult(Result *result) const
     *result = service.render(m_frames,
                              m_selection->geometry(),
                              m_annotationEditor,
-                             m_roundedCornerRadius);
+                             applyRoundedCorners ? m_roundedCornerRadius : 0);
     return result->isValid();
 }
 

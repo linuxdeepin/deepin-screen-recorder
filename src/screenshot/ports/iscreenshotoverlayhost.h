@@ -82,6 +82,8 @@ signals:
     void confirmRequested();
     void copyRequested();
     void pinRequested();
+    void ocrRequested();
+    void tableRecognizeRequested();
     void cancelRequested();
     void recordModeChanged(bool enabled);
     void recordStartRequested();

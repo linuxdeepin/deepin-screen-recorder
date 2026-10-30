@@ -52,6 +52,8 @@ signals:
     void selectionResizeRequested(Qt::Key key, Qt::KeyboardModifiers modifiers);
     void confirmRequested();
     void copyRequested();
+    void ocrRequested();
+    void tableRecognizeRequested();
     void cancelRequested();
     void undoRequested();
 

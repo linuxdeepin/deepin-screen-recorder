@@ -771,11 +771,8 @@ void SubToolWidget::initShotLabel()
     });
 
 #ifdef  OCR_SCROLL_FLAGE_ON
-    // TODO: OCR/表格识别尚未迁移到新的结果消费链路。
-    if (!Utils::isTreelandMode) {
-        btnList.append(m_ocrButton);
-        btnList.append(m_tableButton);
-    }
+    btnList.append(m_ocrButton);
+    btnList.append(m_tableButton);
 #endif
 
     //添加贴图按钮
