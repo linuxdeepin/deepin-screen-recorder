@@ -5,6 +5,7 @@
 #include "localscreenshotresultsink.h"
 
 #include "../../dbus_name.h"
+#include "../../dbusinterface/aiassistantinterface.h"
 #include "../../dbusinterface/ocrinterface.h"
 #include "../../dbusinterface/pinscreenshotsinterface.h"
 #include "../../utils/configsettings.h"
@@ -16,6 +17,7 @@
 #include <QBuffer>
 #include <QClipboard>
 #include <QCoreApplication>
+#include <QCursor>
 #include <QDateTime>
 #include <QDBusConnection>
 #include <QDBusMessage>
@@ -27,6 +29,7 @@
 #include <QImage>
 #include <QGuiApplication>
 #include <QMimeData>
+#include <QScreen>
 #include <QStandardPaths>
 #include <QTimer>
 
@@ -512,6 +515,62 @@ bool LocalScreenshotResultSink::tableRecognize(const Result &result, QString *er
             defaultFileName(ScreenshotFormat::Png),
             decorated.globalSelection.topLeft());
     return waitForDBusService(reply, QStringLiteral("表格识别服务"), error);
+}
+
+bool LocalScreenshotResultSink::aiAssistant(const Result &result,
+                                            int function,
+                                            QString *error)
+{
+    if (!result.isValid()) {
+        if (error)
+            *error = QStringLiteral("截图结果无效");
+        return false;
+    }
+
+    const Result decorated = applyConfiguredBorder(result);
+    const QString tempDirectory =
+            QStandardPaths::writableLocation(QStandardPaths::TempLocation);
+    const QString imagePath = QDir(tempDirectory).filePath(
+            defaultFileName(ScreenshotFormat::Png));
+    if (!decorated.image.save(imagePath, "PNG")) {
+        if (error)
+            *error = QStringLiteral("AI 助手截图保存失败：%1").arg(imagePath);
+        return false;
+    }
+
+    // Match the legacy screenshot flow: cache the image before handing the
+    // temporary file to the AI service, but do not let a clipboard problem
+    // prevent the assistant window from opening.
+    QString clipboardError;
+    if (!copy(result, &clipboardError))
+        qWarning() << "AI assistant clipboard copy failed:" << clipboardError;
+
+    AiAssistantInterface aiAssistant(QStringLiteral("com.deepin.copilot"),
+                                     QStringLiteral("/com/deepin/copilot"),
+                                     QDBusConnection::sessionBus());
+    if (!aiAssistant.isValid()) {
+        if (error)
+            *error = QStringLiteral("AI 助手服务不可用");
+        return false;
+    }
+
+    QDBusPendingReply<> reply;
+    if (function == 3) {
+        reply = aiAssistant.launchChatUploadImage(imagePath);
+    } else {
+        const int mode = qBound(1, function + 1, 3);
+        QScreen *screen = QGuiApplication::screenAt(QCursor::pos());
+        if (!screen)
+            screen = QGuiApplication::primaryScreen();
+        const QRect geometry = screen
+                ? screen->geometry()
+                : QRect(result.globalSelection.topLeft(), result.image.size());
+        const QPoint position(geometry.center().x(),
+                              geometry.top() + geometry.height() / 3);
+        reply = aiAssistant.launchAiQuickOCR(mode, QString(), position, false,
+                                             imagePath);
+    }
+    return waitForDBusService(reply, QStringLiteral("AI 助手服务"), error);
 }
 
 void LocalScreenshotResultSink::onClipboardDataComing(const QByteArray &data)

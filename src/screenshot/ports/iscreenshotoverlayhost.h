@@ -84,6 +84,7 @@ signals:
     void pinRequested();
     void ocrRequested();
     void tableRecognizeRequested();
+    void aiAssistantRequested(int function);
     void cancelRequested();
     void recordModeChanged(bool enabled);
     void recordStartRequested();

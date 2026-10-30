@@ -122,8 +122,9 @@ public:
     {
     }
 
-    void aiAssistantSelected(int) override
+    void aiAssistantSelected(int function) override
     {
+        emit m_overlay->aiAssistantRequested(function);
     }
 
     void toolBarPointRequested() override
@@ -980,6 +981,15 @@ void TreelandMaskOverlayHost::handleToolChanged(const QString &tool)
 {
     if (!m_sideBar || !m_annotationEditor)
         return;
+    if (tool == QStringLiteral("aiassistant")) {
+        m_annotationToolActive = false;
+        m_sideBar->changeShotToolFunc(tool);
+        m_sideBar->showWidget();
+        m_sideBar->show();
+        updateToolBar();
+        updateFineAdjustTips();
+        return;
+    }
     if (!isTreeLandAnnotationTool(tool))
         return;
 

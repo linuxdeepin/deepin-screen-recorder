@@ -169,6 +169,8 @@ ScreenshotSessionController::ScreenshotSessionController(IScreenshotBackend *bac
             this, &ScreenshotSessionController::onOcrRequested);
     connect(m_overlay, &IScreenshotOverlayHost::tableRecognizeRequested,
             this, &ScreenshotSessionController::onTableRecognizeRequested);
+    connect(m_overlay, &IScreenshotOverlayHost::aiAssistantRequested,
+            this, &ScreenshotSessionController::onAiAssistantRequested);
     connect(m_overlay, &IScreenshotOverlayHost::cancelRequested,
             this, &ScreenshotSessionController::onCancelRequested);
     connect(m_overlay, &IScreenshotOverlayHost::recordModeChanged,
@@ -931,6 +933,36 @@ void ScreenshotSessionController::onTableRecognizeRequested()
     }
     m_state = State::Completed;
     qCInfo(dsrApp) << "Screenshot session sent to table recognition:"
+                   << result.image.size()
+                   << "selection:" << result.globalSelection
+                   << "generation:" << result.frameGeneration;
+    finish(State::Completed);
+}
+
+void ScreenshotSessionController::onAiAssistantRequested(int function)
+{
+    if (m_finished || m_selection->geometry().isEmpty())
+        return;
+    if (m_state != State::Selecting && m_state != State::Editing)
+        return;
+
+    Result result;
+    const State previousState = m_state;
+    m_state = State::Exporting;
+    if (!renderResult(&result)) {
+        qWarning() << "Screenshot AI assistant returned an empty result";
+        m_state = previousState;
+        return;
+    }
+
+    QString error;
+    if (!m_resultSink->aiAssistant(result, function, &error)) {
+        fail(error);
+        return;
+    }
+    m_state = State::Completed;
+    qCInfo(dsrApp) << "Screenshot session sent to AI assistant:"
+                   << "function:" << function
                    << result.image.size()
                    << "selection:" << result.globalSelection
                    << "generation:" << result.frameGeneration;
