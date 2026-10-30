@@ -482,6 +482,14 @@ void TreelandMaskWindow::keyPressEvent(QKeyEvent *event)
         emit copyRequested();
         return;
     }
+    if (event->modifiers() == Qt::AltModifier && event->key() == Qt::Key_O) {
+        emit ocrRequested();
+        return;
+    }
+    if (event->modifiers() == Qt::AltModifier && event->key() == Qt::Key_T) {
+        emit tableRecognizeRequested();
+        return;
+    }
     if (event->matches(QKeySequence::Undo)) {
         emit undoRequested();
         return;

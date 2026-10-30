@@ -13,6 +13,7 @@
 #include <QIcon>
 #include <QScreen>
 #include <QTimer>
+#include <QWindow>
 
 #include "../../utils/log.h"
 
@@ -68,12 +69,16 @@ TableRecognizingWidget::TableRecognizingWidget(DWidget *parent)
     makeFloatingOverlay();
     setSoftShadow(CARD_SHADOW_BLUR, CARD_SHADOW_OFFSET_Y, CARD_SHADOW_COLOR);
 
-    // 设计稿 ICON 为 DTK/加载动画/Blue：48x48 @ (38,27.5)。
-    // 直接使用 DTK 基础控件 DSpinner，并把高亮色设为设计稿的蓝色 #005BFF。
+    // 设计稿 ICON 为 48x48 @ (38,27.5)，使用 DTK 基础控件 DSpinner。
     m_spinner = new DSpinner(this);
     m_spinner->setFixedSize(SPINNER_SIZE, SPINNER_SIZE);
+    // DSpinner 使用 QPalette::Highlight 作为转圈颜色。TreeLand 取 DTK 应用主题色，
+    // 与现有 X11 表格识别的 DSpinner 表现一致；X11 分支保留原有取值不变。
     QPalette spinnerPalette = m_spinner->palette();
-    spinnerPalette.setColor(QPalette::Highlight, SPINNER_COLOR);
+    spinnerPalette.setColor(QPalette::Highlight,
+                            PUtils::isTreelandMode
+                                    ? DGuiApplicationHelper::instance()->applicationPalette().highlight().color()
+                                    : SPINNER_COLOR);
     m_spinner->setPalette(spinnerPalette);
     m_spinner->move(inset + SPINNER_LEFT, inset + SPINNER_TOP);
 
@@ -99,6 +104,14 @@ void TableRecognizingWidget::applyThemeColors()
     setPanelColors(PUtils::themeColor(CARD_MASK, CARD_MASK_DARK),
                    PUtils::themeColor(CARD_BORDER, CARD_BORDER_DARK));
 
+    // TreeLand 的 DSpinner 跟随应用主题切换；X11 保持原有固定颜色语义。
+    if (PUtils::isTreelandMode && m_spinner) {
+        QPalette spinnerPalette = m_spinner->palette();
+        spinnerPalette.setColor(QPalette::Highlight,
+                                DGuiApplicationHelper::instance()->applicationPalette().highlight().color());
+        m_spinner->setPalette(spinnerPalette);
+    }
+
     if (m_tipLabel) {
         QPalette tipPalette = m_tipLabel->palette();
         tipPalette.setColor(QPalette::WindowText,
@@ -119,18 +132,36 @@ void TableRecognizingWidget::startOn(QWidget *host)
 
     repositionOn(host);
     show();
+
+    // TreeLand 不允许客户端给顶层 Qt::Tool 窗口指定屏幕坐标，直接 move() 会被
+    // 合成器忽略，进度卡片就会停在某个输出的左上角。工具栏已经采用
+    // QWindow::setParent() 挂成宿主 subsurface 的方式，这里沿用同一做法。
+    // setParent() 后必须重新映射一次，否则 QWidget 仍保留首次映射时的顶层状态。
+    if (PUtils::isTreelandMode) {
+        createWinId();
+        host->createWinId();
+        if (windowHandle() && host->windowHandle()) {
+            windowHandle()->setParent(host->windowHandle());
+            hide();
+            show();
+            repositionOn(host);
+        }
+    }
+
     raise();
     m_spinner->start();
 
-    // 首次显示时贴图主窗可能仍在完成原生映射，合成器会把随后映射的主窗放到
-    // 本浮层之上。下一轮事件循环重新映射一次浮层，强制合成器刷新顶层顺序。
-    QTimer::singleShot(0, this, [this]() {
-        if (!isVisible())
-            return;
-        hide();
-        show();
-        raise();
-    });
+    // X11 顶层浮层可能在主窗完成原生映射后被压在下面，需要重新映射一次。
+    // TreeLand 使用 subsurface 后不存在这个顶层顺序竞争。
+    if (!PUtils::isTreelandMode) {
+        QTimer::singleShot(0, this, [this]() {
+            if (!isVisible())
+                return;
+            hide();
+            show();
+            raise();
+        });
+    }
 }
 
 void TableRecognizingWidget::repositionOn(QWidget *host)
@@ -139,17 +170,27 @@ void TableRecognizingWidget::repositionOn(QWidget *host)
         return;
 
     // 窗口内浮层：永远压在贴图窗口内容之上，且尺寸固定为设计稿大小，
-    // 只按宿主窗口居中，不随宿主窗口缩放。小贴图下卡片会自然超出宿主范围，
-    // 因为它是独立窗口，不会像子控件一样被裁剪。
+    // 只按宿主窗口居中，不随宿主窗口缩放。小贴图下卡片会自然超出宿主范围。
     if (parentWidget() != host)
         setParent(host, windowFlags());
     setBackdropHost(host);
+
     const int inset = contentMargin();
     const int cardWidth = width() - inset * 2;
     const int cardHeight = height() - inset * 2;
+    const QPoint centered((host->width() - cardWidth) / 2,
+                          (host->height() - cardHeight) / 2);
+
+    // TreeLand subsurface 的坐标相对宿主窗口；X11 顶层窗口使用屏幕坐标。
+    const bool attachedToHost = windowHandle() && host->windowHandle()
+            && windowHandle()->parent() == host->windowHandle();
+    if (attachedToHost) {
+        move(centered - QPoint(inset, inset));
+        return;
+    }
+
     const QPoint hostTopLeft = host->mapToGlobal(QPoint(0, 0));
-    QPoint cardTopLeft = hostTopLeft + QPoint((host->width() - cardWidth) / 2,
-                                              (host->height() - cardHeight) / 2);
+    QPoint cardTopLeft = hostTopLeft + centered;
 
     // 贴图窗口靠近屏幕边缘时，居中卡片会有一部分落到屏幕外。这里只约束卡片实体，
     // 投影预留边距仍可超出屏幕，避免小贴图场景下提示文字和加载动画被裁掉。

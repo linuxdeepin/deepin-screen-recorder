@@ -95,6 +95,14 @@ public:
             emit m_overlay->pinRequested();
             return;
         }
+        if (tool == QStringLiteral("ocr")) {
+            emit m_overlay->ocrRequested();
+            return;
+        }
+        if (tool == QStringLiteral("tableRecogn")) {
+            emit m_overlay->tableRecognizeRequested();
+            return;
+        }
         m_overlay->handleToolChanged(tool);
     }
 
@@ -297,6 +305,10 @@ bool TreelandMaskOverlayHost::create(const QList<OutputDescriptor> &outputs)
                 this, &IScreenshotOverlayHost::confirmRequested);
         connect(window, &TreelandMaskWindow::copyRequested,
                 this, &IScreenshotOverlayHost::copyRequested);
+        connect(window, &TreelandMaskWindow::ocrRequested,
+                this, &IScreenshotOverlayHost::ocrRequested);
+        connect(window, &TreelandMaskWindow::tableRecognizeRequested,
+                this, &IScreenshotOverlayHost::tableRecognizeRequested);
         connect(window, &TreelandMaskWindow::cancelRequested,
                 this, &IScreenshotOverlayHost::cancelRequested);
         connect(window, &TreelandMaskWindow::undoRequested,

@@ -274,6 +274,16 @@ public:
         emit pinRequested();
     }
 
+    void ocr()
+    {
+        emit ocrRequested();
+    }
+
+    void tableRecognize()
+    {
+        emit tableRecognizeRequested();
+    }
+
     void cancel()
     {
         emit cancelRequested();
@@ -351,11 +361,17 @@ public:
     int saveCount = 0;
     int copyCount = 0;
     int pinCount = 0;
+    int ocrCount = 0;
+    int tableRecognizeCount = 0;
     QString requestedPath;
     Result lastResult;
     bool saveResult = true;
     bool saveCancelled = false;
+    bool ocrResult = true;
+    bool tableRecognizeResult = true;
     QString saveError;
+    QString ocrError;
+    QString tableRecognizeError;
 
     bool save(const Result &result,
               const QString &path,
@@ -387,6 +403,24 @@ public:
         ++pinCount;
         lastResult = result;
         return true;
+    }
+
+    bool ocr(const Result &result, QString *error) override
+    {
+        ++ocrCount;
+        lastResult = result;
+        if (error)
+            *error = ocrError;
+        return ocrResult;
+    }
+
+    bool tableRecognize(const Result &result, QString *error) override
+    {
+        ++tableRecognizeCount;
+        lastResult = result;
+        if (error)
+            *error = tableRecognizeError;
+        return tableRecognizeResult;
     }
 };
 
@@ -841,6 +875,122 @@ private slots:
         QCOMPARE(sink->lastResult.image.pixelColor(0, 0), QColor(Qt::cyan));
         QCOMPARE(controller.state(), ScreenshotSessionController::State::Completed);
         QVERIFY(overlay->closed);
+    }
+
+    void controllerDrivesOcrThroughPorts()
+    {
+        FakeBackend *backend = new FakeBackend;
+        backend->frames.virtualDesktopRect = QRect(0, 0, 800, 600);
+        backend->frames.outputs = {makeFrame(QRect(0, 0, 800, 600), Qt::magenta)};
+
+        auto *overlay = new FakeOverlay;
+        auto *sink = new FakeResultSink;
+        ScreenshotSessionController controller(backend, overlay, nullptr, nullptr, sink);
+
+        QVERIFY(controller.start(Request()));
+        overlay->press(QPoint(20, 30));
+        overlay->move(QPoint(220, 180));
+        overlay->release(QPoint(220, 180));
+        overlay->requestRoundedCornerRadius(12);
+        overlay->ocr();
+
+        QCOMPARE(sink->ocrCount, 1);
+        QVERIFY(sink->lastResult.isValid());
+        QCOMPARE(sink->lastResult.globalSelection, QRect(20, 30, 201, 151));
+        // OCR uses the unrounded source image to match X11 behavior.
+        QCOMPARE(sink->lastResult.image.pixelColor(0, 0), QColor(Qt::magenta));
+        QCOMPARE(controller.state(), ScreenshotSessionController::State::Completed);
+        QVERIFY(overlay->closed);
+    }
+
+    void controllerDrivesTableRecognitionThroughPorts()
+    {
+        FakeBackend *backend = new FakeBackend;
+        backend->frames.virtualDesktopRect = QRect(100, 200, 800, 600);
+        backend->frames.outputs = {makeFrame(QRect(100, 200, 800, 600), Qt::yellow)};
+
+        auto *overlay = new FakeOverlay;
+        auto *sink = new FakeResultSink;
+        ScreenshotSessionController controller(backend, overlay, nullptr, nullptr, sink);
+
+        QVERIFY(controller.start(Request()));
+        overlay->press(QPoint(120, 230));
+        overlay->move(QPoint(320, 380));
+        overlay->release(QPoint(320, 380));
+        overlay->requestRoundedCornerRadius(12);
+        overlay->tableRecognize();
+
+        QCOMPARE(sink->tableRecognizeCount, 1);
+        QVERIFY(sink->lastResult.isValid());
+        QCOMPARE(sink->lastResult.globalSelection, QRect(120, 230, 201, 151));
+        QCOMPARE(sink->lastResult.image.pixelColor(0, 0), QColor(Qt::yellow));
+        QCOMPARE(controller.state(), ScreenshotSessionController::State::Completed);
+        QVERIFY(overlay->closed);
+    }
+
+    void ocrFailureFailsClosedSession()
+    {
+        FakeBackend *backend = new FakeBackend;
+        backend->frames.virtualDesktopRect = QRect(0, 0, 800, 600);
+        backend->frames.outputs = {makeFrame(QRect(0, 0, 800, 600), Qt::red)};
+        auto *overlay = new FakeOverlay;
+        auto *sink = new FakeResultSink;
+        sink->ocrResult = false;
+        sink->ocrError = QStringLiteral("OCR unavailable");
+        ScreenshotSessionController controller(backend, overlay, nullptr, nullptr, sink);
+        QSignalSpy failedSpy(&controller, &ScreenshotSessionController::failed);
+
+        QVERIFY(controller.start(Request()));
+        overlay->press(QPoint(10, 10));
+        overlay->move(QPoint(100, 100));
+        overlay->release(QPoint(100, 100));
+        overlay->ocr();
+
+        QCOMPARE(failedSpy.count(), 1);
+        QCOMPARE(failedSpy.first().at(0).toString(), sink->ocrError);
+        QCOMPARE(controller.state(), ScreenshotSessionController::State::Failed);
+        QVERIFY(overlay->closed);
+    }
+
+    void tableRecognitionFailureFailsClosedSession()
+    {
+        FakeBackend *backend = new FakeBackend;
+        backend->frames.virtualDesktopRect = QRect(0, 0, 800, 600);
+        backend->frames.outputs = {makeFrame(QRect(0, 0, 800, 600), Qt::red)};
+        auto *overlay = new FakeOverlay;
+        auto *sink = new FakeResultSink;
+        sink->tableRecognizeResult = false;
+        sink->tableRecognizeError = QStringLiteral("table service unavailable");
+        ScreenshotSessionController controller(backend, overlay, nullptr, nullptr, sink);
+        QSignalSpy failedSpy(&controller, &ScreenshotSessionController::failed);
+
+        QVERIFY(controller.start(Request()));
+        overlay->press(QPoint(10, 10));
+        overlay->move(QPoint(100, 100));
+        overlay->release(QPoint(100, 100));
+        overlay->tableRecognize();
+
+        QCOMPARE(failedSpy.count(), 1);
+        QCOMPARE(failedSpy.first().at(0).toString(), sink->tableRecognizeError);
+        QCOMPARE(controller.state(), ScreenshotSessionController::State::Failed);
+        QVERIFY(overlay->closed);
+    }
+
+    void ocrIgnoresEmptySelection()
+    {
+        FakeBackend *backend = new FakeBackend;
+        backend->frames.virtualDesktopRect = QRect(0, 0, 800, 600);
+        backend->frames.outputs = {makeFrame(QRect(0, 0, 800, 600), Qt::red)};
+        auto *overlay = new FakeOverlay;
+        auto *sink = new FakeResultSink;
+        ScreenshotSessionController controller(backend, overlay, nullptr, nullptr, sink);
+
+        QVERIFY(controller.start(Request()));
+        overlay->ocr();
+
+        QCOMPARE(sink->ocrCount, 0);
+        QCOMPARE(controller.state(), ScreenshotSessionController::State::Selecting);
+        QVERIFY(!overlay->closed);
     }
 
     void controllerAppliesPixelAdjustmentShortcuts()
