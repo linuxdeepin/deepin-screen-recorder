@@ -183,28 +183,9 @@ MainWindow::MainWindow(DWidget *parent)
 {
     qCDebug(dsrApp) << "Creating MainWindow";
     initMainWindow();
-
-    // TODO： treeland适配,后面判断会替换为 Utils::isTreelandMode
-#ifndef ENABLE_UNIT_TEST
-    if (Utils::isTreelandMode) {
-        qCDebug(dsrApp) << "Running in Treeland mode";
-        setAttribute(Qt::WA_TranslucentBackground);
-        setWindowFlags(Qt::FramelessWindowHint | Qt::Tool | Qt::WindowTransparentForInput); //Qt::WindowTransparentForInput
-
-        // 确保主窗口显示
-        initMainWindow();
-        // 初始化截图/录屏管理器
-        auto manager = TreelandCaptureManager::instance();
-        if (manager->isActive()) {
-            qCDebug(dsrApp) << "Treeland capture manager is active, initializing capture";
-            initializeCapture();
-        } else {
-            qCDebug(dsrApp) << "Treeland capture manager not active, waiting for activation";
-            connect(manager, &TreelandCaptureManager::activeChanged,
-                    this, &MainWindow::initializeCapture);
-        }
-    }
-#endif
+    // TreeLand capture is owned by ScreenshotSessionController. Do not
+    // initialize TreelandCaptureManager from MainWindow: the legacy path
+    // creates a second capture owner and conflicts with the session overlay.
 }
 
 void MainWindow::initMainWindow()
@@ -9101,51 +9082,6 @@ void MainWindow::setupConnections()
             this, &MainWindow::onFinishClicked);
 }
 
-void MainWindow::initializeCapture()
-{
-#ifndef ENABLE_UNIT_TEST
-    auto manager = TreelandCaptureManager::instance();
-    auto captureContext = manager->ensureContext();
-
-    if (!captureContext) {
-        qApp->exit(-1);
-        return;
-    }
-
-    // 检查窗口句柄是否可用
-    if (!windowHandle() || !windowHandle()->handle()) {
-        qCWarning(dsrApp) << "Window handle not available, cannot initialize capture";
-        // 如果窗口句柄还未创建，延迟初始化
-        // 等待窗口创建完成后再初始化
-        QTimer::singleShot(100, this, &MainWindow::initializeCapture);
-        return;
-    }
-
-    auto waylandWindow = static_cast<QtWaylandClient::QWaylandWindow *>(windowHandle()->handle());
-    if (!waylandWindow) {
-        qCWarning(dsrApp) << "Failed to get wayland window, cannot initialize capture";
-        return;
-    }
-
-    captureContext->selectSource(
-            TreelandCaptureContext::source_type_region,
-        true,
-        false,
-        waylandWindow->surface()
-        );
-
-    connect(manager->context(), &TreelandCaptureContext::captureRegionChanged,
-            this, &MainWindow::updateCaptureRegion, Qt::UniqueConnection);
-
-    connect(manager, &TreelandCaptureManager::finishSelect,
-            this, &MainWindow::handleCaptureFinish);
-
-    // 连接 source_failed 信号到槽函数
-    connect(captureContext, &TreelandCaptureContext::sourceFailed,
-           this, &MainWindow::onSourceFailed);
-#endif
-}
-
 void MainWindow::onSourceFailed(uint32_t reason)
 {
 #ifdef ENABLE_UNIT_TEST
@@ -9586,4 +9522,3 @@ void MainWindow::initAudioAndCameraWatchers()
         qCDebug(dsrApp) << "摄像头监视器初始化完成";
     }
 }
-
