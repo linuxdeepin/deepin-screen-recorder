@@ -91,6 +91,7 @@ private:
     // Configuration
     QSize m_virtualDesktopSize;
     QVector<QRect> m_screenGeometries; // Screen positions in virtual desktop
+    QRect m_contentBounds; // Union of all captured outputs in global coordinates
     QRect m_cropRegion; // Optional crop region
     bool m_hasCropRegion = false;
     

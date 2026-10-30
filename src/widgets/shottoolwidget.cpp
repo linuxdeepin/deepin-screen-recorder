@@ -152,6 +152,7 @@ void ShotToolWidget::initEffectLabel()
 
     //模糊强度滑动条
     Slider *t_radiusSize = new Slider(Qt::Horizontal, t_blurArea);
+    t_radiusSize->setSafeCursorManagement(Utils::isTreelandMode);
     t_radiusSize->slider()->setTickInterval(1);
     t_radiusSize->setMinimum(0);
     t_radiusSize->setMaximum(10);
@@ -165,6 +166,7 @@ void ShotToolWidget::initEffectLabel()
 
     //笔刷大小滑动条
     Slider *t_lineWidthSize = new Slider(Qt::Horizontal, t_blurArea);
+    t_lineWidthSize->setSafeCursorManagement(Utils::isTreelandMode);
     //t_lineWidthSize->setStyleSheet("border-image: url(:/icons/deepin/builtin/texts/vague_normal_32px.svg)");
     t_lineWidthSize->slider()->setTickInterval(1);
     t_lineWidthSize->setMinimum(0);
@@ -317,6 +319,7 @@ void ShotToolWidget::initTextLabel()
 
     QHBoxLayout *t_blurAreaLayout = new QHBoxLayout(t_blurArea);
     Slider *t_textFontSize = new Slider(Qt::Horizontal, t_blurArea);
+    t_textFontSize->setSafeCursorManagement(Utils::isTreelandMode);
     t_textFontSize->slider()->setTickInterval(1);
     //t_textFontSize->setFixedSize(TOOL_SLIDER_SIZE);
     t_textFontSize->setMinimum(0);

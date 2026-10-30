@@ -32,6 +32,7 @@ public:
     void setEffectSourceImage(const QImage &image);
     void setTool(AnnotationTool tool) override;
     AnnotationTool tool() const override;
+    bool hasSelectedContent() const override;
 
     QRectF contentBoundsGlobal() const override;
     bool isInteracting() const override;

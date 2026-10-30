@@ -10,6 +10,7 @@
 
 #include <QObject>
 #include <QPointer>
+#include <QRect>
 
 namespace Dsr::Screenshot {
 
@@ -19,11 +20,14 @@ class IScreenshotResultSink;
 class ISnapHintSource;
 class IWindowTagger;
 class IAnnotationEditor;
+class IRecordingSession;
 class AnnotationCoordinator;
 
 class ScreenshotSessionController : public QObject
 {
     Q_OBJECT
+    Q_CLASSINFO("D-Bus Interface", "com.deepin.ScreenRecorder")
+    Q_PROPERTY(bool IsRecording READ isRecording NOTIFY recordingStateChanged)
 public:
     enum class State {
         Idle,
@@ -31,6 +35,8 @@ public:
         CreatingMasks,
         Selecting,
         Editing,
+        Countdown,
+        Recording,
         Exporting,
         Completed,
         Cancelled,
@@ -50,12 +56,22 @@ public:
     bool start(const Request &request);
     void cancel();
     State state() const;
+    bool isRecording() const;
+    void setRecordingSession(IRecordingSession *recordingSession);
+
+public slots:
+    Q_SCRIPTABLE void stopRecord();
+    Q_SCRIPTABLE void stopApp();
+    Q_SCRIPTABLE QString getRecorderNormalIcon();
 
 signals:
     void finished();
     void failed(const QString &reason);
     void saved(const QString &path);
     void copied();
+    Q_SCRIPTABLE void RecorderState(bool isStart);
+    Q_SCRIPTABLE void RecordingModeChanged(bool isRecording);
+    void recordingStateChanged();
 
 private:
     void onBackendPrepared(const FrozenFrameSet &frames);
@@ -65,14 +81,29 @@ private:
     void onPointerPressed(const QPoint &globalPos);
     void onPointerMoved(const QPoint &globalPos);
     void onPointerReleased(const QPoint &globalPos);
+    void onSelectionMoveRequested(const QPoint &delta);
+    void onSelectionResizeRequested(Qt::Key key, Qt::KeyboardModifiers modifiers);
+    void onSelectionSizeChangeRequested(int width, int height, qreal pixelScale);
+    void onRoundedCornerRadiusChanged(int radius);
     void onMaskWindowRoleCreated(QWindow *window);
     void onSnapRegionChanged(const QRect &globalRegion);
     void onConfirmRequested();
     void onCopyRequested();
     void onPinRequested();
     void onCancelRequested();
+    void onRecordModeChanged(bool enabled);
+    void onRecordStartRequested();
+    void onRecordStopRequested();
+    void onRecordingStarted();
+    void onRecordingSaved(const QString &path);
+    void onRecordingFailed(const QString &reason);
+    void onRecordingCancelled();
+    void stopRecordingCountdown();
+    void startRecordingAfterCountdown();
+    void setRecordingState(bool recording);
 
     void syncOverlaySelection();
+    void updateOverlayHints();
     void syncOverlayCursor(const QPoint *globalPos = nullptr);
     bool startAnnotationInteraction(const QPoint &globalPos);
     bool startSelectionInteraction(const QPoint &globalPos);
@@ -88,6 +119,7 @@ private:
     IWindowTagger *m_windowTagger = nullptr;
     IScreenshotResultSink *m_resultSink = nullptr;
     IAnnotationEditor *m_annotationEditor = nullptr;
+    IRecordingSession *m_recordingSession = nullptr;
     SelectionModel *m_selection = nullptr;
     AnnotationCoordinator *m_annotationCoordinator = nullptr;
 
@@ -95,6 +127,7 @@ private:
     FrozenFrameSet m_frames;
     QRect m_snapHint;
     QPoint m_pressPos;
+    QPoint m_globalCursor = QPoint(-1, -1);
     CursorIntent m_activeCursorIntent = CursorIntent::Cross;
     State m_state = State::Idle;
     enum class InputTarget {
@@ -112,6 +145,9 @@ private:
     int m_taggedSnapMaskCount = 0;
     QString m_snapMaskTagError;
     bool m_finished = false;
+    bool m_recordMode = false;
+    bool m_recordingStateActive = false;
+    int m_roundedCornerRadius = 0;
 };
 
 } // namespace Dsr::Screenshot

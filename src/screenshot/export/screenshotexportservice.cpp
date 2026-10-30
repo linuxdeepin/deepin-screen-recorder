@@ -6,6 +6,7 @@
 
 #include "../core/coordinatemapper.h"
 #include "../ports/iannotationeditor.h"
+#include "../../utils/imageeffects.h"
 
 #include <QPainter>
 #include <QtMath>
@@ -23,7 +24,8 @@ QRect intersectionForFrame(const QRect &selection, const OutputFrame &frame)
 
 Result ScreenshotExportService::render(const FrozenFrameSet &frames,
                                        const QRect &globalSelection,
-                                       IAnnotationEditor *annotations) const
+                                       IAnnotationEditor *annotations,
+                                       int roundedCornerRadius) const
 {
     Result result;
     if (frames.isEmpty() || globalSelection.isEmpty())
@@ -83,6 +85,12 @@ Result ScreenshotExportService::render(const FrozenFrameSet &frames,
         painter.restore();
     }
     painter.end();
+
+    // The radius is configured in logical pixels. The exported bitmap uses the
+    // largest output scale, so convert it to the export image's device pixels
+    // before applying the same shared clipping implementation used by the UI.
+    image = Dsr::ImageEffects::roundedCorners(image,
+                                               roundedCornerRadius * outputScale);
 
     result.image = image;
     result.globalSelection = selection;

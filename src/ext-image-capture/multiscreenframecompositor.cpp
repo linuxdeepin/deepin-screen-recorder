@@ -49,12 +49,16 @@ void MultiScreenFrameCompositor::setScreenLayouts(const QList<QScreen*>& screens
     
     m_screenGeometries.clear();
     m_frameBuffers.clear();
+    m_contentBounds = QRect();
     
     for (QScreen* screen : screens) {
         if (screen) {
             // Get screen geometry in virtual desktop coordinates
             QRect geometry = screen->geometry();
             m_screenGeometries.append(geometry);
+            m_contentBounds = m_contentBounds.isNull()
+                    ? geometry
+                    : m_contentBounds.united(geometry);
             
             // Initialize frame buffer for this screen
             DmaFrameInfo frameInfo;
@@ -66,6 +70,11 @@ void MultiScreenFrameCompositor::setScreenLayouts(const QList<QScreen*>& screens
                             << "geometry:" << geometry;
         }
     }
+
+    if (!m_hasCropRegion) {
+        m_outputSize = m_contentBounds.size();
+        m_outputStride = m_outputSize.width() * 4;
+    }
     
     qCDebug(dsrApp) << "MultiScreenFrameCompositor: Configured" << m_frameBuffers.size() << "screens";
 }
@@ -73,12 +82,18 @@ void MultiScreenFrameCompositor::setScreenLayouts(const QList<QScreen*>& screens
 void MultiScreenFrameCompositor::setCropRegion(const QRect& region)
 {
     QMutexLocker locker(&m_frameMutex);
-    m_cropRegion = region;
+    m_cropRegion = region.normalized();
     m_hasCropRegion = true;
-    m_outputSize = region.size();
-    m_outputStride = region.width() * 4; // RGBA format
-    
-    qCDebug(dsrApp) << "MultiScreenFrameCompositor: Crop region set to" << region;
+
+    // libx264 with yuv420p requires even dimensions. Keep the requested
+    // top-left origin and trim at most one pixel from the right/bottom edge.
+    const int width = qMax(2, m_cropRegion.width() - (m_cropRegion.width() % 2));
+    const int height = qMax(2, m_cropRegion.height() - (m_cropRegion.height() % 2));
+    m_outputSize = QSize(width, height);
+    m_outputStride = width * 4; // RGBA format
+
+    qCDebug(dsrApp) << "MultiScreenFrameCompositor: Crop region set to" << m_cropRegion
+                    << "output size:" << m_outputSize;
 }
 
 void MultiScreenFrameCompositor::clearCropRegion()
@@ -207,6 +222,8 @@ QByteArray MultiScreenFrameCompositor::performFrameStitching()
     QImage compositeImage(m_outputSize, QImage::Format_RGBA8888);
     compositeImage.fill(Qt::GlobalColor::black); // waylandintegration.cpp:1043
     
+    const QRect outputOrigin = m_hasCropRegion ? m_cropRegion : m_contentBounds;
+
     // Create QPainter for composition - waylandintegration.cpp:1044
     QPainter painter(&compositeImage);
     
@@ -224,16 +241,31 @@ QByteArray MultiScreenFrameCompositor::performFrameStitching()
             continue;
         }
         
-        // Calculate where to draw this screen's image
-        QRect drawRect = calculateDrawRect(frameBuffer.screenGeometry);
-        
-        if (drawRect.isValid()) {
-            // Draw the screen image at its position - waylandintegration.cpp:1046
-            painter.drawImage(drawRect.topLeft(), screenImage);
-            
-            qCDebug(dsrApp) << "MultiScreenFrameCompositor: Drew screen" << frameBuffer.screen->name()
-                            << "at position" << drawRect.topLeft() << "size" << screenImage.size();
-        }
+        QRect capturedRegion = m_hasCropRegion ? m_cropRegion : m_contentBounds;
+        if (m_hasCropRegion)
+            capturedRegion = capturedRegion.intersected(QRect(m_cropRegion.topLeft(), m_outputSize));
+        const QRect intersection = frameBuffer.screenGeometry.intersected(capturedRegion);
+        if (intersection.isEmpty())
+            continue;
+
+        const qreal scaleX = static_cast<qreal>(screenImage.width())
+                / qMax(1, frameBuffer.screenGeometry.width());
+        const qreal scaleY = static_cast<qreal>(screenImage.height())
+                / qMax(1, frameBuffer.screenGeometry.height());
+        const QRect local = intersection.translated(-frameBuffer.screenGeometry.topLeft());
+        QRect sourceRect(qRound(local.x() * scaleX),
+                         qRound(local.y() * scaleY),
+                         qRound(local.width() * scaleX),
+                         qRound(local.height() * scaleY));
+        sourceRect = sourceRect.intersected(screenImage.rect());
+        if (sourceRect.isEmpty())
+            continue;
+
+        const QRect targetRect = intersection.translated(-outputOrigin.topLeft());
+        painter.drawImage(targetRect, screenImage, sourceRect);
+
+        qCDebug(dsrApp) << "MultiScreenFrameCompositor: Drew screen" << frameBuffer.screen->name()
+                        << "target:" << targetRect << "source:" << sourceRect;
     }
     
     painter.end();
@@ -280,14 +312,9 @@ QImage MultiScreenFrameCompositor::convertDmaBufferToQImage(const DmaFrameInfo& 
     // often fails on AMD GPUs. The frameData should already contain the converted
     // pixel data from the capture process.
     
-    // Return a placeholder pattern to identify issues
-    QImage placeholder(frameInfo.width, frameInfo.height, QImage::Format_RGBA8888);
-    placeholder.fill(QColor(255, 0, 255, 128)); // Magenta with transparency
-    
-    qCWarning(dsrApp) << "MultiScreenFrameCompositor: Using placeholder image for screen"
+    qCWarning(dsrApp) << "MultiScreenFrameCompositor: No usable image for screen"
                       << frameInfo.screen->name();
-    
-    return placeholder;
+    return QImage();
 }
 
 QRect MultiScreenFrameCompositor::calculateDrawRect(const QRect& screenGeometry) const
@@ -339,4 +366,3 @@ void MultiScreenFrameCompositor::resetFrameReadyFlags()
         buffer.ready = false;
     }
 }
-

@@ -11,14 +11,17 @@
 #include "screenshot/ports/iscreenshotresultsink.h"
 #include "screenshot/ports/isnaphintsource.h"
 #include "screenshot/ports/iwindowtagger.h"
+#include "screenshot/platform/treeland/recordingfiletransaction.h"
 #include "screenshot/session/annotationcoordinator.h"
 #include "screenshot/session/screenshotsessioncontroller.h"
+#include "utils/imageeffects.h"
 #include "utils/shapesutils.h"
 
 #include <QColor>
 #include <QImage>
 #include <QPainter>
 #include <QSignalSpy>
+#include <QTemporaryDir>
 #include <QtTest>
 
 using namespace Dsr::Screenshot;
@@ -54,6 +57,7 @@ public:
     int updateCount = 0;
     int endCount = 0;
     int cancelCount = 0;
+    bool selectedContent = false;
     QList<QPoint> updatePositions;
     AnnotationTool currentTool = AnnotationTool::Pointer;
 
@@ -75,6 +79,11 @@ public:
     AnnotationTool tool() const override
     {
         return currentTool;
+    }
+
+    bool hasSelectedContent() const override
+    {
+        return selectedContent;
     }
 
     AnnotationHit hitTest(const QPoint &) const override
@@ -274,6 +283,26 @@ public:
     {
         emit inputFailed(reason);
     }
+
+    void requestSelectionMove(const QPoint &delta)
+    {
+        emit selectionMoveRequested(delta);
+    }
+
+    void requestSelectionResize(Qt::Key key, Qt::KeyboardModifiers modifiers)
+    {
+        emit selectionResizeRequested(key, modifiers);
+    }
+
+    void requestSelectionSize(int width, int height, qreal pixelScale)
+    {
+        emit selectionSizeChangeRequested(width, height, pixelScale);
+    }
+
+    void requestRoundedCornerRadius(int radius)
+    {
+        emit roundedCornerRadiusChanged(radius);
+    }
 };
 
 class FakeSnapHints : public ISnapHintSource
@@ -412,6 +441,38 @@ private slots:
         const QImage blur = effectAnnotationImage(source, true, 16);
         QCOMPARE(blur.size(), source.size());
         QVERIFY(blur.pixelColor(30, 32) != blur.pixelColor(34, 32));
+    }
+
+    void roundedCornersPreserveSizeAndDevicePixelRatio()
+    {
+        QImage source(80, 80, QImage::Format_ARGB32_Premultiplied);
+        source.setDevicePixelRatio(2.0);
+        source.fill(Qt::red);
+
+        const QImage rounded = Dsr::ImageEffects::roundedCorners(source, 12.0);
+
+        QCOMPARE(rounded.size(), source.size());
+        QCOMPARE(rounded.devicePixelRatio(), 2.0);
+        QCOMPARE(rounded.pixelColor(0, 0).alpha(), 0);
+        QCOMPARE(rounded.pixelColor(40, 40), QColor(Qt::red));
+    }
+
+    void whiteCompositionPreservesSizeAndDevicePixelRatio()
+    {
+        QImage source(40, 20, QImage::Format_ARGB32_Premultiplied);
+        source.setDevicePixelRatio(2.0);
+        source.fill(Qt::transparent);
+        QPainter painter(&source);
+        painter.fillRect(QRect(10, 5, 20, 10), Qt::red);
+        painter.end();
+
+        const QImage flattened = Dsr::ImageEffects::compositeOnWhite(source);
+
+        QCOMPARE(flattened.size(), source.size());
+        QCOMPARE(flattened.devicePixelRatio(), 2.0);
+        QCOMPARE(flattened.pixelColor(0, 0), QColor(Qt::white));
+        QCOMPARE(flattened.pixelColor(0, 0).alpha(), 255);
+        QCOMPARE(flattened.pixelColor(20, 10), QColor(Qt::red));
     }
 
     void selectionShrinkCannotCropAnnotations()
@@ -735,6 +796,107 @@ private slots:
         QCOMPARE(sink->lastResult.image.pixelColor(0, 0), QColor(Qt::cyan));
         QCOMPARE(controller.state(), ScreenshotSessionController::State::Completed);
         QVERIFY(overlay->closed);
+    }
+
+    void controllerAppliesPixelAdjustmentShortcuts()
+    {
+        FakeBackend *backend = new FakeBackend;
+        backend->frames.virtualDesktopRect = QRect(0, 0, 800, 600);
+        backend->frames.outputs = {makeFrame(QRect(0, 0, 800, 600), Qt::white)};
+        auto *overlay = new FakeOverlay;
+        auto *sink = new FakeResultSink;
+        ScreenshotSessionController controller(backend, overlay, nullptr, nullptr, sink);
+
+        QVERIFY(controller.start(Request()));
+        overlay->press(QPoint(100, 100));
+        overlay->move(QPoint(400, 300));
+        overlay->release(QPoint(400, 300));
+        const QRect initial = overlay->selection;
+
+        overlay->requestSelectionMove(QPoint(1, 1));
+        QCOMPARE(overlay->selection, initial.translated(1, 1));
+
+        const QRect moved = overlay->selection;
+        overlay->requestSelectionResize(Qt::Key_Left, Qt::ControlModifier);
+        QCOMPARE(overlay->selection.left(), moved.left() - 1);
+        QCOMPARE(overlay->selection.right(), moved.right());
+
+        const QRect enlarged = overlay->selection;
+        overlay->requestSelectionResize(Qt::Key_Right,
+                                        Qt::ControlModifier | Qt::ShiftModifier);
+        QCOMPARE(overlay->selection.left(), enlarged.left());
+        QCOMPARE(overlay->selection.right(), enlarged.right() - 1);
+    }
+
+    void selectedAnnotationOwnsResizeShortcut()
+    {
+        FakeBackend *backend = new FakeBackend;
+        backend->frames.virtualDesktopRect = QRect(0, 0, 800, 600);
+        backend->frames.outputs = {makeFrame(QRect(0, 0, 800, 600), Qt::white)};
+        auto *overlay = new FakeOverlay;
+        auto *sink = new FakeResultSink;
+        auto *annotations = new FakeAnnotationEditor;
+        annotations->selectedContent = true;
+        ScreenshotSessionController controller(backend,
+                                               overlay,
+                                               nullptr,
+                                               nullptr,
+                                               sink,
+                                               annotations);
+
+        QVERIFY(controller.start(Request()));
+        overlay->press(QPoint(100, 100));
+        overlay->move(QPoint(400, 300));
+        overlay->release(QPoint(400, 300));
+        const QRect initial = overlay->selection;
+
+        overlay->requestSelectionResize(Qt::Key_Left, Qt::ControlModifier);
+        QCOMPARE(overlay->selection, initial);
+    }
+
+    void roundedCornerRadiusIsUsedByFinalExport()
+    {
+        FakeBackend *backend = new FakeBackend;
+        backend->frames.virtualDesktopRect = QRect(0, 0, 800, 600);
+        backend->frames.outputs = {makeFrame(QRect(0, 0, 800, 600), Qt::red)};
+        auto *overlay = new FakeOverlay;
+        auto *sink = new FakeResultSink;
+        ScreenshotSessionController controller(backend, overlay, nullptr, nullptr, sink);
+
+        QVERIFY(controller.start(Request()));
+        overlay->press(QPoint(100, 100));
+        overlay->move(QPoint(299, 249));
+        overlay->release(QPoint(299, 249));
+        overlay->requestRoundedCornerRadius(12);
+        overlay->confirm();
+
+        QVERIFY(sink->lastResult.isValid());
+        QCOMPARE(sink->lastResult.image.pixelColor(0, 0).alpha(), 0);
+        QCOMPARE(sink->lastResult.image.pixelColor(100, 75), QColor(Qt::red));
+    }
+
+    void roundedCornerRadiusUsesExportPixelScale()
+    {
+        FakeBackend *backend = new FakeBackend;
+        backend->frames.virtualDesktopRect = QRect(0, 0, 400, 300);
+        backend->frames.outputs = {
+            makeFrame(QRect(0, 0, 400, 300), Qt::red, 2.0)
+        };
+        auto *overlay = new FakeOverlay;
+        auto *sink = new FakeResultSink;
+        ScreenshotSessionController controller(backend, overlay, nullptr, nullptr, sink);
+
+        QVERIFY(controller.start(Request()));
+        overlay->press(QPoint(100, 100));
+        overlay->move(QPoint(199, 199));
+        overlay->release(QPoint(199, 199));
+        overlay->requestRoundedCornerRadius(10);
+        overlay->confirm();
+
+        QVERIFY(sink->lastResult.isValid());
+        QCOMPARE(sink->lastResult.image.size(), QSize(200, 200));
+        QCOMPARE(sink->lastResult.image.pixelColor(0, 0).alpha(), 0);
+        QCOMPARE(sink->lastResult.image.pixelColor(100, 100), QColor(Qt::red));
     }
 
     void selectionResizeHandleHasPriorityOverAnnotation()
@@ -1176,6 +1338,69 @@ private slots:
         QCOMPARE(failedSpy.size(), 1);
         QCOMPARE(failedSpy.takeFirst().at(0).toString(), QStringLiteral("保存失败"));
         QVERIFY(overlay->closed);
+    }
+
+    void recordingTransactionDiscardPreservesExistingDestination()
+    {
+        QTemporaryDir directory;
+        QVERIFY(directory.isValid());
+
+        const QString finalPath = directory.filePath(QStringLiteral("recording.mp4"));
+        QFile finalFile(finalPath);
+        QVERIFY(finalFile.open(QIODevice::WriteOnly));
+        QCOMPARE(finalFile.write("previous recording"), qint64(18));
+        finalFile.close();
+
+        RecordingFileTransaction transaction(finalPath);
+        const QString capturePath = transaction.createTemporaryPath(QStringLiteral("mp4"));
+        const QString convertedPath = transaction.createTemporaryPath(QStringLiteral("gif"));
+        QVERIFY(!capturePath.isEmpty());
+        QVERIFY(!convertedPath.isEmpty());
+
+        QFile captureFile(capturePath);
+        QVERIFY(captureFile.open(QIODevice::WriteOnly));
+        QCOMPARE(captureFile.write("partial capture"), qint64(15));
+        captureFile.close();
+
+        QFile convertedFile(convertedPath);
+        QVERIFY(convertedFile.open(QIODevice::WriteOnly));
+        QCOMPARE(convertedFile.write("partial transcode"), qint64(17));
+        convertedFile.close();
+
+        QVERIFY(transaction.discard());
+        QVERIFY(QFileInfo::exists(finalPath));
+        QVERIFY(!QFileInfo::exists(capturePath));
+        QVERIFY(!QFileInfo::exists(convertedPath));
+
+        QVERIFY(finalFile.open(QIODevice::ReadOnly));
+        QCOMPARE(finalFile.readAll(), QByteArrayLiteral("previous recording"));
+    }
+
+    void recordingTransactionPublishesOnlyAfterSuccess()
+    {
+        QTemporaryDir directory;
+        QVERIFY(directory.isValid());
+
+        const QString finalPath = directory.filePath(QStringLiteral("recording.mkv"));
+        QFile finalFile(finalPath);
+        QVERIFY(finalFile.open(QIODevice::WriteOnly));
+        QCOMPARE(finalFile.write("previous recording"), qint64(18));
+        finalFile.close();
+
+        RecordingFileTransaction transaction(finalPath);
+        const QString capturePath = transaction.createTemporaryPath(QStringLiteral("mkv"));
+        QVERIFY(!capturePath.isEmpty());
+
+        QFile captureFile(capturePath);
+        QVERIFY(captureFile.open(QIODevice::WriteOnly));
+        QCOMPARE(captureFile.write("completed recording"), qint64(19));
+        captureFile.close();
+
+        QString error;
+        QVERIFY2(transaction.publish(capturePath, &error), qPrintable(error));
+        QVERIFY(!QFileInfo::exists(capturePath));
+        QVERIFY(finalFile.open(QIODevice::ReadOnly));
+        QCOMPARE(finalFile.readAll(), QByteArrayLiteral("completed recording"));
     }
 };
 

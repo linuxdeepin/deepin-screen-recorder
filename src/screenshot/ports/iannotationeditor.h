@@ -54,6 +54,11 @@ public:
     virtual void setTool(AnnotationTool tool) = 0;
     virtual AnnotationTool tool() const = 0;
 
+    // X11 gives Ctrl/Cmd+Arrow to the selected annotation before considering
+    // it as a selection-resize shortcut. Keep that arbitration platform
+    // independent without exposing ShapesWidget internals to the controller.
+    virtual bool hasSelectedContent() const { return false; }
+
     /**
      * Resolve what annotation interaction, if any, belongs at globalPos.
      *

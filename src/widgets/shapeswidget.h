@@ -173,7 +173,7 @@ public slots:
      * @param pos
      * @return 被点击：true 未被点击：false
      */
-    bool clickedOnShapes(QPointF pos);
+    bool clickedOnShapes(QPointF pos, bool includeClosedShapeInterior = false);
 
     /**
      * @brief clickedOnRect: 矩形是否被点击

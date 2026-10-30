@@ -6,16 +6,26 @@
 
 #include "treelandannotationeditor.h"
 #include "treelandmaskwindow.h"
+#include "../../../countdown_tooltip.h"
 #include "widgets/sidebar.h"
 #include "widgets/toolbar.h"
 #include "widgets/toolbarhost.h"
+#include "widgets/fineadjusttips.h"
+#include "widgets/roundedcornerwidget.h"
 #include "../../export/screenshotexportservice.h"
+#include "../../core/coordinatemapper.h"
 #include "../../core/selectionoverlaygeometry.h"
+#include "../../ports/iwindowtagger.h"
 #include "../../../utils/configsettings.h"
 #include "../../../utils/log.h"
+#include "../../../utils/tempfile.h"
 
+#include <QPixmap>
+#include <QGuiApplication>
+#include <QRegion>
 #include <QTimer>
 #include <QWindow>
+#include <QtMath>
 
 namespace Dsr::Screenshot {
 
@@ -52,7 +62,12 @@ public:
 
     void confirm() override
     {
-        emit m_overlay->copyRequested();
+        if (m_overlay->isRecordingActive())
+            emit m_overlay->recordStopRequested();
+        else if (m_recordMode)
+            emit m_overlay->recordStartRequested();
+        else
+            emit m_overlay->copyRequested();
     }
 
     void close(bool) override
@@ -109,10 +124,20 @@ public:
 
     void switchToShotUI() override
     {
+        if (m_overlay->isRecordingActive())
+            return;
+        if (!m_recordMode)
+            return;
+        m_recordMode = false;
+        emit m_overlay->recordModeChanged(false);
     }
 
     void switchToRecordUI() override
     {
+        if (m_overlay->isRecordingActive() || m_recordMode)
+            return;
+        m_recordMode = true;
+        emit m_overlay->recordModeChanged(true);
     }
 
     QPoint sideBarStartPressPoint() const override
@@ -183,11 +208,14 @@ private:
     mutable QRect m_groupStartRect;
     mutable bool m_sideBarVisibleAtDragStart = false;
     mutable bool m_dragPositionsValid = false;
+    bool m_recordMode = false;
 };
 
-TreelandMaskOverlayHost::TreelandMaskOverlayHost(QObject *parent)
+TreelandMaskOverlayHost::TreelandMaskOverlayHost(IWindowTagger *windowTagger,
+                                                 QObject *parent)
     : IScreenshotOverlayHost(parent)
     , m_annotationEditor(new TreelandAnnotationEditor(this))
+    , m_windowTagger(windowTagger)
 {
     connect(m_annotationEditor, &TreelandAnnotationEditor::shapeSelected,
             this, [this](const QString &shape) {
@@ -245,6 +273,22 @@ bool TreelandMaskOverlayHost::create(const QList<OutputDescriptor> &outputs)
             if (m_annotationEditor)
                 m_annotationEditor->beginInlineEdit(globalPos);
         });
+        connect(window, &TreelandMaskWindow::selectionMoveRequested,
+                this, [this](const QPoint &delta) {
+            if (m_annotationToolActive || m_recordingActive || m_recordModeActive)
+                return;
+            emit selectionMoveRequested(delta);
+        });
+        connect(window, &TreelandMaskWindow::selectionResizeRequested,
+                this, [this](Qt::Key key, Qt::KeyboardModifiers modifiers) {
+            // In annotation mode X11 still resizes the capture area when no
+            // annotation is selected. The controller performs that arbitration.
+            if (m_recordingActive || m_recordModeActive)
+                return;
+            if (m_roundedCornerWidget && m_roundedCornerWidget->isRatioLocked())
+                return;
+            emit selectionResizeRequested(key, modifiers);
+        });
         connect(window, &TreelandMaskWindow::confirmRequested,
                 this, &IScreenshotOverlayHost::confirmRequested);
         connect(window, &TreelandMaskWindow::copyRequested,
@@ -262,6 +306,7 @@ bool TreelandMaskOverlayHost::create(const QList<OutputDescriptor> &outputs)
     }
 
     ensureToolBar();
+    ensureSelectionWidgets();
     return true;
 }
 
@@ -364,14 +409,14 @@ void TreelandMaskOverlayHost::checkInputReady()
 void TreelandMaskOverlayHost::setSelection(const QRect &globalSelection)
 {
     m_selection = globalSelection.normalized();
-    TreelandMaskWindow *hintOwner = selectionOwnerWindow();
     for (TreelandMaskWindow *window : m_windows) {
         if (!window)
             continue;
         window->setSelection(m_selection);
-        window->setSelectionHintOwner(window == hintOwner);
     }
+    updateRoundedCornerWidget();
     updateToolBar();
+    updateFineAdjustTips();
 }
 
 void TreelandMaskOverlayHost::setSnapHint(const QRect &globalRegion)
@@ -391,7 +436,9 @@ void TreelandMaskOverlayHost::setSelectionFinalized(bool finalized)
         if (window)
             window->setSelectionFinalized(finalized);
     }
+    updateRoundedCornerWidget();
     updateToolBar();
+    updateFineAdjustTips();
 }
 
 void TreelandMaskOverlayHost::setCursorIntent(CursorIntent intent)
@@ -402,8 +449,196 @@ void TreelandMaskOverlayHost::setCursorIntent(CursorIntent intent)
     }
 }
 
+void TreelandMaskOverlayHost::setSelectionHints(bool visible,
+                                                bool selectionMode,
+                                                const QPoint &globalCursor)
+{
+    m_hintsVisible = visible;
+    m_hintsSelectionMode = selectionMode;
+    m_globalCursor = globalCursor;
+    updateFineAdjustTips();
+}
+
+void TreelandMaskOverlayHost::setRecordModeActive(bool active)
+{
+    if (m_recordModeActive == active)
+        return;
+    m_recordModeActive = active;
+    updateRoundedCornerWidget();
+    updateFineAdjustTips();
+}
+
+bool TreelandMaskOverlayHost::startRecordingCountdown(const QRect &globalSelection)
+{
+    destroyRecordingCountdown();
+
+    const QRect selection = globalSelection.normalized();
+    if (selection.isEmpty() || m_frozenFrames.isEmpty())
+        return false;
+
+    TreelandMaskWindow *owner = selectionOwnerWindow();
+    if (!owner)
+        return false;
+
+    // Match MainWindow::startRecord(): a selection inside one output shows the
+    // countdown in that output's center; a cross-output selection prefers the
+    // toolbar output, then the primary output.
+    TreelandMaskWindow *selectionOutput = nullptr;
+    for (TreelandMaskWindow *window : std::as_const(m_windows)) {
+        if (window && window->output().logicalGeometry.normalized().contains(selection)) {
+            selectionOutput = window;
+            break;
+        }
+    }
+
+    if (!selectionOutput && m_toolBar) {
+        TreelandMaskWindow *toolbarOutput = qobject_cast<TreelandMaskWindow *>(
+                m_toolBar->parentWidget());
+        if (toolbarOutput
+                && toolbarOutput->output().logicalGeometry.normalized().contains(
+                        QRect(toolbarOutput->output().logicalGeometry.topLeft()
+                                      + m_toolBar->pos(),
+                              m_toolBar->size()))) {
+            owner = toolbarOutput;
+        } else {
+            owner = nullptr;
+        }
+    }
+
+    if (!selectionOutput && !owner) {
+        const QString primaryName = QGuiApplication::primaryScreen()
+                ? QGuiApplication::primaryScreen()->name()
+                : QString();
+        for (TreelandMaskWindow *window : std::as_const(m_windows)) {
+            if (window && window->output().outputId == primaryName) {
+                owner = window;
+                break;
+            }
+        }
+    }
+    if (!owner)
+        owner = m_windows.value(0);
+    if (!owner)
+        return false;
+
+    ScreenshotExportService exportService;
+    const Result desktop = exportService.render(m_frozenFrames,
+                                                m_frozenFrames.virtualDesktopRect,
+                                                nullptr);
+    QPixmap background;
+    if (desktop.isValid()) {
+        background = QPixmap::fromImage(desktop.image);
+        TempFile::instance()->setFullScreenPixmap(background);
+    }
+
+    m_countdown = new CountdownTooltip(owner);
+    if (!background.isNull()) {
+        m_countdown->setBackgroundPixmap(background,
+                                         m_frozenFrames.virtualDesktopRect.topLeft());
+    }
+
+    const QPoint centerLocal = selectionOutput
+            ? selection.center() - owner->output().logicalGeometry.topLeft()
+            : owner->rect().center();
+    m_countdown->move(centerLocal.x() - m_countdown->width() / 2,
+                      centerLocal.y() - m_countdown->height() / 2);
+    connect(m_countdown, &CountdownTooltip::finished,
+            this, &IScreenshotOverlayHost::recordingCountdownFinished,
+            Qt::UniqueConnection);
+    m_countdown->start();
+    m_countdown->show();
+    m_countdown->raise();
+    return true;
+}
+
+void TreelandMaskOverlayHost::stopRecordingCountdown()
+{
+    destroyRecordingCountdown();
+}
+
+void TreelandMaskOverlayHost::destroyRecordingCountdown()
+{
+    if (!m_countdown)
+        return;
+    disconnect(m_countdown, nullptr, this, nullptr);
+    m_countdown->hide();
+    m_countdown->deleteLater();
+    m_countdown = nullptr;
+}
+
+bool TreelandMaskOverlayHost::beginRecording(const QRect &globalSelection)
+{
+    if (m_recordingActive || globalSelection.isEmpty())
+        return m_recordingActive;
+
+    if (m_sideBar)
+        m_sideBar->hide();
+    if (m_roundedCornerWidget)
+        m_roundedCornerWidget->hide();
+    if (m_fineAdjustTips)
+        m_fineAdjustTips->hide();
+    if (m_toolBar) {
+        m_toolBar->hide();
+        m_toolBar->setEnabled(false);
+    }
+
+    const QRect selection = globalSelection.normalized();
+
+    // X11 uses the tray recording plugin as the stop entry. Keep the TreeLand
+    // recording frame and input pass-through, but do not create a second
+    // in-overlay recording toolbar.
+    for (TreelandMaskWindow *window : std::as_const(m_windows)) {
+        if (!window)
+            continue;
+        window->setRecordingMode(true, selection, true);
+        window->clearMask();
+        window->show();
+        window->raise();
+        window->setInputRegion(QRegion());
+    }
+
+    m_recordingActive = true;
+    return true;
+}
+
+void TreelandMaskOverlayHost::finishRecording()
+{
+    stopRecordingCountdown();
+    if (!m_recordingActive)
+        return;
+    m_recordingActive = false;
+    for (TreelandMaskWindow *window : std::as_const(m_windows)) {
+        if (!window)
+            continue;
+        window->setRecordingMode(false);
+        window->resetInputRegion();
+        window->clearMask();
+        window->hide();
+    }
+    setRecordingControlsActive(false);
+    if (m_toolBar) {
+        m_toolBar->hide();
+        m_toolBar->setEnabled(false);
+    }
+    updateRoundedCornerWidget();
+    updateFineAdjustTips();
+}
+
+bool TreelandMaskOverlayHost::isRecordingActive() const
+{
+    return m_recordingActive;
+}
+
+void TreelandMaskOverlayHost::setRecordingControlsActive(bool active)
+{
+    if (m_toolBar)
+        m_toolBar->setRecordingActive(active);
+}
+
 void TreelandMaskOverlayHost::close()
 {
+    stopRecordingCountdown();
+    finishRecording();
     m_inputReadyPending = false;
     m_prepared = false;
     // close() can run from a toolbar button's clicked handler (Save, Cancel,
@@ -422,6 +657,8 @@ void TreelandMaskOverlayHost::close()
     if (toolBar) {
         toolBar->hide();
         toolBar->setEnabled(false);
+        if (!toolBar->parent())
+            toolBar->deleteLater();
     }
     if (sideBar) {
         sideBar->hide();
@@ -431,7 +668,16 @@ void TreelandMaskOverlayHost::close()
         disconnect(toolBarHost, nullptr, this, nullptr);
         toolBarHost->deleteLater();
     }
-
+    if (m_roundedCornerWidget) {
+        m_roundedCornerWidget->hide();
+        m_roundedCornerWidget->deleteLater();
+        m_roundedCornerWidget = nullptr;
+    }
+    if (m_fineAdjustTips) {
+        m_fineAdjustTips->hide();
+        m_fineAdjustTips->deleteLater();
+        m_fineAdjustTips = nullptr;
+    }
     for (TreelandMaskWindow *window : m_windows) {
         if (!window)
             continue;
@@ -442,6 +688,8 @@ void TreelandMaskOverlayHost::close()
     m_annotationEditor->clearViews();
     m_selection = QRect();
     m_finalized = false;
+    m_recordModeActive = false;
+    m_hintsVisible = false;
     m_prepared = false;
 }
 
@@ -471,6 +719,154 @@ void TreelandMaskOverlayHost::ensureToolBar()
     m_sideBar->initSideBar(m_toolBarHost);
     m_toolBar->hide();
     m_sideBar->hide();
+}
+
+void TreelandMaskOverlayHost::ensureSelectionWidgets()
+{
+    if (m_windows.isEmpty() || (m_roundedCornerWidget && m_fineAdjustTips))
+        return;
+
+    QWidget *anchor = m_windows.first();
+    if (!m_roundedCornerWidget) {
+        m_roundedCornerWidget = new RoundedCornerWidget(anchor);
+        connect(m_roundedCornerWidget, &RoundedCornerWidget::radiusChanged,
+                this, [this](int radius) {
+            for (TreelandMaskWindow *window : std::as_const(m_windows)) {
+                if (window)
+                    window->setRoundedCornerRadius(radius);
+            }
+            emit roundedCornerRadiusChanged(radius);
+            updateFineAdjustTips();
+        });
+        connect(m_roundedCornerWidget, &RoundedCornerWidget::selectionSizeChanged,
+                this, [this](int width, int height) {
+            emit selectionSizeChangeRequested(width, height, selectionPixelScale());
+        });
+        connect(m_roundedCornerWidget, &RoundedCornerWidget::panelExpandedChanged,
+                this, [this](bool) { updateToolBar(); });
+        connect(m_roundedCornerWidget, &RoundedCornerWidget::groupMoved,
+                this, [this] { updateToolBar(); });
+        for (TreelandMaskWindow *window : std::as_const(m_windows)) {
+            if (window)
+                window->setRoundedCornerRadius(m_roundedCornerWidget->radius());
+        }
+        emit roundedCornerRadiusChanged(m_roundedCornerWidget->radius());
+        m_roundedCornerWidget->hide();
+    }
+
+    if (!m_fineAdjustTips) {
+        m_fineAdjustTips = new FineAdjustTips(anchor);
+        m_fineAdjustTips->hide();
+    }
+}
+
+TreelandMaskWindow *TreelandMaskOverlayHost::windowForGlobalPoint(
+        const QPoint &globalPos) const
+{
+    for (TreelandMaskWindow *window : m_windows) {
+        if (window && window->output().logicalGeometry.contains(globalPos))
+            return window;
+    }
+
+    const QString primaryName = QGuiApplication::primaryScreen()
+            ? QGuiApplication::primaryScreen()->name()
+            : QString();
+    for (TreelandMaskWindow *window : m_windows) {
+        if (window && window->output().outputId == primaryName)
+            return window;
+    }
+    return m_windows.value(0);
+}
+
+qreal TreelandMaskOverlayHost::selectionPixelScale() const
+{
+    qreal scale = 1.0;
+    for (const OutputFrame &frame : m_frozenFrames.outputs) {
+        if (frame.pixelScale <= 0.0)
+            continue;
+        if (m_selection.isEmpty()
+                || m_selection.intersects(frame.output.logicalGeometry)) {
+            scale = qMax(scale, frame.pixelScale);
+        }
+    }
+    return scale;
+}
+
+void TreelandMaskOverlayHost::updateRoundedCornerWidget()
+{
+    if (!m_roundedCornerWidget)
+        return;
+
+    if (!m_finalized || m_selection.isEmpty()
+            || m_recordingActive || m_recordModeActive) {
+        m_roundedCornerWidget->hide();
+        return;
+    }
+
+    TreelandMaskWindow *active = selectionOwnerWindow();
+    if (!active) {
+        m_roundedCornerWidget->hide();
+        return;
+    }
+
+    if (m_roundedCornerWidget->parentWidget() != active)
+        m_roundedCornerWidget->setParent(active);
+
+    const QRect localSelection =
+            m_selection.translated(-active->output().logicalGeometry.topLeft());
+    const qreal scale = selectionPixelScale();
+    m_roundedCornerWidget->setSelectionSize(
+            qMax(1, qRound(localSelection.width() * scale)),
+            qMax(1, qRound(localSelection.height() * scale)));
+    m_roundedCornerWidget->followSelection(localSelection, active->rect());
+    m_roundedCornerWidget->show();
+    m_roundedCornerWidget->raise();
+}
+
+void TreelandMaskOverlayHost::updateFineAdjustTips()
+{
+    if (!m_fineAdjustTips)
+        return;
+
+    if (!m_hintsVisible || m_recordingActive || m_recordModeActive
+            || m_annotationToolActive) {
+        m_fineAdjustTips->hide();
+        return;
+    }
+
+    TreelandMaskWindow *owner = m_hintsSelectionMode
+            ? selectionOwnerWindow()
+            : windowForGlobalPoint(m_globalCursor);
+    if (!owner) {
+        m_fineAdjustTips->hide();
+        return;
+    }
+
+    if (m_fineAdjustTips->parentWidget() != owner)
+        m_fineAdjustTips->setParent(owner);
+
+    m_fineAdjustTips->setMode(m_hintsSelectionMode ? FineAdjustTips::SelectionMode
+                                                   : FineAdjustTips::CursorMode);
+    m_fineAdjustTips->setResizeEnabled(
+            !(m_roundedCornerWidget && m_roundedCornerWidget->isRatioLocked()));
+    m_fineAdjustTips->dockToBottomLeft();
+
+    const QRect tipsRect(m_fineAdjustTips->pos(), m_fineAdjustTips->size());
+    QRect blockedRect;
+    if (m_hintsSelectionMode && !m_selection.isEmpty()) {
+        blockedRect = m_selection.translated(-owner->output().logicalGeometry.topLeft());
+    } else if (m_globalCursor.x() >= 0 && m_globalCursor.y() >= 0) {
+        blockedRect = QRect(m_globalCursor
+                                    - owner->output().logicalGeometry.topLeft(),
+                            QSize(1, 1));
+    }
+    if (tipsRect.intersects(blockedRect)) {
+        m_fineAdjustTips->hide();
+        return;
+    }
+
+    m_fineAdjustTips->show();
+    m_fineAdjustTips->raise();
 }
 
 void TreelandMaskOverlayHost::updateToolBar()
@@ -515,6 +911,18 @@ void TreelandMaskOverlayHost::updateToolBar()
     toolBarY = qBound(ToolBarMargin,
                       toolBarY,
                       qMax(ToolBarMargin, active->height() - toolBarSize.height() - ToolBarMargin));
+
+    if (m_roundedCornerWidget && m_roundedCornerWidget->isVisible()) {
+        const QRect groupPlate = m_roundedCornerWidget->isUserMoved()
+                ? m_roundedCornerWidget->currentGroupPlateRect()
+                : m_roundedCornerWidget->groupPlateRect(localSelection, active->rect());
+        const QRect toolbarRect(QPoint(toolBarX, toolBarY), toolBarSize);
+        if (!groupPlate.isEmpty() && toolbarRect.intersects(groupPlate)) {
+            toolBarY = qMin(groupPlate.bottom() + 1 + ToolBarGap,
+                            qMax(ToolBarMargin,
+                                 active->height() - toolBarSize.height() - ToolBarMargin));
+        }
+    }
     m_toolBar->showAt(QPoint(toolBarX, toolBarY));
     m_toolBar->raise();
     if (m_sideBar->isVisible()) {
@@ -545,6 +953,8 @@ void TreelandMaskOverlayHost::handleToolChanged(const QString &tool)
         return;
 
     m_annotationToolActive = true;
+    if (m_roundedCornerWidget)
+        m_roundedCornerWidget->collapsePanels();
     m_sideBar->showWidget();
     m_sideBar->changeShotToolFunc(tool);
     m_sideBar->show();
@@ -574,6 +984,7 @@ void TreelandMaskOverlayHost::handleToolChanged(const QString &tool)
     }
 
     updateToolBar();
+    updateFineAdjustTips();
 }
 
 void TreelandMaskOverlayHost::ensureEffectSource()
@@ -608,6 +1019,11 @@ void TreelandMaskOverlayHost::destroyWindows()
     if (m_sideBar)
         m_sideBar->hide();
 
+    delete m_roundedCornerWidget;
+    m_roundedCornerWidget = nullptr;
+    delete m_fineAdjustTips;
+    m_fineAdjustTips = nullptr;
+
     m_annotationEditor->clearViews();
     for (TreelandMaskWindow *window : m_windows) {
         if (!window)
@@ -620,6 +1036,11 @@ void TreelandMaskOverlayHost::destroyWindows()
     m_frozenFrames = FrozenFrameSet();
     m_effectSourceReady = false;
     m_finalized = false;
+    m_recordingActive = false;
+    m_recordModeActive = false;
+    m_hintsVisible = false;
+    m_hintsSelectionMode = false;
+    m_annotationToolActive = false;
     m_prepared = false;
     m_inputReadyPending = false;
     m_inputReadyChecks = 0;

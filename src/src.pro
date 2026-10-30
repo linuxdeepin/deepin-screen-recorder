@@ -85,7 +85,7 @@ equals(QT_MAJOR_VERSION, 6) {
           sql xml opengl openglwidgets waylandclient waylandclient-private
     
     # Qt6 specific configurations
-    PKGCONFIG += dtk6widget dtk6core dtk6gui xcb xcb-util gstreamer-app-1.0 libusb-1.0 wayland-client
+    PKGCONFIG += dtk6widget dtk6core dtk6gui xcb xcb-util gstreamer-app-1.0 libusb-1.0
     
     QMAKE_LRELEASE = /usr/lib/qt6/bin/lrelease
     
@@ -190,6 +190,7 @@ HEADERS += main_window.h \
     utils/shortcut.h \
     utils/tempfile.h \
     utils/calculaterect.h \
+    utils/imageeffects.h \
     utils/saveutils.h \
     utils/shapesutils.h \
     wayland-treeland-capture-unstable-v1-client-protocol.h \
@@ -267,6 +268,7 @@ HEADERS += main_window.h \
     screenshot/ports/iscreenshotbackend.h \
     screenshot/ports/iscreenshotoverlayhost.h \
     screenshot/ports/iannotationeditor.h \
+    screenshot/ports/irecordingsession.h \
     screenshot/ports/iscreenshotresultsink.h \
     screenshot/ports/isnaphintsource.h \
     screenshot/ports/iwindowtagger.h \
@@ -283,8 +285,8 @@ HEADERS += main_window.h \
     screenshot/platform/treeland/treelandannotationeditor.h \
     screenshot/platform/treeland/treelandmaskwindow.h \
     screenshot/platform/treeland/treelandmaskoverlayhost.h \
-    screenshot/platform/treeland/treelandclipboardholder.h \
-    protocols/data-control/ext-data-control-v1-client-protocol.h \
+    screenshot/platform/treeland/treelandrecordingsession.h \
+    screenshot/platform/treeland/recordingfiletransaction.h \
     screenshot/platform/treeland/treelandscreenshotbackend.h
 
 # Qt 版本特定的头文件
@@ -322,6 +324,7 @@ SOURCES += main.cpp \
     menucontroller/menucontroller.cpp \
     utils/proxyaudioport.cpp \
     utils/shapesutils.cpp \
+    utils/imageeffects.cpp \
     utils/tempfile.cpp \
     utils/calculaterect.cpp \
     utils/shortcut.cpp \
@@ -414,8 +417,8 @@ SOURCES += main.cpp \
     screenshot/platform/treeland/treelandannotationeditor.cpp \
     screenshot/platform/treeland/treelandmaskwindow.cpp \
     screenshot/platform/treeland/treelandmaskoverlayhost.cpp \
-    screenshot/platform/treeland/treelandclipboardholder.cpp \
-    protocols/data-control/ext-data-control-v1-protocol.c \
+    screenshot/platform/treeland/treelandrecordingsession.cpp \
+    screenshot/platform/treeland/recordingfiletransaction.cpp \
     screenshot/platform/treeland/treelandscreenshotbackend.cpp
 
 # Qt 版本特定的源文件

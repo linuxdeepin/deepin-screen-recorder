@@ -78,9 +78,12 @@ public:
      * @brief 开始多屏录制
      * @param screens 要录制的屏幕列表
      * @param includeCursor 是否包含光标
+     * @param cropRegion 全局坐标下的录制选区
      * @return 是否成功开始
      */
-    bool startMultiScreenCapture(const QList<QScreen*>& screens, bool includeCursor = false);
+    bool startMultiScreenCapture(const QList<QScreen*>& screens,
+                                 bool includeCursor = false,
+                                 const QRect& cropRegion = QRect());
 
     /**
      * @brief 停止多屏录制
@@ -158,9 +161,20 @@ private slots:
     void onSessionStopped();
 
     /**
-     * @brief 检查帧同步和触发合成
+     * @brief 所有输出会话就绪
      */
-    void checkFrameSyncAndCompose();
+    void onSessionReady();
+
+    /**
+     * @brief 一帧多屏合成完成
+     */
+    void onCompositeFrameReady(const QByteArray& compositeFrameData,
+                               int width, int height, int stride, uint64_t timestamp);
+
+    /**
+     * @brief 捕获帧超时，允许下一轮重新请求
+     */
+    void onFrameSyncTimeout();
 
 private:
     /**
@@ -179,21 +193,9 @@ private:
     void* getWaylandOutput(QScreen* screen);
 
     /**
-     * @brief 检查所有屏幕帧是否准备就绪
-     * 基于waylandintegration.cpp的flag检查模式
-     */
-    bool allScreenFramesReady() const;
-
-    /**
      * @brief 重置帧准备标记
      */
     void resetFrameReadyFlags();
-
-    /**
-     * @brief 合成多屏帧数据
-     * 基于waylandintegration.cpp的成功拼接模式
-     */
-    QByteArray composeMultiScreenFrame();
 
     /**
      * @brief 从DMA Buffer提取像素数据
@@ -213,9 +215,12 @@ private:
     QMap<QScreen*, ScreenFrameData> m_screenFrames;         // 屏幕帧数据缓存
     QSize m_virtualDesktopSize;                             // 虚拟桌面总尺寸
     bool m_capturing;                                       // 是否正在捕获
+    bool m_captureInFlight = false;                         // 当前轮次是否等待帧
+    bool m_captureStartedEmitted = false;                   // 是否已通知上层开始
+    int m_readySessionCount = 0;                            // 已就绪输出数
     QMutex m_frameMutex;                                    // 帧数据保护锁
-    MultiScreenFrameCompositor* m_compositor;               // 帧拼接器（后续实现）
-    QTimer* m_syncTimer;                                    // 同步定时器
+    MultiScreenFrameCompositor* m_compositor;               // 帧拼接器
+    QTimer* m_syncTimer;                                    // 帧采集超时定时器
 };
 
 #endif // MULTISCREENCAPTURECOORDINATOR_H

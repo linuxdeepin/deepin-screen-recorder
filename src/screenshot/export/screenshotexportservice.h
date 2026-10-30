@@ -18,7 +18,8 @@ class ScreenshotExportService
 public:
     Result render(const FrozenFrameSet &frames,
                   const QRect &globalSelection,
-                  IAnnotationEditor *annotations = nullptr) const;
+                  IAnnotationEditor *annotations = nullptr,
+                  int roundedCornerRadius = 0) const;
 };
 
 } // namespace Dsr::Screenshot

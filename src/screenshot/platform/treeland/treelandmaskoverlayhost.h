@@ -10,9 +10,14 @@
 class ToolBar;
 class SideBar;
 class ToolBarHost;
+class QWidget;
+class CountdownTooltip;
+class FineAdjustTips;
+class RoundedCornerWidget;
 
 namespace Dsr::Screenshot {
 
+class IWindowTagger;
 class TreelandMaskWindow;
 class TreelandAnnotationEditor;
 
@@ -20,7 +25,8 @@ class TreelandMaskOverlayHost : public IScreenshotOverlayHost
 {
     Q_OBJECT
 public:
-    explicit TreelandMaskOverlayHost(QObject *parent = nullptr);
+    explicit TreelandMaskOverlayHost(IWindowTagger *windowTagger,
+                                     QObject *parent = nullptr);
     ~TreelandMaskOverlayHost() override;
 
     bool create(const QList<OutputDescriptor> &outputs) override;
@@ -33,15 +39,31 @@ public:
     void setSnapHint(const QRect &globalRegion) override;
     void setSelectionFinalized(bool finalized) override;
     void setCursorIntent(CursorIntent intent) override;
+    void setSelectionHints(bool visible,
+                           bool selectionMode,
+                           const QPoint &globalCursor) override;
+    void setRecordModeActive(bool active) override;
+    bool startRecordingCountdown(const QRect &globalSelection) override;
+    void stopRecordingCountdown() override;
+    bool beginRecording(const QRect &globalSelection) override;
+    void finishRecording() override;
+    bool isRecordingActive() const override;
+    void setRecordingControlsActive(bool active) override;
     void close() override;
 
 private:
     friend class TreelandToolBarHost;
 
     TreelandMaskWindow *selectionOwnerWindow() const;
+    TreelandMaskWindow *windowForGlobalPoint(const QPoint &globalPos) const;
     void ensureEffectSource();
     void ensureToolBar();
+    void ensureSelectionWidgets();
+    void destroyRecordingCountdown();
     void updateToolBar();
+    void updateRoundedCornerWidget();
+    void updateFineAdjustTips();
+    qreal selectionPixelScale() const;
     void handleToolChanged(const QString &tool);
     void checkInputReady();
     void undoAnnotation();
@@ -52,14 +74,23 @@ private:
     ToolBar *m_toolBar = nullptr;
     SideBar *m_sideBar = nullptr;
     ToolBarHost *m_toolBarHost = nullptr;
+    RoundedCornerWidget *m_roundedCornerWidget = nullptr;
+    FineAdjustTips *m_fineAdjustTips = nullptr;
+    CountdownTooltip *m_countdown = nullptr;
     QRect m_selection;
+    QPoint m_globalCursor = QPoint(-1, -1);
     FrozenFrameSet m_frozenFrames;
     bool m_finalized = false;
     bool m_annotationToolActive = false;
     bool m_prepared = false;
     bool m_effectSourceReady = false;
     bool m_inputReadyPending = false;
+    bool m_recordingActive = false;
+    bool m_recordModeActive = false;
+    bool m_hintsVisible = false;
+    bool m_hintsSelectionMode = false;
     int m_inputReadyChecks = 0;
+    IWindowTagger *m_windowTagger = nullptr;
 };
 
 } // namespace Dsr::Screenshot

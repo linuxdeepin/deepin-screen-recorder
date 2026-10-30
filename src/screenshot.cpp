@@ -69,6 +69,18 @@ bool Screenshot::startTreelandScreenshot(int mode, bool enableWindowSnap,
             this, [this](const QString &reason) {
         qWarning() << "TreeLand screenshot session failed:" << reason;
     });
+    connect(session,
+            &Dsr::Screenshot::ScreenshotSessionController::recordingStateChanged,
+            this,
+            [this, session] {
+        const bool recording = session->isRecording();
+        if (m_isRecording == recording)
+            return;
+        m_isRecording = recording;
+        emit RecorderState(recording);
+        emit RecordingModeChanged(recording);
+        qCDebug(dsrApp) << "TreeLand recording state changed:" << recording;
+    });
     connect(session, &Dsr::Screenshot::ScreenshotSessionController::finished,
             this, [this, session] {
         m_treelandSession.clear();
@@ -284,6 +296,11 @@ void Screenshot::fullScreenRecord(QString fileName)
 void Screenshot::stopRecord()
 {
     qCDebug(dsrApp) << "stopRecord() called.";
+    if (m_treelandSession) {
+        qCDebug(dsrApp) << "Forwarding stopRecord to TreeLand session.";
+        m_treelandSession->stopRecord();
+        return;
+    }
     m_window.stopRecord();
 }
 

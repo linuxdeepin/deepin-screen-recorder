@@ -254,13 +254,14 @@ TEST_F(SideBarFinalCovTest, SideBarMouseMoveEvent)
 // ============================================================================
 // Slider coverage
 // ============================================================================
-TEST(SliderFinalCovTest, SliderLeaveAfterCursorStackChanges)
+TEST(SliderFinalCovTest, TreeLandSliderLeaveAfterCursorStackChanges)
 {
     while (qApp->overrideCursor())
         qApp->restoreOverrideCursor();
 
     qApp->setOverrideCursor(Qt::IBeamCursor);
     Slider *s = new Slider(Qt::Horizontal);
+    s->setSafeCursorManagement(true);
     QEnterEvent enter(QPointF(5, 5), QPointF(5, 5), QPointF(5, 5));
     EXPECT_NO_FATAL_FAILURE(s->enterEvent(&enter));
     while (qApp->overrideCursor())

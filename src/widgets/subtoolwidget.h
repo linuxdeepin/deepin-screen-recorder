@@ -18,6 +18,7 @@
 DWIDGET_USE_NAMESPACE
 class MainWindow;
 class ToolBarHost;
+class QTimer;
 class SubToolWidget : public DStackedWidget
 {
     Q_OBJECT
@@ -69,6 +70,11 @@ public:
     void setOcrScreenshotEnable(const bool &state);
 
     void setTableScreenshotEnable(const bool &state);
+
+    /**
+     * @brief 显示或隐藏录屏中的计时状态
+     */
+    void setRecordingActive(bool active);
 
     void setButEnableOnLockScreen(const bool &state);
     /**
@@ -127,6 +133,7 @@ private:
     void showAIAssistantWidget();
     void initShotOption();
     void initRecordOption();
+    void updateRecordingStatus();
     /**
      * @brief 录屏功能工具栏
      */
@@ -199,6 +206,9 @@ private:
      * @brief 录屏功能中选项按钮
      */
     ToolButton *m_optionButton = nullptr;
+    DLabel *m_recordingStatusLabel = nullptr;
+    QTimer *m_recordingElapsedTimer = nullptr;
+    int m_recordingElapsedSeconds = 0;
     ToolButton *m_scrollOptionButton = nullptr;
     ToolButton *m_shotButton = nullptr;
     /**
