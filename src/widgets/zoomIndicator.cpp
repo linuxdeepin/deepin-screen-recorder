@@ -111,32 +111,36 @@ QPainterPath infoPath()
 }
 } // namespace
 
-ZoomIndicator::ZoomIndicator(DWidget *parent, bool isRecord)
+ZoomIndicator::ZoomIndicator(DWidget *parent, bool isRecord, bool forcePixmapPainting)
     : DLabel(parent)
 {
-    qCDebug(dsrApp) << "ZoomIndicator constructor called, isRecord:" << isRecord;
+    qCDebug(dsrApp) << "ZoomIndicator constructor called, isRecord:" << isRecord
+                    << ", forcePixmapPainting:" << forcePixmapPainting;
+    m_forcePixmapPainting = forcePixmapPainting;
 
-    QDBusInterface wmInterface("com.deepin.wm",
-                               "/com/deepin/wm",
-                               "com.deepin.wm",
-                               QDBusConnection::sessionBus());
-    if (!wmInterface.isValid()) {
-        qCDebug(dsrApp) << "Failed to get multitasking view dbus interface!";
-        m_isOpenWM = false;
-    } else {
-        QDBusReply<bool> reply = wmInterface.call("GetMultiTaskingStatus");
-        if (!reply.isValid()) {
-            qCDebug(dsrApp) << "Failed to call dbus method to get multitasking view status!";
+    if (!m_forcePixmapPainting) {
+        QDBusInterface wmInterface("com.deepin.wm",
+                                   "/com/deepin/wm",
+                                   "com.deepin.wm",
+                                   QDBusConnection::sessionBus());
+        if (!wmInterface.isValid()) {
+            qCDebug(dsrApp) << "Failed to get multitasking view dbus interface!";
             m_isOpenWM = false;
         } else {
-            m_isOpenWM = reply.value();
-            qCDebug(dsrApp) << "Multitasking view status:" << (m_isOpenWM ? "open" : "closed");
+            QDBusReply<bool> reply = wmInterface.call("GetMultiTaskingStatus");
+            if (!reply.isValid()) {
+                qCDebug(dsrApp) << "Failed to call dbus method to get multitasking view status!";
+                m_isOpenWM = false;
+            } else {
+                m_isOpenWM = reply.value();
+                qCDebug(dsrApp) << "Multitasking view status:" << (m_isOpenWM ? "open" : "closed");
+            }
         }
     }
     m_isRecord = isRecord;
 
 #ifndef ENABLE_UNIT_TEST
-    if (Utils::isWaylandMode && !m_isOpenWM && !m_isRecord) {
+    if (Utils::isWaylandMode && !m_isOpenWM && !m_isRecord && !m_forcePixmapPainting) {
         qCDebug(dsrApp) << "Creating ZoomIndicatorGL for Wayland mode, hiding current indicator.";
         m_zoomIndicatorGL = new ZoomIndicatorGL(parent);
         this->hide();
@@ -153,7 +157,8 @@ ZoomIndicator::~ZoomIndicator()
 {
     qCDebug(dsrApp) << "ZoomIndicator destructor called.";
 #ifndef ENABLE_UNIT_TEST
-    if (Utils::isWaylandMode && !m_isOpenWM && m_zoomIndicatorGL && !m_isRecord) {
+    if (Utils::isWaylandMode && !m_isOpenWM && m_zoomIndicatorGL
+            && !m_isRecord && !m_forcePixmapPainting) {
         qCDebug(dsrApp) << "Deleting ZoomIndicatorGL in Wayland mode.";
         delete m_zoomIndicatorGL;
     }
@@ -162,6 +167,9 @@ ZoomIndicator::~ZoomIndicator()
 
 const QImage &ZoomIndicator::cachedFullscreenImage() const
 {
+    if (!m_sourceImage.isNull())
+        return m_sourceImage;
+
     // getFullscreenPixmap() 每次返回的时候是隐式共享的拷贝，这里按 cacheKey 缓存
     // 转换后的 QImage，避免每次重绘都对整屏图做一次深拷贝。
     const QPixmap pixmap = TempFile::instance()->getFullscreenPixmap();
@@ -309,7 +317,7 @@ void ZoomIndicator::paintEvent(QPaintEvent *)
 void ZoomIndicator::showMagnifier(QPoint pos)
 {
 #ifndef ENABLE_UNIT_TEST
-    if (Utils::isWaylandMode && !m_isOpenWM && !m_isRecord) {
+    if (Utils::isWaylandMode && !m_isOpenWM && !m_isRecord && !m_forcePixmapPainting) {
         m_zoomIndicatorGL->showMagnifier(pos);
         return;
     }
@@ -323,7 +331,7 @@ void ZoomIndicator::showMagnifier(QPoint pos)
 void ZoomIndicator::hideMagnifier()
 {
 #ifndef ENABLE_UNIT_TEST
-    if (Utils::isWaylandMode && !m_isOpenWM && !m_isRecord) {
+    if (Utils::isWaylandMode && !m_isOpenWM && !m_isRecord && !m_forcePixmapPainting) {
         qCDebug(dsrApp) << "Hiding magnifier in Wayland mode";
         m_zoomIndicatorGL->makeCurrent();
         m_zoomIndicatorGL->hide();
@@ -342,4 +350,10 @@ void ZoomIndicator::setCursorPos(QPoint pos)
 void ZoomIndicator::setScreenPos(QPoint pos)
 {
     m_screenPos = pos;
+}
+
+void ZoomIndicator::setSourceImage(const QImage &image)
+{
+    m_sourceImage = image;
+    update();
 }

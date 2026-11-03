@@ -31,10 +31,13 @@ public:
                       QString *error,
                       bool *cancelled = nullptr) = 0;
     virtual bool copy(const Result &result, QString *error) = 0;
+    virtual bool copyText(const QString &text, QString *error) = 0;
     virtual bool pin(const Result &result, QString *error) = 0;
     virtual bool ocr(const Result &result, QString *error) = 0;
     virtual bool tableRecognize(const Result &result, QString *error) = 0;
     virtual bool aiAssistant(const Result &result, int function, QString *error) = 0;
+
+    virtual void setNotificationsEnabled(bool enabled) { Q_UNUSED(enabled); }
 };
 
 } // namespace Dsr::Screenshot

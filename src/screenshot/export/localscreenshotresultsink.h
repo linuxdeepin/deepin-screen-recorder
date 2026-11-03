@@ -21,10 +21,12 @@ public:
               QString *error,
               bool *cancelled = nullptr) override;
     bool copy(const Result &result, QString *error) override;
+    bool copyText(const QString &text, QString *error) override;
     bool pin(const Result &result, QString *error) override;
     bool ocr(const Result &result, QString *error) override;
     bool tableRecognize(const Result &result, QString *error) override;
     bool aiAssistant(const Result &result, int function, QString *error) override;
+    void setNotificationsEnabled(bool enabled) override;
 
 signals:
     void clipboardDataComing();
@@ -33,10 +35,18 @@ private slots:
     void onClipboardDataComing(const QByteArray &data);
 
 private:
+    bool waitForClipboardHandoff(int timeoutMs,
+                                 const QString &timeoutError,
+                                 QString *error);
+    void notifySaved(const QString &path);
+    void notifyCopied();
+
     bool m_clipboardSignalConnected = false;
+    bool m_clipboardConfirmed = false;
     bool m_clipboardReborned = false;
     bool m_clipboardRebornSucceeded = false;
     QString m_clipboardRebornError;
+    bool m_notificationsEnabled = true;
 };
 
 } // namespace Dsr::Screenshot

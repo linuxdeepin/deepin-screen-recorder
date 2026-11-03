@@ -12,6 +12,7 @@
 #include "widgets/toolbarhost.h"
 #include "widgets/fineadjusttips.h"
 #include "widgets/roundedcornerwidget.h"
+#include "widgets/zoomIndicator.h"
 #include "../../export/screenshotexportservice.h"
 #include "../../core/coordinatemapper.h"
 #include "../../core/selectionoverlaygeometry.h"
@@ -33,6 +34,7 @@ namespace {
 
 constexpr int ToolBarMargin = 8;
 constexpr int ToolBarGap = 8;
+constexpr int MagnifierOffset = 12;
 constexpr int InputReadyCheckIntervalMs = 8;
 constexpr int InputReadyMaxChecks = 250;
 
@@ -355,6 +357,7 @@ void TreelandMaskOverlayHost::setFrozenFrames(const FrozenFrameSet &frames)
             }
         }
     }
+    updateMagnifier();
 }
 
 bool TreelandMaskOverlayHost::prepare()
@@ -434,6 +437,7 @@ void TreelandMaskOverlayHost::setSelection(const QRect &globalSelection)
     updateRoundedCornerWidget();
     updateToolBar();
     updateFineAdjustTips();
+    updateMagnifier();
 }
 
 void TreelandMaskOverlayHost::setSnapHint(const QRect &globalRegion)
@@ -456,6 +460,7 @@ void TreelandMaskOverlayHost::setSelectionFinalized(bool finalized)
     updateRoundedCornerWidget();
     updateToolBar();
     updateFineAdjustTips();
+    updateMagnifier();
 }
 
 void TreelandMaskOverlayHost::setCursorIntent(CursorIntent intent)
@@ -468,12 +473,15 @@ void TreelandMaskOverlayHost::setCursorIntent(CursorIntent intent)
 
 void TreelandMaskOverlayHost::setSelectionHints(bool visible,
                                                 bool selectionMode,
-                                                const QPoint &globalCursor)
+                                                const QPoint &globalCursor,
+                                                bool hasGlobalCursor)
 {
     m_hintsVisible = visible;
     m_hintsSelectionMode = selectionMode;
     m_globalCursor = globalCursor;
+    m_hasGlobalCursor = hasGlobalCursor;
     updateFineAdjustTips();
+    updateMagnifier();
 }
 
 void TreelandMaskOverlayHost::setRecordModeActive(bool active)
@@ -483,6 +491,14 @@ void TreelandMaskOverlayHost::setRecordModeActive(bool active)
     m_recordModeActive = active;
     updateRoundedCornerWidget();
     updateFineAdjustTips();
+    updateMagnifier();
+}
+
+QString TreelandMaskOverlayHost::magnifierColorHex() const
+{
+    if (!m_magnifier || !m_magnifier->isVisible())
+        return {};
+    return m_magnifier->currentColorHex();
 }
 
 bool TreelandMaskOverlayHost::startRecordingCountdown(const QRect &globalSelection)
@@ -656,6 +672,11 @@ void TreelandMaskOverlayHost::close()
 {
     stopRecordingCountdown();
     finishRecording();
+    hideMagnifier();
+    // Mask windows are destroyed asynchronously below. Release the magnifier
+    // now so it cannot outlive its parent and leave m_magnifier dangling.
+    delete m_magnifier;
+    m_magnifier = nullptr;
     m_inputReadyPending = false;
     m_prepared = false;
     // close() can run from a toolbar button's clicked handler (Save, Cancel,
@@ -749,10 +770,7 @@ void TreelandMaskOverlayHost::ensureSelectionWidgets()
         m_roundedCornerWidget = new RoundedCornerWidget(anchor);
         connect(m_roundedCornerWidget, &RoundedCornerWidget::radiusChanged,
                 this, [this](int radius) {
-            for (TreelandMaskWindow *window : std::as_const(m_windows)) {
-                if (window)
-                    window->setRoundedCornerRadius(radius);
-            }
+            applyRoundedCornerRadiusToWindows();
             emit roundedCornerRadiusChanged(radius);
             updateFineAdjustTips();
         });
@@ -768,10 +786,7 @@ void TreelandMaskOverlayHost::ensureSelectionWidgets()
                 this, [this](bool) { updateToolBar(); });
         connect(m_roundedCornerWidget, &RoundedCornerWidget::groupMoved,
                 this, [this] { updateToolBar(); });
-        for (TreelandMaskWindow *window : std::as_const(m_windows)) {
-            if (window)
-                window->setRoundedCornerRadius(m_roundedCornerWidget->radius());
-        }
+        applyRoundedCornerRadiusToWindows();
         emit roundedCornerRadiusChanged(m_roundedCornerWidget->radius());
         m_roundedCornerWidget->hide();
     }
@@ -816,6 +831,7 @@ qreal TreelandMaskOverlayHost::selectionPixelScale() const
 
 void TreelandMaskOverlayHost::updateRoundedCornerWidget()
 {
+    applyRoundedCornerRadiusToWindows();
     if (!m_roundedCornerWidget)
         return;
 
@@ -843,6 +859,20 @@ void TreelandMaskOverlayHost::updateRoundedCornerWidget()
     m_roundedCornerWidget->followSelection(localSelection, active->rect());
     m_roundedCornerWidget->show();
     m_roundedCornerWidget->raise();
+}
+
+void TreelandMaskOverlayHost::applyRoundedCornerRadiusToWindows()
+{
+    // Recording always uses a rectangular region. Hide the corner editor when
+    // record mode is selected, but also clear the radius painted by every mask
+    // window so the region becomes rectangular before the countdown starts.
+    const int radius = (m_recordingActive || m_recordModeActive || !m_roundedCornerWidget)
+            ? 0
+            : m_roundedCornerWidget->radius();
+    for (TreelandMaskWindow *window : std::as_const(m_windows)) {
+        if (window)
+            window->setRoundedCornerRadius(radius);
+    }
 }
 
 void TreelandMaskOverlayHost::updateFineAdjustTips()
@@ -893,6 +923,76 @@ void TreelandMaskOverlayHost::updateFineAdjustTips()
 
     m_fineAdjustTips->show();
     m_fineAdjustTips->raise();
+}
+
+void TreelandMaskOverlayHost::updateMagnifier()
+{
+    // Keep magnifier visibility aligned with X11: it is available while the
+    // toolbar is hidden (initial selection and resize/move drag), but not
+    // while editing annotations or after the selection becomes ready.
+    const bool shouldShow = m_hintsVisible
+            && !m_finalized
+            && !m_annotationToolActive
+            && !m_recordingActive
+            && !m_recordModeActive
+            && m_hasGlobalCursor;
+    if (!shouldShow) {
+        hideMagnifier();
+        return;
+    }
+
+    TreelandMaskWindow *owner = windowForGlobalPoint(m_globalCursor);
+    if (!owner) {
+        hideMagnifier();
+        return;
+    }
+
+    const OutputFrame *source = nullptr;
+    for (const OutputFrame &frame : m_frozenFrames.outputs) {
+        if (frame.output.outputId == owner->output().outputId) {
+            source = &frame;
+            break;
+        }
+    }
+    if (!source || source->image.isNull()) {
+        hideMagnifier();
+        return;
+    }
+
+    if (!m_magnifier)
+        m_magnifier = new ZoomIndicator(owner, false, true);
+    else if (m_magnifier->parentWidget() != owner)
+        m_magnifier->setParent(owner);
+
+    const QPoint localCursor = m_globalCursor - owner->output().logicalGeometry.topLeft();
+    const qreal scale = source->pixelScale > 0.0 ? source->pixelScale : 1.0;
+    const QPoint imageCursor(
+            qBound(0, qFloor(localCursor.x() * scale), source->image.width() - 1),
+            qBound(0, qFloor(localCursor.y() * scale), source->image.height() - 1));
+    m_magnifier->setSourceImage(source->image);
+    m_magnifier->setCursorPos(imageCursor);
+    m_magnifier->setScreenPos(m_globalCursor);
+
+    int magnifierX = localCursor.x() + MagnifierOffset;
+    if (magnifierX + ZoomIndicator::PANEL_WIDTH > owner->width())
+        magnifierX = localCursor.x() - MagnifierOffset - ZoomIndicator::PANEL_WIDTH;
+    magnifierX = qBound(0, magnifierX,
+                        qMax(0, owner->width() - ZoomIndicator::PANEL_WIDTH));
+
+    int magnifierY = localCursor.y() + MagnifierOffset;
+    if (magnifierY + ZoomIndicator::PANEL_HEIGHT > owner->height())
+        magnifierY = localCursor.y() - MagnifierOffset - ZoomIndicator::PANEL_HEIGHT;
+    magnifierY = qBound(0, magnifierY,
+                        qMax(0, owner->height() - ZoomIndicator::PANEL_HEIGHT));
+
+    m_magnifier->showMagnifier(QPoint(magnifierX, magnifierY));
+    m_magnifier->raise();
+}
+
+void TreelandMaskOverlayHost::hideMagnifier()
+{
+    if (m_magnifier)
+        m_magnifier->hideMagnifier();
 }
 
 void TreelandMaskOverlayHost::updateToolBar()
@@ -981,6 +1081,18 @@ void TreelandMaskOverlayHost::handleToolChanged(const QString &tool)
 {
     if (!m_sideBar || !m_annotationEditor)
         return;
+    if (tool.isEmpty()) {
+        // Match X11: clicking the active annotation tool again exits drawing
+        // mode, keeps existing annotations, and restores normal selection
+        // interaction.
+        m_annotationToolActive = false;
+        m_annotationEditor->setTool(AnnotationTool::Pointer);
+        m_sideBar->hide();
+        updateToolBar();
+        updateFineAdjustTips();
+        updateMagnifier();
+        return;
+    }
     if (tool == QStringLiteral("aiassistant")) {
         m_annotationToolActive = false;
         m_sideBar->changeShotToolFunc(tool);
@@ -988,6 +1100,7 @@ void TreelandMaskOverlayHost::handleToolChanged(const QString &tool)
         m_sideBar->show();
         updateToolBar();
         updateFineAdjustTips();
+        updateMagnifier();
         return;
     }
     if (!isTreeLandAnnotationTool(tool))
@@ -1026,6 +1139,7 @@ void TreelandMaskOverlayHost::handleToolChanged(const QString &tool)
 
     updateToolBar();
     updateFineAdjustTips();
+    updateMagnifier();
 }
 
 void TreelandMaskOverlayHost::ensureEffectSource()
@@ -1055,6 +1169,10 @@ void TreelandMaskOverlayHost::undoAnnotation()
 
 void TreelandMaskOverlayHost::destroyWindows()
 {
+    hideMagnifier();
+    delete m_magnifier;
+    m_magnifier = nullptr;
+
     if (m_toolBar)
         m_toolBar->hide();
     if (m_sideBar)
@@ -1081,6 +1199,7 @@ void TreelandMaskOverlayHost::destroyWindows()
     m_recordModeActive = false;
     m_hintsVisible = false;
     m_hintsSelectionMode = false;
+    m_hasGlobalCursor = false;
     m_toolBarManuallyMoved = false;
     m_annotationToolActive = false;
     m_prepared = false;

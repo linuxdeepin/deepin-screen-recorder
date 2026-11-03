@@ -59,7 +59,8 @@ signals:
 private:
     bool isRecording() const;
     bool startTreelandScreenshot(int mode, bool enableWindowSnap,
-                                 const QString &outputPath = QString());
+                                 const QString &outputPath = QString(),
+                                 bool notificationsEnabled = true);
 
 private:
     //void initUI();

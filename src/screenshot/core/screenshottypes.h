@@ -56,6 +56,7 @@ struct Request {
     Mode mode = Mode::Region;
     bool includeCursor = false;
     bool enableWindowSnap = true;
+    bool notificationsEnabled = true;
     QRect initialRegion;
     QString outputPath;
     QByteArray outputFormat;

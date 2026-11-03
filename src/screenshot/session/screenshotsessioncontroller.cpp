@@ -215,6 +215,7 @@ bool ScreenshotSessionController::start(const Request &request)
     m_dragged = false;
     m_pressStartedEmpty = false;
     m_globalCursor = QPoint(-1, -1);
+    m_hasGlobalCursor = false;
     m_snapTagsPrepared = false;
     m_snapStarted = false;
     m_expectedSnapMaskCount = 0;
@@ -225,6 +226,7 @@ bool ScreenshotSessionController::start(const Request &request)
     m_activeCursorIntent = CursorIntent::Cross;
     m_recordMode = false;
     m_roundedCornerRadius = 0;
+    m_resultSink->setNotificationsEnabled(m_request.notificationsEnabled);
     stopRecordingCountdown();
     m_selection->clear();
     m_state = State::PreparingFrame;
@@ -372,6 +374,7 @@ void ScreenshotSessionController::onPointerPressed(const QPoint &globalPos)
     if (m_state != State::Selecting && m_state != State::Editing)
         return;
     m_globalCursor = globalPos;
+    m_hasGlobalCursor = true;
     m_pressed = true;
     m_dragged = false;
     m_pressPos = globalPos;
@@ -397,6 +400,7 @@ void ScreenshotSessionController::onPointerPressed(const QPoint &globalPos)
 void ScreenshotSessionController::onPointerMoved(const QPoint &globalPos)
 {
     m_globalCursor = globalPos;
+    m_hasGlobalCursor = true;
     if (!m_pressed) {
         syncOverlayCursor(&globalPos);
         updateOverlayHints();
@@ -418,6 +422,7 @@ void ScreenshotSessionController::onPointerReleased(const QPoint &globalPos)
     if (!m_pressed)
         return;
     m_globalCursor = globalPos;
+    m_hasGlobalCursor = true;
     m_pressed = false;
     if (m_inputTarget == InputTarget::Annotation && m_annotationEditor) {
         m_annotationEditor->endInteraction();
@@ -825,7 +830,26 @@ void ScreenshotSessionController::onConfirmRequested()
 
 void ScreenshotSessionController::onCopyRequested()
 {
-    if (m_finished || m_selection->geometry().isEmpty())
+    if (m_finished)
+        return;
+
+    // X11 gives Ctrl+C to the magnifier while it is visible; otherwise the
+    // same shortcut copies the selected screenshot. Preserve that arbitration
+    // in TreeLand before checking whether a selection has been created.
+    const QString magnifierHex = m_overlay ? m_overlay->magnifierColorHex() : QString();
+    if (!magnifierHex.isEmpty()) {
+        QString error;
+        if (!m_resultSink->copyText(magnifierHex, &error)) {
+            fail(error);
+            return;
+        }
+        m_state = State::Completed;
+        qCInfo(dsrApp) << "Color copied from selection magnifier:" << magnifierHex;
+        finish(State::Completed);
+        return;
+    }
+
+    if (m_selection->geometry().isEmpty())
         return;
     if (m_state != State::Selecting && m_state != State::Editing)
         return;
@@ -1026,7 +1050,8 @@ void ScreenshotSessionController::updateOverlayHints()
             && !m_recordMode;
     m_overlay->setSelectionHints(visible,
                                  m_selection->state() == InteractionState::Ready,
-                                 m_globalCursor);
+                                 m_globalCursor,
+                                 m_hasGlobalCursor);
 }
 
 void ScreenshotSessionController::syncOverlayCursor(const QPoint *globalPos)

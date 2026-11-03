@@ -339,6 +339,7 @@ int main(int argc, char *argv[])
             else if (cmdParser.isSet(topWindowOption))
                 request.mode = Dsr::Screenshot::Mode::TopWindow;
             request.enableWindowSnap = request.mode == Dsr::Screenshot::Mode::Region;
+            request.notificationsEnabled = !cmdParser.isSet(prohibitNotifyOption);
             request.outputPath = cmdParser.isSet(savePathOption)
                     ? cmdParser.value(savePathOption)
                     : QString();
