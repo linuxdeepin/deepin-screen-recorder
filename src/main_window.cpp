@@ -1,5 +1,5 @@
 // Copyright (C) 2020 ~ 2021 Uniontech Software Technology Co.,Ltd.
-// SPDX-FileCopyrightText: 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2022-2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -5115,7 +5115,7 @@ void MainWindow::onMouseMove(int x, int y)
     //启动截图或者录屏后第一次鼠标移动时需要通过此方法，后面都不会在进入此方法
     if (!isFirstMove) {
         QMouseEvent *mouseMove;
-        mouseMove = new QMouseEvent(QEvent::MouseMove, QPoint(x, y), Qt::LeftButton, Qt::LeftButton, Qt::NoModifier);
+        mouseMove = new QMouseEvent(QEvent::MouseMove, globalDeviceToLocalLogical(QPoint(x, y)), Qt::LeftButton, Qt::LeftButton, Qt::NoModifier);
         m_dispatchingSyntheticMouseEvent = true;
         QApplication::sendEvent(QWidget::focusWidget(), mouseMove);
         m_dispatchingSyntheticMouseEvent = false;
