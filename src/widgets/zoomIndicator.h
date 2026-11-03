@@ -31,7 +31,8 @@ public:
     static constexpr int PANEL_WIDTH = 150;
     static constexpr int PANEL_HEIGHT = 170;
 
-    explicit ZoomIndicator(DWidget *parent = nullptr, bool isRecord = false);
+    explicit ZoomIndicator(DWidget *parent = nullptr, bool isRecord = false,
+                           bool forcePixmapPainting = false);
     ~ZoomIndicator() override;
 
     void showMagnifier(QPoint pos);
@@ -41,6 +42,9 @@ public:
     void setCursorPos(QPoint pos);
     // 屏幕逻辑坐标，用于浮窗上的坐标文案
     void setScreenPos(QPoint pos);
+
+    // TreeLand 直接使用冻结帧取像素，避免依赖 TempFile 中是否已经写入全屏图。
+    void setSourceImage(const QImage &image);
 
     QString currentColorHex() const;
 
@@ -67,6 +71,9 @@ private:
      */
     bool m_isOpenWM = false;
     bool m_isRecord = false;
+    bool m_forcePixmapPainting = false;
+
+    QImage m_sourceImage;
 
     mutable QImage m_cachedImage;
     mutable qint64 m_cachedPixmapKey = 0;

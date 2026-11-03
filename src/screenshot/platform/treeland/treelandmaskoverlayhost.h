@@ -14,6 +14,7 @@ class QWidget;
 class CountdownTooltip;
 class FineAdjustTips;
 class RoundedCornerWidget;
+class ZoomIndicator;
 
 namespace Dsr::Screenshot {
 
@@ -41,8 +42,10 @@ public:
     void setCursorIntent(CursorIntent intent) override;
     void setSelectionHints(bool visible,
                            bool selectionMode,
-                           const QPoint &globalCursor) override;
+                           const QPoint &globalCursor,
+                           bool hasGlobalCursor) override;
     void setRecordModeActive(bool active) override;
+    QString magnifierColorHex() const override;
     bool startRecordingCountdown(const QRect &globalSelection) override;
     void stopRecordingCountdown() override;
     bool beginRecording(const QRect &globalSelection) override;
@@ -62,7 +65,10 @@ private:
     void destroyRecordingCountdown();
     void updateToolBar();
     void updateRoundedCornerWidget();
+    void applyRoundedCornerRadiusToWindows();
     void updateFineAdjustTips();
+    void updateMagnifier();
+    void hideMagnifier();
     qreal selectionPixelScale() const;
     void handleToolChanged(const QString &tool);
     void checkInputReady();
@@ -76,6 +82,7 @@ private:
     ToolBarHost *m_toolBarHost = nullptr;
     RoundedCornerWidget *m_roundedCornerWidget = nullptr;
     FineAdjustTips *m_fineAdjustTips = nullptr;
+    ZoomIndicator *m_magnifier = nullptr;
     CountdownTooltip *m_countdown = nullptr;
     QRect m_selection;
     QPoint m_globalCursor = QPoint(-1, -1);
@@ -89,6 +96,7 @@ private:
     bool m_recordModeActive = false;
     bool m_hintsVisible = false;
     bool m_hintsSelectionMode = false;
+    bool m_hasGlobalCursor = false;
     bool m_toolBarManuallyMoved = false;
     int m_inputReadyChecks = 0;
     IWindowTagger *m_windowTagger = nullptr;

@@ -38,7 +38,8 @@ Screenshot::Screenshot(QObject *parent)
 }
 
 bool Screenshot::startTreelandScreenshot(int mode, bool enableWindowSnap,
-                                         const QString &outputPath)
+                                         const QString &outputPath,
+                                         bool notificationsEnabled)
 {
     if (!Dsr::Screenshot::ScreenshotSessionFactory::isCurrentPlatformSupported())
         return false;
@@ -46,6 +47,7 @@ bool Screenshot::startTreelandScreenshot(int mode, bool enableWindowSnap,
     Dsr::Screenshot::Request request;
     request.mode = static_cast<Dsr::Screenshot::Mode>(mode);
     request.enableWindowSnap = enableWindowSnap;
+    request.notificationsEnabled = notificationsEnabled;
     request.outputPath = outputPath;
 
     QString error;
@@ -132,9 +134,11 @@ void Screenshot::startScreenshot()
 
 void Screenshot::customScreenshot(bool hideToolbar, bool notify)
 {
-    Q_UNUSED(notify)
     m_isCustomScreenshot = true; // 标记为自定义截图
-    if (startTreelandScreenshot(static_cast<int>(Dsr::Screenshot::Mode::Region), true))
+    if (startTreelandScreenshot(static_cast<int>(Dsr::Screenshot::Mode::Region),
+                                true,
+                                QString(),
+                                notify))
         return;
     m_window.setToolbarVisable(hideToolbar);
     startScreenshot();
@@ -201,7 +205,10 @@ void Screenshot::topWindowScreenshot()
 void Screenshot::noNotifyScreenshot()
 {
     qCDebug(dsrApp) << "noNotifyScreenshot() called.";
-    if (startTreelandScreenshot(static_cast<int>(Dsr::Screenshot::Mode::Region), true))
+    if (startTreelandScreenshot(static_cast<int>(Dsr::Screenshot::Mode::Region),
+                                true,
+                                QString(),
+                                false))
         return;
     m_window.noNotify();
 }
@@ -276,7 +283,10 @@ void Screenshot::startScreenshotFor3rd(const QString &path)
     qCDebug(dsrApp) << "startScreenshotFor3rd() called with path:" << path << ".";
     Utils::is3rdInterfaceStart = true;
     m_isCustomScreenshot = true;
-    if (startTreelandScreenshot(static_cast<int>(Dsr::Screenshot::Mode::Region), true, path))
+    if (startTreelandScreenshot(static_cast<int>(Dsr::Screenshot::Mode::Region),
+                                true,
+                                path,
+                                false))
         return;
     m_window.startScreenshotFor3rd(path);
 }

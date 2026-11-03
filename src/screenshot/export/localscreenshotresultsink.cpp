@@ -11,6 +11,7 @@
 #include "../../utils/configsettings.h"
 #include "../../utils/imageeffects.h"
 #include "../../utils/saveutils.h"
+#include "../../utils.h"
 #include "../../widgets/imagemenu.h"
 
 #include <QApplication>
@@ -20,6 +21,7 @@
 #include <QCursor>
 #include <QDateTime>
 #include <QDBusConnection>
+#include <QDBusInterface>
 #include <QDBusMessage>
 #include <QDBusPendingCallWatcher>
 #include <QDir>
@@ -378,6 +380,7 @@ bool LocalScreenshotResultSink::save(const Result &result,
         ConfigSettings::instance()->setValue("shot", "save_dir_change", false);
     }
 
+    notifySaved(path);
     if (savedPath)
         *savedPath = path;
     return true;
@@ -412,53 +415,64 @@ bool LocalScreenshotResultSink::copy(const Result &result, QString *error)
         // dde-clipboard-daemon intentionally ignores identical clipboard data
         // and therefore does not emit dataComing for a repeated copy. The
         // requested payload is already available, so this copy has succeeded.
+        notifyCopied();
         return true;
     }
 
-    QEventLoop waitLoop;
-    QTimer timeout;
-    bool clipboardConfirmed = false;
+    m_clipboardConfirmed = false;
     m_clipboardReborned = false;
     m_clipboardRebornSucceeded = false;
     m_clipboardRebornError.clear();
-    if (m_clipboardSignalConnected) {
-        timeout.setSingleShot(true);
-        connect(&timeout, &QTimer::timeout, &waitLoop, &QEventLoop::quit);
-        connect(this, &LocalScreenshotResultSink::clipboardDataComing,
-                &waitLoop, [&clipboardConfirmed, &waitLoop]() {
-                    clipboardConfirmed = true;
-                    waitLoop.quit();
-                });
-        timeout.start(clipboardTimeoutMs(decorated.image));
-    }
 
     auto *mimeData = new QMimeData;
     mimeData->setData(QStringLiteral("image/png"), png);
     clipboard->setMimeData(mimeData, QClipboard::Clipboard);
 
-    if (m_clipboardSignalConnected) {
-        waitLoop.exec();
-        if (!clipboardConfirmed) {
-            if (error) {
-                *error = QStringLiteral("剪贴板服务未确认接管截图数据");
-            }
-            return false;
-        }
-        if (!m_clipboardRebornSucceeded) {
-            if (error) {
-                *error = m_clipboardRebornError.isEmpty()
-                        ? QStringLiteral("剪贴板服务未能重新持有截图数据")
-                        : m_clipboardRebornError;
-            }
-            return false;
-        }
-    } else {
-        // 没有 clipboard loader 时给 Wayland 数据源至少一次事件循环，
-        // 避免调用方立即退出导致刚设置的 MIME 数据被销毁。
-        QCoreApplication::processEvents(QEventLoop::AllEvents, 100);
+    const bool copied = waitForClipboardHandoff(
+            clipboardTimeoutMs(decorated.image),
+            QStringLiteral("剪贴板服务未确认接管截图数据"),
+            error);
+    if (copied)
+        notifyCopied();
+    return copied;
+}
+
+bool LocalScreenshotResultSink::copyText(const QString &text, QString *error)
+{
+    if (text.isEmpty()) {
+        if (error)
+            *error = QStringLiteral("待复制的文本为空");
+        return false;
     }
 
-    return true;
+    QClipboard *clipboard = QGuiApplication::clipboard();
+    if (!clipboard) {
+        if (error)
+            *error = QStringLiteral("系统剪贴板不可用");
+        return false;
+    }
+
+    const QMimeData *currentMimeData = clipboard->mimeData(QClipboard::Clipboard);
+    if (currentMimeData && currentMimeData->hasText()
+            && currentMimeData->text() == text) {
+        // The clipboard daemon ignores an identical payload and therefore
+        // does not emit dataComing again. The requested text is already
+        // available, so this copy has succeeded.
+        return true;
+    }
+
+    m_clipboardConfirmed = false;
+    m_clipboardReborned = false;
+    m_clipboardRebornSucceeded = false;
+    m_clipboardRebornError.clear();
+
+    auto *mimeData = new QMimeData;
+    mimeData->setText(text);
+    clipboard->setMimeData(mimeData, QClipboard::Clipboard);
+
+    return waitForClipboardHandoff(2000,
+                                   QStringLiteral("剪贴板服务未确认接管颜色值"),
+                                   error);
 }
 
 bool LocalScreenshotResultSink::pin(const Result &result, QString *error)
@@ -575,6 +589,7 @@ bool LocalScreenshotResultSink::aiAssistant(const Result &result,
 
 void LocalScreenshotResultSink::onClipboardDataComing(const QByteArray &data)
 {
+    m_clipboardConfirmed = true;
     if (!m_clipboardReborned) {
         m_clipboardReborned = true;
         // dataComing only means the clipboard daemon has cached the payload.
@@ -596,6 +611,122 @@ void LocalScreenshotResultSink::onClipboardDataComing(const QByteArray &data)
         }
     }
     emit clipboardDataComing();
+}
+
+void LocalScreenshotResultSink::setNotificationsEnabled(bool enabled)
+{
+    m_notificationsEnabled = enabled;
+}
+
+void LocalScreenshotResultSink::notifySaved(const QString &path)
+{
+    if (!m_notificationsEnabled || Utils::isRootUser)
+        return;
+
+    QStringList actions;
+    QVariantMap hints;
+    QString body;
+    QDBusInterface remoteDdeNotify(NOTIFICATION_NAME,
+                                   NOTIFICATION_PATH,
+                                   NOTIFICATION_INTERFACE,
+                                   QDBusConnection::sessionBus());
+    if (remoteDdeNotify.isValid()) {
+        actions << QStringLiteral("_open")
+                << QCoreApplication::translate("MainWindow", "View")
+                << QStringLiteral("_open1")
+                << QCoreApplication::translate("MainWindow", "Open Folder");
+
+        QStringList openCommand{QStringLiteral("xdg-open"), path};
+        hints.insert(QStringLiteral("x-deepin-action-_open"), openCommand);
+        if (!QStandardPaths::findExecutable(QStringLiteral("dde-file-manager")).isEmpty()) {
+            QStringList folderCommand{QStringLiteral("dde-file-manager"),
+                                      QStringLiteral("--show-item"),
+                                      path};
+            hints.insert(QStringLiteral("x-deepin-action-_open1"), folderCommand);
+        }
+        body = QCoreApplication::translate("MainWindow", "Saved to %1").arg(path);
+    } else {
+        body = QCoreApplication::translate("MainWindow", "Screenshot finished");
+    }
+
+    QDBusInterface notification(QStringLiteral("org.freedesktop.Notifications"),
+                                QStringLiteral("/org/freedesktop/Notifications"),
+                                QStringLiteral("org.freedesktop.Notifications"),
+                                QDBusConnection::sessionBus());
+    QList<QVariant> arguments;
+    arguments << Utils::appName
+              << 0u
+              << QStringLiteral("deepin-screen-recorder")
+              << QCoreApplication::translate("MainWindow", "Screen Capture")
+              << body
+              << actions
+              << hints
+              << 5000;
+    notification.callWithArgumentList(QDBus::AutoDetect,
+                                      QStringLiteral("Notify"),
+                                      arguments);
+}
+
+void LocalScreenshotResultSink::notifyCopied()
+{
+    if (!m_notificationsEnabled || Utils::isRootUser)
+        return;
+
+    QDBusInterface notification(QStringLiteral("org.freedesktop.Notifications"),
+                                QStringLiteral("/org/freedesktop/Notifications"),
+                                QStringLiteral("org.freedesktop.Notifications"),
+                                QDBusConnection::sessionBus());
+    QList<QVariant> arguments;
+    arguments << Utils::appName
+              << 0u
+              << QStringLiteral("deepin-screen-recorder")
+              << QCoreApplication::translate("MainWindow", "Screen Capture")
+              << QCoreApplication::translate("MainWindow",
+                                             "Screenshot finished and copy to clipboard")
+              << QStringList()
+              << QVariantMap()
+              << 5000;
+    notification.callWithArgumentList(QDBus::AutoDetect,
+                                      QStringLiteral("Notify"),
+                                      arguments);
+}
+
+bool LocalScreenshotResultSink::waitForClipboardHandoff(int timeoutMs,
+                                                        const QString &timeoutError,
+                                                        QString *error)
+{
+    if (!m_clipboardSignalConnected) {
+        // Without a clipboard loader, give a Wayland data source at least one
+        // event-loop pass so the compositor can request the advertised data.
+        QCoreApplication::processEvents(QEventLoop::AllEvents, 100);
+        return true;
+    }
+
+    if (!m_clipboardConfirmed) {
+        QEventLoop waitLoop;
+        QTimer timeout;
+        timeout.setSingleShot(true);
+        connect(&timeout, &QTimer::timeout, &waitLoop, &QEventLoop::quit);
+        connect(this, &LocalScreenshotResultSink::clipboardDataComing,
+                &waitLoop, &QEventLoop::quit);
+        timeout.start(timeoutMs);
+        waitLoop.exec();
+    }
+
+    if (!m_clipboardConfirmed) {
+        if (error)
+            *error = timeoutError;
+        return false;
+    }
+    if (!m_clipboardRebornSucceeded) {
+        if (error) {
+            *error = m_clipboardRebornError.isEmpty()
+                    ? QStringLiteral("剪贴板服务未能重新持有复制数据")
+                    : m_clipboardRebornError;
+        }
+        return false;
+    }
+    return true;
 }
 
 } // namespace Dsr::Screenshot

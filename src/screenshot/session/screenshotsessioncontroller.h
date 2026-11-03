@@ -132,6 +132,7 @@ private:
     QRect m_snapHint;
     QPoint m_pressPos;
     QPoint m_globalCursor = QPoint(-1, -1);
+    bool m_hasGlobalCursor = false;
     CursorIntent m_activeCursorIntent = CursorIntent::Cross;
     State m_state = State::Idle;
     enum class InputTarget {

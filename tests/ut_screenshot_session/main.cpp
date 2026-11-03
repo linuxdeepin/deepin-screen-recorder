@@ -180,6 +180,10 @@ public:
     IAnnotationEditor *pendingEditor = nullptr;
     IAnnotationEditor *providedEditor = nullptr;
     CursorIntent cursorIntent = CursorIntent::Default;
+    QString magnifierHex;
+    bool hintsVisible = false;
+    bool hintsHasGlobalCursor = false;
+    QPoint hintsCursor;
 
     bool create(const QList<OutputDescriptor> &outputs) override
     {
@@ -237,6 +241,21 @@ public:
     void setCursorIntent(CursorIntent intent) override
     {
         cursorIntent = intent;
+    }
+
+    QString magnifierColorHex() const override
+    {
+        return magnifierHex;
+    }
+
+    void setSelectionHints(bool visible,
+                           bool,
+                           const QPoint &globalCursor,
+                           bool hasGlobalCursor) override
+    {
+        hintsVisible = visible;
+        hintsCursor = globalCursor;
+        hintsHasGlobalCursor = hasGlobalCursor;
     }
 
     void close() override
@@ -365,19 +384,25 @@ class FakeResultSink : public IScreenshotResultSink
 public:
     int saveCount = 0;
     int copyCount = 0;
+    int textCopyCount = 0;
     int pinCount = 0;
     int ocrCount = 0;
     int tableRecognizeCount = 0;
     int aiAssistantCount = 0;
     int aiAssistantFunction = -1;
     QString requestedPath;
+    QString copiedText;
     Result lastResult;
     bool saveResult = true;
     bool saveCancelled = false;
+    bool textCopyResult = true;
     bool ocrResult = true;
     bool tableRecognizeResult = true;
     bool aiAssistantResult = true;
+    bool notificationsEnabled = true;
+    int notificationSettingCount = 0;
     QString saveError;
+    QString textCopyError;
     QString ocrError;
     QString tableRecognizeError;
     QString aiAssistantError;
@@ -405,6 +430,15 @@ public:
         ++copyCount;
         lastResult = result;
         return true;
+    }
+
+    bool copyText(const QString &text, QString *error) override
+    {
+        ++textCopyCount;
+        copiedText = text;
+        if (error)
+            *error = textCopyError;
+        return textCopyResult;
     }
 
     bool pin(const Result &result, QString *) override
@@ -440,6 +474,12 @@ public:
         if (error)
             *error = aiAssistantError;
         return aiAssistantResult;
+    }
+
+    void setNotificationsEnabled(bool enabled) override
+    {
+        notificationsEnabled = enabled;
+        ++notificationSettingCount;
     }
 };
 
@@ -799,7 +839,27 @@ private slots:
         QCOMPARE(sink->requestedPath, QStringLiteral("captured.png"));
         QVERIFY(sink->lastResult.isValid());
         QCOMPARE(sink->lastResult.image.pixelColor(0, 0), QColor(Qt::green));
+        QVERIFY(sink->notificationsEnabled);
+        QCOMPARE(sink->notificationSettingCount, 1);
         QVERIFY(overlay->closed);
+    }
+
+    void notificationPreferenceIsForwardedToResultSink()
+    {
+        FakeBackend *backend = new FakeBackend;
+        backend->frames.virtualDesktopRect = QRect(0, 0, 800, 600);
+        backend->frames.outputs = {makeFrame(QRect(0, 0, 800, 600), Qt::white)};
+
+        auto *overlay = new FakeOverlay;
+        auto *sink = new FakeResultSink;
+        ScreenshotSessionController controller(backend, overlay, nullptr, nullptr, sink);
+
+        Request request;
+        request.notificationsEnabled = false;
+        QVERIFY(controller.start(request));
+
+        QCOMPARE(sink->notificationSettingCount, 1);
+        QVERIFY(!sink->notificationsEnabled);
     }
 
     void controllerDrivesCopyThroughPorts()
@@ -827,6 +887,84 @@ private slots:
         QCOMPARE(sink->copyCount, 1);
         QCOMPARE(controller.state(), ScreenshotSessionController::State::Completed);
         QVERIFY(overlay->closed);
+    }
+
+    void controllerCopiesMagnifierColorBeforeScreenshotCopy()
+    {
+        FakeBackend *backend = new FakeBackend;
+        backend->frames.virtualDesktopRect = QRect(0, 0, 800, 600);
+        backend->frames.outputs = {makeFrame(QRect(0, 0, 800, 600), Qt::yellow)};
+
+        auto *overlay = new FakeOverlay;
+        overlay->magnifierHex = QStringLiteral("#12abef");
+        auto *sink = new FakeResultSink;
+        ScreenshotSessionController controller(backend,
+                                               overlay,
+                                               nullptr,
+                                               nullptr,
+                                               sink);
+
+        QVERIFY(controller.start(Request()));
+        overlay->move(QPoint(10, 10));
+        overlay->copy();
+
+        QCOMPARE(sink->textCopyCount, 1);
+        QCOMPARE(sink->copiedText, QStringLiteral("#12abef"));
+        QCOMPARE(sink->copyCount, 0);
+        QCOMPARE(controller.state(), ScreenshotSessionController::State::Completed);
+        QVERIFY(overlay->closed);
+    }
+
+    void controllerDoesNotCompleteWhenMagnifierColorCopyFails()
+    {
+        FakeBackend *backend = new FakeBackend;
+        backend->frames.virtualDesktopRect = QRect(0, 0, 800, 600);
+        backend->frames.outputs = {makeFrame(QRect(0, 0, 800, 600), Qt::yellow)};
+
+        auto *overlay = new FakeOverlay;
+        overlay->magnifierHex = QStringLiteral("#12abef");
+        auto *sink = new FakeResultSink;
+        sink->textCopyResult = false;
+        sink->textCopyError = QStringLiteral("剪贴板确认失败");
+        ScreenshotSessionController controller(backend,
+                                               overlay,
+                                               nullptr,
+                                               nullptr,
+                                               sink);
+        QSignalSpy failedSpy(&controller, &ScreenshotSessionController::failed);
+
+        QVERIFY(controller.start(Request()));
+        overlay->move(QPoint(10, 10));
+        overlay->copy();
+
+        QCOMPARE(sink->textCopyCount, 1);
+        QCOMPARE(sink->copyCount, 0);
+        QCOMPARE(failedSpy.count(), 1);
+        QCOMPARE(controller.state(), ScreenshotSessionController::State::Failed);
+        QVERIFY(overlay->closed);
+    }
+
+    void controllerMarksCursorValidOnlyAfterPointerInput()
+    {
+        FakeBackend *backend = new FakeBackend;
+        backend->frames.virtualDesktopRect = QRect(0, 0, 800, 600);
+        backend->frames.outputs = {makeFrame(QRect(0, 0, 800, 600), Qt::yellow)};
+
+        auto *overlay = new FakeOverlay;
+        auto *sink = new FakeResultSink;
+        ScreenshotSessionController controller(backend,
+                                               overlay,
+                                               nullptr,
+                                               nullptr,
+                                               sink);
+
+        QVERIFY(controller.start(Request()));
+        QVERIFY(overlay->hintsVisible);
+        QVERIFY(!overlay->hintsHasGlobalCursor);
+
+        overlay->move(QPoint(-20, -10));
+        QVERIFY(overlay->hintsHasGlobalCursor);
+        QCOMPARE(overlay->hintsCursor, QPoint(-20, -10));
     }
 
     void controllerAppliesSelectionSizeWithoutAnnotationExpansion()

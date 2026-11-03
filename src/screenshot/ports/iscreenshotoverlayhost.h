@@ -43,13 +43,19 @@ public:
     // aids as the X11 window. Other hosts keep the default no-op behaviour.
     virtual void setSelectionHints(bool visible,
                                    bool selectionMode,
-                                   const QPoint &globalCursor)
+                                   const QPoint &globalCursor,
+                                   bool hasGlobalCursor)
     {
         Q_UNUSED(visible);
         Q_UNUSED(selectionMode);
         Q_UNUSED(globalCursor);
+        Q_UNUSED(hasGlobalCursor);
     }
     virtual void setRecordModeActive(bool active) { Q_UNUSED(active); }
+    // Returns the HEX value under the selection magnifier. Empty means the
+    // magnifier is not active and Ctrl+C should keep its normal screenshot
+    // semantics.
+    virtual QString magnifierColorHex() const { return {}; }
     // Host the existing CountdownTooltip inside the platform overlay. A
     // separate top-level tool window cannot be kept above TreeLand's
     // per-output mask surfaces.
