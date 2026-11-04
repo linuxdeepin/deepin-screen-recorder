@@ -166,6 +166,23 @@ void ToolBarWidget::setRecordingActive(bool active)
     adjustSize();
 }
 
+void ToolBarWidget::setScrollActive(bool active)
+{
+    if (active) {
+        m_subTool->switchContent(QStringLiteral("scroll"));
+    } else {
+        m_subTool->switchContent(QStringLiteral("shot"));
+    }
+
+    // Match X11: the scroll toolbar keeps the normal confirm action. Enter
+    // copies the stitched image to the clipboard; Ctrl+S stays on Save.
+    m_confirmButton->setIcon(QIcon::fromTheme(QStringLiteral("confirm")));
+    m_confirmButton->setAccessibleName(QStringLiteral("ConfirmButton"));
+    m_subTool->installTipHint(m_confirmButton, tr("Copy to clipboard (Enter)"));
+    updateGeometry();
+    adjustSize();
+}
+
 void ToolBarWidget::setButEnableOnLockScreen(const bool &state)
 {
     qCDebug(dsrApp) << "ToolBarWidget::setButEnableOnLockScreen called with state:" << state;
@@ -400,6 +417,12 @@ void ToolBar::setRecordingActive(bool active)
 {
     if (m_toolbarWidget)
         m_toolbarWidget->setRecordingActive(active);
+}
+
+void ToolBar::setScrollActive(bool active)
+{
+    if (m_toolbarWidget)
+        m_toolbarWidget->setScrollActive(active);
 }
 
 void ToolBar::setButEnableOnLockScreen(const bool &state)

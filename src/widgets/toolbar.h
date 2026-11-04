@@ -45,6 +45,15 @@ public:
 
     void setRecordingActive(bool active);
 
+    /**
+     * @brief 切换滚动截图工具栏状态。
+     *
+     * TreeLand 滚动截图复用 X11 的 scroll 子工具栏；进入滚动态时切换到
+     * 滚动截图子工具栏，确认按钮保持普通确认语义，退出时恢复普通截图
+     * 工具栏。
+     */
+    void setScrollActive(bool active);
+
     void setButEnableOnLockScreen(const bool &state);
     /**
      * @brief getShotOptionRect 获取选项菜单的位置及大小
@@ -139,6 +148,8 @@ public:
     void setTableScreenshotsEnable(const bool &state);
 
     void setRecordingActive(bool active);
+
+    void setScrollActive(bool active);
 
     void setButEnableOnLockScreen(const bool &state);
     void clearShotToolSelection();

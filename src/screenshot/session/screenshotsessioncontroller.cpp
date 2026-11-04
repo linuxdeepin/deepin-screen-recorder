@@ -9,6 +9,8 @@
 #include "../export/screenshotexportservice.h"
 #include "../ports/iannotationeditor.h"
 #include "../ports/irecordingsession.h"
+#include "../ports/iscrollcapture.h"
+#include "../ports/iscrollmerger.h"
 #include "../ports/iscreenshotbackend.h"
 #include "../ports/iscreenshotoverlayhost.h"
 #include "../ports/iscreenshotresultsink.h"
@@ -130,6 +132,12 @@ ScreenshotSessionController::ScreenshotSessionController(IScreenshotBackend *bac
                                                         m_annotationEditor,
                                                         this);
 
+    m_scrollStopTimeout = new QTimer(this);
+    m_scrollStopTimeout->setSingleShot(true);
+    m_scrollStopTimeout->setInterval(500);
+    connect(m_scrollStopTimeout, &QTimer::timeout,
+            this, &ScreenshotSessionController::finalizeScrollStop);
+
     connect(m_backend, &IScreenshotBackend::prepared,
             this, &ScreenshotSessionController::onBackendPrepared);
     connect(m_backend, &IScreenshotBackend::failed,
@@ -181,6 +189,10 @@ ScreenshotSessionController::ScreenshotSessionController(IScreenshotBackend *bac
             this, &ScreenshotSessionController::onRecordStopRequested);
     connect(m_overlay, &IScreenshotOverlayHost::recordingCountdownFinished,
             this, &ScreenshotSessionController::startRecordingAfterCountdown);
+    connect(m_overlay, &IScreenshotOverlayHost::scrollStartRequested,
+            this, &ScreenshotSessionController::onScrollStartRequested);
+    connect(m_overlay, &IScreenshotOverlayHost::scrollStopRequested,
+            this, &ScreenshotSessionController::onScrollStopRequested);
     if (m_snapHints) {
         connect(m_snapHints, &ISnapHintSource::regionChanged,
                 this, &ScreenshotSessionController::onSnapRegionChanged);
@@ -199,6 +211,10 @@ ScreenshotSessionController::~ScreenshotSessionController()
                 || m_recordingSession->state() == IRecordingSession::State::Recording)) {
         m_recordingSession->cancel();
     }
+    if (m_scrollCapture)
+        m_scrollCapture->stop();
+    if (m_scrollMerger)
+        m_scrollMerger->cancel();
 }
 
 bool ScreenshotSessionController::start(const Request &request)
@@ -226,6 +242,12 @@ bool ScreenshotSessionController::start(const Request &request)
     m_activeCursorIntent = CursorIntent::Cross;
     m_recordMode = false;
     m_roundedCornerRadius = 0;
+    m_scrollSelection = QRect();
+    m_scrollExport = ScrollExport::Save;
+    m_scrollPaused = false;
+    m_scrollStopping = false;
+    if (m_scrollStopTimeout)
+        m_scrollStopTimeout->stop();
     m_resultSink->setNotificationsEnabled(m_request.notificationsEnabled);
     stopRecordingCountdown();
     m_selection->clear();
@@ -269,6 +291,58 @@ void ScreenshotSessionController::setRecordingSession(IRecordingSession *recordi
             this, &ScreenshotSessionController::onRecordingCancelled);
 }
 
+void ScreenshotSessionController::setScrollCapture(IScrollCapture *scrollCapture)
+{
+    if (m_scrollCapture == scrollCapture)
+        return;
+    if (m_scrollCapture)
+        m_scrollCapture->deleteLater();
+    m_scrollCapture = scrollCapture;
+    if (!m_scrollCapture)
+        return;
+    m_scrollCapture->setParent(this);
+    connect(m_scrollCapture, &IScrollCapture::frameReady,
+            this, &ScreenshotSessionController::onScrollFrameReady);
+    connect(m_scrollCapture, &IScrollCapture::failed,
+            this, &ScreenshotSessionController::onScrollCaptureFailed);
+    connect(m_scrollCapture, &IScrollCapture::captureAboutToStart,
+            this, [this]() {
+        if (m_overlay && m_state == State::Scrolling)
+            m_overlay->beginScrollFrameCapture();
+    });
+    connect(m_scrollCapture, &IScrollCapture::captureFinished,
+            this, [this]() {
+        if (m_overlay && (m_state == State::Scrolling || m_scrollStopping))
+            m_overlay->endScrollFrameCapture();
+    });
+}
+
+void ScreenshotSessionController::setScrollMerger(IScrollImageMerger *scrollMerger)
+{
+    if (m_scrollMerger == scrollMerger)
+        return;
+    if (m_scrollMerger)
+        m_scrollMerger->deleteLater();
+    m_scrollMerger = scrollMerger;
+    if (!m_scrollMerger)
+        return;
+    m_scrollMerger->setParent(this);
+    connect(m_scrollMerger, &IScrollImageMerger::reachedBottom,
+            this, &ScreenshotSessionController::onScrollReachedBottom);
+    connect(m_scrollMerger, &IScrollImageMerger::maxHeightReached,
+            this, &ScreenshotSessionController::onScrollMaxHeightReached);
+    connect(m_scrollMerger, &IScrollImageMerger::failed,
+            this, &ScreenshotSessionController::onScrollMergeFailed);
+    connect(m_scrollMerger, &IScrollImageMerger::previewUpdated,
+            this, [this](const QImage &image) {
+        if (!m_overlay || image.isNull())
+            return;
+        if (m_state != State::Scrolling && !m_scrollStopping)
+            return;
+        m_overlay->setScrollPreview(image);
+    });
+}
+
 void ScreenshotSessionController::stopRecord()
 {
     onRecordStopRequested();
@@ -294,6 +368,8 @@ void ScreenshotSessionController::onBackendPrepared(const FrozenFrameSet &frames
     }
 
     m_frames = frames;
+    if (m_scrollCapture)
+        m_scrollCapture->setFrozenFrames(frames);
     m_selection->setDesktopBounds(frames.virtualDesktopRect);
     m_annotationCoordinator->syncBounds();
     if (m_request.mode == Mode::FullScreen)
@@ -771,6 +847,195 @@ void ScreenshotSessionController::onRecordingCancelled()
     finish(State::Cancelled);
 }
 
+void ScreenshotSessionController::onScrollStartRequested()
+{
+    if (m_finished || (m_state != State::Selecting && m_state != State::Editing))
+        return;
+
+    const QRect selection = m_selection->geometry().normalized();
+    if (selection.isEmpty()) {
+        fail(QStringLiteral("滚动截图前请先选择区域"));
+        return;
+    }
+    if (!m_scrollCapture || !m_scrollMerger) {
+        fail(QStringLiteral("当前平台没有可用的滚动截图后端"));
+        return;
+    }
+
+    int outputCount = 0;
+    QList<OutputDescriptor> outputs;
+    for (const OutputFrame &frame : m_frames.outputs) {
+        outputs.append(frame.output);
+        if (frame.output.logicalGeometry.intersects(selection))
+            ++outputCount;
+    }
+    if (outputCount != 1) {
+        fail(QStringLiteral("当前版本仅支持单输出滚动截图"));
+        return;
+    }
+
+    stopSnapHints();
+    m_scrollSelection = selection;
+    m_state = State::Scrolling;
+    m_overlay->setSelectionFinalized(true);
+    if (!m_overlay->beginScroll(selection)) {
+        m_state = State::Editing;
+        fail(QStringLiteral("启动滚动截图覆盖层失败"));
+        return;
+    }
+
+    m_scrollMerger->start(selection);
+    QString error;
+    if (!m_scrollCapture->start(outputs, selection, &error)) {
+        m_overlay->finishScroll();
+        fail(error.isEmpty() ? QStringLiteral("启动滚动截图失败") : error);
+    }
+}
+
+void ScreenshotSessionController::onScrollStopRequested()
+{
+    requestScrollExport(ScrollExport::Save);
+}
+
+void ScreenshotSessionController::requestScrollExport(ScrollExport exportMode)
+{
+    if (m_state != State::Scrolling || m_scrollStopping)
+        return;
+
+    m_scrollExport = exportMode;
+    m_scrollStopping = true;
+    m_state = State::Exporting;
+    if (m_overlay)
+        m_overlay->finishScroll();
+
+    if (m_scrollPaused) {
+        finalizeScrollStop();
+        return;
+    }
+
+    // Ask the platform for one final frame before tearing down the capture
+    // session. This closes the gap between the last timer tick and the user's
+    // confirm/save action. The timeout keeps export responsive if a frame is
+    // lost.
+    if (m_scrollStopTimeout)
+        m_scrollStopTimeout->start();
+    if (m_scrollCapture)
+        m_scrollCapture->requestFrame();
+    else
+        finalizeScrollStop();
+}
+
+void ScreenshotSessionController::onScrollFrameReady(const ScrollFrame &frame)
+{
+    if (!m_scrollMerger || (m_state != State::Scrolling && !m_scrollStopping))
+        return;
+    m_scrollMerger->addFrame(frame);
+    if (m_scrollStopping)
+        finalizeScrollStop();
+}
+
+void ScreenshotSessionController::onScrollCaptureFailed(const QString &reason)
+{
+    if (m_state == State::Scrolling || m_scrollStopping)
+        fail(reason);
+}
+
+void ScreenshotSessionController::finalizeScrollStop()
+{
+    if (!m_scrollStopping)
+        return;
+    m_scrollStopping = false;
+    if (m_scrollStopTimeout)
+        m_scrollStopTimeout->stop();
+    stopScrollCapture();
+    exportScrollResult();
+}
+
+void ScreenshotSessionController::onScrollReachedBottom()
+{
+    if (m_state != State::Scrolling || m_scrollPaused || m_scrollStopping)
+        return;
+    // Match X11: reaching the end stops capture but keeps the stitched
+    // preview and toolbar alive. The user decides whether to copy or save.
+    m_scrollPaused = true;
+    stopScrollCapture();
+}
+
+void ScreenshotSessionController::onScrollMaxHeightReached()
+{
+    if (m_state != State::Scrolling || m_scrollPaused || m_scrollStopping)
+        return;
+    m_scrollPaused = true;
+    stopScrollCapture();
+}
+
+void ScreenshotSessionController::onScrollMergeFailed(const QString &reason)
+{
+    if (m_state == State::Scrolling)
+        fail(reason);
+}
+
+void ScreenshotSessionController::stopScrollCapture()
+{
+    if (m_scrollCapture)
+        m_scrollCapture->stop();
+}
+
+void ScreenshotSessionController::exportScrollResult()
+{
+    const QImage image = m_scrollMerger ? m_scrollMerger->finish() : QImage();
+    if (image.isNull()) {
+        fail(QStringLiteral("滚动截图没有可保存的图像"));
+        return;
+    }
+
+    Result result;
+    result.image = image;
+    result.globalSelection = QRect(m_scrollSelection.topLeft(),
+                                   QSize(m_scrollSelection.width(), image.height()));
+    result.frameGeneration = m_frames.generation;
+    for (const OutputFrame &frame : m_frames.outputs)
+        result.outputs.append(frame.output);
+
+    if (m_scrollExport == ScrollExport::Copy) {
+        QString error;
+        if (!m_resultSink->copy(result, &error)) {
+            fail(error);
+            return;
+        }
+        m_state = State::Completed;
+        qCInfo(dsrApp) << "Scroll screenshot copied:"
+                       << "selection:" << result.globalSelection
+                       << "image:" << result.image.size();
+        emit copied();
+        finish(State::Completed);
+        return;
+    }
+
+    QString path;
+    QString error;
+    bool cancelled = false;
+    if (!m_resultSink->save(result,
+                            m_request.outputPath,
+                            &path,
+                            &error,
+                            &cancelled)) {
+        if (cancelled) {
+            finish(State::Cancelled);
+            return;
+        }
+        fail(error);
+        return;
+    }
+
+    m_state = State::Completed;
+    qCInfo(dsrApp) << "Scroll screenshot saved:" << path
+                   << "selection:" << result.globalSelection
+                   << "image:" << result.image.size();
+    emit saved(path);
+    finish(State::Completed);
+}
+
 void ScreenshotSessionController::setRecordingState(bool recording)
 {
     if (m_recordingStateActive == recording)
@@ -785,7 +1050,13 @@ void ScreenshotSessionController::setRecordingState(bool recording)
 
 void ScreenshotSessionController::onConfirmRequested()
 {
-    if (m_finished || m_selection->geometry().isEmpty())
+    if (m_finished)
+        return;
+    if (m_state == State::Scrolling) {
+        requestScrollExport(ScrollExport::Save);
+        return;
+    }
+    if (m_selection->geometry().isEmpty())
         return;
     if (m_recordMode) {
         onRecordStartRequested();
@@ -832,6 +1103,11 @@ void ScreenshotSessionController::onCopyRequested()
 {
     if (m_finished)
         return;
+
+    if (m_state == State::Scrolling) {
+        requestScrollExport(ScrollExport::Copy);
+        return;
+    }
 
     // X11 gives Ctrl+C to the magnifier while it is visible; otherwise the
     // same shortcut copies the selected screenshot. Preserve that arbitration
@@ -998,6 +1274,20 @@ void ScreenshotSessionController::onCancelRequested()
     if (m_finished)
         return;
 
+    if (m_state == State::Scrolling || m_scrollStopping) {
+        m_scrollPaused = false;
+        m_scrollStopping = false;
+        if (m_scrollStopTimeout)
+            m_scrollStopTimeout->stop();
+        stopScrollCapture();
+        if (m_scrollMerger)
+            m_scrollMerger->cancel();
+        if (m_overlay)
+            m_overlay->finishScroll();
+        finish(State::Cancelled);
+        return;
+    }
+
     if ((m_state == State::Countdown
          || m_state == State::Recording
          || m_state == State::Exporting)
@@ -1154,6 +1444,11 @@ void ScreenshotSessionController::fail(const QString &reason)
         return;
 
     qCritical() << "Screenshot session failed:" << reason;
+    stopScrollCapture();
+    if (m_scrollMerger)
+        m_scrollMerger->cancel();
+    if (m_overlay)
+        m_overlay->finishScroll();
     m_backend->cancel();
     setRecordingState(false);
     if (m_recordingSession
@@ -1173,8 +1468,16 @@ void ScreenshotSessionController::finish(State state)
         return;
     stopRecordingCountdown();
     stopSnapHints();
+    m_scrollStopping = false;
+    m_scrollPaused = false;
+    if (m_scrollStopTimeout)
+        m_scrollStopTimeout->stop();
+    stopScrollCapture();
+    if (m_scrollMerger)
+        m_scrollMerger->cancel();
     setRecordingState(false);
     if (m_overlay) {
+        m_overlay->finishScroll();
         m_overlay->finishRecording();
         m_overlay->close();
     }

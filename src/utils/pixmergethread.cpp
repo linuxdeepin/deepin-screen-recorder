@@ -161,6 +161,12 @@ void PixMergeThread::addShotImg(const QPixmap &picture, PictureDirection directi
         qCDebug(dsrApp) << "First image initialized.";
         return;
     }
+    // 自动方向无法提前裁剪固定页头/页脚，先整帧入队，由工作线程判定方向。
+    if (direction == Auto) {
+        QMutexLocker locker(&m_Mutex);
+        m_pixImgs.enqueue(qMakePair(picture, Auto));
+        return;
+    }
     //将图片去除顶部或者底部的固定区域，放入图片队列
     if (direction == ScrollDown) {
         qCDebug(dsrApp) << "Calling ScrollDwonAddImg.";
@@ -180,8 +186,8 @@ QImage PixMergeThread::getMerageResult() const
 void PixMergeThread::run()
 {
     qCInfo(dsrApp) << "PixMergeThread started running";
-    while (m_loopTask) {
-        while (!m_pixImgs.isEmpty()) {
+    while (m_loopTask || hasPendingImages()) {
+        while (hasPendingImages()) {
             QPair<QPixmap, PictureDirection> pair;
             {
                 QMutexLocker locker(&m_Mutex);
@@ -190,12 +196,17 @@ void PixMergeThread::run()
             cv::Mat matImg = qPixmapToCvMat(pair.first);
             if (mergeImageWork(matImg, pair.second)) {
                 // 更新预览图
+                // The signal crosses from the merge worker to the GUI thread.
+                // Deep-copy here so the preview does not keep referencing
+                // m_curImg while the worker continues stitching.
                 emit updatePreviewImg(QImage(m_curImg.data, m_curImg.cols, m_curImg.rows,
-                                             static_cast<int>(m_curImg.step), QImage::Format_ARGB32));
+                                             static_cast<int>(m_curImg.step), QImage::Format_ARGB32).copy());
                 qCDebug(dsrApp) << "Preview image updated";
             }
         }
-        QThread::currentThread()->msleep(300);
+        if (!m_loopTask)
+            break;
+        QThread::currentThread()->msleep(50);
     }
     qCDebug(dsrApp) << "Thread run loop finished.";
 }
@@ -219,6 +230,27 @@ void PixMergeThread::calculateTimeDiff(int time)
     m_curTimeDiff = (time - m_lastTime) * 100;
     qCDebug(dsrApp) << "Calculated time difference: " << m_curTimeDiff << " from time: " << time << " last time: " << m_lastTime;
     m_lastTime = time;
+}
+
+bool PixMergeThread::hasPendingImages()
+{
+    QMutexLocker locker(&m_Mutex);
+    return !m_pixImgs.isEmpty();
+}
+
+int PixMergeThread::pendingImageCount()
+{
+    QMutexLocker locker(&m_Mutex);
+    return m_pixImgs.size();
+}
+
+bool PixMergeThread::dropOldestPending()
+{
+    QMutexLocker locker(&m_Mutex);
+    if (m_pixImgs.isEmpty())
+        return false;
+    m_pixImgs.dequeue();
+    return true;
 }
 
 bool PixMergeThread::isOneWay()
@@ -266,6 +298,14 @@ bool PixMergeThread::mergeImageWork(const cv::Mat &image, int imageStatus)
         qCDebug(dsrApp) << "Merging image for ScrollUp.";
         isSucess = splicePictureUp(image);
         return isSucess;
+    case Auto: {
+        PictureDirection detected = ScrollDown;
+        if (!detectDirection(image, &detected))
+            return false;
+        qCDebug(dsrApp) << "Auto-detected scroll direction:" << detected;
+        return detected == ScrollDown ? splicePictureDown(image)
+                                      : splicePictureUp(image);
+    }
     default:
         qCWarning(dsrApp) << "Invalid image status for merge operation:" << imageStatus;
         return isSucess;
@@ -317,6 +357,78 @@ int PixMergeThread::getBottomFixedHigh(cv::Mat &img1, cv::Mat &img2)
     }
     qCDebug(dsrApp) << "No bottom fixed height found, returning 0.";
     return 0;
+}
+
+// 通过同时匹配新帧顶部和底部，判断用户当前是向下还是向上滚动。
+bool PixMergeThread::detectDirection(const cv::Mat &image, PictureDirection *direction)
+{
+    if (!direction || m_curImg.empty() || image.empty()
+            || image.rows <= TEMPLATE_HEIGHT
+            || m_curImg.rows < TEMPLATE_HEIGHT
+            || image.cols != m_curImg.cols) {
+        return false;
+    }
+
+    cv::Mat currentGray;
+    cv::Mat newGray;
+    cvtColor(m_curImg, currentGray, CV_BGR2GRAY);
+    cvtColor(image, newGray, CV_BGR2GRAY);
+
+    struct Candidate
+    {
+        PictureDirection direction;
+        double score;
+    };
+    QList<Candidate> candidates;
+
+    auto evaluate = [&](const cv::Mat &tpl, PictureDirection candidateDirection,
+                         bool upward) {
+        if (currentGray.rows < tpl.rows || currentGray.cols < tpl.cols)
+            return;
+        cv::Mat result(currentGray.rows - tpl.rows + 1,
+                       currentGray.cols - tpl.cols + 1,
+                       CV_32FC1);
+        matchTemplate(currentGray, tpl, result, CV_TM_CCOEFF_NORMED);
+        double minValue = 0.0;
+        double maxValue = 0.0;
+        cv::Point minLocation;
+        cv::Point maxLocation;
+        minMaxLoc(result, &minValue, &maxValue, &minLocation, &maxLocation);
+        if (maxValue < 0.8 || maxLocation.y <= 0)
+            return;
+        // 静止画面底边模板会匹配到长图最底部，这不是向上滚动。
+        if (upward && maxLocation.y >= currentGray.rows - TEMPLATE_HEIGHT)
+            return;
+        candidates.append({candidateDirection, maxValue});
+    };
+
+    evaluate(newGray.rowRange(0, TEMPLATE_HEIGHT), ScrollDown, false);
+    evaluate(newGray.rowRange(image.rows - TEMPLATE_HEIGHT, image.rows),
+             ScrollUp, true);
+
+    if (candidates.isEmpty()) {
+        // Manual scrolling can legitimately produce frames before the user
+        // moves the page, or frames containing unrelated animation. Idle
+        // frames are not a merge failure; wait for a frame with a detectable
+        // displacement instead of terminating the screenshot session.
+        if (m_isManualScrollModel)
+            return false;
+        ++m_autoDirectionFailures;
+        if (m_autoDirectionFailures >= 3) {
+            m_autoDirectionFailures = 0;
+            emit merageError(Failed);
+        }
+        return false;
+    }
+
+    auto best = candidates.first();
+    for (const Candidate &candidate : candidates) {
+        if (candidate.score > best.score)
+            best = candidate;
+    }
+    *direction = best.direction;
+    m_autoDirectionFailures = 0;
+    return true;
 }
 
 //向上拼接图片
@@ -643,6 +755,4 @@ QRect PixMergeThread::getScrollChangeRectArea(cv::Mat &img1, const cv::Mat &img2
     qCDebug(dsrApp) << "minJ: " << minJ << "minI:" << minI << "maxJ - minJ:" << maxJ - minJ << "maxI - minI" << maxI - minI;
     return QRect(minJ, minI + m_headHeight, maxJ - minJ, maxI - minI);
 }
-
-
 

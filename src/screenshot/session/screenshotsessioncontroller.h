@@ -12,6 +12,8 @@
 #include <QPointer>
 #include <QRect>
 
+class QTimer;
+
 namespace Dsr::Screenshot {
 
 class IScreenshotBackend;
@@ -21,6 +23,8 @@ class ISnapHintSource;
 class IWindowTagger;
 class IAnnotationEditor;
 class IRecordingSession;
+class IScrollCapture;
+class IScrollImageMerger;
 class AnnotationCoordinator;
 
 class ScreenshotSessionController : public QObject
@@ -35,6 +39,7 @@ public:
         CreatingMasks,
         Selecting,
         Editing,
+        Scrolling,
         Countdown,
         Recording,
         Exporting,
@@ -58,6 +63,8 @@ public:
     State state() const;
     bool isRecording() const;
     void setRecordingSession(IRecordingSession *recordingSession);
+    void setScrollCapture(IScrollCapture *scrollCapture);
+    void setScrollMerger(IScrollImageMerger *scrollMerger);
 
 public slots:
     Q_SCRIPTABLE void stopRecord();
@@ -102,6 +109,21 @@ private:
     void onRecordingSaved(const QString &path);
     void onRecordingFailed(const QString &reason);
     void onRecordingCancelled();
+    void onScrollStartRequested();
+    void onScrollStopRequested();
+    void onScrollFrameReady(const ScrollFrame &frame);
+    void onScrollCaptureFailed(const QString &reason);
+    void onScrollReachedBottom();
+    void onScrollMaxHeightReached();
+    void onScrollMergeFailed(const QString &reason);
+    void finalizeScrollStop();
+    void stopScrollCapture();
+    enum class ScrollExport {
+        Save,
+        Copy
+    };
+    void requestScrollExport(ScrollExport exportMode);
+    void exportScrollResult();
     void stopRecordingCountdown();
     void startRecordingAfterCountdown();
     void setRecordingState(bool recording);
@@ -124,6 +146,8 @@ private:
     IScreenshotResultSink *m_resultSink = nullptr;
     IAnnotationEditor *m_annotationEditor = nullptr;
     IRecordingSession *m_recordingSession = nullptr;
+    IScrollCapture *m_scrollCapture = nullptr;
+    IScrollImageMerger *m_scrollMerger = nullptr;
     SelectionModel *m_selection = nullptr;
     AnnotationCoordinator *m_annotationCoordinator = nullptr;
 
@@ -153,6 +177,11 @@ private:
     bool m_recordMode = false;
     bool m_recordingStateActive = false;
     int m_roundedCornerRadius = 0;
+    QRect m_scrollSelection;
+    ScrollExport m_scrollExport = ScrollExport::Save;
+    QTimer *m_scrollStopTimeout = nullptr;
+    bool m_scrollPaused = false;
+    bool m_scrollStopping = false;
 };
 
 } // namespace Dsr::Screenshot

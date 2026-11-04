@@ -10,6 +10,7 @@
 #include <QDebug>
 #include <QEventLoop>
 #include <QFile>
+#include <QFileInfo>
 #include <QGuiApplication>
 #include <QTimer>
 #include <QWindow>
@@ -41,6 +42,14 @@ QString processNameForPidfd(int pidfd)
     }
     if (pid <= 0)
         return QString();
+
+    const QString executable =
+            QFile::symLinkTarget(QStringLiteral("/proc/%1/exe").arg(pid));
+    if (!executable.isEmpty()) {
+        const QString name = QFileInfo(executable).fileName();
+        if (!name.isEmpty())
+            return name;
+    }
 
     QFile comm(QStringLiteral("/proc/%1/comm").arg(pid));
     if (!comm.open(QIODevice::ReadOnly))

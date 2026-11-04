@@ -16,7 +16,8 @@ namespace Dsr::Screenshot {
 enum class Mode {
     Region,
     FullScreen,
-    TopWindow
+    TopWindow,
+    Scroll
 };
 
 enum class CursorIntent {
@@ -86,6 +87,13 @@ struct FrozenFrameSet {
     }
 };
 
+struct ScrollFrame {
+    OutputDescriptor output;
+    QRect globalSelection;
+    QImage image;
+    quint64 timestampNs = 0;
+};
+
 struct Result {
     QImage image;
     QRect globalSelection;
@@ -101,6 +109,7 @@ struct Result {
 } // namespace Dsr::Screenshot
 
 Q_DECLARE_METATYPE(Dsr::Screenshot::FrozenFrameSet)
+Q_DECLARE_METATYPE(Dsr::Screenshot::ScrollFrame)
 Q_DECLARE_METATYPE(Dsr::Screenshot::Result)
 
 #endif // SCREENSHOT_TYPES_H

@@ -731,9 +731,7 @@ void SubToolWidget::initShotLabel()
     m_scrollShotButton->setFixedSize(TOOL_BUTTON_SIZE);
     installTipHint(m_scrollShotButton, tr("Scrollshot (Alt+I)"));
 #ifdef  OCR_SCROLL_FLAGE_ON
-    // TODO: 仅x11下开启，后续处理，目前还有问题
-    if (!(Utils::isTreelandMode))
-        btnList.append(m_scrollShotButton);
+    btnList.append(m_scrollShotButton);
 #endif
     connect(m_scrollShotButton, &DPushButton::clicked, this, [ = ] {
         qCDebug(dsrApp) << "滚动截图的按钮按下！";
@@ -2190,7 +2188,10 @@ void SubToolWidget::switchContent(QString shapeType)
         setCurrentWidget(m_shotSubTool);
         m_currentType = shapeType;
     } else if (shapeType == "scroll") {
-        initScrollLabel();
+        // 滚动截图入口和 TreeLand 的 toolbar 状态切换可能都会请求进入
+        // scroll 页；页面只需构建一次，重复构建会让旧按钮残留在布局里。
+        if (!m_scrollSubTool)
+            initScrollLabel();
         this->addWidget(m_scrollSubTool);
         this->removeWidget(m_recordSubTool);
         this->removeWidget(m_shotSubTool);

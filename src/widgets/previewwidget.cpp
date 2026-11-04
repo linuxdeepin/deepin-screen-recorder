@@ -234,3 +234,10 @@ void PreviewWidget::setScreenInfo(int screenWidth, double screenRatio)
     m_screenWidth = screenWidth;
     m_screenRatio = screenRatio;
 }
+
+void PreviewWidget::setMaxPreviewSize(const QSize &size)
+{
+    qCDebug(dsrApp) << "setMaxPreviewSize called with size:" << size;
+    m_maxWidth = qMax(1, size.width());
+    m_maxHeight = qMax(1, size.height());
+}

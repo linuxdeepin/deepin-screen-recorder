@@ -6,9 +6,13 @@
 #include "screenshot/core/selectionoverlaygeometry.h"
 #include "screenshot/export/screenshotexportservice.h"
 #include "screenshot/ports/iannotationeditor.h"
+#include "screenshot/ports/iscrollcapture.h"
+#include "screenshot/ports/iscrollmerger.h"
+#include "screenshot/core/inputregiongeometry.h"
 #include "screenshot/ports/iscreenshotbackend.h"
 #include "screenshot/ports/iscreenshotoverlayhost.h"
 #include "screenshot/ports/iscreenshotresultsink.h"
+#include "screenshot/merge/scrollmergecoordinator.h"
 #include "screenshot/ports/isnaphintsource.h"
 #include "screenshot/ports/iwindowtagger.h"
 #include "screenshot/platform/treeland/recordingfiletransaction.h"
@@ -16,11 +20,14 @@
 #include "screenshot/session/screenshotsessioncontroller.h"
 #include "utils/imageeffects.h"
 #include "utils/shapesutils.h"
+#include "utils/pixmergethread.h"
 
 #include <QColor>
 #include <QImage>
 #include <QPainter>
 #include <QSignalSpy>
+#include <QElapsedTimer>
+#include <QRandomGenerator>
 #include <QTemporaryDir>
 #include <QtTest>
 
@@ -40,6 +47,37 @@ OutputFrame makeFrame(const QRect &geometry, const QColor &color, qreal scale = 
                          QImage::Format_ARGB32_Premultiplied);
     frame.image.fill(color);
     return frame;
+}
+
+
+QImage makeScrollSource(int width, int height)
+{
+    QImage image(width, height, QImage::Format_ARGB32_Premultiplied);
+    QRandomGenerator random(0x5c2011);
+    for (int y = 0; y < height; ++y) {
+        for (int x = 0; x < width; ++x) {
+            const int value = static_cast<int>(random.generate() & 0xff);
+            image.setPixelColor(x, y,
+                                QColor(value,
+                                       (value + x * 7 + y * 3) & 0xff,
+                                       (value * 3 + x * 5 + y * 11) & 0xff));
+        }
+    }
+    return image;
+}
+
+QPixmap scrollViewport(const QImage &source, int top, int height)
+{
+    return QPixmap::fromImage(source.copy(0, top, source.width(), height));
+}
+
+bool waitForMergeQueue(PixMergeThread &merge, int expected, int timeoutMs = 5000)
+{
+    QElapsedTimer timer;
+    timer.start();
+    while (merge.pendingImageCount() != expected && timer.elapsed() < timeoutMs)
+        QTest::qWait(5);
+    return merge.pendingImageCount() == expected;
 }
 
 class FakeAnnotationEditor : public IAnnotationEditor
@@ -184,6 +222,15 @@ public:
     bool hintsVisible = false;
     bool hintsHasGlobalCursor = false;
     QPoint hintsCursor;
+    bool scrollActive = false;
+    int scrollBeginCount = 0;
+    int scrollFinishCount = 0;
+    bool scrollBeginResult = true;
+    QRect scrollSelection;
+    int scrollPreviewCount = 0;
+    QImage lastScrollPreview;
+    int scrollFrameCaptureBeginCount = 0;
+    int scrollFrameCaptureEndCount = 0;
 
     bool create(const QList<OutputDescriptor> &outputs) override
     {
@@ -258,9 +305,54 @@ public:
         hintsHasGlobalCursor = hasGlobalCursor;
     }
 
+    bool beginScroll(const QRect &globalSelection) override
+    {
+        ++scrollBeginCount;
+        scrollSelection = globalSelection;
+        scrollActive = scrollBeginResult;
+        return scrollBeginResult;
+    }
+
+    void finishScroll() override
+    {
+        ++scrollFinishCount;
+        scrollActive = false;
+    }
+
+    bool isScrollActive() const override
+    {
+        return scrollActive;
+    }
+
+    void setScrollPreview(const QImage &image) override
+    {
+        ++scrollPreviewCount;
+        lastScrollPreview = image;
+    }
+
+    void beginScrollFrameCapture() override
+    {
+        ++scrollFrameCaptureBeginCount;
+    }
+
+    void endScrollFrameCapture() override
+    {
+        ++scrollFrameCaptureEndCount;
+    }
+
     void close() override
     {
         closed = true;
+    }
+
+    void scrollStart()
+    {
+        emit scrollStartRequested();
+    }
+
+    void scrollStop()
+    {
+        emit scrollStopRequested();
     }
 
     void press(const QPoint &position)
@@ -480,6 +572,115 @@ public:
     {
         notificationsEnabled = enabled;
         ++notificationSettingCount;
+    }
+};
+
+class FakeScrollCapture : public IScrollCapture
+{
+    Q_OBJECT
+public:
+    int startCount = 0;
+    int stopCount = 0;
+    int requestCount = 0;
+    bool startResult = true;
+    bool replayFrameOnRequest = false;
+    QRect selection;
+    QList<OutputDescriptor> outputs;
+    ScrollFrame lastFrame;
+
+    bool start(const QList<OutputDescriptor> &newOutputs,
+               const QRect &globalSelection,
+               QString *) override
+    {
+        ++startCount;
+        outputs = newOutputs;
+        selection = globalSelection;
+        return startResult;
+    }
+
+    void requestFrame() override
+    {
+        ++requestCount;
+        if (replayFrameOnRequest)
+            emit frameReady(lastFrame);
+    }
+
+    void stop() override
+    {
+        ++stopCount;
+    }
+
+    void emitFrame(const ScrollFrame &frame)
+    {
+        lastFrame = frame;
+        emit frameReady(frame);
+    }
+
+    void fail(const QString &reason)
+    {
+        emit failed(reason);
+    }
+
+    void emitCaptureAboutToStart()
+    {
+        emit captureAboutToStart();
+    }
+
+    void emitCaptureFinished()
+    {
+        emit captureFinished();
+    }
+};
+
+class FakeScrollMerger : public IScrollImageMerger
+{
+    Q_OBJECT
+public:
+    int startCount = 0;
+    int addCount = 0;
+    int finishCount = 0;
+    int cancelCount = 0;
+    QRect selection;
+    QList<ScrollFrame> frames;
+    QImage result;
+
+    void start(const QRect &globalSelection) override
+    {
+        ++startCount;
+        selection = globalSelection;
+    }
+
+    bool addFrame(const ScrollFrame &frame) override
+    {
+        ++addCount;
+        frames.append(frame);
+        return true;
+    }
+
+    QImage finish() override
+    {
+        ++finishCount;
+        return result;
+    }
+
+    void cancel() override
+    {
+        ++cancelCount;
+    }
+
+    void emitReachedBottom()
+    {
+        emit reachedBottom();
+    }
+
+    void emitPreview(const QImage &image)
+    {
+        emit previewUpdated(image);
+    }
+
+    void fail(const QString &reason)
+    {
+        emit failed(reason);
     }
 };
 
@@ -842,6 +1043,463 @@ private slots:
         QVERIFY(sink->notificationsEnabled);
         QCOMPARE(sink->notificationSettingCount, 1);
         QVERIFY(overlay->closed);
+    }
+
+    void scrollInputRegionKeepsInteractiveControlsAndPassesWheelThroughHole()
+    {
+        const QRect surface(0, 0, 800, 600);
+        OutputDescriptor output;
+        output.logicalGeometry = QRect(0, 0, 800, 600);
+        const QRect selection(200, 100, 300, 200);
+        const QRect toolBar(520, 320, 225, 68);
+
+        const QRegion region = scrollInputRegion(
+                surface, output, selection, {toolBar});
+
+        QVERIFY(region.contains(QPoint(10, 10)));
+        QVERIFY(!region.contains(QPoint(300, 150)));
+        QVERIFY(region.contains(QPoint(540, 340)));
+    }
+
+    void scrollInputRegionRestoresToolBarInsideSelection()
+    {
+        const QRect surface(0, 0, 800, 600);
+        OutputDescriptor output;
+        output.logicalGeometry = QRect(0, 0, 800, 600);
+        const QRect selection(100, 100, 400, 300);
+        const QRect toolBar(180, 220, 225, 68);
+
+        const QRegion region = scrollInputRegion(
+                surface, output, selection, {toolBar});
+
+        QVERIFY(!region.contains(QPoint(120, 120)));
+        QVERIFY(region.contains(QPoint(200, 240)));
+    }
+
+    void scrollInputRegionConvertsGlobalSelectionPerOutput()
+    {
+        const QRect surface(0, 0, 1920, 1080);
+        OutputDescriptor output;
+        output.logicalGeometry = QRect(1920, 0, 1920, 1080);
+        const QRect selection(2000, 100, 200, 200);
+
+        const QRegion region = scrollInputRegion(
+                surface, output, selection, {});
+
+        QVERIFY(region.contains(QPoint(10, 10)));
+        QVERIFY(!region.contains(QPoint(90, 110)));
+        QVERIFY(region.contains(QPoint(500, 500)));
+    }
+
+    void controllerStartsScrollAndSavesLongImage()
+    {
+        FakeBackend *backend = new FakeBackend;
+        backend->frames.virtualDesktopRect = QRect(0, 0, 800, 600);
+        backend->frames.outputs = {makeFrame(QRect(0, 0, 800, 600), Qt::red)};
+
+        auto *overlay = new FakeOverlay;
+        auto *sink = new FakeResultSink;
+        auto *capture = new FakeScrollCapture;
+        auto *merger = new FakeScrollMerger;
+        merger->result = QImage(200, 420, QImage::Format_ARGB32_Premultiplied);
+        merger->result.fill(Qt::blue);
+
+        ScreenshotSessionController controller(backend, overlay, nullptr, nullptr, sink);
+        controller.setScrollCapture(capture);
+        controller.setScrollMerger(merger);
+        QSignalSpy savedSpy(&controller, &ScreenshotSessionController::saved);
+
+        Request request;
+        request.mode = Mode::Scroll;
+        request.enableWindowSnap = false;
+        request.initialRegion = QRect(100, 100, 200, 200);
+        request.outputPath = QStringLiteral("scroll.png");
+
+        QVERIFY(controller.start(request));
+        QCOMPARE(controller.state(), ScreenshotSessionController::State::Selecting);
+        QVERIFY(overlay->finalized);
+
+        overlay->scrollStart();
+        QCOMPARE(controller.state(), ScreenshotSessionController::State::Scrolling);
+        QCOMPARE(overlay->scrollBeginCount, 1);
+        QCOMPARE(overlay->scrollSelection, QRect(100, 100, 200, 200));
+        QCOMPARE(capture->startCount, 1);
+        QCOMPARE(capture->selection, QRect(100, 100, 200, 200));
+        QCOMPARE(merger->startCount, 1);
+
+        ScrollFrame frame;
+        frame.output = backend->frames.outputs.first().output;
+        frame.globalSelection = QRect(100, 100, 200, 200);
+        frame.image = QImage(200, 200, QImage::Format_ARGB32_Premultiplied);
+        frame.image.fill(Qt::green);
+        capture->emitFrame(frame);
+        QCOMPARE(merger->addCount, 1);
+        capture->replayFrameOnRequest = true;
+
+        overlay->scrollStop();
+        QCOMPARE(capture->requestCount, 1);
+        QCOMPARE(controller.state(), ScreenshotSessionController::State::Completed);
+        QCOMPARE(merger->finishCount, 1);
+        QCOMPARE(sink->saveCount, 1);
+        QCOMPARE(sink->requestedPath, QStringLiteral("scroll.png"));
+        QCOMPARE(sink->lastResult.image, merger->result);
+        QCOMPARE(sink->lastResult.globalSelection, QRect(100, 100, 200, 420));
+        QCOMPARE(savedSpy.count(), 1);
+        QVERIFY(capture->stopCount >= 1);
+        QVERIFY(overlay->scrollFinishCount >= 1);
+        QVERIFY(overlay->closed);
+    }
+
+    void controllerScrollConfirmCopiesAndSaveButtonSaves()
+    {
+        FakeBackend *backend = new FakeBackend;
+        backend->frames.virtualDesktopRect = QRect(0, 0, 800, 600);
+        backend->frames.outputs = {makeFrame(QRect(0, 0, 800, 600), Qt::red)};
+
+        auto *overlay = new FakeOverlay;
+        auto *sink = new FakeResultSink;
+        auto *capture = new FakeScrollCapture;
+        auto *merger = new FakeScrollMerger;
+        merger->result = QImage(200, 300, QImage::Format_ARGB32_Premultiplied);
+        merger->result.fill(Qt::blue);
+
+        ScreenshotSessionController controller(backend, overlay, nullptr, nullptr, sink);
+        controller.setScrollCapture(capture);
+        controller.setScrollMerger(merger);
+        QSignalSpy copiedSpy(&controller, &ScreenshotSessionController::copied);
+        QSignalSpy savedSpy(&controller, &ScreenshotSessionController::saved);
+
+        Request request;
+        request.mode = Mode::Scroll;
+        request.enableWindowSnap = false;
+        request.initialRegion = QRect(100, 100, 200, 200);
+        request.outputPath = QStringLiteral("scroll-confirm.png");
+
+        QVERIFY(controller.start(request));
+        overlay->scrollStart();
+        QCOMPARE(controller.state(), ScreenshotSessionController::State::Scrolling);
+
+        capture->replayFrameOnRequest = true;
+        overlay->copy();
+
+        QCOMPARE(controller.state(), ScreenshotSessionController::State::Completed);
+        QCOMPARE(capture->requestCount, 1);
+        QCOMPARE(sink->copyCount, 1);
+        QCOMPARE(sink->saveCount, 0);
+        QCOMPARE(sink->lastResult.image, merger->result);
+        QCOMPARE(copiedSpy.count(), 1);
+        QCOMPARE(savedSpy.count(), 0);
+
+        FakeBackend *saveBackend = new FakeBackend;
+        saveBackend->frames.virtualDesktopRect = QRect(0, 0, 800, 600);
+        saveBackend->frames.outputs = {makeFrame(QRect(0, 0, 800, 600), Qt::red)};
+        auto *saveOverlay = new FakeOverlay;
+        auto *saveSink = new FakeResultSink;
+        auto *saveCapture = new FakeScrollCapture;
+        auto *saveMerger = new FakeScrollMerger;
+        saveMerger->result = merger->result;
+        ScreenshotSessionController saveController(saveBackend, saveOverlay,
+                                                   nullptr, nullptr, saveSink);
+        saveController.setScrollCapture(saveCapture);
+        saveController.setScrollMerger(saveMerger);
+
+        Request saveRequest = request;
+        QVERIFY(saveController.start(saveRequest));
+        saveOverlay->scrollStart();
+        saveCapture->replayFrameOnRequest = true;
+        saveOverlay->confirm();
+
+        QCOMPARE(saveController.state(), ScreenshotSessionController::State::Completed);
+        QCOMPARE(saveCapture->requestCount, 1);
+        QCOMPARE(saveSink->saveCount, 1);
+        QCOMPARE(saveSink->copyCount, 0);
+        QCOMPARE(saveSink->requestedPath, QStringLiteral("scroll-confirm.png"));
+    }
+
+    void controllerScrollPreviewIsForwardedToOverlay()
+    {
+        FakeBackend *backend = new FakeBackend;
+        backend->frames.virtualDesktopRect = QRect(0, 0, 800, 600);
+        backend->frames.outputs = {makeFrame(QRect(0, 0, 800, 600), Qt::red)};
+
+        auto *overlay = new FakeOverlay;
+        auto *sink = new FakeResultSink;
+        auto *capture = new FakeScrollCapture;
+        auto *merger = new FakeScrollMerger;
+        ScreenshotSessionController controller(backend, overlay, nullptr, nullptr, sink);
+        controller.setScrollCapture(capture);
+        controller.setScrollMerger(merger);
+
+        Request request;
+        request.mode = Mode::Scroll;
+        request.enableWindowSnap = false;
+        request.initialRegion = QRect(100, 100, 200, 200);
+        QVERIFY(controller.start(request));
+        overlay->scrollStart();
+
+        QImage preview(200, 420, QImage::Format_ARGB32_Premultiplied);
+        preview.fill(Qt::magenta);
+        merger->emitPreview(preview);
+        QCOMPARE(overlay->scrollPreviewCount, 1);
+        QCOMPARE(overlay->lastScrollPreview, preview);
+
+        overlay->cancel();
+        merger->emitPreview(preview);
+        QCOMPARE(overlay->scrollPreviewCount, 1);
+    }
+
+    void controllerGuardsScrollFramesAgainstOverlayWidgets()
+    {
+        FakeBackend *backend = new FakeBackend;
+        backend->frames.virtualDesktopRect = QRect(0, 0, 800, 600);
+        backend->frames.outputs = {makeFrame(QRect(0, 0, 800, 600), Qt::red)};
+
+        auto *overlay = new FakeOverlay;
+        auto *sink = new FakeResultSink;
+        auto *capture = new FakeScrollCapture;
+        auto *merger = new FakeScrollMerger;
+        ScreenshotSessionController controller(backend, overlay, nullptr, nullptr, sink);
+        controller.setScrollCapture(capture);
+        controller.setScrollMerger(merger);
+
+        Request request;
+        request.mode = Mode::Scroll;
+        request.enableWindowSnap = false;
+        request.initialRegion = QRect(100, 100, 200, 200);
+        QVERIFY(controller.start(request));
+        overlay->scrollStart();
+
+        capture->emitCaptureAboutToStart();
+        capture->emitCaptureFinished();
+        QCOMPARE(overlay->scrollFrameCaptureBeginCount, 1);
+        QCOMPARE(overlay->scrollFrameCaptureEndCount, 1);
+
+        overlay->cancel();
+        capture->emitCaptureAboutToStart();
+        capture->emitCaptureFinished();
+        QCOMPARE(overlay->scrollFrameCaptureBeginCount, 1);
+        QCOMPARE(overlay->scrollFrameCaptureEndCount, 1);
+    }
+
+    void controllerScrollReachedBottomKeepsPreviewForConfirmation()
+    {
+        FakeBackend *backend = new FakeBackend;
+        backend->frames.virtualDesktopRect = QRect(0, 0, 800, 600);
+        backend->frames.outputs = {makeFrame(QRect(0, 0, 800, 600), Qt::red)};
+
+        auto *overlay = new FakeOverlay;
+        auto *sink = new FakeResultSink;
+        auto *capture = new FakeScrollCapture;
+        auto *merger = new FakeScrollMerger;
+        merger->result = QImage(200, 420, QImage::Format_ARGB32_Premultiplied);
+        merger->result.fill(Qt::cyan);
+        ScreenshotSessionController controller(backend, overlay, nullptr, nullptr, sink);
+        controller.setScrollCapture(capture);
+        controller.setScrollMerger(merger);
+
+        Request request;
+        request.mode = Mode::Scroll;
+        request.enableWindowSnap = false;
+        request.initialRegion = QRect(100, 100, 200, 200);
+        QVERIFY(controller.start(request));
+        overlay->scrollStart();
+
+        merger->emitReachedBottom();
+        QCOMPARE(controller.state(), ScreenshotSessionController::State::Scrolling);
+        QVERIFY(overlay->scrollActive);
+        QVERIFY(capture->stopCount >= 1);
+        QCOMPARE(capture->requestCount, 0);
+        QCOMPARE(sink->saveCount, 0);
+        QCOMPARE(sink->copyCount, 0);
+
+        overlay->copy();
+        QCOMPARE(controller.state(), ScreenshotSessionController::State::Completed);
+        QCOMPARE(capture->requestCount, 0);
+        QCOMPARE(sink->copyCount, 1);
+        QCOMPARE(sink->lastResult.image, merger->result);
+    }
+
+    void controllerRejectsCrossOutputScrollSelection()
+    {
+        FakeBackend *backend = new FakeBackend;
+        backend->frames.virtualDesktopRect = QRect(0, 0, 1600, 600);
+        backend->frames.outputs = {
+            makeFrame(QRect(0, 0, 800, 600), Qt::red),
+            makeFrame(QRect(800, 0, 800, 600), Qt::green)
+        };
+
+        auto *overlay = new FakeOverlay;
+        auto *sink = new FakeResultSink;
+        auto *capture = new FakeScrollCapture;
+        auto *merger = new FakeScrollMerger;
+        ScreenshotSessionController controller(backend, overlay, nullptr, nullptr, sink);
+        controller.setScrollCapture(capture);
+        controller.setScrollMerger(merger);
+
+        Request request;
+        request.mode = Mode::Scroll;
+        request.enableWindowSnap = false;
+        request.initialRegion = QRect(700, 100, 200, 200);
+        QSignalSpy failedSpy(&controller, &ScreenshotSessionController::failed);
+
+        QVERIFY(controller.start(request));
+        overlay->scrollStart();
+
+        QCOMPARE(controller.state(), ScreenshotSessionController::State::Failed);
+        QCOMPARE(failedSpy.count(), 1);
+        QCOMPARE(overlay->scrollBeginCount, 0);
+        QCOMPARE(capture->startCount, 0);
+    }
+
+    void controllerCancelsScrollingWithoutSaving()
+    {
+        FakeBackend *backend = new FakeBackend;
+        backend->frames.virtualDesktopRect = QRect(0, 0, 800, 600);
+        backend->frames.outputs = {makeFrame(QRect(0, 0, 800, 600), Qt::red)};
+        auto *overlay = new FakeOverlay;
+        auto *sink = new FakeResultSink;
+        auto *capture = new FakeScrollCapture;
+        auto *merger = new FakeScrollMerger;
+        ScreenshotSessionController controller(backend, overlay, nullptr, nullptr, sink);
+        controller.setScrollCapture(capture);
+        controller.setScrollMerger(merger);
+
+        Request request;
+        request.mode = Mode::Scroll;
+        request.enableWindowSnap = false;
+        request.initialRegion = QRect(100, 100, 200, 200);
+        QVERIFY(controller.start(request));
+        overlay->scrollStart();
+        QCOMPARE(controller.state(), ScreenshotSessionController::State::Scrolling);
+
+        overlay->cancel();
+
+        QCOMPARE(controller.state(), ScreenshotSessionController::State::Cancelled);
+        QCOMPARE(sink->saveCount, 0);
+        QVERIFY(capture->stopCount >= 1);
+        QVERIFY(merger->cancelCount >= 1);
+    }
+
+
+    void pixMergeAutoDetectsDownwardScroll()
+    {
+        const QImage source = makeScrollSource(120, 600);
+        PixMergeThread merge;
+        merge.setScrollModel(true);
+        merge.addShotImg(scrollViewport(source, 0, 200),
+                         PixMergeThread::PictureDirection::Auto);
+        merge.start();
+
+        for (int top : {40, 80, 120}) {
+            merge.addShotImg(scrollViewport(source, top, 200),
+                             PixMergeThread::PictureDirection::Auto);
+            QVERIFY(waitForMergeQueue(merge, 0));
+        }
+
+        merge.setIsLastImg(true);
+        merge.stopTask();
+        QVERIFY(merge.wait(5000));
+        const QImage result = merge.getMerageResult();
+        QCOMPARE(result.size(), QSize(120, 320));
+    }
+
+    void pixMergeAutoDetectsUpwardScroll()
+    {
+        const QImage source = makeScrollSource(120, 600);
+        PixMergeThread merge;
+        merge.setScrollModel(true);
+        merge.addShotImg(scrollViewport(source, 200, 200),
+                         PixMergeThread::PictureDirection::Auto);
+        merge.start();
+
+        for (int top : {160, 120}) {
+            merge.addShotImg(scrollViewport(source, top, 200),
+                             PixMergeThread::PictureDirection::Auto);
+            QVERIFY(waitForMergeQueue(merge, 0));
+        }
+
+        merge.setIsLastImg(true);
+        merge.stopTask();
+        QVERIFY(merge.wait(5000));
+        const QImage result = merge.getMerageResult();
+        QCOMPARE(result.size(), QSize(120, 280));
+    }
+
+
+    void pixMergeDropsOldestQueuedFrame()
+    {
+        const QImage source = makeScrollSource(120, 600);
+        PixMergeThread merge;
+        merge.setScrollModel(true);
+        merge.addShotImg(scrollViewport(source, 0, 200),
+                         PixMergeThread::PictureDirection::Auto);
+        merge.addShotImg(scrollViewport(source, 40, 200),
+                         PixMergeThread::PictureDirection::Auto);
+        merge.addShotImg(scrollViewport(source, 80, 200),
+                         PixMergeThread::PictureDirection::Auto);
+        merge.addShotImg(scrollViewport(source, 120, 200),
+                         PixMergeThread::PictureDirection::Auto);
+
+        QCOMPARE(merge.pendingImageCount(), 3);
+        QVERIFY(merge.dropOldestPending());
+        QCOMPARE(merge.pendingImageCount(), 2);
+    }
+
+    void scrollMergeCoordinatorDropsIdenticalFrames()
+    {
+        const QImage source = makeScrollSource(120, 600);
+        ScrollMergeCoordinator merger;
+        merger.start(QRect(0, 0, 120, 200));
+
+        ScrollFrame frame;
+        frame.image = source.copy(0, 0, 120, 200);
+        QVERIFY(merger.addFrame(frame));
+        QVERIFY(!merger.addFrame(frame));
+
+        const QImage result = merger.finish();
+        QCOMPARE(result.size(), QSize(120, 200));
+    }
+
+    void scrollMergeCoordinatorEmitsPreviewForFirstFrame()
+    {
+        ScrollMergeCoordinator merger;
+        QSignalSpy previewSpy(&merger, &IScrollImageMerger::previewUpdated);
+        merger.start(QRect(0, 0, 120, 200));
+
+        ScrollFrame frame;
+        frame.image = QImage(120, 200, QImage::Format_ARGB32_Premultiplied);
+        frame.image.fill(Qt::darkGreen);
+        QVERIFY(merger.addFrame(frame));
+
+        QCOMPARE(previewSpy.count(), 1);
+        QCOMPARE(previewSpy.first().at(0).value<QImage>(), frame.image);
+        merger.cancel();
+    }
+
+    void pixMergeManualModeIgnoresIdleFrames()
+    {
+        PixMergeThread merge;
+        merge.setScrollModel(true);
+        QSignalSpy errorSpy(&merge, &PixMergeThread::merageError);
+
+        auto frame = [](const QColor &color) {
+            QImage image(120, 200, QImage::Format_ARGB32_Premultiplied);
+            image.fill(color);
+            return QPixmap::fromImage(image);
+        };
+
+        merge.addShotImg(frame(Qt::red), PixMergeThread::PictureDirection::Auto);
+        merge.start();
+        for (const QColor &color : {QColor(Qt::green), QColor(Qt::blue),
+                                    QColor(Qt::yellow), QColor(Qt::cyan)}) {
+            merge.addShotImg(frame(color), PixMergeThread::PictureDirection::Auto);
+        }
+
+        QVERIFY(waitForMergeQueue(merge, 0));
+        QTest::qWait(100);
+        QCOMPARE(errorSpy.count(), 0);
+        merge.stopTask();
+        merge.wait();
     }
 
     void notificationPreferenceIsForwardedToResultSink()
@@ -1803,6 +2461,6 @@ private slots:
     }
 };
 
-QTEST_GUILESS_MAIN(ScreenshotSessionTest)
+QTEST_MAIN(ScreenshotSessionTest)
 
 #include "main.moc"

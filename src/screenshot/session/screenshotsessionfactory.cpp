@@ -12,6 +12,8 @@
 #include "../platform/treeland/treelandsnapproxy.h"
 #include "../platform/treeland/treelandwindowtagger.h"
 #include "../platform/treeland/treelandrecordingsession.h"
+#include "../platform/treeland/treelandscrollcapture.h"
+#include "../merge/scrollmergecoordinator.h"
 
 #include <QGuiApplication>
 #include <QProcessEnvironment>
@@ -62,6 +64,10 @@ ScreenshotSessionController *ScreenshotSessionFactory::createForCurrentPlatform(
                                                        annotationEditor,
                                                        parent);
     controller->setRecordingSession(new TreelandRecordingSession);
+    auto *scrollCapture = new TreelandScrollCapture;
+    scrollCapture->setSnapSession(snapSession);
+    controller->setScrollCapture(scrollCapture);
+    controller->setScrollMerger(new ScrollMergeCoordinator);
     snapSession->setParent(controller);
     return controller;
 }

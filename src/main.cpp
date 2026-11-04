@@ -329,7 +329,6 @@ int main(int argc, char *argv[])
                 && !cmdParser.isSet(dbusOption)
                 && !cmdParser.isSet(screenRecordOption)
                 && !cmdParser.isSet(screenOcrOption)
-                && !cmdParser.isSet(screenScrollOption)
                 && !cmdParser.isSet(screenRecordFullScreenOption);
         if (cmdParser.isSet(screenshotSessionPreviewOption)
                 || usePlatformScreenshotSession) {
@@ -338,7 +337,14 @@ int main(int argc, char *argv[])
                 request.mode = Dsr::Screenshot::Mode::FullScreen;
             else if (cmdParser.isSet(topWindowOption))
                 request.mode = Dsr::Screenshot::Mode::TopWindow;
-            request.enableWindowSnap = request.mode == Dsr::Screenshot::Mode::Region;
+            else if (cmdParser.isSet(screenScrollOption))
+                request.mode = Dsr::Screenshot::Mode::Scroll;
+            // Scroll capture starts from a snapped application window. The
+            // scroll backend needs the snap region and target process to
+            // validate the selection, and --scroll must initialize the same
+            // snap session as an ordinary region screenshot.
+            request.enableWindowSnap = request.mode == Dsr::Screenshot::Mode::Region
+                    || request.mode == Dsr::Screenshot::Mode::Scroll;
             request.notificationsEnabled = !cmdParser.isSet(prohibitNotifyOption);
             request.outputPath = cmdParser.isSet(savePathOption)
                     ? cmdParser.value(savePathOption)

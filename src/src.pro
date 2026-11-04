@@ -255,6 +255,7 @@ HEADERS += main_window.h \
     protocols/ext-image-copy-capture/wayland-ext-foreign-toplevel-list-v1-client-protocol.h \
     protocols/linux-dmabuf/qwayland-linux-dmabuf-unstable-v1.h \
     protocols/linux-dmabuf/wayland-linux-dmabuf-unstable-v1-client-protocol.h \
+    protocols/wlr-screencopy/wayland-wlr-screencopy-unstable-v1-client-protocol.h \
     protocols/treeland-snap-target/qwayland-treeland-snap-target-unstable-v1.h \
     protocols/treeland-snap-target/wayland-treeland-snap-target-unstable-v1-client-protocol.h \
     protocols/treeland-snap-target/qwayland-xdg-toplevel-tag-v1.h \
@@ -269,11 +270,15 @@ HEADERS += main_window.h \
     screenshot/ports/iscreenshotoverlayhost.h \
     screenshot/ports/iannotationeditor.h \
     screenshot/ports/irecordingsession.h \
+    screenshot/ports/iscrollcapture.h \
+    screenshot/ports/iscrollmerger.h \
     screenshot/ports/iscreenshotresultsink.h \
     screenshot/ports/isnaphintsource.h \
     screenshot/ports/iwindowtagger.h \
     screenshot/adapters/shapeswidgetannotationeditor.h \
+    screenshot/core/inputregiongeometry.h \
     screenshot/session/annotationcoordinator.h \
+    screenshot/merge/scrollmergecoordinator.h \
     screenshot/export/screenshotexportservice.h \
     screenshot/export/localscreenshotresultsink.h \
     screenshot/session/screenshotsessioncontroller.h \
@@ -286,6 +291,7 @@ HEADERS += main_window.h \
     screenshot/platform/treeland/treelandmaskwindow.h \
     screenshot/platform/treeland/treelandmaskoverlayhost.h \
     screenshot/platform/treeland/treelandrecordingsession.h \
+    screenshot/platform/treeland/treelandscrollcapture.h \
     screenshot/platform/treeland/recordingfiletransaction.h \
     screenshot/platform/treeland/treelandscreenshotbackend.h
 
@@ -396,6 +402,7 @@ SOURCES += main.cpp \
     protocols/ext-image-copy-capture/wayland-ext-foreign-toplevel-list-v1-protocol.c \
     protocols/linux-dmabuf/qwayland-linux-dmabuf-unstable-v1.cpp \
     protocols/linux-dmabuf/wayland-linux-dmabuf-unstable-v1-protocol.c \
+    protocols/wlr-screencopy/wayland-wlr-screencopy-unstable-v1-protocol.c \
     protocols/treeland-snap-target/qwayland-treeland-snap-target-unstable-v1.cpp \
     protocols/treeland-snap-target/wayland-treeland-snap-target-unstable-v1-protocol.c \
     protocols/treeland-snap-target/qwayland-xdg-toplevel-tag-v1.cpp \
@@ -410,6 +417,7 @@ SOURCES += main.cpp \
     screenshot/session/annotationcoordinator.cpp \
     screenshot/session/screenshotsessioncontroller.cpp \
     screenshot/session/screenshotsessionfactory.cpp \
+    screenshot/merge/scrollmergecoordinator.cpp \
     screenshot/platform/treeland/treelandstillcapture.cpp \
     screenshot/platform/treeland/treelandsnapproxy.cpp \
     screenshot/platform/treeland/treelandsnaphintsource.cpp \
@@ -418,6 +426,7 @@ SOURCES += main.cpp \
     screenshot/platform/treeland/treelandmaskwindow.cpp \
     screenshot/platform/treeland/treelandmaskoverlayhost.cpp \
     screenshot/platform/treeland/treelandrecordingsession.cpp \
+    screenshot/platform/treeland/treelandscrollcapture.cpp \
     screenshot/platform/treeland/recordingfiletransaction.cpp \
     screenshot/platform/treeland/treelandscreenshotbackend.cpp
 
