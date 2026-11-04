@@ -15,6 +15,7 @@ class CountdownTooltip;
 class FineAdjustTips;
 class RoundedCornerWidget;
 class ZoomIndicator;
+class PreviewWidget;
 
 namespace Dsr::Screenshot {
 
@@ -52,6 +53,12 @@ public:
     void finishRecording() override;
     bool isRecordingActive() const override;
     void setRecordingControlsActive(bool active) override;
+    bool beginScroll(const QRect &globalSelection) override;
+    void setScrollPreview(const QImage &image) override;
+    void beginScrollFrameCapture() override;
+    void endScrollFrameCapture() override;
+    void finishScroll() override;
+    bool isScrollActive() const override;
     void close() override;
 
 private:
@@ -63,6 +70,10 @@ private:
     void ensureToolBar();
     void ensureSelectionWidgets();
     void destroyRecordingCountdown();
+    void applyScrollInputRegions();
+    void ensureScrollPreview();
+    void destroyScrollPreview();
+    QRect widgetGlobalRect(QWidget *widget) const;
     void updateToolBar();
     void updateRoundedCornerWidget();
     void applyRoundedCornerRadiusToWindows();
@@ -84,7 +95,9 @@ private:
     FineAdjustTips *m_fineAdjustTips = nullptr;
     ZoomIndicator *m_magnifier = nullptr;
     CountdownTooltip *m_countdown = nullptr;
+    PreviewWidget *m_scrollPreview = nullptr;
     QRect m_selection;
+    QRect m_scrollSelection;
     QPoint m_globalCursor = QPoint(-1, -1);
     FrozenFrameSet m_frozenFrames;
     bool m_finalized = false;
@@ -93,6 +106,10 @@ private:
     bool m_effectSourceReady = false;
     bool m_inputReadyPending = false;
     bool m_recordingActive = false;
+    bool m_scrollActive = false;
+    bool m_scrollFrameCaptureInProgress = false;
+    bool m_scrollPreviewHiddenForCapture = false;
+    bool m_scrollToolBarHiddenForCapture = false;
     bool m_recordModeActive = false;
     bool m_hintsVisible = false;
     bool m_hintsSelectionMode = false;

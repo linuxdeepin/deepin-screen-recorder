@@ -7,6 +7,7 @@
 
 #include "../core/screenshottypes.h"
 
+#include <QImage>
 #include <QObject>
 #include <QPoint>
 #include <QRect>
@@ -68,6 +69,18 @@ public:
     virtual bool beginRecording(const QRect &globalSelection) { Q_UNUSED(globalSelection); return false; }
     virtual void finishRecording() {}
     virtual bool isRecordingActive() const { return false; }
+    virtual bool beginScroll(const QRect &globalSelection) { Q_UNUSED(globalSelection); return false; }
+    // The stitched image produced while scrolling. Hosts that can display a
+    // live preview update it here; the default implementation is a no-op for
+    // platforms without an in-overlay preview.
+    virtual void setScrollPreview(const QImage &image) { Q_UNUSED(image); }
+    // Called around each scroll capture request. Hosts hide any overlay
+    // widgets that intersect the selection so output-based capture cannot
+    // include the preview or toolbar in the stitched image.
+    virtual void beginScrollFrameCapture() {}
+    virtual void endScrollFrameCapture() {}
+    virtual void finishScroll() {}
+    virtual bool isScrollActive() const { return false; }
     virtual void setRecordingControlsActive(bool active) { Q_UNUSED(active); }
     virtual void close() = 0;
 
@@ -96,6 +109,8 @@ signals:
     void recordStartRequested();
     void recordStopRequested();
     void recordingCountdownFinished();
+    void scrollStartRequested();
+    void scrollStopRequested();
 };
 
 } // namespace Dsr::Screenshot

@@ -13,8 +13,10 @@
 #include "widgets/fineadjusttips.h"
 #include "widgets/roundedcornerwidget.h"
 #include "widgets/zoomIndicator.h"
+#include "widgets/previewwidget.h"
 #include "../../export/screenshotexportservice.h"
 #include "../../core/coordinatemapper.h"
+#include "../../core/inputregiongeometry.h"
 #include "../../core/selectionoverlaygeometry.h"
 #include "../../ports/iwindowtagger.h"
 #include "../../../utils/configsettings.h"
@@ -64,7 +66,9 @@ public:
 
     void confirm() override
     {
-        if (m_overlay->isRecordingActive())
+        if (m_overlay->isScrollActive())
+            emit m_overlay->copyRequested();
+        else if (m_overlay->isRecordingActive())
             emit m_overlay->recordStopRequested();
         else if (m_recordMode)
             emit m_overlay->recordStartRequested();
@@ -93,6 +97,10 @@ public:
 
     void toolChanged(const QString &tool) override
     {
+        if (tool == QStringLiteral("scrollShot")) {
+            emit m_overlay->scrollStartRequested();
+            return;
+        }
         if (tool == QStringLiteral("pinScreenshots")) {
             emit m_overlay->pinRequested();
             return;
@@ -193,6 +201,8 @@ public:
         toolBar->raise();
         if (sideBar && m_sideBarVisibleAtDragStart)
             sideBar->raise();
+        if (m_overlay->isScrollActive())
+            m_overlay->applyScrollInputRegions();
         return true;
     }
 
@@ -634,6 +644,214 @@ bool TreelandMaskOverlayHost::beginRecording(const QRect &globalSelection)
     return true;
 }
 
+bool TreelandMaskOverlayHost::beginScroll(const QRect &globalSelection)
+{
+    if (m_scrollActive || m_recordingActive || globalSelection.isEmpty())
+        return false;
+
+    if (!m_toolBar || !m_sideBar)
+        return false;
+
+    if (m_roundedCornerWidget)
+        m_roundedCornerWidget->hide();
+    if (m_fineAdjustTips)
+        m_fineAdjustTips->hide();
+    hideMagnifier();
+
+    const QRect selection = globalSelection.normalized();
+    for (TreelandMaskWindow *window : std::as_const(m_windows)) {
+        if (!window)
+            continue;
+        window->setRecordingMode(true, selection, true);
+        window->clearMask();
+        window->show();
+        window->raise();
+    }
+
+    m_scrollSelection = selection;
+    // 复用 X11 的滚动截图工具栏：切换到 scroll 子工具栏，确认键复制长图，
+    // 保存键保存长图。工具栏和选区同样保留输入，选区内部则通过 input
+    // region 挖空，让滚轮落到下面的页面。
+    m_scrollActive = true;
+    m_toolBar->setEnabled(true);
+    m_toolBar->setScrollActive(true);
+    m_sideBar->hide();
+    updateToolBar();
+    applyScrollInputRegions();
+    ensureScrollPreview();
+    return true;
+}
+
+void TreelandMaskOverlayHost::setScrollPreview(const QImage &image)
+{
+    if (!m_scrollActive || image.isNull())
+        return;
+    if (!m_scrollPreview)
+        ensureScrollPreview();
+    if (!m_scrollPreview)
+        return;
+
+    m_scrollPreview->updateImage(image);
+    if (m_scrollFrameCaptureInProgress)
+        return;
+    m_scrollPreview->show();
+    m_scrollPreview->lower();
+    if (m_toolBar && m_toolBar->isVisible())
+        m_toolBar->raise();
+}
+
+void TreelandMaskOverlayHost::ensureScrollPreview()
+{
+    destroyScrollPreview();
+    if (!m_scrollActive || m_scrollSelection.isEmpty())
+        return;
+
+    TreelandMaskWindow *owner = selectionOwnerWindow();
+    if (!owner)
+        return;
+
+    const QRect localSelection =
+            CoordinateMapper::globalToOutputLocal(m_scrollSelection, owner->output());
+    const QSize defaultLimit(qMax(1, owner->width() / 4),
+                             qMax(1, owner->height() * 7 / 10));
+
+    m_scrollPreview = new PreviewWidget(localSelection, owner);
+    m_scrollPreview->setAttribute(Qt::WA_TransparentForMouseEvents, true);
+    m_scrollPreview->setMaxPreviewSize(defaultLimit);
+    m_scrollPreview->setScreenInfo(owner->width(), selectionPixelScale());
+    m_scrollPreview->initPreviewWidget();
+    m_scrollPreview->hide();
+}
+
+QRect TreelandMaskOverlayHost::widgetGlobalRect(QWidget *widget) const
+{
+    if (!widget)
+        return {};
+    QWidget *parent = widget->parentWidget();
+    for (TreelandMaskWindow *window : m_windows) {
+        if (window == parent) {
+            return QRect(window->output().logicalGeometry.topLeft() + widget->pos(),
+                         widget->size());
+        }
+    }
+    return {};
+}
+
+void TreelandMaskOverlayHost::beginScrollFrameCapture()
+{
+    if (!m_scrollActive || m_scrollFrameCaptureInProgress)
+        return;
+    m_scrollFrameCaptureInProgress = true;
+    m_scrollPreviewHiddenForCapture = false;
+    m_scrollToolBarHiddenForCapture = false;
+
+    if (m_scrollPreview && m_scrollPreview->isVisible()) {
+        const QRect previewRect = widgetGlobalRect(m_scrollPreview);
+        if (previewRect.intersects(m_scrollSelection)) {
+            m_scrollPreview->hide();
+            m_scrollPreviewHiddenForCapture = true;
+        }
+    }
+
+    if (m_toolBar && m_toolBar->isVisible()) {
+        const QRect toolBarRect = widgetGlobalRect(m_toolBar);
+        if (toolBarRect.intersects(m_scrollSelection)) {
+            m_toolBar->hide();
+            m_scrollToolBarHiddenForCapture = true;
+        }
+    }
+}
+
+void TreelandMaskOverlayHost::endScrollFrameCapture()
+{
+    if (!m_scrollFrameCaptureInProgress)
+        return;
+    m_scrollFrameCaptureInProgress = false;
+
+    if (m_scrollPreviewHiddenForCapture && m_scrollPreview) {
+        m_scrollPreview->show();
+        m_scrollPreview->lower();
+        m_scrollPreviewHiddenForCapture = false;
+    }
+    if (m_scrollToolBarHiddenForCapture && m_toolBar) {
+        m_toolBar->show();
+        m_toolBar->raise();
+        m_scrollToolBarHiddenForCapture = false;
+    }
+    if (m_scrollActive)
+        applyScrollInputRegions();
+}
+
+void TreelandMaskOverlayHost::destroyScrollPreview()
+{
+    if (!m_scrollPreview)
+        return;
+    m_scrollPreview->hide();
+    m_scrollPreview->deleteLater();
+    m_scrollPreview = nullptr;
+}
+
+void TreelandMaskOverlayHost::finishScroll()
+{
+    destroyScrollPreview();
+    m_scrollFrameCaptureInProgress = false;
+    m_scrollPreviewHiddenForCapture = false;
+    m_scrollToolBarHiddenForCapture = false;
+    if (!m_scrollActive) {
+        m_scrollSelection = QRect();
+        return;
+    }
+
+    m_scrollActive = false;
+    if (m_toolBar) {
+        m_toolBar->setScrollActive(false);
+        m_toolBar->hide();
+        m_toolBar->setEnabled(false);
+    }
+    if (m_sideBar)
+        m_sideBar->hide();
+    for (TreelandMaskWindow *window : std::as_const(m_windows)) {
+        if (window)
+            window->resetInputRegion();
+    }
+    m_scrollSelection = QRect();
+}
+
+bool TreelandMaskOverlayHost::isScrollActive() const
+{
+    return m_scrollActive;
+}
+
+void TreelandMaskOverlayHost::applyScrollInputRegions()
+{
+    for (TreelandMaskWindow *window : std::as_const(m_windows)) {
+        if (!window)
+            continue;
+        const QRect localSelection =
+                CoordinateMapper::globalToOutputLocal(m_scrollSelection,
+                                                      window->output())
+                        .intersected(window->rect());
+        if (localSelection.isEmpty()) {
+            window->setInputRegion(QRegion());
+            continue;
+        }
+        QList<QRect> interactiveRects;
+        const auto appendInteractiveWidget = [&interactiveRects, window](QWidget *widget) {
+            if (!widget || !widget->isVisible() || widget->parentWidget() != window)
+                return;
+            interactiveRects.append(QRect(window->output().logicalGeometry.topLeft()
+                                                  + widget->pos(),
+                                          widget->size()));
+        };
+        appendInteractiveWidget(m_toolBar);
+        appendInteractiveWidget(m_sideBar);
+        window->setInputRegion(scrollInputRegion(window->rect(),
+                                                 window->output(),
+                                                 m_scrollSelection,
+                                                 interactiveRects));
+    }
+}
+
 void TreelandMaskOverlayHost::finishRecording()
 {
     stopRecordingCountdown();
@@ -671,6 +889,7 @@ void TreelandMaskOverlayHost::setRecordingControlsActive(bool active)
 void TreelandMaskOverlayHost::close()
 {
     stopRecordingCountdown();
+    finishScroll();
     finishRecording();
     hideMagnifier();
     // Mask windows are destroyed asynchronously below. Release the magnifier
@@ -1016,8 +1235,11 @@ void TreelandMaskOverlayHost::updateToolBar()
             m_toolBarHost->setAnchorWidget(active);
     }
 
+    if (m_scrollActive)
+        m_sideBar->hide();
+
     const QRect localSelection = m_selection.translated(-active->output().logicalGeometry.topLeft());
-    if (m_annotationToolActive) {
+    if (m_annotationToolActive && !m_scrollActive) {
         // Selection interaction temporarily hides the tool bars. Restore the
         // active annotation options when the selection becomes ready again.
         m_sideBar->showWidget();
@@ -1075,6 +1297,8 @@ void TreelandMaskOverlayHost::updateToolBar()
         m_sideBar->showAt(QPoint(sideBarX, sideBarY));
         m_sideBar->raise();
     }
+    if (m_scrollActive)
+        applyScrollInputRegions();
 }
 
 void TreelandMaskOverlayHost::handleToolChanged(const QString &tool)
@@ -1169,6 +1393,7 @@ void TreelandMaskOverlayHost::undoAnnotation()
 
 void TreelandMaskOverlayHost::destroyWindows()
 {
+    destroyScrollPreview();
     hideMagnifier();
     delete m_magnifier;
     m_magnifier = nullptr;

@@ -151,14 +151,11 @@ bool ExtCaptureSession::initialize(void *manager,
     }
 
     try {
-        // 创建捕获会话
-        // uint32_t options = paintCursors ? EXT_IMAGE_COPY_CAPTURE_MANAGER_V1_OPTIONS_PAINT_CURSORS : 0;
-        uint32_t options = 0;
-        // qCWarning(dsrApp) << "ExtCaptureSession: paintCursors =" << paintCursors << "-> options =" << options << "(C enum value:" << EXT_IMAGE_COPY_CAPTURE_MANAGER_V1_OPTIONS_PAINT_CURSORS << "Qt enum:" << QtWayland::ext_image_copy_capture_manager_v1::options_paint_cursors << ")";
-        
-        if (!paintCursors) {
-            qCWarning(dsrApp) << "ExtCaptureSession: TESTING TreeLand options handling - using 0 (no cursors)";
-        }
+        // 创建捕获会话。输出源是否真正排除光标由合成器实现决定；
+        // TreeLand 0.11 的 output source 即使用 options=0 仍可能带软件光标。
+        const uint32_t options = paintCursors
+                ? QtWayland::ext_image_copy_capture_manager_v1::options_paint_cursors
+                : 0;
         
         // 使用传入的 imageSource
         auto *source = reinterpret_cast<ext_image_capture_source_v1*>(imageSource);

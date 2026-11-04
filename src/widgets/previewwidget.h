@@ -33,6 +33,9 @@ public:
     QRect calculatePreviewPosition(int previewWidth, int previewHeight);
     //设置屏幕宽度
     void setScreenInfo(int screenWidth, double screenRatio);
+    //限制预览框最大尺寸。TreeLand 用它把预览放到选区外侧，避免预览被
+    //ext-image-copy-capture 拼进长图。
+    void setMaxPreviewSize(const QSize &size);
     //初始化预览位置大小
     void initPreviewWidget();
 

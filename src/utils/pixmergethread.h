@@ -35,6 +35,7 @@ public:
     enum PictureDirection {//滚动方向
         ScrollDown = 0,     //向下滚动
         ScrollUp,           //向上滚动
+        Auto,               //自动判定方向
     };
 
     explicit PixMergeThread(QObject *parent = nullptr);
@@ -51,6 +52,9 @@ public:
     void calculateTimeDiff(int time); //计算时间差
     bool isOneWay(); //是否单向
     void setIsLastImg(bool isLastImg); //设置最后一张图片标记
+    bool hasPendingImages();
+    int pendingImageCount();
+    bool dropOldestPending();
 protected:
     cv::Mat qPixmapToCvMat(const QPixmap &inPixmap);
     bool mergeImageWork(const cv::Mat &image, int imageStatus = ScrollDown);
@@ -61,6 +65,7 @@ protected:
     bool splicePictureUp(const cv::Mat &image);//向上拼接图片
     bool splicePictureDown(const cv::Mat &image);//向下拼接图片
     QRect getScrollChangeRectArea(cv::Mat &img1, const cv::Mat &img2);//计算可以滚动的区域
+    bool detectDirection(const cv::Mat &image, PictureDirection *direction);//自动判定滚动方向
     void ScrollUpAddImg(const QPixmap &picture); //滚动向上时添加
     void ScrollDwonAddImg(const QPixmap &picture);//滚动向下时添加
 signals:
@@ -89,6 +94,7 @@ private:
     int m_upCount = 0;
     int m_downCount = 0;
     bool m_isLastPixmap = false; // 是否是最后一张
+    int m_autoDirectionFailures = 0;
 };
 
 Q_DECLARE_METATYPE(PixMergeThread::MergeErrorValue);
