@@ -3596,7 +3596,7 @@ void MainWindow::updateToolBarPos()
     if (m_roundedCornerWidget) {
         if (canShowRoundedCorner) {
             // 尺寸面板展示实际截图像素大小：直接复用裁剪计算，
-            // 窗口识别选区取窗口真实范围（不含窗管边框），手工框选保持宽 -2、高 -1 的既有约定。
+            // 窗口识别选区取窗口真实范围（不含窗管边框），手工框选也严格等于选区。
             const QRect shotTarget = shotTargetRectPhysical();
             m_roundedCornerWidget->setSelectionSize(qMax(1, shotTarget.width()),
                                                     qMax(1, shotTarget.height()));
@@ -8965,11 +8965,12 @@ void MainWindow::onRoundedSelectionSizeChanged(int width, int height)
     }
     const qreal pixelRatio = qApp->primaryScreen()->devicePixelRatio() > 0
             ? qApp->primaryScreen()->devicePixelRatio() : 1.0;
-    // 尺寸面板与实际截图裁剪保持一致：宽-2、高-1，并限制不超出屏幕
-    const int maxWidth = qMax(RECORD_MIN_SHOT_SIZE, m_backgroundRect.width() - recordX - 2);
-    const int maxHeight = qMax(RECORD_MIN_SHOT_SIZE, m_backgroundRect.height() - recordY - 1);
-    const int newWidth = qBound(RECORD_MIN_SHOT_SIZE, qRound(width / pixelRatio) + 2, maxWidth);
-    const int newHeight = qBound(RECORD_MIN_SHOT_SIZE, qRound(height / pixelRatio) + 1, maxHeight);
+    // 输入的是最终成图的物理像素，recordWidth/Height 是逻辑选区尺寸。
+    // 裁剪已经严格等于选区，不能再补历史虚线边框的 2/1 像素。
+    const int maxWidth = qMax(RECORD_MIN_SHOT_SIZE, m_backgroundRect.width() - recordX);
+    const int maxHeight = qMax(RECORD_MIN_SHOT_SIZE, m_backgroundRect.height() - recordY);
+    const int newWidth = qBound(RECORD_MIN_SHOT_SIZE, qRound(width / pixelRatio), maxWidth);
+    const int newHeight = qBound(RECORD_MIN_SHOT_SIZE, qRound(height / pixelRatio), maxHeight);
     if (newWidth == recordWidth && newHeight == recordHeight) {
         return;
     }
