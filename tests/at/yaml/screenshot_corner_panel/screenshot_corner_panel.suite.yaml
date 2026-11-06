@@ -1,0 +1,169 @@
+name: screenshot_corner_panel_suite
+app: deepin-screen-recorder
+description: 截图圆角与尺寸比例面板：圆角按钮、半径滑块/输入框、尺寸比例按钮、宽高输入、比例锁定
+module: screenshot_corner_panel
+tags:
+- at
+- screenshot
+- new-feature
+- corner-panel
+fast_fail: true
+env_check: []
+setup:
+- action: session_start
+  command: |
+    bash -lc 'python3 "$(git rev-parse --show-toplevel)/tests/at/yaml_basic/basic_capture_record/basic_capture_record_helper.py" init'
+  wait: 0.5
+suites:
+- id: corner_panel_rounded_corner_button
+  name: 截图圆角面板-圆角按钮显示
+  tags:
+  - screenshot
+  - new-feature
+  - corner
+  steps:
+  - action: session_start
+    command: |
+      bash -lc 'set -e; export DISPLAY=${DISPLAY:-:0}; export XAUTHORITY=${XAUTHORITY:-$HOME/.Xauthority};
+      python3 "$(git rev-parse --show-toplevel)/tests/at/yaml_basic/basic_capture_record/basic_capture_record_helper.py" clear-marker corner_btn;
+      gdbus call --session --dest com.deepin.ScreenRecorder --object-path /com/deepin/ScreenRecorder --method com.deepin.ScreenRecorder.stopApp >/dev/null 2>&1 || true;
+      sleep 0.5; xdotool key --clearmodifiers ctrl+alt+a; sleep 1.2;
+      xdotool mousemove 320 220 mousedown 1; sleep 0.1; xdotool mousemove 920 620 mouseup 1; sleep 1.0;
+      python3 "$(git rev-parse --show-toplevel)/tests/at/yaml_basic/basic_capture_record/basic_capture_record_helper.py" assert-at-name save_local_button;
+      python3 "$(git rev-parse --show-toplevel)/tests/at/yaml_basic/basic_capture_record/basic_capture_record_helper.py" assert-at-name RoundedCornerButton;
+      python3 "$(git rev-parse --show-toplevel)/tests/at/yaml_basic/basic_capture_record/basic_capture_record_helper.py" mark corner_btn'
+    wait: 10.0
+  assert_steps:
+  - action: session_start
+    command: |
+      bash -lc 'python3 "$(git rev-parse --show-toplevel)/tests/at/yaml_basic/basic_capture_record/basic_capture_record_helper.py" assert-marker corner_btn'
+    wait: 1.0
+  - action: keyboard_press
+    key: escape
+    wait: 0.3
+
+- id: corner_panel_size_ratio_button
+  name: 截图尺寸比例面板-比例按钮显示
+  tags:
+  - screenshot
+  - new-feature
+  - size-ratio
+  steps:
+  - action: session_start
+    command: |
+      bash -lc 'set -e; export DISPLAY=${DISPLAY:-:0}; export XAUTHORITY=${XAUTHORITY:-$HOME/.Xauthority};
+      python3 "$(git rev-parse --show-toplevel)/tests/at/yaml_basic/basic_capture_record/basic_capture_record_helper.py" clear-marker ratio_btn;
+      gdbus call --session --dest com.deepin.ScreenRecorder --object-path /com/deepin/ScreenRecorder --method com.deepin.ScreenRecorder.stopApp >/dev/null 2>&1 || true;
+      sleep 0.5; xdotool key --clearmodifiers ctrl+alt+a; sleep 1.2;
+      xdotool mousemove 320 220 mousedown 1; sleep 0.1; xdotool mousemove 920 620 mouseup 1; sleep 1.0;
+      python3 "$(git rev-parse --show-toplevel)/tests/at/yaml_basic/basic_capture_record/basic_capture_record_helper.py" assert-at-name save_local_button;
+      python3 "$(git rev-parse --show-toplevel)/tests/at/yaml_basic/basic_capture_record/basic_capture_record_helper.py" assert-at-name SizeRatioButton;
+      python3 "$(git rev-parse --show-toplevel)/tests/at/yaml_basic/basic_capture_record/basic_capture_record_helper.py" mark ratio_btn'
+    wait: 10.0
+  assert_steps:
+  - action: session_start
+    command: |
+      bash -lc 'python3 "$(git rev-parse --show-toplevel)/tests/at/yaml_basic/basic_capture_record/basic_capture_record_helper.py" assert-marker ratio_btn'
+    wait: 1.0
+  - action: keyboard_press
+    key: escape
+    wait: 0.3
+
+- id: corner_panel_click_corner_show_radius_controls
+  name: 截图圆角面板-点击圆角按钮后显示半径滑块和输入框
+  tags:
+  - screenshot
+  - new-feature
+  - corner
+  - radius
+  steps:
+  - action: session_start
+    command: |
+      bash -lc 'set -e; export DISPLAY=${DISPLAY:-:0}; export XAUTHORITY=${XAUTHORITY:-$HOME/.Xauthority};
+      python3 "$(git rev-parse --show-toplevel)/tests/at/yaml_basic/basic_capture_record/basic_capture_record_helper.py" clear-marker corner_radius;
+      gdbus call --session --dest com.deepin.ScreenRecorder --object-path /com/deepin/ScreenRecorder --method com.deepin.ScreenRecorder.stopApp >/dev/null 2>&1 || true;
+      sleep 0.5; xdotool key --clearmodifiers ctrl+alt+a; sleep 1.2;
+      xdotool mousemove 320 220 mousedown 1; sleep 0.1; xdotool mousemove 920 620 mouseup 1; sleep 1.0;
+      python3 "$(git rev-parse --show-toplevel)/tests/at/yaml_basic/basic_capture_record/basic_capture_record_helper.py" assert-at-name save_local_button;
+      python3 "$(git rev-parse --show-toplevel)/tests/at/yaml_basic/basic_capture_record/basic_capture_record_helper.py" click-at-name RoundedCornerButton; sleep 0.5;
+      python3 "$(git rev-parse --show-toplevel)/tests/at/yaml_basic/basic_capture_record/basic_capture_record_helper.py" assert-at-name CornerRadiusSlider;
+      python3 "$(git rev-parse --show-toplevel)/tests/at/yaml_basic/basic_capture_record/basic_capture_record_helper.py" assert-at-name CornerRadiusSpinBox;
+      python3 "$(git rev-parse --show-toplevel)/tests/at/yaml_basic/basic_capture_record/basic_capture_record_helper.py" mark corner_radius'
+    wait: 10.0
+  assert_steps:
+  - action: session_start
+    command: |
+      bash -lc 'python3 "$(git rev-parse --show-toplevel)/tests/at/yaml_basic/basic_capture_record/basic_capture_record_helper.py" assert-marker corner_radius'
+    wait: 1.0
+  - action: keyboard_press
+    key: escape
+    wait: 0.3
+
+- id: corner_panel_click_ratio_show_size_controls
+  name: 截图尺寸比例面板-点击比例按钮后显示宽高输入和模式按钮
+  tags:
+  - screenshot
+  - new-feature
+  - size-ratio
+  - dimension
+  steps:
+  - action: session_start
+    command: |
+      bash -lc 'set -e; export DISPLAY=${DISPLAY:-:0}; export XAUTHORITY=${XAUTHORITY:-$HOME/.Xauthority};
+      python3 "$(git rev-parse --show-toplevel)/tests/at/yaml_basic/basic_capture_record/basic_capture_record_helper.py" clear-marker ratio_size;
+      gdbus call --session --dest com.deepin.ScreenRecorder --object-path /com/deepin/ScreenRecorder --method com.deepin.ScreenRecorder.stopApp >/dev/null 2>&1 || true;
+      sleep 0.5; xdotool key --clearmodifiers ctrl+alt+a; sleep 1.2;
+      xdotool mousemove 320 220 mousedown 1; sleep 0.1; xdotool mousemove 920 620 mouseup 1; sleep 1.0;
+      python3 "$(git rev-parse --show-toplevel)/tests/at/yaml_basic/basic_capture_record/basic_capture_record_helper.py" assert-at-name save_local_button;
+      python3 "$(git rev-parse --show-toplevel)/tests/at/yaml_basic/basic_capture_record/basic_capture_record_helper.py" click-at-name SizeRatioButton; sleep 0.5;
+      python3 "$(git rev-parse --show-toplevel)/tests/at/yaml_basic/basic_capture_record/basic_capture_record_helper.py" assert-at-name SizeRatioModeButton;
+      python3 "$(git rev-parse --show-toplevel)/tests/at/yaml_basic/basic_capture_record/basic_capture_record_helper.py" assert-at-name SelectionWidthEdit;
+      python3 "$(git rev-parse --show-toplevel)/tests/at/yaml_basic/basic_capture_record/basic_capture_record_helper.py" assert-at-name SelectionHeightEdit;
+      python3 "$(git rev-parse --show-toplevel)/tests/at/yaml_basic/basic_capture_record/basic_capture_record_helper.py" assert-at-name RatioLockButton;
+      python3 "$(git rev-parse --show-toplevel)/tests/at/yaml_basic/basic_capture_record/basic_capture_record_helper.py" mark ratio_size'
+    wait: 10.0
+  assert_steps:
+  - action: session_start
+    command: |
+      bash -lc 'python3 "$(git rev-parse --show-toplevel)/tests/at/yaml_basic/basic_capture_record/basic_capture_record_helper.py" assert-marker ratio_size'
+    wait: 1.0
+  - action: keyboard_press
+    key: escape
+    wait: 0.3
+
+- id: corner_panel_fine_adjust_tips
+  name: 截图选区-精细调整提示面板显示
+  tags:
+  - screenshot
+  - new-feature
+  - fine-adjust
+  steps:
+  - action: session_start
+    command: |
+      bash -lc 'set -e; export DISPLAY=${DISPLAY:-:0}; export XAUTHORITY=${XAUTHORITY:-$HOME/.Xauthority};
+      python3 "$(git rev-parse --show-toplevel)/tests/at/yaml_basic/basic_capture_record/basic_capture_record_helper.py" clear-marker fine_adjust;
+      gdbus call --session --dest com.deepin.ScreenRecorder --object-path /com/deepin/ScreenRecorder --method com.deepin.ScreenRecorder.stopApp >/dev/null 2>&1 || true;
+      sleep 0.5; xdotool key --clearmodifiers ctrl+alt+a; sleep 1.2;
+      xdotool mousemove 320 220 mousedown 1; sleep 0.1; xdotool mousemove 920 620 mouseup 1; sleep 1.0;
+      python3 "$(git rev-parse --show-toplevel)/tests/at/yaml_basic/basic_capture_record/basic_capture_record_helper.py" assert-at-name save_local_button;
+      python3 "$(git rev-parse --show-toplevel)/tests/at/yaml_basic/basic_capture_record/basic_capture_record_helper.py" assert-at-name FineAdjustTips;
+      python3 "$(git rev-parse --show-toplevel)/tests/at/yaml_basic/basic_capture_record/basic_capture_record_helper.py" mark fine_adjust'
+    wait: 10.0
+  assert_steps:
+  - action: session_start
+    command: |
+      bash -lc 'python3 "$(git rev-parse --show-toplevel)/tests/at/yaml_basic/basic_capture_record/basic_capture_record_helper.py" assert-marker fine_adjust'
+    wait: 1.0
+  - action: keyboard_press
+    key: escape
+    wait: 0.3
+
+teardown:
+- action: session_start
+  command: |
+    bash -lc 'export DISPLAY=${DISPLAY:-:0}; export XAUTHORITY=${XAUTHORITY:-$HOME/.Xauthority};
+    python3 "$(git rev-parse --show-toplevel)/tests/at/yaml_basic/basic_capture_record/basic_capture_record_helper.py" restore;
+    xdotool key --clearmodifiers Escape >/dev/null 2>&1 || true;
+    gdbus call --session --dest com.deepin.ScreenRecorder --object-path /com/deepin/ScreenRecorder --method com.deepin.ScreenRecorder.stopApp >/dev/null 2>&1 || true'
+  wait: 0.5
+- action: session_stop
