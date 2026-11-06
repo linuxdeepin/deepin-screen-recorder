@@ -2558,16 +2558,20 @@ void MainWindow::updateToolBarPos()
     // 多屏情况下，横向，有可能在屏幕外面。
     if (m_isScreenVertical == false && m_screenInfo.size() >= 2) {
         for (int i = 0; i < m_screenInfo.size(); ++i) {
+            // ScreenInfo.width/height 是物理坐标，工具栏定位使用逻辑坐标，需转换为逻辑坐标
+            qreal factor = m_screenInfo[i].scaleFactor > 0 ? m_screenInfo[i].scaleFactor : m_pixelRatio;
+            int logicalW = static_cast<int>(m_screenInfo[i].width / factor);
+            int logicalH = static_cast<int>(m_screenInfo[i].height / factor);
             //qDebug() << "屏幕: " << m_screenInfo[i].name <<  m_screenInfo[i].x << m_screenInfo[i].y << m_screenInfo[i].width << m_screenInfo[i].height;
             //工具栏是否在屏幕内
-            toolIsInScreen = toolbarPoint.x() * m_pixelRatio >= m_screenInfo[i].x &&
-                             toolbarPoint.x() * m_pixelRatio  < (m_screenInfo[i].x + m_screenInfo[i].width) &&
-                             (toolbarPoint.y() - m_screenInfo[i].height) / m_pixelRatio + m_screenInfo[i].height >= m_screenInfo[i].y &&
-                             (toolbarPoint.y() - m_screenInfo[i].height) / m_pixelRatio + m_screenInfo[i].height < (m_screenInfo[i].y + m_screenInfo[i].height);
-            bool recordIsInScreen =  recordX * m_pixelRatio >= m_screenInfo[i].x &&
-                                     recordX * m_pixelRatio < (m_screenInfo[i].x + m_screenInfo[i].width) &&
-                                     recordY * m_pixelRatio >= m_screenInfo[i].y - 1 &&
-                                     recordY * m_pixelRatio < (m_screenInfo[i].y + m_screenInfo[i].height);
+            toolIsInScreen = toolbarPoint.x() >= m_screenInfo[i].x &&
+                             toolbarPoint.x() < (m_screenInfo[i].x + logicalW) &&
+                             toolbarPoint.y() >= m_screenInfo[i].y &&
+                             toolbarPoint.y() < (m_screenInfo[i].y + logicalH);
+            bool recordIsInScreen =  recordX >= m_screenInfo[i].x &&
+                                     recordX < (m_screenInfo[i].x + logicalW) &&
+                                     recordY >= m_screenInfo[i].y - 1 &&
+                                     recordY < (m_screenInfo[i].y + logicalH);
             //qDebug() << "工具栏是否在屏幕（"<< m_screenInfo[i].name<<"）内 ? " << toolIsInScreen;
             //qDebug() << "捕捉区域是否在屏幕（"<< m_screenInfo[i].name<<"）内 ? " << recordIsInScreen;
             //取出捕捉区域所在的屏幕
@@ -2587,12 +2591,12 @@ void MainWindow::updateToolBarPos()
                     toolbarPoint.setY(recordY + TOOLBAR_Y_SPACING);
                     //toolbarPoint.setY(m_screenInfo[i].y + TOOLBAR_Y_SPACING);
                     //qDebug() << "工具栏位置超出屏幕上边缘，已矫正 >>> toolbarPoint: " << toolbarPoint;
-                } else if (toolbarPoint.y() > m_screenInfo[i].y / m_pixelRatio + m_screenInfo[i].height / m_pixelRatio - m_toolBar->height() - TOOLBAR_Y_SPACING) {
+                } else if (toolbarPoint.y() > m_screenInfo[i].y + logicalH - m_toolBar->height() - TOOLBAR_Y_SPACING) {
                     // 屏幕下超出
                     int y = std::max(recordY - m_toolBar->height() - TOOLBAR_Y_SPACING, 0);
                     //qDebug() << ">>> y: " << y;
-                    if (y > m_screenInfo[i].y + m_screenInfo[i].height / m_pixelRatio - m_toolBar->height() - TOOLBAR_Y_SPACING)
-                        y = m_screenInfo[i].y + static_cast<int>(m_screenInfo[i].height / m_pixelRatio) - m_toolBar->height() - TOOLBAR_Y_SPACING;
+                    if (y > m_screenInfo[i].y + logicalH - m_toolBar->height() - TOOLBAR_Y_SPACING)
+                        y = m_screenInfo[i].y + logicalH - m_toolBar->height() - TOOLBAR_Y_SPACING;
 
                     //已经调整工具栏位置之后，发现工具栏位置超出屏幕上边缘
                     if (y < m_screenInfo[i].y) {
@@ -2954,6 +2958,14 @@ QPoint MainWindow::getTwoScreenIntersectPos(QPoint rawPos)
     } else {
         tmp_screenInfo.append(m_screenInfo.at(1));
         tmp_screenInfo.append(m_screenInfo.at(0));
+    }
+
+    // ScreenInfo.width/height 是物理坐标，与逻辑坐标的 x/y 混用会导致分数缩放下位置偏移
+    // 在此函数内统一转为逻辑坐标
+    for (int i = 0; i < tmp_screenInfo.size(); ++i) {
+        qreal f = tmp_screenInfo[i].scaleFactor > 0 ? tmp_screenInfo[i].scaleFactor : m_pixelRatio;
+        tmp_screenInfo[i].width = static_cast<int>(tmp_screenInfo[i].width / f);
+        tmp_screenInfo[i].height = static_cast<int>(tmp_screenInfo[i].height / f);
     }
 
     // 2. get the cross area
