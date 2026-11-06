@@ -1492,6 +1492,7 @@ private:
      */
     bool m_initResource = false;
     bool m_initScroll;
+    bool m_suppressRoundedCorners = false;
     RecorderTablet *m_tabletRecorderHandle = nullptr;
     int m_cursorBound;
     //ocr接口
