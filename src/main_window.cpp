@@ -1756,6 +1756,14 @@ void MainWindow::initScrollShot()
 
     // 设置当前功能类型
     m_functionType = status::scrollshot;
+    m_suppressRoundedCorners = true;
+    // 从普通截图切入滚动截图时，圆角/尺寸工具组可能仍处于显示状态。
+    // 滚动截图抓取首张图用于预览前必须先隐藏该浮层，否则它会被抓进首帧，
+    // 使滚动截图预览看起来带有圆角。
+    if (m_roundedCornerWidget) {
+        m_roundedCornerWidget->collapsePanels();
+        m_roundedCornerWidget->hide();
+    }
     m_keyBoardStatus = false;
     m_mouseStatus = false;
     m_repaintMainButton = false;
@@ -2107,14 +2115,38 @@ void MainWindow::showScrollShot()
         return;
     }
     qCInfo(dsrApp) << "初始化滚动截图时，显示滚动截图中的一些公共部件、例如工具栏、提示、图片大小、第一张预览图 start";
+    // 抓取滚动截图首帧前，确保退出普通截图的圆角绘制状态并完成重绘，
+    // 避免圆角遮罩仍停留在窗口后备存储中被 XGetImage 一并抓入预览。
+    m_functionType = status::scrollshot;
+    m_suppressRoundedCorners = true;
+    if (m_roundedCornerWidget) {
+        m_roundedCornerWidget->collapsePanels();
+        m_roundedCornerWidget->hide();
+    }
+    m_radiusPreviewRadius = 0;
+    repaint();
+    qApp->processEvents(QEventLoop::ExcludeUserInputEvents);
     bool ok;
     QRect rect(recordX + m_scrollShotOffsetXY,
                ((recordY == 0) ? 2 : (recordY + m_scrollShotOffsetXY)),
                recordWidth - m_scrollShotOffsetWH,
                recordHeight - m_scrollShotOffsetWH);
-    // 滚动截图截取指定区域的第一张图片
-    m_firstScrollShotImg = m_screenGrabber.grabEntireDesktop(ok, rect, m_pixelRatio);
-    // m_firstScrollShotImg.save("m_firstScrollShotImg1.png");
+    // 滚动截图的首帧直接复用进入截图前的原始桌面背景。
+    // 此时屏幕上可能仍有普通截图的圆角遮罩/浮层，继续用 XGetImage 抓根窗口
+    // 会把圆角一起写进首帧，导致滚动预览从第一帧开始就是圆角。
+    if (!m_backgroundPixmap.isNull()) {
+        const qreal dpr = m_backgroundPixmap.devicePixelRatio() > 0
+                ? m_backgroundPixmap.devicePixelRatio() : 1.0;
+        const QRect physicalRect(
+                qRound(rect.x() * dpr),
+                qRound(rect.y() * dpr),
+                qRound(rect.width() * dpr),
+                qRound(rect.height() * dpr));
+        m_firstScrollShotImg = m_backgroundPixmap.copy(physicalRect.intersected(m_backgroundPixmap.rect()));
+        ok = !m_firstScrollShotImg.isNull();
+    } else {
+        m_firstScrollShotImg = m_screenGrabber.grabEntireDesktop(ok, rect, m_pixelRatio);
+    }
     // 预览区域显示当前指定区域的第一张图片
     m_previewWidget->updateImage(m_firstScrollShotImg.toImage());
     m_previewWidget->show();
@@ -2346,6 +2378,7 @@ void MainWindow::onScreenResolutionChanged()
 void MainWindow::initLaunchMode(const QString &launchMode)
 {
     qCDebug(dsrApp) << "initLaunchMode";
+    m_suppressRoundedCorners = false;
     m_functionType = status::shot;
     if (launchMode == "screenRecord" && !Utils::isTreelandMode) {
         qCDebug(dsrApp) << "initLaunchMode screenRecord";
@@ -3566,6 +3599,7 @@ void MainWindow::updateToolBarPos()
 
     // 圆角 / 尺寸比例工具组本次是否显示（下面定位工具栏时也要用同一个判定）
     const bool canShowRoundedCorner = (status::shot == m_functionType)
+            && !m_suppressRoundedCorners
             && !Utils::isTreelandMode
             && recordWidth > 0 && recordHeight > 0;
 
@@ -3999,6 +4033,7 @@ void MainWindow::changeFunctionButton(QString type)
         // m_recordButton->hide();
         // updateShotButtonPos();
         // m_shotButton->show();
+        m_suppressRoundedCorners = false;
         m_functionType = status::shot;
         m_toolBar->hide();
         if (m_toolBarPoint.x() - m_toolBar->width() < 0) {
@@ -4324,6 +4359,10 @@ void MainWindow::changeShotToolEvent(const QString &func)
             EventLogUtils::get().writeLogs(obj);
         }
         // 捕捉区域的固件不显示
+        // 必须在下面的 repaint() 之前关闭圆角绘制：这次重绘发生在
+        // initScrollShot() 之前，否则圆角遮罩会先进入窗口后备存储，
+        // 随后被滚动截图首帧抓取并带到预览。
+        m_suppressRoundedCorners = true;
         drawDragPoint = false;
         m_toolBar->hide();
         m_sideBar->hide();
@@ -5514,6 +5553,7 @@ void MainWindow::paintEvent(QPaintEvent *event)
 
         // 圆角实时预览：把选中区域四个圆角外重新覆盖半透明蒙层，使其呈现圆角
         if (m_roundedCornerWidget && m_roundedCornerWidget->radius() > 0
+                && !m_suppressRoundedCorners
                 && status::shot == m_functionType && status::scrollshot != m_functionType) {
             const qreal r = static_cast<qreal>(m_roundedCornerWidget->radius());
             QPainterPath roundedPath;
@@ -7726,8 +7766,9 @@ void MainWindow::shotCurrentImg()
     const int roundedRadius = m_roundedCornerWidget ? m_roundedCornerWidget->radius() : 0;
     // 圆角属于截图成像效果：普通截图与「贴图」都需要带上圆角，
     // OCR / 表格识别 / 滚动截图需要的是原始像素，不做圆角裁切。
-    const bool roundableMode = (status::shot == m_functionType
-                                || status::pinscreenshots == m_functionType);
+    const bool roundableMode = !m_suppressRoundedCorners
+            && (status::shot == m_functionType
+                || status::pinscreenshots == m_functionType);
     if (roundedRadius > 0 && roundableMode) {
         // 顺序：标注 -> 光标 -> 圆角裁切 -> 投影
         addCursorToImage();
