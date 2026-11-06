@@ -111,12 +111,15 @@ void ScrollMergeCoordinator::onMergeError(int state)
     case PixMergeThread::MaxHeight:
         emit maxHeightReached();
         break;
-    case PixMergeThread::Failed:
     case PixMergeThread::InvalidArea:
-        emit failed(QStringLiteral("滚动截图拼接失败"));
+        emit invalidAreaDetected();
         break;
     case PixMergeThread::RoollingTooFast:
         qCWarning(dsrApp) << "Scroll frame dropped because scrolling was too fast";
+        emit quickScrollDetected();
+        break;
+    case PixMergeThread::Failed:
+        emit failed(QStringLiteral("滚动截图拼接失败"));
         break;
     }
 }

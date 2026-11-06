@@ -32,6 +32,9 @@ namespace Dsr::Screenshot {
 namespace {
 
 constexpr int MinimumSelectionSize = 10;
+// A single missed frame is usually a transient compositor hiccup and must not
+// flash the X11 merge-error prompt. Only a run of failures is user-visible.
+constexpr int ScrollFrameFailureTipThreshold = 2;
 
 bool isSelectionResize(SelectionAction action)
 {
@@ -138,6 +141,20 @@ ScreenshotSessionController::ScreenshotSessionController(IScreenshotBackend *bac
     connect(m_scrollStopTimeout, &QTimer::timeout,
             this, &ScreenshotSessionController::finalizeScrollStop);
 
+    m_scrollTipHideTimeout = new QTimer(this);
+    m_scrollTipHideTimeout->setSingleShot(true);
+    m_scrollTipHideTimeout->setInterval(2000);
+    connect(m_scrollTipHideTimeout, &QTimer::timeout, this, [this] {
+        if (m_overlay)
+            m_overlay->hideScrollTip();
+    });
+
+    m_scrollResumeTimeout = new QTimer(this);
+    m_scrollResumeTimeout->setSingleShot(true);
+    m_scrollResumeTimeout->setInterval(2000);
+    connect(m_scrollResumeTimeout, &QTimer::timeout,
+            this, &ScreenshotSessionController::resumeScrollCaptureAfterFailure);
+
     connect(m_backend, &IScreenshotBackend::prepared,
             this, &ScreenshotSessionController::onBackendPrepared);
     connect(m_backend, &IScreenshotBackend::failed,
@@ -243,11 +260,17 @@ bool ScreenshotSessionController::start(const Request &request)
     m_recordMode = false;
     m_roundedCornerRadius = 0;
     m_scrollSelection = QRect();
+    m_lastScrollPreview = QImage();
     m_scrollExport = ScrollExport::Save;
     m_scrollPaused = false;
     m_scrollStopping = false;
+    m_scrollFrameFailureCount = 0;
     if (m_scrollStopTimeout)
         m_scrollStopTimeout->stop();
+    if (m_scrollTipHideTimeout)
+        m_scrollTipHideTimeout->stop();
+    if (m_scrollResumeTimeout)
+        m_scrollResumeTimeout->stop();
     m_resultSink->setNotificationsEnabled(m_request.notificationsEnabled);
     stopRecordingCountdown();
     m_selection->clear();
@@ -305,6 +328,8 @@ void ScreenshotSessionController::setScrollCapture(IScrollCapture *scrollCapture
             this, &ScreenshotSessionController::onScrollFrameReady);
     connect(m_scrollCapture, &IScrollCapture::failed,
             this, &ScreenshotSessionController::onScrollCaptureFailed);
+    connect(m_scrollCapture, &IScrollCapture::frameFailed,
+            this, &ScreenshotSessionController::onScrollCaptureFrameFailed);
     connect(m_scrollCapture, &IScrollCapture::captureAboutToStart,
             this, [this]() {
         if (m_overlay && m_state == State::Scrolling)
@@ -331,6 +356,10 @@ void ScreenshotSessionController::setScrollMerger(IScrollImageMerger *scrollMerg
             this, &ScreenshotSessionController::onScrollReachedBottom);
     connect(m_scrollMerger, &IScrollImageMerger::maxHeightReached,
             this, &ScreenshotSessionController::onScrollMaxHeightReached);
+    connect(m_scrollMerger, &IScrollImageMerger::quickScrollDetected,
+            this, &ScreenshotSessionController::onScrollQuickScrolling);
+    connect(m_scrollMerger, &IScrollImageMerger::invalidAreaDetected,
+            this, &ScreenshotSessionController::onScrollInvalidArea);
     connect(m_scrollMerger, &IScrollImageMerger::failed,
             this, &ScreenshotSessionController::onScrollMergeFailed);
     connect(m_scrollMerger, &IScrollImageMerger::previewUpdated,
@@ -339,6 +368,7 @@ void ScreenshotSessionController::setScrollMerger(IScrollImageMerger *scrollMerg
             return;
         if (m_state != State::Scrolling && !m_scrollStopping)
             return;
+        m_lastScrollPreview = image;
         m_overlay->setScrollPreview(image);
     });
 }
@@ -854,11 +884,12 @@ void ScreenshotSessionController::onScrollStartRequested()
 
     const QRect selection = m_selection->geometry().normalized();
     if (selection.isEmpty()) {
-        fail(QStringLiteral("滚动截图前请先选择区域"));
+        showScrollTip(ScrollTipKind::Error);
         return;
     }
     if (!m_scrollCapture || !m_scrollMerger) {
-        fail(QStringLiteral("当前平台没有可用的滚动截图后端"));
+        qCWarning(dsrApp) << "Scroll capture backend is unavailable";
+        showScrollTip(ScrollTipKind::Error);
         return;
     }
 
@@ -870,7 +901,8 @@ void ScreenshotSessionController::onScrollStartRequested()
             ++outputCount;
     }
     if (outputCount != 1) {
-        fail(QStringLiteral("当前版本仅支持单输出滚动截图"));
+        qCWarning(dsrApp) << "Scroll capture requires exactly one output";
+        showScrollTip(ScrollTipKind::Error);
         return;
     }
 
@@ -880,16 +912,23 @@ void ScreenshotSessionController::onScrollStartRequested()
     m_overlay->setSelectionFinalized(true);
     if (!m_overlay->beginScroll(selection)) {
         m_state = State::Editing;
-        fail(QStringLiteral("启动滚动截图覆盖层失败"));
+        qCWarning(dsrApp) << "Unable to start the TreeLand scroll overlay";
+        showScrollTip(ScrollTipKind::Error);
         return;
     }
 
     m_scrollMerger->start(selection);
     QString error;
     if (!m_scrollCapture->start(outputs, selection, &error)) {
+        m_scrollMerger->cancel();
         m_overlay->finishScroll();
-        fail(error.isEmpty() ? QStringLiteral("启动滚动截图失败") : error);
+        m_state = State::Editing;
+        qCWarning(dsrApp) << "Unable to start TreeLand scroll capture:" << error;
+        showScrollTip(ScrollTipKind::Error);
+        return;
     }
+    m_scrollFrameFailureCount = 0;
+    showScrollTip(ScrollTipKind::Start);
 }
 
 void ScreenshotSessionController::onScrollStopRequested()
@@ -905,6 +944,14 @@ void ScreenshotSessionController::requestScrollExport(ScrollExport exportMode)
     m_scrollExport = exportMode;
     m_scrollStopping = true;
     m_state = State::Exporting;
+    if (m_scrollResumeTimeout)
+        m_scrollResumeTimeout->stop();
+    if (m_scrollTipHideTimeout)
+        m_scrollTipHideTimeout->stop();
+    // Stop the periodic timer before requesting the final frame. Otherwise a
+    // timer tick can race the export and leave the final request in flight.
+    if (m_scrollCapture)
+        m_scrollCapture->pause();
     if (m_overlay)
         m_overlay->finishScroll();
 
@@ -929,15 +976,64 @@ void ScreenshotSessionController::onScrollFrameReady(const ScrollFrame &frame)
 {
     if (!m_scrollMerger || (m_state != State::Scrolling && !m_scrollStopping))
         return;
+    const bool recovered = m_scrollFrameFailureCount > 0;
+    m_scrollFrameFailureCount = 0;
+    if (recovered && !m_scrollStopping && m_overlay) {
+        m_overlay->hideScrollTip();
+        if (m_scrollTipHideTimeout)
+            m_scrollTipHideTimeout->stop();
+    }
     m_scrollMerger->addFrame(frame);
     if (m_scrollStopping)
         finalizeScrollStop();
 }
 
+void ScreenshotSessionController::onScrollCaptureFrameFailed(const QString &reason)
+{
+    if (m_scrollStopping) {
+        // The final frame is an optimization. Export the image stitched so far
+        // instead of failing the whole screenshot session.
+        qCWarning(dsrApp) << "Final scroll frame failed; exporting stitched image:"
+                          << reason;
+        finalizeScrollStop();
+        return;
+    }
+    if (m_state != State::Scrolling || m_finished)
+        return;
+
+    ++m_scrollFrameFailureCount;
+    qCWarning(dsrApp) << "Scroll frame failed" << m_scrollFrameFailureCount
+                      << "time(s) in a row:" << reason;
+    if (m_scrollPaused)
+        return;
+    if (m_scrollFrameFailureCount < ScrollFrameFailureTipThreshold)
+        return;
+
+    // Match X11's error state: keep the stitched preview and toolbar, pause
+    // capture, and show the same prompt instead of closing the session. TreeLand
+    // cannot see wheel events inside the pass-through hole, so retry
+    // automatically after the prompt's 2s display window.
+    pauseScrollCaptureForTip(ScrollTipKind::Error, true);
+}
+
 void ScreenshotSessionController::onScrollCaptureFailed(const QString &reason)
 {
-    if (m_state == State::Scrolling || m_scrollStopping)
-        fail(reason);
+    if (m_scrollStopping) {
+        // The final frame is an optimization: it closes the small gap between
+        // the last periodic capture and the save action. If the compositor
+        // does not deliver that frame, export the image we already stitched
+        // instead of failing the whole screenshot session.
+        qCWarning(dsrApp) << "Final scroll frame failed; exporting stitched image:"
+                          << reason;
+        finalizeScrollStop();
+        return;
+    }
+    if (m_state != State::Scrolling || m_finished)
+        return;
+    // Terminal backend failures still keep the session alive. The user can
+    // copy/save the frames already stitched or cancel the screenshot.
+    qCWarning(dsrApp) << "Scroll capture stopped:" << reason;
+    pauseScrollCaptureForTip(ScrollTipKind::Error);
 }
 
 void ScreenshotSessionController::finalizeScrollStop()
@@ -947,6 +1043,10 @@ void ScreenshotSessionController::finalizeScrollStop()
     m_scrollStopping = false;
     if (m_scrollStopTimeout)
         m_scrollStopTimeout->stop();
+    if (m_scrollResumeTimeout)
+        m_scrollResumeTimeout->stop();
+    if (m_scrollTipHideTimeout)
+        m_scrollTipHideTimeout->stop();
     stopScrollCapture();
     exportScrollResult();
 }
@@ -957,22 +1057,76 @@ void ScreenshotSessionController::onScrollReachedBottom()
         return;
     // Match X11: reaching the end stops capture but keeps the stitched
     // preview and toolbar alive. The user decides whether to copy or save.
-    m_scrollPaused = true;
-    stopScrollCapture();
+    pauseScrollCaptureForTip(ScrollTipKind::End);
 }
 
 void ScreenshotSessionController::onScrollMaxHeightReached()
 {
     if (m_state != State::Scrolling || m_scrollPaused || m_scrollStopping)
         return;
-    m_scrollPaused = true;
-    stopScrollCapture();
+    pauseScrollCaptureForTip(ScrollTipKind::MaxLength);
+}
+
+void ScreenshotSessionController::onScrollQuickScrolling()
+{
+    if (m_state != State::Scrolling || m_scrollPaused || m_scrollStopping)
+        return;
+    showScrollTip(ScrollTipKind::QuickScroll);
+}
+
+void ScreenshotSessionController::onScrollInvalidArea()
+{
+    if (m_state != State::Scrolling || m_scrollPaused || m_scrollStopping)
+        return;
+    // X11 switches to the "adjust capture area" state. TreeLand cannot resize
+    // the target window, so pause and keep the result saveable.
+    pauseScrollCaptureForTip(ScrollTipKind::InvalidArea);
 }
 
 void ScreenshotSessionController::onScrollMergeFailed(const QString &reason)
 {
-    if (m_state == State::Scrolling)
-        fail(reason);
+    if (m_state != State::Scrolling || m_finished)
+        return;
+    qCWarning(dsrApp) << "Scroll merge failed:" << reason;
+    pauseScrollCaptureForTip(ScrollTipKind::Error);
+}
+
+void ScreenshotSessionController::showScrollTip(ScrollTipKind kind)
+{
+    if (!m_overlay || m_finished)
+        return;
+    m_overlay->showScrollTip(kind);
+    if (m_scrollTipHideTimeout)
+        m_scrollTipHideTimeout->start();
+}
+
+void ScreenshotSessionController::pauseScrollCaptureForTip(ScrollTipKind kind,
+                                                           bool retryAfterDelay)
+{
+    if (m_scrollPaused && !retryAfterDelay)
+        return;
+    m_scrollPaused = true;
+    if (m_scrollCapture)
+        m_scrollCapture->pause();
+    showScrollTip(kind);
+    if (retryAfterDelay && m_scrollResumeTimeout)
+        m_scrollResumeTimeout->start();
+}
+
+void ScreenshotSessionController::resumeScrollCaptureAfterFailure()
+{
+    if (m_finished || m_state != State::Scrolling || m_scrollStopping
+            || !m_scrollPaused) {
+        return;
+    }
+    m_scrollPaused = false;
+    m_scrollFrameFailureCount = 0;
+    if (m_scrollTipHideTimeout)
+        m_scrollTipHideTimeout->stop();
+    if (m_overlay)
+        m_overlay->hideScrollTip();
+    if (m_scrollCapture)
+        m_scrollCapture->resume();
 }
 
 void ScreenshotSessionController::stopScrollCapture()
@@ -983,7 +1137,9 @@ void ScreenshotSessionController::stopScrollCapture()
 
 void ScreenshotSessionController::exportScrollResult()
 {
-    const QImage image = m_scrollMerger ? m_scrollMerger->finish() : QImage();
+    QImage image = m_scrollMerger ? m_scrollMerger->finish() : QImage();
+    if (image.isNull())
+        image = m_lastScrollPreview;
     if (image.isNull()) {
         fail(QStringLiteral("滚动截图没有可保存的图像"));
         return;
@@ -1444,6 +1600,10 @@ void ScreenshotSessionController::fail(const QString &reason)
         return;
 
     qCritical() << "Screenshot session failed:" << reason;
+    if (m_scrollResumeTimeout)
+        m_scrollResumeTimeout->stop();
+    if (m_scrollTipHideTimeout)
+        m_scrollTipHideTimeout->stop();
     stopScrollCapture();
     if (m_scrollMerger)
         m_scrollMerger->cancel();
@@ -1472,6 +1632,10 @@ void ScreenshotSessionController::finish(State state)
     m_scrollPaused = false;
     if (m_scrollStopTimeout)
         m_scrollStopTimeout->stop();
+    if (m_scrollResumeTimeout)
+        m_scrollResumeTimeout->stop();
+    if (m_scrollTipHideTimeout)
+        m_scrollTipHideTimeout->stop();
     stopScrollCapture();
     if (m_scrollMerger)
         m_scrollMerger->cancel();

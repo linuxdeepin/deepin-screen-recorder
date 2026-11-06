@@ -17,6 +17,19 @@ namespace Dsr::Screenshot {
 
 class IAnnotationEditor;
 
+// Platform-neutral mirror of the X11 ScrollShotTip types. Keeping the enum in
+// the port lets the session controller drive TreeLand prompts without a
+// dependency on the widget implementation.
+enum class ScrollTipKind {
+    None,
+    Start,
+    Error,
+    End,
+    MaxLength,
+    QuickScroll,
+    InvalidArea
+};
+
 class IScreenshotOverlayHost : public QObject
 {
     Q_OBJECT
@@ -79,6 +92,10 @@ public:
     // include the preview or toolbar in the stitched image.
     virtual void beginScrollFrameCapture() {}
     virtual void endScrollFrameCapture() {}
+    // Shows the same prompt types and placement rules as the X11
+    // ScrollShotTip. Hosts without an in-overlay prompt keep the no-op.
+    virtual void showScrollTip(ScrollTipKind kind) { Q_UNUSED(kind); }
+    virtual void hideScrollTip() {}
     virtual void finishScroll() {}
     virtual bool isScrollActive() const { return false; }
     virtual void setRecordingControlsActive(bool active) { Q_UNUSED(active); }

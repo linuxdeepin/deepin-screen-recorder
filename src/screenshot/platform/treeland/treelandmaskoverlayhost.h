@@ -16,6 +16,7 @@ class FineAdjustTips;
 class RoundedCornerWidget;
 class ZoomIndicator;
 class PreviewWidget;
+class ScrollShotTip;
 
 namespace Dsr::Screenshot {
 
@@ -57,6 +58,8 @@ public:
     void setScrollPreview(const QImage &image) override;
     void beginScrollFrameCapture() override;
     void endScrollFrameCapture() override;
+    void showScrollTip(ScrollTipKind kind) override;
+    void hideScrollTip() override;
     void finishScroll() override;
     bool isScrollActive() const override;
     void close() override;
@@ -73,10 +76,14 @@ private:
     void applyScrollInputRegions();
     void ensureScrollPreview();
     void destroyScrollPreview();
+    void ensureScrollTip();
+    void destroyScrollTip();
+    QPoint scrollTipPosition(const QSize &tipSize,
+                             TreelandMaskWindow *owner) const;
+    void applyRoundedCornerRadiusToWindows();
     QRect widgetGlobalRect(QWidget *widget) const;
     void updateToolBar();
     void updateRoundedCornerWidget();
-    void applyRoundedCornerRadiusToWindows();
     void updateFineAdjustTips();
     void updateMagnifier();
     void hideMagnifier();
@@ -96,6 +103,7 @@ private:
     ZoomIndicator *m_magnifier = nullptr;
     CountdownTooltip *m_countdown = nullptr;
     PreviewWidget *m_scrollPreview = nullptr;
+    ScrollShotTip *m_scrollTip = nullptr;
     QRect m_selection;
     QRect m_scrollSelection;
     QPoint m_globalCursor = QPoint(-1, -1);
@@ -109,6 +117,7 @@ private:
     bool m_scrollActive = false;
     bool m_scrollFrameCaptureInProgress = false;
     bool m_scrollPreviewHiddenForCapture = false;
+    bool m_scrollTipHiddenForCapture = false;
     bool m_scrollToolBarHiddenForCapture = false;
     bool m_recordModeActive = false;
     bool m_hintsVisible = false;

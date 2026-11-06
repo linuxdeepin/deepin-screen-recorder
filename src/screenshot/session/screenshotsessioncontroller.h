@@ -26,6 +26,7 @@ class IRecordingSession;
 class IScrollCapture;
 class IScrollImageMerger;
 class AnnotationCoordinator;
+enum class ScrollTipKind;
 
 class ScreenshotSessionController : public QObject
 {
@@ -112,10 +113,16 @@ private:
     void onScrollStartRequested();
     void onScrollStopRequested();
     void onScrollFrameReady(const ScrollFrame &frame);
+    void onScrollCaptureFrameFailed(const QString &reason);
     void onScrollCaptureFailed(const QString &reason);
     void onScrollReachedBottom();
     void onScrollMaxHeightReached();
+    void onScrollQuickScrolling();
+    void onScrollInvalidArea();
     void onScrollMergeFailed(const QString &reason);
+    void showScrollTip(ScrollTipKind kind);
+    void pauseScrollCaptureForTip(ScrollTipKind kind, bool retryAfterDelay = false);
+    void resumeScrollCaptureAfterFailure();
     void finalizeScrollStop();
     void stopScrollCapture();
     enum class ScrollExport {
@@ -178,8 +185,12 @@ private:
     bool m_recordingStateActive = false;
     int m_roundedCornerRadius = 0;
     QRect m_scrollSelection;
+    QImage m_lastScrollPreview;
     ScrollExport m_scrollExport = ScrollExport::Save;
     QTimer *m_scrollStopTimeout = nullptr;
+    QTimer *m_scrollTipHideTimeout = nullptr;
+    QTimer *m_scrollResumeTimeout = nullptr;
+    int m_scrollFrameFailureCount = 0;
     bool m_scrollPaused = false;
     bool m_scrollStopping = false;
 };

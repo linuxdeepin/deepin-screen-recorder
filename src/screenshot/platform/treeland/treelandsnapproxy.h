@@ -75,6 +75,7 @@ public:
 
     QRect region() const;
     QString processName() const;
+    qint64 processId() const;
 
 signals:
     void ready();
@@ -87,6 +88,7 @@ private:
     void onSnapRegion(int x, int y, quint32 width, quint32 height);
     void onFailed(quint32 reason);
     void setProcessName(const QString &name);
+    void setProcessId(qint64 pid);
     void clearPendingPidfd();
 
     TreelandToplevelTagManager m_tagManager;
@@ -101,6 +103,7 @@ private:
     bool m_started = false;
     QRect m_region;
     QString m_processName;
+    qint64 m_processId = -1;
     int m_pendingPidfd = -1;
 };
 
