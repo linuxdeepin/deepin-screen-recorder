@@ -262,6 +262,8 @@ public:
         Wait,
         Shoting,
     };
+    // All fields (x, y, width, height) use logical coordinate space.
+    // Use scaleFactor to convert to physical/device coordinates when needed.
     struct ScreenInfo {
         int x;
         int y;
