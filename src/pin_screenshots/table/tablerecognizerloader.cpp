@@ -11,6 +11,7 @@
 
 #include "../../utils/log.h"
 
+#ifdef HAVE_DTK6_TABLERECOGNIZER
 TableRecognizerLoader::TableRecognizerLoader(QObject *parent)
     : QObject(parent)
     , m_recognizer(new Dtk::TableRecognizer::DTableRecognizer(this))
@@ -36,3 +37,18 @@ bool TableRecognizerLoader::recognize(const QImage &image, int timeoutMs)
     m_recognizer->recognizeAsync(image, std::chrono::milliseconds(timeoutMs));
     return true;
 }
+#else
+TableRecognizerLoader::TableRecognizerLoader(QObject *parent)
+    : QObject(parent)
+{
+}
+
+bool TableRecognizerLoader::recognize(const QImage &image, int timeoutMs)
+{
+    Q_UNUSED(image)
+    Q_UNUSED(timeoutMs)
+    emit recognitionFinished(false, QString(),
+                             Dtk::TableRecognizer::TableError::UnknownError);
+    return false;
+}
+#endif

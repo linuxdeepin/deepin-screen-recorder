@@ -64,6 +64,7 @@ ToolButton::ToolButton(QWidget *parent)
 {
     setCheckable(true);
     setFocusPolicy(Qt::NoFocus);
+    setAttribute(Qt::WA_AcceptTouchEvents, true);
 }
 
 ToolButton::~ToolButton()
