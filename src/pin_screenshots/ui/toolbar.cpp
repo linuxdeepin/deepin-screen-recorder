@@ -1,5 +1,5 @@
 // Copyright (C) 2020 ~ 2021 Uniontech Software Technology Co., Ltd.
-// SPDX-FileCopyrightText: 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2022-2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -49,6 +49,7 @@ void ToolBar::initToolBar(DWidget *parent)
     }
     DPlatformWindowHandle handle(m_btWidget);
     handle.setEnableBlurWindow(true);
+    handle.setWindowRadius(18); // 容器仅 60px 高，与 m_confirmButton 的 18px 对齐，避免保存按钮被裁成胶囊形
     //初始化保存按钮
     m_saveButton = new DPushButton(m_btWidget);
 
@@ -67,6 +68,7 @@ void ToolBar::initToolBar(DWidget *parent)
     pa.setColor(DPalette::Light, QColor(0, 129, 255, 204));
     m_saveButton->setPalette(pa);
     m_saveButton->setProperty("isShotState", true);
+    m_saveButton->setStyleSheet("border-radius:18px;padding:2px 4px;background-color: rgba(0, 129, 255,204);"); // 参考截屏录屏确认按钮 m_confirmButton 的实现，统一圆角样式
 
     // 为m_btWidget设置背景色，不然在2D模式下是黑色边框
     DPalette pa2;
