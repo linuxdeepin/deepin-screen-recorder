@@ -4051,6 +4051,8 @@ void ShapesWidget::mouseDoubleClickEvent(QMouseEvent *e)
             const int editMinNum = sequenceNumberBeforeOrder(hitOrder) + 1;
             const int editMaxNum = SEQUENCE_MAX_NUMBER - (sequenceCount() - 1 - hitOrder);
             m_sequenceEdit = new QLineEdit(this);
+            m_sequenceEdit->setObjectName("SequenceNumberEdit");
+            m_sequenceEdit->setAccessibleName("SequenceNumberEdit");
             m_sequenceEditOrder = hitOrder;
             m_sequenceEdit->setText(QString::number(currentDisplay));
             m_sequenceEdit->setMaxLength(2);

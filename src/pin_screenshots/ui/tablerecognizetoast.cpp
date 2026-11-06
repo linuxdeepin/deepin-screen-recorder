@@ -178,6 +178,8 @@ TableRecognizeToast::TableRecognizeToast(const QString &message,
 
     if (!actionText.isEmpty()) {
         m_actionButton = new TransparentActionButton(actionText, this);
+        m_actionButton->setObjectName("TableRecognizeToastActionButton");
+        m_actionButton->setAccessibleName("TableRecognizeToastActionButton");
         m_actionButton->setMinimumSize(ACTION_MIN_WIDTH, ACTION_HEIGHT);
         // 系统级别为 T6 的字体大小, 默认是14 px
         DFontSizeManager::instance()->bind(m_actionButton, DFontSizeManager::T6);
