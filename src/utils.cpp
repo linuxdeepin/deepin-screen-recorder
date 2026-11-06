@@ -588,14 +588,17 @@ QPoint Utils::getPosWithScreen(QPoint pos)
 
     for (int i = 0; i < screensInfo.size(); i++) {
         //判断当前点在哪块屏幕上
-        if (pos.x() > screensInfo[i].x && pos.x() < screensInfo[i].x + screensInfo[i].width &&
-                pos.y() > screensInfo[i].y && pos.y() < screensInfo[i].y + screensInfo[i].height) {
+        // pos 为物理坐标，ScreenInfo 现为逻辑坐标，需将 pos 除以缩放比后比较
+        const qreal pixelRatio = screensInfo[i].scaleFactor;
+        const int logicalX = static_cast<int>(pos.x() / pixelRatio);
+        const int logicalY = static_cast<int>(pos.y() / pixelRatio);
+        if (logicalX > screensInfo[i].x && logicalX < screensInfo[i].x + screensInfo[i].width &&
+                logicalY > screensInfo[i].y && logicalY < screensInfo[i].y + screensInfo[i].height) {
 
             qInfo() << "screenInfo: " << screensInfo[i].toString();
             // 各屏缩放比可能不同（多屏混缩放），须用所在屏自己的比例换算
-            const qreal pixelRatio = screensInfo[i].scaleFactor;
-            dpos.setX(static_cast<int>((pos.x() - screensInfo[i].x) / pixelRatio + screensInfo[i].x));
-            dpos.setY(static_cast<int>((pos.y() - screensInfo[i].y) / pixelRatio) + + screensInfo[i].y);
+            dpos.setX(static_cast<int>((pos.x() - screensInfo[i].x * pixelRatio) / pixelRatio + screensInfo[i].x));
+            dpos.setY(static_cast<int>((pos.y() - screensInfo[i].y * pixelRatio) / pixelRatio + screensInfo[i].y));
         }
     }
     return dpos;
@@ -644,8 +647,9 @@ QList<Utils::ScreenInfo> Utils::getScreensInfo()
         ScreenInfo screenInfo;
         screenInfo.x = rect.x(); //屏幕的起始x坐标始终是正确的，不管是否经过缩放
         screenInfo.y = rect.y(); //屏幕的起始y坐标始终是正确的，不管是否经过缩放
-        screenInfo.height =  static_cast<int>(rect.height() * pixelRatio);
-        screenInfo.width = static_cast<int>(rect.width() * pixelRatio);
+        // 统一使用逻辑坐标，不乘缩放比——物理尺寸由 scaleFactor 字段按需换算
+        screenInfo.height = rect.height();
+        screenInfo.width = rect.width();
         screenInfo.name = (*it)->name();
         screenInfo.scaleFactor = pixelRatio;
         hTotal += screenInfo.height;
