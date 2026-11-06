@@ -29,6 +29,8 @@ signals:
     void previewUpdated(const QImage &image);
     void reachedBottom();
     void maxHeightReached();
+    void quickScrollDetected();
+    void invalidAreaDetected();
     void failed(const QString &reason);
 };
 

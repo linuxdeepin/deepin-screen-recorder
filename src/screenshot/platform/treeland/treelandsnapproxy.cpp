@@ -26,11 +26,11 @@ namespace {
 
 constexpr auto SnapMaskTag = "org.deepin.treeland.snap-mask";
 
-QString processNameForPidfd(int pidfd)
+qint64 pidForPidfd(int pidfd)
 {
     QFile fdinfo(QStringLiteral("/proc/self/fdinfo/%1").arg(pidfd));
     if (!fdinfo.open(QIODevice::ReadOnly))
-        return QString();
+        return -1;
 
     qint64 pid = 0;
     const QList<QByteArray> lines = fdinfo.readAll().split('\n');
@@ -40,6 +40,13 @@ QString processNameForPidfd(int pidfd)
             break;
         }
     }
+    if (pid <= 0)
+        return -1;
+    return pid;
+}
+
+QString processNameForPid(qint64 pid)
+{
     if (pid <= 0)
         return QString();
 
@@ -299,6 +306,11 @@ QString TreelandSnapSession::processName() const
     return m_processName;
 }
 
+qint64 TreelandSnapSession::processId() const
+{
+    return m_processId;
+}
+
 void TreelandSnapSession::maybeInitialize()
 {
     if (m_initialized)
@@ -335,10 +347,14 @@ bool TreelandSnapSession::tagWindow(QWindow *window)
 
 void TreelandSnapSession::onSnapRegion(int x, int y, quint32 width, quint32 height)
 {
-    if (m_pendingPidfd >= 0)
-        setProcessName(processNameForPidfd(m_pendingPidfd));
-    else
+    if (m_pendingPidfd >= 0) {
+        const qint64 pid = pidForPidfd(m_pendingPidfd);
+        setProcessId(pid);
+        setProcessName(processNameForPid(pid));
+    } else {
+        setProcessId(-1);
         setProcessName(QString());
+    }
     clearPendingPidfd();
 
     m_region = (width != 0 && height != 0)
@@ -364,6 +380,11 @@ void TreelandSnapSession::setProcessName(const QString &name)
     if (m_processName == name)
         return;
     m_processName = name;
+}
+
+void TreelandSnapSession::setProcessId(qint64 pid)
+{
+    m_processId = pid;
 }
 
 void TreelandSnapSession::clearPendingPidfd()

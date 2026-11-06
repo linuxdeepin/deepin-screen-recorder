@@ -292,6 +292,7 @@ HEADERS += main_window.h \
     screenshot/platform/treeland/treelandmaskoverlayhost.h \
     screenshot/platform/treeland/treelandrecordingsession.h \
     screenshot/platform/treeland/treelandscrollcapture.h \
+    screenshot/platform/treeland/treelandoutputcapture.h \
     screenshot/platform/treeland/recordingfiletransaction.h \
     screenshot/platform/treeland/treelandscreenshotbackend.h
 
@@ -427,6 +428,7 @@ SOURCES += main.cpp \
     screenshot/platform/treeland/treelandmaskoverlayhost.cpp \
     screenshot/platform/treeland/treelandrecordingsession.cpp \
     screenshot/platform/treeland/treelandscrollcapture.cpp \
+    screenshot/platform/treeland/treelandoutputcapture.cpp \
     screenshot/platform/treeland/recordingfiletransaction.cpp \
     screenshot/platform/treeland/treelandscreenshotbackend.cpp
 

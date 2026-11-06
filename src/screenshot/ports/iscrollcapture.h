@@ -23,6 +23,11 @@ public:
                        QString *error) = 0;
     virtual void setFrozenFrames(const FrozenFrameSet &frames) { Q_UNUSED(frames) }
     virtual void requestFrame() = 0;
+    // Restarts periodic capture after a recoverable frame failure.
+    virtual void resume() {}
+    // Stops periodic capture while keeping the platform session alive for an
+    // optional final frame.
+    virtual void pause() {}
     virtual void stop() = 0;
 
 signals:
@@ -33,6 +38,9 @@ signals:
     void captureAboutToStart();
     void captureFinished();
     void frameReady(const Dsr::Screenshot::ScrollFrame &frame);
+    // A single frame could not be captured. Unlike failed(), this is
+    // recoverable: the backend keeps the session alive and retries.
+    void frameFailed(const QString &reason);
     void failed(const QString &reason);
 };
 
