@@ -1,3 +1,47 @@
+deepin-screen-recorder (6.7.1) unstable; urgency=medium
+
+  * fix: prevent rounded corners in scroll screenshot preview
+  * feat(treeland): add magnifier color copy and notifications
+  * fix: align fixed-size input with crop geometry
+  * feat(treeland): wire AI assistant into screenshot session
+  * refactor(treeland): disable legacy MainWindow capture init
+  * feat(treeland): add OCR and table recognition to screenshot flow
+  * fix(treeland): align toolbar and sizing with X11 behavior
+  * fix(treeland): align selection editing and image export
+  * fix(treeland): align recording controls and screenshot interactions
+  * feat(treeland): integrate recording controls into screenshot flow
+  * feat(treeland): add cross-output recording backend
+  * fix(capture): preserve XBGR frame color channels
+  * feat(clipboard): keep Wayland clipboard selections alive
+  * fix(shot): prevent slider cursor stack crash
+  * fix(treeland): restore annotation and export flows
+  * fix(shot): restore annotation editing interactions
+  * test(shot): cover TreeLand multi-screen regressions
+  * fix(shot): restore TreeLand save and clipboard flows
+  * fix(shot): restore annotation cursor and hit interactions
+  * perf(treeland): batch capture multiple outputs for frame sync
+  * feat(treeland): support robust multi-output selection masks
+  * fix(shot): repair toolbar and menu layout regressions
+  * fix(shot): show annotation resize controls on TreeLand
+  * fix(shot): retain PNG clipboard data under Wayland
+  * feat(treeland): integrate screenshot session with native toolbars
+  * feat(shot): support annotation editing interactions
+  * test(shot): add screenshot session unit coverage
+  * feat(shot): wire screenshot session preview entry
+  * feat(shot): add treeland screenshot session adapters
+  * feat(log): categorized logging with dynamic dconfig log_rules (part 5/5)
+  * feat(log): categorized logging with dynamic dconfig log_rules (part 4/5)
+  * feat(log): categorized logging with dynamic dconfig log_rules (part 3/5)
+  * feat(log): categorized logging with dynamic dconfig log_rules (part 2/5)
+  * feat(log): categorized logging with dynamic dconfig log_rules (part 1/5)
+  * feat(shot): add platform-neutral screenshot session core
+  * feat(protocol): add treeland snap target bindings
+  * feat(capture): support shm-first still image capture
+  * test: fix 7 flaky UT cases (1 assert + 6 hangs)
+  * test: fix UT build failure that hid ~1783 test cases
+
+ -- dengzhongyuan <dengzhongyuan@uniontech.com>  Fri, 06 Nov 2026 14:21:35 +0800
+
 deepin-screen-recorder (6.7.0) unstable; urgency=medium
 
   * docs(shot): refresh help manual for new capture features
