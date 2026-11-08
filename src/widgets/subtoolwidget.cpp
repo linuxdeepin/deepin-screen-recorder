@@ -20,6 +20,7 @@
 #include <DFontSizeManager>
 #include <DComboBox>
 #include <DListWidget>
+#include <DHiDPIHelper>
 
 #include <QAction>
 #include <QButtonGroup>
@@ -720,7 +721,7 @@ void SubToolWidget::initShotLabel()
     //添加ocr图文识别按钮
     m_ocrButton = new ToolButton();
     m_ocrButton->setIconSize(QSize(35, 35));
-    m_ocrButton->setIcon(QIcon::fromTheme("ocr-normal"));
+    m_ocrButton->setIcon(QIcon(DHiDPIHelper::loadNxPixmap(":/icons/deepin/builtin/texts/ocr-normal_32px.svg")));
     Utils::setAccessibility(m_ocrButton, AC_SUBTOOLWIDGET_OCR_BUTTON);
     m_shotBtnGroup->addButton(m_ocrButton);
     m_ocrButton->setFixedSize(MIN_TOOL_BUTTON_SIZE);
