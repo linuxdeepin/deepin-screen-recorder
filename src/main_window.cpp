@@ -1,5 +1,5 @@
 // Copyright (C) 2020 ~ 2021 Uniontech Software Technology Co.,Ltd.
-// SPDX-FileCopyrightText: 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2022-2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -2276,8 +2276,12 @@ bool MainWindow::checkSuffix(const QString &str)
 void MainWindow::wheelEvent(QWheelEvent *event)
 {
 #ifdef OCR_SCROLL_FLAGE_ON
+    if (status::scrollshot != m_functionType) {
+        event->accept();
+        return;
+    }
     qDebug() << __FUNCTION__ << __LINE__ << "m_functionType " << m_functionType;
-    if (Utils::isWaylandMode == false || (m_initScroll && status::scrollshot != m_functionType))
+    if (Utils::isWaylandMode == false)
         return;
     int x = this->cursor().pos().x();
     int y = this->cursor().pos().y();
