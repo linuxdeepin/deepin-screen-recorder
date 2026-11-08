@@ -27,6 +27,9 @@ void WriteFrameThread::run()
     while (m_context->isWriteVideo()) {
         if (m_context->getFrame(frame)) {
             m_context->m_recordAdmin->m_pOutputStream->writeVideoFrame(frame);
+        } else {
+            // Yield CPU briefly when frame queue is empty (1ms << 16ms frame interval)
+            QThread::msleep(1);
         }
     }
     m_context->m_recordAdmin->m_cacheMutex.unlock();
