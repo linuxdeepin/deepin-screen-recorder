@@ -1,5 +1,5 @@
 // Copyright (C) 2019 ~ 2019 Deepin Technology Co., Ltd.
-// SPDX-FileCopyrightText: 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2022-2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -56,6 +56,7 @@ int main(int argc, char *argv[])
     app->setApplicationName("deepin-screen-recorder");
     app->setProductName(QObject::tr("Pin Screenshots"));
     app->setApplicationVersion("1.0");
+    QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
     app->setAttribute(Qt::AA_UseHighDpiPixmaps);
 
     Dtk::Core::DLogManager::registerConsoleAppender();
