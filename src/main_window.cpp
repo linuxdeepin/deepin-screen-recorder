@@ -1,5 +1,5 @@
 // Copyright (C) 2020 ~ 2021 Uniontech Software Technology Co.,Ltd.
-// SPDX-FileCopyrightText: 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2022-2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -4885,12 +4885,22 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
                                 }
                                 //qDebug()  << "1.3 >>>> recordX: " << recordX << " , recordY: "<< recordY;
                             } else {
-                                recordX = it->x() - static_cast<int>(screenRect.x() * m_pixelRatio);
-                                recordY = it->y() - static_cast<int>(screenRect.y() * m_pixelRatio);
+                                if (Utils::isWaylandMode) {
+                                    recordX = it->x() - static_cast<int>(screenRect.x());
+                                    recordY = it->y() - static_cast<int>(screenRect.y());
+                                } else {
+                                    recordX = static_cast<int>(it->x() / m_pixelRatio) - static_cast<int>(screenRect.x());
+                                    recordY = static_cast<int>(it->y() / m_pixelRatio) - static_cast<int>(screenRect.y());
+                                }
                                 //qDebug()  << "1.4 >>>> recordX: " << recordX << " , recordY: "<< recordY;
                             }
-                            recordWidth = it->width();
-                            recordHeight = it->height();
+                            if (Utils::isWaylandMode) {
+                                recordWidth = it->width();
+                                recordHeight = it->height();
+                            } else {
+                                recordWidth = static_cast<int>(it->width() / m_pixelRatio);
+                                recordHeight = static_cast<int>(it->height() / m_pixelRatio);
+                            }
                             needRepaint = true;
                             break;
                         }
@@ -4905,7 +4915,7 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
                 static_cast<int>(recordX * m_pixelRatio),
                 static_cast<int>(recordY * m_pixelRatio),
                 static_cast<int>(recordWidth * m_pixelRatio),
-                static_cast<int>(recordHeight + 1 * m_pixelRatio)
+                static_cast<int>((recordHeight + 1) * m_pixelRatio)
             };
 
             //如果鼠标位置移出捕捉区域则不显示捕捉区域的骨架节点（骨架节点是显示状态，鼠标移出捕捉区域）
