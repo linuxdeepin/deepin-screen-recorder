@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2022-2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -461,7 +461,28 @@ bool CAVOutputStream::open(QString path)
 
     if (m_videoCodecID  != 0) {
         printf("FLQQ,video encoder initialize\n\n");
-        pCodec = avlibInterface::m_avcodec_find_encoder(m_videoCodecID);
+        // 硬件编码器优先选择，软编码回退（修复 arm64 平台 CPU 占用过高问题）
+        // 1. 先尝试 h264_v4l2m2m（arm64 常见硬件编码器）
+        // 2. 若不可用，尝试 h264_vaapi
+        // 3. 均不可用时回退到 avcodec_find_encoder（libx264 软编码）
+        pCodec = nullptr;
+        bool useHardwareEncoder = false;
+
+        if (avlibInterface::m_avcodec_find_encoder_by_name) {
+            pCodec = avlibInterface::m_avcodec_find_encoder_by_name("h264_v4l2m2m");
+            if (!pCodec) {
+                pCodec = avlibInterface::m_avcodec_find_encoder_by_name("h264_vaapi");
+            }
+            if (pCodec) {
+                useHardwareEncoder = true;
+                printf("Using hardware H.264 encoder: %s\n", pCodec->name);
+            }
+        }
+
+        if (!pCodec) {
+            pCodec = avlibInterface::m_avcodec_find_encoder(m_videoCodecID);
+            printf("Falling back to software encoder\n");
+        }
 
         if (!pCodec) {
             printf("Can not find output video encoder! (没有找到合适的编码器！)\n");
@@ -499,10 +520,13 @@ bool CAVOutputStream::open(QString path)
             pCodecCtx->qmax = 51;
             pCodecCtx->max_b_frames = 0;
 
-            // Set H264 preset and tune
-            avlibInterface::m_av_dict_set(&param, "preset", "ultrafast", 0);
-            avlibInterface::m_av_dict_set(&param, "tune", "zerolatency", 0);
-            avlibInterface::m_av_dict_set(&param, "crf", "30", 0);            // 质量较低，文件较大但编码更快
+            // 硬件编码器无需 preset/tune/crf 参数
+            if (!useHardwareEncoder) {
+                // Set H264 preset and tune
+                avlibInterface::m_av_dict_set(&param, "preset", "ultrafast", 0);
+                avlibInterface::m_av_dict_set(&param, "tune", "zerolatency", 0);
+                avlibInterface::m_av_dict_set(&param, "crf", "30", 0);            // 质量较低，文件较大但编码更快
+            }
         }
 
         if (avlibInterface::m_avcodec_open2(pCodecCtx, pCodec, &param) < 0) {

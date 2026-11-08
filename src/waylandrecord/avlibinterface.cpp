@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2022-2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -47,6 +47,7 @@ avlibInterface::p_av_free_packet avlibInterface::m_av_free_packet = nullptr;
 avlibInterface::p_avcodec_encode_audio2 avlibInterface::m_avcodec_encode_audio2 = nullptr;
 avlibInterface::p_avcodec_close avlibInterface::m_avcodec_close = nullptr;
 avlibInterface::p_avcodec_find_encoder avlibInterface::m_avcodec_find_encoder = nullptr;
+avlibInterface::p_avcodec_find_encoder_by_name avlibInterface::m_avcodec_find_encoder_by_name = nullptr;
 avlibInterface::p_avpicture_get_size avlibInterface::m_avpicture_get_size = nullptr;
 avlibInterface::p_avpicture_fill avlibInterface::m_avpicture_fill = nullptr;
 
@@ -182,6 +183,7 @@ void avlibInterface::initFunctions()
     m_avcodec_encode_audio2 = reinterpret_cast<p_avcodec_encode_audio2>(m_libavcodec.resolve("avcodec_encode_audio2"));
     m_avcodec_close = reinterpret_cast<p_avcodec_close>(m_libavcodec.resolve("avcodec_close"));
     m_avcodec_find_encoder = reinterpret_cast<p_avcodec_find_encoder>(m_libavcodec.resolve("avcodec_find_encoder"));
+    m_avcodec_find_encoder_by_name = reinterpret_cast<p_avcodec_find_encoder_by_name>(m_libavcodec.resolve("avcodec_find_encoder_by_name"));
     m_avpicture_get_size = reinterpret_cast<p_avpicture_get_size>(m_libavcodec.resolve("avpicture_get_size"));
     m_avpicture_fill = reinterpret_cast<p_avpicture_fill>(m_libavcodec.resolve("avpicture_fill"));
 
