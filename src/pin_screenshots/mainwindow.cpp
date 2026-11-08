@@ -218,21 +218,23 @@ void MainWindow::saveImg()
         isSaveState = m_image.save(m_lastImagePath);
     }
 
-    // 保存到剪贴板
-    QMimeData *t_imageData = new QMimeData;
-    // 图片数据过大时，可能影响后端剪贴板处理，调整为保存 PNG 图片
-    QByteArray bytes;
-    QBuffer buffer(&bytes);
-    buffer.open(QIODevice::WriteOnly);
-    m_image.save(&buffer, "PNG");
-    t_imageData->setData("image/png", bytes);
-    QClipboard *cb = qApp->clipboard();
-    cb->setMimeData(t_imageData, QClipboard::Clipboard);
+    if (m_saveInfo.first == SubToolWidget::CLIPBOARD) {
+        // 保存到剪贴板
+        QMimeData *t_imageData = new QMimeData;
+        // 图片数据过大时，可能影响后端剪贴板处理，调整为保存 PNG 图片
+        QByteArray bytes;
+        QBuffer buffer(&bytes);
+        buffer.open(QIODevice::WriteOnly);
+        m_image.save(&buffer, "PNG");
+        t_imageData->setData("image/png", bytes);
+        QClipboard *cb = qApp->clipboard();
+        cb->setMimeData(t_imageData, QClipboard::Clipboard);
 
-    if (PUtils::isWaylandMode) {
-        QEventLoop eventloop;
-        connect(cb, SIGNAL(dataChanged()), &eventloop, SLOT(quit()));
-        eventloop.exec();
+        if (PUtils::isWaylandMode) {
+            QEventLoop eventloop;
+            connect(cb, SIGNAL(dataChanged()), &eventloop, SLOT(quit()));
+            eventloop.exec();
+        }
     }
 
     // 发送通知
