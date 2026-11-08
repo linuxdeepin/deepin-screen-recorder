@@ -644,8 +644,8 @@ QList<Utils::ScreenInfo> Utils::getScreensInfo()
         ScreenInfo screenInfo;
         screenInfo.x = rect.x(); //屏幕的起始x坐标始终是正确的，不管是否经过缩放
         screenInfo.y = rect.y(); //屏幕的起始y坐标始终是正确的，不管是否经过缩放
-        screenInfo.height =  static_cast<int>(rect.height() * pixelRatio);
-        screenInfo.width = static_cast<int>(rect.width() * pixelRatio);
+        screenInfo.height = rect.height();
+        screenInfo.width = rect.width();
         screenInfo.name = (*it)->name();
         screenInfo.scaleFactor = pixelRatio;
         hTotal += screenInfo.height;

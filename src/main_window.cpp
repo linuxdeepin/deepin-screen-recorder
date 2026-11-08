@@ -1,5 +1,5 @@
 // Copyright (C) 2020 ~ 2021 Uniontech Software Technology Co.,Ltd.
-// SPDX-FileCopyrightText: 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2022-2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -197,8 +197,8 @@ void MainWindow::initMainWindow()
         ScreenInfo screenInfo;
         screenInfo.x = rect.x();
         screenInfo.y = rect.y();
-        screenInfo.height =  static_cast<int>(rect.height() * screenRatio);
-        screenInfo.width = static_cast<int>(rect.width() * screenRatio);
+        screenInfo.height = rect.height();
+        screenInfo.width = rect.width();
         screenInfo.name = (*it)->name();
         screenInfo.scaleFactor = screenRatio;
 
@@ -273,12 +273,12 @@ QPoint MainWindow::globalDeviceToLocalLogical(const QPoint &pos) const
         const qreal factor = (info.scaleFactor > 0.0) ? info.scaleFactor : m_pixelRatio;
         const int deviceX = m_isScreenVertical ? static_cast<int>(info.x * factor) : deviceOffset;
         const int deviceY = m_isScreenVertical ? deviceOffset : static_cast<int>(info.y * factor);
-        if (pos.x() >= deviceX && pos.x() < deviceX + info.width &&
-                pos.y() >= deviceY && pos.y() < deviceY + info.height) {
+        if (pos.x() >= deviceX && pos.x() < deviceX + static_cast<int>(info.width * factor) &&
+                pos.y() >= deviceY && pos.y() < deviceY + static_cast<int>(info.height * factor)) {
             return QPoint(static_cast<int>((pos.x() - deviceX) / factor) + info.x,
                           static_cast<int>((pos.y() - deviceY) / factor) + info.y);
         }
-        deviceOffset += m_isScreenVertical ? info.height : info.width;
+        deviceOffset += m_isScreenVertical ? static_cast<int>(info.height * factor) : static_cast<int>(info.width * factor);
     }
 
     // 不在任何屏的物理区间内（屏幕空隙/越界），回落旧换算
@@ -303,8 +303,8 @@ void MainWindow::initAttributes()
         rootWindowRect = QRect(0, 0, t_virtualScreen->virtualGeometry().width(),
                                t_virtualScreen->virtualGeometry().height());
     } else {
-        rootWindowRect = QRect(0, 0, static_cast<int>(qRound(m_screenSize.width() / m_pixelRatio)),
-                               static_cast<int>(qRound(m_screenSize.height() / m_pixelRatio)));
+        rootWindowRect = QRect(0, 0, m_screenSize.width(),
+                               m_screenSize.height());
     }
     screenRect = QRect(screenRect.topLeft() / m_pixelRatio, screenRect.size());
     qDebug() << "screen size" << rootWindowRect;
@@ -464,7 +464,7 @@ void MainWindow::initAttributes()
             }
             if (m_screenInfo[0].height < heightAfterFirst) {
                 // 多屏放缩情况下，小屏在上，整体需要偏移一定距离
-                this->move(0, m_screenInfo[0].height - static_cast<int>(m_screenInfo[0].height / m_pixelRatio));
+                this->move(0, 0);
             }
 
         } else {
@@ -474,7 +474,7 @@ void MainWindow::initAttributes()
             }
             if (m_screenInfo[0].width < widthAfterFirst) {
                 // 多屏放缩情况下，小屏在前，整体需要偏移一定距离
-                this->move(m_screenInfo[0].width - static_cast<int>(m_screenInfo[0].width / m_pixelRatio), 0);
+                this->move(0, 0);
             }
 
         }
@@ -673,8 +673,8 @@ void MainWindow::waylandwindowinfo(const QVector<ClientManagement::WindowState> 
         const QScreen *t_virtualScreen = QGuiApplication::primaryScreen();
         const QSize t_virtualSize = (t_virtualScreen != nullptr)
                                     ? t_virtualScreen->virtualGeometry().size()
-                                    : QSize(static_cast<int>(m_screenSize.width() / m_pixelRatio),
-                                            static_cast<int>(m_screenSize.height() / m_pixelRatio));
+                                    : QSize(m_screenSize.width(),
+                                            m_screenSize.height());
         QRect screenRect(0, 0, t_virtualSize.width(), t_virtualSize.height());
         //qDebug() << screenRect;
         //qDebug() << windowRects;
@@ -1501,12 +1501,12 @@ QPoint MainWindow::getScrollShotTipPosition()
             currnetScreenRect = {
                 static_cast<int>(m_screenInfo[i].x),
                 static_cast<int>(m_screenInfo[i].y),
-                static_cast<int>(m_screenInfo[i].width),
-                static_cast<int>(m_screenInfo[i].height)
+                static_cast<int>(m_screenInfo[i].width * m_pixelRatio),
+                static_cast<int>(m_screenInfo[i].height * m_pixelRatio)
             };
             if (currnetScreenRect.contains(QPoint(recordRect.x(), recordRect.y()))) {
-                screenWidth = static_cast<int>(m_screenInfo[i].width);
-                screenHeight = static_cast<int>(m_screenInfo[i].height);
+                screenWidth = static_cast<int>(m_screenInfo[i].width * m_pixelRatio);
+                screenHeight = static_cast<int>(m_screenInfo[i].height * m_pixelRatio);
                 break;
             }
         }
@@ -1925,14 +1925,14 @@ void MainWindow::topWindow()
         int x = recordX;
         int y = recordY;
         if (x >= m_screenInfo[1].x) {
-            recordX = static_cast<int>(m_screenInfo[1].x / m_pixelRatio + (x - m_screenInfo[1].x));
+            recordX = x;
         }
         if (y >= m_screenInfo[1].y) {
-            recordY = static_cast<int>(m_screenInfo[1].y / m_pixelRatio + (y - m_screenInfo[1].y));
+            recordY = y;
         }
     } else {
-        recordX = recordX - static_cast<int>(screenRect.x() * m_pixelRatio);
-        recordY = recordY - static_cast<int>(screenRect.y() * m_pixelRatio);
+        recordX = recordX - static_cast<int>(screenRect.x());
+        recordY = recordY - static_cast<int>(screenRect.y());
     }
 
     //this->hide();
@@ -2560,14 +2560,14 @@ void MainWindow::updateToolBarPos()
         for (int i = 0; i < m_screenInfo.size(); ++i) {
             //qDebug() << "屏幕: " << m_screenInfo[i].name <<  m_screenInfo[i].x << m_screenInfo[i].y << m_screenInfo[i].width << m_screenInfo[i].height;
             //工具栏是否在屏幕内
-            toolIsInScreen = toolbarPoint.x() * m_pixelRatio >= m_screenInfo[i].x &&
-                             toolbarPoint.x() * m_pixelRatio  < (m_screenInfo[i].x + m_screenInfo[i].width) &&
-                             (toolbarPoint.y() - m_screenInfo[i].height) / m_pixelRatio + m_screenInfo[i].height >= m_screenInfo[i].y &&
-                             (toolbarPoint.y() - m_screenInfo[i].height) / m_pixelRatio + m_screenInfo[i].height < (m_screenInfo[i].y + m_screenInfo[i].height);
-            bool recordIsInScreen =  recordX * m_pixelRatio >= m_screenInfo[i].x &&
-                                     recordX * m_pixelRatio < (m_screenInfo[i].x + m_screenInfo[i].width) &&
-                                     recordY * m_pixelRatio >= m_screenInfo[i].y - 1 &&
-                                     recordY * m_pixelRatio < (m_screenInfo[i].y + m_screenInfo[i].height);
+            toolIsInScreen = toolbarPoint.x() >= m_screenInfo[i].x &&
+                             toolbarPoint.x() < (m_screenInfo[i].x + m_screenInfo[i].width) &&
+                             toolbarPoint.y() >= m_screenInfo[i].y &&
+                             toolbarPoint.y() < (m_screenInfo[i].y + m_screenInfo[i].height);
+            bool recordIsInScreen =  recordX >= m_screenInfo[i].x &&
+                                     recordX < (m_screenInfo[i].x + m_screenInfo[i].width) &&
+                                     recordY >= m_screenInfo[i].y - 1 &&
+                                     recordY < (m_screenInfo[i].y + m_screenInfo[i].height);
             //qDebug() << "工具栏是否在屏幕（"<< m_screenInfo[i].name<<"）内 ? " << toolIsInScreen;
             //qDebug() << "捕捉区域是否在屏幕（"<< m_screenInfo[i].name<<"）内 ? " << recordIsInScreen;
             //取出捕捉区域所在的屏幕
@@ -2587,12 +2587,12 @@ void MainWindow::updateToolBarPos()
                     toolbarPoint.setY(recordY + TOOLBAR_Y_SPACING);
                     //toolbarPoint.setY(m_screenInfo[i].y + TOOLBAR_Y_SPACING);
                     //qDebug() << "工具栏位置超出屏幕上边缘，已矫正 >>> toolbarPoint: " << toolbarPoint;
-                } else if (toolbarPoint.y() > m_screenInfo[i].y / m_pixelRatio + m_screenInfo[i].height / m_pixelRatio - m_toolBar->height() - TOOLBAR_Y_SPACING) {
+                } else if (toolbarPoint.y() > m_screenInfo[i].y + m_screenInfo[i].height - m_toolBar->height() - TOOLBAR_Y_SPACING) {
                     // 屏幕下超出
                     int y = std::max(recordY - m_toolBar->height() - TOOLBAR_Y_SPACING, 0);
                     //qDebug() << ">>> y: " << y;
-                    if (y > m_screenInfo[i].y + m_screenInfo[i].height / m_pixelRatio - m_toolBar->height() - TOOLBAR_Y_SPACING)
-                        y = m_screenInfo[i].y + static_cast<int>(m_screenInfo[i].height / m_pixelRatio) - m_toolBar->height() - TOOLBAR_Y_SPACING;
+                    if (y > m_screenInfo[i].y + m_screenInfo[i].height - m_toolBar->height() - TOOLBAR_Y_SPACING)
+                        y = m_screenInfo[i].y + m_screenInfo[i].height - m_toolBar->height() - TOOLBAR_Y_SPACING;
 
                     //已经调整工具栏位置之后，发现工具栏位置超出屏幕上边缘
                     if (y < m_screenInfo[i].y) {
