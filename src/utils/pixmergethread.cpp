@@ -1,5 +1,5 @@
 // Copyright (C) 2020 ~ 2021 Deepin Technology Co., Ltd.
-// SPDX-FileCopyrightText: 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2022-2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -9,7 +9,7 @@
 #include <QDateTime>
 #include <opencv2/imgproc/types_c.h>
 const int PixMergeThread::LONG_IMG_MAX_HEIGHT = 10000;
-const int PixMergeThread::TEMPLATE_HEIGHT = 50;
+const int PixMergeThread::TEMPLATE_HEIGHT = 90;
 const int PixMergeThread::FIRST_FRAME_RETRY_LIMIT = 3;
 
 PixMergeThread::PixMergeThread(QObject *parent) : QThread(parent)
@@ -252,8 +252,8 @@ bool PixMergeThread::splicePictureUp(const cv::Mat &image)
     /*模板匹配，采用归一化相关系数匹配*/
     matchTemplate(image2_gray, temp, res, CV_TM_CCOEFF_NORMED);
     /*结果矩阵阈值化处理*/
-    threshold(res, res, 0.8, 1, CV_THRESH_TOZERO);
-    double minVal, maxVal, thresholdv = 0.8;
+    threshold(res, res, 0.65, 1, CV_THRESH_TOZERO);
+    double minVal, maxVal, thresholdv = 0.65;
 
     /*查找最大值及位置*/
     cv::Point minLoc, maxLoc;
@@ -355,8 +355,8 @@ bool PixMergeThread::splicePictureDown(const cv::Mat &image)
     /*模板匹配，采用归一化相关系数匹配*/
     matchTemplate(image1_gray, temp, res, CV_TM_CCOEFF_NORMED);
     /*结果矩阵阈值化处理*/
-    threshold(res, res, 0.8, 1, CV_THRESH_TOZERO);
-    double minVal, maxVal, thresholdv = 0.8;
+    threshold(res, res, 0.65, 1, CV_THRESH_TOZERO);
+    double minVal, maxVal, thresholdv = 0.65;
 
     /*查找最大值及位置*/
     cv::Point minLoc, maxLoc;
