@@ -25,6 +25,23 @@
 #include <dlfcn.h>
 #include <signal.h>
 
+#if defined(__aarch64__)
+#include <QProcess>
+static bool isV4L2M2MEncoderAvailable()
+{
+    static int available = -1;
+    if (available == -1) {
+        QProcess proc;
+        proc.start("ffmpeg", QStringList() << "-hide_banner" << "-encoders");
+        proc.waitForFinished(3000);
+        QString output = QString::fromLocal8Bit(proc.readAllStandardOutput()) +
+                         QString::fromLocal8Bit(proc.readAllStandardError());
+        available = output.contains("h264_v4l2m2m") ? 1 : 0;
+    }
+    return available == 1;
+}
+#endif
+
 const int RecordProcess::RECORD_TYPE_VIDEO = 0;
 const int RecordProcess::RECORD_TYPE_GIF = 1;
 const int RecordProcess::RECORD_TYPE_MP4 = 2;
@@ -197,6 +214,7 @@ void RecordProcess::onRecordFinish()
     }
 
     // Wayland Frame Interpolation
+#if !defined(__aarch64__)
     if (Utils::waylandFrameInterpolation == 1) {
         bool isLosslessRecording = settings->value("recordConfig", "lossless_recording").toBool();
         QString fileExtension = isLosslessRecording ? "mkv" : "mp4";
@@ -206,6 +224,7 @@ void RecordProcess::onRecordFinish()
                 return;
         }
     }
+#endif
 
     // Move file to save directory.
     QString newSavePath = QDir(saveDir).filePath(saveBaseName);
@@ -520,12 +539,31 @@ void RecordProcess::recordVideo()
     arguments << QString("%1+%2,%3").arg(displayNumber).arg(m_recordRect.x()).arg(m_recordRect.y());
 
     arguments << QString("-c:v");
+#if defined(__aarch64__)
+    if (isV4L2M2MEncoderAvailable()) {
+        arguments << QString("h264_v4l2m2m");
+        arguments << QString("-pix_fmt");
+        arguments << QString("yuv420p");
+        arguments << QString("-b:v");
+        arguments << QString("500k");
+    } else {
+        arguments << QString("libx264");
+        arguments << QString("-pix_fmt");
+        arguments << QString("yuv420p");
+        if (settings->value("recordConfig", "lossless_recording").toBool()) {
+            arguments << QString("-qp");
+            arguments << QString("23");
+        } else {
+            arguments << QString("-crf");
+            arguments << QString("23");
+        }
+        arguments << QString("-preset");
+        arguments << QString("ultrafast");
+    }
+#else
     arguments << QString("libx264");
     arguments << QString("-pix_fmt");
     arguments << QString("yuv420p");
-    // baseline 算法，录制的视频在windos自带播放器不能播放
-    //arguments << QString("-profile:v");
-    //arguments << QString("baseline");
     if (settings->value("recordConfig", "lossless_recording").toBool()) {
         arguments << QString("-qp");
         arguments << QString("23");
@@ -535,6 +573,7 @@ void RecordProcess::recordVideo()
     }
     arguments << QString("-preset");
     arguments << QString("ultrafast");
+#endif
     arguments << QString("-vsync");
     arguments << QString("passthrough");
     arguments << QString("-vf");

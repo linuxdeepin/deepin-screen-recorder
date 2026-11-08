@@ -461,7 +461,17 @@ bool CAVOutputStream::open(QString path)
 
     if (m_videoCodecID  != 0) {
         printf("FLQQ,video encoder initialize\n\n");
+        bool useHwEncoder = false;
+#if defined(__aarch64__)
+        pCodec = avlibInterface::m_avcodec_find_encoder_by_name("h264_v4l2m2m");
+        if (pCodec) {
+            useHwEncoder = true;
+        } else {
+            pCodec = avlibInterface::m_avcodec_find_encoder(m_videoCodecID);
+        }
+#else
         pCodec = avlibInterface::m_avcodec_find_encoder(m_videoCodecID);
+#endif
 
         if (!pCodec) {
             printf("Can not find output video encoder! (没有找到合适的编码器！)\n");
@@ -494,15 +504,21 @@ bool CAVOutputStream::open(QString path)
 
         //set H264 codec param
         if (m_videoCodecID  == AV_CODEC_ID_H264) {
-            pCodecCtx->qmin = 10;
-            //low
-            pCodecCtx->qmax = 51;
-            pCodecCtx->max_b_frames = 0;
+            if (useHwEncoder) {
+                // V4L2 M2M hardware encoder: use bitrate control, skip CRF/preset/tune
+                pCodecCtx->bit_rate = m_video_bitrate;
+                pCodecCtx->max_b_frames = 0;
+            } else {
+                pCodecCtx->qmin = 10;
+                //low
+                pCodecCtx->qmax = 51;
+                pCodecCtx->max_b_frames = 0;
 
-            // Set H264 preset and tune
-            avlibInterface::m_av_dict_set(&param, "preset", "ultrafast", 0);
-            avlibInterface::m_av_dict_set(&param, "tune", "zerolatency", 0);
-            avlibInterface::m_av_dict_set(&param, "crf", "30", 0);            // 质量较低，文件较大但编码更快
+                // Set H264 preset and tune
+                avlibInterface::m_av_dict_set(&param, "preset", "ultrafast", 0);
+                avlibInterface::m_av_dict_set(&param, "tune", "zerolatency", 0);
+                avlibInterface::m_av_dict_set(&param, "crf", "30", 0);            // 质量较低，文件较大但编码更快
+            }
         }
 
         if (avlibInterface::m_avcodec_open2(pCodecCtx, pCodec, &param) < 0) {
