@@ -900,8 +900,8 @@ void ScreenshotSessionController::onScrollStartRequested()
         if (frame.output.logicalGeometry.intersects(selection))
             ++outputCount;
     }
-    if (outputCount != 1) {
-        qCWarning(dsrApp) << "Scroll capture requires exactly one output";
+    if (outputCount < 1) {
+        qCWarning(dsrApp) << "Scroll capture requires at least one intersecting output";
         showScrollTip(ScrollTipKind::Error);
         return;
     }

@@ -7,15 +7,13 @@
 
 #include "../../ports/iscrollcapture.h"
 
+#include <QImage>
 #include <QList>
 #include <QRect>
 #include <QString>
 #include <QTimer>
 
 #include <cstdint>
-
-class QImage;
-class QScreen;
 
 namespace Dsr::Screenshot {
 
@@ -49,14 +47,13 @@ private:
     QRect m_targetWindowRegion;
     QString m_targetProcessName;
     qint64 m_targetProcessId = -1;
-    OutputDescriptor m_captureOutput;
-    QScreen *m_captureScreen = nullptr;
+    QList<OutputDescriptor> m_captureOutputs;
     bool m_started = false;
     bool m_stopping = false;
     bool m_frameInFlight = false;
     int m_consecutiveFailures = 0;
 
-    TreelandOutputCapture *m_outputCapture = nullptr;
+    QList<TreelandOutputCapture *> m_outputCaptures;
 };
 
 } // namespace Dsr::Screenshot
