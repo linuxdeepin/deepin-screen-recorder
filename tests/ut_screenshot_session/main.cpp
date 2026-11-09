@@ -17,6 +17,7 @@
 #include "screenshot/ports/isnaphintsource.h"
 #include "screenshot/ports/iwindowtagger.h"
 #include "screenshot/platform/treeland/recordingfiletransaction.h"
+#include "screenshot/platform/treeland/treelandscrollcompositor.h"
 #include "screenshot/session/annotationcoordinator.h"
 #include "screenshot/session/screenshotsessioncontroller.h"
 #include "utils/imageeffects.h"
@@ -1718,7 +1719,58 @@ private slots:
         QCOMPARE(sink->lastResult.image, merger->result);
     }
 
-    void controllerRejectsCrossOutputScrollSelection()
+    void scrollCompositorStitchesAdjacentOutputs()
+    {
+        const OutputDescriptor left{QStringLiteral("left"), QRect(0, 0, 1920, 1080), 1.0};
+        const OutputDescriptor right{QStringLiteral("right"), QRect(1920, 0, 1920, 1080), 1.0};
+        QImage leftImage(1920, 1080, QImage::Format_RGB32);
+        leftImage.fill(Qt::red);
+        QImage rightImage(1920, 1080, QImage::Format_RGB32);
+        rightImage.fill(Qt::green);
+
+        const QImage composed = composeScrollSelectionFrame(
+                {left, right}, {leftImage, rightImage}, QRect(1800, 0, 240, 200));
+
+        QCOMPARE(composed.size(), QSize(240, 200));
+        QCOMPARE(composed.pixelColor(60, 100), QColor(Qt::red));
+        QCOMPARE(composed.pixelColor(180, 100), QColor(Qt::green));
+    }
+
+    void scrollCompositorHandlesNegativeOrigin()
+    {
+        const OutputDescriptor left{QStringLiteral("left"), QRect(-1920, 0, 1920, 1080), 1.0};
+        const OutputDescriptor right{QStringLiteral("right"), QRect(0, 0, 1920, 1080), 1.0};
+        QImage leftImage(1920, 1080, QImage::Format_RGB32);
+        leftImage.fill(Qt::red);
+        QImage rightImage(1920, 1080, QImage::Format_RGB32);
+        rightImage.fill(Qt::green);
+
+        const QImage composed = composeScrollSelectionFrame(
+                {left, right}, {leftImage, rightImage}, QRect(-100, 0, 200, 100));
+
+        QCOMPARE(composed.size(), QSize(200, 100));
+        QCOMPARE(composed.pixelColor(50, 50), QColor(Qt::red));
+        QCOMPARE(composed.pixelColor(150, 50), QColor(Qt::green));
+    }
+
+    void scrollCompositorScalesMixedDpr()
+    {
+        const OutputDescriptor left{QStringLiteral("left"), QRect(0, 0, 1920, 1080), 1.0};
+        const OutputDescriptor hidpi{QStringLiteral("hidpi"), QRect(1920, 0, 1280, 720), 1.5};
+        QImage leftImage(1920, 1080, QImage::Format_RGB32);
+        leftImage.fill(Qt::red);
+        QImage hidpiImage(1920, 1080, QImage::Format_RGB32);
+        hidpiImage.fill(Qt::green);
+
+        const QImage composed = composeScrollSelectionFrame(
+                {left, hidpi}, {leftImage, hidpiImage}, QRect(1900, 0, 340, 200));
+
+        QCOMPARE(composed.size(), QSize(510, 300));
+        QCOMPARE(composed.pixelColor(10, 150), QColor(Qt::red));
+        QCOMPARE(composed.pixelColor(400, 150), QColor(Qt::green));
+    }
+
+    void controllerAcceptsCrossOutputScrollSelection()
     {
         FakeBackend *backend = new FakeBackend;
         backend->frames.virtualDesktopRect = QRect(0, 0, 1600, 600);
@@ -1744,13 +1796,14 @@ private slots:
         QVERIFY(controller.start(request));
         overlay->scrollStart();
 
-        // Match X11: an invalid scroll target shows the error prompt and keeps
-        // the screenshot session in selection mode instead of exiting.
-        QCOMPARE(controller.state(), ScreenshotSessionController::State::Selecting);
+        // Cross-output selections are composed from every intersecting output;
+        // the capture backend decides how to stitch them into one frame.
+        QCOMPARE(controller.state(), ScreenshotSessionController::State::Scrolling);
         QCOMPARE(failedSpy.count(), 0);
-        QCOMPARE(overlay->lastScrollTip, ScrollTipKind::Error);
-        QCOMPARE(overlay->scrollBeginCount, 0);
-        QCOMPARE(capture->startCount, 0);
+        QCOMPARE(overlay->scrollBeginCount, 1);
+        QCOMPARE(capture->startCount, 1);
+        QCOMPARE(capture->outputs.size(), 2);
+        QCOMPARE(capture->selection, QRect(700, 100, 200, 200));
     }
 
     void controllerCancelsScrollingWithoutSaving()

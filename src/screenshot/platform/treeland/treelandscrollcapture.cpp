@@ -6,11 +6,13 @@
 
 #include "../../../utils/log.h"
 #include "treelandoutputcapture.h"
+#include "treelandscrollcompositor.h"
 #include "treelandsnapproxy.h"
 
 #include <QEventLoop>
 #include <QGuiApplication>
 #include <QImage>
+#include <QRegion>
 #include <QScreen>
 #include <QTimer>
 
@@ -20,29 +22,13 @@ namespace {
 
 constexpr int CaptureIntervalMs = 150;
 
-QRect selectionRectInImage(const QImage &image,
-                           const QRect &windowRegion,
-                           const QRect &selection)
+qreal screenDprForOutput(const QString &outputId)
 {
-    if (image.isNull() || windowRegion.isEmpty() || selection.isEmpty())
-        return {};
-
-    const QRect local = selection.translated(-windowRegion.topLeft());
-    const qreal scaleX = static_cast<qreal>(image.width()) / windowRegion.width();
-    const qreal scaleY = static_cast<qreal>(image.height()) / windowRegion.height();
-    const int left = qRound(local.left() * scaleX);
-    const int top = qRound(local.top() * scaleY);
-    const int right = qRound(local.right() * scaleX);
-    const int bottom = qRound(local.bottom() * scaleY);
-    return QRect(QPoint(left, top), QPoint(right, bottom)).intersected(image.rect());
-}
-
-QImage cropSelection(const QImage &image,
-                     const QRect &windowRegion,
-                     const QRect &selection)
-{
-    const QRect crop = selectionRectInImage(image, windowRegion, selection);
-    return crop.isEmpty() ? QImage() : image.copy(crop);
+    for (QScreen *screen : QGuiApplication::screens()) {
+        if (screen && screen->name() == outputId)
+            return screen->devicePixelRatio();
+    }
+    return 0.0;
 }
 
 } // namespace
@@ -50,7 +36,6 @@ QImage cropSelection(const QImage &image,
 TreelandScrollCapture::TreelandScrollCapture(QObject *parent)
     : IScrollCapture(parent)
     , m_captureTimer(new QTimer(this))
-    , m_outputCapture(new TreelandOutputCapture)
 {
     m_captureTimer->setInterval(CaptureIntervalMs);
     connect(m_captureTimer, &QTimer::timeout,
@@ -70,8 +55,8 @@ void TreelandScrollCapture::setFrozenFrames(const FrozenFrameSet &frames)
 TreelandScrollCapture::~TreelandScrollCapture()
 {
     stop();
-    delete m_outputCapture;
-    m_outputCapture = nullptr;
+    qDeleteAll(m_outputCaptures);
+    m_outputCaptures.clear();
 }
 
 bool TreelandScrollCapture::start(const QList<OutputDescriptor> &outputs,
@@ -83,6 +68,9 @@ bool TreelandScrollCapture::start(const QList<OutputDescriptor> &outputs,
     m_started = false;
     m_frameInFlight = false;
     m_consecutiveFailures = 0;
+    qDeleteAll(m_outputCaptures);
+    m_outputCaptures.clear();
+    m_captureOutputs.clear();
     m_globalSelection = globalSelection.normalized();
     m_targetWindowRegion = m_snapSession
             ? m_snapSession->region().normalized()
@@ -113,62 +101,59 @@ bool TreelandScrollCapture::start(const QList<OutputDescriptor> &outputs,
     }
 
     QList<OutputDescriptor> matchingOutputs;
+    QRegion coveredOutputs;
     for (const OutputDescriptor &output : outputs) {
-        if (output.logicalGeometry.isValid()
-                && output.logicalGeometry.intersects(m_globalSelection)) {
-            matchingOutputs.append(output);
+        if (!output.logicalGeometry.isValid()
+                || !output.logicalGeometry.intersects(m_globalSelection)) {
+            continue;
         }
+        OutputDescriptor resolved = output;
+        if (resolved.devicePixelRatio <= 0)
+            resolved.devicePixelRatio = screenDprForOutput(resolved.outputId);
+        if (resolved.devicePixelRatio <= 0)
+            resolved.devicePixelRatio = 1.0;
+        matchingOutputs.append(resolved);
+        coveredOutputs += resolved.logicalGeometry;
     }
-    if (matchingOutputs.size() != 1) {
-        if (error) {
-            *error = matchingOutputs.isEmpty()
-                    ? QStringLiteral("滚动截图选区没有对应的输出")
-                    : QStringLiteral("TreeLand 窗口滚动截图仅支持单输出");
-        }
-        return false;
-    }
-
-    m_captureOutput = matchingOutputs.first();
-    if (!m_captureOutput.logicalGeometry.contains(m_globalSelection)) {
+    if (matchingOutputs.isEmpty()) {
         if (error)
-            *error = QStringLiteral("滚动截图选区超出了目标输出范围");
+            *error = QStringLiteral("滚动截图选区没有对应的输出");
+        return false;
+    }
+    // A cross-output selection must be fully covered by the captured outputs,
+    // otherwise the composed selection canvas would contain uncovered edges.
+    if (!coveredOutputs.contains(m_globalSelection)) {
+        if (error)
+            *error = QStringLiteral("滚动截图选区超出了可用输出范围");
         return false;
     }
 
-    m_captureScreen = nullptr;
-    for (QScreen *screen : QGuiApplication::screens()) {
-        if (screen && screen->name() == m_captureOutput.outputId) {
-            m_captureScreen = screen;
-            break;
+    for (const OutputDescriptor &output : matchingOutputs) {
+        auto *capture = new TreelandOutputCapture;
+        QString captureError;
+        if (!capture->start(output.outputId, output.logicalGeometry, &captureError)) {
+            delete capture;
+            qDeleteAll(m_outputCaptures);
+            m_outputCaptures.clear();
+            if (error) {
+                *error = QStringLiteral("输出 %1 启动截图失败：%2")
+                                 .arg(output.outputId, captureError);
+            }
+            return false;
         }
+        m_outputCaptures.append(capture);
     }
-    if (!m_captureScreen) {
-        if (error) {
-            *error = QStringLiteral("找不到滚动截图输出 %1")
-                             .arg(m_captureOutput.outputId);
-        }
-        return false;
-    }
+    m_captureOutputs = matchingOutputs;
 
-    qreal outputScale = m_captureOutput.devicePixelRatio;
-    if (outputScale <= 0 && m_captureScreen)
-        outputScale = m_captureScreen->devicePixelRatio();
-    if (outputScale <= 0)
-        outputScale = 1.0;
-
-    if (!m_outputCapture->start(m_captureOutput.outputId,
-                                m_captureOutput.logicalGeometry,
-                                error)) {
-        return false;
-    }
-
-    qCInfo(dsrApp) << "TreeLand scroll capture started: output" << m_captureOutput.outputId
-                   << "output geometry" << m_captureOutput.logicalGeometry
+    qCInfo(dsrApp) << "TreeLand scroll capture started: outputs" << m_captureOutputs.size()
                    << "window" << m_targetWindowRegion
                    << "selection" << m_globalSelection
                    << "pid" << m_targetProcessId
-                   << "process" << m_targetProcessName
-                   << "scale" << outputScale;
+                   << "process" << m_targetProcessName;
+    for (const OutputDescriptor &output : qAsConst(m_captureOutputs)) {
+        qCInfo(dsrApp) << "TreeLand scroll capture output" << output.outputId
+                       << output.logicalGeometry << "scale" << output.devicePixelRatio;
+    }
     m_started = true;
     m_captureTimer->start();
     QTimer::singleShot(0, this, &TreelandScrollCapture::requestFrame);
@@ -210,7 +195,9 @@ void TreelandScrollCapture::requestFrame()
         return;
 
     ScrollFrame frame;
-    frame.output = m_captureOutput;
+    // The image is already composed from every intersecting output; keep the
+    // first output as metadata for consumers that still expect one descriptor.
+    frame.output = m_captureOutputs.first();
     frame.globalSelection = m_globalSelection;
     frame.image = image;
     frame.timestampNs = timestampNs;
@@ -239,8 +226,10 @@ void TreelandScrollCapture::stop()
     m_consecutiveFailures = 0;
     if (m_captureTimer)
         m_captureTimer->stop();
-    if (m_outputCapture)
-        m_outputCapture->stop();
+    for (TreelandOutputCapture *capture : qAsConst(m_outputCaptures)) {
+        if (capture)
+            capture->stop();
+    }
 }
 
 bool TreelandScrollCapture::captureFrame(QImage *image,
@@ -252,26 +241,43 @@ bool TreelandScrollCapture::captureFrame(QImage *image,
     *image = QImage();
     *timestampNs = 0;
 
-    if (!m_outputCapture) {
+    if (m_outputCaptures.isEmpty()
+            || m_outputCaptures.size() != m_captureOutputs.size()) {
         *error = QStringLiteral("TreeLand 输出捕获器未初始化");
         return false;
     }
 
-    QImage outputImage;
-    quint64 outputTimestamp = 0;
-    if (!m_outputCapture->capture(&outputImage, &outputTimestamp, error))
-        return false;
+    QList<QImage> images;
+    images.reserve(m_outputCaptures.size());
+    quint64 latestTimestamp = 0;
+    for (int i = 0; i < m_outputCaptures.size(); ++i) {
+        QImage frameImage;
+        quint64 frameTimestamp = 0;
+        QString frameError;
+        if (!m_outputCaptures[i]->capture(&frameImage, &frameTimestamp, &frameError)) {
+            *error = QStringLiteral("输出 %1 抓帧失败：%2")
+                             .arg(m_captureOutputs[i].outputId, frameError);
+            return false;
+        }
+        if (frameImage.isNull()) {
+            *error = QStringLiteral("输出 %1 返回了空帧")
+                             .arg(m_captureOutputs[i].outputId);
+            return false;
+        }
+        images.append(frameImage);
+        latestTimestamp = qMax(latestTimestamp, frameTimestamp);
+    }
 
-    const QImage selectionImage = cropSelection(outputImage,
-                                                m_captureOutput.logicalGeometry,
-                                                m_globalSelection);
-    if (selectionImage.isNull()) {
-        *error = QStringLiteral("TreeLand 输出截图裁剪失败");
+    const QImage composed = composeScrollSelectionFrame(m_captureOutputs,
+                                                        images,
+                                                        m_globalSelection);
+    if (composed.isNull()) {
+        *error = QStringLiteral("滚动截图跨屏合成失败");
         return false;
     }
 
-    *image = selectionImage;
-    *timestampNs = outputTimestamp;
+    *image = composed;
+    *timestampNs = latestTimestamp;
     return true;
 }
 
