@@ -5114,10 +5114,11 @@ void MainWindow::onMouseMove(int x, int y)
 
     //启动截图或者录屏后第一次鼠标移动时需要通过此方法，后面都不会在进入此方法
     if (!isFirstMove) {
-        QMouseEvent *mouseMove;
-        mouseMove = new QMouseEvent(QEvent::MouseMove, QPoint(x, y), Qt::LeftButton, Qt::LeftButton, Qt::NoModifier);
+        // XEventMonitor 上报的是全局物理坐标，混缩放下须按屏换算成逻辑坐标
+        QPoint point = globalDeviceToLocalLogical(QPoint(x, y));
+        QMouseEvent mouseMove(QEvent::MouseMove, point, Qt::LeftButton, Qt::LeftButton, Qt::NoModifier);
         m_dispatchingSyntheticMouseEvent = true;
-        QApplication::sendEvent(QWidget::focusWidget(), mouseMove);
+        QApplication::sendEvent(QWidget::focusWidget(), static_cast<QEvent*>(&mouseMove));
         m_dispatchingSyntheticMouseEvent = false;
     }
 }
