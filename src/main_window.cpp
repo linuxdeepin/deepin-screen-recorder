@@ -192,13 +192,15 @@ void MainWindow::initMainWindow()
         QRect rect = (*it)->geometry();
         qDebug() << (*it)->name() << rect;
         // 多屏混缩放（如内屏 150% + 外屏 100%）时各屏缩放比不同，
-        // 物理尺寸必须按各屏自己的缩放比换算，不能统一乘主屏的 m_pixelRatio
+        // scaleFactor 保存各屏自身缩放比，供需要物理尺寸的场景按需换算。
+        // m_screenInfo 统一使用全逻辑坐标（x/y/width/height 均来自 QScreen::geometry()），
+        // width/height 不乘 screenRatio，避免逻辑坐标与物理坐标混用导致边界检测错位。
         const qreal screenRatio = Utils::screenFactor(*it);
         ScreenInfo screenInfo;
         screenInfo.x = rect.x();
         screenInfo.y = rect.y();
-        screenInfo.height =  static_cast<int>(rect.height() * screenRatio);
-        screenInfo.width = static_cast<int>(rect.width() * screenRatio);
+        screenInfo.height = rect.height();
+        screenInfo.width = rect.width();
         screenInfo.name = (*it)->name();
         screenInfo.scaleFactor = screenRatio;
 
@@ -268,17 +270,20 @@ QPoint MainWindow::globalDeviceToLocalLogical(const QPoint &pos) const
 
     // 每块屏在 kwin 物理布局空间中的区间：沿布局轴（m_screenInfo 已按位置排序）
     // 按原生尺寸累加，非布局轴按对齐处理（起点 = 逻辑起点 × 该屏比例）
+    // m_screenInfo 的 width/height 为逻辑坐标，设备坐标空间需乘 scaleFactor 换算
     int deviceOffset = 0;
     for (const ScreenInfo &info : m_screenInfo) {
         const qreal factor = (info.scaleFactor > 0.0) ? info.scaleFactor : m_pixelRatio;
+        const int devWidth = static_cast<int>(info.width * factor);
+        const int devHeight = static_cast<int>(info.height * factor);
         const int deviceX = m_isScreenVertical ? static_cast<int>(info.x * factor) : deviceOffset;
         const int deviceY = m_isScreenVertical ? deviceOffset : static_cast<int>(info.y * factor);
-        if (pos.x() >= deviceX && pos.x() < deviceX + info.width &&
-                pos.y() >= deviceY && pos.y() < deviceY + info.height) {
+        if (pos.x() >= deviceX && pos.x() < deviceX + devWidth &&
+                pos.y() >= deviceY && pos.y() < deviceY + devHeight) {
             return QPoint(static_cast<int>((pos.x() - deviceX) / factor) + info.x,
                           static_cast<int>((pos.y() - deviceY) / factor) + info.y);
         }
-        deviceOffset += m_isScreenVertical ? info.height : info.width;
+        deviceOffset += m_isScreenVertical ? devHeight : devWidth;
     }
 
     // 不在任何屏的物理区间内（屏幕空隙/越界），回落旧换算
@@ -303,8 +308,8 @@ void MainWindow::initAttributes()
         rootWindowRect = QRect(0, 0, t_virtualScreen->virtualGeometry().width(),
                                t_virtualScreen->virtualGeometry().height());
     } else {
-        rootWindowRect = QRect(0, 0, static_cast<int>(qRound(m_screenSize.width() / m_pixelRatio)),
-                               static_cast<int>(qRound(m_screenSize.height() / m_pixelRatio)));
+        // m_screenSize 现为全逻辑坐标，直接使用
+        rootWindowRect = QRect(0, 0, m_screenSize.width(), m_screenSize.height());
     }
     screenRect = QRect(screenRect.topLeft() / m_pixelRatio, screenRect.size());
     qDebug() << "screen size" << rootWindowRect;
@@ -455,7 +460,9 @@ void MainWindow::initAttributes()
 
     // 多屏缩放模式下，界面坐标修正（历史补丁：统一缩放比场景下的小屏偏移补偿）。
     // 各屏缩放比不一致（混缩放）时，screenInfo 尺寸由各屏自身比例推算，
-    // 该偏移量不再成立（会把窗口整体挪出桌面），须跳过修正
+    // 该偏移量不再成立（会把窗口整体挪出桌面），须跳过修正。
+    // m_screenInfo 的 width/height 为逻辑坐标，move() 需要物理偏移量，
+    // 故按 logical * (ratio - 1) 换算（等价于旧的 physical - physical/ratio）。
     if (isUniformScreenScale() && m_screenCount > 1 && m_pixelRatio  > 1) {
         if (m_isScreenVertical) {
             int heightAfterFirst = 0;
@@ -464,7 +471,7 @@ void MainWindow::initAttributes()
             }
             if (m_screenInfo[0].height < heightAfterFirst) {
                 // 多屏放缩情况下，小屏在上，整体需要偏移一定距离
-                this->move(0, m_screenInfo[0].height - static_cast<int>(m_screenInfo[0].height / m_pixelRatio));
+                this->move(0, static_cast<int>(m_screenInfo[0].height * m_pixelRatio) - m_screenInfo[0].height);
             }
 
         } else {
@@ -474,7 +481,7 @@ void MainWindow::initAttributes()
             }
             if (m_screenInfo[0].width < widthAfterFirst) {
                 // 多屏放缩情况下，小屏在前，整体需要偏移一定距离
-                this->move(m_screenInfo[0].width - static_cast<int>(m_screenInfo[0].width / m_pixelRatio), 0);
+                this->move(static_cast<int>(m_screenInfo[0].width * m_pixelRatio) - m_screenInfo[0].width, 0);
             }
 
         }
@@ -673,8 +680,8 @@ void MainWindow::waylandwindowinfo(const QVector<ClientManagement::WindowState> 
         const QScreen *t_virtualScreen = QGuiApplication::primaryScreen();
         const QSize t_virtualSize = (t_virtualScreen != nullptr)
                                     ? t_virtualScreen->virtualGeometry().size()
-                                    : QSize(static_cast<int>(m_screenSize.width() / m_pixelRatio),
-                                            static_cast<int>(m_screenSize.height() / m_pixelRatio));
+                                    : QSize(m_screenSize.width(),
+                                            m_screenSize.height());
         QRect screenRect(0, 0, t_virtualSize.width(), t_virtualSize.height());
         //qDebug() << screenRect;
         //qDebug() << windowRects;
@@ -1498,15 +1505,16 @@ QPoint MainWindow::getScrollShotTipPosition()
     } else if (m_screenCount > 1) {
         qDebug() << "m_screenInfo.size(): " << m_screenInfo.size();
         for (int i = 0; i < m_screenInfo.size(); ++i) {
+            // m_screenInfo 为全逻辑坐标，recordRect 为物理坐标（×m_pixelRatio），需换算至同一坐标系
             currnetScreenRect = {
-                static_cast<int>(m_screenInfo[i].x),
-                static_cast<int>(m_screenInfo[i].y),
-                static_cast<int>(m_screenInfo[i].width),
-                static_cast<int>(m_screenInfo[i].height)
+                static_cast<int>(m_screenInfo[i].x * m_pixelRatio),
+                static_cast<int>(m_screenInfo[i].y * m_pixelRatio),
+                static_cast<int>(m_screenInfo[i].width * m_pixelRatio),
+                static_cast<int>(m_screenInfo[i].height * m_pixelRatio)
             };
             if (currnetScreenRect.contains(QPoint(recordRect.x(), recordRect.y()))) {
-                screenWidth = static_cast<int>(m_screenInfo[i].width);
-                screenHeight = static_cast<int>(m_screenInfo[i].height);
+                screenWidth = static_cast<int>(m_screenInfo[i].width * m_pixelRatio);
+                screenHeight = static_cast<int>(m_screenInfo[i].height * m_pixelRatio);
                 break;
             }
         }
@@ -2560,14 +2568,17 @@ void MainWindow::updateToolBarPos()
         for (int i = 0; i < m_screenInfo.size(); ++i) {
             //qDebug() << "屏幕: " << m_screenInfo[i].name <<  m_screenInfo[i].x << m_screenInfo[i].y << m_screenInfo[i].width << m_screenInfo[i].height;
             //工具栏是否在屏幕内
-            toolIsInScreen = toolbarPoint.x() * m_pixelRatio >= m_screenInfo[i].x &&
-                             toolbarPoint.x() * m_pixelRatio  < (m_screenInfo[i].x + m_screenInfo[i].width) &&
-                             (toolbarPoint.y() - m_screenInfo[i].height) / m_pixelRatio + m_screenInfo[i].height >= m_screenInfo[i].y &&
-                             (toolbarPoint.y() - m_screenInfo[i].height) / m_pixelRatio + m_screenInfo[i].height < (m_screenInfo[i].y + m_screenInfo[i].height);
-            bool recordIsInScreen =  recordX * m_pixelRatio >= m_screenInfo[i].x &&
-                                     recordX * m_pixelRatio < (m_screenInfo[i].x + m_screenInfo[i].width) &&
-                                     recordY * m_pixelRatio >= m_screenInfo[i].y - 1 &&
-                                     recordY * m_pixelRatio < (m_screenInfo[i].y + m_screenInfo[i].height);
+            // m_screenInfo 为全逻辑坐标，toolbarPoint/recordX/recordY 亦为逻辑坐标（widget local），
+            // 直接比较即可，不再乘 m_pixelRatio（旧代码乘 m_pixelRatio 后与逻辑 x 比较，且
+            // 右边界 x+width 为逻辑+物理混算，1.25x 下边界错位导致工具栏检测失败）
+            toolIsInScreen = toolbarPoint.x() >= m_screenInfo[i].x &&
+                             toolbarPoint.x()  < (m_screenInfo[i].x + m_screenInfo[i].width) &&
+                             toolbarPoint.y() >= m_screenInfo[i].y &&
+                             toolbarPoint.y() < (m_screenInfo[i].y + m_screenInfo[i].height);
+            bool recordIsInScreen =  recordX >= m_screenInfo[i].x &&
+                                     recordX < (m_screenInfo[i].x + m_screenInfo[i].width) &&
+                                     recordY >= m_screenInfo[i].y - 1 &&
+                                     recordY < (m_screenInfo[i].y + m_screenInfo[i].height);
             //qDebug() << "工具栏是否在屏幕（"<< m_screenInfo[i].name<<"）内 ? " << toolIsInScreen;
             //qDebug() << "捕捉区域是否在屏幕（"<< m_screenInfo[i].name<<"）内 ? " << recordIsInScreen;
             //取出捕捉区域所在的屏幕
@@ -2587,12 +2598,12 @@ void MainWindow::updateToolBarPos()
                     toolbarPoint.setY(recordY + TOOLBAR_Y_SPACING);
                     //toolbarPoint.setY(m_screenInfo[i].y + TOOLBAR_Y_SPACING);
                     //qDebug() << "工具栏位置超出屏幕上边缘，已矫正 >>> toolbarPoint: " << toolbarPoint;
-                } else if (toolbarPoint.y() > m_screenInfo[i].y / m_pixelRatio + m_screenInfo[i].height / m_pixelRatio - m_toolBar->height() - TOOLBAR_Y_SPACING) {
+                } else if (toolbarPoint.y() > m_screenInfo[i].y + m_screenInfo[i].height - m_toolBar->height() - TOOLBAR_Y_SPACING) {
                     // 屏幕下超出
                     int y = std::max(recordY - m_toolBar->height() - TOOLBAR_Y_SPACING, 0);
                     //qDebug() << ">>> y: " << y;
-                    if (y > m_screenInfo[i].y + m_screenInfo[i].height / m_pixelRatio - m_toolBar->height() - TOOLBAR_Y_SPACING)
-                        y = m_screenInfo[i].y + static_cast<int>(m_screenInfo[i].height / m_pixelRatio) - m_toolBar->height() - TOOLBAR_Y_SPACING;
+                    if (y > m_screenInfo[i].y + m_screenInfo[i].height - m_toolBar->height() - TOOLBAR_Y_SPACING)
+                        y = m_screenInfo[i].y + m_screenInfo[i].height - m_toolBar->height() - TOOLBAR_Y_SPACING;
 
                     //已经调整工具栏位置之后，发现工具栏位置超出屏幕上边缘
                     if (y < m_screenInfo[i].y) {
@@ -2822,11 +2833,11 @@ void MainWindow::updateRecordButtonPos()
             if (recordButtonBarPoint.y() < m_screenInfo[i].y + TOOLBAR_Y_SPACING) {
                 // 屏幕上超出
                 recordButtonBarPoint.setY(m_screenInfo[i].y + TOOLBAR_Y_SPACING + 6);
-            } else if (recordButtonBarPoint.y() > m_screenInfo[i].y + m_screenInfo[i].height / m_pixelRatio - m_recordButton->height() - TOOLBAR_Y_SPACING) {
+            } else if (recordButtonBarPoint.y() > m_screenInfo[i].y + m_screenInfo[i].height - m_recordButton->height() - TOOLBAR_Y_SPACING) {
                 // 屏幕下超出
                 int y = std::max(recordY - m_recordButton->height() - TOOLBAR_Y_SPACING - 6, 0);
-                if (y > m_screenInfo[i].y + m_screenInfo[i].height / m_pixelRatio - m_recordButton->height() - TOOLBAR_Y_SPACING - 6)
-                    y = m_screenInfo[i].y + static_cast<int>(m_screenInfo[i].height / m_pixelRatio) - m_recordButton->height() - TOOLBAR_Y_SPACING - 6;
+                if (y > m_screenInfo[i].y + m_screenInfo[i].height - m_recordButton->height() - TOOLBAR_Y_SPACING - 6)
+                    y = m_screenInfo[i].y + m_screenInfo[i].height - m_recordButton->height() - TOOLBAR_Y_SPACING - 6;
                 recordButtonBarPoint.setY(y);
             }
             break;
@@ -2874,11 +2885,11 @@ void MainWindow::updateShotButtonPos()
             if (shotButtonBarPoint.y() < m_screenInfo[i].y + TOOLBAR_Y_SPACING) {
                 // 屏幕上超出
                 shotButtonBarPoint.setY(m_screenInfo[i].y + TOOLBAR_Y_SPACING + 6);
-            } else if (shotButtonBarPoint.y() > m_screenInfo[i].y + m_screenInfo[i].height / m_pixelRatio - m_shotButton->height() - TOOLBAR_Y_SPACING) {
+            } else if (shotButtonBarPoint.y() > m_screenInfo[i].y + m_screenInfo[i].height - m_shotButton->height() - TOOLBAR_Y_SPACING) {
                 // 屏幕下超出
                 int y = std::max(recordY - m_shotButton->height() - TOOLBAR_Y_SPACING - 6, 0);
-                if (y > m_screenInfo[i].y + m_screenInfo[i].height / m_pixelRatio - m_shotButton->height() - TOOLBAR_Y_SPACING - 6)
-                    y = m_screenInfo[i].y + static_cast<int>(m_screenInfo[i].height / m_pixelRatio) - m_shotButton->height() - TOOLBAR_Y_SPACING - 6;
+                if (y > m_screenInfo[i].y + m_screenInfo[i].height - m_shotButton->height() - TOOLBAR_Y_SPACING - 6)
+                    y = m_screenInfo[i].y + m_screenInfo[i].height - m_shotButton->height() - TOOLBAR_Y_SPACING - 6;
                 shotButtonBarPoint.setY(y);
             }
             break;
