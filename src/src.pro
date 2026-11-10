@@ -245,6 +245,7 @@ HEADERS += main_window.h \
     ext-image-capture/multiscreencapturecoordinator.h \
     ext-image-capture/multiscreenframecompositor.h \
     ext-image-capture/extcapturerecorder.h \
+    ext-image-capture/framepumpworker.h \
     ext-image-capture/extcaptureframebuffer.h \
     ext-image-capture/extcapturebridge.h \
     protocols/ext-image-copy-capture/qwayland-ext-image-copy-capture-v1.h \
@@ -395,6 +396,7 @@ SOURCES += main.cpp \
     ext-image-capture/multiscreencapturecoordinator.cpp \
     ext-image-capture/multiscreenframecompositor.cpp \
     ext-image-capture/extcapturerecorder.cpp \
+    ext-image-capture/framepumpworker.cpp \
     ext-image-capture/extcaptureframebuffer.cpp \
     ext-image-capture/extcapturebridge.cpp \
     protocols/ext-image-copy-capture/qwayland-ext-image-copy-capture-v1.cpp \

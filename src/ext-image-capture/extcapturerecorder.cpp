@@ -6,6 +6,7 @@
 #include "extcapturerecorder.h"
 #include "extcaptureintegration.h"
 #include "extcaptureframebuffer.h"
+#include "framepumpworker.h"
 #include "../utils/log.h"
 
 #include <QDebug>
@@ -22,6 +23,7 @@ ExtCaptureRecorder::ExtCaptureRecorder(QObject *parent)
     , m_extCapture(new ExtCaptureIntegration(this))
     , m_frameBuffer(new ExtCaptureFrameBuffer(this))
     , m_captureTimer(new QTimer(this))
+    , m_captureWatchdog(new QTimer(this))
     , m_state(Stopped)
     , m_frameRate(30)
     , m_frameCount(0)
@@ -33,6 +35,15 @@ ExtCaptureRecorder::ExtCaptureRecorder(QObject *parent)
     , m_ffmpegProcess(nullptr)
     , m_streamingMode(true)  
     , m_ffmpegStarted(false)
+    , m_framePump(nullptr)
+    , m_framePumpThread(nullptr)
+    , m_latestFrame(new LatestFrameStore)
+    , m_lastCaptureRequestNs(-1)
+    , m_captureIntervalNs(1000000000LL / 30)
+    , m_captureSequence(0)
+    , m_pumpOutputFrames(0)
+    , m_pumpRepeatedFrames(0)
+    , m_pumpBehindMs(0)
     , m_firstFrameWidth(0)
     , m_firstFrameHeight(0)
     , m_firstFrameStride(0)
@@ -58,9 +69,13 @@ ExtCaptureRecorder::ExtCaptureRecorder(QObject *parent)
             this, &ExtCaptureRecorder::onExtCaptureError);
 
     // 设置捕获定时器
-    m_captureTimer->setSingleShot(false);
+    m_captureTimer->setSingleShot(true);
     connect(m_captureTimer, &QTimer::timeout,
             this, &ExtCaptureRecorder::onCaptureTimer);
+    m_captureWatchdog->setSingleShot(true);
+    m_captureWatchdog->setInterval(3000);
+    connect(m_captureWatchdog, &QTimer::timeout,
+            this, &ExtCaptureRecorder::onCaptureWatchdog);
 
     qCDebug(dsrApp) << "ExtCaptureRecorder initialized";
 }
@@ -70,6 +85,10 @@ ExtCaptureRecorder::~ExtCaptureRecorder()
     if (m_state == Recording) {
         stopRecording();
     }
+
+    stopFramePump();
+    delete m_latestFrame;
+    m_latestFrame = nullptr;
 
     if (m_ffmpegProcess) {
         if (m_ffmpegProcess->state() != QProcess::NotRunning) {
@@ -116,6 +135,7 @@ bool ExtCaptureRecorder::startRecording(QScreen *screen, bool includeCursor,
     m_multiScreenRecording = false;
     m_includeCursor = includeCursor;
     m_frameRate = qMax(1, qMin(frameRate, 60)); // 限制在1-60fps
+    m_captureIntervalNs = 1000000000LL / m_frameRate;
     m_outputPath = outputPath.isEmpty() ? generateDefaultOutputPath() : outputPath;
     m_captureOutputGeometry = screen->geometry();
     m_captureRegionGlobal = captureRegion.normalized().intersected(m_captureOutputGeometry);
@@ -125,11 +145,18 @@ bool ExtCaptureRecorder::startRecording(QScreen *screen, bool includeCursor,
     
     // 重置计数器
     m_frameCount = 0;
+    m_captureSequence = 0;
+    m_lastCaptureRequestNs = -1;
+    m_pumpOutputFrames = 0;
+    m_pumpRepeatedFrames = 0;
+    m_pumpBehindMs = 0;
     m_ffmpegStarted = false;
     m_firstFrameWidth = 0;
     m_firstFrameHeight = 0;
     m_firstFrameStride = 0;
     m_firstFrameBuffer.clear();
+    if (m_latestFrame)
+        m_latestFrame->clear();
     
     // 清空帧缓冲区
     if (m_frameBuffer) {
@@ -175,16 +202,25 @@ bool ExtCaptureRecorder::startMultiScreenRecording(const QList<QScreen *> &scree
     m_multiScreenRecording = true;
     m_includeCursor = includeCursor;
     m_frameRate = qMax(1, qMin(frameRate, 60));
+    m_captureIntervalNs = 1000000000LL / m_frameRate;
     m_outputPath = outputPath.isEmpty() ? generateDefaultOutputPath() : outputPath;
     m_captureRegionGlobal = captureRegion.normalized();
     m_captureOutputGeometry = QRect();
     m_cropFilter.clear();
     m_frameCount = 0;
+    m_captureSequence = 0;
+    m_lastCaptureRequestNs = -1;
+    m_pumpOutputFrames = 0;
+    m_pumpRepeatedFrames = 0;
+    m_pumpBehindMs = 0;
     m_ffmpegStarted = false;
     m_firstFrameWidth = 0;
     m_firstFrameHeight = 0;
     m_firstFrameStride = 0;
     m_firstFrameBuffer.clear();
+
+    if (m_latestFrame)
+        m_latestFrame->clear();
 
     if (m_frameBuffer)
         m_frameBuffer->clear();
@@ -217,6 +253,7 @@ void ExtCaptureRecorder::stopRecording()
     
     // 停止定时器
     m_captureTimer->stop();
+    m_captureWatchdog->stop();
     // 确保移除可能的挂起触发
     m_captureTimer->disconnect(this);
     connect(m_captureTimer, &QTimer::timeout, this, &ExtCaptureRecorder::onCaptureTimer);
@@ -231,7 +268,12 @@ void ExtCaptureRecorder::stopRecording()
         m_frameBuffer->setGetFrame(false);
     }
 
-    setState(Stopped);
+    // 底层正常会发出 recordingStopped 并在 onRecordingStopped 中收尾。
+    // 若会话尚未真正启动（例如启动失败后调用停止），这里补一次收尾。
+    if (m_state == Stopping) {
+        finalizeRecording();
+        emit recordingStopped();
+    }
 }
 
 ExtCaptureRecorder::RecordState ExtCaptureRecorder::state() const
@@ -296,6 +338,20 @@ void ExtCaptureRecorder::onRecordingStarted()
     m_firstFrameTimestampNs = -1;
     m_lastFrameTimestampNs = -1;
     m_wallClockTimer.start();
+    m_captureClock.start();
+    m_lastCaptureRequestNs = -1;
+    m_pendingFrame = false;
+    m_captureTimer->stop();
+    m_captureWatchdog->stop();
+    m_statTicks = 0;
+    m_statRequests = 0;
+    m_statBusy = 0;
+    m_statFrames = 0;
+    m_statLatencyTotalMs = 0;
+    m_statLatencyMaxMs = 0;
+    m_statProcessTotalMs = 0;
+    m_statProcessMaxMs = 0;
+    m_captureStatsTimer.start();
     
     if (m_streamingMode) {
         // 流式编码模式：等待第一帧到达时启动FFmpeg进程
@@ -308,11 +364,10 @@ void ExtCaptureRecorder::onRecordingStarted()
         }
     }
     
-    // 设置定时器间隔
-    int interval = 1000 / m_frameRate; // 毫秒
-    m_captureTimer->start(interval);
-    
-    qCWarning(dsrApp) << "ExtCaptureRecorder::onRecordingStarted: Timer started with interval:" << interval << "ms";
+    // 采集由“上一帧就绪”驱动；首帧直接发起，避免启动阶段 GUI 初始化把
+    // 0ms 定时器推迟到数百毫秒之后。
+    onCaptureTimer();
+    qCWarning(dsrApp) << "ExtCaptureRecorder::onRecordingStarted: ready-driven capture started, target fps:" << m_frameRate;
     emit recordingStarted();
 }
 
@@ -338,6 +393,16 @@ void ExtCaptureRecorder::onFrameReady(const void *data, size_t size, int width, 
     if (m_state != Recording) {
         return;
     }
+    recordFrameArrival();
+    m_captureWatchdog->stop();
+
+    const qint64 expectedSize = static_cast<qint64>(stride) * height;
+    if (expectedSize <= 0 || static_cast<qint64>(size) < expectedSize) {
+        qCWarning(dsrApp) << "ExtCaptureRecorder::onFrameReady: short frame"
+                          << size << "expected:" << expectedSize;
+        scheduleNextCapture();
+        return;
+    }
 
     // 初始化帧缓冲区（第一帧时）
     if (m_frameCount == 0) {
@@ -345,54 +410,44 @@ void ExtCaptureRecorder::onFrameReady(const void *data, size_t size, int width, 
         m_frameHeight = height;
         m_frameStride = stride;
         updateCropFilter(width, height);
-        
-        if (!m_frameBuffer->initialize(width, height, stride)) {
+
+        if (!m_streamingMode && !m_frameBuffer->initialize(width, height, stride)) {
             qCWarning(dsrApp) << "ExtCaptureRecorder: Failed to initialize frame buffer";
             emit error("Failed to initialize frame buffer");
+            scheduleNextCapture();
             return;
         }
         
         qCDebug(dsrApp) << "ExtCaptureRecorder: Frame format:" << width << "x" << height << "stride:" << stride;
     }
 
-    if (m_streamingMode && !m_ffmpegStarted) {
-        // 首帧：设置帧尺寸信息并启动FFmpeg进程
-        m_frameWidth = width;
-        m_frameHeight = height;
-        m_frameStride = stride;
-        
-        if (!startFFmpegProcess()) {
-            qCCritical(dsrApp) << "ExtCaptureRecorder::onFrameReady: Failed to start FFmpeg process on first frame";
-            setState(Error);
-            emit error("Failed to start video encoding process");
-            return;
-        }
-        
-        m_ffmpegStarted = true;
-    }
-    
     updateFrameTimestamps(static_cast<int64_t>(timestamp));
 
-    if (m_streamingMode && m_ffmpegProcess && m_ffmpegProcess->state() == QProcess::Running) {
-        // 流式编码模式：直接写入FFmpeg
-        qint64 bytesWritten = m_ffmpegProcess->write(static_cast<const char*>(data), static_cast<qint64>(size));
-        if (bytesWritten != static_cast<qint64>(size)) {
-            qCWarning(dsrApp) << "ExtCaptureRecorder::onFrameReady: Failed to write complete frame, expected:" << size << "written:" << bytesWritten;
-        }
+    QElapsedTimer processTimer;
+    processTimer.start();
+    if (m_streamingMode) {
+        const QByteArray frameData(static_cast<const char *>(data), expectedSize);
+        storeFrameSnapshot(frameData, width, height, stride, timestamp);
     } else if (!m_streamingMode) {
         // 缓冲模式：添加帧到缓冲区
         int64_t frameTimestamp = (timestamp > 0) ? static_cast<int64_t>(timestamp) : QDateTime::currentMSecsSinceEpoch() * 1000000LL;
         m_frameBuffer->appendBuffer(static_cast<const unsigned char*>(data), size, width, height, stride, frameTimestamp);
     }
+    const qint64 processMs = processTimer.elapsed();
+    m_statProcessTotalMs += processMs;
+    m_statProcessMaxMs = qMax(m_statProcessMaxMs, processMs);
+    ++m_statFrames;
     
     m_frameCount++;
     
     // 发送进度更新
     emit progressUpdated(m_frameCount, recordingDuration());
+    scheduleNextCapture();
 }
 
 void ExtCaptureRecorder::onDmaFrameReady(int dmaBufferFd, void *gbmBo, size_t size, int width, int height, int stride, uint64_t timestamp)
 {
+    Q_UNUSED(size)
     if (dmaBufferFd < 0 || !gbmBo) {
         return;
     }
@@ -401,6 +456,8 @@ void ExtCaptureRecorder::onDmaFrameReady(int dmaBufferFd, void *gbmBo, size_t si
     if (m_state != Recording) {
         return;
     }
+    recordFrameArrival();
+    m_captureWatchdog->stop();
 
     // 初始化帧缓冲区（第一帧时）
     if (m_frameCount == 0) {
@@ -412,36 +469,29 @@ void ExtCaptureRecorder::onDmaFrameReady(int dmaBufferFd, void *gbmBo, size_t si
         qCDebug(dsrApp) << "ExtCaptureRecorder: DMA Buffer frame format:" << width << "x" << height << "stride:" << stride;
     }
 
-    if (m_streamingMode && !m_ffmpegStarted) {
-        // 首帧：设置帧尺寸信息并启动支持DMA Buffer的FFmpeg进程
-        m_frameWidth = width;
-        m_frameHeight = height;
-        m_frameStride = stride;
-        
-        if (!startDmaFFmpegProcess()) {
-            qCCritical(dsrApp) << "ExtCaptureRecorder::onDmaFrameReady: Failed to start DMA Buffer FFmpeg process on first frame";
-            setState(Error);
-            emit error("Failed to start DMA Buffer video encoding process");
-            return;
-        }
-        
-        m_ffmpegStarted = true;
-    }
-    
     updateFrameTimestamps(static_cast<int64_t>(timestamp));
 
-    if (m_streamingMode && m_ffmpegProcess && m_ffmpegProcess->state() == QProcess::Running) {
-        // DMA Buffer流式编码：使用硬件编码器处理DMA Buffer
-        if (!processDmaBufferFrame(dmaBufferFd, gbmBo, width, height, stride)) {
-            qCWarning(dsrApp) << "ExtCaptureRecorder::onDmaFrameReady: Failed to process DMA Buffer frame";
+    if (m_streamingMode) {
+        QElapsedTimer processTimer;
+        processTimer.start();
+        const QByteArray frameData = copyDmaFrame(dmaBufferFd, gbmBo, width, height, stride);
+        if (frameData.isEmpty()) {
+            qCWarning(dsrApp) << "ExtCaptureRecorder::onDmaFrameReady: Failed to map DMA Buffer frame";
+            scheduleNextCapture();
             return;
         }
+        storeFrameSnapshot(frameData, width, height, stride, timestamp);
+        const qint64 processMs = processTimer.elapsed();
+        m_statProcessTotalMs += processMs;
+        m_statProcessMaxMs = qMax(m_statProcessMaxMs, processMs);
+        ++m_statFrames;
     }
     
     m_frameCount++;
     
     // 发送进度更新
     emit progressUpdated(m_frameCount, recordingDuration());
+    scheduleNextCapture();
 }
 
 void ExtCaptureRecorder::onExtCaptureError(const QString &message)
@@ -456,13 +506,17 @@ void ExtCaptureRecorder::onMultiScreenFrameReady(const QByteArray &data,
                                                  int stride,
                                                  uint64_t timestamp)
 {
-    if (m_state != Recording || data.isEmpty() || width <= 0 || height <= 0)
+    if (m_state != Recording || data.isEmpty() || width <= 0 || height <= 0 || stride <= 0)
         return;
+
+    recordFrameArrival();
+    m_captureWatchdog->stop();
 
     const qint64 expectedSize = static_cast<qint64>(stride) * height;
     if (data.size() < expectedSize) {
         qCWarning(dsrApp) << "ExtCaptureRecorder::onMultiScreenFrameReady: short frame"
                           << data.size() << "expected:" << expectedSize;
+        scheduleNextCapture();
         return;
     }
 
@@ -470,28 +524,19 @@ void ExtCaptureRecorder::onMultiScreenFrameReady(const QByteArray &data,
     m_frameHeight = height;
     m_frameStride = stride;
 
-    if (m_streamingMode && !m_ffmpegStarted) {
-        if (!startDmaFFmpegProcess()) {
-            setState(Error);
-            emit error(QStringLiteral("Failed to start cross-output video encoder"));
-            return;
-        }
-        m_ffmpegStarted = true;
-    }
-
     updateFrameTimestamps(static_cast<int64_t>(timestamp));
-    if (!m_ffmpegProcess || m_ffmpegProcess->state() != QProcess::Running)
-        return;
 
-    const qint64 written = m_ffmpegProcess->write(data.constData(), expectedSize);
-    if (written != expectedSize) {
-        qCWarning(dsrApp) << "ExtCaptureRecorder::onMultiScreenFrameReady: incomplete write"
-                          << written << "expected:" << expectedSize;
-        return;
-    }
+    QElapsedTimer processTimer;
+    processTimer.start();
+    storeFrameSnapshot(data, width, height, stride, timestamp);
+    const qint64 processMs = processTimer.elapsed();
+    m_statProcessTotalMs += processMs;
+    m_statProcessMaxMs = qMax(m_statProcessMaxMs, processMs);
+    ++m_statFrames;
 
     ++m_frameCount;
     emit progressUpdated(m_frameCount, recordingDuration());
+    scheduleNextCapture();
 }
 
 void ExtCaptureRecorder::onCaptureTimer()
@@ -499,11 +544,277 @@ void ExtCaptureRecorder::onCaptureTimer()
     if (m_state != Recording || !m_extCapture) {
         return;
     }
+    if (m_pendingFrame) {
+        return;
+    }
 
-    if (m_multiScreenRecording)
-        m_extCapture->captureMultiScreenFrame();
+    ++m_statTicks;
+    QElapsedTimer requestCallTimer;
+    requestCallTimer.start();
+    const bool requested = m_multiScreenRecording
+            ? m_extCapture->captureMultiScreenFrame()
+            : m_extCapture->captureFrame();
+    const qint64 requestCallNs = requestCallTimer.nsecsElapsed();
+    m_statRequestCallTotalNs += requestCallNs;
+    m_statRequestCallMaxNs = qMax(m_statRequestCallMaxNs, requestCallNs);
+    if (requested) {
+        ++m_statRequests;
+        m_pendingFrame = true;
+        m_pendingFrameTimer.start();
+        m_lastCaptureRequestNs = m_captureClock.nsecsElapsed();
+        m_captureWatchdog->start();
+    } else {
+        ++m_statBusy;
+        // 会话可能仍在切换状态，稍后重试；帧就绪后会直接触发下一帧请求。
+        m_captureTimer->start(qBound(2, 1000 / qMax(1, m_frameRate), 10));
+    }
+
+    if (qEnvironmentVariableIsSet("DSR_CAPTURE_STATS")
+            && m_captureStatsTimer.elapsed() >= 1000) {
+        logCaptureStats();
+    }
+}
+
+void ExtCaptureRecorder::onCaptureWatchdog()
+{
+    if (m_state != Recording || !m_pendingFrame)
+        return;
+
+    qCWarning(dsrApp) << "ExtCaptureRecorder: frame request timed out, retrying";
+    m_pendingFrame = false;
+    scheduleNextCapture();
+}
+
+void ExtCaptureRecorder::scheduleNextCapture()
+{
+    if (m_state != Recording || m_pendingFrame)
+        return;
+
+    qint64 delayMs = 0;
+    if (m_lastCaptureRequestNs >= 0) {
+        const qint64 elapsedNs = m_captureClock.nsecsElapsed() - m_lastCaptureRequestNs;
+        if (elapsedNs < m_captureIntervalNs) {
+            delayMs = (m_captureIntervalNs - elapsedNs + 999999LL) / 1000000LL;
+        }
+    }
+    m_captureTimer->start(static_cast<int>(qMax<qint64>(0, delayMs)));
+}
+
+void ExtCaptureRecorder::logCaptureStats()
+{
+    const qint64 elapsedMs = m_captureStatsTimer.restart();
+    const double fps = elapsedMs > 0
+            ? m_statFrames * 1000.0 / elapsedMs
+            : 0.0;
+    const double avgLatency = m_statFrames > 0
+            ? static_cast<double>(m_statLatencyTotalMs) / m_statFrames
+            : 0.0;
+    const double avgProcess = m_statFrames > 0
+            ? static_cast<double>(m_statProcessTotalMs) / m_statFrames
+            : 0.0;
+    const double avgRequestCallMs = m_statTicks > 0
+            ? static_cast<double>(m_statRequestCallTotalNs) / m_statTicks / 1000000.0
+            : 0.0;
+    const double maxRequestCallMs = static_cast<double>(m_statRequestCallMaxNs) / 1000000.0;
+    qCWarning(dsrApp) << "capture stats:"
+                      << "windowMs:" << elapsedMs
+                      << "ticks:" << m_statTicks
+                      << "requests:" << m_statRequests
+                      << "busy:" << m_statBusy
+                      << "frames:" << m_statFrames
+                      << "fps:" << fps
+                      << "avgRequestToReadyMs:" << avgLatency
+                      << "maxRequestToReadyMs:" << m_statLatencyMaxMs
+                      << "avgRequestCallMs:" << avgRequestCallMs
+                      << "maxRequestCallMs:" << maxRequestCallMs
+                      << "avgProcessMs:" << avgProcess
+                      << "maxProcessMs:" << m_statProcessMaxMs
+                      << "outputFrames:" << m_pumpOutputFrames
+                      << "repeatedFrames:" << m_pumpRepeatedFrames
+                      << "pumpBehindMs:" << m_pumpBehindMs;
+
+    m_statTicks = 0;
+    m_statRequests = 0;
+    m_statBusy = 0;
+    m_statFrames = 0;
+    m_statLatencyTotalMs = 0;
+    m_statLatencyMaxMs = 0;
+    m_statProcessTotalMs = 0;
+    m_statProcessMaxMs = 0;
+    m_statRequestCallTotalNs = 0;
+    m_statRequestCallMaxNs = 0;
+}
+
+void ExtCaptureRecorder::onFramePumpStats(int outputFrames, int repeatedFrames, qint64 behindMs)
+{
+    m_pumpOutputFrames = outputFrames;
+    m_pumpRepeatedFrames = repeatedFrames;
+    m_pumpBehindMs = behindMs;
+}
+
+void ExtCaptureRecorder::onFramePumpError(const QString &message)
+{
+    qCCritical(dsrApp) << "ExtCaptureRecorder: frame pump failed:" << message;
+    emit error(message);
+    if (m_state == Recording || m_state == Starting)
+        stopRecording();
+}
+
+void ExtCaptureRecorder::recordFrameArrival()
+{
+    if (!m_pendingFrame) {
+        return;
+    }
+    const qint64 latencyMs = m_pendingFrameTimer.elapsed();
+    m_statLatencyTotalMs += latencyMs;
+    m_statLatencyMaxMs = qMax(m_statLatencyMaxMs, latencyMs);
+    m_pendingFrame = false;
+}
+
+bool ExtCaptureRecorder::ensureFramePump(int width, int height, int stride)
+{
+    if (m_framePump)
+        return true;
+
+    QDir outputDir = QFileInfo(m_outputPath).dir();
+    if (!outputDir.exists() && !outputDir.mkpath(".")) {
+        qCCritical(dsrApp) << "ExtCaptureRecorder: failed to create output directory" << outputDir.path();
+        return false;
+    }
+
+    m_framePumpThread = new QThread(this);
+    m_framePump = new FramePumpWorker(m_frameRate, m_outputPath, m_cropFilter, m_latestFrame);
+    m_framePump->moveToThread(m_framePumpThread);
+    connect(m_framePump, &FramePumpWorker::statsUpdated,
+            this, &ExtCaptureRecorder::onFramePumpStats);
+    connect(m_framePump, &FramePumpWorker::errorOccurred,
+            this, &ExtCaptureRecorder::onFramePumpError);
+    m_framePumpThread->start();
+
+    QMetaObject::invokeMethod(m_framePump, "start", Qt::QueuedConnection,
+                              Q_ARG(int, width), Q_ARG(int, height), Q_ARG(int, stride),
+                              Q_ARG(qint64, m_captureClock.isValid() ? m_captureClock.nsecsElapsed() : 0));
+    return true;
+}
+
+void ExtCaptureRecorder::stopFramePump()
+{
+    if (!m_framePump && !m_framePumpThread)
+        return;
+
+    if (m_framePumpThread && m_framePumpThread->isRunning()) {
+        if (m_framePump) {
+            QMetaObject::invokeMethod(m_framePump, "stop", Qt::BlockingQueuedConnection);
+            int outputFrames = 0;
+            int repeatedFrames = 0;
+            QMetaObject::invokeMethod(m_framePump, [worker = m_framePump, &outputFrames, &repeatedFrames]() {
+                outputFrames = worker->outputFrames();
+                repeatedFrames = worker->repeatedFrames();
+                delete worker;
+            },
+                                      Qt::BlockingQueuedConnection);
+            m_pumpOutputFrames = outputFrames;
+            m_pumpRepeatedFrames = repeatedFrames;
+            m_framePump = nullptr;
+        }
+        m_framePumpThread->quit();
+        if (!m_framePumpThread->wait(8000))
+            qCWarning(dsrApp) << "ExtCaptureRecorder: frame pump thread did not stop in time";
+    } else if (m_framePump) {
+        delete m_framePump;
+        m_framePump = nullptr;
+    }
+
+    delete m_framePumpThread;
+    m_framePumpThread = nullptr;
+}
+
+bool ExtCaptureRecorder::storeFrameSnapshot(const QByteArray &data, int width, int height,
+                                            int stride, uint64_t timestamp)
+{
+    if (!m_latestFrame || data.isEmpty() || width <= 0 || height <= 0 || stride <= 0)
+        return false;
+
+    const qint64 expectedSize = static_cast<qint64>(stride) * height;
+    if (data.size() < expectedSize) {
+        qCWarning(dsrApp) << "ExtCaptureRecorder::storeFrameSnapshot: short frame"
+                          << data.size() << "expected:" << expectedSize;
+        return false;
+    }
+
+    CaptureFrameSnapshotPtr snapshot = std::make_shared<CaptureFrameSnapshot>();
+    if (data.size() == expectedSize)
+        snapshot->data = data;
     else
-        m_extCapture->captureFrame();
+        snapshot->data = QByteArray(data.constData(), expectedSize);
+    snapshot->width = width;
+    snapshot->height = height;
+    snapshot->stride = stride;
+    snapshot->ptsNs = static_cast<qint64>(timestamp);
+    snapshot->sequence = ++m_captureSequence;
+    m_latestFrame->set(snapshot);
+
+    return ensureFramePump(width, height, stride);
+}
+
+QByteArray ExtCaptureRecorder::copyDmaFrame(int dmaBufferFd, void *gbmBo, int width,
+                                            int height, int stride)
+{
+#ifdef ENABLE_UNIT_TEST
+    Q_UNUSED(dmaBufferFd)
+    Q_UNUSED(gbmBo)
+    Q_UNUSED(width)
+    Q_UNUSED(height)
+    Q_UNUSED(stride)
+    return QByteArray();
+#else
+    if (dmaBufferFd < 0 || !gbmBo || width <= 0 || height <= 0)
+        return QByteArray();
+
+    gbm_bo *bo = static_cast<gbm_bo *>(gbmBo);
+    const int boWidth = static_cast<int>(gbm_bo_get_width(bo));
+    const int boHeight = static_cast<int>(gbm_bo_get_height(bo));
+    const int boStride = static_cast<int>(gbm_bo_get_stride(bo));
+    if (boWidth <= 0 || boHeight <= 0 || boStride <= 0)
+        return QByteArray();
+
+    const int outHeight = qMin(height, boHeight);
+    const int outStride = stride > 0 ? stride : boStride;
+    const qint64 outSize = static_cast<qint64>(outStride) * outHeight;
+    if (outSize <= 0)
+        return QByteArray();
+
+    QByteArray result;
+    result.resize(static_cast<int>(outSize));
+    char *dst = result.data();
+
+    void *mapped = mmap(nullptr, static_cast<size_t>(boStride) * boHeight,
+                        PROT_READ, MAP_SHARED, dmaBufferFd, 0);
+    if (mapped != MAP_FAILED) {
+        const char *src = static_cast<const char *>(mapped);
+        for (int y = 0; y < outHeight; ++y)
+            memcpy(dst + static_cast<qint64>(y) * outStride,
+                   src + static_cast<qint64>(y) * boStride,
+                   qMin(outStride, boStride));
+        munmap(mapped, static_cast<size_t>(boStride) * boHeight);
+        return result;
+    }
+
+    uint32_t mapStride = 0;
+    void *mapHandle = nullptr;
+    void *gbmData = gbm_bo_map(bo, 0, 0, boWidth, boHeight,
+                               GBM_BO_TRANSFER_READ, &mapStride, &mapHandle);
+    if (!gbmData)
+        return QByteArray();
+
+    const char *src = static_cast<const char *>(gbmData);
+    for (int y = 0; y < outHeight; ++y)
+        memcpy(dst + static_cast<qint64>(y) * outStride,
+               src + static_cast<qint64>(y) * mapStride,
+               qMin(outStride, static_cast<int>(mapStride)));
+    gbm_bo_unmap(bo, mapHandle);
+    return result;
+#endif
 }
 
 void ExtCaptureRecorder::setState(RecordState newState)
@@ -522,7 +833,20 @@ void ExtCaptureRecorder::initializeCapture()
 
 void ExtCaptureRecorder::finalizeRecording()
 {
-    if (m_streamingMode && m_ffmpegStarted && m_ffmpegProcess) {
+    m_captureTimer->stop();
+    m_captureWatchdog->stop();
+
+    if (m_framePump) {
+        stopFramePump();
+        m_ffmpegStarted = false;
+        if (!QFile::exists(m_outputPath) || QFileInfo(m_outputPath).size() == 0) {
+            qCCritical(dsrApp) << "ExtCaptureRecorder::finalizeRecording: frame pump produced no video";
+        } else {
+            qCWarning(dsrApp) << "ExtCaptureRecorder::finalizeRecording: frame pump finalized without remux,"
+                              << "output frames:" << m_pumpOutputFrames
+                              << "repeated frames:" << m_pumpRepeatedFrames;
+        }
+    } else if (m_streamingMode && m_ffmpegStarted && m_ffmpegProcess) {
         // 流式编码模式：完成FFmpeg进程
         m_ffmpegProcess->closeWriteChannel();
         
@@ -561,6 +885,8 @@ void ExtCaptureRecorder::finalizeRecording()
     if (m_frameBuffer) {
         m_frameBuffer->reset();
     }
+    if (m_latestFrame)
+        m_latestFrame->clear();
     
     // 重置录制状态和计数器，为下次录制做准备
     m_frameCount = 0;
@@ -568,6 +894,7 @@ void ExtCaptureRecorder::finalizeRecording()
     m_frameWidth = 0;
     m_frameHeight = 0;
     m_frameStride = 0;
+    m_lastCaptureRequestNs = -1;
     
     setState(Stopped);
 }
@@ -977,6 +1304,15 @@ bool ExtCaptureRecorder::adjustVideoDurationIfNeeded()
 
     const double stretchFactor = actualDurationSec / encodedDurationSec;
     const double deviation = std::abs(stretchFactor - 1.0);
+    const double effectiveFps = m_frameCount / actualDurationSec;
+
+    if (effectiveFps < m_frameRate * 0.5) {
+        qCWarning(dsrApp) << "ExtCaptureRecorder::adjustVideoDurationIfNeeded: low effective capture fps"
+                          << effectiveFps << "target:" << m_frameRate
+                          << "frames:" << m_frameCount
+                          << "actual:" << actualDurationSec
+                          << "encoded:" << encodedDurationSec;
+    }
 
     // 如果时长误差在 3% 以内，忽略校正
     if (deviation < 0.03) {
@@ -984,20 +1320,24 @@ bool ExtCaptureRecorder::adjustVideoDurationIfNeeded()
         return true;
     }
 
+    const QString suffix = QFileInfo(m_outputPath).suffix();
     QString tempPath = m_outputPath;
-    tempPath.append(".tmp_fix.mp4");
+    tempPath.append(QStringLiteral(".tmp_fix.%1")
+                            .arg(suffix.isEmpty() ? QStringLiteral("mp4") : suffix));
 
     QProcess fixProcess;
     QString stretchStr = QString::number(stretchFactor, 'f', 6);
     QStringList args;
     args << "-y"
+         << "-itsscale" << stretchStr
          << "-i" << m_outputPath
-         << "-filter:v" << QString("setpts=%1*PTS").arg(stretchStr)
-         << "-pix_fmt" << "yuv420p"
-         << "-c:v" << "libx264"
+         << "-map" << "0"
+         << "-c" << "copy"
+         << "-avoid_negative_ts" << "make_zero"
          << tempPath;
 
-    qCWarning(dsrApp) << "ExtCaptureRecorder::adjustVideoDurationIfNeeded: correcting duration, stretch factor:" << stretchStr;
+    qCWarning(dsrApp) << "ExtCaptureRecorder::adjustVideoDurationIfNeeded: correcting duration without re-encoding,"
+                      << "stretch factor:" << stretchStr;
 
     fixProcess.start("ffmpeg", args);
     if (!fixProcess.waitForStarted(3000)) {
