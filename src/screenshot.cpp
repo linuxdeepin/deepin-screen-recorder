@@ -39,7 +39,8 @@ Screenshot::Screenshot(QObject *parent)
 
 bool Screenshot::startTreelandScreenshot(int mode, bool enableWindowSnap,
                                          const QString &outputPath,
-                                         bool notificationsEnabled)
+                                         bool notificationsEnabled,
+                                         int delayMs)
 {
     if (!Dsr::Screenshot::ScreenshotSessionFactory::isCurrentPlatformSupported())
         return false;
@@ -48,7 +49,12 @@ bool Screenshot::startTreelandScreenshot(int mode, bool enableWindowSnap,
     request.mode = static_cast<Dsr::Screenshot::Mode>(mode);
     request.enableWindowSnap = enableWindowSnap;
     request.notificationsEnabled = notificationsEnabled;
-    request.outputPath = outputPath;
+    request.outputPath = outputPath.isEmpty() ? m_pendingSavePath : outputPath;
+    request.delayMs = qMax(0, delayMs);
+    qCInfo(dsrApp) << "Starting TreeLand screenshot session, mode:" << mode
+                   << "snap:" << enableWindowSnap
+                   << "delayMs:" << request.delayMs
+                   << "output:" << request.outputPath;
 
     QString error;
     auto *session = Dsr::Screenshot::ScreenshotSessionFactory::createForCurrentPlatform(this,
@@ -95,14 +101,18 @@ bool Screenshot::startTreelandScreenshot(int mode, bool enableWindowSnap,
         m_treelandSession.clear();
         return false;
     }
+    m_pendingSavePath.clear();
     return true;
 }
 
 void Screenshot::startScreenshot()
 {
     qCDebug(dsrApp) << "startScreenshot() called.";
-    if (startTreelandScreenshot(static_cast<int>(Dsr::Screenshot::Mode::Region), true))
+    if (Dsr::Screenshot::ScreenshotSessionFactory::isCurrentPlatformSupported()) {
+        if (!startTreelandScreenshot(static_cast<int>(Dsr::Screenshot::Mode::Region), true))
+            qWarning() << "Unable to start TreeLand region screenshot session";
         return;
+    }
     m_window.initAttributes();
     m_window.initResource();
     m_window.initLaunchMode(m_launchMode);
@@ -135,11 +145,14 @@ void Screenshot::startScreenshot()
 void Screenshot::customScreenshot(bool hideToolbar, bool notify)
 {
     m_isCustomScreenshot = true; // 标记为自定义截图
-    if (startTreelandScreenshot(static_cast<int>(Dsr::Screenshot::Mode::Region),
-                                true,
-                                QString(),
-                                notify))
+    if (Dsr::Screenshot::ScreenshotSessionFactory::isCurrentPlatformSupported()) {
+        if (!startTreelandScreenshot(static_cast<int>(Dsr::Screenshot::Mode::Region),
+                                     true,
+                                     QString(),
+                                     notify))
+            qWarning() << "Unable to start TreeLand custom screenshot session";
         return;
+    }
     m_window.setToolbarVisable(hideToolbar);
     startScreenshot();
 }
@@ -148,9 +161,27 @@ void Screenshot::delayScreenshot(double num)
 {
     qCDebug(dsrApp) << "delayScreenshot() called with delay:" << num << "seconds.";
     if (Dsr::Screenshot::ScreenshotSessionFactory::isCurrentPlatformSupported()) {
-        QTimer::singleShot(int(1000 * num), this, [this] {
-            startTreelandScreenshot(static_cast<int>(Dsr::Screenshot::Mode::Region), true);
-        });
+        const qint64 requestedMs = qRound64(qMax(0.0, num) * 1000.0);
+        const int delayMs = static_cast<int>(qMin<qint64>(requestedMs,
+                                                          24LL * 60 * 60 * 1000));
+        if (num >= 2) {
+            const QString summary = QString(tr("Screen Capture will start in %1 seconds").arg(num));
+            DBusNotify *notifyDBus = new DBusNotify(this);
+            notifyDBus->Notify(Utils::appName, 0, "deepin-screen-recorder", "",
+                               summary, QStringList(), QVariantMap(), 3000);
+            QTimer::singleShot(int(500 * num), notifyDBus, [notifyDBus] {
+                notifyDBus->CloseNotification(0);
+            });
+        }
+        // Delay is owned by the session controller so cancel/fail can stop
+        // it, and so D-Bus, CLI and shortcut paths share one implementation.
+        if (!startTreelandScreenshot(static_cast<int>(Dsr::Screenshot::Mode::Region),
+                                     true,
+                                     QString(),
+                                     true,
+                                     delayMs)) {
+            qWarning() << "Unable to start delayed TreeLand screenshot session";
+        }
         return;
     }
     QString summary = QString(tr("Screen Capture will start in %1 seconds").arg(num));
@@ -189,33 +220,47 @@ void Screenshot::delayScreenshot(double num)
 void Screenshot::fullscreenScreenshot()
 {
     qCDebug(dsrApp) << "fullscreenScreenshot() called.";
-    if (startTreelandScreenshot(static_cast<int>(Dsr::Screenshot::Mode::FullScreen), false))
+    if (Dsr::Screenshot::ScreenshotSessionFactory::isCurrentPlatformSupported()) {
+        if (!startTreelandScreenshot(static_cast<int>(Dsr::Screenshot::Mode::FullScreen), false))
+            qWarning() << "Unable to start TreeLand fullscreen screenshot session";
         return;
+    }
     m_window.fullScreenshot();
 }
 
 void Screenshot::topWindowScreenshot()
 {
     qCDebug(dsrApp) << "topWindowScreenshot() called.";
-    if (startTreelandScreenshot(static_cast<int>(Dsr::Screenshot::Mode::TopWindow), true))
+    if (Dsr::Screenshot::ScreenshotSessionFactory::isCurrentPlatformSupported()) {
+        if (!startTreelandScreenshot(static_cast<int>(Dsr::Screenshot::Mode::TopWindow), true))
+            qWarning() << "Unable to start TreeLand top-window screenshot session";
         return;
+    }
     m_window.topWindow();
 }
 
 void Screenshot::noNotifyScreenshot()
 {
     qCDebug(dsrApp) << "noNotifyScreenshot() called.";
-    if (startTreelandScreenshot(static_cast<int>(Dsr::Screenshot::Mode::Region),
-                                true,
-                                QString(),
-                                false))
+    if (Dsr::Screenshot::ScreenshotSessionFactory::isCurrentPlatformSupported()) {
+        if (!startTreelandScreenshot(static_cast<int>(Dsr::Screenshot::Mode::Region),
+                                     true,
+                                     QString(),
+                                     false))
+            qWarning() << "Unable to start TreeLand no-notify screenshot session";
         return;
+    }
     m_window.noNotify();
 }
 
 void Screenshot::OcrScreenshot()
 {
     qCDebug(dsrApp) << "OcrScreenshot() called.";
+    if (Dsr::Screenshot::ScreenshotSessionFactory::isCurrentPlatformSupported()) {
+        if (!startTreelandScreenshot(static_cast<int>(Dsr::Screenshot::Mode::Ocr), true))
+            qWarning() << "Unable to start TreeLand OCR screenshot session";
+        return;
+    }
 #ifdef OCR_SCROLL_FLAGE_ON
     m_window.initAttributes();
     m_window.initResource();
@@ -232,8 +277,11 @@ void Screenshot::ScrollScreenshot()
 {
     qCDebug(dsrApp) << "ScrollScreenshot() called.";
 #ifdef OCR_SCROLL_FLAGE_ON
-    if (startTreelandScreenshot(static_cast<int>(Dsr::Screenshot::Mode::Scroll), false))
+    if (Dsr::Screenshot::ScreenshotSessionFactory::isCurrentPlatformSupported()) {
+        if (!startTreelandScreenshot(static_cast<int>(Dsr::Screenshot::Mode::Scroll), true))
+            qWarning() << "Unable to start TreeLand scroll screenshot session";
         return;
+    }
 
     //2d模式不支持滚动截图
     qCDebug(dsrApp) << "Whether to turn on window effects? " << (DWindowManagerHelper::instance()->hasBlurWindow() ? "yes" : "no") << ".";
@@ -270,14 +318,18 @@ void Screenshot::ScrollScreenshot()
 void Screenshot::savePathScreenshot(const QString &path)
 {
     qCDebug(dsrApp) << "savePathScreenshot() called with path:" << path << ".";
-    if (startTreelandScreenshot(static_cast<int>(Dsr::Screenshot::Mode::Region), true, path))
+    if (Dsr::Screenshot::ScreenshotSessionFactory::isCurrentPlatformSupported()) {
+        if (!startTreelandScreenshot(static_cast<int>(Dsr::Screenshot::Mode::Region), true, path))
+            qWarning() << "Unable to start TreeLand save-path screenshot session";
         return;
+    }
     m_window.savePath(path);
 }
 
 void Screenshot::setSavePath(const QString &path)
 {
     qCDebug(dsrApp) << "setSavePath() called with path:" << path << ".";
+    m_pendingSavePath = path;
     m_window.setSavePath(path);
 }
 
@@ -286,11 +338,14 @@ void Screenshot::startScreenshotFor3rd(const QString &path)
     qCDebug(dsrApp) << "startScreenshotFor3rd() called with path:" << path << ".";
     Utils::is3rdInterfaceStart = true;
     m_isCustomScreenshot = true;
-    if (startTreelandScreenshot(static_cast<int>(Dsr::Screenshot::Mode::Region),
-                                true,
-                                path,
-                                false))
+    if (Dsr::Screenshot::ScreenshotSessionFactory::isCurrentPlatformSupported()) {
+        if (!startTreelandScreenshot(static_cast<int>(Dsr::Screenshot::Mode::Region),
+                                     true,
+                                     path,
+                                     false))
+            qWarning() << "Unable to start TreeLand third-party screenshot session";
         return;
+    }
     m_window.startScreenshotFor3rd(path);
 }
 
@@ -303,6 +358,13 @@ void Screenshot::initLaunchMode(const QString &launchmode)
 void Screenshot::fullScreenRecord(QString fileName)
 {
     qCDebug(dsrApp) << "Start Full Screen Record! File name:" << fileName << ".";
+    if (Dsr::Screenshot::ScreenshotSessionFactory::isCurrentPlatformSupported()) {
+        if (!startTreelandScreenshot(static_cast<int>(Dsr::Screenshot::Mode::RecordFullScreen),
+                                     false,
+                                     fileName))
+            qWarning() << "Unable to start TreeLand fullscreen recording session";
+        return;
+    }
     m_window.fullScreenRecord(fileName);
 }
 
@@ -320,6 +382,11 @@ void Screenshot::stopRecord()
 void Screenshot::stopApp()
 {
     qCDebug(dsrApp) << "stopApp() called.";
+    if (m_treelandSession) {
+        qCDebug(dsrApp) << "Forwarding stopApp to TreeLand session.";
+        m_treelandSession->cancel();
+        return;
+    }
     m_window.stopApp();
 }
 

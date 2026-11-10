@@ -66,6 +66,10 @@ public:
         Q_UNUSED(hasGlobalCursor);
     }
     virtual void setRecordModeActive(bool active) { Q_UNUSED(active); }
+    // Apply the launch mode before the first user interaction. This lets a
+    // --record session open directly on the recorder toolbar instead of
+    // starting in screenshot mode and requiring an extra UI switch.
+    virtual void setInitialMode(Mode mode) { Q_UNUSED(mode); }
     // Returns the HEX value under the selection magnifier. Empty means the
     // magnifier is not active and Ctrl+C should keep its normal screenshot
     // semantics.

@@ -51,6 +51,7 @@ HEADERS += \
     ../../src/screenshot/ports/isnaphintsource.h \
     ../../src/screenshot/ports/iwindowtagger.h \
     ../../src/screenshot/session/annotationcoordinator.h \
+    ../../src/screenshot/session/platformdetection.h \
     ../../src/screenshot/session/screenshotsessioncontroller.h \
     ../../src/screenshot/platform/treeland/recordingfiletransaction.h \
     ../../src/screenshot/platform/treeland/treelandscrollcompositor.h \

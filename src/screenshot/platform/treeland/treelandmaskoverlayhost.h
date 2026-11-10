@@ -47,6 +47,7 @@ public:
                            const QPoint &globalCursor,
                            bool hasGlobalCursor) override;
     void setRecordModeActive(bool active) override;
+    void setInitialMode(Mode mode) override;
     QString magnifierColorHex() const override;
     bool startRecordingCountdown(const QRect &globalSelection) override;
     void stopRecordingCountdown() override;

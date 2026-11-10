@@ -92,7 +92,7 @@ BackendCapabilities TreelandScreenshotBackend::capabilities() const
     capabilities.frozenFrame = true;
     capabilities.compositorSnap = true;
     capabilities.multiOutputMasks = true;
-    capabilities.topWindowCapture = false;
+    capabilities.topWindowCapture = true;
     capabilities.cursorInFrame = false;
     return capabilities;
 }
@@ -111,10 +111,6 @@ QList<OutputDescriptor> TreelandScreenshotBackend::outputs() const
 void TreelandScreenshotBackend::prepare(const Request &request)
 {
     m_cancelled = false;
-    if (request.mode == Mode::TopWindow) {
-        emit failed(QStringLiteral("Treeland 新截图后端暂不支持顶层窗口截图"));
-        return;
-    }
     if (request.includeCursor) {
         emit failed(QStringLiteral("Treeland 新截图后端暂不支持把光标写入冻结帧"));
         return;

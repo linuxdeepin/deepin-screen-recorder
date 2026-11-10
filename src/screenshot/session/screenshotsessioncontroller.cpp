@@ -22,6 +22,7 @@
 #include "../../recordertablet.h"
 
 #include <QGuiApplication>
+#include <QFileInfo>
 #include <QScreen>
 #include <QTimer>
 #include <QDebug>
@@ -77,6 +78,16 @@ QRect clampedSelectionMove(const QRect &selection,
     return moved;
 }
 
+bool isRecordMode(Mode mode)
+{
+    return mode == Mode::Record || mode == Mode::RecordFullScreen;
+}
+
+bool modeStartsAfterSelection(Mode mode)
+{
+    return mode == Mode::Scroll || mode == Mode::Ocr || mode == Mode::TopWindow;
+}
+
 QList<QScreen *> recordingScreensForSelection(const QRect &selection,
                                                const QList<OutputFrame> &outputs)
 {
@@ -98,6 +109,21 @@ QList<QScreen *> recordingScreensForSelection(const QRect &selection,
             result.append(matched);
     }
     return result;
+}
+
+int recordingFormatForOutputPath(int configuredFormat, const QString &outputPath)
+{
+    if (outputPath.isEmpty())
+        return configuredFormat;
+
+    const QString suffix = QFileInfo(outputPath).suffix().toLower();
+    if (suffix == QStringLiteral("gif"))
+        return Utils::kGIF;
+    if (suffix == QStringLiteral("mkv"))
+        return Utils::kMKV;
+    if (suffix == QStringLiteral("mp4"))
+        return Utils::kMP4;
+    return configuredFormat;
 }
 
 } // namespace
@@ -134,6 +160,11 @@ ScreenshotSessionController::ScreenshotSessionController(IScreenshotBackend *bac
     m_annotationCoordinator = new AnnotationCoordinator(m_selection,
                                                         m_annotationEditor,
                                                         this);
+
+    m_startDelayTimer = new QTimer(this);
+    m_startDelayTimer->setSingleShot(true);
+    connect(m_startDelayTimer, &QTimer::timeout,
+            this, &ScreenshotSessionController::beginBackendPrepare);
 
     m_scrollStopTimeout = new QTimer(this);
     m_scrollStopTimeout->setSingleShot(true);
@@ -258,6 +289,7 @@ bool ScreenshotSessionController::start(const Request &request)
     m_inputTarget = InputTarget::Inactive;
     m_activeCursorIntent = CursorIntent::Cross;
     m_recordMode = false;
+    m_initialModeActionTriggered = false;
     m_roundedCornerRadius = 0;
     m_scrollSelection = QRect();
     m_lastScrollPreview = QImage();
@@ -265,6 +297,8 @@ bool ScreenshotSessionController::start(const Request &request)
     m_scrollPaused = false;
     m_scrollStopping = false;
     m_scrollFrameFailureCount = 0;
+    if (m_startDelayTimer)
+        m_startDelayTimer->stop();
     if (m_scrollStopTimeout)
         m_scrollStopTimeout->stop();
     if (m_scrollTipHideTimeout)
@@ -275,8 +309,19 @@ bool ScreenshotSessionController::start(const Request &request)
     stopRecordingCountdown();
     m_selection->clear();
     m_state = State::PreparingFrame;
-    m_backend->prepare(m_request);
+    if (m_request.delayMs > 0) {
+        m_startDelayTimer->start(m_request.delayMs);
+    } else {
+        beginBackendPrepare();
+    }
     return true;
+}
+
+void ScreenshotSessionController::beginBackendPrepare()
+{
+    if (m_state != State::PreparingFrame || m_finished)
+        return;
+    m_backend->prepare(m_request);
 }
 
 void ScreenshotSessionController::cancel()
@@ -402,10 +447,12 @@ void ScreenshotSessionController::onBackendPrepared(const FrozenFrameSet &frames
         m_scrollCapture->setFrozenFrames(frames);
     m_selection->setDesktopBounds(frames.virtualDesktopRect);
     m_annotationCoordinator->syncBounds();
-    if (m_request.mode == Mode::FullScreen)
+    if (m_request.mode == Mode::FullScreen
+            || m_request.mode == Mode::RecordFullScreen) {
         m_selection->setGeometry(frames.virtualDesktopRect);
-    else if (!m_request.initialRegion.isEmpty())
+    } else if (!m_request.initialRegion.isEmpty()) {
         m_selection->setGeometry(m_request.initialRegion);
+    }
 
     QList<OutputDescriptor> outputs;
     outputs.reserve(frames.outputs.size());
@@ -459,10 +506,28 @@ void ScreenshotSessionController::onOverlayReady()
         return;
 
     m_state = State::Selecting;
-    m_overlay->setRecordModeActive(false);
+    const bool recordMode = isRecordMode(m_request.mode);
+    m_recordMode = recordMode;
+    if (m_overlay)
+        m_overlay->setInitialMode(m_request.mode);
+    m_overlay->setRecordModeActive(recordMode);
     updateOverlayHints();
     if (m_request.enableWindowSnap)
         startSnapHints();
+    if (m_request.mode == Mode::RecordFullScreen) {
+        QTimer::singleShot(0, this, [this]() {
+            if (m_state == State::Selecting && !m_finished)
+                onRecordStartRequested();
+        });
+    } else if (m_request.mode == Mode::FullScreen) {
+        // Match the X11 fullscreen command: the whole virtual desktop is the
+        // selection and the result is saved without waiting for a toolbar
+        // confirmation. This also keeps --delay/--fullscreen deterministic.
+        QTimer::singleShot(0, this, [this]() {
+            if (m_state == State::Selecting && !m_finished)
+                onConfirmRequested();
+        });
+    }
 }
 
 void ScreenshotSessionController::onOverlayFailed(const QString &reason)
@@ -546,6 +611,8 @@ void ScreenshotSessionController::onPointerReleased(const QPoint &globalPos)
         m_state = State::Editing;
         m_snapHint = QRect();
         m_overlay->setSnapHint(QRect());
+        if (modeStartsAfterSelection(m_request.mode))
+            scheduleInitialModeAction();
     } else if (m_state == State::Selecting) {
         m_overlay->setSnapHint(m_snapHint);
     }
@@ -721,6 +788,21 @@ void ScreenshotSessionController::onSnapRegionChanged(const QRect &globalRegion)
     m_snapHint = SelectionOverlayGeometry::snapRegionForOutputs(
             rawRegion, outputGeometries).intersected(m_frames.virtualDesktopRect);
     m_overlay->setSnapHint(m_snapHint);
+
+    if (m_request.mode == Mode::TopWindow
+            && !m_snapHint.isEmpty()
+            && !m_initialModeActionTriggered) {
+        // TreeLand does not expose window geometry through the foreign
+        // toplevel protocol. The compositor snap target already provides the
+        // topmost window under the pointer, so reuse that region and finish
+        // the top-window capture without asking the user to drag a second time.
+        m_selection->setGeometry(m_snapHint);
+        m_state = State::Editing;
+        stopSnapHints();
+        m_overlay->setSnapHint(QRect());
+        syncOverlaySelection();
+        scheduleInitialModeAction();
+    }
 }
 
 void ScreenshotSessionController::onRecordModeChanged(bool enabled)
@@ -799,6 +881,7 @@ void ScreenshotSessionController::startRecordingAfterCountdown()
                                                 QStringLiteral("cursor"))
                                     .toInt()
             != 0;
+    request.outputPath = m_request.outputPath;
     request.frameRate = settings->getValue(QStringLiteral("recorder"),
                                            QStringLiteral("frame_rate"))
                                 .toInt();
@@ -807,6 +890,8 @@ void ScreenshotSessionController::startRecordingAfterCountdown()
     request.format = settings->getValue(QStringLiteral("recorder"),
                                         QStringLiteral("format"))
                              .toInt();
+    request.format = recordingFormatForOutputPath(request.format,
+                                                  m_request.outputPath);
 
     // Let the compositor remove the full-screen mask before the first frame is
     // requested; otherwise the frozen screenshot surface can leak into video.
@@ -1192,6 +1277,39 @@ void ScreenshotSessionController::exportScrollResult()
     finish(State::Completed);
 }
 
+void ScreenshotSessionController::scheduleInitialModeAction()
+{
+    if (m_initialModeActionTriggered || m_finished)
+        return;
+    m_initialModeActionTriggered = true;
+
+    // Let the current pointer-release / overlay update finish before switching
+    // into scrolling, OCR, or top-window export.
+    QTimer::singleShot(60, this, [this]() {
+        if (m_finished)
+            return;
+        switch (m_request.mode) {
+        case Mode::Scroll:
+            if (m_state == State::Selecting || m_state == State::Editing)
+                onScrollStartRequested();
+            break;
+        case Mode::Ocr:
+            if (m_state == State::Selecting || m_state == State::Editing)
+                onOcrRequested();
+            break;
+        case Mode::TopWindow:
+            if (m_state == State::Selecting || m_state == State::Editing)
+                onConfirmRequested();
+            break;
+        case Mode::Region:
+        case Mode::FullScreen:
+        case Mode::Record:
+        case Mode::RecordFullScreen:
+            break;
+        }
+    });
+}
+
 void ScreenshotSessionController::setRecordingState(bool recording)
 {
     if (m_recordingStateActive == recording)
@@ -1475,6 +1593,8 @@ void ScreenshotSessionController::onCancelRequested()
         m_selection->cancelInteraction();
     m_inputTarget = InputTarget::Inactive;
     m_pressed = false;
+    if (m_startDelayTimer)
+        m_startDelayTimer->stop();
     m_backend->cancel();
     finish(State::Cancelled);
 }
@@ -1600,6 +1720,8 @@ void ScreenshotSessionController::fail(const QString &reason)
         return;
 
     qCritical() << "Screenshot session failed:" << reason;
+    if (m_startDelayTimer)
+        m_startDelayTimer->stop();
     if (m_scrollResumeTimeout)
         m_scrollResumeTimeout->stop();
     if (m_scrollTipHideTimeout)
@@ -1628,6 +1750,8 @@ void ScreenshotSessionController::finish(State state)
         return;
     stopRecordingCountdown();
     stopSnapHints();
+    if (m_startDelayTimer)
+        m_startDelayTimer->stop();
     m_scrollStopping = false;
     m_scrollPaused = false;
     if (m_scrollStopTimeout)

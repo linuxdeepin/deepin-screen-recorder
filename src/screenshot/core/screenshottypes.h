@@ -17,7 +17,10 @@ enum class Mode {
     Region,
     FullScreen,
     TopWindow,
-    Scroll
+    Scroll,
+    Record,
+    RecordFullScreen,
+    Ocr
 };
 
 enum class CursorIntent {
@@ -61,6 +64,7 @@ struct Request {
     QRect initialRegion;
     QString outputPath;
     QByteArray outputFormat;
+    int delayMs = 0;
 };
 
 struct OutputDescriptor {

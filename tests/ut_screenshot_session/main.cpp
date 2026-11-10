@@ -6,6 +6,7 @@
 #include "screenshot/core/selectionoverlaygeometry.h"
 #include "screenshot/export/screenshotexportservice.h"
 #include "screenshot/ports/iannotationeditor.h"
+#include "screenshot/ports/irecordingsession.h"
 #include "screenshot/ports/iscrollcapture.h"
 #include "screenshot/ports/iscrollmerger.h"
 #include "screenshot/core/inputregiongeometry.h"
@@ -19,10 +20,12 @@
 #include "screenshot/platform/treeland/recordingfiletransaction.h"
 #include "screenshot/platform/treeland/treelandscrollcompositor.h"
 #include "screenshot/session/annotationcoordinator.h"
+#include "screenshot/session/platformdetection.h"
 #include "screenshot/session/screenshotsessioncontroller.h"
 #include "utils/imageeffects.h"
 #include "utils/shapesutils.h"
 #include "utils/pixmergethread.h"
+#include "utils.h"
 
 #include <QColor>
 #include <QImage>
@@ -202,6 +205,49 @@ public:
     }
 };
 
+class FakeRecordingSession : public IRecordingSession
+{
+    Q_OBJECT
+public:
+    int startCount = 0;
+    int stopCount = 0;
+    int cancelCount = 0;
+    RecordingRequest lastRequest;
+    State currentState = State::Idle;
+    bool startResult = true;
+
+    bool start(const RecordingRequest &request) override
+    {
+        ++startCount;
+        lastRequest = request;
+        if (!startResult)
+            return false;
+        currentState = State::Recording;
+        emit started();
+        return true;
+    }
+
+    void stop() override
+    {
+        ++stopCount;
+    }
+
+    void cancel() override
+    {
+        ++cancelCount;
+    }
+
+    State state() const override
+    {
+        return currentState;
+    }
+
+    QString outputPath() const override
+    {
+        return lastRequest.outputPath;
+    }
+};
+
 class FakeOverlay : public IScreenshotOverlayHost
 {
     Q_OBJECT
@@ -236,6 +282,16 @@ public:
     int scrollTipShowCount = 0;
     int scrollTipHideCount = 0;
     ScrollTipKind lastScrollTip = ScrollTipKind::None;
+    Mode initialMode = Mode::Region;
+    bool hasInitialMode = false;
+    bool recordModeActive = false;
+    bool countdownResult = true;
+    bool emitCountdownImmediately = false;
+    int countdownStartCount = 0;
+    int countdownStopCount = 0;
+    bool beginRecordingResult = true;
+    int beginRecordingCount = 0;
+    bool recordingActive = false;
 
     bool create(const QList<OutputDescriptor> &outputs) override
     {
@@ -285,6 +341,17 @@ public:
         snapHint = globalRegion;
     }
 
+    void setInitialMode(Mode mode) override
+    {
+        initialMode = mode;
+        hasInitialMode = true;
+    }
+
+    void setRecordModeActive(bool active) override
+    {
+        recordModeActive = active;
+    }
+
     void setSelectionFinalized(bool value) override
     {
         finalized = value;
@@ -322,6 +389,36 @@ public:
     {
         ++scrollFinishCount;
         scrollActive = false;
+    }
+
+    bool startRecordingCountdown(const QRect &) override
+    {
+        ++countdownStartCount;
+        if (emitCountdownImmediately)
+            emit recordingCountdownFinished();
+        return countdownResult;
+    }
+
+    void stopRecordingCountdown() override
+    {
+        ++countdownStopCount;
+    }
+
+    bool beginRecording(const QRect &) override
+    {
+        ++beginRecordingCount;
+        recordingActive = beginRecordingResult;
+        return beginRecordingResult;
+    }
+
+    void finishRecording() override
+    {
+        recordingActive = false;
+    }
+
+    bool isRecordingActive() const override
+    {
+        return recordingActive;
     }
 
     bool isScrollActive() const override
@@ -732,12 +829,58 @@ public:
     }
 };
 
+class ScopedEnvVar
+{
+public:
+    ScopedEnvVar(const char *name, const QByteArray &value)
+        : m_name(name)
+        , m_wasSet(qEnvironmentVariableIsSet(name))
+        , m_oldValue(qgetenv(name))
+    {
+        qputenv(name, value);
+    }
+
+    ~ScopedEnvVar()
+    {
+        if (m_wasSet)
+            qputenv(m_name, m_oldValue);
+        else
+            qunsetenv(m_name);
+    }
+
+private:
+    QByteArray m_name;
+    bool m_wasSet = false;
+    QByteArray m_oldValue;
+};
+
 } // namespace
 
 class ScreenshotSessionTest : public QObject
 {
     Q_OBJECT
 private slots:
+    void treeLandDetectionIgnoresPlainWaylandSessions()
+    {
+        ScopedEnvVar demoMode("DSR_TREELAND_DEMO", QByteArray());
+        ScopedEnvVar compositor("DDE_CURRENT_COMPOSITOR", QByteArray("KWin"));
+
+        QVERIFY(!isTreeLandEnvironment());
+
+        qputenv("DDE_CURRENT_COMPOSITOR", "wayland");
+        QVERIFY(!isTreeLandEnvironment());
+
+        qputenv("DDE_CURRENT_COMPOSITOR", "TreeLand");
+        QVERIFY(isTreeLandEnvironment());
+
+        qputenv("DDE_CURRENT_COMPOSITOR", "treeland");
+        QVERIFY(isTreeLandEnvironment());
+
+        qputenv("DDE_CURRENT_COMPOSITOR", "KWin");
+        qputenv("DSR_TREELAND_DEMO", "1");
+        QVERIFY(isTreeLandEnvironment());
+    }
+
     void annotationContentBoundsCoverGeometryWithoutDecorations()
     {
         Toolshape rectangle;
@@ -1091,6 +1234,183 @@ private slots:
         QVERIFY(sink->notificationsEnabled);
         QCOMPARE(sink->notificationSettingCount, 1);
         QVERIFY(overlay->closed);
+    }
+
+    void recordModeUsesRecorderToolbarFromStart()
+    {
+        FakeBackend *backend = new FakeBackend;
+        backend->frames.virtualDesktopRect = QRect(0, 0, 800, 600);
+        backend->frames.outputs = {makeFrame(QRect(0, 0, 800, 600), Qt::red)};
+        auto *overlay = new FakeOverlay;
+        auto *sink = new FakeResultSink;
+
+        ScreenshotSessionController controller(backend, overlay, nullptr, nullptr, sink);
+        Request request;
+        request.mode = Mode::Record;
+        request.enableWindowSnap = false;
+
+        QVERIFY(controller.start(request));
+        QCOMPARE(controller.state(), ScreenshotSessionController::State::Selecting);
+        QVERIFY(overlay->hasInitialMode);
+        QCOMPARE(overlay->initialMode, Mode::Record);
+        QVERIFY(overlay->recordModeActive);
+    }
+
+    void recordFullScreenStartsCountdownAndPassesOutputPath()
+    {
+        QScreen *screen = QGuiApplication::primaryScreen();
+        QVERIFY(screen);
+
+        FakeBackend *backend = new FakeBackend;
+        backend->frames.virtualDesktopRect = screen->geometry();
+        backend->frames.outputs = {
+            makeFrame(screen->geometry(), Qt::red)
+        };
+        backend->frames.outputs.first().output.outputId = screen->name();
+
+        auto *overlay = new FakeOverlay;
+        overlay->emitCountdownImmediately = true;
+        auto *recording = new FakeRecordingSession;
+        auto *sink = new FakeResultSink;
+
+        ScreenshotSessionController controller(backend, overlay, nullptr, nullptr, sink);
+        controller.setRecordingSession(recording);
+
+        Request request;
+        request.mode = Mode::RecordFullScreen;
+        request.enableWindowSnap = false;
+        request.outputPath = QStringLiteral("/tmp/treeland-record.mp4");
+
+        QVERIFY(controller.start(request));
+        QTRY_COMPARE_WITH_TIMEOUT(controller.state(),
+                                  ScreenshotSessionController::State::Countdown,
+                                  2000);
+        QCOMPARE(overlay->selection, screen->geometry());
+        QCOMPARE(overlay->initialMode, Mode::RecordFullScreen);
+        QCOMPARE(overlay->countdownStartCount, 1);
+
+        QTRY_COMPARE_WITH_TIMEOUT(recording->startCount, 1, 2000);
+        QCOMPARE(recording->lastRequest.outputPath,
+                 QStringLiteral("/tmp/treeland-record.mp4"));
+        QCOMPARE(recording->lastRequest.format, int(Utils::kMP4));
+        QCOMPARE(controller.state(), ScreenshotSessionController::State::Recording);
+    }
+
+    void scrollModeAutomaticallyStartsAfterSelection()
+    {
+        FakeBackend *backend = new FakeBackend;
+        backend->frames.virtualDesktopRect = QRect(0, 0, 800, 600);
+        backend->frames.outputs = {makeFrame(QRect(0, 0, 800, 600), Qt::red)};
+        auto *overlay = new FakeOverlay;
+        auto *sink = new FakeResultSink;
+        auto *capture = new FakeScrollCapture;
+        auto *merger = new FakeScrollMerger;
+
+        ScreenshotSessionController controller(backend, overlay, nullptr, nullptr, sink);
+        controller.setScrollCapture(capture);
+        controller.setScrollMerger(merger);
+
+        Request request;
+        request.mode = Mode::Scroll;
+        request.enableWindowSnap = false;
+
+        QVERIFY(controller.start(request));
+        overlay->press(QPoint(100, 100));
+        overlay->move(QPoint(299, 299));
+        overlay->release(QPoint(299, 299));
+
+        QTRY_COMPARE_WITH_TIMEOUT(capture->startCount, 1, 2000);
+        QCOMPARE(controller.state(), ScreenshotSessionController::State::Scrolling);
+        QCOMPARE(overlay->scrollSelection, QRect(100, 100, 200, 200));
+        QVERIFY(overlay->scrollActive);
+    }
+
+    void ocrModeAutomaticallyConsumesSelection()
+    {
+        FakeBackend *backend = new FakeBackend;
+        backend->frames.virtualDesktopRect = QRect(0, 0, 800, 600);
+        backend->frames.outputs = {makeFrame(QRect(0, 0, 800, 600), Qt::red)};
+        auto *overlay = new FakeOverlay;
+        auto *sink = new FakeResultSink;
+
+        ScreenshotSessionController controller(backend, overlay, nullptr, nullptr, sink);
+        Request request;
+        request.mode = Mode::Ocr;
+        request.enableWindowSnap = false;
+
+        QVERIFY(controller.start(request));
+        overlay->press(QPoint(100, 100));
+        overlay->move(QPoint(299, 299));
+        overlay->release(QPoint(299, 299));
+
+        QTRY_COMPARE_WITH_TIMEOUT(sink->ocrCount, 1, 2000);
+        QCOMPARE(controller.state(), ScreenshotSessionController::State::Completed);
+        QVERIFY(sink->lastResult.isValid());
+    }
+
+    void topWindowModeUsesSnapRegionWithoutSecondDrag()
+    {
+        FakeBackend *backend = new FakeBackend;
+        backend->frames.virtualDesktopRect = QRect(0, 0, 800, 600);
+        backend->frames.outputs = {makeFrame(QRect(0, 0, 800, 600), Qt::red)};
+        auto *overlay = new FakeOverlay;
+        auto *snapHints = new FakeSnapHints;
+        auto *sink = new FakeResultSink;
+
+        ScreenshotSessionController controller(backend, overlay, snapHints, nullptr, sink);
+        Request request;
+        request.mode = Mode::TopWindow;
+        // The fake overlay cannot tag native mask windows. Snap events still
+        // reach the controller through ISnapHintSource, which is the part
+        // this test exercises.
+        request.enableWindowSnap = false;
+
+        QVERIFY(controller.start(request));
+        QCOMPARE(controller.state(), ScreenshotSessionController::State::Selecting);
+
+        snapHints->setRegion(QRect(120, 80, 320, 240));
+        QTRY_COMPARE_WITH_TIMEOUT(sink->saveCount, 1, 2000);
+        QCOMPARE(controller.state(), ScreenshotSessionController::State::Completed);
+        QCOMPARE(overlay->selection, QRect(120, 80, 320, 240));
+    }
+
+    void delayedSessionWaitsBeforePreparingBackend()
+    {
+        FakeBackend *backend = new FakeBackend;
+        backend->frames.virtualDesktopRect = QRect(0, 0, 800, 600);
+        backend->frames.outputs = {makeFrame(QRect(0, 0, 800, 600), Qt::red)};
+        auto *overlay = new FakeOverlay;
+        auto *sink = new FakeResultSink;
+
+        ScreenshotSessionController controller(backend, overlay, nullptr, nullptr, sink);
+        Request request;
+        request.delayMs = 80;
+
+        QVERIFY(controller.start(request));
+        QCOMPARE(controller.state(), ScreenshotSessionController::State::PreparingFrame);
+        QCOMPARE(backend->prepareCount, 0);
+
+        QTRY_COMPARE_WITH_TIMEOUT(backend->prepareCount, 1, 2000);
+        QCOMPARE(controller.state(), ScreenshotSessionController::State::Selecting);
+    }
+
+    void cancelledDelayDoesNotPrepareBackend()
+    {
+        FakeBackend *backend = new FakeBackend;
+        backend->frames.virtualDesktopRect = QRect(0, 0, 800, 600);
+        backend->frames.outputs = {makeFrame(QRect(0, 0, 800, 600), Qt::red)};
+        auto *overlay = new FakeOverlay;
+        auto *sink = new FakeResultSink;
+
+        ScreenshotSessionController controller(backend, overlay, nullptr, nullptr, sink);
+        Request request;
+        request.delayMs = 300;
+
+        QVERIFY(controller.start(request));
+        controller.cancel();
+        QCOMPARE(controller.state(), ScreenshotSessionController::State::Cancelled);
+        QTest::qWait(450);
+        QCOMPARE(backend->prepareCount, 0);
     }
 
     void scrollInputRegionKeepsInteractiveControlsAndPassesWheelThroughHole()
@@ -2692,6 +3012,26 @@ private slots:
         QCOMPARE(sink->saveCount, 1);
         QCOMPARE(sink->lastResult.image.size(), QSize(3840, 1080));
         QCOMPARE(controller.state(), ScreenshotSessionController::State::Completed);
+    }
+
+    void fullScreenRequestAutoSavesWithoutConfirmation()
+    {
+        FakeBackend *backend = new FakeBackend;
+        backend->frames.virtualDesktopRect = QRect(0, 0, 800, 600);
+        backend->frames.outputs = {makeFrame(QRect(0, 0, 800, 600), Qt::red)};
+        auto *overlay = new FakeOverlay;
+        auto *sink = new FakeResultSink;
+        ScreenshotSessionController controller(backend, overlay, nullptr, nullptr, sink);
+
+        Request request;
+        request.mode = Mode::FullScreen;
+        request.outputPath = QStringLiteral("/tmp/fullscreen.png");
+
+        QVERIFY(controller.start(request));
+        QTRY_COMPARE_WITH_TIMEOUT(sink->saveCount, 1, 2000);
+        QCOMPARE(controller.state(), ScreenshotSessionController::State::Completed);
+        QCOMPARE(sink->requestedPath, QStringLiteral("/tmp/fullscreen.png"));
+        QVERIFY(sink->lastResult.isValid());
     }
 
     void overlayMappingFailureFailsSession()

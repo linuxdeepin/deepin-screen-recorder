@@ -60,7 +60,8 @@ private:
     bool isRecording() const;
     bool startTreelandScreenshot(int mode, bool enableWindowSnap,
                                  const QString &outputPath = QString(),
-                                 bool notificationsEnabled = true);
+                                 bool notificationsEnabled = true,
+                                 int delayMs = 0);
 
 private:
     //void initUI();
@@ -70,6 +71,7 @@ private:
     MainWindow m_window;
     bool m_isCustomScreenshot = false; // 标记是否是自定义截图
     bool m_isRecording = false; // 实际录屏状态
+    QString m_pendingSavePath;
     QPointer<Dsr::Screenshot::ScreenshotSessionController> m_treelandSession;
 
 };
