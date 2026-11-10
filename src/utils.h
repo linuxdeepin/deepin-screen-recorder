@@ -24,14 +24,14 @@ class Utils : public QObject
     Q_OBJECT
 public:
     struct ScreenInfo {
-        int x;
-        int y;
-        int width;
-        int height;
+        int x;          // 逻辑坐标（QScreen::geometry().x()）
+        int y;          // 逻辑坐标（QScreen::geometry().y()）
+        int width;      // 逻辑坐标（QScreen::geometry().width()）
+        int height;     // 逻辑坐标（QScreen::geometry().height()）
         QString name;
         /**
-         * @brief 该屏自身的缩放比。多屏混缩放（如内屏 150% + 外屏 100%）时
-         *        各屏不同，width/height 必须按各自的 scaleFactor 换算
+         * @brief 该屏自身的缩放比。需要物理尺寸时按 width*scaleFactor / height*scaleFactor 换算。
+         *        多屏混缩放（如内屏 150% + 外屏 100%）时各屏不同。
          */
         qreal scaleFactor = 1.0;
         ~ScreenInfo() {}
