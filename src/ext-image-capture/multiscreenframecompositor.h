@@ -59,6 +59,11 @@ public:
     void setCropRegion(const QRect& region); // For region recording
     void clearCropRegion(); // For full-screen recording
 
+    // Physical-pixel canvas scale. The captured frames are physical pixels,
+    // while QScreen geometries and crop regions are logical pixels.
+    void setOutputScale(qreal scale);
+    qreal getOutputScale() const;
+
     // Frame composition interface
     bool addScreenFrame(const DmaFrameInfo& frameInfo);
     bool isCompositionReady() const;
@@ -86,6 +91,8 @@ private:
     bool areAllFramesReady() const;
     uint64_t getLatestTimestamp() const;
     void resetFrameReadyFlags();
+    QSize scaledOutputSize(const QSize &logicalSize) const;
+    QRect scaleLogicalRect(const QRect &rect, qreal scale) const;
 
 private:
     // Configuration
@@ -100,8 +107,9 @@ private:
     mutable QMutex m_frameMutex;
     
     // Output configuration
-    QSize m_outputSize; // Final output size (virtual desktop or crop region)
+    QSize m_outputSize; // Final output size in physical pixels
     int m_outputStride;
+    qreal m_outputScale = 1.0;
     
     // Performance tracking
     int m_frameCount = 0;

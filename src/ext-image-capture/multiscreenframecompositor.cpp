@@ -34,13 +34,38 @@ void MultiScreenFrameCompositor::setVirtualDesktopSize(const QSize& size)
 {
     QMutexLocker locker(&m_frameMutex);
     m_virtualDesktopSize = size;
-    
+
     if (!m_hasCropRegion) {
-        m_outputSize = size;
-        m_outputStride = size.width() * 4; // RGBA format
+        m_outputSize = scaledOutputSize(size);
+        m_outputStride = m_outputSize.width() * 4; // RGBA format
     }
-    
-    qCDebug(dsrApp) << "MultiScreenFrameCompositor: Virtual desktop size set to" << size;
+
+    qCDebug(dsrApp) << "MultiScreenFrameCompositor: Virtual desktop size set to" << size
+                    << "output scale:" << m_outputScale
+                    << "physical output size:" << m_outputSize;
+}
+
+void MultiScreenFrameCompositor::setOutputScale(qreal scale)
+{
+    QMutexLocker locker(&m_frameMutex);
+    if (!qIsFinite(scale) || scale <= 0.0)
+        scale = 1.0;
+    m_outputScale = scale;
+
+    const QSize logicalSize = m_hasCropRegion ? m_cropRegion.size()
+                                              : m_virtualDesktopSize;
+    m_outputSize = scaledOutputSize(logicalSize);
+    m_outputStride = m_outputSize.isEmpty() ? 0 : m_outputSize.width() * 4;
+
+    qCDebug(dsrApp) << "MultiScreenFrameCompositor: Output scale set to" << m_outputScale
+                    << "logical size:" << logicalSize
+                    << "physical output size:" << m_outputSize;
+}
+
+qreal MultiScreenFrameCompositor::getOutputScale() const
+{
+    QMutexLocker locker(&m_frameMutex);
+    return m_outputScale;
 }
 
 void MultiScreenFrameCompositor::setScreenLayouts(const QList<QScreen*>& screens)
@@ -72,11 +97,13 @@ void MultiScreenFrameCompositor::setScreenLayouts(const QList<QScreen*>& screens
     }
 
     if (!m_hasCropRegion) {
-        m_outputSize = m_contentBounds.size();
+        m_outputSize = scaledOutputSize(m_contentBounds.size());
         m_outputStride = m_outputSize.width() * 4;
     }
-    
-    qCDebug(dsrApp) << "MultiScreenFrameCompositor: Configured" << m_frameBuffers.size() << "screens";
+
+    qCDebug(dsrApp) << "MultiScreenFrameCompositor: Configured" << m_frameBuffers.size()
+                    << "screens; output scale:" << m_outputScale
+                    << "physical output size:" << m_outputSize;
 }
 
 void MultiScreenFrameCompositor::setCropRegion(const QRect& region)
@@ -85,25 +112,27 @@ void MultiScreenFrameCompositor::setCropRegion(const QRect& region)
     m_cropRegion = region.normalized();
     m_hasCropRegion = true;
 
-    // libx264 with yuv420p requires even dimensions. Keep the requested
-    // top-left origin and trim at most one pixel from the right/bottom edge.
-    const int width = qMax(2, m_cropRegion.width() - (m_cropRegion.width() % 2));
-    const int height = qMax(2, m_cropRegion.height() - (m_cropRegion.height() % 2));
-    m_outputSize = QSize(width, height);
-    m_outputStride = width * 4; // RGBA format
+    // Keep the canvas at physical resolution. The crop region and screen
+    // geometries are logical pixels, while captured frames are physical
+    // pixels; libx264 with yuv420p also requires even output dimensions.
+    m_outputSize = scaledOutputSize(m_cropRegion.size());
+    m_outputStride = m_outputSize.width() * 4; // RGBA format
 
     qCDebug(dsrApp) << "MultiScreenFrameCompositor: Crop region set to" << m_cropRegion
-                    << "output size:" << m_outputSize;
+                    << "output scale:" << m_outputScale
+                    << "physical output size:" << m_outputSize;
 }
 
 void MultiScreenFrameCompositor::clearCropRegion()
 {
     QMutexLocker locker(&m_frameMutex);
     m_hasCropRegion = false;
-    m_outputSize = m_virtualDesktopSize;
-    m_outputStride = m_virtualDesktopSize.width() * 4; // RGBA format
-    
-    qCDebug(dsrApp) << "MultiScreenFrameCompositor: Crop region cleared";
+    m_outputSize = scaledOutputSize(m_virtualDesktopSize);
+    m_outputStride = m_outputSize.width() * 4; // RGBA format
+
+    qCDebug(dsrApp) << "MultiScreenFrameCompositor: Crop region cleared"
+                    << "output scale:" << m_outputScale
+                    << "physical output size:" << m_outputSize;
 }
 
 bool MultiScreenFrameCompositor::addScreenFrame(const DmaFrameInfo& frameInfo)
@@ -241,9 +270,7 @@ QByteArray MultiScreenFrameCompositor::performFrameStitching()
             continue;
         }
         
-        QRect capturedRegion = m_hasCropRegion ? m_cropRegion : m_contentBounds;
-        if (m_hasCropRegion)
-            capturedRegion = capturedRegion.intersected(QRect(m_cropRegion.topLeft(), m_outputSize));
+        const QRect capturedRegion = m_hasCropRegion ? m_cropRegion : m_contentBounds;
         const QRect intersection = frameBuffer.screenGeometry.intersected(capturedRegion);
         if (intersection.isEmpty())
             continue;
@@ -253,15 +280,25 @@ QByteArray MultiScreenFrameCompositor::performFrameStitching()
         const qreal scaleY = static_cast<qreal>(screenImage.height())
                 / qMax(1, frameBuffer.screenGeometry.height());
         const QRect local = intersection.translated(-frameBuffer.screenGeometry.topLeft());
-        QRect sourceRect(qRound(local.x() * scaleX),
-                         qRound(local.y() * scaleY),
-                         qRound(local.width() * scaleX),
-                         qRound(local.height() * scaleY));
+        const int sourceLeft = qRound(local.left() * scaleX);
+        const int sourceTop = qRound(local.top() * scaleY);
+        const int sourceRight = qRound((local.left() + local.width()) * scaleX);
+        const int sourceBottom = qRound((local.top() + local.height()) * scaleY);
+        QRect sourceRect(sourceLeft,
+                         sourceTop,
+                         qMax(0, sourceRight - sourceLeft),
+                         qMax(0, sourceBottom - sourceTop));
         sourceRect = sourceRect.intersected(screenImage.rect());
         if (sourceRect.isEmpty())
             continue;
 
-        const QRect targetRect = intersection.translated(-outputOrigin.topLeft());
+        QRect targetRect = scaleLogicalRect(intersection.translated(-outputOrigin.topLeft()),
+                                            m_outputScale);
+        targetRect = targetRect.intersected(compositeImage.rect());
+        if (targetRect.isEmpty())
+            continue;
+        painter.setRenderHint(QPainter::SmoothPixmapTransform,
+                              targetRect.size() != sourceRect.size());
         painter.drawImage(targetRect, screenImage, sourceRect);
 
         qCDebug(dsrApp) << "MultiScreenFrameCompositor: Drew screen" << frameBuffer.screen->name()
@@ -315,6 +352,30 @@ QImage MultiScreenFrameCompositor::convertDmaBufferToQImage(const DmaFrameInfo& 
     qCWarning(dsrApp) << "MultiScreenFrameCompositor: No usable image for screen"
                       << frameInfo.screen->name();
     return QImage();
+}
+
+QSize MultiScreenFrameCompositor::scaledOutputSize(const QSize &logicalSize) const
+{
+    if (logicalSize.isEmpty())
+        return QSize();
+
+    int width = qMax(2, qRound(logicalSize.width() * m_outputScale));
+    int height = qMax(2, qRound(logicalSize.height() * m_outputScale));
+    width -= width % 2;
+    height -= height % 2;
+    return QSize(width, height);
+}
+
+QRect MultiScreenFrameCompositor::scaleLogicalRect(const QRect &rect, qreal scale) const
+{
+    if (rect.isEmpty() || !qIsFinite(scale) || scale <= 0.0)
+        return QRect();
+
+    const int left = qRound(rect.left() * scale);
+    const int top = qRound(rect.top() * scale);
+    const int right = qRound((rect.left() + rect.width()) * scale);
+    const int bottom = qRound((rect.top() + rect.height()) * scale);
+    return QRect(left, top, qMax(0, right - left), qMax(0, bottom - top));
 }
 
 QRect MultiScreenFrameCompositor::calculateDrawRect(const QRect& screenGeometry) const

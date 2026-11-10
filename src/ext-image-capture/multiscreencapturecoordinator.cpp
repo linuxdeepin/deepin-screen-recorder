@@ -413,11 +413,16 @@ void MultiScreenCaptureCoordinator::calculateVirtualDesktopLayout(const QList<QS
     // 计算虚拟桌面的边界
     int minX = INT_MAX, minY = INT_MAX;
     int maxX = INT_MIN, maxY = INT_MIN;
+    qreal outputScale = 1.0;
 
     for (QScreen* screen : screens) {
         QRect geometry = screen->geometry();
         qCDebug(dsrApp) << "Screen" << screen->name() << "geometry:" << geometry;
-        
+
+        const qreal devicePixelRatio = screen->devicePixelRatio();
+        if (qIsFinite(devicePixelRatio) && devicePixelRatio > outputScale)
+            outputScale = devicePixelRatio;
+
         minX = qMin(minX, geometry.x());
         minY = qMin(minY, geometry.y());
         maxX = qMax(maxX, geometry.x() + geometry.width());
@@ -452,14 +457,19 @@ void MultiScreenCaptureCoordinator::calculateVirtualDesktopLayout(const QList<QS
                         << "original geometry:" << screenGeometry;
     }
     
-    // 配置compositor
+    // 配置compositor。采集帧是物理像素，而 QScreen geometry 和录制选区是
+    // 逻辑像素；以所有输出中的最大 DPR 建立物理像素画布，避免 2K@125%
+    // 或 4K@200% 被降采样后变糊。
     if (m_compositor) {
+        m_compositor->setOutputScale(outputScale);
         m_compositor->setVirtualDesktopSize(m_virtualDesktopSize);
         m_compositor->setScreenLayouts(screens);
         m_compositor->clearCropRegion(); // 默认全屏录制，后续可通过接口设置裁剪区域
-        
-        qCDebug(dsrApp) << "MultiScreenCaptureCoordinator: Compositor configured with" 
-                        << screens.size() << "screens, virtual desktop size:" << m_virtualDesktopSize;
+
+        qCDebug(dsrApp) << "MultiScreenCaptureCoordinator: Compositor configured with"
+                        << screens.size() << "screens, virtual desktop size:" << m_virtualDesktopSize
+                        << "output scale:" << outputScale
+                        << "physical output size:" << m_compositor->getOutputSize();
     }
 }
 

@@ -57,6 +57,49 @@ TEST_F(MultiScreenFrameCompositorTest, virtualDesktopAndCrop)
     EXPECT_EQ(m_c->getOutputStride(), 400);
 }
 
+TEST_F(MultiScreenFrameCompositorTest, outputScaleUsesPhysicalCanvas)
+{
+    EXPECT_DOUBLE_EQ(m_c->getOutputScale(), 1.0);
+
+    m_c->setOutputScale(1.25);
+    m_c->setVirtualDesktopSize(QSize(2048, 1152));
+    EXPECT_EQ(m_c->getOutputSize(), QSize(2560, 1440));
+    EXPECT_EQ(m_c->getOutputStride(), 2560 * 4);
+
+    m_c->setCropRegion(QRect(100, 100, 800, 600));
+    EXPECT_EQ(m_c->getOutputSize(), QSize(1000, 750));
+    EXPECT_EQ(m_c->getOutputStride(), 1000 * 4);
+
+    m_c->clearCropRegion();
+    EXPECT_EQ(m_c->getOutputSize(), QSize(2560, 1440));
+
+    m_c->setOutputScale(0.0);
+    EXPECT_DOUBLE_EQ(m_c->getOutputScale(), 1.0);
+    EXPECT_EQ(m_c->getOutputSize(), QSize(2048, 1152));
+}
+
+TEST_F(MultiScreenFrameCompositorTest, physicalScaleCompositionKeepsFullCanvas)
+{
+    QList<QScreen*> screens = QGuiApplication::screens();
+    if (screens.isEmpty()) GTEST_SKIP();
+    QScreen *screen = screens.first();
+    const QRect geo = screen->geometry();
+
+    m_c->setOutputScale(2.0);
+    m_c->setScreenLayouts({screen});
+    m_c->setVirtualDesktopSize(geo.size());
+
+    const QSize expected(qMax(2, (geo.width() * 2) - (geo.width() * 2) % 2),
+                         qMax(2, (geo.height() * 2) - (geo.height() * 2) % 2));
+    EXPECT_EQ(m_c->getOutputSize(), expected);
+
+    DmaFrameInfo f = makeFrame(screen, geo, geo.width(), geo.height(), 12345);
+    ASSERT_TRUE(m_c->addScreenFrame(f));
+    const QByteArray out = m_c->composeFrames();
+    ASSERT_FALSE(out.isEmpty());
+    EXPECT_EQ(out.size(), expected.width() * 4 * expected.height());
+}
+
 TEST_F(MultiScreenFrameCompositorTest, composeWithoutLayoutReturnsEmpty)
 {
     m_c->setVirtualDesktopSize(QSize(10, 10));
