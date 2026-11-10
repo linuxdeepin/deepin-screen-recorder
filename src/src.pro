@@ -283,6 +283,7 @@ HEADERS += main_window.h \
     screenshot/export/localscreenshotresultsink.h \
     screenshot/session/screenshotsessioncontroller.h \
     screenshot/session/screenshotsessionfactory.h \
+    screenshot/session/platformdetection.h \
     screenshot/platform/treeland/treelandstillcapture.h \
     screenshot/platform/treeland/treelandsnapproxy.h \
     screenshot/platform/treeland/treelandsnaphintsource.h \

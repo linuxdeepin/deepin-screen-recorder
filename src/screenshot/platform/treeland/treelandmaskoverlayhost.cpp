@@ -528,6 +528,22 @@ void TreelandMaskOverlayHost::setRecordModeActive(bool active)
     updateMagnifier();
 }
 
+void TreelandMaskOverlayHost::setInitialMode(Mode mode)
+{
+    if (mode != Mode::Record && mode != Mode::RecordFullScreen)
+        return;
+
+    // MainWindow::status::record is the existing toolbar contract. The
+    // TreeLand host owns its own toolbar and does not have a MainWindow
+    // instance, so switch the toolbar content and its host state together.
+    constexpr unsigned int RecordFunctionType = 0;
+    if (m_toolBar)
+        m_toolBar->setRecordLaunchMode(RecordFunctionType);
+    if (m_toolBarHost)
+        m_toolBarHost->switchToRecordUI();
+    setRecordModeActive(true);
+}
+
 QString TreelandMaskOverlayHost::magnifierColorHex() const
 {
     if (!m_magnifier || !m_magnifier->isVisible())

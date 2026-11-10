@@ -15,6 +15,7 @@
 #include "screenshot/core/screenshottypes.h"
 #include "screenshot/session/screenshotsessioncontroller.h"
 #include "screenshot/session/screenshotsessionfactory.h"
+#include "screenshot/session/platformdetection.h"
 
 #include <DWidget>
 #include <DLog>
@@ -53,15 +54,6 @@ static bool isWaylandProtocol()
            WAYLAND_DISPLAY.contains(QLatin1String("wayland"), Qt::CaseInsensitive);
     qCDebug(dsrApp) << "XDG_SESSION_TYPE:" << XDG_SESSION_TYPE << ", WAYLAND_DISPLAY:" << WAYLAND_DISPLAY << ", isWayland:" << isWayland;
     return isWayland;
-}
-
-static bool isTreelandEnvironment()
-{
-    qCDebug(dsrApp) << "isTreelandEnvironment called.";
-    QProcessEnvironment e = QProcessEnvironment::systemEnvironment();
-    bool isTreeland = e.value(QStringLiteral("DDE_CURRENT_COMPOSITOR")) == QStringLiteral("TreeLand");
-    qCDebug(dsrApp) << "DDE_CURRENT_COMPOSITOR:" << e.value(QStringLiteral("DDE_CURRENT_COMPOSITOR")) << ", isTreeland:" << isTreeland;
-    return isTreeland;
 }
 
 static bool initQt6XcbEnv()
@@ -164,7 +156,7 @@ int main(int argc, char *argv[])
     // Utils::isTabletEnvironment = DGuiApplicationHelper::isTabletEnvironment();
     // wayland 协议
     Utils::isWaylandMode = isWaylandProtocol();
-    Utils::isTreelandMode = isTreelandEnvironment();
+    Utils::isTreelandMode = Dsr::Screenshot::isTreeLandEnvironment();
     Utils::isRootUser = (getuid() == 0);
     qCDebug(dsrApp) << "isWaylandMode:" << Utils::isWaylandMode << ", isTreelandMode:" << Utils::isTreelandMode << ", isRootUser:" << Utils::isRootUser;
 
@@ -199,12 +191,6 @@ int main(int argc, char *argv[])
     QScopedPointer<DApplication> app(DApplication::globalApplication(argc, argv));
     qCDebug(dsrApp) << "DTK version 5.4.0 or greater, getting global DApplication.";
 #endif
-
-    // treeland环境开启，方便可以用命令行参数启动treeland——demo调试
-    if (Utils::isWaylandMode || QGuiApplication::platformName().startsWith("wayland", Qt::CaseInsensitive)) {
-        Utils::isTreelandMode = true;
-        qCDebug(dsrApp) << "Wayland or platform name starts with wayland, setting isTreelandMode to true.";
-    }
 
     if (Utils::isWaylandMode) {
 #ifdef __mips__
@@ -277,6 +263,17 @@ int main(int argc, char *argv[])
         cmdParser.addOption(screenScrollOption);
         cmdParser.addOption(screenshotSessionPreviewOption);
         cmdParser.process(*app);
+        if (cmdParser.isSet(screenshotSessionPreviewOption)
+                && QGuiApplication::platformName().startsWith(QStringLiteral("wayland"),
+                                                             Qt::CaseInsensitive)
+                && !Dsr::Screenshot::isTreeLandEnvironment()) {
+            // Explicit demo opt-in: the preview option may force the new
+            // session on another Wayland compositor for debugging, but a
+            // plain Wayland session must never be misclassified as TreeLand.
+            qputenv("DSR_TREELAND_DEMO", "1");
+            Utils::isTreelandMode = true;
+            qCWarning(dsrApp) << "Screenshot session preview: explicit TreeLand demo mode enabled";
+        }
         if (cmdParser.isSet(dbusOption)) {
             // The D-Bus service owns no visible window between screenshot
             // sessions. Keep the process alive so subsequent calls reuse the
@@ -326,29 +323,46 @@ int main(int argc, char *argv[])
 
         const bool usePlatformScreenshotSession =
                 Dsr::Screenshot::ScreenshotSessionFactory::isCurrentPlatformSupported()
-                && !cmdParser.isSet(dbusOption)
-                && !cmdParser.isSet(screenRecordOption)
-                && !cmdParser.isSet(screenOcrOption)
-                && !cmdParser.isSet(screenRecordFullScreenOption);
+                && !cmdParser.isSet(dbusOption);
         if (cmdParser.isSet(screenshotSessionPreviewOption)
                 || usePlatformScreenshotSession) {
             Dsr::Screenshot::Request request;
-            if (cmdParser.isSet(fullscreenOption))
-                request.mode = Dsr::Screenshot::Mode::FullScreen;
-            else if (cmdParser.isSet(topWindowOption))
-                request.mode = Dsr::Screenshot::Mode::TopWindow;
-            else if (cmdParser.isSet(screenScrollOption))
+            if (cmdParser.isSet(screenRecordFullScreenOption)) {
+                request.mode = Dsr::Screenshot::Mode::RecordFullScreen;
+            } else if (cmdParser.isSet(screenRecordOption)) {
+                request.mode = Dsr::Screenshot::Mode::Record;
+            } else if (cmdParser.isSet(screenOcrOption)) {
+                request.mode = Dsr::Screenshot::Mode::Ocr;
+            } else if (cmdParser.isSet(screenScrollOption)) {
                 request.mode = Dsr::Screenshot::Mode::Scroll;
-            // Scroll capture starts from a snapped application window. The
-            // scroll backend needs the snap region and target process to
-            // validate the selection, and --scroll must initialize the same
-            // snap session as an ordinary region screenshot.
-            request.enableWindowSnap = request.mode == Dsr::Screenshot::Mode::Region
-                    || request.mode == Dsr::Screenshot::Mode::Scroll;
+            } else if (cmdParser.isSet(topWindowOption)) {
+                request.mode = Dsr::Screenshot::Mode::TopWindow;
+            } else if (cmdParser.isSet(fullscreenOption)) {
+                request.mode = Dsr::Screenshot::Mode::FullScreen;
+            }
+
+            request.enableWindowSnap =
+                    request.mode == Dsr::Screenshot::Mode::Region
+                    || request.mode == Dsr::Screenshot::Mode::Scroll
+                    || request.mode == Dsr::Screenshot::Mode::TopWindow
+                    || request.mode == Dsr::Screenshot::Mode::Ocr
+                    || request.mode == Dsr::Screenshot::Mode::Record;
             request.notificationsEnabled = !cmdParser.isSet(prohibitNotifyOption);
-            request.outputPath = cmdParser.isSet(savePathOption)
-                    ? cmdParser.value(savePathOption)
-                    : QString();
+            if (cmdParser.isSet(screenRecordFullScreenOption)) {
+                request.outputPath = cmdParser.value(screenRecordFullScreenOption);
+            } else if (cmdParser.isSet(savePathOption)) {
+                request.outputPath = cmdParser.value(savePathOption);
+            }
+            if (cmdParser.isSet(delayOption)) {
+                bool delayOk = false;
+                const qlonglong delaySeconds = cmdParser.value(delayOption).toLongLong(&delayOk);
+                if (!delayOk || delaySeconds < 0) {
+                    qCritical() << "Invalid delay value:" << cmdParser.value(delayOption);
+                    return 2;
+                }
+                request.delayMs = static_cast<int>(qMin<qlonglong>(delaySeconds * 1000,
+                                                                   24LL * 60 * 60 * 1000));
+            }
 
             QString factoryError;
             auto *session = Dsr::Screenshot::ScreenshotSessionFactory::createForCurrentPlatform(

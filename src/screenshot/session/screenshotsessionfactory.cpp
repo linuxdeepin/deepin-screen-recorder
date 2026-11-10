@@ -5,6 +5,7 @@
 #include "screenshotsessionfactory.h"
 
 #include "screenshotsessioncontroller.h"
+#include "platformdetection.h"
 #include "../export/localscreenshotresultsink.h"
 #include "../platform/treeland/treelandmaskoverlayhost.h"
 #include "../platform/treeland/treelandscreenshotbackend.h"
@@ -22,27 +23,21 @@ namespace Dsr::Screenshot {
 
 namespace {
 
-bool isTreelandSession()
-{
-    if (!QGuiApplication::platformName().startsWith(QStringLiteral("wayland"),
-                                                     Qt::CaseInsensitive)) {
-        return false;
-    }
-    return QProcessEnvironment::systemEnvironment()
-            .value(QStringLiteral("DDE_CURRENT_COMPOSITOR")) == QStringLiteral("TreeLand");
-}
-
 } // namespace
 
 bool ScreenshotSessionFactory::isCurrentPlatformSupported()
 {
-    return isTreelandSession();
+    if (!isTreeLandEnvironment())
+        return false;
+
+    return QGuiApplication::platformName().startsWith(QStringLiteral("wayland"),
+                                                      Qt::CaseInsensitive);
 }
 
 ScreenshotSessionController *ScreenshotSessionFactory::createForCurrentPlatform(QObject *parent,
                                                                                 QString *error)
 {
-    if (!isTreelandSession()) {
+    if (!isCurrentPlatformSupported()) {
         if (error)
             *error = QStringLiteral("当前平台没有可用的截图会话后端");
         return nullptr;

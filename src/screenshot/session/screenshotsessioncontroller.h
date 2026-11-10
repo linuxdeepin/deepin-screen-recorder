@@ -134,6 +134,8 @@ private:
     void stopRecordingCountdown();
     void startRecordingAfterCountdown();
     void setRecordingState(bool recording);
+    void beginBackendPrepare();
+    void scheduleInitialModeAction();
 
     void syncOverlaySelection();
     void updateOverlayHints();
@@ -183,10 +185,12 @@ private:
     bool m_finished = false;
     bool m_recordMode = false;
     bool m_recordingStateActive = false;
+    bool m_initialModeActionTriggered = false;
     int m_roundedCornerRadius = 0;
     QRect m_scrollSelection;
     QImage m_lastScrollPreview;
     ScrollExport m_scrollExport = ScrollExport::Save;
+    QTimer *m_startDelayTimer = nullptr;
     QTimer *m_scrollStopTimeout = nullptr;
     QTimer *m_scrollTipHideTimeout = nullptr;
     QTimer *m_scrollResumeTimeout = nullptr;
