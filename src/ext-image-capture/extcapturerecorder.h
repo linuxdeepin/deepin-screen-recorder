@@ -29,6 +29,8 @@
 
 class ExtCaptureIntegration;
 class ExtCaptureFrameBuffer;
+class FramePumpWorker;
+class LatestFrameStore;
 
 // 使用ExtCaptureFrameBuffer中的ExtFrameData结构
 
@@ -163,12 +165,17 @@ private slots:
                                  int stride, uint64_t timestamp);
     void onExtCaptureError(const QString &message);
     void onCaptureTimer();
+    void onCaptureWatchdog();
+    void onFramePumpStats(int outputFrames, int repeatedFrames, qint64 behindMs);
+    void onFramePumpError(const QString &message);
 
 private:
     void setState(RecordState newState);
     void initializeCapture();
     void finalizeRecording();
     void processFrameQueue();
+    void logCaptureStats();
+    void recordFrameArrival();
     QString generateDefaultOutputPath();
     bool startFFmpegProcess();
     bool startDmaFFmpegProcess();
@@ -176,9 +183,16 @@ private:
     void updateFrameTimestamps(int64_t timestamp);
     bool adjustVideoDurationIfNeeded();
     void updateCropFilter(int frameWidth, int frameHeight);
+    bool ensureFramePump(int width, int height, int stride);
+    void stopFramePump();
+    void scheduleNextCapture();
+    bool storeFrameSnapshot(const QByteArray &data, int width, int height, int stride,
+                            uint64_t timestamp);
+    QByteArray copyDmaFrame(int dmaBufferFd, void *gbmBo, int width, int height, int stride);
     ExtCaptureIntegration *m_extCapture;
     ExtCaptureFrameBuffer *m_frameBuffer;  // 保留用于兼容性
     QTimer *m_captureTimer;
+    QTimer *m_captureWatchdog;
     
     RecordState m_state;
     QString m_outputPath;
@@ -201,6 +215,17 @@ private:
     bool m_streamingMode;
     bool m_ffmpegStarted;
     QByteArray m_firstFrameBuffer;
+
+    FramePumpWorker *m_framePump;
+    QThread *m_framePumpThread;
+    LatestFrameStore *m_latestFrame;
+    QElapsedTimer m_captureClock;
+    qint64 m_lastCaptureRequestNs;
+    qint64 m_captureIntervalNs;
+    quint64 m_captureSequence;
+    int m_pumpOutputFrames;
+    int m_pumpRepeatedFrames;
+    qint64 m_pumpBehindMs;
     
     // 首帧参数（用于DMA Buffer处理）
     int m_firstFrameWidth;
@@ -211,6 +236,19 @@ private:
     qint64 m_firstFrameTimestampNs;
     qint64 m_lastFrameTimestampNs;
     QElapsedTimer m_wallClockTimer;
+    QElapsedTimer m_pendingFrameTimer;
+    QElapsedTimer m_captureStatsTimer;
+    bool m_pendingFrame = false;
+    quint64 m_statTicks = 0;
+    quint64 m_statRequests = 0;
+    quint64 m_statBusy = 0;
+    quint64 m_statFrames = 0;
+    qint64 m_statLatencyTotalMs = 0;
+    qint64 m_statLatencyMaxMs = 0;
+    qint64 m_statProcessTotalMs = 0;
+    qint64 m_statProcessMaxMs = 0;
+    qint64 m_statRequestCallTotalNs = 0;
+    qint64 m_statRequestCallMaxNs = 0;
 };
 
 #endif // EXTCAPTURERECORDER_H
