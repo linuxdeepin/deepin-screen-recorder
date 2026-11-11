@@ -55,6 +55,7 @@ private:
     QString m_capturePath;
     QString m_finalPath;
     QString m_publishPath;
+    QString m_systemAudioDevice;
     QString m_pendingError;
     RecordingFileTransaction m_fileTransaction;
     bool m_stopRequested = false;

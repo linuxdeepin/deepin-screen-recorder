@@ -20,6 +20,8 @@ struct RecordingRequest {
     QRect outputGeometry;
     QRect selection;
     bool includeCursor = false;
+    // Matches Utils::AudioRecordType: 0 none, 1 microphone, 2 system, 3 both.
+    int audioType = 0;
     int frameRate = 30;
     int format = 1;
     QString outputPath;

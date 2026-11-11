@@ -881,6 +881,11 @@ void ScreenshotSessionController::startRecordingAfterCountdown()
                                                 QStringLiteral("cursor"))
                                     .toInt()
             != 0;
+    request.audioType = qBound(static_cast<int>(Utils::kNoAudio),
+                               settings->getValue(QStringLiteral("recorder"),
+                                                  QStringLiteral("audio"))
+                                       .toInt(),
+                               static_cast<int>(Utils::kMicAndSystemAudio));
     request.outputPath = m_request.outputPath;
     request.frameRate = settings->getValue(QStringLiteral("recorder"),
                                            QStringLiteral("frame_rate"))

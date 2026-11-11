@@ -6,6 +6,7 @@
 #include <QMutex>
 #include <QObject>
 #include <QString>
+#include <QStringList>
 
 #include <memory>
 
@@ -23,6 +24,35 @@ struct CaptureFrameSnapshot
 };
 
 using CaptureFrameSnapshotPtr = std::shared_ptr<CaptureFrameSnapshot>;
+
+struct AudioCaptureOptions
+{
+    enum Type {
+        NoAudio = 0,
+        Microphone = 1,
+        SystemAudio = 2,
+        MicrophoneAndSystemAudio = 3,
+    };
+
+    int type = NoAudio;
+    QString systemDevice;
+    QString microphoneDevice = QStringLiteral("default");
+
+    bool hasMicrophone() const
+    {
+        return type == Microphone || type == MicrophoneAndSystemAudio;
+    }
+
+    bool hasSystemAudio() const
+    {
+        return type == SystemAudio || type == MicrophoneAndSystemAudio;
+    }
+
+    bool hasAudio() const
+    {
+        return hasMicrophone() || hasSystemAudio();
+    }
+};
 
 class LatestFrameStore
 {
@@ -45,14 +75,22 @@ public:
                     const QString &outputPath,
                     const QString &cropFilter,
                     LatestFrameStore *store,
+                    const AudioCaptureOptions &audio = AudioCaptureOptions(),
                     QObject *parent = nullptr);
     ~FramePumpWorker() override;
 
     int outputFrames() const { return m_outputFrames; }
     int repeatedFrames() const { return m_repeatedFrames; }
 
+    static QStringList buildFfmpegArguments(int width,
+                                            int height,
+                                            int frameRate,
+                                            const QString &cropFilter,
+                                            const AudioCaptureOptions &audio,
+                                            const QString &outputPath);
+
 public slots:
-    void start(int width, int height, int stride, qint64 startOffsetNs);
+    void start(int width, int height, int stride);
     void stop();
 
 signals:
@@ -75,6 +113,7 @@ private:
     QString m_outputPath;
     QString m_cropFilter;
     LatestFrameStore *m_store;
+    AudioCaptureOptions m_audio;
     QProcess *m_ffmpeg = nullptr;
     QTimer *m_timer = nullptr;
     QElapsedTimer m_clock;
@@ -85,6 +124,7 @@ private:
     int m_stride = 0;
     int m_outputFrames = 0;
     int m_repeatedFrames = 0;
+    int m_skippedSlots = 0;
     quint64 m_lastFrameSequence = 0;
     qint64 m_lastStatsNs = 0;
     bool m_started = false;

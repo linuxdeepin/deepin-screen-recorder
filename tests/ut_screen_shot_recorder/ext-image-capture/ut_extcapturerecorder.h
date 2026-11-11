@@ -15,8 +15,6 @@ using namespace testing;
 
 // 暴露 recorder 的私有纯函数用于直接覆盖
 ACCESS_PRIVATE_FUN(ExtCaptureRecorder, QString(), generateDefaultOutputPath);
-ACCESS_PRIVATE_FUN(ExtCaptureRecorder, bool(), adjustVideoDurationIfNeeded);
-ACCESS_PRIVATE_FUN(ExtCaptureRecorder, void(int64_t), updateFrameTimestamps);
 ACCESS_PRIVATE_FUN(ExtCaptureRecorder, void(), processFrameQueue);
 ACCESS_PRIVATE_FUN(ExtCaptureRecorder, void(), initializeCapture);
 
@@ -85,13 +83,6 @@ TEST_F(ExtCaptureRecorderTest, privatePureMethods)
     QString p = call_private_fun::ExtCaptureRecordergenerateDefaultOutputPath(*m_rec);
     EXPECT_FALSE(p.isEmpty());
     EXPECT_TRUE(p.contains("ext-capture-recording"));
-
-    // adjustVideoDurationIfNeeded：frameCount==0 时早退返回 true
-    EXPECT_TRUE(call_private_fun::ExtCaptureRecorderadjustVideoDurationIfNeeded(*m_rec));
-
-    // updateFrameTimestamps：纯赋值，无副作用
-    EXPECT_NO_FATAL_FAILURE(call_private_fun::ExtCaptureRecorderupdateFrameTimestamps(*m_rec, 1000));
-    EXPECT_NO_FATAL_FAILURE(call_private_fun::ExtCaptureRecorderupdateFrameTimestamps(*m_rec, -1));
 
     // processFrameQueue / initializeCapture：仅日志
     EXPECT_NO_FATAL_FAILURE(call_private_fun::ExtCaptureRecorderprocessFrameQueue(*m_rec));

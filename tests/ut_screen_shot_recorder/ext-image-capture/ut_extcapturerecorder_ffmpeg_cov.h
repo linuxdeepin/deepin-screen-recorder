@@ -13,8 +13,7 @@
 using namespace testing;
 
 // 本头聚焦 createVideoFile / startFFmpegProcess / startDmaFFmpegProcess /
-// processDmaBufferFrame 的覆盖。adjustVideoDurationIfNeeded 已在
-// ut_extcapturerecorder.h 声明访问器，禁止重复声明。
+// processDmaBufferFrame 的覆盖。
 //
 // 策略：
 //  - 早退守卫分支（无帧 / m_ffmpegProcess 已存在）—— 直接覆盖，安全。
