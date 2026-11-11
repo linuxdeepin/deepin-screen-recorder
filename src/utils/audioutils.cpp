@@ -140,45 +140,42 @@ QString AudioUtils::currentAudioChannel()
 #endif
     }
 
-    QString str_output = "-1";
+    QString str_output;
     if (m_defaultSinkDBusInterface && m_defaultSinkDBusInterface->isValid()) {
         QString sinkName = m_defaultSinkDBusInterface->property("Name").toString();
         qCDebug(dsrApp) << "系统声卡名称: " << sinkName;
-        QStringList options;
-        options << "-c";
-        options << QString("pacmd list-sources | grep -PB 1 %1 | head -n 1 | perl -pe 's/.* //g'").arg(sinkName);
         QProcess process;
-        process.start("bash", options);
-        process.waitForFinished();
-        process.waitForReadyRead();
-        str_output = process.readAllStandardOutput();
-        qCDebug(dsrApp) << "Audio channel from pacmd command:" << str_output;
-        qCDebug(dsrApp) << "pacmd command: " << options;
-        qCDebug(dsrApp) << "通过pacmd命令获取的系统音频通道号: " << str_output;
-        if (str_output.isEmpty()) {
-            QStringList options1;
-            options1 << "-c";
-            options1 << QString("pactl list sources | grep -PB 2 %1 | head -n 1 | perl -pe 's/.* #//g'").arg(sinkName);
-            process.start("bash", options1);
+
+        auto readSourceIndex = [&process](const QString &command) {
+            process.start("bash", QStringList() << "-c" << command);
             process.waitForFinished();
             process.waitForReadyRead();
-            str_output = process.readAllStandardOutput().trimmed();
-            qCDebug(dsrApp) << "Audio channel from pactl command:" << str_output;
-            qCDebug(dsrApp) << "pactl command: " << options;
-            qCDebug(dsrApp) << "通过pactl命令获取的系统音频通道号: " << str_output;
-            if (str_output.isEmpty()) {
-                if (!m_defaultSinkPath.isEmpty()) {
-                    str_output = m_defaultSinkPath.right(1);
-                    qCInfo(dsrApp) << "Using auto-assigned channel number:" << str_output;
-                } else {
-                    str_output = "-1";
-                    qCWarning(dsrApp) << "Failed to auto-assign channel number, default sink path is empty";
-                }
-            }
-        } else {
-            if (str_output != "-1" && str_output.size() > 1) {
-                str_output = str_output.left(str_output.size() - 1);
-            }
+            return QString::fromLocal8Bit(process.readAllStandardOutput()).trimmed();
+        };
+
+        // PipeWire exposes one index space through pactl/FFmpeg and another
+        // through the legacy pacmd compatibility layer. FFmpeg consumes the
+        // pactl index, so prefer it; pacmd remains a fallback for old systems.
+        str_output = readSourceIndex(
+                QString("pactl list sources | grep -PB 2 %1 | head -n 1 | perl -pe 's/.* #//g'")
+                        .arg(sinkName));
+        qCDebug(dsrApp) << "Audio channel from pactl command:" << str_output;
+        if (str_output.isEmpty()) {
+            str_output = readSourceIndex(
+                    QString("pacmd list-sources | grep -PB 1 %1 | head -n 1 | perl -pe 's/.* //g'")
+                            .arg(sinkName));
+            qCDebug(dsrApp) << "Audio channel from pacmd command:" << str_output;
+        }
+        if (str_output.isEmpty()) {
+            // A monitor source name is accepted directly by FFmpeg's pulse
+            // input and avoids relying on unstable numeric indexes.
+            if (!sinkName.isEmpty())
+                str_output = sinkName.endsWith(QStringLiteral(".monitor"))
+                        ? sinkName
+                        : sinkName + QStringLiteral(".monitor");
+            else
+                str_output = QStringLiteral("-1");
+            qCInfo(dsrApp) << "Using default sink monitor source:" << str_output;
         }
         return str_output;
     } else {

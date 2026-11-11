@@ -27,6 +27,8 @@
 #include <algorithm>
 #include <QDateTime>
 
+#include "framepumpworker.h"
+
 class ExtCaptureIntegration;
 class ExtCaptureFrameBuffer;
 class FramePumpWorker;
@@ -86,6 +88,13 @@ public:
                                    const QString &outputPath,
                                    int frameRate,
                                    const QRect &captureRegion);
+
+    /**
+     * @brief 设置音频采集参数
+     * @param audioType 0 无音频, 1 麦克风, 2 系统音频, 3 麦克风和系统音频
+     * @param systemAudioDevice PulseAudio 系统音频监听设备名
+     */
+    void setAudioOptions(int audioType, const QString &systemAudioDevice);
 
     /**
      * @brief 停止录制
@@ -180,8 +189,6 @@ private:
     bool startFFmpegProcess();
     bool startDmaFFmpegProcess();
     bool processDmaBufferFrame(int dmaBufferFd, void *gbmBo, int width, int height, int stride);
-    void updateFrameTimestamps(int64_t timestamp);
-    bool adjustVideoDurationIfNeeded();
     void updateCropFilter(int frameWidth, int frameHeight);
     bool ensureFramePump(int width, int height, int stride);
     void stopFramePump();
@@ -204,6 +211,7 @@ private:
     QRect m_captureRegionGlobal;
     QRect m_captureOutputGeometry;
     QString m_cropFilter;
+    AudioCaptureOptions m_audioOptions;
     
     // 录制参数
     int m_frameWidth;
@@ -233,9 +241,6 @@ private:
     int m_firstFrameStride;
 
     // 帧时间戳跟踪
-    qint64 m_firstFrameTimestampNs;
-    qint64 m_lastFrameTimestampNs;
-    QElapsedTimer m_wallClockTimer;
     QElapsedTimer m_pendingFrameTimer;
     QElapsedTimer m_captureStatsTimer;
     bool m_pendingFrame = false;

@@ -24,6 +24,7 @@ SOURCES += \
     ../../src/screenshot/session/screenshotsessioncontroller.cpp \
     ../../src/screenshot/platform/treeland/recordingfiletransaction.cpp \
     ../../src/screenshot/platform/treeland/treelandscrollcompositor.cpp \
+    ../../src/ext-image-capture/framepumpworker.cpp \
     ../../src/recordertablet.cpp \
     ../../src/utils/configsettings.cpp \
     ../../src/utils/imageeffects.cpp \
@@ -55,6 +56,7 @@ HEADERS += \
     ../../src/screenshot/session/screenshotsessioncontroller.h \
     ../../src/screenshot/platform/treeland/recordingfiletransaction.h \
     ../../src/screenshot/platform/treeland/treelandscrollcompositor.h \
+    ../../src/ext-image-capture/framepumpworker.h \
     ../../src/utils/configsettings.h \
     ../../src/utils/imageeffects.h \
     ../../src/utils/log.h \

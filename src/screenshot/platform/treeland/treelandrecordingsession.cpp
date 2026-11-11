@@ -7,6 +7,7 @@
 #include "../../../ext-image-capture/extcapturerecorder.h"
 #include "../../../utils/configsettings.h"
 #include "../../../utils/log.h"
+#include "../../../utils/audioutils.h"
 #include "../../../utils.h"
 
 #include <QClipboard>
@@ -130,6 +131,29 @@ bool TreelandRecordingSession::start(const RecordingRequest &request)
 
     m_request = request;
     m_request.selection = request.selection.normalized();
+
+    int audioType = request.audioType;
+    QString systemAudioDevice;
+    if (request.format == Utils::kGIF) {
+        audioType = Utils::kNoAudio;
+    } else if (audioType == Utils::kSystemAudio
+               || audioType == Utils::kMicAndSystemAudio) {
+        AudioUtils audioUtils;
+        systemAudioDevice = audioUtils.currentAudioChannel().trimmed();
+        if (systemAudioDevice.isEmpty() || systemAudioDevice == QStringLiteral("-1")) {
+            if (audioType == Utils::kSystemAudio) {
+                audioType = Utils::kNoAudio;
+            } else {
+                audioType = Utils::kMic;
+            }
+            qCWarning(dsrApp) << "TreeLand recording: system audio unavailable, fallback to"
+                              << audioType;
+        }
+    }
+    m_request.audioType = audioType;
+    m_systemAudioDevice = systemAudioDevice;
+    qCWarning(dsrApp) << "TreeLand recording audio type:" << m_request.audioType
+                      << "system device:" << m_systemAudioDevice;
     m_pendingError.clear();
     m_stopRequested = false;
     m_startIssued = false;
@@ -159,6 +183,7 @@ bool TreelandRecordingSession::start(const RecordingRequest &request)
     }
 
     m_recorder = new ExtCaptureRecorder(this);
+    m_recorder->setAudioOptions(m_request.audioType, m_systemAudioDevice);
     connect(m_recorder, &ExtCaptureRecorder::recordingStarted,
             this, &TreelandRecordingSession::onRecorderStarted);
     connect(m_recorder, &ExtCaptureRecorder::recordingStopped,

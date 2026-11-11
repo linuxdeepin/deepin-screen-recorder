@@ -181,7 +181,7 @@ TEST_F(ExtCaptureIntegrationCov2Test, getAvailableScreensNonEmpty)
 
 // ===== ExtCaptureRecorder 补充 =====
 // 既有 ut_extcapturerecorder.h 已声明 generateDefaultOutputPath/
-// updateFrameTimestamps/processFrameQueue/initializeCapture，
+// processFrameQueue/initializeCapture，
 // ut_extcapturerecorder_ext.h 已声明 m_frameCount/m_state/m_streamingMode/
 // m_frameRate 等字段，ut_extcapturerecorder_cov.h 已声明 setState，
 // 同一 TU 内不重复声明，直接复用 call_private_fun / access_private_field。
@@ -218,20 +218,6 @@ TEST_F(ExtCaptureRecorderCov2Test, generateDefaultOutputPathNonEmpty)
     QString p;
     EXPECT_NO_FATAL_FAILURE(p = call_private_fun::ExtCaptureRecordergenerateDefaultOutputPath(*m_rec));
     EXPECT_FALSE(p.isEmpty());
-}
-
-// updateFrameTimestamps：timestamp<=0 -> 用 wallClockTimer
-TEST_F(ExtCaptureRecorderCov2Test, updateFrameTimestampsNegativeUsesWallClock)
-{
-    EXPECT_NO_FATAL_FAILURE(call_private_fun::ExtCaptureRecorderupdateFrameTimestamps(*m_rec, -1));
-}
-
-// updateFrameTimestamps：timestamp>0 -> 直接用
-TEST_F(ExtCaptureRecorderCov2Test, updateFrameTimestampsPositive)
-{
-    EXPECT_NO_FATAL_FAILURE(call_private_fun::ExtCaptureRecorderupdateFrameTimestamps(*m_rec, 1000));
-    // 再次调用 -> m_firstFrameTimestampNs 已设
-    EXPECT_NO_FATAL_FAILURE(call_private_fun::ExtCaptureRecorderupdateFrameTimestamps(*m_rec, 2000));
 }
 
 // onExtCaptureAvailable：emit protocolAvailable

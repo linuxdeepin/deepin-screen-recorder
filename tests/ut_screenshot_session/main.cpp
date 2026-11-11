@@ -19,6 +19,7 @@
 #include "screenshot/ports/iwindowtagger.h"
 #include "screenshot/platform/treeland/recordingfiletransaction.h"
 #include "screenshot/platform/treeland/treelandscrollcompositor.h"
+#include "ext-image-capture/framepumpworker.h"
 #include "screenshot/session/annotationcoordinator.h"
 #include "screenshot/session/platformdetection.h"
 #include "screenshot/session/screenshotsessioncontroller.h"
@@ -3253,6 +3254,122 @@ private slots:
         QVERIFY(!QFileInfo::exists(capturePath));
         QVERIFY(finalFile.open(QIODevice::ReadOnly));
         QCOMPARE(finalFile.readAll(), QByteArrayLiteral("completed recording"));
+    }
+
+    void recordingAudioArgumentsKeepNoAudioPathUnchanged()
+    {
+        AudioCaptureOptions audio;
+        const QStringList args = FramePumpWorker::buildFfmpegArguments(
+                1920, 1080, 24, QString(), audio, QStringLiteral("/tmp/out.mp4"));
+
+        QVERIFY(args.contains("-map"));
+        QCOMPARE(args.at(args.lastIndexOf("-map") + 1), QStringLiteral("0:v:0"));
+        QVERIFY(!args.contains("pulse"));
+        QVERIFY(!args.contains("-c:a"));
+        QVERIFY(!args.contains("-shortest"));
+        QVERIFY(!args.contains("-vsync"));
+        QCOMPARE(args.at(args.indexOf("-fps_mode") + 1), QStringLiteral("cfr"));
+        QCOMPARE(args.at(args.lastIndexOf("-r") + 1), QStringLiteral("24"));
+    }
+
+    void recordingAudioArgumentsMapMicrophoneInput()
+    {
+        AudioCaptureOptions audio;
+        audio.type = AudioCaptureOptions::Microphone;
+        const QStringList args = FramePumpWorker::buildFfmpegArguments(
+                1920, 1080, 30, QStringLiteral("crop=1280:720:0:0"),
+                audio, QStringLiteral("/tmp/out.mp4"));
+
+        QVERIFY(args.contains("pulse"));
+        QVERIFY(args.contains(QStringLiteral("default")));
+        QVERIFY(args.indexOf("pulse") < args.indexOf("rawvideo"));
+        QVERIFY(args.contains("-vf"));
+        QVERIFY(args.at(args.indexOf("-vf") + 1).startsWith(QStringLiteral("crop=1280:720:0:0,")));
+        QCOMPARE(args.at(args.indexOf("-map") + 1), QStringLiteral("1:v:0"));
+        QCOMPARE(args.at(args.lastIndexOf("-map") + 1), QStringLiteral("0:a:0"));
+        QVERIFY(args.contains("-shortest"));
+        QVERIFY(args.contains("aac"));
+        QCOMPARE(args.at(args.lastIndexOf("-r") + 1), QStringLiteral("30"));
+    }
+
+    void recordingAudioArgumentsMapSystemInput()
+    {
+        AudioCaptureOptions audio;
+        audio.type = AudioCaptureOptions::SystemAudio;
+        audio.systemDevice = QStringLiteral("87");
+        const QStringList args = FramePumpWorker::buildFfmpegArguments(
+                2560, 1440, 24, QString(), audio, QStringLiteral("/tmp/out.mp4"));
+
+        QVERIFY(args.contains(QStringLiteral("87")));
+        QVERIFY(args.indexOf("pulse") < args.indexOf("rawvideo"));
+        QCOMPARE(args.at(args.indexOf("-map") + 1), QStringLiteral("1:v:0"));
+        QCOMPARE(args.at(args.lastIndexOf("-map") + 1), QStringLiteral("0:a:0"));
+        QVERIFY(args.contains("-shortest"));
+    }
+
+    void recordingAudioArgumentsMixMicrophoneAndSystemInputs()
+    {
+        AudioCaptureOptions audio;
+        audio.type = AudioCaptureOptions::MicrophoneAndSystemAudio;
+        audio.systemDevice = QStringLiteral("87");
+        const QStringList args = FramePumpWorker::buildFfmpegArguments(
+                2560, 1440, 24, QString(), audio, QStringLiteral("/tmp/out.mp4"));
+
+        const int filterIndex = args.indexOf("-filter_complex");
+        QVERIFY(filterIndex >= 0);
+        const QString filter = args.at(filterIndex + 1);
+        QVERIFY(filter.contains(QStringLiteral("amerge=inputs=2")));
+        QVERIFY(filter.contains(QStringLiteral("pan=stereo")));
+        QVERIFY(args.indexOf("pulse") < args.indexOf("rawvideo"));
+        QVERIFY(filter.startsWith(QStringLiteral("[0:a][1:a]")));
+        QVERIFY(!args.contains("[vout]"));
+        QVERIFY(!args.contains("[aout]"));
+        QVERIFY(args.contains("-vf"));
+        QVERIFY(args.contains("-shortest"));
+    }
+
+    void recordingAudioOptionsFallbackSemantics()
+    {
+        AudioCaptureOptions audio;
+        QVERIFY(!audio.hasAudio());
+
+        audio.type = AudioCaptureOptions::Microphone;
+        QVERIFY(audio.hasMicrophone());
+        QVERIFY(!audio.hasSystemAudio());
+
+        audio.type = AudioCaptureOptions::SystemAudio;
+        QVERIFY(!audio.hasMicrophone());
+        QVERIFY(audio.hasSystemAudio());
+
+        audio.type = AudioCaptureOptions::MicrophoneAndSystemAudio;
+        QVERIFY(audio.hasAudio());
+    }
+
+    void recordingArgumentsUseWallclockPtsOnlyForRawVideoInput()
+    {
+        AudioCaptureOptions audio;
+        audio.type = AudioCaptureOptions::MicrophoneAndSystemAudio;
+        audio.systemDevice = QStringLiteral("87");
+        const QStringList args = FramePumpWorker::buildFfmpegArguments(
+                2560, 1440, 24, QString(), audio, QStringLiteral("/tmp/out.mp4"));
+
+        const int wallclockIndex = args.indexOf(QStringLiteral("-use_wallclock_as_timestamps"));
+        QVERIFY(wallclockIndex >= 0);
+        QCOMPARE(args.at(wallclockIndex + 1), QStringLiteral("1"));
+
+        const int rawVideoIndex = args.indexOf(QStringLiteral("rawvideo"));
+        QVERIFY(rawVideoIndex > wallclockIndex);
+        QVERIFY(wallclockIndex > args.lastIndexOf(QStringLiteral("pulse")));
+        QVERIFY(wallclockIndex < args.lastIndexOf(QStringLiteral("-i")));
+
+        const int fpsModeIndex = args.indexOf(QStringLiteral("-fps_mode"));
+        QVERIFY(fpsModeIndex >= 0);
+        QCOMPARE(args.at(fpsModeIndex + 1), QStringLiteral("cfr"));
+        QCOMPARE(args.at(args.lastIndexOf("-r") + 1), QStringLiteral("24"));
+
+        QVERIFY(!args.contains(QStringLiteral("-vsync")));
+        QVERIFY(!args.join(' ').contains(QStringLiteral("itsscale")));
+        QVERIFY(!args.join(' ').contains(QStringLiteral("passthrough")));
     }
 };
 

@@ -17,10 +17,8 @@ using namespace testing;
 // 仅暴露 ut_extcapturerecorder.h 中未声明的新增私有函数（避免同一 TU 内宏重定义）
 ACCESS_PRIVATE_FUN(ExtCaptureRecorder, void(), finalizeRecording);
 
-// 字段访问器：用于驱动 adjustVideoDurationIfNeeded 走不同早退分支
+// 字段访问器：用于驱动录制状态和收尾分支
 ACCESS_PRIVATE_FIELD(ExtCaptureRecorder, int, m_frameCount);
-ACCESS_PRIVATE_FIELD(ExtCaptureRecorder, qint64, m_firstFrameTimestampNs);
-ACCESS_PRIVATE_FIELD(ExtCaptureRecorder, qint64, m_lastFrameTimestampNs);
 ACCESS_PRIVATE_FIELD(ExtCaptureRecorder, int, m_frameRate);
 ACCESS_PRIVATE_FIELD(ExtCaptureRecorder, int, m_frameWidth);
 ACCESS_PRIVATE_FIELD(ExtCaptureRecorder, QString, m_outputPath);
@@ -46,100 +44,6 @@ TEST_F(ExtCaptureRecorderExtTest, generateDefaultOutputPathStableFormat)
     // 重复调用产生不同时间戳文件名（边界情形，秒级可能相同——只断言格式稳定）
     QString p2 = call_private_fun::ExtCaptureRecordergenerateDefaultOutputPath(*m_rec);
     EXPECT_TRUE(p2.endsWith(QStringLiteral(".mp4")));
-}
-
-// updateFrameTimestamps：第一帧设置 first/last；后续帧只更新 last
-TEST_F(ExtCaptureRecorderExtTest, updateFrameTimestampsFirstAndSubsequent)
-{
-    // 负/零时间戳走 wallClock 兜底分支
-    EXPECT_NO_FATAL_FAILURE(call_private_fun::ExtCaptureRecorderupdateFrameTimestamps(*m_rec, 0));
-    EXPECT_NO_FATAL_FAILURE(call_private_fun::ExtCaptureRecorderupdateFrameTimestamps(*m_rec, -100));
-    // 正时间戳：首帧写入 first+last
-    call_private_fun::ExtCaptureRecorderupdateFrameTimestamps(*m_rec, 5000);
-    EXPECT_EQ(access_private_field::ExtCaptureRecorderm_firstFrameTimestampNs(*m_rec), 5000);
-    EXPECT_EQ(access_private_field::ExtCaptureRecorderm_lastFrameTimestampNs(*m_rec), 5000);
-    // 第二帧只更新 last
-    call_private_fun::ExtCaptureRecorderupdateFrameTimestamps(*m_rec, 9000);
-    EXPECT_EQ(access_private_field::ExtCaptureRecorderm_firstFrameTimestampNs(*m_rec), 5000);
-    EXPECT_EQ(access_private_field::ExtCaptureRecorderm_lastFrameTimestampNs(*m_rec), 9000);
-}
-
-// adjustVideoDurationIfNeeded 早退路径 1：frameCount<=1
-TEST_F(ExtCaptureRecorderExtTest, adjustDurationSkipWhenFrameCountLeOne)
-{
-    access_private_field::ExtCaptureRecorderm_frameCount(*m_rec) = 0;
-    access_private_field::ExtCaptureRecorderm_firstFrameTimestampNs(*m_rec) = 1000;
-    access_private_field::ExtCaptureRecorderm_lastFrameTimestampNs(*m_rec) = 2000;
-    EXPECT_TRUE(call_private_fun::ExtCaptureRecorderadjustVideoDurationIfNeeded(*m_rec));
-
-    access_private_field::ExtCaptureRecorderm_frameCount(*m_rec) = 1;
-    EXPECT_TRUE(call_private_fun::ExtCaptureRecorderadjustVideoDurationIfNeeded(*m_rec));
-}
-
-// adjustVideoDurationIfNeeded 早退路径 2：first<0
-TEST_F(ExtCaptureRecorderExtTest, adjustDurationSkipWhenFirstTimestampNegative)
-{
-    access_private_field::ExtCaptureRecorderm_frameCount(*m_rec) = 10;
-    access_private_field::ExtCaptureRecorderm_firstFrameTimestampNs(*m_rec) = -1;
-    access_private_field::ExtCaptureRecorderm_lastFrameTimestampNs(*m_rec) = 1000;
-    EXPECT_TRUE(call_private_fun::ExtCaptureRecorderadjustVideoDurationIfNeeded(*m_rec));
-}
-
-// adjustVideoDurationIfNeeded 早退路径 3：last<=first（含相等与倒退）
-TEST_F(ExtCaptureRecorderExtTest, adjustDurationSkipWhenLastLeFirst)
-{
-    access_private_field::ExtCaptureRecorderm_frameCount(*m_rec) = 10;
-    access_private_field::ExtCaptureRecorderm_firstFrameTimestampNs(*m_rec) = 1000;
-    access_private_field::ExtCaptureRecorderm_lastFrameTimestampNs(*m_rec) = 1000; // 相等
-    EXPECT_TRUE(call_private_fun::ExtCaptureRecorderadjustVideoDurationIfNeeded(*m_rec));
-
-    access_private_field::ExtCaptureRecorderm_lastFrameTimestampNs(*m_rec) = 500; // 倒退
-    EXPECT_TRUE(call_private_fun::ExtCaptureRecorderadjustVideoDurationIfNeeded(*m_rec));
-}
-
-// adjustVideoDurationIfNeeded 早退路径 4：intervalNs<=0（上面相等已覆盖，这里再断一次独立语义）
-TEST_F(ExtCaptureRecorderExtTest, adjustDurationSkipWhenIntervalNonPositive)
-{
-    access_private_field::ExtCaptureRecorderm_frameCount(*m_rec) = 5;
-    access_private_field::ExtCaptureRecorderm_firstFrameTimestampNs(*m_rec) = 0;
-    access_private_field::ExtCaptureRecorderm_lastFrameTimestampNs(*m_rec) = 0;
-    EXPECT_TRUE(call_private_fun::ExtCaptureRecorderadjustVideoDurationIfNeeded(*m_rec));
-}
-
-// adjustVideoDurationIfNeeded 进入校正分支（deviation>=3%）
-// 注意：该校正分支会 spawn ffmpeg 进程——我们故意只断言其返回 false（ffmpeg 不存在/失败），
-// 不验证文件副作用。这是安全的：QProcess::start 对不存在的 ffmpeg 会失败快速返回。
-TEST_F(ExtCaptureRecorderExtTest, adjustDurationEntersCorrectionBranchAndFails)
-{
-    access_private_field::ExtCaptureRecorderm_frameCount(*m_rec) = 100;
-    access_private_field::ExtCaptureRecorderm_frameRate(*m_rec) = 30;
-    // 实际时长远大于编码时长 -> stretch factor 偏差巨大
-    access_private_field::ExtCaptureRecorderm_firstFrameTimestampNs(*m_rec) = 0;
-    // 10 秒的纳秒数
-    access_private_field::ExtCaptureRecorderm_lastFrameTimestampNs(*m_rec) =
-        static_cast<qint64>(10) * 1000 * 1000 * 1000;
-    access_private_field::ExtCaptureRecorderm_outputPath(*m_rec) =
-        QStringLiteral("/tmp/ut_ext_rec_nonexist.mp4");
-    // 进入 ffmpeg 校正分支；ffmpeg 缺失或失败 -> 返回 false，不抛异常
-    EXPECT_FALSE(call_private_fun::ExtCaptureRecorderadjustVideoDurationIfNeeded(*m_rec));
-}
-
-// adjustVideoDurationIfNeeded：偏差 < 3% 时跳过校正（构造接近理论编码时长的数据）
-TEST_F(ExtCaptureRecorderExtTest, adjustDurationSkipWhenDeviationSmall)
-{
-    access_private_field::ExtCaptureRecorderm_frameCount(*m_rec) = 30;
-    access_private_field::ExtCaptureRecorderm_frameRate(*m_rec) = 30;
-    // 理论编码时长 = frameCount/frameRate = 1s
-    // actualTotalDuration = actualDurationSec + avgInterval
-    //   = (intervalNs/1e9) + (intervalNs/1e9)/(frameCount-1)
-    //   = (intervalNs/1e9) * frameCount/(frameCount-1)
-    // 设 actualTotalDuration = encodedDuration =>
-    //   intervalNs/1e9 = (frameCount-1)/frameRate
-    //   intervalNs = 1e9 * 29/30
-    access_private_field::ExtCaptureRecorderm_firstFrameTimestampNs(*m_rec) = 0;
-    qint64 nsPerFrame = static_cast<qint64>(1e9 / 30.0); // 1/frameRate
-    access_private_field::ExtCaptureRecorderm_lastFrameTimestampNs(*m_rec) = nsPerFrame * 29;
-    EXPECT_TRUE(call_private_fun::ExtCaptureRecorderadjustVideoDurationIfNeeded(*m_rec));
 }
 
 // processFrameQueue：仅日志，无副作用，反复调用安全
