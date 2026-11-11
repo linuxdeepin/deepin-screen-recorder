@@ -17,6 +17,7 @@
 
 class ExtCaptureManager;
 class ExtCaptureSession;
+class ExtCaptureFrame;
 class MultiScreenFrameCompositor;
 
 // Forward declaration for DmaFrameInfo
@@ -151,6 +152,11 @@ private slots:
                            int width, int height, int stride, size_t size, uint64_t timestamp);
 
     /**
+     * @brief 处理单个屏幕的 SHM 帧
+     */
+    void onScreenShmFrameReady(QScreen* screen, ExtCaptureFrame* frame);
+
+    /**
      * @brief 处理会话错误
      */
     void onSessionError(const QString& message);
@@ -177,6 +183,13 @@ private slots:
     void onFrameSyncTimeout();
 
 private:
+    /**
+     * @brief 将 CPU 可访问帧提交给多屏合成器
+     */
+    void submitScreenFrame(QScreen* screen, const QByteArray& frameData,
+                           int dmaBufferFd, void* gbmBo, int width, int height,
+                           int stride, size_t size, uint64_t timestamp);
+
     /**
      * @brief 计算虚拟桌面布局
      */
