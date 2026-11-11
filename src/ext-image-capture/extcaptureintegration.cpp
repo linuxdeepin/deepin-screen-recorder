@@ -142,6 +142,11 @@ bool ExtCaptureIntegration::captureFrame()
         return false;
     }
 
+    // 上一次 capture 在输出无新 commit 时可能一直没有 ready。上层重试时
+    // 先取消挂起帧，避免 Session 永久停在 Capturing。
+    if (m_session->state() == ExtCaptureSession::Capturing)
+        m_session->cancelFrame();
+
     if (m_session->state() != ExtCaptureSession::Ready) {
         // qCWarning(dsrApp) << "ExtCaptureIntegration::captureFrame: Session not ready for frame capture, current state:" << m_session->state();
         return false;

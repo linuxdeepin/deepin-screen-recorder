@@ -12,6 +12,8 @@
 
 #include <QDebug>
 #include <QGuiApplication>
+#include <QDir>
+#include <QFile>
 #include <qpa/qplatformnativeinterface.h>
 #include <QPointer>
 #include "../utils/log.h"
@@ -19,9 +21,126 @@
 // Wayland 相关
 #include <wayland-client.h>
 #include <cstring>
+#include <fcntl.h>
+#include <sys/stat.h>
+#include <unistd.h>
+
+// DMA-BUF / GBM
+#include <drm/drm_fourcc.h>
+#include <gbm.h>
 
 // Wayland 格式定义
 #include <wayland-client.h>
+
+namespace {
+
+struct DmaBufFormatInfo {
+    uint32_t format = 0;
+    QList<uint64_t> modifiers;
+};
+
+bool hasLinearModifier(const QList<uint64_t> &modifiers)
+{
+    return modifiers.contains(DRM_FORMAT_MOD_LINEAR);
+}
+
+QStringList drmDeviceCandidates(const QByteArray &deviceData)
+{
+    dev_t target = 0;
+    const bool hasTarget = deviceData.size() >= static_cast<int>(sizeof(target));
+    if (!hasTarget)
+        return {};
+    std::memcpy(&target, deviceData.constData(), sizeof(target));
+
+    QString exactMatch;
+    QStringList renderNodes;
+    QStringList cardNodes;
+
+    const QDir driDir(QStringLiteral("/dev/dri"));
+    const QStringList entries = driDir.entryList(
+            {QStringLiteral("renderD*"), QStringLiteral("card*")},
+            QDir::System | QDir::Files, QDir::Name);
+
+    for (const QString &name : entries) {
+        const QString path = driDir.absoluteFilePath(name);
+        struct stat st {};
+        if (hasTarget && ::stat(QFile::encodeName(path).constData(), &st) == 0
+                && st.st_rdev == target) {
+            exactMatch = path;
+        }
+        if (name.startsWith(QStringLiteral("renderD")))
+            renderNodes.append(path);
+        else
+            cardNodes.append(path);
+    }
+
+    QStringList candidates;
+    if (!exactMatch.isEmpty())
+        candidates.append(exactMatch);
+    candidates.append(renderNodes);
+    candidates.append(cardNodes);
+    candidates.removeDuplicates();
+    return candidates;
+}
+
+bool probeDmaBufferPlan(const QString &devicePath, uint32_t format, const QSize &size)
+{
+    if (devicePath.isEmpty() || format == 0 || size.isEmpty())
+        return false;
+
+    const int drmFd = ::open(QFile::encodeName(devicePath).constData(), O_RDWR | O_CLOEXEC);
+    if (drmFd < 0)
+        return false;
+
+    gbm_device *gbmDevice = gbm_create_device(drmFd);
+    if (!gbmDevice) {
+        ::close(drmFd);
+        return false;
+    }
+
+    uint64_t modifiers[] = {DRM_FORMAT_MOD_LINEAR};
+    gbm_bo *bo = gbm_bo_create_with_modifiers2(gbmDevice,
+                                               static_cast<uint32_t>(size.width()),
+                                               static_cast<uint32_t>(size.height()),
+                                               format, modifiers, 1,
+                                               GBM_BO_USE_RENDERING);
+    if (!bo) {
+        gbm_device_destroy(gbmDevice);
+        ::close(drmFd);
+        return false;
+    }
+
+    bool usable = gbm_bo_get_modifier(bo) == DRM_FORMAT_MOD_LINEAR
+            && gbm_bo_get_format(bo) == format
+            && gbm_bo_get_plane_count(bo) >= 1
+            && gbm_bo_get_stride_for_plane(bo, 0) >=
+                    static_cast<uint32_t>(size.width()) * 4u;
+    int planeFd = -1;
+    if (usable) {
+        planeFd = gbm_bo_get_fd_for_plane(bo, 0);
+        usable = planeFd >= 0;
+    }
+
+    if (usable) {
+        uint32_t mapStride = 0;
+        void *mapHandle = nullptr;
+        void *mapped = gbm_bo_map(bo, 0, 0, gbm_bo_get_width(bo), gbm_bo_get_height(bo),
+                                  GBM_BO_TRANSFER_READ, &mapStride, &mapHandle);
+        usable = mapped != nullptr
+                && mapStride >= static_cast<uint32_t>(size.width()) * 4u;
+        if (mapped)
+            gbm_bo_unmap(bo, mapHandle);
+    }
+
+    if (planeFd >= 0)
+        ::close(planeFd);
+    gbm_bo_destroy(bo);
+    gbm_device_destroy(gbmDevice);
+    ::close(drmFd);
+    return usable;
+}
+
+} // namespace
 
 class ExtCaptureSession::Private : public QtWayland::ext_image_copy_capture_session_v1
 {
@@ -33,8 +152,8 @@ public:
     CaptureConfig config;
     
     QList<uint32_t> shmFormats;        // 共享内存格式
-    QList<uint32_t> dmabufFormats;     // DMA缓冲区格式
-    QByteArray dmabufDevice;           // DMA设备
+    QList<DmaBufFormatInfo> dmabufFormats; // DMA缓冲区格式及其 modifier 约束
+    QByteArray dmabufDevice;           // composer 指定的 DMA 设备 dev_t
     
     bool constraintsReceived = false;
     bool preferDmaBuffer = true;
@@ -303,6 +422,23 @@ ExtCaptureFrame* ExtCaptureSession::createFrame()
 #endif
 }
 
+void ExtCaptureSession::cancelFrame()
+{
+    if (!d->currentFrame) {
+        if (d->state == Capturing)
+            setState(Ready);
+        return;
+    }
+
+    ExtCaptureFrame *frame = d->currentFrame;
+    d->currentFrame = nullptr;
+    disconnect(frame, nullptr, this, nullptr);
+    delete frame;
+    setState(Ready);
+
+    qCWarning(dsrApp) << "ExtCaptureSession: cancelled pending capture frame";
+}
+
 void ExtCaptureSession::stop()
 {
     if (d->state == Stopped || d->state == Uninitialized) {
@@ -326,7 +462,8 @@ void ExtCaptureSession::stop()
 QList<uint32_t> ExtCaptureSession::supportedFormats() const
 {
     QList<uint32_t> formats = d->shmFormats;
-    formats.append(d->dmabufFormats);
+    for (const DmaBufFormatInfo &info : d->dmabufFormats)
+        formats.append(info.format);
     return formats;
 }
 
@@ -352,16 +489,28 @@ void ExtCaptureSession::handleDmabufDevice(const QByteArray &device)
 
 void ExtCaptureSession::handleDmabufFormat(uint32_t format, const QList<uint64_t> &modifiers)
 {
-    if (!d->dmabufFormats.contains(format)) {
-        d->dmabufFormats.append(format);
-        qCDebug(dsrApp) << "DMA-BUF format supported:" << format << "with" << modifiers.size() << "modifiers";
+    for (DmaBufFormatInfo &info : d->dmabufFormats) {
+        if (info.format == format) {
+            for (uint64_t modifier : modifiers) {
+                if (!info.modifiers.contains(modifier))
+                    info.modifiers.append(modifier);
+            }
+            return;
+        }
     }
+
+    DmaBufFormatInfo info;
+    info.format = format;
+    info.modifiers = modifiers;
+    d->dmabufFormats.append(info);
+    qCDebug(dsrApp) << "DMA-BUF format supported:" << format
+                    << "with" << modifiers.size() << "modifiers";
 }
 
 void ExtCaptureSession::handleDone()
 {
     d->constraintsReceived = true;
-    selectOptimalFormat();
+    selectCapturePlan();
     if (d->state != Error) setState(Ready);
     if (d->state != Error) emit ready();
     // qCWarning(dsrApp) << "ExtCaptureSession: Session constraints received, ready for capture";
@@ -382,16 +531,60 @@ void ExtCaptureSession::setState(SessionState newState)
     }
 }
 
-void ExtCaptureSession::selectOptimalFormat()
+void ExtCaptureSession::selectCapturePlan()
 {
-    // 优先选择DMA-BUF格式，然后是共享内存
+    // CPU 消费链路只能正确读取 LINEAR DMA-BUF。方案在这里一次性确定：
+    // 探测 composer 指定的 DRM 节点、LINEAR 分配和 GBM CPU 映射都成功后
+    // 才使用 DMA-BUF；任何一步失败都整体切到 SHM，避免逐帧反复试探。
+    d->config.useDmaBuffer = false;
+    d->config.dmaDevicePath.clear();
+    d->config.dmaModifier = 0;
+
     if (d->preferDmaBuffer && !d->dmabufFormats.isEmpty()) {
-        d->config.format = d->dmabufFormats.first();
-        d->config.useDmaBuffer = true;
-        // qCWarning(dsrApp) << "*** DMA-BUF FORMAT SELECTED ***";
-        // qCWarning(dsrApp) << "Selected DMA-BUF format:" << d->config.format;
-        // qCWarning(dsrApp) << "Available DMA-BUF formats count:" << d->dmabufFormats.size();
-    } else if (!d->shmFormats.isEmpty()) {
+        static const uint32_t preferredDmaFormats[] = {
+            DRM_FORMAT_XBGR8888,
+            DRM_FORMAT_ABGR8888,
+            DRM_FORMAT_XRGB8888,
+            DRM_FORMAT_ARGB8888
+        };
+
+        const QStringList devices = drmDeviceCandidates(d->dmabufDevice);
+        if (devices.isEmpty()) {
+            qCWarning(dsrApp) << "ExtCaptureSession: composer did not provide a usable DRM node,"
+                              << "falling back to SHM";
+        }
+
+        for (uint32_t format : preferredDmaFormats) {
+            bool advertised = false;
+            for (const DmaBufFormatInfo &info : d->dmabufFormats) {
+                if (info.format == format && hasLinearModifier(info.modifiers)) {
+                    advertised = true;
+                    break;
+                }
+            }
+            if (!advertised)
+                continue;
+
+            for (const QString &device : devices) {
+                if (probeDmaBufferPlan(device, format, d->config.bufferSize)) {
+                    d->config.format = format;
+                    d->config.useDmaBuffer = true;
+                    d->config.dmaDevicePath = device;
+                    d->config.dmaModifier = DRM_FORMAT_MOD_LINEAR;
+                    qCWarning(dsrApp) << "ExtCaptureSession: capture transport=DMA-LINEAR"
+                                      << "device:" << device
+                                      << "format:" << Qt::hex << format
+                                      << "size:" << d->config.bufferSize;
+                    return;
+                }
+            }
+        }
+
+        qCWarning(dsrApp) << "ExtCaptureSession: no DMA-LINEAR plan available,"
+                          << "falling back to SHM";
+    }
+
+    if (!d->shmFormats.isEmpty()) {
         // Still-image capture deliberately uses wl_shm. DMA-BUF remains the
         // recording path, where frames are consumed as transparent handles.
         // Pick a format with a known QImage mapping instead of trusting the
@@ -409,10 +602,9 @@ void ExtCaptureSession::selectOptimalFormat()
                 break;
             }
         }
-        d->config.useDmaBuffer = false;
-        // qCWarning(dsrApp) << "*** SHM FORMAT SELECTED (DMA-BUF not available) ***";
-        // qCWarning(dsrApp) << "Selected SHM format:" << d->config.format;
-        // qCWarning(dsrApp) << "Available SHM formats count:" << d->shmFormats.size();
+        qCWarning(dsrApp) << "ExtCaptureSession: capture transport=SHM"
+                          << "format:" << Qt::hex << d->config.format
+                          << "size:" << d->config.bufferSize;
     } else {
         qCWarning(dsrApp) << "*** NO SUPPORTED FORMATS FOUND ***";
         setState(Error);

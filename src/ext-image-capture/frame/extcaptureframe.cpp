@@ -8,6 +8,7 @@
 #include "../../protocols/ext-image-copy-capture/qwayland-ext-image-copy-capture-v1.h"
 
 #include <QDebug>
+#include <QFile>
 #include <QGuiApplication>
 #include <qpa/qplatformnativeinterface.h>
 #include <cstring>
@@ -349,6 +350,10 @@ bool ExtCaptureFrame::createShmBuffer()
 #ifdef ENABLE_UNIT_TEST
     return false; // 单测桩：SHM 缓冲区需真实 Wayland，跳过
 #else
+    // createBuffer() calls this as a fallback from DMA-BUF. Keep the frame's
+    // advertised buffer type in sync so consumers take the SHM path.
+    d->config.useDmaBuffer = false;
+
     // 计算缓冲区大小（假设RGBA格式，4字节/像素）
     uint32_t width = d->config.bufferSize.width();
     uint32_t height = d->config.bufferSize.height();
@@ -434,115 +439,120 @@ bool ExtCaptureFrame::createDmaBuffer()
 #ifdef ENABLE_UNIT_TEST
     return false; // 单测桩：DRM/GBM/DMA-BUF 需真实设备，跳过
 #else
-    uint32_t width = d->config.bufferSize.width();
-    uint32_t height = d->config.bufferSize.height();
-    uint32_t format = DRM_FORMAT_XBGR8888; // 使用XBGR8888格式
-    
-    // qCWarning(dsrApp) << "Creating DMA Buffer:" << width << "x" << height 
-    //                   << "format:" << format;
-    
-    // 1. 打开DRM设备创建GBM设备
-    int drmFd = open("/dev/dri/renderD128", O_RDWR);
-    if (drmFd < 0) {
-        drmFd = open("/dev/dri/card0", O_RDWR);
-        if (drmFd < 0) {
-            // qCWarning(dsrApp) << "Failed to open DRM device, falling back to SHM";
-            return createShmBuffer();
-        }
+    const uint32_t width = static_cast<uint32_t>(d->config.bufferSize.width());
+    const uint32_t height = static_cast<uint32_t>(d->config.bufferSize.height());
+    const uint32_t format = d->config.format;
+
+    if (d->config.dmaDevicePath.isEmpty() || format == 0 || width == 0 || height == 0) {
+        qCWarning(dsrApp) << "ExtCaptureFrame::createDmaBuffer: incomplete DMA plan";
+        return false;
     }
-    
+
+    // 节点、格式和 LINEAR modifier 已由 ExtCaptureSession 在约束阶段探测，
+    // 这里只执行方案，不再逐帧尝试其他节点或临时回退 SHM。
+    const int drmFd = open(QFile::encodeName(d->config.dmaDevicePath).constData(),
+                           O_RDWR | O_CLOEXEC);
+    if (drmFd < 0) {
+        qCWarning(dsrApp) << "ExtCaptureFrame::createDmaBuffer: cannot open DRM node"
+                          << d->config.dmaDevicePath << "errno:" << errno;
+        return false;
+    }
+
     d->gbmDevice = gbm_create_device(drmFd);
     if (!d->gbmDevice) {
-        // qCWarning(dsrApp) << "Failed to create GBM device, falling back to SHM";
+        qCWarning(dsrApp) << "ExtCaptureFrame::createDmaBuffer: gbm_create_device failed";
         close(drmFd);
-        return createShmBuffer();
+        return false;
     }
-    
-    // 2. 创建GBM buffer object
-    uint32_t flags = GBM_BO_USE_RENDERING;
-    d->bo = gbm_bo_create(d->gbmDevice, width, height, format, flags);
-    
+
+    // 录制链路按 LINEAR 行布局读取 DMA-BUF。必须显式请求 LINEAR，并在
+    // 分配后检查驱动实际返回的 modifier；DMA-BUF 本身不等于 LINEAR。
+    uint64_t modifiers[] = { DRM_FORMAT_MOD_LINEAR };
+    d->bo = gbm_bo_create_with_modifiers2(d->gbmDevice, width, height, format,
+                                          modifiers, 1, GBM_BO_USE_RENDERING);
+
     if (!d->bo) {
-        // qCWarning(dsrApp) << "Failed to create GBM BO, falling back to SHM";
-        gbm_device_destroy(d->gbmDevice);
-        d->gbmDevice = nullptr;
+        qCWarning(dsrApp) << "ExtCaptureFrame::createDmaBuffer: failed to allocate LINEAR GBM BO";
+        cleanupDmaBuffer();
         close(drmFd);
-        return createShmBuffer();
+        return false;
     }
-    
-    // 3. 获取BO信息（使用plane-specific方法，参考PipeWire实现）
-    uint32_t stride = gbm_bo_get_stride_for_plane(d->bo, 0);
-    uint32_t offset = gbm_bo_get_offset(d->bo, 0);
-    uint64_t modifier = gbm_bo_get_modifier(d->bo);
-    int planeFd = gbm_bo_get_fd_for_plane(d->bo, 0);
-    
+
+    const uint64_t modifier = gbm_bo_get_modifier(d->bo);
+    if (modifier != DRM_FORMAT_MOD_LINEAR || modifier != d->config.dmaModifier) {
+        qCWarning(dsrApp) << "ExtCaptureFrame::createDmaBuffer: driver returned non-LINEAR BO"
+                          << "modifier:" << Qt::hex << modifier;
+        cleanupDmaBuffer();
+        close(drmFd);
+        return false;
+    }
+
+    if (gbm_bo_get_format(d->bo) != format || gbm_bo_get_plane_count(d->bo) < 1) {
+        qCWarning(dsrApp) << "ExtCaptureFrame::createDmaBuffer: BO format/plane mismatch";
+        cleanupDmaBuffer();
+        close(drmFd);
+        return false;
+    }
+
+    const uint32_t stride = gbm_bo_get_stride_for_plane(d->bo, 0);
+    const uint32_t offset = gbm_bo_get_offset(d->bo, 0);
+    const int planeFd = gbm_bo_get_fd_for_plane(d->bo, 0);
     if (planeFd < 0) {
-        // qCWarning(dsrApp) << "Failed to get FD from GBM BO, falling back to SHM";
-        gbm_bo_destroy(d->bo);
-        d->bo = nullptr;
-        gbm_device_destroy(d->gbmDevice);
-        d->gbmDevice = nullptr;
+        qCWarning(dsrApp) << "ExtCaptureFrame::createDmaBuffer: failed to export plane fd";
+        cleanupDmaBuffer();
         close(drmFd);
-        return createShmBuffer();
+        return false;
     }
-        
-        // qCWarning(dsrApp) << "GBM BO created - stride:" << stride << "offset:" << offset 
-        //                 << "modifier:" << modifier << "fd:" << planeFd;
-    
+
     d->frameData.stride = stride;
     d->bufferSize = stride * height;
+    d->frameData.size = d->bufferSize;
     d->bufferFd = planeFd;
-    
-    // 4. 映射DMA-BUF以便CPU访问
-    d->mappedData = mmap(nullptr, d->bufferSize, PROT_READ | PROT_WRITE, MAP_SHARED, planeFd, 0);
-    if (d->mappedData == MAP_FAILED) {
-        // 某些驱动可能不支持CPU映射DMA-BUF，这是正常的
-        // qCWarning(dsrApp) << "Cannot mmap DMA-BUF (this is normal for some drivers)";
-        d->mappedData = nullptr;
-    }
-    
-    // 5. 获取linux-dmabuf对象
+
+    qCDebug(dsrApp) << "ExtCaptureFrame: DMA-LINEAR BO created"
+                    << "device:" << d->config.dmaDevicePath
+                    << "stride:" << stride
+                    << "offset:" << offset
+                    << "modifier:" << Qt::hex << modifier
+                    << "fd:" << planeFd;
+
     if (!d->session) {
-        // qCWarning(dsrApp) << "Session is null";
         cleanupDmaBuffer();
         close(drmFd);
         return false;
     }
-    
+
     auto *linuxDmabuf = static_cast<struct zwp_linux_dmabuf_v1*>(d->session->getLinuxDmabuf());
     if (!linuxDmabuf) {
-        // qCWarning(dsrApp) << "Linux DMA-BUF not available, falling back to SHM";
+        qCWarning(dsrApp) << "ExtCaptureFrame::createDmaBuffer: linux-dmabuf unavailable";
         cleanupDmaBuffer();
         close(drmFd);
-        return createShmBuffer();
+        return false;
     }
-    
-    // 6. 使用linux-dmabuf协议创建wl_buffer
+
     auto *params = zwp_linux_dmabuf_v1_create_params(linuxDmabuf);
     if (!params) {
-        // qCWarning(dsrApp) << "Failed to create linux_buffer_params";
+        qCWarning(dsrApp) << "ExtCaptureFrame::createDmaBuffer: create_params failed";
         cleanupDmaBuffer();
         close(drmFd);
         return false;
     }
-    
-    // 7. 添加plane参数 (对于单plane格式，通常只有plane 0)
-    zwp_linux_buffer_params_v1_add(params, planeFd, 0, offset, stride, 
+
+    zwp_linux_buffer_params_v1_add(params, planeFd, 0, offset, stride,
                                    modifier >> 32, modifier & 0xffffffff);
-    
-    // 8. 创建wl_buffer
+
     d->buffer = zwp_linux_buffer_params_v1_create_immed(params, width, height, format, 0);
     zwp_linux_buffer_params_v1_destroy(params);
-    
+
     if (!d->buffer) {
-        // qCWarning(dsrApp) << "Failed to create wl_buffer from DMA-BUF";
+        qCWarning(dsrApp) << "ExtCaptureFrame::createDmaBuffer: create_immed failed";
         cleanupDmaBuffer();
         close(drmFd);
         return false;
     }
-    
-    // qCWarning(dsrApp) << "DMA Buffer created successfully using linux-dmabuf protocol!";
-    close(drmFd); // 可以关闭设备fd，GBM已经获得了所有需要的信息
+
+    // GBM 设备持有自身 fd 的引用，创建完成后可以关闭本地打开的描述符。
+    close(drmFd);
 
     return true;
 #endif
@@ -586,4 +596,3 @@ QString ExtCaptureFrame::failureReasonToString(uint32_t reason)
         return QString("Unknown failure reason: %1").arg(reason);
     }
 }
-

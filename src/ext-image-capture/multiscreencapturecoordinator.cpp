@@ -19,6 +19,7 @@
 #include <utility>
 #include <QDateTime>
 #include <gbm.h>
+#include <drm/drm_fourcc.h>
 
 #include <QGuiApplication>
 #include <QDebug>
@@ -160,6 +161,14 @@ bool MultiScreenCaptureCoordinator::startMultiScreenCapture(const QList<QScreen*
                     onScreenFrameReady(screen, dmaBufferFd, gbmBo, width, height, stride, size, timestamp);
                 });
 
+        // 每个输出独立选择 transport。某台输出回退 SHM 时，多屏合成
+        // 不能只等 dmaFrameReady，否则这一轮永远凑不齐所有屏幕。
+        connect(session, &ExtCaptureSession::frameReady,
+                this, [this, screen](ExtCaptureFrame *frame) {
+                    if (frame && !frame->isDmaBuffer())
+                        onScreenShmFrameReady(screen, frame);
+                });
+
         connect(session, &ExtCaptureSession::error,
                 this, &MultiScreenCaptureCoordinator::onSessionError);
 
@@ -229,6 +238,9 @@ bool MultiScreenCaptureCoordinator::captureMultiScreenFrame()
     int captureCount = 0;
     for (auto& layout : m_screenLayouts) {
         if (layout.session) {
+            if (layout.session->state() == ExtCaptureSession::Capturing)
+                layout.session->cancelFrame();
+
             // 使用createFrame方法创建帧并触发捕获
             ExtCaptureFrame* frame = layout.session->createFrame();
             if (frame) {
@@ -277,12 +289,63 @@ void MultiScreenCaptureCoordinator::onScreenFrameReady(QScreen* screen, int dmaB
         qCWarning(dsrApp) << "onScreenFrameReady: screen is null, ignoring frame.";
         return;
     }
-    QMutexLocker locker(&m_frameMutex);
-    
+
     qCDebug(dsrApp) << "MultiScreenCaptureCoordinator::onScreenFrameReady: Screen" << screen->name()
                     << "frame ready, size:" << size << "dimensions:" << width << "x" << height;
 
-    // 创建DmaFrameInfo并传递给compositor
+    const QByteArray frameData = extractDmaBufferData(dmaBufferFd, gbmBo, width, height, stride, size);
+    if (frameData.isEmpty()) {
+        qCWarning(dsrApp) << "MultiScreenCaptureCoordinator: Failed to map frame for screen"
+                          << screen->name();
+        return;
+    }
+
+    submitScreenFrame(screen, frameData, dmaBufferFd, gbmBo, width, height,
+                      stride, size, timestamp);
+}
+
+void MultiScreenCaptureCoordinator::onScreenShmFrameReady(QScreen *screen, ExtCaptureFrame *frame)
+{
+    if (!screen || !frame || frame->isDmaBuffer())
+        return;
+
+    void *data = frame->mapBuffer();
+    if (!data) {
+        qCWarning(dsrApp) << "MultiScreenCaptureCoordinator: Failed to map SHM frame for screen"
+                          << screen->name();
+        return;
+    }
+
+    const FrameData &source = frame->frameData();
+    const int width = source.dimensions.width();
+    const int height = source.dimensions.height();
+    const int stride = static_cast<int>(source.stride);
+    const size_t size = static_cast<size_t>(stride) * static_cast<size_t>(height);
+    if (width <= 0 || height <= 0 || stride <= 0 || size == 0) {
+        qCWarning(dsrApp) << "MultiScreenCaptureCoordinator: invalid SHM frame for screen"
+                          << screen->name();
+        frame->unmapBuffer();
+        return;
+    }
+
+    // frameReady 返回后 Session 会释放 frame，必须在当前调用栈内完成拷贝。
+    const QByteArray frameData(static_cast<const char *>(data), static_cast<int>(size));
+    frame->unmapBuffer();
+
+    submitScreenFrame(screen, frameData, -1, nullptr, width, height,
+                      stride, size, source.timestamp);
+}
+
+void MultiScreenCaptureCoordinator::submitScreenFrame(QScreen *screen, const QByteArray &frameData,
+                                                      int dmaBufferFd, void *gbmBo, int width,
+                                                      int height, int stride, size_t size,
+                                                      uint64_t timestamp)
+{
+    if (!screen || frameData.isEmpty())
+        return;
+
+    QMutexLocker locker(&m_frameMutex);
+
     DmaFrameInfo frameInfo;
     frameInfo.screen = screen;
     frameInfo.screenGeometry = screen->geometry();
@@ -294,27 +357,18 @@ void MultiScreenCaptureCoordinator::onScreenFrameReady(QScreen* screen, int dmaB
     frameInfo.size = size;
     frameInfo.timestamp = timestamp;
     frameInfo.ready = true;
-    
-    // 从DMA Buffer或GBM Buffer Object中提取CPU可访问的像素数据
-    // 使用与ExtCaptureRecorder相同的完整实现
-    frameInfo.frameData = extractDmaBufferData(dmaBufferFd, gbmBo, width, height, stride, size);
-
-    if (frameInfo.frameData.isEmpty()) {
-        qCWarning(dsrApp) << "MultiScreenCaptureCoordinator: Failed to map frame for screen"
-                          << screen->name();
-        return;
-    }
+    frameInfo.frameData = frameData;
     
     // 保持原有的帧数据结构用于兼容性
-    ScreenFrameData& frameData = m_screenFrames[screen];
-    frameData.dmaBufferFd = dmaBufferFd;
-    frameData.gbmBo = gbmBo;
-    frameData.width = width;
-    frameData.height = height;
-    frameData.stride = stride;
-    frameData.size = size;
-    frameData.timestamp = timestamp;
-    frameData.ready = true;
+    ScreenFrameData& cachedFrame = m_screenFrames[screen];
+    cachedFrame.dmaBufferFd = dmaBufferFd;
+    cachedFrame.gbmBo = gbmBo;
+    cachedFrame.width = width;
+    cachedFrame.height = height;
+    cachedFrame.stride = stride;
+    cachedFrame.size = size;
+    cachedFrame.timestamp = timestamp;
+    cachedFrame.ready = true;
 
     // 标记对应的屏幕布局为帧准备就绪
     for (auto& layout : m_screenLayouts) {
@@ -396,6 +450,10 @@ void MultiScreenCaptureCoordinator::onFrameSyncTimeout()
         return;
 
     qCWarning(dsrApp) << "MultiScreenCaptureCoordinator: Timed out waiting for output frames; retrying on the next tick";
+    for (auto &layout : m_screenLayouts) {
+        if (layout.session && layout.session->state() == ExtCaptureSession::Capturing)
+            layout.session->cancelFrame();
+    }
     m_captureInFlight = false;
 }
 
@@ -534,6 +592,8 @@ void MultiScreenCaptureCoordinator::resetFrameReadyFlags()
 
 QByteArray MultiScreenCaptureCoordinator::extractDmaBufferData(int dmaBufferFd, void* gbmBo, int width, int height, int stride, size_t size)
 {
+    Q_UNUSED(stride)
+    Q_UNUSED(size)
     if (dmaBufferFd < 0 || !gbmBo) {
         qCWarning(dsrApp) << "MultiScreenCaptureCoordinator::extractDmaBufferData: Invalid parameters";
         return QByteArray();
@@ -559,69 +619,44 @@ QByteArray MultiScreenCaptureCoordinator::extractDmaBufferData(int dmaBufferFd, 
     uint32_t bo_height = gbm_bo_get_height(bo);
     uint32_t bo_stride = gbm_bo_get_stride(bo);
     uint32_t bo_format = gbm_bo_get_format(bo);
+    uint64_t bo_modifier = gbm_bo_get_modifier(bo);
+
+    if (bo_modifier != DRM_FORMAT_MOD_LINEAR) {
+        qCWarning(dsrApp) << "MultiScreenCaptureCoordinator::extractDmaBufferData:"
+                          << "non-linear DMA-BUF modifier:" << Qt::hex << bo_modifier;
+        return QByteArray();
+    }
     
     qCDebug(dsrApp) << "MultiScreenCaptureCoordinator::extractDmaBufferData: GBM BO info:"
                     << "width:" << bo_width << "height:" << bo_height 
-                    << "stride:" << bo_stride << "format:" << bo_format;
+                    << "stride:" << bo_stride << "format:" << bo_format
+                    << "modifier:" << Qt::hex << bo_modifier;
     
     size_t frame_size = static_cast<size_t>(bo_stride) * bo_height;
     qCDebug(dsrApp) << "MultiScreenCaptureCoordinator::extractDmaBufferData: Extracting DMA Buffer data, size:" << frame_size;
     
     QByteArray frame_data;
-    void *mapped_data = nullptr;
     
-    // 方法1：首先尝试直接mmap DMA Buffer FD（这是标准方法）
-    qCDebug(dsrApp) << "MultiScreenCaptureCoordinator::extractDmaBufferData: Attempting standard DMA-BUF mmap, fd:" << dmaBufferFd;
-    mapped_data = mmap(nullptr, frame_size, PROT_READ, MAP_SHARED, dmaBufferFd, 0);
-    
-    if (mapped_data != MAP_FAILED) {
-        qCDebug(dsrApp) << "MultiScreenCaptureCoordinator::extractDmaBufferData: *** SUCCESS! *** DMA-BUF mmap worked, copying real screen data";
-        frame_data = QByteArray(static_cast<const char*>(mapped_data), frame_size);
-        munmap(mapped_data, frame_size);
+    // GBM mapping performs the required DMA-BUF transfer/cache synchronization
+    // before CPU access; raw mmap() can expose stale or partially written rows.
+    void *map_handle = nullptr;
+    uint32_t map_stride = 0;
+    void *gbm_map_data = gbm_bo_map(bo, 0, 0, bo_width, bo_height,
+                                    GBM_BO_TRANSFER_READ, &map_stride, &map_handle);
+    if (gbm_map_data) {
+        qCDebug(dsrApp) << "MultiScreenCaptureCoordinator::extractDmaBufferData:"
+                        << "GBM mapping succeeded, stride:" << map_stride;
+        frame_data.resize(frame_size);
+        char *dest = frame_data.data();
+        const char *src = static_cast<const char *>(gbm_map_data);
+        const uint32_t copy_width = std::min(bo_stride, map_stride);
+        for (uint32_t y = 0; y < bo_height; y++)
+            memcpy(dest + y * bo_stride, src + y * map_stride, copy_width);
+        gbm_bo_unmap(bo, map_handle);
     } else {
-        int error_code = errno;
-        qCDebug(dsrApp) << "MultiScreenCaptureCoordinator::extractDmaBufferData: DMA-BUF mmap failed with errno:" << error_code << strerror(error_code);
-        
-        // 方法2：尝试GBM映射
-        void *map_handle = nullptr;
-        uint32_t map_stride = 0;
-        void *gbm_map_data = nullptr;
-        
-        if (gbmBo) {
-            struct gbm_bo *bo = static_cast<struct gbm_bo*>(gbmBo);
-            qCDebug(dsrApp) << "MultiScreenCaptureCoordinator::extractDmaBufferData: Trying GBM BO mapping as fallback";
-            gbm_map_data = gbm_bo_map(bo, 0, 0, bo_width, bo_height, GBM_BO_TRANSFER_READ, &map_stride, &map_handle);
-            
-            if (gbm_map_data) {
-                qCDebug(dsrApp) << "MultiScreenCaptureCoordinator::extractDmaBufferData: *** GBM MAPPING SUCCESS! *** stride:" << map_stride;
-                
-                // 复制真实屏幕数据
-                if (map_stride == bo_stride) {
-                    frame_data = QByteArray(static_cast<const char*>(gbm_map_data), frame_size);
-                } else {
-                    frame_data.resize(frame_size);
-                    char *dest = frame_data.data();
-                    const char *src = static_cast<const char*>(gbm_map_data);
-                    uint32_t copy_width = std::min(bo_stride, map_stride);
-                    for (uint32_t y = 0; y < bo_height; y++) {
-                        memcpy(dest + y * bo_stride, src + y * map_stride, copy_width);
-                    }
-                }
-                
-                gbm_bo_unmap(bo, map_handle);
-            } else {
-                qCWarning(dsrApp) << "MultiScreenCaptureCoordinator::extractDmaBufferData: GBM mapping also failed";
-            }
-        }
-        
-        // 如果两种方法都失败，返回空数据让compositor使用占位符
-        if (!gbm_map_data) {
-            qCWarning(dsrApp) << "MultiScreenCaptureCoordinator::extractDmaBufferData: *** BOTH MAPPING METHODS FAILED ***";
-            qCWarning(dsrApp) << "MultiScreenCaptureCoordinator::extractDmaBufferData: This suggests a driver or buffer allocation issue";
-            
-            // 返回空数据，让compositor生成占位符图案
-            return QByteArray();
-        }
+        qCWarning(dsrApp) << "MultiScreenCaptureCoordinator::extractDmaBufferData:"
+                          << "GBM mapping failed";
+        return QByteArray();
     }
     
     qCDebug(dsrApp) << "MultiScreenCaptureCoordinator::extractDmaBufferData: Successfully extracted" << frame_data.size() << "bytes of frame data";

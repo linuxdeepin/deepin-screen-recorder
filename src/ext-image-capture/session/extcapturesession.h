@@ -9,6 +9,7 @@
 #include <QObject>
 #include <QSize>
 #include <QList>
+#include <QString>
 
 QT_BEGIN_NAMESPACE
 class QWaylandOutput;
@@ -25,6 +26,10 @@ struct CaptureConfig {
     uint32_t format = 0;        // 像素格式
     bool useDmaBuffer = true;   // 是否使用DMA缓冲区（默认启用）
     bool paintCursors = false;  // 是否绘制光标
+    // DMA-BUF 方案由 ExtCaptureSession 在约束完成后一次性确定。
+    // dmaDevicePath 是 composer 指定设备的实际 DRM 节点；空表示不使用 DMA-BUF。
+    QString dmaDevicePath;
+    uint64_t dmaModifier = 0;   // 当前仅允许 DRM_FORMAT_MOD_LINEAR
 };
 
 /**
@@ -75,6 +80,14 @@ public:
      * @return 捕获帧对象，失败返回nullptr
      */
     ExtCaptureFrame* createFrame();
+
+    /**
+     * @brief 取消尚未完成的帧，恢复到 Ready 状态
+     *
+     * 用于上层采集超时后的重试。Wayland 的 capture 请求在输出没有新 commit
+     * 时可能长期不回调；若不取消，currentFrame 会一直占用并让后续请求失败。
+     */
+    void cancelFrame();
 
     /**
      * @brief 停止捕获会话
@@ -141,7 +154,7 @@ protected:
 
 private:
     void setState(SessionState newState);
-    void selectOptimalFormat();
+    void selectCapturePlan();
 
     class Private;
     Private *d;
