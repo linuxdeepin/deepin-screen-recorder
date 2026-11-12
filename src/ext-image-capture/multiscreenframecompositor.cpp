@@ -88,6 +88,7 @@ void MultiScreenFrameCompositor::setScreenLayouts(const QList<QScreen*>& screens
             // Initialize frame buffer for this screen
             DmaFrameInfo frameInfo;
             frameInfo.screen = screen;
+            frameInfo.screenName = screen->name();
             frameInfo.screenGeometry = geometry;
             m_frameBuffers.append(frameInfo);
             
@@ -104,6 +105,52 @@ void MultiScreenFrameCompositor::setScreenLayouts(const QList<QScreen*>& screens
     qCDebug(dsrApp) << "MultiScreenFrameCompositor: Configured" << m_frameBuffers.size()
                     << "screens; output scale:" << m_outputScale
                     << "physical output size:" << m_outputSize;
+}
+
+void MultiScreenFrameCompositor::setScreenLayouts(const QVector<ScreenLayoutInfo>& layouts)
+{
+    QMutexLocker locker(&m_frameMutex);
+
+    m_screenGeometries.clear();
+    m_frameBuffers.clear();
+    m_contentBounds = QRect();
+
+    for (const ScreenLayoutInfo &layout : layouts) {
+        if (layout.geometry.isEmpty())
+            continue;
+
+        m_screenGeometries.append(layout.geometry);
+        m_contentBounds = m_contentBounds.isNull()
+                ? layout.geometry
+                : m_contentBounds.united(layout.geometry);
+
+        DmaFrameInfo frameInfo;
+        frameInfo.screenName = layout.name;
+        frameInfo.screenGeometry = layout.geometry;
+        m_frameBuffers.append(frameInfo);
+
+        qCDebug(dsrApp) << "MultiScreenFrameCompositor: Added output" << layout.name
+                        << "geometry:" << layout.geometry;
+    }
+
+    if (!m_hasCropRegion) {
+        m_outputSize = scaledOutputSize(m_contentBounds.size());
+        m_outputStride = m_outputSize.width() * 4;
+    }
+
+    qCDebug(dsrApp) << "MultiScreenFrameCompositor: Configured" << m_frameBuffers.size()
+                    << "outputs from pure layout data; output scale:" << m_outputScale
+                    << "physical output size:" << m_outputSize;
+}
+
+void MultiScreenFrameCompositor::beginRound(quint64 roundId)
+{
+    QMutexLocker locker(&m_frameMutex);
+    m_activeRoundId = roundId;
+    for (auto &buffer : m_frameBuffers)
+        buffer.ready = false;
+
+    qCDebug(dsrApp) << "MultiScreenFrameCompositor: Begin round" << roundId;
 }
 
 void MultiScreenFrameCompositor::setCropRegion(const QRect& region)
@@ -141,34 +188,51 @@ bool MultiScreenFrameCompositor::addScreenFrame(const DmaFrameInfo& frameInfo)
     
     // Find the frame buffer for this screen
     for (auto& buffer : m_frameBuffers) {
-        if (buffer.screen == frameInfo.screen) {
-            // Update frame data
-            buffer.dmaBufferFd = frameInfo.dmaBufferFd;
-            buffer.gbmBo = frameInfo.gbmBo;
-            buffer.width = frameInfo.width;
-            buffer.height = frameInfo.height;
-            buffer.stride = frameInfo.stride;
-            buffer.size = frameInfo.size;
-            buffer.timestamp = frameInfo.timestamp;
-            buffer.frameData = frameInfo.frameData;
-            buffer.ready = true;
-            
-            qCDebug(dsrApp) << "MultiScreenFrameCompositor: Frame added for screen" 
-                            << frameInfo.screen->name() << "timestamp:" << frameInfo.timestamp;
-            
-            // Check if all frames are ready for composition
-            if (areAllFramesReady()) {
-                qCDebug(dsrApp) << "MultiScreenFrameCompositor: All frames ready, triggering composition";
-                // Use queued connection to avoid blocking the caller
-                QMetaObject::invokeMethod(this, "performComposition", Qt::QueuedConnection);
-            }
-            
-            return true;
+        const bool nameMatch = !frameInfo.screenName.isEmpty()
+                && buffer.screenName == frameInfo.screenName;
+        const bool legacyPointerMatch = frameInfo.screen != nullptr
+                && buffer.screen == frameInfo.screen;
+        if (!nameMatch && !legacyPointerMatch)
+            continue;
+
+        if (m_activeRoundId != 0 && frameInfo.roundId != 0
+                && frameInfo.roundId != m_activeRoundId) {
+            qCWarning(dsrApp) << "MultiScreenFrameCompositor: dropping stale frame for output"
+                              << screenLabel(frameInfo) << "round:" << frameInfo.roundId
+                              << "active round:" << m_activeRoundId;
+            return false;
         }
+
+        // 旧 GUI 接口会在 frameInfo.screen 里带 QScreen；工作线程接口只带名称。
+        if (!buffer.screen)
+            buffer.screen = frameInfo.screen;
+
+        // Update frame data
+        buffer.dmaBufferFd = frameInfo.dmaBufferFd;
+        buffer.gbmBo = frameInfo.gbmBo;
+        buffer.width = frameInfo.width;
+        buffer.height = frameInfo.height;
+        buffer.stride = frameInfo.stride;
+        buffer.size = frameInfo.size;
+        buffer.timestamp = frameInfo.timestamp;
+        buffer.frameData = frameInfo.frameData;
+        buffer.ready = true;
+
+        qCDebug(dsrApp) << "MultiScreenFrameCompositor: Frame added for output"
+                        << screenLabel(frameInfo) << "timestamp:" << frameInfo.timestamp;
+
+        // Check if all frames are ready for composition
+        if (areAllFramesReady()) {
+            qCDebug(dsrApp) << "MultiScreenFrameCompositor: All frames ready, triggering composition";
+            // Use queued connection to avoid blocking the caller
+            QMetaObject::invokeMethod(this, "performComposition", Qt::QueuedConnection);
+        }
+
+        return true;
     }
-    
-    qCWarning(dsrApp) << "MultiScreenFrameCompositor: No frame buffer found for screen" 
-                      << frameInfo.screen->name();
+
+    qCWarning(dsrApp) << "MultiScreenFrameCompositor: No frame buffer found for output"
+                      << screenLabel(frameInfo);
     return false;
 }
 
@@ -200,6 +264,7 @@ void MultiScreenFrameCompositor::reset()
     }
     
     m_frameCount = 0;
+    m_activeRoundId = 0;
     qCDebug(dsrApp) << "MultiScreenFrameCompositor: Reset complete";
 }
 
@@ -265,8 +330,8 @@ QByteArray MultiScreenFrameCompositor::performFrameStitching()
         // Convert DMA Buffer to QImage
         QImage screenImage = convertDmaBufferToQImage(frameBuffer);
         if (screenImage.isNull()) {
-            qCWarning(dsrApp) << "MultiScreenFrameCompositor: Failed to convert frame for screen"
-                              << frameBuffer.screen->name();
+            qCWarning(dsrApp) << "MultiScreenFrameCompositor: Failed to convert frame for output"
+                              << screenLabel(frameBuffer);
             continue;
         }
         
@@ -301,7 +366,8 @@ QByteArray MultiScreenFrameCompositor::performFrameStitching()
                               targetRect.size() != sourceRect.size());
         painter.drawImage(targetRect, screenImage, sourceRect);
 
-        qCDebug(dsrApp) << "MultiScreenFrameCompositor: Drew screen" << frameBuffer.screen->name()
+        qCDebug(dsrApp) << "MultiScreenFrameCompositor: Drew output"
+                        << screenLabel(frameBuffer)
                         << "target:" << targetRect << "source:" << sourceRect;
     }
     
@@ -323,8 +389,8 @@ QImage MultiScreenFrameCompositor::convertDmaBufferToQImage(const DmaFrameInfo& 
 {
     // If we already have CPU-accessible data, use it directly
     if (!frameInfo.frameData.isEmpty()) {
-        qCDebug(dsrApp) << "MultiScreenFrameCompositor: Using CPU-accessible frame data for screen"
-                        << frameInfo.screen->name();
+        qCDebug(dsrApp) << "MultiScreenFrameCompositor: Using CPU-accessible frame data for output"
+                        << screenLabel(frameInfo);
         
         // Capture frames use DRM_FORMAT_XBGR8888. On little-endian systems the
         // memory order is R,G,B,X, while the final X byte is unused rather
@@ -337,8 +403,8 @@ QImage MultiScreenFrameCompositor::convertDmaBufferToQImage(const DmaFrameInfo& 
     }
     
     // If no CPU data available, we need to handle DMA Buffer conversion
-    qCWarning(dsrApp) << "MultiScreenFrameCompositor: No CPU-accessible data for screen"
-                      << frameInfo.screen->name() << ", attempting DMA Buffer conversion";
+    qCWarning(dsrApp) << "MultiScreenFrameCompositor: No CPU-accessible data for output"
+                      << screenLabel(frameInfo) << ", attempting DMA Buffer conversion";
     
     // For DMA Buffer conversion, we would need to:
     // 1. Import the DMA Buffer FD
@@ -349,9 +415,18 @@ QImage MultiScreenFrameCompositor::convertDmaBufferToQImage(const DmaFrameInfo& 
     // often fails on AMD GPUs. The frameData should already contain the converted
     // pixel data from the capture process.
     
-    qCWarning(dsrApp) << "MultiScreenFrameCompositor: No usable image for screen"
-                      << frameInfo.screen->name();
+    qCWarning(dsrApp) << "MultiScreenFrameCompositor: No usable image for output"
+                      << screenLabel(frameInfo);
     return QImage();
+}
+
+QString MultiScreenFrameCompositor::screenLabel(const DmaFrameInfo& frameInfo) const
+{
+    if (!frameInfo.screenName.isEmpty())
+        return frameInfo.screenName;
+    if (frameInfo.screen)
+        return frameInfo.screen->name();
+    return QStringLiteral("<unknown>");
 }
 
 QSize MultiScreenFrameCompositor::scaledOutputSize(const QSize &logicalSize) const

@@ -7,6 +7,8 @@
 #include "extcaptureintegration.h"
 #include "extcaptureframebuffer.h"
 #include "framepumpworker.h"
+#include "capturepipelineworker.h"
+#include "dmaframegpuconverter.h"
 #include "../utils/log.h"
 
 #include <QDebug>
@@ -60,6 +62,8 @@ ExtCaptureRecorder::ExtCaptureRecorder(QObject *parent)
             this, &ExtCaptureRecorder::onRecordingStopped);
     connect(m_extCapture, &ExtCaptureIntegration::frameReady,
             this, &ExtCaptureRecorder::onFrameReady);
+    connect(m_extCapture, &ExtCaptureIntegration::shmFrameReady,
+            this, &ExtCaptureRecorder::onShmFrameReady);
     connect(m_extCapture, &ExtCaptureIntegration::dmaFrameReady,
             this, &ExtCaptureRecorder::onDmaFrameReady);
     connect(m_extCapture, &ExtCaptureIntegration::multiScreenFrameReady,
@@ -86,6 +90,7 @@ ExtCaptureRecorder::~ExtCaptureRecorder()
     }
 
     stopFramePump();
+    stopCapturePipeline();
     delete m_latestFrame;
     m_latestFrame = nullptr;
 
@@ -157,6 +162,8 @@ bool ExtCaptureRecorder::startRecording(QScreen *screen, bool includeCursor,
     // 重置计数器
     m_frameCount = 0;
     m_captureSequence = 0;
+    m_pipelineJobId = 0;
+    m_pipelineBusy = false;
     m_lastCaptureRequestNs = -1;
     m_pumpOutputFrames = 0;
     m_pumpRepeatedFrames = 0;
@@ -176,9 +183,16 @@ bool ExtCaptureRecorder::startRecording(QScreen *screen, bool includeCursor,
 
     setState(Starting);
 
+    if (!ensureCapturePipeline()) {
+        setState(Error);
+        emit error(QStringLiteral("无法创建采集工作线程"));
+        return false;
+    }
+
     // 开始ext-capture录制
     if (!m_extCapture->startScreenRecording(screen, includeCursor)) {
         qCWarning(dsrApp) << "ExtCaptureRecorder::startRecording: Failed to start ext-capture";
+        stopCapturePipeline();
         setState(Error);
         emit error("Failed to start screen recording");
         return false;
@@ -253,15 +267,11 @@ void ExtCaptureRecorder::stopRecording()
     }
 
     setState(Stopping);
-    
-    // 立即断开所有帧事件信号连接，避免停止后仍有残留事件触发处理
-    if (m_extCapture) {
-        disconnect(m_extCapture, &ExtCaptureIntegration::frameReady, this, &ExtCaptureRecorder::onFrameReady);
-        disconnect(m_extCapture, &ExtCaptureIntegration::dmaFrameReady, this, &ExtCaptureRecorder::onDmaFrameReady);
-        disconnect(m_extCapture, &ExtCaptureIntegration::multiScreenFrameReady,
-                   this, &ExtCaptureRecorder::onMultiScreenFrameReady);
-    }
-    
+
+    // 不在这里断开 m_extCapture 的帧信号。ExtCaptureRecorder 会被同一
+    // 进程复用，断开后下一次录制就再也收不到帧；停止期间的残留帧由
+    // m_state != Recording 的守卫丢弃。
+
     // 停止定时器
     m_captureTimer->stop();
     m_captureWatchdog->stop();
@@ -273,6 +283,9 @@ void ExtCaptureRecorder::stopRecording()
     if (m_extCapture) {
         m_extCapture->stopRecording();
     }
+
+    // 先让工作线程结束并丢弃所有在途结果，再进入编码收尾。
+    stopCapturePipeline();
 
     // 停止帧缓冲区
     if (m_frameBuffer) {
@@ -383,6 +396,8 @@ void ExtCaptureRecorder::onRecordingStopped()
 {
     // 底层已停止，进行收尾
     setState(Stopped);
+
+    stopCapturePipeline();
     
     // 先完成编码资源的收尾
     finalizeRecording();
@@ -393,12 +408,22 @@ void ExtCaptureRecorder::onRecordingStopped()
 
 void ExtCaptureRecorder::onFrameReady(const void *data, size_t size, int width, int height, int stride, uint64_t timestamp)
 {
+    // 流式录制统一走 onShmFrameReady() 的 memfd 工作线程路径；这里保留
+    // 旧指针信号，仅用于历史缓冲模式/单测。
+    if (m_streamingMode) {
+        return;
+    }
+
     if (!data || !m_frameBuffer) {
         return;
     }
     
     // 停止或非录制状态下一律丢弃
     if (m_state != Recording) {
+        return;
+    }
+    if (m_pipelineBusy) {
+        qCDebug(dsrApp) << "ExtCaptureRecorder::onFrameReady: duplicate frame while pipeline busy, ignored";
         return;
     }
     recordFrameArrival();
@@ -419,23 +444,19 @@ void ExtCaptureRecorder::onFrameReady(const void *data, size_t size, int width, 
         m_frameStride = stride;
         updateCropFilter(width, height);
 
-        if (!m_streamingMode && !m_frameBuffer->initialize(width, height, stride)) {
+        if (!m_frameBuffer->initialize(width, height, stride)) {
             qCWarning(dsrApp) << "ExtCaptureRecorder: Failed to initialize frame buffer";
             emit error("Failed to initialize frame buffer");
             scheduleNextCapture();
             return;
         }
-        
+
         qCDebug(dsrApp) << "ExtCaptureRecorder: Frame format:" << width << "x" << height << "stride:" << stride;
     }
 
     QElapsedTimer processTimer;
     processTimer.start();
-    if (m_streamingMode) {
-        const QByteArray frameData(static_cast<const char *>(data), expectedSize);
-        storeFrameSnapshot(frameData, width, height, stride, timestamp);
-    } else if (!m_streamingMode) {
-        // 缓冲模式：添加帧到缓冲区
+    if (!m_streamingMode) {
         int64_t frameTimestamp = (timestamp > 0) ? static_cast<int64_t>(timestamp) : QDateTime::currentMSecsSinceEpoch() * 1000000LL;
         m_frameBuffer->appendBuffer(static_cast<const unsigned char*>(data), size, width, height, stride, frameTimestamp);
     }
@@ -451,6 +472,47 @@ void ExtCaptureRecorder::onFrameReady(const void *data, size_t size, int width, 
     scheduleNextCapture();
 }
 
+void ExtCaptureRecorder::onShmFrameReady(int shmFd, size_t size, int width, int height,
+                                         int stride, uint64_t timestamp)
+{
+    if (!m_streamingMode || shmFd < 0)
+        return;
+    if (m_state != Recording)
+        return;
+    if (m_pipelineBusy) {
+        qCDebug(dsrApp) << "ExtCaptureRecorder::onShmFrameReady: duplicate frame while pipeline busy, ignored";
+        return;
+    }
+    recordFrameArrival();
+    m_captureWatchdog->stop();
+
+    if (!ensureCapturePipeline()) {
+        QMetaObject::invokeMethod(this, [this]() {
+            onExtCaptureError(QStringLiteral("采集工作线程不可用"));
+        }, Qt::QueuedConnection);
+        return;
+    }
+
+    const quint64 jobId = ++m_pipelineJobId;
+    ShmFrameSourcePtr source;
+    QString error;
+    if (!makeShmFrameSource(shmFd, size, width, height, stride, timestamp, jobId,
+                            &source, &error)) {
+        QMetaObject::invokeMethod(this, [this, error]() {
+            onExtCaptureError(error.isEmpty()
+                                      ? QStringLiteral("SHM 帧描述失败")
+                                      : error);
+        }, Qt::QueuedConnection);
+        return;
+    }
+
+    m_pipelineBusy = true;
+    QMetaObject::invokeMethod(m_capturePipeline, "convertSingleShm",
+                              Qt::QueuedConnection,
+                              Q_ARG(ShmFrameSourcePtr, source),
+                              Q_ARG(quint64, jobId));
+}
+
 void ExtCaptureRecorder::onDmaFrameReady(int dmaBufferFd, void *gbmBo, size_t size, int width, int height, int stride, uint64_t timestamp)
 {
     Q_UNUSED(size)
@@ -462,43 +524,50 @@ void ExtCaptureRecorder::onDmaFrameReady(int dmaBufferFd, void *gbmBo, size_t si
     if (m_state != Recording) {
         return;
     }
+    if (m_pipelineBusy) {
+        qCDebug(dsrApp) << "ExtCaptureRecorder::onDmaFrameReady: duplicate frame while pipeline busy, ignored";
+        return;
+    }
     recordFrameArrival();
     m_captureWatchdog->stop();
 
-    // 初始化帧缓冲区（第一帧时）
-    if (m_frameCount == 0) {
-        m_frameWidth = width;
-        m_frameHeight = height;
-        m_frameStride = stride;
-        updateCropFilter(width, height);
-        
-        qCDebug(dsrApp) << "ExtCaptureRecorder: DMA Buffer frame format:" << width << "x" << height << "stride:" << stride;
+    if (!m_streamingMode) {
+        m_frameCount++;
+        emit progressUpdated(m_frameCount, recordingDuration());
+        scheduleNextCapture();
+        return;
     }
 
-    if (m_streamingMode) {
-        QElapsedTimer processTimer;
-        processTimer.start();
-        const QByteArray frameData = copyDmaFrame(dmaBufferFd, gbmBo, width, height, stride);
-        if (frameData.isEmpty()) {
-            // 当前仍在 Session 的帧就绪回调中，异步报错，避免上层同步停止
-            // 录制并销毁 Session 造成重入。
-            QMetaObject::invokeMethod(this, [this]() {
-                onExtCaptureError(QStringLiteral("DMA-BUF 帧映射失败：GBM CPU 映射不可用"));
-            }, Qt::QueuedConnection);
-            return;
-        }
-        storeFrameSnapshot(frameData, width, height, stride, timestamp);
-        const qint64 processMs = processTimer.elapsed();
-        m_statProcessTotalMs += processMs;
-        m_statProcessMaxMs = qMax(m_statProcessMaxMs, processMs);
-        ++m_statFrames;
+    if (!ensureCapturePipeline()) {
+        QMetaObject::invokeMethod(this, [this]() {
+            onExtCaptureError(QStringLiteral("采集工作线程不可用"));
+        }, Qt::QueuedConnection);
+        return;
     }
-    
-    m_frameCount++;
-    
-    // 发送进度更新
-    emit progressUpdated(m_frameCount, recordingDuration());
-    scheduleNextCapture();
+
+    const QString devicePath = m_extCapture ? m_extCapture->dmaDevicePath() : QString();
+    const uint64_t modifier = m_extCapture ? m_extCapture->dmaModifier()
+                                           : DRM_FORMAT_MOD_LINEAR;
+    const quint64 jobId = ++m_pipelineJobId;
+    DmaFrameSourcePtr source;
+    QString error;
+    if (!makeDmaFrameSource(dmaBufferFd, gbmBo, width, height, stride, devicePath,
+                            modifier, timestamp, jobId, &source, &error)) {
+        // 当前仍在 Session 的帧就绪回调中，异步报错，避免上层同步停止
+        // 录制并销毁 Session 造成重入。
+        QMetaObject::invokeMethod(this, [this, error]() {
+            onExtCaptureError(error.isEmpty()
+                                      ? QStringLiteral("DMA-BUF 帧描述失败")
+                                      : error);
+        }, Qt::QueuedConnection);
+        return;
+    }
+
+    m_pipelineBusy = true;
+    QMetaObject::invokeMethod(m_capturePipeline, "convertSingleDma",
+                              Qt::QueuedConnection,
+                              Q_ARG(DmaFrameSourcePtr, source),
+                              Q_ARG(quint64, jobId));
 }
 
 void ExtCaptureRecorder::onExtCaptureError(const QString &message)
@@ -544,12 +613,62 @@ void ExtCaptureRecorder::onMultiScreenFrameReady(const QByteArray &data,
     scheduleNextCapture();
 }
 
+void ExtCaptureRecorder::onPipelineSingleFrameReady(const QByteArray &data, int width,
+                                                    int height, int stride,
+                                                    uint64_t timestamp, quint64 jobId,
+                                                    qint64 convertMs)
+{
+    if (m_state != Recording || jobId != m_pipelineJobId)
+        return;
+
+    m_pipelineBusy = false;
+    consumeCapturedFrame(data, width, height, stride, timestamp, convertMs);
+}
+
+void ExtCaptureRecorder::onPipelineSingleFrameFailed(const QString &message, quint64 jobId)
+{
+    if (m_state != Recording || jobId != m_pipelineJobId)
+        return;
+
+    m_pipelineBusy = false;
+    onExtCaptureError(message.isEmpty() ? QStringLiteral("采集帧转换失败") : message);
+}
+
+void ExtCaptureRecorder::consumeCapturedFrame(const QByteArray &data, int width, int height,
+                                              int stride, uint64_t timestamp,
+                                              qint64 convertMs)
+{
+    if (m_state != Recording || data.isEmpty())
+        return;
+
+    if (m_frameCount == 0) {
+        m_frameWidth = width;
+        m_frameHeight = height;
+        m_frameStride = stride;
+        updateCropFilter(width, height);
+        qCDebug(dsrApp) << "ExtCaptureRecorder: captured frame format:" << width << "x"
+                        << height << "stride:" << stride;
+    }
+
+    QElapsedTimer processTimer;
+    processTimer.start();
+    storeFrameSnapshot(data, width, height, stride, timestamp);
+    const qint64 processMs = processTimer.elapsed() + qMax<qint64>(0, convertMs);
+    m_statProcessTotalMs += processMs;
+    m_statProcessMaxMs = qMax(m_statProcessMaxMs, processMs);
+    ++m_statFrames;
+
+    ++m_frameCount;
+    emit progressUpdated(m_frameCount, recordingDuration());
+    scheduleNextCapture();
+}
+
 void ExtCaptureRecorder::onCaptureTimer()
 {
     if (m_state != Recording || !m_extCapture) {
         return;
     }
-    if (m_pendingFrame) {
+    if (m_pendingFrame || m_pipelineBusy) {
         return;
     }
 
@@ -677,6 +796,60 @@ void ExtCaptureRecorder::recordFrameArrival()
     m_pendingFrame = false;
 }
 
+bool ExtCaptureRecorder::ensureCapturePipeline()
+{
+    if (m_capturePipeline && m_capturePipelineThread
+            && m_capturePipelineThread->isRunning()) {
+        return true;
+    }
+
+    stopCapturePipeline();
+
+    m_capturePipelineThread = new QThread(this);
+    m_capturePipeline = new CapturePipelineWorker;
+    m_capturePipeline->moveToThread(m_capturePipelineThread);
+
+    connect(m_capturePipeline, &CapturePipelineWorker::singleFrameReady,
+            this, &ExtCaptureRecorder::onPipelineSingleFrameReady);
+    connect(m_capturePipeline, &CapturePipelineWorker::singleFrameFailed,
+            this, &ExtCaptureRecorder::onPipelineSingleFrameFailed);
+
+    m_capturePipelineThread->start();
+    qCWarning(dsrApp) << "ExtCaptureRecorder: capture pipeline thread started";
+    return true;
+}
+
+void ExtCaptureRecorder::stopCapturePipeline()
+{
+    if (!m_capturePipeline && !m_capturePipelineThread) {
+        m_pipelineBusy = false;
+        return;
+    }
+
+    // 使所有在途结果失效；随后阻塞等待工作线程把当前任务处理完。
+    ++m_pipelineJobId;
+    m_pipelineBusy = false;
+
+    if (m_capturePipelineThread && m_capturePipelineThread->isRunning()) {
+        if (m_capturePipeline) {
+            QMetaObject::invokeMethod(m_capturePipeline,
+                                      [worker = m_capturePipeline]() { delete worker; },
+                                      Qt::BlockingQueuedConnection);
+            m_capturePipeline = nullptr;
+        }
+        m_capturePipelineThread->quit();
+        if (!m_capturePipelineThread->wait(8000))
+            qCWarning(dsrApp) << "ExtCaptureRecorder: capture pipeline thread did not stop in time";
+    } else if (m_capturePipeline) {
+        delete m_capturePipeline;
+        m_capturePipeline = nullptr;
+    }
+
+    delete m_capturePipelineThread;
+    m_capturePipelineThread = nullptr;
+    qCWarning(dsrApp) << "ExtCaptureRecorder: capture pipeline thread stopped";
+}
+
 bool ExtCaptureRecorder::ensureFramePump(int width, int height, int stride)
 {
     if (m_framePump)
@@ -778,50 +951,28 @@ QByteArray ExtCaptureRecorder::copyDmaFrame(int dmaBufferFd, void *gbmBo, int wi
         return QByteArray();
 
     gbm_bo *bo = static_cast<gbm_bo *>(gbmBo);
-    const int boWidth = static_cast<int>(gbm_bo_get_width(bo));
-    const int boHeight = static_cast<int>(gbm_bo_get_height(bo));
-    const int boStride = static_cast<int>(gbm_bo_get_stride(bo));
-    if (boWidth <= 0 || boHeight <= 0 || boStride <= 0)
+    const uint32_t boWidth = gbm_bo_get_width(bo);
+    const uint32_t boHeight = gbm_bo_get_height(bo);
+    if (boWidth == 0 || boHeight == 0)
         return QByteArray();
 
-    const uint64_t modifier = gbm_bo_get_modifier(bo);
-    if (modifier != DRM_FORMAT_MOD_LINEAR) {
-        qCWarning(dsrApp) << "ExtCaptureRecorder::copyDmaFrame: non-linear DMA-BUF"
-                          << "modifier:" << Qt::hex << modifier;
-        return QByteArray();
-    }
+    uint64_t modifier = gbm_bo_get_modifier(bo);
+    if (modifier == DRM_FORMAT_MOD_INVALID)
+        modifier = DRM_FORMAT_MOD_LINEAR;
 
-    const int outHeight = qMin(height, boHeight);
-    const int outStride = stride > 0 ? stride : boStride;
-    const qint64 outSize = static_cast<qint64>(outStride) * outHeight;
-    if (outSize <= 0)
-        return QByteArray();
-
+    DmaFrameGpuConverter converter(gbm_bo_get_device(bo));
     QByteArray result;
-    result.resize(static_cast<int>(outSize));
-    char *dst = result.data();
-
-    // GBM mapping performs the required DMA-BUF transfer/cache synchronization
-    // before CPU access. A raw mmap() may observe incomplete GPU writes and
-    // produce sheared, stale scanlines even for a LINEAR buffer.
-    uint32_t mapStride = 0;
-    void *mapHandle = nullptr;
-    void *gbmData = gbm_bo_map(bo, 0, 0, boWidth, boHeight,
-                               GBM_BO_TRANSFER_READ, &mapStride, &mapHandle);
-    if (gbmData) {
-        const char *src = static_cast<const char *>(gbmData);
-        for (int y = 0; y < outHeight; ++y)
-            memcpy(dst + static_cast<qint64>(y) * outStride,
-                   src + static_cast<qint64>(y) * mapStride,
-                   qMin(outStride, static_cast<int>(mapStride)));
-        gbm_bo_unmap(bo, mapHandle);
-        return result;
+    QString error;
+    if (!converter.convertToRgba(dmaBufferFd, static_cast<int>(boWidth),
+                                 static_cast<int>(boHeight),
+                                 stride > 0 ? stride : static_cast<int>(gbm_bo_get_stride(bo)),
+                                 gbm_bo_get_offset(bo, 0), gbm_bo_get_format(bo),
+                                 modifier, &result, &error)) {
+        qCWarning(dsrApp) << "ExtCaptureRecorder::copyDmaFrame: GPU conversion failed:"
+                          << error;
+        return QByteArray();
     }
-
-    // 裸 mmap() 不具备 DMA-BUF 的 transfer/cache 同步语义，也不理解
-    // modifier。生产路径只接受 GBM 映射；失败时由上层报告错误。
-    qCWarning(dsrApp) << "ExtCaptureRecorder::copyDmaFrame: GBM map failed";
-    return QByteArray();
+    return result;
 #endif
 }
 

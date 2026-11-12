@@ -16,11 +16,27 @@
 #include <QMutex>
 #include <QMutexLocker>
 #include <QScreen>
+#include <QString>
+
+/**
+ * @brief 与 QScreen 解耦的屏幕布局。
+ *
+ * 合成器在采集工作线程中运行，不能访问 GUI 线程的 QScreen 对象，
+ * 因此布局信息以纯数据形式传入。
+ */
+struct ScreenLayoutInfo {
+    QString name;
+    QRect geometry;  // 虚拟桌面坐标系下的逻辑像素位置
+};
 
 // DMA Buffer frame information structure
 struct DmaFrameInfo {
+    // QScreen 仅用于兼容旧的 GUI 线程调用和单元测试；工作线程路径只使用
+    // screenName，绝不能在这里解引用 QScreen。
     QScreen* screen = nullptr;
+    QString screenName;
     QRect screenGeometry; // Screen position in virtual desktop
+    quint64 roundId = 0;
     int dmaBufferFd = -1;
     void* gbmBo = nullptr;
     int width = 0;
@@ -55,7 +71,10 @@ public:
 
     // Configuration methods
     void setVirtualDesktopSize(const QSize& size);
+    // 旧接口：仅在 GUI 线程/单元测试中使用。
     void setScreenLayouts(const QList<QScreen*>& screens);
+    // 工作线程接口：布局信息全部为纯数据。
+    void setScreenLayouts(const QVector<ScreenLayoutInfo>& layouts);
     void setCropRegion(const QRect& region); // For region recording
     void clearCropRegion(); // For full-screen recording
 
@@ -65,6 +84,7 @@ public:
     qreal getOutputScale() const;
 
     // Frame composition interface
+    void beginRound(quint64 roundId);
     bool addScreenFrame(const DmaFrameInfo& frameInfo);
     bool isCompositionReady() const;
     QByteArray composeFrames();
@@ -86,6 +106,7 @@ private:
     QByteArray performFrameStitching();
     QImage convertDmaBufferToQImage(const DmaFrameInfo& frameInfo);
     QRect calculateDrawRect(const QRect& screenGeometry) const;
+    QString screenLabel(const DmaFrameInfo& frameInfo) const;
     
     // Helper methods
     bool areAllFramesReady() const;
@@ -113,6 +134,7 @@ private:
     
     // Performance tracking
     int m_frameCount = 0;
+    quint64 m_activeRoundId = 0;
 };
 
 #endif // MULTISCREENFRAMECOMPOSITOR_H

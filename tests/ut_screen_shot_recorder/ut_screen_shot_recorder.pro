@@ -45,7 +45,7 @@ QT += multimediawidgets
 QT += concurrent openglwidgets
 QT += svg
 QT += waylandclient-private
-LIBS += -lX11 -lXext -lXtst -lXfixes -lXcursor -lgtest -lopencv_small -lavcodec -lavdevice -lavfilter -lavformat -lavutil -lswscale -lswresample -lepoxy -lgbm -lXinerama -ludev -lv4l2 -lv4lconvert -lv4l1 -lgobject-2.0
+LIBS += -lX11 -lXext -lXtst -lXfixes -lXcursor -lgtest -lopencv_small -lavcodec -lavdevice -lavfilter -lavformat -lavutil -lswscale -lswresample -lepoxy -lgbm -lEGL -lGL -lXinerama -ludev -lv4l2 -lv4lconvert -lv4l1 -lgobject-2.0
 # libcam 静态库内部引用 udev_* / v4l2_* 符号，但本二进制没有直接引用，
 # 默认 --as-needed 链接会丢弃 libudev/libv4l2.so 导致运行时 undefined symbol
 # 段错误。强制 --no-as-needed 保留这些 NEEDED 条目。
@@ -258,6 +258,8 @@ HEADERS += test_all_interfaces.h \
     ../../src/ext-image-capture/extcaptureframebuffer.h \
     ../../src/ext-image-capture/extcaptureintegration.h \
     ../../src/ext-image-capture/extcapturerecorder.h \
+    ../../src/ext-image-capture/capturepipelineworker.h \
+    ../../src/ext-image-capture/dmaframegpuconverter.h \
     ../../src/ext-image-capture/frame/extcaptureframe.h \
     ../../src/ext-image-capture/manager/extcapturemanager.h \
     ../../src/ext-image-capture/manager/extoutputsourcemanager.h \
@@ -387,6 +389,8 @@ SOURCES += main.cpp \
     ../../src/ext-image-capture/extcaptureframebuffer.cpp \
     ../../src/ext-image-capture/extcaptureintegration.cpp \
     ../../src/ext-image-capture/extcapturerecorder.cpp \
+    ../../src/ext-image-capture/capturepipelineworker.cpp \
+    ../../src/ext-image-capture/dmaframegpuconverter.cpp \
     ../../src/ext-image-capture/multiscreencapturecoordinator.cpp \
     ../../src/ext-image-capture/multiscreenframecompositor.cpp \
     ../../src/ext-image-capture/frame/extcaptureframe.cpp \

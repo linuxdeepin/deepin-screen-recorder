@@ -282,6 +282,11 @@ int ExtCaptureFrame::getDmaBufferFd() const
     return d->config.useDmaBuffer ? d->bufferFd : -1;
 }
 
+int ExtCaptureFrame::getShmBufferFd() const
+{
+    return d->config.useDmaBuffer ? -1 : d->bufferFd;
+}
+
 void* ExtCaptureFrame::getGbmBufferObject() const
 {
     return d->config.useDmaBuffer ? d->bo : nullptr;
@@ -448,8 +453,8 @@ bool ExtCaptureFrame::createDmaBuffer()
         return false;
     }
 
-    // 节点、格式和 LINEAR modifier 已由 ExtCaptureSession 在约束阶段探测，
-    // 这里只执行方案，不再逐帧尝试其他节点或临时回退 SHM。
+    // 节点、格式和 modifier 已由 ExtCaptureSession 在约束阶段完成分配与
+    // EGL/CPU 消费探测。这里按协商结果精确执行，不再逐帧换节点或回退 SHM。
     const int drmFd = open(QFile::encodeName(d->config.dmaDevicePath).constData(),
                            O_RDWR | O_CLOEXEC);
     if (drmFd < 0) {
@@ -465,23 +470,44 @@ bool ExtCaptureFrame::createDmaBuffer()
         return false;
     }
 
-    // 录制链路按 LINEAR 行布局读取 DMA-BUF。必须显式请求 LINEAR，并在
-    // 分配后检查驱动实际返回的 modifier；DMA-BUF 本身不等于 LINEAR。
-    uint64_t modifiers[] = { DRM_FORMAT_MOD_LINEAR };
-    d->bo = gbm_bo_create_with_modifiers2(d->gbmDevice, width, height, format,
-                                          modifiers, 1, GBM_BO_USE_RENDERING);
+    if (d->config.dmaImplicitModifier) {
+        // 合成器只广告 INVALID 时，使用 GBM 的隐式布局创建接口；不能把
+        // INVALID 传给 gbm_bo_create_with_modifiers2。
+        d->bo = gbm_bo_create(d->gbmDevice, width, height, format,
+                              GBM_BO_USE_RENDERING);
+    } else {
+        uint64_t modifiers[] = { d->config.dmaModifier };
+        d->bo = gbm_bo_create_with_modifiers2(d->gbmDevice, width, height, format,
+                                              modifiers, 1, GBM_BO_USE_RENDERING);
+    }
 
     if (!d->bo) {
-        qCWarning(dsrApp) << "ExtCaptureFrame::createDmaBuffer: failed to allocate LINEAR GBM BO";
+        qCWarning(dsrApp) << "ExtCaptureFrame::createDmaBuffer: failed to allocate GBM BO"
+                          << "format:" << Qt::hex << format
+                          << "modifier:" << d->config.dmaModifier;
         cleanupDmaBuffer();
         close(drmFd);
         return false;
     }
 
-    const uint64_t modifier = gbm_bo_get_modifier(d->bo);
-    if (modifier != DRM_FORMAT_MOD_LINEAR || modifier != d->config.dmaModifier) {
-        qCWarning(dsrApp) << "ExtCaptureFrame::createDmaBuffer: driver returned non-LINEAR BO"
-                          << "modifier:" << Qt::hex << modifier;
+    const uint64_t reportedModifier = gbm_bo_get_modifier(d->bo);
+    // 旧版 Mesa/amdgpu 对显式 LINEAR BO 仍可能返回 INVALID。创建时使用
+    // 的协商 modifier 是权威值，交给 compositor 时不能传播 INVALID。
+    // 隐式布局下驱动返回的实际 modifier 才是本地解码依据；显式布局下
+    // 只兼容 LINEAR 被旧版 Mesa 报告为 INVALID 的情况。
+    const uint64_t modifier = (reportedModifier == DRM_FORMAT_MOD_INVALID
+                               && !d->config.dmaImplicitModifier
+                               && d->config.dmaModifier == DRM_FORMAT_MOD_LINEAR)
+            ? DRM_FORMAT_MOD_LINEAR
+            : reportedModifier;
+    const bool modifierMatches = d->config.dmaImplicitModifier
+            ? (d->config.dmaDecodeModifier == DRM_FORMAT_MOD_INVALID
+               || modifier == d->config.dmaDecodeModifier)
+            : modifier == d->config.dmaModifier;
+    if (!modifierMatches) {
+        qCWarning(dsrApp) << "ExtCaptureFrame::createDmaBuffer: driver returned unexpected modifier"
+                          << "expected:" << Qt::hex << d->config.dmaModifier
+                          << "actual:" << reportedModifier;
         cleanupDmaBuffer();
         close(drmFd);
         return false;
@@ -505,16 +531,19 @@ bool ExtCaptureFrame::createDmaBuffer()
     }
 
     d->frameData.stride = stride;
+    d->frameData.dmaModifier = modifier;
+    d->frameData.dmaOffset = offset;
     d->bufferSize = stride * height;
     d->frameData.size = d->bufferSize;
     d->bufferFd = planeFd;
 
-    qCDebug(dsrApp) << "ExtCaptureFrame: DMA-LINEAR BO created"
-                    << "device:" << d->config.dmaDevicePath
-                    << "stride:" << stride
-                    << "offset:" << offset
-                    << "modifier:" << Qt::hex << modifier
-                    << "fd:" << planeFd;
+    qCWarning(dsrApp) << "ExtCaptureFrame: DMA BO created"
+                      << "device:" << d->config.dmaDevicePath
+                      << "format:" << Qt::hex << format
+                      << "stride:" << stride
+                      << "offset:" << offset
+                      << "modifier:" << modifier
+                      << "fd:" << planeFd;
 
     if (!d->session) {
         cleanupDmaBuffer();
@@ -538,8 +567,14 @@ bool ExtCaptureFrame::createDmaBuffer()
         return false;
     }
 
+    // 隐式 mode 必须把 INVALID 原样交给 compositor，由 compositor 从
+    // dmabuf 推导实际布局。实际 modifier 仅用于本进程的 CPU/EGL 解码。
+    const uint64_t transportModifier = d->config.dmaImplicitModifier
+            ? DRM_FORMAT_MOD_INVALID
+            : modifier;
     zwp_linux_buffer_params_v1_add(params, planeFd, 0, offset, stride,
-                                   modifier >> 32, modifier & 0xffffffff);
+                                   transportModifier >> 32,
+                                   transportModifier & 0xffffffff);
 
     d->buffer = zwp_linux_buffer_params_v1_create_immed(params, width, height, format, 0);
     zwp_linux_buffer_params_v1_destroy(params);

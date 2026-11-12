@@ -4,6 +4,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 
 #include "extcapturesession.h"
+#include "../dmaframegpuconverter.h"
 #include "../frame/extcaptureframe.h"
 #include "../../protocols/ext-image-copy-capture/qwayland-ext-image-copy-capture-v1.h"
 #include "../../protocols/ext-image-copy-capture/wayland-ext-image-copy-capture-v1-client-protocol.h"
@@ -39,9 +40,16 @@ struct DmaBufFormatInfo {
     QList<uint64_t> modifiers;
 };
 
-bool hasLinearModifier(const QList<uint64_t> &modifiers)
+QList<uint64_t> orderedModifiers(const QList<uint64_t> &modifiers)
 {
-    return modifiers.contains(DRM_FORMAT_MOD_LINEAR);
+    QList<uint64_t> ordered;
+    if (modifiers.contains(DRM_FORMAT_MOD_LINEAR))
+        ordered.append(DRM_FORMAT_MOD_LINEAR);
+    for (uint64_t modifier : modifiers) {
+        if (modifier != DRM_FORMAT_MOD_LINEAR)
+            ordered.append(modifier);
+    }
+    return ordered;
 }
 
 QStringList drmDeviceCandidates(const QByteArray &deviceData)
@@ -83,53 +91,144 @@ QStringList drmDeviceCandidates(const QByteArray &deviceData)
     return candidates;
 }
 
-bool probeDmaBufferPlan(const QString &devicePath, uint32_t format, const QSize &size)
+bool probeDmaBufferPlan(const QString &devicePath, uint32_t format, uint64_t modifier,
+                        const QSize &size, uint64_t *selectedModifier, QString *error)
 {
-    if (devicePath.isEmpty() || format == 0 || size.isEmpty())
+    if (selectedModifier)
+        *selectedModifier = 0;
+    if (error)
+        error->clear();
+
+    if (devicePath.isEmpty() || format == 0 || size.isEmpty()) {
+        if (error)
+            *error = QStringLiteral("DMA-BUF 探测参数无效");
         return false;
+    }
 
     const int drmFd = ::open(QFile::encodeName(devicePath).constData(), O_RDWR | O_CLOEXEC);
-    if (drmFd < 0)
+    if (drmFd < 0) {
+        if (error)
+            *error = QStringLiteral("打开 DRM 节点 %1 失败：%2")
+                             .arg(devicePath,
+                                  QString::fromLocal8Bit(strerror(errno)));
         return false;
+    }
 
     gbm_device *gbmDevice = gbm_create_device(drmFd);
     if (!gbmDevice) {
+        if (error)
+            *error = QStringLiteral("创建 GBM 设备失败：%1").arg(devicePath);
         ::close(drmFd);
         return false;
     }
 
-    uint64_t modifiers[] = {DRM_FORMAT_MOD_LINEAR};
-    gbm_bo *bo = gbm_bo_create_with_modifiers2(gbmDevice,
-                                               static_cast<uint32_t>(size.width()),
-                                               static_cast<uint32_t>(size.height()),
-                                               format, modifiers, 1,
-                                               GBM_BO_USE_RENDERING);
+    const bool implicitModifier = modifier == DRM_FORMAT_MOD_INVALID;
+    gbm_bo *bo = nullptr;
+    if (implicitModifier) {
+        // DRM_FORMAT_MOD_INVALID 表示由驱动选择隐式布局。GBM 不接受把
+        // INVALID 当作显式 modifier 传入，必须使用无 modifier 的创建接口。
+        bo = gbm_bo_create(gbmDevice,
+                           static_cast<uint32_t>(size.width()),
+                           static_cast<uint32_t>(size.height()),
+                           format, GBM_BO_USE_RENDERING);
+    } else {
+        uint64_t modifiers[] = {modifier};
+        bo = gbm_bo_create_with_modifiers2(gbmDevice,
+                                           static_cast<uint32_t>(size.width()),
+                                           static_cast<uint32_t>(size.height()),
+                                           format, modifiers, 1,
+                                           GBM_BO_USE_RENDERING);
+    }
     if (!bo) {
+        if (error)
+            *error = QStringLiteral("无法分配 DMA-BUF：format=0x%1 modifier=0x%2")
+                             .arg(format, 0, 16)
+                             .arg(modifier, 0, 16);
         gbm_device_destroy(gbmDevice);
         ::close(drmFd);
         return false;
     }
 
-    bool usable = gbm_bo_get_modifier(bo) == DRM_FORMAT_MOD_LINEAR
+    const uint64_t actualModifier = gbm_bo_get_modifier(bo);
+    const uint32_t stride = gbm_bo_get_stride_for_plane(bo, 0);
+    const uint32_t offset = gbm_bo_get_offset(bo, 0);
+    // 部分 Mesa/amdgpu 版本在显式请求 LINEAR 后，gbm_bo_get_modifier()
+    // 仍返回 DRM_FORMAT_MOD_INVALID。此时 BO 是按 LINEAR 创建的，应该以
+    // 协商请求的 modifier 为准，而不是把结果误判成不可用。
+    // 隐式模式下驱动可以返回任意实际 modifier，包括仍然返回 INVALID。
+    // 显式模式则必须匹配协商结果；LINEAR 被旧版 Mesa 报告成 INVALID 是
+    // 已知兼容行为，此时 BO 仍按 LINEAR 分配，解码也应按 LINEAR 处理。
+    const bool modifierMatches = implicitModifier
+            || actualModifier == modifier
+            || (actualModifier == DRM_FORMAT_MOD_INVALID
+                && modifier == DRM_FORMAT_MOD_LINEAR);
+    const uint64_t decodeModifier = (actualModifier == DRM_FORMAT_MOD_INVALID
+                                     && !implicitModifier
+                                     && modifier == DRM_FORMAT_MOD_LINEAR)
+            ? DRM_FORMAT_MOD_LINEAR
+            : actualModifier;
+    bool usable = modifierMatches
             && gbm_bo_get_format(bo) == format
             && gbm_bo_get_plane_count(bo) >= 1
-            && gbm_bo_get_stride_for_plane(bo, 0) >=
-                    static_cast<uint32_t>(size.width()) * 4u;
+            && stride >= static_cast<uint32_t>(size.width()) * 4u;
+    if (!usable && error) {
+        *error = QStringLiteral("DMA-BUF 分配结果不匹配：期望 format=0x%1 modifier=0x%2，"
+                                "实际 format=0x%3 modifier=0x%4 stride=%5")
+                         .arg(format, 0, 16)
+                         .arg(modifier, 0, 16)
+                         .arg(gbm_bo_get_format(bo), 0, 16)
+                         .arg(actualModifier, 0, 16)
+                         .arg(stride);
+    }
+
     int planeFd = -1;
     if (usable) {
         planeFd = gbm_bo_get_fd_for_plane(bo, 0);
         usable = planeFd >= 0;
+        if (!usable && error)
+            *error = QStringLiteral("导出 DMA-BUF plane fd 失败");
     }
 
-    if (usable) {
+    // 非 LINEAR modifier 不能交给 CPU 按行读取。这里用与录制线程相同的
+    // EGL 导入路径做一次真实探测，避免协商阶段误选不可消费的 DMA-BUF。
+    if (usable && decodeModifier != DRM_FORMAT_MOD_LINEAR) {
+        DmaFrameGpuConverter converter(gbmDevice);
+        QString gpuError;
+        usable = converter.canImport(planeFd,
+                                     static_cast<int>(size.width()),
+                                     static_cast<int>(size.height()),
+                                     static_cast<int>(stride), offset, format,
+                                     decodeModifier, &gpuError);
+        if (!usable && error) {
+            *error = QStringLiteral("EGL 无法导入 DMA-BUF：format=0x%1 modifier=0x%2，%3")
+                             .arg(format, 0, 16)
+                             .arg(decodeModifier, 0, 16)
+                             .arg(gpuError);
+        }
+    } else if (usable && decodeModifier == DRM_FORMAT_MOD_LINEAR) {
+        // LINEAR 映射失败时仍可尝试 GPU 解布局，不能直接把整条 DMA 链路
+        // 判死。只有 CPU 与 EGL 都无法消费时才由调用方回退 SHM。
         uint32_t mapStride = 0;
         void *mapHandle = nullptr;
         void *mapped = gbm_bo_map(bo, 0, 0, gbm_bo_get_width(bo), gbm_bo_get_height(bo),
                                   GBM_BO_TRANSFER_READ, &mapStride, &mapHandle);
-        usable = mapped != nullptr
+        const bool cpuReadable = mapped
                 && mapStride >= static_cast<uint32_t>(size.width()) * 4u;
         if (mapped)
             gbm_bo_unmap(bo, mapHandle);
+        if (!cpuReadable) {
+            DmaFrameGpuConverter converter(gbmDevice);
+            QString gpuError;
+            usable = converter.canImport(planeFd,
+                                         static_cast<int>(size.width()),
+                                         static_cast<int>(size.height()),
+                                         static_cast<int>(stride), offset, format,
+                                         decodeModifier, &gpuError);
+            if (!usable && error) {
+                *error = QStringLiteral("LINEAR DMA-BUF 的 CPU/EGL 消费均失败：%1")
+                                 .arg(gpuError);
+            }
+        }
     }
 
     if (planeFd >= 0)
@@ -137,6 +236,8 @@ bool probeDmaBufferPlan(const QString &devicePath, uint32_t format, const QSize 
     gbm_bo_destroy(bo);
     gbm_device_destroy(gbmDevice);
     ::close(drmFd);
+    if (usable && selectedModifier)
+        *selectedModifier = decodeModifier;
     return usable;
 }
 
@@ -503,8 +604,12 @@ void ExtCaptureSession::handleDmabufFormat(uint32_t format, const QList<uint64_t
     info.format = format;
     info.modifiers = modifiers;
     d->dmabufFormats.append(info);
-    qCDebug(dsrApp) << "DMA-BUF format supported:" << format
-                    << "with" << modifiers.size() << "modifiers";
+    QStringList modifierText;
+    for (uint64_t modifier : modifiers)
+        modifierText.append(QStringLiteral("0x%1").arg(modifier, 0, 16));
+    qCWarning(dsrApp) << "DMA-BUF format supported:"
+                      << QStringLiteral("format=0x%1").arg(format, 0, 16)
+                      << "modifiers:" << modifierText.join(QLatin1Char(','));
 }
 
 void ExtCaptureSession::handleDone()
@@ -533,14 +638,19 @@ void ExtCaptureSession::setState(SessionState newState)
 
 void ExtCaptureSession::selectCapturePlan()
 {
-    // CPU 消费链路只能正确读取 LINEAR DMA-BUF。方案在这里一次性确定：
-    // 探测 composer 指定的 DRM 节点、LINEAR 分配和 GBM CPU 映射都成功后
-    // 才使用 DMA-BUF；任何一步失败都整体切到 SHM，避免逐帧反复试探。
+    // DMA-BUF 是录制链路的首选 transport。这里遍历合成器广告的
+    // format/modifier，使用与录制线程一致的 GBM + EGL 消费能力做一次性
+    // 探测。只有所有候选都无法分配或消费时才回退 SHM。
     d->config.useDmaBuffer = false;
     d->config.dmaDevicePath.clear();
     d->config.dmaModifier = 0;
+    d->config.dmaDecodeModifier = 0;
+    d->config.dmaImplicitModifier = false;
 
-    if (d->preferDmaBuffer && !d->dmabufFormats.isEmpty()) {
+    QString dmaFailure;
+    if (d->preferDmaBuffer && d->dmabufFormats.isEmpty()) {
+        dmaFailure = QStringLiteral("合成器未广告 DMA-BUF 格式");
+    } else if (d->preferDmaBuffer) {
         static const uint32_t preferredDmaFormats[] = {
             DRM_FORMAT_XBGR8888,
             DRM_FORMAT_ABGR8888,
@@ -548,40 +658,74 @@ void ExtCaptureSession::selectCapturePlan()
             DRM_FORMAT_ARGB8888
         };
 
-        const QStringList devices = drmDeviceCandidates(d->dmabufDevice);
-        if (devices.isEmpty()) {
-            qCWarning(dsrApp) << "ExtCaptureSession: composer did not provide a usable DRM node,"
-                              << "falling back to SHM";
+        // 已知的 32-bit 格式优先；其余广告格式仍交给 EGL 尝试，避免
+        // 因为客户端偏好列表过窄而错误地判定“只能 SHM”。
+        QList<uint32_t> formatCandidates;
+        for (uint32_t format : preferredDmaFormats) {
+            for (const DmaBufFormatInfo &info : d->dmabufFormats) {
+                if (info.format == format && !formatCandidates.contains(format))
+                    formatCandidates.append(format);
+            }
+        }
+        for (const DmaBufFormatInfo &info : d->dmabufFormats) {
+            if (!formatCandidates.contains(info.format))
+                formatCandidates.append(info.format);
         }
 
-        for (uint32_t format : preferredDmaFormats) {
-            bool advertised = false;
+        const QStringList devices = drmDeviceCandidates(d->dmabufDevice);
+        if (devices.isEmpty()) {
+            dmaFailure = QStringLiteral("合成器未提供可用的 DRM 节点");
+        }
+
+        for (uint32_t format : formatCandidates) {
+            const DmaBufFormatInfo *formatInfo = nullptr;
             for (const DmaBufFormatInfo &info : d->dmabufFormats) {
-                if (info.format == format && hasLinearModifier(info.modifiers)) {
-                    advertised = true;
+                if (info.format == format) {
+                    formatInfo = &info;
                     break;
                 }
             }
-            if (!advertised)
+            if (!formatInfo || formatInfo->modifiers.isEmpty())
                 continue;
 
-            for (const QString &device : devices) {
-                if (probeDmaBufferPlan(device, format, d->config.bufferSize)) {
-                    d->config.format = format;
-                    d->config.useDmaBuffer = true;
-                    d->config.dmaDevicePath = device;
-                    d->config.dmaModifier = DRM_FORMAT_MOD_LINEAR;
-                    qCWarning(dsrApp) << "ExtCaptureSession: capture transport=DMA-LINEAR"
-                                      << "device:" << device
-                                      << "format:" << Qt::hex << format
-                                      << "size:" << d->config.bufferSize;
-                    return;
+            for (uint64_t modifier : orderedModifiers(formatInfo->modifiers)) {
+                for (const QString &device : devices) {
+                    uint64_t selectedModifier = 0;
+                    QString probeError;
+                    if (probeDmaBufferPlan(device, format, modifier, d->config.bufferSize,
+                                           &selectedModifier, &probeError)) {
+                        d->config.format = format;
+                        d->config.useDmaBuffer = true;
+                        d->config.dmaDevicePath = device;
+                        d->config.dmaModifier = modifier;
+                        d->config.dmaDecodeModifier = selectedModifier;
+                        d->config.dmaImplicitModifier = (modifier == DRM_FORMAT_MOD_INVALID);
+                        qCWarning(dsrApp)
+                                << "ExtCaptureSession: capture transport=DMA"
+                                << "format=" + QStringLiteral("0x%1").arg(format, 0, 16)
+                                << "alloc-modifier=" + QStringLiteral("0x%1").arg(modifier, 0, 16)
+                                << "decode-modifier=" + QStringLiteral("0x%1").arg(selectedModifier, 0, 16)
+                                << "implicit-modifier=" << d->config.dmaImplicitModifier
+                                << "device=" + device
+                                << "size=" << d->config.bufferSize;
+                        return;
+                    }
+                    if (!probeError.isEmpty()) {
+                        dmaFailure = QStringLiteral("format=0x%1 modifier=0x%2 device=%3：%4")
+                                .arg(format, 0, 16)
+                                .arg(modifier, 0, 16)
+                                .arg(device, probeError);
+                        qCDebug(dsrApp) << "ExtCaptureSession: DMA candidate rejected:"
+                                        << dmaFailure;
+                    }
                 }
             }
         }
 
-        qCWarning(dsrApp) << "ExtCaptureSession: no DMA-LINEAR plan available,"
-                          << "falling back to SHM";
+        if (dmaFailure.isEmpty())
+            dmaFailure = QStringLiteral("没有可用的 DMA-BUF format/modifier 组合");
+        qCWarning(dsrApp) << "ExtCaptureSession: capture transport=DMA unavailable,"
+                          << "falling back to SHM, reason:" << dmaFailure;
     }
 
     if (!d->shmFormats.isEmpty()) {
@@ -603,8 +747,11 @@ void ExtCaptureSession::selectCapturePlan()
             }
         }
         qCWarning(dsrApp) << "ExtCaptureSession: capture transport=SHM"
-                          << "format:" << Qt::hex << d->config.format
-                          << "size:" << d->config.bufferSize;
+                          << "format=" + QStringLiteral("0x%1").arg(d->config.format, 0, 16)
+                          << "size:" << d->config.bufferSize
+                          << "reason:" << (d->preferDmaBuffer
+                                                   ? dmaFailure
+                                                   : QStringLiteral("调用方未请求 DMA-BUF"));
     } else {
         qCWarning(dsrApp) << "*** NO SUPPORTED FORMATS FOUND ***";
         setState(Error);

@@ -14,6 +14,8 @@
 #include <QTimer>
 #include <QGuiApplication>
 
+#include <drm/drm_fourcc.h>
+
 ExtCaptureIntegration::ExtCaptureIntegration(QObject *parent)
     : QObject(parent)
     , m_manager(new ExtCaptureManager(this))
@@ -242,6 +244,15 @@ void ExtCaptureIntegration::onFrameReady(ExtCaptureFrame *frame)
                           frameData.size, frameData.dimensions.width(), frameData.dimensions.height(),
                           frameData.stride, frameData.timestamp);
     } else {
+        // SHM Buffer模式：先把 memfd 元数据交给录制侧，由采集工作线程
+        // 自行 mmap/拷贝；同时保留旧的指针信号供现有测试使用。
+        const int shmFd = frame->getShmBufferFd();
+        if (shmFd >= 0) {
+            emit shmFrameReady(shmFd, frameData.size,
+                               frameData.dimensions.width(), frameData.dimensions.height(),
+                               frameData.stride, frameData.timestamp);
+        }
+
         // SHM Buffer模式：传统方式映射内存
         void *data = frame->mapBuffer();
         
@@ -329,6 +340,16 @@ bool ExtCaptureIntegration::isMultiScreenRecording() const
 QList<QScreen*> ExtCaptureIntegration::getAvailableScreens() const
 {
     return QGuiApplication::screens();
+}
+
+QString ExtCaptureIntegration::dmaDevicePath() const
+{
+    return m_session ? m_session->config().dmaDevicePath : QString();
+}
+
+uint64_t ExtCaptureIntegration::dmaModifier() const
+{
+    return m_session ? m_session->config().dmaDecodeModifier : DRM_FORMAT_MOD_LINEAR;
 }
 
 void ExtCaptureIntegration::onMultiScreenFrameReady(const QByteArray& compositeFrameData, 
