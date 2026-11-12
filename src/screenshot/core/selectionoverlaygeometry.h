@@ -34,6 +34,13 @@ QList<QLineF> strokedOutlineForOutput(const QRect &globalSelection,
                                       const QRect &outputGeometry,
                                       qreal strokeWidth);
 
+// Returns the 1 px dashed frame used by the X11 screenshot/scroll selection.
+// The frame surrounds the capture region and sits just outside it, matching
+// X11's drawRect(recordX - 1, recordY - 1, ...). Screen edges are clamped so a
+// full-screen selection still shows a border on every side.
+QList<QLineF> dashedFrameForOutput(const QRect &globalSelection,
+                                   const QRect &outputGeometry);
+
 // Resolves a compositor snap target against the output layout. Treeland
 // reports one global rectangle for a window that crosses outputs. Keeping that
 // rectangle would paint fragments on an adjacent output and make a

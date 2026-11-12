@@ -134,6 +134,14 @@ AnnotationTool ShapesWidgetAnnotationEditor::tool() const
     return m_tool;
 }
 
+void ShapesWidgetAnnotationEditor::setInteractionBounds(const QRect &globalBounds)
+{
+    // Visibility is clipped by the TreeLand annotation view. Shape geometry
+    // intentionally stays independent of the selection so resizing never
+    // pulls existing content back inside it.
+    Q_UNUSED(globalBounds);
+}
+
 bool ShapesWidgetAnnotationEditor::hasSelectedContent() const
 {
     return m_widget && m_widget->hasSelectedShape();
@@ -204,6 +212,19 @@ void ShapesWidgetAnnotationEditor::cancelInteraction()
     if (!m_widget)
         return;
     m_widget->cancelInteraction();
+}
+
+void ShapesWidgetAnnotationEditor::clearContent()
+{
+    if (!m_widget)
+        return;
+
+    // Cancel an in-progress shape first, then drop every committed shape.
+    // undoAllDrawShapes() only removes the selected shape when a selection is
+    // active, so clearSelected() is required to take the "remove all" branch.
+    m_widget->cancelInteraction();
+    m_widget->clearSelected();
+    m_widget->undoAllDrawShapes();
 }
 
 void ShapesWidgetAnnotationEditor::undo()

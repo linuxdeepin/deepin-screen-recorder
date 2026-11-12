@@ -134,6 +134,8 @@ void TreelandMaskWindow::setRecordingMode(bool enabled,
                                           const QRect &globalSelection,
                                           bool dimOutside)
 {
+    if (enabled)
+        m_scrollMode = false;
     m_recordingMode = enabled;
     m_recordingDimOutside = enabled && dimOutside;
     m_globalRecordingSelection = enabled ? globalSelection.normalized() : QRect();
@@ -145,6 +147,26 @@ void TreelandMaskWindow::setRecordingMode(bool enabled,
                     << "global selection:" << globalSelection
                     << "local selection:" << m_recordingSelection
                     << "dim outside:" << m_recordingDimOutside;
+    repaint();
+}
+
+void TreelandMaskWindow::setScrollMode(bool enabled,
+                                       const QRect &globalSelection,
+                                       bool showFrame)
+{
+    if (enabled)
+        m_recordingMode = false;
+    m_scrollMode = enabled;
+    m_scrollFrameVisible = enabled && showFrame;
+    m_recordingDimOutside = enabled;
+    m_globalRecordingSelection = enabled ? globalSelection.normalized() : QRect();
+    m_recordingSelection = enabled
+            ? CoordinateMapper::globalToOutputLocal(m_globalRecordingSelection, m_output)
+                      .intersected(rect())
+            : QRect();
+    qCDebug(dsrApp) << "Scroll overlay mode:" << enabled
+                    << "global selection:" << globalSelection
+                    << "local selection:" << m_recordingSelection;
     repaint();
 }
 
@@ -287,26 +309,23 @@ void TreelandMaskWindow::closeSilently()
     close();
 }
 
-void TreelandMaskWindow::drawSelectionOutline(QPainter &painter,
-                                              const QRect &globalRect,
-                                              const QColor &color,
-                                              int width,
-                                              bool dashed) const
+void TreelandMaskWindow::drawSelectionFrame(QPainter &painter,
+                                            const QRect &globalRect) const
 {
     const QList<QLineF> lines =
-            SelectionOverlayGeometry::strokedOutlineForOutput(
-                    globalRect, m_output.logicalGeometry, width);
+            SelectionOverlayGeometry::dashedFrameForOutput(
+                    globalRect, m_output.logicalGeometry);
     if (lines.isEmpty())
         return;
 
     painter.save();
-    // X11 的选区边框为 1px 白色 DashLine，并关闭抗锯齿，避免虚线被灰边糊开。
-    painter.setRenderHint(QPainter::Antialiasing, !dashed);
-    QPen pen(color, width);
-    if (dashed) {
-        pen.setStyle(Qt::DashLine);
-        pen.setDashOffset(0);
-    }
+    // X11 截图/滚动截图选区边框：1px 白色 DashLine，关闭抗锯齿，绘制在
+    // 选区外侧 1px 处，避免虚线进入截图/长图内容。
+    painter.setRenderHint(QPainter::Antialiasing, false);
+    QPen pen(Qt::white, 1.0);
+    pen.setStyle(Qt::DashLine);
+    pen.setDashOffset(0);
+    painter.setBrush(Qt::NoBrush);
     painter.setPen(pen);
     for (const QLineF &line : lines)
         painter.drawLine(line);
@@ -321,7 +340,7 @@ void TreelandMaskWindow::paintEvent(QPaintEvent *event)
     painter.setRenderHint(QPainter::Antialiasing, true);
     painter.setRenderHint(QPainter::SmoothPixmapTransform, true);
 
-    if (m_recordingMode) {
+    if (m_recordingMode || m_scrollMode) {
         painter.setCompositionMode(QPainter::CompositionMode_Source);
         painter.fillRect(rect(), Qt::transparent);
         painter.setCompositionMode(QPainter::CompositionMode_SourceOver);
@@ -337,28 +356,43 @@ void TreelandMaskWindow::paintEvent(QPaintEvent *event)
                 outside -= QRegion(m_recordingSelection);
                 painter.setClipRegion(outside);
                 painter.fillRect(rect(), maskColor);
-                // 与 X11 RecorderRegionShow 保持一致：2px 白色虚线，
-                // dash pattern 为 1,2，启用抗锯齿。边框必须完全位于录制
-                // crop 外侧，否则抗锯齿边缘会进入视频首帧。
-                QPen recordingPen(Qt::white, 2.0);
-                recordingPen.setStyle(Qt::DashLine);
-                QVector<qreal> dashes;
-                dashes << 1 << 2;
-                recordingPen.setDashPattern(dashes);
-                recordingPen.setDashOffset(0);
-
                 painter.save();
                 painter.setClipping(false);
-                painter.setRenderHint(QPainter::Antialiasing, true);
                 painter.setBrush(Qt::NoBrush);
-                painter.setPen(recordingPen);
-                const QRect recordingOutline =
-                        m_globalRecordingSelection.adjusted(-3, -3, 3, 3);
-                const QList<QLineF> recordingLines =
-                        SelectionOverlayGeometry::strokedOutlineForOutput(
-                                recordingOutline, m_output.logicalGeometry, 2.0);
-                for (const QLineF &line : recordingLines)
-                    painter.drawLine(line);
+                if (m_scrollMode) {
+                    if (m_scrollFrameVisible) {
+                        // 滚动截图沿用 X11 截图选区边框，而不是录屏虚线。
+                        const QList<QLineF> scrollLines =
+                                SelectionOverlayGeometry::dashedFrameForOutput(
+                                        m_globalRecordingSelection,
+                                        m_output.logicalGeometry);
+                        QPen scrollPen(Qt::white, 1.0);
+                        scrollPen.setStyle(Qt::DashLine);
+                        scrollPen.setDashOffset(0);
+                        painter.setRenderHint(QPainter::Antialiasing, false);
+                        painter.setPen(scrollPen);
+                        for (const QLineF &line : scrollLines)
+                            painter.drawLine(line);
+                    }
+                } else {
+                    // 与 X11 RecorderRegionShow 保持一致：2px 白色虚线，
+                    // dash pattern 为 1,2，启用抗锯齿，描边紧贴 crop 外侧。
+                    QPen recordingPen(Qt::white, 2.0);
+                    recordingPen.setStyle(Qt::DashLine);
+                    QVector<qreal> dashes;
+                    dashes << 1 << 2;
+                    recordingPen.setDashPattern(dashes);
+                    recordingPen.setDashOffset(0);
+                    painter.setRenderHint(QPainter::Antialiasing, true);
+                    painter.setPen(recordingPen);
+                    const QRect recordingOutline =
+                            m_globalRecordingSelection.adjusted(-2, -2, 2, 2);
+                    const QList<QLineF> recordingLines =
+                            SelectionOverlayGeometry::strokedOutlineForOutput(
+                                    recordingOutline, m_output.logicalGeometry, 2.0);
+                    for (const QLineF &line : recordingLines)
+                        painter.drawLine(line);
+                }
                 painter.restore();
             }
         }
@@ -371,29 +405,32 @@ void TreelandMaskWindow::paintEvent(QPaintEvent *event)
         painter.fillRect(rect(), QColor(32, 32, 32));
 
     const QRect visibleSelection = m_selection.intersected(rect());
-    if (visibleSelection.isEmpty()) {
+    // X11 auto-recognizes the window under the cursor and draws the normal
+    // capture frame around it before the click. Reuse the snap region as the
+    // preview selection instead of painting a separate blue highlight.
+    const bool snapPreviewActive =
+            visibleSelection.isEmpty() && !m_finalized && !m_snapHint.isEmpty();
+    const QRect visibleRegion = snapPreviewActive ? m_snapHint : visibleSelection;
+    const QRect frameRectGlobal =
+            snapPreviewActive ? m_globalSnapHint : m_globalSelection;
+    if (visibleRegion.isEmpty()) {
         painter.fillRect(rect(), QColor(0, 0, 0, 110));
     } else {
         const QColor mask(0, 0, 0, 120);
-        painter.fillRect(QRect(0, 0, width(), visibleSelection.top()), mask);
-        painter.fillRect(QRect(0, visibleSelection.bottom() + 1,
-                               width(), height() - visibleSelection.bottom() - 1), mask);
-        painter.fillRect(QRect(0, visibleSelection.top(),
-                               visibleSelection.left(), visibleSelection.height()), mask);
-        painter.fillRect(QRect(visibleSelection.right() + 1, visibleSelection.top(),
-                               width() - visibleSelection.right() - 1,
-                               visibleSelection.height()), mask);
+        painter.fillRect(QRect(0, 0, width(), visibleRegion.top()), mask);
+        painter.fillRect(QRect(0, visibleRegion.bottom() + 1,
+                               width(), height() - visibleRegion.bottom() - 1), mask);
+        painter.fillRect(QRect(0, visibleRegion.top(),
+                               visibleRegion.left(), visibleRegion.height()), mask);
+        painter.fillRect(QRect(visibleRegion.right() + 1, visibleRegion.top(),
+                               width() - visibleRegion.right() - 1,
+                               visibleRegion.height()), mask);
     }
 
-    if (!m_finalized && !m_snapHint.isEmpty()) {
-        painter.fillRect(m_snapHint, QColor(46, 132, 255, 42));
-        drawSelectionOutline(painter, m_globalSnapHint, QColor(75, 160, 255), 2, false);
-    }
-
-    if (!visibleSelection.isEmpty()) {
+    if (!visibleRegion.isEmpty()) {
         if (m_roundedCornerRadius > 0) {
             const QRect localSelection =
-                    CoordinateMapper::globalToOutputLocal(m_globalSelection, m_output);
+                    CoordinateMapper::globalToOutputLocal(frameRectGlobal, m_output);
             const qreal radius = m_roundedCornerRadius;
             QPainterPath squarePath;
             squarePath.addRect(QRectF(localSelection));
@@ -411,7 +448,7 @@ void TreelandMaskWindow::paintEvent(QPaintEvent *event)
         // Draw the selection outline after the rounded-corner mask. Otherwise
         // the extra corner mask covers the white dashes and makes four corner
         // segments look grey.
-        drawSelectionOutline(painter, m_globalSelection, Qt::white, 1, true);
+        drawSelectionFrame(painter, frameRectGlobal);
 
         if (m_finalized) {
             painter.setBrush(QColor(245, 248, 252));

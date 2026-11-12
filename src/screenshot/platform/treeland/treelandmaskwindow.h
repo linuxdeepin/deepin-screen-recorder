@@ -14,7 +14,6 @@
 class QKeyEvent;
 class QMouseEvent;
 class QPaintEvent;
-class QColor;
 class QPainter;
 
 namespace Dsr::Screenshot {
@@ -33,6 +32,8 @@ public:
     void setSelectionFinalized(bool finalized);
     void setRecordingMode(bool enabled, const QRect &globalSelection = QRect(),
                           bool dimOutside = false);
+    void setScrollMode(bool enabled, const QRect &globalSelection = QRect(),
+                       bool showFrame = true);
     void setInputRegion(const QRegion &region);
     void resetInputRegion();
     void setCursorIntent(CursorIntent intent);
@@ -69,9 +70,7 @@ protected:
 
 private:
     QPoint toGlobal(const QPoint &localPos) const;
-    void drawSelectionOutline(QPainter &painter, const QRect &globalRect,
-                              const QColor &color, int width,
-                              bool dashed = false) const;
+    void drawSelectionFrame(QPainter &painter, const QRect &globalRect) const;
 
     OutputDescriptor m_output;
     QImage m_sourceImage;
@@ -83,6 +82,8 @@ private:
     QRect m_recordingSelection;
     bool m_finalized = false;
     bool m_recordingMode = false;
+    bool m_scrollMode = false;
+    bool m_scrollFrameVisible = true;
     bool m_recordingDimOutside = false;
     bool m_silentClose = false;
     CursorIntent m_cursorIntent = CursorIntent::Default;

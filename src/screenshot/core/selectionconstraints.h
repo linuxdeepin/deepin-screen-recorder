@@ -13,10 +13,8 @@ namespace Dsr::Screenshot {
 
 struct SelectionConstraints {
     QRect desktopBounds;
-    QRectF annotationBounds;
     QSize minimumSize = QSize(8, 8);
     bool keepInsideDesktop = true;
-    bool expandSelectionForAnnotations = true;
 };
 
 QRect resolveSelectionGeometry(const QRect &candidate,

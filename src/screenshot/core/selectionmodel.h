@@ -35,11 +35,6 @@ enum class InteractionState {
     Ready
 };
 
-enum class SelectionGeometryMode {
-    ConstrainToAnnotations,
-    IgnoreAnnotationBounds
-};
-
 CursorIntent cursorIntentFor(SelectionAction action);
 
 class SelectionModel : public QObject
@@ -53,6 +48,7 @@ public:
     SelectionAction action() const;
 
     void setDesktopBounds(const QRect &bounds);
+    // Informational only: X11 lets annotations extend outside the selection.
     void setAnnotationBounds(const QRectF &bounds);
 
     SelectionAction beginInteraction(const QPoint &globalPos);
@@ -60,10 +56,7 @@ public:
     void endInteraction();
     void cancelInteraction();
 
-    // X11 applies annotation bounds while the user drags/edit annotations, but
-    // explicit width/height and ratio edits only clamp to the desktop.
-    void setGeometry(const QRect &globalRect,
-                     SelectionGeometryMode mode = SelectionGeometryMode::ConstrainToAnnotations);
+    void setGeometry(const QRect &globalRect);
     void clear();
 
     SelectionAction hitTest(const QPoint &globalPos) const;
@@ -79,7 +72,6 @@ private:
 
     QRect m_geometry;
     QRect m_desktopBounds;
-    QRectF m_annotationBounds;
     QRect m_startRect;
     QPoint m_startPos;
     SelectionAction m_action = SelectionAction::NoAction;

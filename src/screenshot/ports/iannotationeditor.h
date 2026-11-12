@@ -53,6 +53,12 @@ public:
     virtual bool isInteracting() const = 0;
     virtual void setTool(AnnotationTool tool) = 0;
     virtual AnnotationTool tool() const = 0;
+    // Selection rectangle in global coordinates. Implementations use it to
+    // clip live painting without destroying annotation geometry outside it.
+    virtual void setInteractionBounds(const QRect &globalBounds)
+    {
+        Q_UNUSED(globalBounds);
+    }
 
     // X11 gives Ctrl/Cmd+Arrow to the selected annotation before considering
     // it as a selection-resize shortcut. Keep that arbitration platform
@@ -76,6 +82,7 @@ public:
     virtual void updateInteraction(const QPoint &globalPos) = 0;
     virtual void endInteraction() = 0;
     virtual void cancelInteraction() = 0;
+    virtual void clearContent() {}
     virtual void undo() {}
 
     /**

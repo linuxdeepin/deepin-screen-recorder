@@ -100,7 +100,10 @@ public:
     // ScrollShotTip. Hosts without an in-overlay prompt keep the no-op.
     virtual void showScrollTip(ScrollTipKind kind) { Q_UNUSED(kind); }
     virtual void hideScrollTip() {}
-    virtual void finishScroll() {}
+    virtual void finishScroll(bool restoreSelectionUi = true)
+    {
+        Q_UNUSED(restoreSelectionUi);
+    }
     virtual bool isScrollActive() const { return false; }
     virtual void setRecordingControlsActive(bool active) { Q_UNUSED(active); }
     virtual void close() = 0;

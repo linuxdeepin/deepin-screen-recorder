@@ -1894,6 +1894,9 @@ void ShapesWidget::clampSelectedShapeToCanvas()
         return;
 
     Toolshape &shape = m_shapes[m_selectedOrder];
+    // The canvas is the whole desktop, not the current selection. Annotations
+    // may extend beyond the selection and must stay there while being moved
+    // or resized; the selection only clips their visibility.
     const QRectF canvas = rect();
     QRectF bounds = toolshapeContentBounds(shape);
     if (canvas.isEmpty() || bounds.isEmpty() || canvas.contains(bounds))
@@ -2915,17 +2918,19 @@ void ShapesWidget::paintRect(QPainter &painter, FourPoints rectFPoints, int inde
     painter.drawPath(rectPath);
 
     //    using namespace utils;
+    // Clip to the effect shape only for this draw call. The guard intersects
+    // with the caller's clip so TreeLand's selection rect still clips the
+    // hover frame and resize handles painted afterwards.
     if (isBlur) {
-        painter.setClipPath(rectPath);
+        Dsr::Shapes::ScopedClipPath clip(painter, rectPath);
         painter.drawPixmap(0, 0, width(), height(), effectPixmap(true, radius));
         painter.drawPath(rectPath);
     }
     if (isMosaic) {
-        painter.setClipPath(rectPath);
+        Dsr::Shapes::ScopedClipPath clip(painter, rectPath);
         painter.drawPixmap(0, 0, width(), height(), effectPixmap(false, radius));
         painter.drawPath(rectPath);
     }
-    painter.setClipping(false);
 }
 
 void ShapesWidget::paintEllipse(QPainter &painter, FourPoints ellipseFPoints, int index,
@@ -2966,17 +2971,17 @@ void ShapesWidget::paintEllipse(QPainter &painter, FourPoints ellipseFPoints, in
 
 
     //    using namespace utils;
+    // Keep the caller's clip intact; see paintRect().
     if (isBlur) {
-        painter.setClipPath(ellipsePath);
+        Dsr::Shapes::ScopedClipPath clip(painter, ellipsePath);
         painter.drawPixmap(0, 0, width(), height(), effectPixmap(true, radius));
         painter.drawPath(ellipsePath);
     }
     if (isMosaic) {
-        painter.setClipPath(ellipsePath);
+        Dsr::Shapes::ScopedClipPath clip(painter, ellipsePath);
         painter.drawPixmap(0, 0, width(), height(), effectPixmap(false, radius));
         painter.drawPath(ellipsePath);
     }
-    painter.setClipping(false);
 }
 
 QPixmap ShapesWidget::effectPixmap(bool blur, int radius) const

@@ -43,14 +43,6 @@ QRect resolveSelectionGeometry(const QRect &candidate, const SelectionConstraint
     if (resolved.isEmpty())
         return QRect();
 
-    if (constraints.expandSelectionForAnnotations && !constraints.annotationBounds.isEmpty()) {
-        QRect annotation = constraints.annotationBounds.toAlignedRect().normalized();
-        if (bounds.isValid())
-            annotation = annotation.intersected(bounds);
-        if (!annotation.isEmpty())
-            resolved = resolved.united(annotation);
-    }
-
     if (bounds.isValid()) {
         resolved = enforceMinimumSize(resolved, constraints.minimumSize, bounds);
         resolved = resolved.intersected(bounds);
