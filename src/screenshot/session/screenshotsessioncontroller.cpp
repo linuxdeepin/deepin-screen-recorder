@@ -51,8 +51,7 @@ CursorIntent cursorIntentWhilePressed(CursorIntent intent)
 
 QRect clampedSelectionMove(const QRect &selection,
                            const QPoint &delta,
-                           const QRect &desktopBounds,
-                           const QRect &annotationBounds)
+                           const QRect &desktopBounds)
 {
     QRect moved = selection.translated(delta);
     if (desktopBounds.isValid()) {
@@ -64,16 +63,6 @@ QRect clampedSelectionMove(const QRect &selection,
             moved.moveRight(desktopBounds.right());
         if (moved.bottom() > desktopBounds.bottom())
             moved.moveBottom(desktopBounds.bottom());
-    }
-    if (!annotationBounds.isEmpty()) {
-        if (moved.left() > annotationBounds.left())
-            moved.moveLeft(annotationBounds.left());
-        if (moved.top() > annotationBounds.top())
-            moved.moveTop(annotationBounds.top());
-        if (moved.right() < annotationBounds.right())
-            moved.moveRight(annotationBounds.right());
-        if (moved.bottom() < annotationBounds.bottom())
-            moved.moveBottom(annotationBounds.bottom());
     }
     return moved;
 }
@@ -556,7 +545,11 @@ void ScreenshotSessionController::onPointerPressed(const QPoint &globalPos)
     if (isSelectionResize(selectionHit)) {
         startSelectionInteraction(globalPos);
     } else {
-        const AnnotationHit annotationHit = m_annotationEditor
+        // Match X11: annotations are edited inside the fixed capture region.
+        // A drawing tool pressed outside the selection must not start an
+        // annotation there and grow the selection to fit it.
+        const bool insideSelection = m_selection->geometry().contains(globalPos);
+        const AnnotationHit annotationHit = (insideSelection && m_annotationEditor)
                 ? m_annotationEditor->hitTest(globalPos)
                 : AnnotationHit();
         if (annotationHit.isValid() && startAnnotationInteraction(globalPos))
@@ -580,10 +573,14 @@ void ScreenshotSessionController::onPointerMoved(const QPoint &globalPos)
 
     if ((globalPos - m_pressPos).manhattanLength() >= 3)
         m_dragged = true;
-    if (m_inputTarget == InputTarget::Annotation && m_annotationEditor)
+    if (m_inputTarget == InputTarget::Annotation && m_annotationEditor) {
+        // X11 lets a shape extend outside the capture region while drawing;
+        // painting is clipped to the selection and the hidden part reappears
+        // if the user later enlarges the selection.
         m_annotationEditor->updateInteraction(globalPos);
-    else if (m_inputTarget == InputTarget::Selection)
+    } else if (m_inputTarget == InputTarget::Selection) {
         m_selection->updateInteraction(globalPos);
+    }
     syncOverlayCursor(&globalPos);
     updateOverlayHints();
 }
@@ -631,13 +628,9 @@ void ScreenshotSessionController::onSelectionMoveRequested(const QPoint &delta)
     if (selection.isEmpty() || delta.isNull())
         return;
 
-    const QRect annotationBounds = m_annotationEditor
-            ? m_annotationEditor->contentBoundsGlobal().toAlignedRect().normalized()
-            : QRect();
     m_selection->setGeometry(clampedSelectionMove(selection,
                                                   delta,
-                                                  m_frames.virtualDesktopRect,
-                                                  annotationBounds));
+                                                  m_frames.virtualDesktopRect));
 }
 
 void ScreenshotSessionController::onSelectionResizeRequested(
@@ -662,9 +655,6 @@ void ScreenshotSessionController::onSelectionResizeRequested(
         return;
 
     const QRect desktopBounds = m_frames.virtualDesktopRect;
-    const QRect annotationBounds = m_annotationEditor
-            ? m_annotationEditor->contentBoundsGlobal().toAlignedRect().normalized()
-            : QRect();
     int left = selection.left();
     int top = selection.top();
     int right = selection.right();
@@ -674,32 +664,28 @@ void ScreenshotSessionController::onSelectionResizeRequested(
     case Qt::Key_Left:
         if (enlarge) {
             left = qMax(desktopBounds.left(), left - 1);
-        } else if (selection.width() > MinimumSelectionSize
-                   && (!annotationBounds.isValid() || left < annotationBounds.left())) {
+        } else if (selection.width() > MinimumSelectionSize) {
             ++left;
         }
         break;
     case Qt::Key_Right:
         if (enlarge) {
             right = qMin(desktopBounds.right(), right + 1);
-        } else if (selection.width() > MinimumSelectionSize
-                   && (!annotationBounds.isValid() || right > annotationBounds.right())) {
+        } else if (selection.width() > MinimumSelectionSize) {
             --right;
         }
         break;
     case Qt::Key_Up:
         if (enlarge) {
             top = qMax(desktopBounds.top(), top - 1);
-        } else if (selection.height() > MinimumSelectionSize
-                   && (!annotationBounds.isValid() || top < annotationBounds.top())) {
+        } else if (selection.height() > MinimumSelectionSize) {
             ++top;
         }
         break;
     case Qt::Key_Down:
         if (enlarge) {
             bottom = qMin(desktopBounds.bottom(), bottom + 1);
-        } else if (selection.height() > MinimumSelectionSize
-                   && (!annotationBounds.isValid() || bottom > annotationBounds.bottom())) {
+        } else if (selection.height() > MinimumSelectionSize) {
             --bottom;
         }
         break;
@@ -727,8 +713,7 @@ void ScreenshotSessionController::onSelectionSizeChangeRequested(
     const int logicalWidth = qMax(MinimumSelectionSize, qRound(width / scale));
     const int logicalHeight = qMax(MinimumSelectionSize, qRound(height / scale));
     m_selection->setGeometry(QRect(current.topLeft(),
-                                   QSize(logicalWidth, logicalHeight)),
-                             SelectionGeometryMode::IgnoreAnnotationBounds);
+                                   QSize(logicalWidth, logicalHeight)));
 }
 
 void ScreenshotSessionController::onSelectionRatioChangeRequested(int width, int height)
@@ -764,8 +749,7 @@ void ScreenshotSessionController::onSelectionRatioChangeRequested(int width, int
     }
 
     m_selection->setGeometry(QRect(current.topLeft(),
-                                   QSize(logicalWidth, logicalHeight)),
-                             SelectionGeometryMode::IgnoreAnnotationBounds);
+                                   QSize(logicalWidth, logicalHeight)));
 }
 
 void ScreenshotSessionController::onRoundedCornerRadiusChanged(int radius)
@@ -809,6 +793,13 @@ void ScreenshotSessionController::onRecordModeChanged(bool enabled)
 {
     if (m_state != State::Selecting && m_state != State::Editing)
         return;
+    if (enabled && m_annotationEditor) {
+        // X11 discards the annotation widget when entering record mode. Do the
+        // same here so annotations from the screenshot session cannot leak into
+        // the recording overlay and preview.
+        m_annotationEditor->clearContent();
+        m_annotationCoordinator->syncBounds();
+    }
     m_recordMode = enabled;
     m_overlay->setRecordModeActive(enabled);
     updateOverlayHints();
@@ -1043,7 +1034,7 @@ void ScreenshotSessionController::requestScrollExport(ScrollExport exportMode)
     if (m_scrollCapture)
         m_scrollCapture->pause();
     if (m_overlay)
-        m_overlay->finishScroll();
+        m_overlay->finishScroll(false);
 
     if (m_scrollPaused) {
         finalizeScrollStop();
@@ -1608,6 +1599,8 @@ void ScreenshotSessionController::syncOverlaySelection()
 {
     if (!m_overlay)
         return;
+    if (m_annotationEditor)
+        m_annotationEditor->setInteractionBounds(m_selection->geometry());
     m_overlay->setSelection(m_selection->geometry());
     m_overlay->setSelectionFinalized(m_selection->state() == InteractionState::Ready);
     updateOverlayHints();

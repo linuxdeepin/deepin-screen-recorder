@@ -38,6 +38,14 @@ public:
                 "QWidget { background: transparent; border: none; }"));
     }
 
+    void setClipBounds(const QRect &globalBounds)
+    {
+        if (m_clipBounds == globalBounds)
+            return;
+        m_clipBounds = globalBounds;
+        update();
+    }
+
 protected:
     void paintEvent(QPaintEvent *) override
     {
@@ -46,7 +54,12 @@ protected:
 
         QPainter painter(this);
         painter.setRenderHint(QPainter::Antialiasing, true);
-        painter.setClipRect(rect());
+        const QRect clip = m_clipBounds.isValid()
+                ? m_clipBounds.translated(-m_outputBounds.topLeft())
+                : QRect();
+        if (clip.isEmpty())
+            return;
+        painter.setClipRect(clip);
         painter.translate(-m_outputBounds.left(), -m_outputBounds.top());
         m_document->paintEditingContent(painter);
     }
@@ -54,6 +67,7 @@ protected:
 private:
     const ShapesWidget *m_document = nullptr;
     QRect m_outputBounds;
+    QRect m_clipBounds;
 };
 
 TreelandAnnotationEditor::TreelandAnnotationEditor(QObject *parent)
@@ -113,6 +127,7 @@ QWidget *TreelandAnnotationEditor::createView(QWidget *parent,
                                               const QRect &outputBounds)
 {
     auto *view = new TreelandAnnotationView(m_documentWidget, outputBounds, parent);
+    view->setClipBounds(m_interactionBounds);
     m_views.append(view);
     m_viewBounds.append(outputBounds);
     return view;
@@ -162,6 +177,17 @@ AnnotationTool TreelandAnnotationEditor::tool() const
     return m_tool;
 }
 
+void TreelandAnnotationEditor::setInteractionBounds(const QRect &globalBounds)
+{
+    m_interactionBounds = globalBounds.normalized();
+    if (m_document)
+        m_document->setInteractionBounds(m_interactionBounds);
+    for (const QPointer<QWidget> &view : m_views) {
+        if (view)
+            static_cast<TreelandAnnotationView *>(view.data())->setClipBounds(m_interactionBounds);
+    }
+}
+
 bool TreelandAnnotationEditor::hasSelectedContent() const
 {
     return m_document && m_document->hasSelectedContent();
@@ -203,6 +229,14 @@ void TreelandAnnotationEditor::cancelInteraction()
     finishInlineEdit(false);
     if (m_document)
         m_document->cancelInteraction();
+}
+
+void TreelandAnnotationEditor::clearContent()
+{
+    finishInlineEdit(false);
+    if (m_document)
+        m_document->clearContent();
+    publishBounds();
 }
 
 void TreelandAnnotationEditor::undo()

@@ -83,6 +83,38 @@ QList<QLineF> strokedOutlineForOutput(const QRect &globalSelection,
     return result;
 }
 
+QList<QLineF> dashedFrameForOutput(const QRect &globalSelection,
+                                   const QRect &outputGeometry)
+{
+    QList<QLineF> result;
+    const QRect selection = normalizedNonEmpty(globalSelection);
+    const QRect output = normalizedNonEmpty(outputGeometry);
+    if (selection.isEmpty() || output.isEmpty())
+        return result;
+
+    const Outline outline = outlineForOutput(selection, output);
+    if (outline.localRect.isEmpty())
+        return result;
+
+    // Match X11 main_window.cpp: the 1 px dashed frame is drawn one pixel
+    // outside the capture region and clamped to the output, so a selection
+    // touching a screen edge keeps a visible border on that edge.
+    const qreal left = qMax(selection.left() - 1, output.left()) - output.left();
+    const qreal top = qMax(selection.top() - 1, output.top()) - output.top();
+    const qreal right = qMin(selection.right() + 1, output.right()) - output.left();
+    const qreal bottom = qMin(selection.bottom() + 1, output.bottom()) - output.top();
+
+    if (outline.top)
+        result.append(QLineF(left, top, right, top));
+    if (outline.right)
+        result.append(QLineF(right, top, right, bottom));
+    if (outline.bottom)
+        result.append(QLineF(left, bottom, right, bottom));
+    if (outline.left)
+        result.append(QLineF(left, top, left, bottom));
+    return result;
+}
+
 QRect snapRegionForOutputs(const QRect &globalRegion,
                            const QList<QRect> &outputGeometries)
 {

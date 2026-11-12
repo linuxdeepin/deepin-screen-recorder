@@ -91,9 +91,10 @@ void SelectionModel::setDesktopBounds(const QRect &bounds)
 
 void SelectionModel::setAnnotationBounds(const QRectF &bounds)
 {
-    m_annotationBounds = bounds;
-    if (m_state == InteractionState::Ready && !m_geometry.isEmpty())
-        setGeometry(m_geometry);
+    Q_UNUSED(bounds);
+    // X11 keeps annotation content independent from the capture region:
+    // drawing may extend outside the selection, where it is clipped visually
+    // and becomes visible again only after the selection is enlarged.
 }
 
 SelectionAction SelectionModel::beginInteraction(const QPoint &globalPos)
@@ -160,7 +161,7 @@ void SelectionModel::cancelInteraction()
         emit geometryChanged(oldRect, m_geometry);
 }
 
-void SelectionModel::setGeometry(const QRect &globalRect, SelectionGeometryMode mode)
+void SelectionModel::setGeometry(const QRect &globalRect)
 {
     if (globalRect.isEmpty()) {
         clear();
@@ -170,9 +171,6 @@ void SelectionModel::setGeometry(const QRect &globalRect, SelectionGeometryMode 
     const QRect oldRect = m_geometry;
     SelectionConstraints constraints;
     constraints.desktopBounds = m_desktopBounds;
-    constraints.annotationBounds = m_annotationBounds;
-    constraints.expandSelectionForAnnotations =
-            mode == SelectionGeometryMode::ConstrainToAnnotations;
     constraints.minimumSize = QSize(1, 1);
     QRect resolved = resolveSelectionGeometry(globalRect, constraints);
     if (resolved.width() < CreationMinimumSize || resolved.height() < CreationMinimumSize)
@@ -225,7 +223,6 @@ void SelectionModel::applyCandidate(const QRect &candidate, const QSize &minimum
     const QRect oldRect = m_geometry;
     SelectionConstraints constraints;
     constraints.desktopBounds = m_desktopBounds;
-    constraints.annotationBounds = m_annotationBounds;
     constraints.minimumSize = minimumSize;
     m_geometry = resolveSelectionGeometry(candidate, constraints);
     if (oldRect != m_geometry)

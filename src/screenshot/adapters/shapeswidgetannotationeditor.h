@@ -32,6 +32,7 @@ public:
     void setEffectSourceImage(const QImage &image);
     void setTool(AnnotationTool tool) override;
     AnnotationTool tool() const override;
+    void setInteractionBounds(const QRect &globalBounds) override;
     bool hasSelectedContent() const override;
 
     QRectF contentBoundsGlobal() const override;
@@ -41,6 +42,7 @@ public:
     void updateInteraction(const QPoint &globalPos) override;
     void endInteraction() override;
     void cancelInteraction() override;
+    void clearContent() override;
     void undo() override;
 
     bool takePendingInlineEdit(ShapesWidget::InlineEditRequest *request);

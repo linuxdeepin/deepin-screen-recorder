@@ -46,12 +46,14 @@ public:
     bool isInteracting() const override;
     void setTool(AnnotationTool tool) override;
     AnnotationTool tool() const override;
+    void setInteractionBounds(const QRect &globalBounds) override;
     bool hasSelectedContent() const override;
     AnnotationHit hitTest(const QPoint &globalPos) const override;
     bool beginInteraction(const QPoint &globalPos) override;
     void updateInteraction(const QPoint &globalPos) override;
     void endInteraction() override;
     void cancelInteraction() override;
+    void clearContent() override;
     void undo() override;
     void render(QPainter &painter,
                 const QRect &globalSelection,
@@ -83,6 +85,7 @@ private:
     QString m_inlineOriginalText;
     QRectF m_inlineOriginalRect;
     QRect m_desktopBounds;
+    QRect m_interactionBounds;
     QRectF m_lastBounds;
     AnnotationTool m_tool = AnnotationTool::Pointer;
 };

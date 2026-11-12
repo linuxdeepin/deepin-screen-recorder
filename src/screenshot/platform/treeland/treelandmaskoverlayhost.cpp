@@ -317,7 +317,7 @@ bool TreelandMaskOverlayHost::create(const QList<OutputDescriptor> &outputs)
                 this, &IScreenshotOverlayHost::pointerReleased);
         connect(window, &TreelandMaskWindow::pointerDoubleClicked,
                 this, [this](const QPoint &globalPos) {
-            if (m_annotationEditor)
+            if (m_annotationEditor && m_selection.contains(globalPos))
                 m_annotationEditor->beginInlineEdit(globalPos);
         });
         connect(window, &TreelandMaskWindow::selectionMoveRequested,
@@ -521,8 +521,14 @@ void TreelandMaskOverlayHost::setRecordModeActive(bool active)
     if (m_recordModeActive == active)
         return;
     m_recordModeActive = active;
-    if (active)
+    if (active) {
         hideScrollTip();
+        m_annotationToolActive = false;
+        if (m_annotationEditor)
+            m_annotationEditor->setTool(AnnotationTool::Pointer);
+        if (m_sideBar)
+            m_sideBar->hide();
+    }
     updateRoundedCornerWidget();
     updateFineAdjustTips();
     updateMagnifier();
@@ -705,7 +711,7 @@ bool TreelandMaskOverlayHost::beginScroll(const QRect &globalSelection)
     for (TreelandMaskWindow *window : std::as_const(m_windows)) {
         if (!window)
             continue;
-        window->setRecordingMode(true, selection, true);
+        window->setScrollMode(true, selection);
         window->clearMask();
         window->show();
         window->raise();
@@ -940,7 +946,7 @@ void TreelandMaskOverlayHost::hideScrollTip()
         applyScrollInputRegions();
 }
 
-void TreelandMaskOverlayHost::finishScroll()
+void TreelandMaskOverlayHost::finishScroll(bool restoreSelectionUi)
 {
     destroyScrollPreview();
     destroyScrollTip();
@@ -962,11 +968,22 @@ void TreelandMaskOverlayHost::finishScroll()
     if (m_sideBar)
         m_sideBar->hide();
     for (TreelandMaskWindow *window : std::as_const(m_windows)) {
-        if (window)
-            window->resetInputRegion();
+        if (!window)
+            continue;
+        if (restoreSelectionUi) {
+            window->setScrollMode(false);
+        } else {
+            // The save path keeps the live desktop dimmed under the result
+            // preview but drops the dashed frame, matching X11's
+            // m_isSaveScrollShot behavior. Re-entering the screenshot mask
+            // here would flash the frozen frame and rounded corners.
+            window->setScrollMode(true, m_scrollSelection, false);
+        }
+        window->resetInputRegion();
     }
     m_scrollSelection = QRect();
-    updateRoundedCornerWidget();
+    if (restoreSelectionUi)
+        updateRoundedCornerWidget();
 }
 
 bool TreelandMaskOverlayHost::isScrollActive() const
@@ -1213,7 +1230,7 @@ void TreelandMaskOverlayHost::updateRoundedCornerWidget()
     applyRoundedCornerRadiusToWindows();
 
     if (!m_finalized || m_selection.isEmpty()
-            || m_recordingActive || m_recordModeActive) {
+            || m_recordingActive || m_recordModeActive || m_scrollActive) {
         m_roundedCornerWidget->hide();
         return;
     }

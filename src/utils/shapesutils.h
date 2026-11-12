@@ -9,6 +9,8 @@
 #include <QtCore>
 #include <QColor>
 #include <QImage>
+#include <QPainter>
+#include <QPainterPath>
 
 typedef QList<QPointF> FourPoints;
 //Q_DECLARE_METATYPE(FourPoints)
@@ -68,5 +70,41 @@ QRectF toolshapeContentBounds(const Toolshape &shape);
  * canvas without depending on the legacy global TempFile cache.
  */
 QImage effectAnnotationImage(const QImage &source, bool blur, int radius);
+
+namespace Dsr::Shapes {
+
+/**
+ * Intersect the painter clip with a shape path for the lifetime of this
+ * object and restore the caller's clip afterwards.
+ *
+ * Effect annotations need to be clipped to their own shape while drawing the
+ * blur/mosaic pixmap. Replacing the clip with QPainter::setClipPath() and then
+ * calling setClipping(false) also drops any outer clip (for example the
+ * TreeLand selection rect), which lets selection handles leak outside the
+ * selected region. This guard keeps the outer clip intact.
+ */
+class ScopedClipPath
+{
+public:
+    ScopedClipPath(QPainter &painter, const QPainterPath &path)
+        : m_painter(painter)
+    {
+        m_painter.save();
+        m_painter.setClipPath(path, Qt::IntersectClip);
+    }
+
+    ~ScopedClipPath()
+    {
+        m_painter.restore();
+    }
+
+    ScopedClipPath(const ScopedClipPath &) = delete;
+    ScopedClipPath &operator=(const ScopedClipPath &) = delete;
+
+private:
+    QPainter &m_painter;
+};
+
+} // namespace Dsr::Shapes
 
 #endif // SHAPESUTILS_H

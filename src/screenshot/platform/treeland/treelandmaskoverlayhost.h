@@ -61,7 +61,7 @@ public:
     void endScrollFrameCapture() override;
     void showScrollTip(ScrollTipKind kind) override;
     void hideScrollTip() override;
-    void finishScroll() override;
+    void finishScroll(bool restoreSelectionUi = true) override;
     bool isScrollActive() const override;
     void close() override;
 

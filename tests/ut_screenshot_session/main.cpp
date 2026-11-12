@@ -31,6 +31,7 @@
 #include <QColor>
 #include <QImage>
 #include <QPainter>
+#include <QPainterPath>
 #include <QSignalSpy>
 #include <QElapsedTimer>
 #include <QRandomGenerator>
@@ -101,9 +102,11 @@ public:
     int updateCount = 0;
     int endCount = 0;
     int cancelCount = 0;
+    int clearCount = 0;
     bool selectedContent = false;
     QList<QPoint> updatePositions;
     AnnotationTool currentTool = AnnotationTool::Pointer;
+    QRect interactionBounds;
 
     QRectF contentBoundsGlobal() const override
     {
@@ -123,6 +126,11 @@ public:
     AnnotationTool tool() const override
     {
         return currentTool;
+    }
+
+    void setInteractionBounds(const QRect &globalBounds) override
+    {
+        interactionBounds = globalBounds;
     }
 
     bool hasSelectedContent() const override
@@ -159,6 +167,14 @@ public:
     {
         ++cancelCount;
         interacting = false;
+    }
+
+    void clearContent() override
+    {
+        ++clearCount;
+        bounds = QRectF();
+        emit contentChanged();
+        emit contentBoundsChanged(bounds);
     }
 
     void render(QPainter &painter, const QRect &, qreal) const override
@@ -274,6 +290,7 @@ public:
     bool scrollActive = false;
     int scrollBeginCount = 0;
     int scrollFinishCount = 0;
+    QList<bool> scrollFinishRestoreArgs;
     bool scrollBeginResult = true;
     QRect scrollSelection;
     int scrollPreviewCount = 0;
@@ -386,9 +403,10 @@ public:
         return scrollBeginResult;
     }
 
-    void finishScroll() override
+    void finishScroll(bool restoreSelectionUi = true) override
     {
         ++scrollFinishCount;
+        scrollFinishRestoreArgs.append(restoreSelectionUi);
         scrollActive = false;
     }
 
@@ -547,6 +565,11 @@ public:
     void requestRoundedCornerRadius(int radius)
     {
         emit roundedCornerRadiusChanged(radius);
+    }
+
+    void requestRecordMode(bool enabled)
+    {
+        emit recordModeChanged(enabled);
     }
 };
 
@@ -934,6 +957,26 @@ private slots:
         QVERIFY(blur.pixelColor(30, 32) != blur.pixelColor(34, 32));
     }
 
+    void shapeClipGuardPreservesOuterClip()
+    {
+        QImage target(64, 64, QImage::Format_ARGB32_Premultiplied);
+        target.fill(Qt::transparent);
+        QPainter painter(&target);
+        const QRect outerClip(0, 0, 16, 16);
+        painter.setClipRect(outerClip);
+
+        QPainterPath shapePath;
+        shapePath.addRect(QRectF(0, 0, 48, 48));
+        {
+            Dsr::Shapes::ScopedClipPath clip(painter, shapePath);
+            QCOMPARE(painter.clipRegion(), QRegion(outerClip));
+        }
+
+        // The caller's selection clip must survive annotation painting;
+        // otherwise resize handles are drawn outside the selection.
+        QCOMPARE(painter.clipRegion(), QRegion(outerClip));
+    }
+
     void roundedCornersPreserveSizeAndDevicePixelRatio()
     {
         QImage source(80, 80, QImage::Format_ARGB32_Premultiplied);
@@ -966,7 +1009,7 @@ private slots:
         QCOMPARE(flattened.pixelColor(20, 10), QColor(Qt::red));
     }
 
-    void selectionShrinkCannotCropAnnotations()
+    void selectionShrinkCanHideAnnotationsOutsideSelection()
     {
         SelectionModel model;
         model.setDesktopBounds(QRect(0, 0, 1000, 800));
@@ -978,41 +1021,36 @@ private slots:
         model.endInteraction();
 
         const QRect result = model.geometry();
-        QVERIFY(result.left() <= 200);
-        QVERIFY(result.right() >= 399);
-        QVERIFY(result.top() <= 200);
-        QVERIFY(result.bottom() >= 299);
+        QCOMPARE(result, QRect(100, 100, 151, 400));
+        QVERIFY(!result.contains(QPoint(399, 299)));
     }
 
-    void annotationBoundsUpdateExpandsReadySelection()
+    void annotationBoundsUpdateKeepsReadySelectionFixed()
     {
         SelectionModel model;
         model.setDesktopBounds(QRect(0, 0, 1000, 800));
         model.setGeometry(QRect(100, 100, 300, 200));
+        const QRect original = model.geometry();
 
         FakeAnnotationEditor editor;
         AnnotationCoordinator coordinator(&model, &editor);
         editor.setBounds(QRectF(750, 150, 100, 100));
 
-        QVERIFY(model.geometry().contains(QPoint(750, 150)));
-        QVERIFY(model.geometry().contains(QPoint(849, 249)));
+        QCOMPARE(model.geometry(), original);
     }
 
-    void annotationBoundsAcrossOutputsExpandReadySelection()
+    void annotationBoundsAcrossOutputsKeepReadySelectionFixed()
     {
         SelectionModel model;
         model.setDesktopBounds(QRect(0, 0, 3840, 1080));
         model.setGeometry(QRect(100, 100, 300, 200));
+        const QRect original = model.geometry();
 
         FakeAnnotationEditor editor;
         AnnotationCoordinator coordinator(&model, &editor);
         editor.setBounds(QRectF(100, 100, 2100, 600));
 
-        const QRect selection = model.geometry();
-        QVERIFY(selection.left() <= 100);
-        QVERIFY(selection.right() >= 2199);
-        QVERIFY(selection.top() <= 100);
-        QVERIFY(selection.bottom() >= 699);
+        QCOMPARE(model.geometry(), original);
     }
 
     void multiScreenOutlineOmitsInternalBoundaries()
@@ -1061,6 +1099,55 @@ private slots:
         QCOMPARE(lines.size(), 4);
         QCOMPARE(lines.at(2).p1().y(), 1079.5);
         QCOMPARE(lines.at(2).p2().y(), 1079.5);
+    }
+
+    void dashedFrameSitsJustOutsideSelectionLikeX11()
+    {
+        const QList<QLineF> lines =
+                SelectionOverlayGeometry::dashedFrameForOutput(
+                        QRect(100, 100, 200, 200), QRect(0, 0, 1920, 1080));
+
+        QCOMPARE(lines.size(), 4);
+        // X11 draws at recordX - 1 / recordY - 1 with a 1 px pen, so the
+        // dashed frame surrounds the capture region instead of covering its
+        // first and last pixel rows.
+        QCOMPARE(lines.at(0), QLineF(99, 99, 300, 99));
+        QCOMPARE(lines.at(1), QLineF(300, 99, 300, 300));
+        QCOMPARE(lines.at(2), QLineF(99, 300, 300, 300));
+        QCOMPARE(lines.at(3), QLineF(99, 99, 99, 300));
+    }
+
+    void dashedFrameClampsToOutputEdges()
+    {
+        const QList<QLineF> lines =
+                SelectionOverlayGeometry::dashedFrameForOutput(
+                        QRect(0, 0, 1920, 1080), QRect(0, 0, 1920, 1080));
+
+        QCOMPARE(lines.size(), 4);
+        QCOMPARE(lines.at(0), QLineF(0, 0, 1919, 0));
+        QCOMPARE(lines.at(1), QLineF(1919, 0, 1919, 1079));
+        QCOMPARE(lines.at(2), QLineF(0, 1079, 1919, 1079));
+        QCOMPARE(lines.at(3), QLineF(0, 0, 0, 1079));
+    }
+
+    void dashedFrameOmitsInternalOutputBoundary()
+    {
+        const QRect selection(100, 20, 2200, 140);
+        const QList<QLineF> left =
+                SelectionOverlayGeometry::dashedFrameForOutput(
+                        selection, QRect(0, 0, 1920, 1080));
+        QCOMPARE(left.size(), 3);
+        QCOMPARE(left.at(0), QLineF(99, 19, 1919, 19));
+        QCOMPARE(left.at(1), QLineF(99, 160, 1919, 160));
+        QCOMPARE(left.at(2), QLineF(99, 19, 99, 160));
+
+        const QList<QLineF> right =
+                SelectionOverlayGeometry::dashedFrameForOutput(
+                        selection, QRect(1920, 0, 1920, 1080));
+        QCOMPARE(right.size(), 3);
+        QCOMPARE(right.at(0), QLineF(0, 19, 380, 19));
+        QCOMPARE(right.at(1), QLineF(380, 19, 380, 160));
+        QCOMPARE(right.at(2), QLineF(0, 160, 380, 160));
     }
 
     void crossOutputSnapTargetUsesDominantOutput()
@@ -1255,6 +1342,39 @@ private slots:
         QVERIFY(overlay->hasInitialMode);
         QCOMPARE(overlay->initialMode, Mode::Record);
         QVERIFY(overlay->recordModeActive);
+    }
+
+    void switchingToRecordClearsScreenshotAnnotations()
+    {
+        FakeBackend *backend = new FakeBackend;
+        backend->frames.virtualDesktopRect = QRect(0, 0, 800, 600);
+        backend->frames.outputs = {makeFrame(QRect(0, 0, 800, 600), Qt::red)};
+        auto *overlay = new FakeOverlay;
+        auto *sink = new FakeResultSink;
+        auto *annotations = new FakeAnnotationEditor;
+
+        ScreenshotSessionController controller(backend,
+                                               overlay,
+                                               nullptr,
+                                               nullptr,
+                                               sink,
+                                               annotations);
+        Request request;
+        request.enableWindowSnap = false;
+
+        QVERIFY(controller.start(request));
+        overlay->press(QPoint(100, 100));
+        overlay->move(QPoint(500, 400));
+        overlay->release(QPoint(500, 400));
+        QCOMPARE(controller.state(), ScreenshotSessionController::State::Editing);
+
+        annotations->setBounds(QRectF(200, 200, 80, 60));
+        overlay->requestRecordMode(true);
+
+        QCOMPARE(annotations->clearCount, 1);
+        QVERIFY(annotations->bounds.isEmpty());
+        QVERIFY(overlay->recordModeActive);
+        QCOMPARE(controller.state(), ScreenshotSessionController::State::Editing);
     }
 
     void recordFullScreenStartsCountdownAndPassesOutputPath()
@@ -1574,6 +1694,9 @@ private slots:
         QCOMPARE(savedSpy.count(), 1);
         QVERIFY(capture->stopCount >= 1);
         QVERIFY(overlay->scrollFinishCount >= 1);
+        // The export path must not restore the screenshot mask: doing so
+        // flashes the frozen frame and rounded corners before the result UI.
+        QCOMPARE(overlay->scrollFinishRestoreArgs.first(), false);
         QVERIFY(overlay->closed);
     }
 
@@ -2871,7 +2994,7 @@ private slots:
         QCOMPARE(overlay->cursorIntent, CursorIntent::Move);
     }
 
-    void annotationBoundsExpandReadySelection()
+    void annotationBoundsKeepReadySelectionFixed()
     {
         FakeBackend *backend = new FakeBackend;
         backend->frames.virtualDesktopRect = QRect(0, 0, 800, 600);
@@ -2892,12 +3015,13 @@ private slots:
         overlay->press(QPoint(150, 150));
         overlay->release(QPoint(150, 150));
         QCOMPARE(controller.state(), ScreenshotSessionController::State::Editing);
+        const QRect original = overlay->selection;
 
         annotations->setBounds(QRectF(80, 90, 260, 240));
-        QVERIFY(overlay->selection.contains(QRect(80, 90, 260, 240)));
+        QCOMPARE(overlay->selection, original);
     }
 
-    void annotationInteractionExpandsSelectionImmediately()
+    void annotationDrawingCanExtendBeyondSelection()
     {
         FakeBackend *backend = new FakeBackend;
         backend->frames.virtualDesktopRect = QRect(0, 0, 800, 600);
@@ -2906,8 +3030,8 @@ private slots:
         auto *sink = new FakeResultSink;
         auto *annotations = new FakeAnnotationEditor;
         annotations->beginResult = true;
-        annotations->currentHit = {AnnotationHitKind::Content,
-                                   CursorIntent::Move,
+        annotations->currentHit = {AnnotationHitKind::CreateContent,
+                                   CursorIntent::Cross,
                                    -1};
 
         ScreenshotSessionController controller(backend, overlay, nullptr, nullptr,
@@ -2915,14 +3039,14 @@ private slots:
         Request request;
         request.initialRegion = QRect(100, 100, 200, 200);
         QVERIFY(controller.start(request));
+        const QRect original = overlay->selection;
+        QCOMPARE(annotations->interactionBounds, original);
 
         overlay->press(QPoint(150, 150));
-        annotations->setBounds(QRectF(60, 70, 300, 260));
-        QVERIFY(overlay->selection.contains(QRect(60, 70, 300, 260)));
-
         overlay->move(QPoint(420, 390));
         QCOMPARE(annotations->updateCount, 1);
-        QVERIFY(overlay->selection.contains(QRect(60, 70, 300, 260)));
+        QCOMPARE(annotations->updatePositions.last(), QPoint(420, 390));
+        QCOMPARE(overlay->selection, original);
     }
 
     void initialSelectionIsSyncedAfterOverlayCreation()
@@ -2985,6 +3109,11 @@ private slots:
         ScreenshotSessionController controller(backend, overlay, nullptr, nullptr, sink);
 
         QVERIFY(controller.start(Request()));
+        overlay->press(QPoint(10, 10));
+        overlay->move(QPoint(300, 300));
+        overlay->release(QPoint(300, 300));
+        QCOMPARE(controller.state(), ScreenshotSessionController::State::Editing);
+
         overlay->press(QPoint(100, 100));
 
         QCOMPARE(annotations->beginCount, 1);
