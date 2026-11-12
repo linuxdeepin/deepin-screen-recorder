@@ -286,7 +286,8 @@ public slots:
      * Paint committed content only. Used for the final screenshot image.
      */
     void paintContent(QPainter &painter) const;
-    void paintContent(QPainter &painter, int excludedShapeIndex) const;
+    void paintContent(QPainter &painter, int excludedShapeIndex,
+                      bool skipLiveTextEdits = false) const;
     /**
      * Paint committed content plus the shape currently being drawn.
      *

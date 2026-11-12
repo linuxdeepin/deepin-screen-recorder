@@ -224,9 +224,16 @@ void ShapesWidget::updateSelectedShape(const QString &group,
     qCDebug(dsrApp) << "Updating selected shape - group:" << group << "key:" << key << "index:" << index;
     
     if (m_isSelectedText) {
-        qCDebug(dsrApp) << "Skipping update for selected text";
         m_isSelectedText = false;
-        return;
+        // Selecting a text used to trigger a toolbar sync that could overwrite
+        // its current color. Keep suppressing that implicit common-color sync,
+        // but never swallow an explicit text color/size change.
+        const bool explicitTextProperty = group == "text"
+                && (key == "color_index" || key == "fontsize");
+        if (!explicitTextProperty) {
+            qCDebug(dsrApp) << "Skipping implicit update for selected text";
+            return;
+        }
     }
     
     if (group == m_currentShape.type && key == "color_index") {
@@ -245,23 +252,23 @@ void ShapesWidget::updateSelectedShape(const QString &group,
         } else if (m_selectedShape.type == group && key == "line_width") {
             m_selectedShape.lineWidth = LINEWIDTH(index);
         } else if (group == "text" && m_selectedShape.type == group && key == "color_index") {
-            int tmpIndex = m_shapes[m_selectedOrder].index;
-            if (m_editMap.contains(tmpIndex)) {
-                m_selectedShape.colorIndex = index;
-                m_editMap.value(tmpIndex)->setColor(BaseUtils::colorIndexOf(index));
-                m_editMap.value(tmpIndex)->update();
+            const int tmpIndex = m_shapes[m_selectedOrder].index;
+            m_selectedShape.colorIndex = index;
+            if (TextEdit *edit = m_editMap.value(tmpIndex, nullptr)) {
+                edit->setColor(BaseUtils::colorIndexOf(index));
+                edit->update();
             }
 
         } else if (group == "text" && m_selectedShape.type == group && key == "fontsize")  {
             const int tmpIndex = m_shapes[m_selectedOrder].index;
+            const int fontSize = qMax(1, index);
+            m_selectedShape.fontSize = fontSize;
             if (TextEdit *edit = m_editMap.value(tmpIndex, nullptr)) {
-                edit->setFontSize(index);
+                edit->setFontSize(fontSize);
                 edit->update();
             } else if (isTreeLandMode()
                        && !m_selectedShape.text.isEmpty()
                        && m_selectedShape.mainPoints.size() >= 4) {
-                const int fontSize = qMax(1, index);
-                m_selectedShape.fontSize = fontSize;
                 m_shapes[m_selectedOrder].fontSize = fontSize;
                 // TreeLand deletes the temporary inline editor after commit.
                 // Recompute the committed text box here so the selection border,
@@ -3099,7 +3106,8 @@ void ShapesWidget::paintContent(QPainter &painter) const
     paintContent(painter, -1);
 }
 
-void ShapesWidget::paintContent(QPainter &painter, int excludedShapeIndex) const
+void ShapesWidget::paintContent(QPainter &painter, int excludedShapeIndex,
+                               bool skipLiveTextEdits) const
 {
     painter.setRenderHints(QPainter::Antialiasing);
     QPen pen;
@@ -3150,6 +3158,8 @@ void ShapesWidget::paintContent(QPainter &painter, int excludedShapeIndex) const
             paintLine(painter, m_shapes[i].points);
         } else if (m_shapes[i].type == "text") {
             const TextEdit *edit = m_editMap.value(m_shapes[i].index);
+            if (skipLiveTextEdits && !isTreeLandMode() && edit)
+                continue;
             if (!isTreeLandMode() && !edit)
                 continue;
             const QString text = isTreeLandMode()
@@ -3233,7 +3243,7 @@ void ShapesWidget::paintEditingContent(QPainter &painter) const
     // A visible platform inline editor owns the text/number rendering while
     // it is active. Keep the logical shape in the document for bounds and
     // export, but avoid painting a second copy underneath the real editor.
-    paintContent(painter, m_inlineEditingShape);
+    paintContent(painter, m_inlineEditingShape, true);
     paintInProgressShape(painter);
 
     // TreeLand hosts the real inline editor in a sibling widget. Draw the
