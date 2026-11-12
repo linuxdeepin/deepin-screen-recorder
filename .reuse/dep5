@@ -63,6 +63,12 @@ Files: hicolor/*
 Copyright: UnionTech Software Technology Co., Ltd.
 License: LGPL-3.0-or-later
 
+# wlr screencopy protocol
+Files: src/protocols/wlr-screencopy/*
+Copyright: 2018 Simon Ser
+           2019 Andri Yngvason
+License: MIT
+
 # src
 Files: src/*
 Copyright: UnionTech Software Technology Co., Ltd.
@@ -92,6 +98,7 @@ License: GPL-2.0-or-later
 Files: 3rdparty/stub_linux/*
 Copyright: None
 License: GPL-2.0-or-later
+
 # tests/at
 Files: tests/at/*
 Copyright: UnionTech Software Technology Co., Ltd.
