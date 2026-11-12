@@ -84,6 +84,18 @@ public:
      */
     QList<QScreen*> getAvailableScreens() const;
 
+    /**
+     * @brief 当前单屏采集会话使用的 DRM 设备节点
+     *
+     * 仅 DMA-BUF 会话有效；空字符串表示当前会话不使用 DMA-BUF。
+     */
+    QString dmaDevicePath() const;
+
+    /**
+     * @brief 当前单屏采集会话协商使用的 DMA-BUF modifier
+     */
+    uint64_t dmaModifier() const;
+
 signals:
     /**
      * @brief 协议变为可用
@@ -115,6 +127,14 @@ signals:
      * @param timestamp 时间戳
      */
     void frameReady(const void *data, size_t size, int width, int height, int stride, uint64_t timestamp);
+
+    /**
+     * @brief wl_shm 帧 memfd 就绪
+     *
+     * fd 仅在当前信号调用栈内有效；需要异步使用时必须 dup()。
+     */
+    void shmFrameReady(int shmFd, size_t size, int width, int height, int stride,
+                       uint64_t timestamp);
 
     /**
      * @brief DMA Buffer帧就绪

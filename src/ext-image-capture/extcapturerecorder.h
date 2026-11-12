@@ -33,6 +33,7 @@ class ExtCaptureIntegration;
 class ExtCaptureFrameBuffer;
 class FramePumpWorker;
 class LatestFrameStore;
+class CapturePipelineWorker;
 
 // 使用ExtCaptureFrameBuffer中的ExtFrameData结构
 
@@ -169,9 +170,15 @@ private slots:
     void onRecordingStarted();
     void onRecordingStopped();
     void onFrameReady(const void *data, size_t size, int width, int height, int stride, uint64_t timestamp);
+    void onShmFrameReady(int shmFd, size_t size, int width, int height, int stride,
+                         uint64_t timestamp);
     void onDmaFrameReady(int dmaBufferFd, void *gbmBo, size_t size, int width, int height, int stride, uint64_t timestamp);
     void onMultiScreenFrameReady(const QByteArray &data, int width, int height,
                                  int stride, uint64_t timestamp);
+    void onPipelineSingleFrameReady(const QByteArray &data, int width, int height,
+                                    int stride, uint64_t timestamp, quint64 jobId,
+                                    qint64 convertMs);
+    void onPipelineSingleFrameFailed(const QString &message, quint64 jobId);
     void onExtCaptureError(const QString &message);
     void onCaptureTimer();
     void onCaptureWatchdog();
@@ -195,6 +202,10 @@ private:
     void scheduleNextCapture();
     bool storeFrameSnapshot(const QByteArray &data, int width, int height, int stride,
                             uint64_t timestamp);
+    bool ensureCapturePipeline();
+    void stopCapturePipeline();
+    void consumeCapturedFrame(const QByteArray &data, int width, int height, int stride,
+                              uint64_t timestamp, qint64 processMs);
     QByteArray copyDmaFrame(int dmaBufferFd, void *gbmBo, int width, int height, int stride);
     ExtCaptureIntegration *m_extCapture;
     ExtCaptureFrameBuffer *m_frameBuffer;  // 保留用于兼容性
@@ -227,6 +238,10 @@ private:
     FramePumpWorker *m_framePump;
     QThread *m_framePumpThread;
     LatestFrameStore *m_latestFrame;
+    CapturePipelineWorker *m_capturePipeline = nullptr;
+    QThread *m_capturePipelineThread = nullptr;
+    bool m_pipelineBusy = false;
+    quint64 m_pipelineJobId = 0;
     QElapsedTimer m_captureClock;
     qint64 m_lastCaptureRequestNs;
     qint64 m_captureIntervalNs;

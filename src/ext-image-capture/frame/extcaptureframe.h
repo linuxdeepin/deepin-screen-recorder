@@ -47,6 +47,8 @@ struct FrameData {
     QSize dimensions;              // 帧尺寸
     uint32_t format = 0;           // 像素格式
     uint32_t stride = 0;           // 行字节数
+    uint64_t dmaModifier = 0;      // DMA-BUF 实际使用的 DRM modifier
+    uint32_t dmaOffset = 0;        // DMA-BUF plane 0 偏移
     FrameTransform transform = FrameTransform::Normal;  // 变换
     uint64_t timestamp = 0;        // 时间戳
     QList<QRect> damageRegions;    // 损坏区域
@@ -143,6 +145,14 @@ public:
      * @brief 获取DMA Buffer文件描述符 (仅DMA Buffer有效)
      */
     int getDmaBufferFd() const;
+
+    /**
+     * @brief 获取 wl_shm memfd (仅 SHM Buffer 有效)
+     *
+     * 调用方如需跨线程使用，必须自行 dup()。ExtCaptureFrame 销毁后原 fd
+     * 会关闭，dup 后的副本仍指向同一共享内存。
+     */
+    int getShmBufferFd() const;
 
     /**
      * @brief 获取GBM Buffer Object (仅DMA Buffer有效)

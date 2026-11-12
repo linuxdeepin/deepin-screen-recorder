@@ -29,7 +29,9 @@ struct CaptureConfig {
     // DMA-BUF 方案由 ExtCaptureSession 在约束完成后一次性确定。
     // dmaDevicePath 是 composer 指定设备的实际 DRM 节点；空表示不使用 DMA-BUF。
     QString dmaDevicePath;
-    uint64_t dmaModifier = 0;   // 当前仅允许 DRM_FORMAT_MOD_LINEAR
+    uint64_t dmaModifier = 0;   // 显式分配使用的 modifier；隐式模式忽略此值
+    uint64_t dmaDecodeModifier = 0; // 实际用于 CPU/EGL 解码的 modifier
+    bool dmaImplicitModifier = false; // 合成器只接受 DRM_FORMAT_MOD_INVALID 的隐式布局
 };
 
 /**
