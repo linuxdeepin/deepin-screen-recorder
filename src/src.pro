@@ -154,6 +154,16 @@ QMAKE_CFLAGS += -g -Wall -fPIE -fstack-protector-strong -O2
 QMAKE_CXXFLAGS += -g -Wall -fPIE -Wno-error=deprecated-declarations -Wno-deprecated-declarations -fstack-protector-strong -O2
 QMAKE_LFLAGS += -g -Wall -Wl,--as-needed -pie -z noexecstack -z now
 
+# 表格识别由贴图进程（deepin-pin-screenshots）链接 dtk6tablerecognizer 完成，
+# 该库仅存在于 amd64/arm64/loong64（mips64el/sw_64 无 onnxruntime，源里没有此包）。
+# 主程序不链接该库，仅在无该能力的架构编译期隐藏工具栏按钮与 Alt+T 入口；
+# 探测条件与 src/pin_screenshots/pin_screenshots.pro 保持一致。
+packagesExist(dtk6tablerecognizer) {
+    DEFINES += DSR_HAVE_TABLE_RECOGNIZER
+} else {
+    message("dtk6tablerecognizer not available, hide table recognition entry")
+}
+
 # 添加 FORTIFY_SOURCE 保护
 DEFINES += _FORTIFY_SOURCE=2
 

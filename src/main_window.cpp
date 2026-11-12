@@ -1189,7 +1189,9 @@ void MainWindow::initToolBarShortcut()
     // 截图模式/滚动模式 ocr应用内快捷键
     QShortcut *ocrSC = new QShortcut(QKeySequence("Alt+O"), this);
     // 截图模式 表格识别应用内快捷键
+#ifdef DSR_HAVE_TABLE_RECOGNIZER
     QShortcut *tableRecognSC = new QShortcut(QKeySequence("Alt+T"), this);
+#endif
     // 截图模式 矩形
     QShortcut *rectSC = new QShortcut(QKeySequence("R"), this);
     // 截图模式 圆形
@@ -1256,12 +1258,14 @@ void MainWindow::initToolBarShortcut()
         }
     });
     // 截图模式 表格识别应用内快捷键
+#ifdef DSR_HAVE_TABLE_RECOGNIZER
     connect(tableRecognSC, &QShortcut::activated, this, [=] {
         if ((status::shot == m_functionType || status::scrollshot == m_functionType) && Utils::is3rdInterfaceStart == false) {
             qCDebug(dsrApp) << "shortcut : tableRecognSC (key: alt+t)";
             m_toolBar->shapeClickedFromMain("tableRecogn");
         }
     });
+#endif
     // 截图模式 矩形
     connect(rectSC, &QShortcut::activated, this, [=] {
         if (status::shot == m_functionType) {

@@ -44,6 +44,7 @@ void DbusPinScreenShotsAdaptor::openImageAndName(QByteArray images, QString imag
     qCDebug(dsrApp) << "Invoked openImageAndName method on parent object.";
 }
 
+#ifdef DSR_HAVE_TABLE_RECOGNIZER
 void DbusPinScreenShotsAdaptor::openImageAndNameForTable(QByteArray images, QString imageName, QPoint point)
 {
     qCDebug(dsrApp) << "Received DBus call to open image for table recognition. Image name:" << imageName << ", Point:" << point;
@@ -56,6 +57,7 @@ void DbusPinScreenShotsAdaptor::openImageAndNameForTable(QByteArray images, QStr
     QMetaObject::invokeMethod(parent(), "openImageForTable", Q_ARG(QImage, image), Q_ARG(QString, imageName), Q_ARG(QPoint, point));
     qCDebug(dsrApp) << "Invoked openImageForTable method on parent object.";
 }
+#endif
 
 void DbusPinScreenShotsAdaptor::openImage(QByteArray images)
 {

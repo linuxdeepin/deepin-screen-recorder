@@ -753,6 +753,7 @@ void SubToolWidget::initShotLabel()
         emit changeShotToolFunc("ocr");
     });
 
+#ifdef DSR_HAVE_TABLE_RECOGNIZER
     //添加表格识别按钮（位于文字识别与贴图之间）
     m_tableButton = new ToolButton();
     m_tableButton->setObjectName("TableButton");
@@ -767,10 +768,13 @@ void SubToolWidget::initShotLabel()
         qCDebug(dsrApp) << "table recognition button clicked.";
         emit changeShotToolFunc("tableRecogn");
     });
+#endif
 
 #ifdef  OCR_SCROLL_FLAGE_ON
     btnList.append(m_ocrButton);
+#ifdef DSR_HAVE_TABLE_RECOGNIZER
     btnList.append(m_tableButton);
+#endif
 #endif
 
     //添加贴图按钮
@@ -893,7 +897,9 @@ void SubToolWidget::initShotLabel()
         m_shotOptionButton->hide();
         m_scrollShotButton->hide(); //隐藏滚动截图按钮
         m_ocrButton->hide(); //隐藏ocr按钮
+#ifdef DSR_HAVE_TABLE_RECOGNIZER
         m_tableButton->hide(); //隐藏表格识别按钮
+#endif
         m_pinButton->hide(); //隐藏pin按钮
         m_aiAssistantButton->hide(); //隐藏AI助手按钮
     }
@@ -2059,7 +2065,11 @@ void SubToolWidget::setOcrScreenshotEnable(const bool &state)
 
 void SubToolWidget::setTableScreenshotEnable(const bool &state)
 {
+#ifdef DSR_HAVE_TABLE_RECOGNIZER
     m_tableButton->setEnabled(state);
+#else
+    Q_UNUSED(state);
+#endif
 }
 
 void SubToolWidget::setButEnableOnLockScreen(const bool &state)
@@ -2245,7 +2255,9 @@ void SubToolWidget::shapeClickedFromWidget(QString shape)
             if (!m_ocrButton->isChecked())
                 m_ocrButton->click();
         } else if (shape == "tableRecogn") {
+#ifdef DSR_HAVE_TABLE_RECOGNIZER
             m_tableButton->click();
+#endif
         } else if (shape == "gio" || shape == "rect" || shape == "circ" || shape == "rectangle" || shape == "oval") {
             if (!m_gioButton->isChecked())
                 m_gioButton->click();

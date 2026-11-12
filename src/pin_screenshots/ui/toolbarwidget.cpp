@@ -132,7 +132,9 @@ void ToolBarWidget::initToolBarWidget()
     m_subTool = new SubToolWidget(this);
     qCDebug(dsrApp) << "SubToolWidget created.";
     connect(m_subTool, SIGNAL(signalOcrButtonClicked()), this, SIGNAL(sendOcrButtonClicked()));
+#ifdef DSR_HAVE_TABLE_RECOGNIZER
     connect(m_subTool, SIGNAL(signalTableButtonClicked()), this, SIGNAL(sendTableButtonClicked()));
+#endif
     connect(m_subTool, &SubToolWidget::signalSaveToLocalButtonClicked, this, &ToolBarWidget::signalSaveToLocalButtonClicked);
     qCDebug(dsrApp) << "Connected signalOcrButtonClicked.";
 
