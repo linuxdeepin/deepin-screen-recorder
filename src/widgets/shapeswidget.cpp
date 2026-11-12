@@ -1,5 +1,5 @@
 // Copyright (C) 2020 ~ 2021 Uniontech Software Technology Co.,Ltd.
-// SPDX-FileCopyrightText: 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2022-2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -1665,7 +1665,7 @@ void ShapesWidget::mouseMoveEvent(QMouseEvent *e)
                     } else if (m_resizeDirection == Rotate) {
                         qApp->setOverrideCursor(BaseUtils::setCursorShape("rotate"));
                     } else if (m_resizeDirection == Moving) {
-                        qApp->setOverrideCursor(Qt::ClosedHandCursor);
+                        qApp->setOverrideCursor(Qt::SizeAllCursor);
                     } else {
                         updateCursorShape();
                     }
