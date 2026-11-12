@@ -126,6 +126,24 @@ QString DevNumMonitor::availableCamera()
     qCDebug(dsrApp) << "Exit: DevNumMonitor::availableCamera - Available camera:" << m_availableCamera;
     return m_availableCamera;
 }
+
+bool DevNumMonitor::isDevicePresent(const QString &device) const
+{
+    if (device.isEmpty())
+        return false;
+
+    const v4l2_device_list_t *devices = get_device_list();
+    if (!devices)
+        return false;
+
+    const QByteArray target = device.toLocal8Bit();
+    for (int i = 0; i < devices->num_devices; ++i) {
+        if (target == devices->list_devices[i].device)
+            return true;
+    }
+    return false;
+}
+
 DevNumMonitor::~DevNumMonitor()
 {
     qCDebug(dsrApp) << "Entry: DevNumMonitor::~DevNumMonitor";

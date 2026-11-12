@@ -52,6 +52,15 @@ public:
      * @return
      */
     QString availableCamera();
+
+    /**
+     * @brief 判断指定设备节点当前是否仍在设备列表中
+     *
+     * 录制期间 m_canUse 为 false，timeOutSlot() 不会重新探测设备是否可用；
+     * 该接口只检查设备节点是否仍被 udev/v4l2 枚举，用于发现当前选中的
+     * 摄像头被拔出但还有其他摄像头在线的场景。
+     */
+    bool isDevicePresent(const QString &device) const;
 signals:
     /**
      * @brief existDevice 存在摄像头设备信号

@@ -359,6 +359,8 @@ void TreelandMaskWindow::paintEvent(QPaintEvent *event)
                 painter.save();
                 painter.setClipping(false);
                 painter.setBrush(Qt::NoBrush);
+                // Recording mode paints no frame here: this window is part of
+                // the captured output, so any border would leak into the video.
                 if (m_scrollMode) {
                     if (m_scrollFrameVisible) {
                         // 滚动截图沿用 X11 截图选区边框，而不是录屏虚线。
@@ -374,24 +376,6 @@ void TreelandMaskWindow::paintEvent(QPaintEvent *event)
                         for (const QLineF &line : scrollLines)
                             painter.drawLine(line);
                     }
-                } else {
-                    // 与 X11 RecorderRegionShow 保持一致：2px 白色虚线，
-                    // dash pattern 为 1,2，启用抗锯齿，描边紧贴 crop 外侧。
-                    QPen recordingPen(Qt::white, 2.0);
-                    recordingPen.setStyle(Qt::DashLine);
-                    QVector<qreal> dashes;
-                    dashes << 1 << 2;
-                    recordingPen.setDashPattern(dashes);
-                    recordingPen.setDashOffset(0);
-                    painter.setRenderHint(QPainter::Antialiasing, true);
-                    painter.setPen(recordingPen);
-                    const QRect recordingOutline =
-                            m_globalRecordingSelection.adjusted(-2, -2, 2, 2);
-                    const QList<QLineF> recordingLines =
-                            SelectionOverlayGeometry::strokedOutlineForOutput(
-                                    recordingOutline, m_output.logicalGeometry, 2.0);
-                    for (const QLineF &line : recordingLines)
-                        painter.drawLine(line);
                 }
                 painter.restore();
             }
@@ -407,7 +391,7 @@ void TreelandMaskWindow::paintEvent(QPaintEvent *event)
     const QRect visibleSelection = m_selection.intersected(rect());
     // X11 auto-recognizes the window under the cursor and draws the normal
     // capture frame around it before the click. Reuse the snap region as the
-    // preview selection instead of painting a separate blue highlight.
+    // preview selection instead of painting a separate highlight.
     const bool snapPreviewActive =
             visibleSelection.isEmpty() && !m_finalized && !m_snapHint.isEmpty();
     const QRect visibleRegion = snapPreviewActive ? m_snapHint : visibleSelection;

@@ -17,6 +17,8 @@ class RoundedCornerWidget;
 class ZoomIndicator;
 class PreviewWidget;
 class ScrollShotTip;
+class CameraWidget;
+class DevNumMonitor;
 
 namespace Dsr::Screenshot {
 
@@ -92,6 +94,11 @@ private:
     void handleToolChanged(const QString &tool);
     void checkInputReady();
     void undoAnnotation();
+    void ensureCameraMonitor();
+    void toggleCamera(bool enabled);
+    bool updateCameraWidgetGeometry(bool resetPosition = false);
+    void stopCamera();
+    void destroyCamera();
     void destroyWindows();
 
     QList<TreelandMaskWindow *> m_windows;
@@ -105,6 +112,9 @@ private:
     CountdownTooltip *m_countdown = nullptr;
     PreviewWidget *m_scrollPreview = nullptr;
     ScrollShotTip *m_scrollTip = nullptr;
+    CameraWidget *m_cameraWidget = nullptr;
+    DevNumMonitor *m_cameraMonitor = nullptr;
+    QString m_cameraDeviceName;
     QRect m_selection;
     QRect m_scrollSelection;
     QPoint m_globalCursor = QPoint(-1, -1);
@@ -115,6 +125,7 @@ private:
     bool m_effectSourceReady = false;
     bool m_inputReadyPending = false;
     bool m_recordingActive = false;
+    bool m_recordingCountdownActive = false;
     bool m_scrollActive = false;
     bool m_scrollFrameCaptureInProgress = false;
     bool m_scrollPreviewHiddenForCapture = false;
@@ -125,6 +136,7 @@ private:
     bool m_hintsSelectionMode = false;
     bool m_hasGlobalCursor = false;
     bool m_toolBarManuallyMoved = false;
+    bool m_cameraSelected = false;
     int m_inputReadyChecks = 0;
     IWindowTagger *m_windowTagger = nullptr;
 };
