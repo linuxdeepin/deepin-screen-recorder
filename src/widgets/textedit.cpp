@@ -16,6 +16,8 @@
 #include <QPixmap>
 #include <QFontMetricsF>
 #include <QApplication>
+#include <QTextCharFormat>
+#include <QTextCursor>
 
 
 DGUI_USE_NAMESPACE
@@ -76,8 +78,6 @@ void TextEdit::setColor(QColor c)
 {
     qCDebug(dsrApp) << "TextEdit::setColor called with color:" << c;
     m_textColor = c;
-//    setStyleSheet(QString("TextEdit {background-color:  transparent;"
-//                          " color: %1; border: none;}").arg(m_textColor.name()));
 
     DPalette pa = this->palette();
     pa.setColor(DPalette::Base, QColor(255, 255, 255, 0));
@@ -85,6 +85,19 @@ void TextEdit::setColor(QColor c)
     pa.setColor(DPalette::Light, QColor(255, 255, 255, 0));
     pa.setColor(DPalette::Text, c);
     this->setPalette(pa);
+
+    QTextCursor cursor = textCursor();
+    QTextCharFormat format = cursor.charFormat();
+    format.setForeground(c);
+    if (!document()->isEmpty()) {
+        QTextCursor target = cursor.hasSelection() ? cursor : QTextCursor(document());
+        if (!cursor.hasSelection())
+            target.select(QTextCursor::Document);
+        target.mergeCharFormat(format);
+    }
+    // Keep the format used by the next typed character in sync.
+    cursor.mergeCharFormat(format);
+    setCurrentCharFormat(format);
     this->updateGeometry();
 }
 /*
@@ -97,9 +110,22 @@ QColor TextEdit::getColor()
 void TextEdit::setFontSize(int fontsize)
 {
     qCDebug(dsrApp) << "TextEdit::setFontSize called with font size:" << fontsize;
-    QFont font;
+    QFont font = document()->defaultFont();
     font.setPixelSize(fontsize);
-    this->document()->setDefaultFont(font);
+    document()->setDefaultFont(font);
+
+    QTextCursor cursor = textCursor();
+    QTextCharFormat format = cursor.charFormat();
+    format.setFont(font);
+    if (!document()->isEmpty()) {
+        QTextCursor target = cursor.hasSelection() ? cursor : QTextCursor(document());
+        if (!cursor.hasSelection())
+            target.select(QTextCursor::Document);
+        target.mergeCharFormat(format);
+    }
+    // Keep the format used by the next typed character in sync.
+    cursor.mergeCharFormat(format);
+    setCurrentCharFormat(format);
     this->updateGeometry();
     m_cursorHeight = cursorRect().height();
 

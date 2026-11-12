@@ -1074,6 +1074,11 @@ private:
      * 仅当它与当前选区一致时才会用于裁剪，避免手工框选后误用旧数据。
      */
     Utils::WindowPhysicalGeometry m_selectedWindowPhysicalGeometry;
+    // 用户从尺寸面板输入的是物理像素。分数 DPR 下逻辑整数尺寸无法无损
+    // 反算出所有物理值（例如 1000 / 1.75 -> 571 -> 999），因此单独保存
+    // 本次手工输入的物理尺寸及其对应的逻辑选区，裁剪和面板回显直接使用。
+    QSize m_requestedSelectionPhysicalSize;
+    QSize m_requestedSelectionLogicalSize;
     int ddeDockLayerIndex = -1;
     ShowButtons *m_showButtons = nullptr;
     //QTimer *flashTrayIconTimer = nullptr;

@@ -2382,6 +2382,8 @@ void MainWindow::onScreenResolutionChanged()
 void MainWindow::initLaunchMode(const QString &launchMode)
 {
     qCDebug(dsrApp) << "initLaunchMode";
+    m_requestedSelectionPhysicalSize = QSize();
+    m_requestedSelectionLogicalSize = QSize();
     m_suppressRoundedCorners = false;
     m_functionType = status::shot;
     if (launchMode == "screenRecord" && !Utils::isTreelandMode) {
@@ -2677,10 +2679,16 @@ QRect MainWindow::shotTargetRectPhysical() const
     }
 
     // 手工框选：选区矩形的物理像素范围就是成图范围，不做任何“边框补偿”。
+    // 尺寸面板输入过的物理尺寸优先使用，避免分数 DPR 下 round 往返丢失 1px。
+    const bool hasRequestedSize = m_requestedSelectionPhysicalSize.isValid()
+            && m_requestedSelectionLogicalSize == selectionRect.size();
+    const QSize physicalSize = hasRequestedSize
+            ? m_requestedSelectionPhysicalSize
+            : QSize(static_cast<int>(qRound(recordWidth * m_pixelRatio)),
+                    static_cast<int>(qRound(recordHeight * m_pixelRatio)));
     const QRect selectionPhysical(static_cast<int>(qRound(recordX * m_pixelRatio)),
                                   static_cast<int>(qRound(recordY * m_pixelRatio)),
-                                  static_cast<int>(qRound(recordWidth * m_pixelRatio)),
-                                  static_cast<int>(qRound(recordHeight * m_pixelRatio)));
+                                  physicalSize.width(), physicalSize.height());
     // 收敛到背景图范围内，避免选区部分移出屏幕时 copy() 越界（整屏框选时二者相等）
     const QRect target = selectionPhysical.intersected(backgroundPhysicalRect());
     qCDebug(dsrApp) << "shotTargetRectPhysical: manual selection" << selectionRect
@@ -9016,11 +9024,10 @@ void MainWindow::onRoundedSelectionSizeChanged(int width, int height)
     const int maxHeight = qMax(RECORD_MIN_SHOT_SIZE, m_backgroundRect.height() - recordY);
     const int newWidth = qBound(RECORD_MIN_SHOT_SIZE, qRound(width / pixelRatio), maxWidth);
     const int newHeight = qBound(RECORD_MIN_SHOT_SIZE, qRound(height / pixelRatio), maxHeight);
-    if (newWidth == recordWidth && newHeight == recordHeight) {
-        return;
-    }
     recordWidth = newWidth;
     recordHeight = newHeight;
+    m_requestedSelectionPhysicalSize = QSize(qMax(1, width), qMax(1, height));
+    m_requestedSelectionLogicalSize = QSize(recordWidth, recordHeight);
     // 尺寸面板只改变宽高、不动左上角，标注保持屏幕绝对位置即可
     syncShapesWidgetGeometry(false);
     if (m_sizeTips) {

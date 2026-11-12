@@ -1119,21 +1119,25 @@ void RoundedCornerWidget::updateDimensionFields()
     }
 
     m_syncingSelectionSize = true;
+    // 鼠标移出输入框时，主窗口的移动事件会持续刷新工具栏并调用到这里。
+    // 正在编辑的字段不能被旧选区尺寸回写，否则用户输入会在失焦提交前丢失。
+    const bool widthEditing = m_widthEdit->lineEdit()->hasFocus();
+    const bool heightEditing = m_heightEdit->lineEdit()->hasFocus();
     if (m_ratioLocked) {
         if (m_ratioWidth <= 0 || m_ratioHeight <= 0) {
             syncRatioFromSelection();
         }
-        if (m_widthEdit->text().toInt() != m_ratioWidth) {
+        if (!widthEditing && m_widthEdit->text().toInt() != m_ratioWidth) {
             m_widthEdit->setText(QString::number(m_ratioWidth));
         }
-        if (m_heightEdit->text().toInt() != m_ratioHeight) {
+        if (!heightEditing && m_heightEdit->text().toInt() != m_ratioHeight) {
             m_heightEdit->setText(QString::number(m_ratioHeight));
         }
     } else {
-        if (m_widthEdit->text().toInt() != m_selectionWidth) {
+        if (!widthEditing && m_widthEdit->text().toInt() != m_selectionWidth) {
             m_widthEdit->setText(QString::number(m_selectionWidth));
         }
-        if (m_heightEdit->text().toInt() != m_selectionHeight) {
+        if (!heightEditing && m_heightEdit->text().toInt() != m_selectionHeight) {
             m_heightEdit->setText(QString::number(m_selectionHeight));
         }
     }

@@ -7,6 +7,8 @@
 #include "../../adapters/shapeswidgetannotationeditor.h"
 #include "widgets/textedit.h"
 #include "widgets/shapeswidget.h"
+#include "utils/baseutils.h"
+#include "utils/configsettings.h"
 
 #include <QFont>
 #include <QGuiApplication>
@@ -97,6 +99,19 @@ TreelandAnnotationEditor::TreelandAnnotationEditor(QObject *parent)
     });
     connect(m_document, &IAnnotationEditor::contentBoundsChanged, this, [this] {
         publishBounds();
+    });
+    connect(ConfigSettings::instance(), &ConfigSettings::shapeConfigChanged,
+            this, [this](const QString &group, const QString &key, int index) {
+        if (!m_inlineEditor || m_inlineIsSequence)
+            return;
+        auto *textEditor = qobject_cast<TextEdit *>(m_inlineEditor);
+        if (!textEditor)
+            return;
+        if (group == "text" && key == "fontsize") {
+            textEditor->setFontSize(qMax(1, index));
+        } else if (group == "text" && key == "color_index") {
+            textEditor->setColor(BaseUtils::colorIndexOf(index));
+        }
     });
 }
 
@@ -310,9 +325,9 @@ void TreelandAnnotationEditor::showInlineEditor(
         textEditor->setAccessibleName(QStringLiteral("TreelandTextEditor"));
         textEditor->setAttribute(Qt::WA_InputMethodEnabled, true);
         textEditor->setFocusPolicy(Qt::StrongFocus);
+        textEditor->setPlainText(request.text);
         textEditor->setFontSize(request.fontSize);
         textEditor->setColor(request.foregroundColor);
-        textEditor->setPlainText(request.text);
         textEditor->setReadOnly(false);
         textEditor->setEditing(true);
         textEditor->setCursorVisible(true);
