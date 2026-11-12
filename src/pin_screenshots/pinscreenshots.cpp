@@ -53,6 +53,7 @@ void PinScreenShots::openImage(QImage image)
     }
 }
 
+#ifdef DSR_HAVE_TABLE_RECOGNIZER
 void PinScreenShots::openImageForTable(QImage image, QString imageName, QPoint point)
 {
     if (!image.isNull() && image.width() >= 1) {
@@ -70,6 +71,7 @@ void PinScreenShots::openImageForTable(QImage image, QString imageName, QPoint p
         qCWarning(dsrApp) << "Attempted to open invalid image for table recognition. Name:" << imageName;
     }
 }
+#endif
 
 void PinScreenShots::openImageAndName(QImage image, QString imageName, QPoint point)
 {

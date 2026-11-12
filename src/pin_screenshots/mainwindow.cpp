@@ -84,7 +84,9 @@ void MainWindow::initMainWindow()
     // 工具栏设置
     m_toolBar = new ToolBarWidget(this); //初始化
     connect(m_toolBar, SIGNAL(sendOcrButtonClicked()), this, SLOT(onOpenOCR()));
+#ifdef DSR_HAVE_TABLE_RECOGNIZER
     connect(m_toolBar, SIGNAL(sendTableButtonClicked()), this, SLOT(onOpenTableRecognition()));  // 贴图工具栏：表格识别
+#endif
     connect(m_toolBar, SIGNAL(sendSaveButtonClicked()), this, SLOT(saveToClipboard()));  // 保存到剪贴板
     connect(m_toolBar, &ToolBarWidget::signalSaveToLocalButtonClicked, this, &MainWindow::onSave);
     connect(m_toolBar, SIGNAL(sendCloseButtonClicked()), this, SLOT(onExit()));
@@ -165,6 +167,7 @@ bool MainWindow::openImageAndName(const QImage &image, const QString &name, cons
     qCDebug(dsrApp) << "Tool bar position updated.";
     return true;
 }
+#ifdef DSR_HAVE_TABLE_RECOGNIZER
 // 表格识别
 bool MainWindow::openImageForTable(const QImage &image, const QString &name, const QPoint &point)
 {
@@ -293,6 +296,7 @@ void MainWindow::raiseTableOverlays()
     if (m_tableToast && m_tableToast->isVisible())
         m_tableToast->raise();
 }
+#endif // DSR_HAVE_TABLE_RECOGNIZER
 
 // 开启OCR
 void MainWindow::onOpenOCR()
@@ -309,6 +313,7 @@ void MainWindow::onOpenOCR()
     qCDebug(dsrApp) << "Opened image with OCR interface.";
 }
 
+#ifdef DSR_HAVE_TABLE_RECOGNIZER
 // 贴图工具栏“表格识别”按钮：对当前贴图内容重新识别
 void MainWindow::onOpenTableRecognition()
 {
@@ -328,6 +333,7 @@ void MainWindow::onOpenTableRecognition()
         m_tableRecognizePending = true;
     }
 }
+#endif // DSR_HAVE_TABLE_RECOGNIZER
 
 // 贴图保存
 void MainWindow::saveImg()
@@ -546,7 +552,9 @@ void MainWindow::onSave()
 // 退出
 void MainWindow::onExit()
 {
+#ifdef DSR_HAVE_TABLE_RECOGNIZER
     cleanupTableToast();
+#endif
     //每次关闭贴图时重设isChangeSavePath
     Settings::instance()->setIsChangeSavePath(false);
     qCDebug(dsrApp) << "Exiting application.";
@@ -727,6 +735,7 @@ void MainWindow::resizeEvent(QResizeEvent *event)
 {
     QWidget::resizeEvent(event);
 
+#ifdef DSR_HAVE_TABLE_RECOGNIZER
     // 表格识别浮层/提示条跟随窗口位置重新定位（尺寸与窗口大小无关）
     if (m_tableRecognizingWidget && m_tableRecognizingWidget->isVisible()) {
         m_tableRecognizingWidget->repositionOn(this);
@@ -738,6 +747,7 @@ void MainWindow::resizeEvent(QResizeEvent *event)
         // 弹窗是尺寸固定的独立浮层，只重新定位，不跟随窗口拉伸
         m_tableResultDialog->showOverlay();
     }
+#endif
     
     // 如果不是由于鼠标左键按下引起的大小变化，则不处理
     if (!isLeftPressDown) {
@@ -1051,11 +1061,13 @@ void MainWindow::sendNotify(QString savePath, bool bSaveState)
 
 void MainWindow::updateToolBarPosition()
 {
+#ifdef DSR_HAVE_TABLE_RECOGNIZER
     if (m_tableOverlayActive) {
         if (m_toolBar && m_toolBar->isVisible())
             m_toolBar->hide();
         return;
     }
+#endif
 
     //获取贴图界面右下角的点
     QPoint brPoint = mapToGlobal(this->rect().bottomRight());
@@ -1109,11 +1121,13 @@ void MainWindow::checkToolbarVisibility()
 {
     m_hideToolbarTimer->stop();
 
+#ifdef DSR_HAVE_TABLE_RECOGNIZER
     if (m_tableOverlayActive) {
         if (m_toolBar && m_toolBar->isVisible())
             m_toolBar->hide();
         return;
     }
+#endif
 
     if (isLeftPressDown) {
         if (m_toolBar && m_toolBar->isVisible()) {
@@ -1166,6 +1180,7 @@ void MainWindow::showEvent(QShowEvent *event)
 {
     DWidget::showEvent(event);
 
+#ifdef DSR_HAVE_TABLE_RECOGNIZER
     // 贴图窗口在 X11 下是 BypassWindowManagerHint 的置顶窗口，浮层若先于它映射
     // 会被盖住；这里在主窗口真正映射出来（以及之后每次重新激活）时补一次置顶。
     if (!m_tableOverlayRaiseHooked) {
@@ -1190,6 +1205,7 @@ void MainWindow::showEvent(QShowEvent *event)
         }
     }
     raiseTableOverlays();
+#endif // DSR_HAVE_TABLE_RECOGNIZER
 
     if (!PUtils::isTreelandMode || !m_toolBar) {
         return;
@@ -1224,8 +1240,10 @@ void MainWindow::leaveEvent(QEvent *event)
 
 void MainWindow::startToolbarHideTimer()
 {
+#ifdef DSR_HAVE_TABLE_RECOGNIZER
     if (m_tableOverlayActive)
         return;
+#endif
 
     // 鼠标离开时，启动延迟隐藏定时器
     if (!isLeftPressDown) {

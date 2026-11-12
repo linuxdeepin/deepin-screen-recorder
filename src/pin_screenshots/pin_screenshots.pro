@@ -40,11 +40,31 @@ QMAKE_LFLAGS += -g -Wall -Wl,--as-needed -pie -z noexecstack -z now
 # 添加 FORTIFY_SOURCE 保护
 DEFINES += _FORTIFY_SOURCE=2
 
-# 表格识别能力（dtkmultimedia 的 dtk6tablerecognizer）：按常规方式链接，
-# 由 pkg-config 提供头文件路径与库（dtk6tablerecognizer 的 .pc 里 Requires: dtk6ocr，
-# 所以 OCR 库会一并带进来）。构建期依赖 libdtk6tablerecognizer-dev，
-# 运行期依赖由 ${shlibs:Depends} 自动生成。
-PKGCONFIG += dtk6tablerecognizer
+# 表格识别能力（dtkmultimedia 的 dtk6tablerecognizer）：仅在该库实际存在的架构
+# 启用。dtkmultimedia 只为 amd64/arm64/loong64 构建 libdtk6tablerecognizer（其依赖
+# libonnxruntime [amd64 arm64 loong64]），mips64el/sw_64 上源里没有这个包，
+# 此时编译期整体裁剪表格识别（代码以 DSR_HAVE_TABLE_RECOGNIZER 门控；
+# 构建依赖同样按架构限定，见 debian/control）。
+packagesExist(dtk6tablerecognizer) {
+    PKGCONFIG += dtk6tablerecognizer
+    DEFINES += DSR_HAVE_TABLE_RECOGNIZER
+
+    SOURCES += \
+        table/tablerecognizerloader.cpp \
+        ui/tableglasspanel.cpp \
+        ui/tablerecognizingwidget.cpp \
+        ui/tablerecognizetoast.cpp \
+        ui/tableresultdialog.cpp
+
+    HEADERS += \
+        table/tablerecognizerloader.h \
+        ui/tableglasspanel.h \
+        ui/tablerecognizingwidget.h \
+        ui/tablerecognizetoast.h \
+        ui/tableresultdialog.h
+} else {
+    message("dtk6tablerecognizer not available, table recognition disabled")
+}
 
 SOURCES += \
     service/dbuspinscreenshotsadaptor.cpp \
@@ -60,11 +80,6 @@ SOURCES += \
     putils.cpp \
     settings.cpp \
     ui/mainToolWidget.cpp \
-    table/tablerecognizerloader.cpp \
-    ui/tableglasspanel.cpp \
-    ui/tablerecognizingwidget.cpp \
-    ui/tablerecognizetoast.cpp \
-    ui/tableresultdialog.cpp \
     ../utils/log.cpp \
     ../utils/logger.cpp \
     ../widgets/toolbutton.cpp \
@@ -82,11 +97,6 @@ HEADERS += \
     ui/pinsavemenumanager.h \
     putils.h \
     settings.h \
-    table/tablerecognizerloader.h \
-    ui/tableglasspanel.h \
-    ui/tablerecognizingwidget.h \
-    ui/tablerecognizetoast.h \
-    ui/tableresultdialog.h \
     ui/mainToolWidget.h \
     ../utils/log.h \
     ../utils/logger.h \

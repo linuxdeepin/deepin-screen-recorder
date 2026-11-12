@@ -20,8 +20,10 @@ public:
 
     Q_INVOKABLE void openImageAndName(QImage image, QString imageName, QPoint point);
 
+#ifdef DSR_HAVE_TABLE_RECOGNIZER
     // 打开图片并进行表格识别
     Q_INVOKABLE void openImageForTable(QImage image, QString imageName, QPoint point);
+#endif
 
 signals:
 

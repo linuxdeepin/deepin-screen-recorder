@@ -156,10 +156,12 @@ private:
      */
     ToolButton *m_ocrButton = nullptr;
     ToolButton *m_ocrScrollButton = nullptr;
+#ifdef DSR_HAVE_TABLE_RECOGNIZER
     /**
      * @brief 表格识别工具栏按钮
      */
     ToolButton *m_tableButton = nullptr;
+#endif
     /**
      * @brief 贴图工具栏按钮
      */

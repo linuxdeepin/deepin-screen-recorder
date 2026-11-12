@@ -7,12 +7,14 @@
 #define MAINWINDOW_H
 
 #include "service/ocrinterface.h"
-#include "table/tablerecognizerloader.h"
 #include "ui/menucontroller.h"
+#include "ui/toolbarwidget.h"
+#ifdef DSR_HAVE_TABLE_RECOGNIZER
+#include "table/tablerecognizerloader.h"
 #include "ui/tablerecognizingwidget.h"
 #include "ui/tablerecognizetoast.h"
 #include "ui/tableresultdialog.h"
-#include "ui/toolbarwidget.h"
+#endif
 
 #include <DWidget>
 #include <QGraphicsView>
@@ -70,6 +72,7 @@ public:
      */
     bool openImageAndName(const QImage &image, const QString &name = "", const QPoint &point = QPoint(0, 0));
 
+#ifdef DSR_HAVE_TABLE_RECOGNIZER
     /**
      * @brief 打开图片并进行表格识别
      * @param 图片对象
@@ -78,6 +81,7 @@ public:
      * @return
      */
     bool openImageForTable(const QImage &image, const QString &name = "", const QPoint &point = QPoint(0, 0));
+#endif
     /**
      * @brief 保存图片
      */
@@ -107,6 +111,7 @@ public slots:
      */
     void onOpenOCR();
 
+#ifdef DSR_HAVE_TABLE_RECOGNIZER
     /**
      * @brief 在贴图工具栏点击“表格识别”按钮：对当前贴图内容重新识别
      */
@@ -117,6 +122,7 @@ public slots:
      */
     void onTableRecognitionFinished(bool success, const QString &html,
                                     Dtk::TableRecognizer::TableError error);
+#endif
 
     void saveToClipboard();
     /**
@@ -169,6 +175,7 @@ protected:
     void updateToolBarPosition(); // 工具栏显示位置
     bool toolbarAttachedToWindow() const;
 
+#ifdef DSR_HAVE_TABLE_RECOGNIZER
     /**
      * @brief 启动表格识别流程
      */
@@ -185,6 +192,7 @@ protected:
     void raiseTableOverlays();
     /// 识别进度/结果/错误提示显示期间禁止工具栏弹出
     void setTableOverlayActive(bool active);
+#endif
 
 private:
     /**
@@ -238,6 +246,7 @@ private:
     QTimer *m_mouseMonitorTimer = nullptr;
     QTimer *m_hideToolbarTimer = nullptr;
 
+#ifdef DSR_HAVE_TABLE_RECOGNIZER
     /**
      * @brief 是否处于表格识别流程
      */
@@ -268,6 +277,7 @@ private:
     bool m_tableRecognizePending = false;
     /// 表格识别过程或结果浮层正在显示，此时工具栏必须保持隐藏
     bool m_tableOverlayActive = false;
+#endif
 };
 
 #endif // MAINWINDOW_H
