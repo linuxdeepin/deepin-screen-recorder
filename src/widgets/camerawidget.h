@@ -54,6 +54,8 @@ public:
      * @param pos: 指定位置
      */
     void showAt(QPoint pos);
+    void setParentGlobalOffset(const QPoint &offset);
+    QPoint parentGlobalOffset() const;
     int getRecordX();
     int getRecordY();
     int getRecordWidth();
@@ -118,6 +120,7 @@ private:
     QPoint m_windowTopLeftPoint;
     QPoint m_windowTopRightPoint;
     QPoint m_windowBottomLeftPoint;
+    QPoint m_parentGlobalOffset;
     DLabel *m_cameraUI = nullptr;
     QString m_deviceName;
 

@@ -15,6 +15,11 @@
 #include "widgets/scrollshottip.h"
 #include "widgets/zoomIndicator.h"
 #include "widgets/previewwidget.h"
+#include "widgets/camerawidget.h"
+#include "camera/devnummonitor.h"
+extern "C" {
+#include "load_libs.h"
+}
 #include "../../export/screenshotexportservice.h"
 #include "../../core/coordinatemapper.h"
 #include "../../core/inputregiongeometry.h"
@@ -26,11 +31,16 @@
 #include "../../../utils/tempfile.h"
 
 #include <QPixmap>
+#include <QDir>
 #include <QGuiApplication>
+#include <QLibraryInfo>
 #include <QRegion>
 #include <QTimer>
+#include <QVersionNumber>
 #include <QWindow>
 #include <QtMath>
+
+#include <algorithm>
 
 namespace Dsr::Screenshot {
 
@@ -41,6 +51,91 @@ constexpr int ToolBarGap = 8;
 constexpr int MagnifierOffset = 12;
 constexpr int InputReadyCheckIntervalMs = 8;
 constexpr int InputReadyMaxChecks = 250;
+constexpr int CameraWidgetMaxWidth = 320;
+constexpr int CameraWidgetMaxHeight = 180;
+constexpr int CameraWidgetMinHeight = 45;
+
+QSize cameraWidgetSizeForSelection(const QRect &selection)
+{
+    if (selection.isEmpty())
+        return QSize();
+
+    int width = selection.width() * 2 / 5;
+    width = qMin(width, CameraWidgetMaxWidth);
+
+    int height = selection.height() / 4;
+    height = qMin(height, CameraWidgetMaxHeight);
+
+    const int heightFromWidth = width * 9 / 16;
+    const int widthFromHeight = height * 16 / 9;
+    if (heightFromWidth <= CameraWidgetMaxHeight
+            && heightFromWidth >= CameraWidgetMinHeight
+            && heightFromWidth <= selection.height()) {
+        height = heightFromWidth;
+    } else {
+        width = widthFromHeight;
+    }
+
+    width = qBound(1, width, qMin(selection.width(), CameraWidgetMaxWidth));
+    height = qBound(1, height, qMin(selection.height(), CameraWidgetMaxHeight));
+    return QSize(width, height);
+}
+
+QVersionNumber libraryVersionSuffix(const QString &fileName, const QString &libraryName)
+{
+    QString suffix = fileName.mid(libraryName.size());
+    while (suffix.startsWith(QLatin1Char('.')))
+        suffix.remove(0, 1);
+    return QVersionNumber::fromString(suffix);
+}
+
+QByteArray libraryPath(const QString &libraryName)
+{
+    QDir directory(QLibraryInfo::location(QLibraryInfo::LibrariesPath));
+    QStringList candidates = directory.entryList(
+            QStringList() << (libraryName + QStringLiteral("*")),
+            QDir::NoDotAndDotDot | QDir::Files);
+    if (candidates.contains(libraryName))
+        return libraryName.toLatin1();
+    if (candidates.isEmpty())
+        return libraryName.toLatin1();
+    std::sort(candidates.begin(), candidates.end(),
+              [&libraryName](const QString &left, const QString &right) {
+        const QVersionNumber leftVersion = libraryVersionSuffix(left, libraryName);
+        const QVersionNumber rightVersion = libraryVersionSuffix(right, libraryName);
+        if (leftVersion == rightVersion)
+            return left < right;
+        return leftVersion < rightVersion;
+    });
+    return candidates.last().toLatin1();
+}
+
+void initializeCameraLibraries()
+{
+    QByteArray avcodec = libraryPath(QStringLiteral("libavcodec.so"));
+    QByteArray avformat = libraryPath(QStringLiteral("libavformat.so"));
+    QByteArray avutil = libraryPath(QStringLiteral("libavutil.so"));
+    QByteArray udev = libraryPath(QStringLiteral("libudev.so"));
+    QByteArray usb = libraryPath(QStringLiteral("libusb-1.0.so"));
+    QByteArray portaudio = libraryPath(QStringLiteral("libportaudio.so"));
+    QByteArray v4l2 = libraryPath(QStringLiteral("libv4l2.so"));
+    QByteArray ffmpegthumbnailer = libraryPath(QStringLiteral("libffmpegthumbnailer.so"));
+    QByteArray swscale = libraryPath(QStringLiteral("libswscale.so"));
+    QByteArray swresample = libraryPath(QStringLiteral("libswresample.so"));
+
+    LoadLibNames names{};
+    names.chAvcodec = avcodec.data();
+    names.chAvformat = avformat.data();
+    names.chAvutil = avutil.data();
+    names.chUdev = udev.data();
+    names.chUsb = usb.data();
+    names.chPortaudio = portaudio.data();
+    names.chV4l2 = v4l2.data();
+    names.chFfmpegthumbnailer = ffmpegthumbnailer.data();
+    names.chSwscale = swscale.data();
+    names.chSwresample = swresample.data();
+    setLibNames(names);
+}
 
 bool isTreeLandAnnotationTool(const QString &tool)
 {
@@ -150,8 +245,9 @@ public:
     {
     }
 
-    void cameraToggled(bool) override
+    void cameraToggled(bool enabled) override
     {
+        m_overlay->toggleCamera(enabled);
     }
 
     void aiAssistantSelected(int function) override
@@ -169,6 +265,8 @@ public:
             return;
         if (!m_recordMode)
             return;
+        if (m_overlay->m_toolBar)
+            m_overlay->m_toolBar->setVideoButtonInit();
         m_recordMode = false;
         emit m_overlay->recordModeChanged(false);
     }
@@ -466,6 +564,7 @@ void TreelandMaskOverlayHost::setSelection(const QRect &globalSelection)
             continue;
         window->setSelection(m_selection);
     }
+    updateCameraWidgetGeometry();
     updateRoundedCornerWidget();
     updateToolBar();
     updateFineAdjustTips();
@@ -489,6 +588,7 @@ void TreelandMaskOverlayHost::setSelectionFinalized(bool finalized)
         if (window)
             window->setSelectionFinalized(finalized);
     }
+    updateCameraWidgetGeometry();
     updateRoundedCornerWidget();
     updateToolBar();
     updateFineAdjustTips();
@@ -522,12 +622,15 @@ void TreelandMaskOverlayHost::setRecordModeActive(bool active)
         return;
     m_recordModeActive = active;
     if (active) {
+        ensureCameraMonitor();
         hideScrollTip();
         m_annotationToolActive = false;
         if (m_annotationEditor)
             m_annotationEditor->setTool(AnnotationTool::Pointer);
         if (m_sideBar)
             m_sideBar->hide();
+    } else {
+        stopCamera();
     }
     updateRoundedCornerWidget();
     updateFineAdjustTips();
@@ -621,6 +724,21 @@ bool TreelandMaskOverlayHost::startRecordingCountdown(const QRect &globalSelecti
     }
 
     m_countdown = new CountdownTooltip(owner);
+    // Match X11 MainWindow::startCountdown(): hide the recording UI as soon as
+    // the user confirms, instead of waiting for the capture to start.
+    m_recordingCountdownActive = true;
+    if (m_toolBar) {
+        m_toolBar->hide();
+        m_toolBar->setEnabled(false);
+    }
+    if (m_sideBar)
+        m_sideBar->hide();
+    if (m_roundedCornerWidget)
+        m_roundedCornerWidget->hide();
+    if (m_fineAdjustTips)
+        m_fineAdjustTips->hide();
+    hideMagnifier();
+    hideScrollTip();
     if (!background.isNull()) {
         m_countdown->setBackgroundPixmap(background,
                                          m_frozenFrames.virtualDesktopRect.topLeft());
@@ -647,6 +765,7 @@ void TreelandMaskOverlayHost::stopRecordingCountdown()
 
 void TreelandMaskOverlayHost::destroyRecordingCountdown()
 {
+    m_recordingCountdownActive = false;
     if (!m_countdown)
         return;
     disconnect(m_countdown, nullptr, this, nullptr);
@@ -674,6 +793,11 @@ bool TreelandMaskOverlayHost::beginRecording(const QRect &globalSelection)
 
     const QRect selection = globalSelection.normalized();
 
+    if (m_cameraWidget) {
+        m_cameraWidget->setCameraWidgetImmovable(true);
+        updateCameraWidgetGeometry();
+    }
+
     // X11 uses the tray recording plugin as the stop entry. Keep the TreeLand
     // recording frame and input pass-through, but do not create a second
     // in-overlay recording toolbar.
@@ -696,6 +820,8 @@ bool TreelandMaskOverlayHost::beginScroll(const QRect &globalSelection)
 {
     if (m_scrollActive || m_recordingActive || globalSelection.isEmpty())
         return false;
+
+    stopCamera();
 
     if (!m_toolBar || !m_sideBar)
         return false;
@@ -1025,6 +1151,7 @@ void TreelandMaskOverlayHost::applyScrollInputRegions()
 void TreelandMaskOverlayHost::finishRecording()
 {
     stopRecordingCountdown();
+    stopCamera();
     if (!m_recordingActive)
         return;
     m_recordingActive = false;
@@ -1058,6 +1185,7 @@ void TreelandMaskOverlayHost::setRecordingControlsActive(bool active)
 
 void TreelandMaskOverlayHost::close()
 {
+    destroyCamera();
     stopRecordingCountdown();
     finishScroll();
     finishRecording();
@@ -1131,6 +1259,210 @@ TreelandMaskWindow *TreelandMaskOverlayHost::selectionOwnerWindow() const
     const int ownerIndex = SelectionOverlayGeometry::largestSelectionIntersectionIndex(
             m_selection, outputGeometries);
     return ownerIndex >= 0 ? m_windows.value(ownerIndex) : nullptr;
+}
+
+void TreelandMaskOverlayHost::ensureCameraMonitor()
+{
+    if (m_cameraMonitor)
+        return;
+
+    static bool v4l2CoreInitialized = false;
+    if (!v4l2CoreInitialized) {
+        initializeCameraLibraries();
+        v4l2core_init();
+        v4l2CoreInitialized = true;
+    }
+
+    m_cameraMonitor = new DevNumMonitor();
+    m_cameraMonitor->setParent(this);
+    connect(m_cameraMonitor, &DevNumMonitor::existDevice,
+            this, [this](bool available) {
+        if (!available) {
+            if (m_cameraSelected)
+                stopCamera();
+        } else if (m_cameraSelected && m_cameraWidget) {
+            if (!m_cameraDeviceName.isEmpty()
+                    && m_cameraMonitor
+                    && !m_cameraMonitor->isDevicePresent(m_cameraDeviceName)) {
+                qCWarning(dsrApp) << "TreeLand recording: selected camera removed:"
+                                  << m_cameraDeviceName;
+                stopCamera();
+            } else {
+                const QString availableDevice = m_cameraMonitor
+                        ? m_cameraMonitor->availableCamera()
+                        : QString();
+                if (!availableDevice.isEmpty()
+                        && availableDevice != m_cameraDeviceName) {
+                    m_cameraDeviceName = availableDevice;
+                    m_cameraWidget->setDevcieName(availableDevice);
+                }
+                if (!m_cameraDeviceName.isEmpty()
+                        && !m_cameraWidget->getCameraStatus()) {
+                    if (m_cameraMonitor)
+                        m_cameraMonitor->setCanUse(false);
+                    updateCameraWidgetGeometry(true);
+                }
+            }
+        }
+        if (m_toolBar)
+            m_toolBar->setCameraDeviceEnable(available);
+    });
+    m_cameraMonitor->setWatch(true);
+}
+
+void TreelandMaskOverlayHost::toggleCamera(bool enabled)
+{
+    if (m_cameraSelected == enabled) {
+        if (enabled)
+            updateCameraWidgetGeometry(true);
+        return;
+    }
+
+    if (!enabled) {
+        stopCamera();
+        return;
+    }
+
+    // Match X11: the camera can be enabled before the region is selected.
+    // Keep the button selected and let later selection updates place the
+    // preview once a usable capture region exists.
+    if (!m_recordModeActive || m_windows.isEmpty()) {
+        stopCamera();
+        return;
+    }
+
+    ensureCameraMonitor();
+    if (!m_cameraWidget) {
+        m_cameraWidget = new CameraWidget();
+        m_cameraWidget->initUI();
+    }
+
+    const QString deviceName = m_cameraMonitor
+            ? m_cameraMonitor->availableCamera()
+            : QString();
+    m_cameraDeviceName = deviceName;
+    m_cameraWidget->setDevcieName(deviceName);
+    m_cameraWidget->setCameraWidgetImmovable(false);
+    m_cameraSelected = true;
+    if (m_cameraMonitor && !m_cameraDeviceName.isEmpty())
+        m_cameraMonitor->setCanUse(false);
+
+    updateCameraWidgetGeometry(true);
+}
+
+bool TreelandMaskOverlayHost::updateCameraWidgetGeometry(bool resetPosition)
+{
+    if (!m_cameraSelected || !m_cameraWidget)
+        return false;
+
+    if (m_selection.isEmpty() || m_windows.isEmpty()) {
+        m_cameraWidget->hide();
+        return false;
+    }
+
+    TreelandMaskWindow *owner = selectionOwnerWindow();
+    if (!owner) {
+        m_cameraWidget->hide();
+        return false;
+    }
+
+    const QRect outputGeometry = owner->output().logicalGeometry.normalized();
+    const QRect cameraRegion = m_selection.normalized().intersected(outputGeometry);
+    if (cameraRegion.isEmpty()) {
+        m_cameraWidget->hide();
+        return false;
+    }
+
+    const QPoint outputOrigin = outputGeometry.topLeft();
+    const QRect previousRegion(m_cameraWidget->getRecordX(),
+                               m_cameraWidget->getRecordY(),
+                               m_cameraWidget->getRecordWidth(),
+                               m_cameraWidget->getRecordHeight());
+    const CameraWidget::Position position = previousRegion.size().isEmpty()
+            ? CameraWidget::Position::rightBottom
+            : m_cameraWidget->postion();
+    const bool reparented = m_cameraWidget->parentWidget() != owner;
+    if (reparented)
+        m_cameraWidget->setParent(owner);
+    m_cameraWidget->setParentGlobalOffset(outputOrigin);
+
+    const QSize targetSize = cameraWidgetSizeForSelection(cameraRegion);
+    const bool reanchor = resetPosition || reparented
+            || previousRegion.size() != cameraRegion.size();
+
+    int globalX = 0;
+    int globalY = 0;
+    if (reanchor) {
+        switch (position) {
+        case CameraWidget::Position::leftTop:
+            globalX = cameraRegion.left();
+            globalY = cameraRegion.top();
+            break;
+        case CameraWidget::Position::leftBottom:
+            globalX = cameraRegion.left();
+            globalY = cameraRegion.bottom() - targetSize.height() + 1;
+            break;
+        case CameraWidget::Position::rightTop:
+            globalX = cameraRegion.right() - targetSize.width() + 1;
+            globalY = cameraRegion.top();
+            break;
+        case CameraWidget::Position::rightBottom:
+            globalX = cameraRegion.right() - targetSize.width() + 1;
+            globalY = cameraRegion.bottom() - targetSize.height() + 1;
+            break;
+        }
+    } else {
+        const QPoint currentGlobal = m_cameraWidget->mapToGlobal(QPoint(0, 0));
+        const QPoint delta = cameraRegion.topLeft() - previousRegion.topLeft();
+        globalX = currentGlobal.x() + delta.x();
+        globalY = currentGlobal.y() + delta.y();
+    }
+
+    globalX = qBound(cameraRegion.left(),
+                     globalX,
+                     qMax(cameraRegion.left(), cameraRegion.right() - targetSize.width() + 1));
+    globalY = qBound(cameraRegion.top(),
+                     globalY,
+                     qMax(cameraRegion.top(), cameraRegion.bottom() - targetSize.height() + 1));
+
+    m_cameraWidget->resize(targetSize);
+    m_cameraWidget->setRecordRect(cameraRegion.x(),
+                                  cameraRegion.y(),
+                                  cameraRegion.width(),
+                                  cameraRegion.height());
+    m_cameraWidget->showAt(QPoint(globalX - outputOrigin.x(), globalY - outputOrigin.y()));
+    m_cameraWidget->lower();
+    if (!m_cameraWidget->getCameraStatus() && !m_cameraDeviceName.isEmpty())
+        m_cameraWidget->cameraStart();
+    return true;
+}
+
+void TreelandMaskOverlayHost::stopCamera()
+{
+    if (m_cameraWidget) {
+        if (m_cameraWidget->getCameraStatus())
+            m_cameraWidget->cameraStop();
+        m_cameraWidget->hide();
+        m_cameraWidget->setCameraWidgetImmovable(false);
+    }
+    m_cameraDeviceName.clear();
+    m_cameraSelected = false;
+    if (m_cameraMonitor)
+        m_cameraMonitor->setCanUse(true);
+    if (m_toolBar)
+        m_toolBar->setVideoButtonInit();
+}
+
+void TreelandMaskOverlayHost::destroyCamera()
+{
+    stopCamera();
+    delete m_cameraWidget;
+    m_cameraWidget = nullptr;
+    if (m_cameraMonitor) {
+        m_cameraMonitor->setWatch(false);
+        delete m_cameraMonitor;
+        m_cameraMonitor = nullptr;
+    }
 }
 
 void TreelandMaskOverlayHost::ensureToolBar()
@@ -1393,6 +1725,13 @@ void TreelandMaskOverlayHost::hideMagnifier()
 
 void TreelandMaskOverlayHost::updateToolBar()
 {
+    if (m_recordingActive || m_recordingCountdownActive) {
+        if (m_toolBar)
+            m_toolBar->hide();
+        if (m_sideBar)
+            m_sideBar->hide();
+        return;
+    }
     if (!m_toolBar || !m_sideBar || !m_finalized || m_selection.isEmpty()) {
         if (m_toolBar)
             m_toolBar->hide();
@@ -1570,6 +1909,8 @@ void TreelandMaskOverlayHost::undoAnnotation()
 
 void TreelandMaskOverlayHost::destroyWindows()
 {
+    destroyRecordingCountdown();
+    destroyCamera();
     destroyScrollPreview();
     destroyScrollTip();
     hideMagnifier();

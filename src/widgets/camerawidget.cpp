@@ -54,6 +54,16 @@ void CameraWidget::showAt(QPoint pos)
     move(pos.x(), pos.y());
 }
 
+void CameraWidget::setParentGlobalOffset(const QPoint &offset)
+{
+    m_parentGlobalOffset = offset;
+}
+
+QPoint CameraWidget::parentGlobalOffset() const
+{
+    return m_parentGlobalOffset;
+}
+
 int CameraWidget::getRecordX()
 {
     qCDebug(dsrApp) << "getRecordX called, returning:" << recordX;
@@ -332,7 +342,7 @@ void CameraWidget::mouseMoveEvent(QMouseEvent *event)
 
 //        QPoint resultPos = QPoint(curPos.x() - size.width() / 2,
 //                                  curPos.y() - size.height() / 2);
-        this->move(curPos);
+        this->move(curPos - m_parentGlobalOffset);
     }
     DWidget::mouseMoveEvent(event);
 }
@@ -344,36 +354,41 @@ void CameraWidget::mouseReleaseEvent(QMouseEvent *event)
         qCDebug(dsrApp) << "Left mouse button released";
         //改变移动状态.
         m_move = false;
-        int centerX = this->x() + this->width() / 2;
-        int centerY = this->y() + this->height() / 2;
+        const QPoint globalTopLeft = mapToGlobal(QPoint(0, 0));
+        int centerX = globalTopLeft.x() + this->width() / 2;
+        int centerY = globalTopLeft.y() + this->height() / 2;
+        QPoint targetGlobalPos;
         if (centerX - recordX < recordWidth / 2) {
             qCDebug(dsrApp) << "Adjusting position: centerX is in left half";
             if (centerY - recordY < recordHeight / 2) {
                 qCDebug(dsrApp) << "Adjusting position: centerY is in top half, moving to top-left";
-                this->move(recordX, recordY);
+                targetGlobalPos = QPoint(recordX, recordY);
             } else {
                 qCDebug(dsrApp) << "Adjusting position: centerY is in bottom half, moving to bottom-left";
-                this->move(recordX, recordY + recordHeight - this->height());
+                targetGlobalPos = QPoint(recordX, recordY + recordHeight - this->height());
             }
         } else {
             qCDebug(dsrApp) << "Adjusting position: centerX is in right half";
             if (centerY - recordY < recordHeight / 2) {
                 qCDebug(dsrApp) << "Adjusting position: centerY is in top half, moving to top-right";
-                this->move(recordX + recordWidth - this->width(), recordY);
+                targetGlobalPos = QPoint(recordX + recordWidth - this->width(), recordY);
             } else {
                 qCDebug(dsrApp) << "Adjusting position: centerY is in bottom half, moving to bottom-right";
-                this->move(recordX + recordWidth - this->width(), recordY + recordHeight - this->height());
+                targetGlobalPos = QPoint(recordX + recordWidth - this->width(),
+                                         recordY + recordHeight - this->height());
             }
         }
+        this->move(targetGlobalPos - m_parentGlobalOffset);
     }
 }
 
 CameraWidget::Position CameraWidget::postion()
 {
     qCDebug(dsrApp) << "postion called";
-    if (this->x() == recordX) {
+    const QPoint globalTopLeft = mapToGlobal(QPoint(0, 0));
+    if (globalTopLeft.x() == recordX) {
         qCDebug(dsrApp) << "Widget X matches recordX";
-        if (this->y() == recordY) {
+        if (globalTopLeft.y() == recordY) {
             qCDebug(dsrApp) << "Widget Y matches recordY, returning leftTop";
             return leftTop;
         } else {
@@ -382,7 +397,7 @@ CameraWidget::Position CameraWidget::postion()
         }
     } else {
         qCDebug(dsrApp) << "Widget X does not match recordX";
-        if (this->y() == recordY) {
+        if (globalTopLeft.y() == recordY) {
             qCDebug(dsrApp) << "Widget Y matches recordY, returning rightTop";
             return rightTop;
         } else {
