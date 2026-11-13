@@ -1,3 +1,24 @@
+deepin-screen-recorder (6.7.2) unstable; urgency=medium
+
+  * fix: correct text rendering and size input commit
+  * perf(treeland): decouple capture pipeline and support DMA-BUF modifiers
+  * feat(treeland): add camera preview to recording
+  * fix: gate table recognition by architecture availability
+  * fix(treeland): keep annotation editing independent of selection
+  * feat(treeland): add recording audio and CFR timeline
+  * fix(treeland): make DMA-BUF capture modifier-safe
+  * perf(treeland): decouple recording capture from encoding
+  * feat(treeland): unify session entry and launch modes
+  * fix(record): compose multi-screen frames at physical resolution
+  * feat(treeland): support cross-output scroll capture
+  * fix(treeland): fall back to stitched image when final scroll frame times out
+  * fix(ci): update SPDX year range for previewwidget header
+  * fix(ci): add MIT license metadata for wlr-screencopy
+  * feat(treeland): add scroll screenshot capture
+  * fix: add objectName and accessibleName for AT-SPI accessibility
+
+ -- dengzhongyuan <dengzhongyuan@uniontech.com>  Fri, 13 Nov 2026 09:30:46 +0800
+
 deepin-screen-recorder (6.7.1) unstable; urgency=medium
 
   * fix: prevent rounded corners in scroll screenshot preview
