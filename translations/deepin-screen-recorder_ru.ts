@@ -349,7 +349,7 @@ or press the shortcut again to stop recording</source>
     <message>
         <location filename="../src/utils/shortcut.cpp" line="29"/>
         <source>Start/Recording</source>
-        <translation>Старт/Запись</translation>
+        <translation>Старт/запись</translation>
     </message>
     <message>
         <location filename="../src/utils/shortcut.cpp" line="30"/>
@@ -404,7 +404,7 @@ or press the shortcut again to stop recording</source>
     <message>
         <location filename="../src/utils/shortcut.cpp" line="42"/>
         <source>Scrollshot</source>
-        <translation>Скриншот с прокруткой</translation>
+        <translation>Снимок с прокруткой</translation>
     </message>
     <message>
         <location filename="../src/utils/shortcut.cpp" line="44"/>
@@ -460,7 +460,7 @@ or press the shortcut again to stop recording</source>
         <location filename="../src/utils/shortcut.cpp" line="51"/>
         <location filename="../src/utils/shortcut.cpp" line="56"/>
         <source>Options</source>
-        <translation>Опции</translation>
+        <translation>Параметры</translation>
     </message>
     <message>
         <location filename="../src/utils/shortcut.cpp" line="53"/>
@@ -510,7 +510,7 @@ or press the shortcut again to stop recording</source>
     <message>
         <location filename="../src/utils/shortcut.cpp" line="62"/>
         <source>Decrease height up</source>
-        <translation>Уменьшить размер  сверху</translation>
+        <translation>Уменьшить размер сверху</translation>
     </message>
     <message>
         <location filename="../src/utils/shortcut.cpp" line="63"/>
@@ -530,7 +530,7 @@ or press the shortcut again to stop recording</source>
     <message>
         <location filename="../src/utils/shortcut.cpp" line="67"/>
         <source>Help</source>
-        <translation>Помощь</translation>
+        <translation>Справка</translation>
     </message>
     <message>
         <location filename="../src/utils/shortcut.cpp" line="67"/>
