@@ -353,6 +353,8 @@ void RecordProcess::recordVideo()
     }
     arguments << QString("-thread_queue_size"); // 输入线程缓冲区大小
     arguments << QString("128");
+    arguments << QString("-use_wallclock_as_timestamps");
+    arguments << QString("1");
     arguments << QString("-i");
     arguments << QString("%1+%2,%3").arg(displayNumber).arg(m_recordRect.x()).arg(m_recordRect.y()); // 录制区域左上角坐标
     if (m_audioType == Utils::kSystemAudio || m_audioType == Utils::kMicAndSystemAudio) {
@@ -466,6 +468,8 @@ void RecordProcess::recordVideo()
     arguments << QString("64");
     arguments << QString("-f");
     arguments << QString("x11grab");
+    arguments << QString("-use_wallclock_as_timestamps");
+    arguments << QString("1");
     arguments << QString("-i");
     arguments << QString("%1+%2,%3").arg(displayNumber).arg(m_recordRect.x()).arg(m_recordRect.y());
     
