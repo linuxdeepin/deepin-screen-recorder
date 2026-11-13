@@ -300,8 +300,7 @@ void MainWindow::initAttributes()
     // 会算出 2880 而真实逻辑宽度是 3360，导致预览窗口盖不住桌面/内容错位）
     const QScreen *t_virtualScreen = QGuiApplication::primaryScreen();
     if (t_virtualScreen != nullptr) {
-        rootWindowRect = QRect(0, 0, t_virtualScreen->virtualGeometry().width(),
-                               t_virtualScreen->virtualGeometry().height());
+        rootWindowRect = t_virtualScreen->virtualGeometry();
     } else {
         rootWindowRect = QRect(0, 0, static_cast<int>(qRound(m_screenSize.width() / m_pixelRatio)),
                                static_cast<int>(qRound(m_screenSize.height() / m_pixelRatio)));
@@ -445,8 +444,8 @@ void MainWindow::initAttributes()
 
 
     m_backgroundRect = rootWindowRect;
-    m_backgroundRect = QRect(m_backgroundRect.topLeft() / m_pixelRatio, m_backgroundRect.size());
-    move(m_backgroundRect.topLeft() * m_pixelRatio);
+    m_backgroundRect = QRect(m_backgroundRect.topLeft(), m_backgroundRect.size());
+    move(m_backgroundRect.x(), m_backgroundRect.y());
     this->setFixedSize(m_backgroundRect.size());
 
     initBackground();
