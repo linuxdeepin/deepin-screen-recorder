@@ -200,10 +200,11 @@ static QPixmap grabNativeDesktop(bool &ok, qreal canvasScale)
             break;
         }
         ++grabbedScreens;
+        const qreal perScreenScale = Utils::screenFactor(screen);
         const QRectF target((geometry.x() - logicalUnion.x()) * canvasScale,
                             (geometry.y() - logicalUnion.y()) * canvasScale,
-                            geometry.width() * canvasScale,
-                            geometry.height() * canvasScale);
+                            geometry.width() * perScreenScale,
+                            geometry.height() * perScreenScale);
         painter.drawPixmap(target, native, QRectF(0.0, 0.0, native.width(), native.height()));
     }
     painter.end();
