@@ -371,7 +371,7 @@ void RecordProcess::recordVideo()
     QString arch = QSysInfo::currentCpuArchitecture();
 
 #if defined(__mips__) || defined(__sw_64__) || defined(__loongarch_64__) || defined(__loongarch__)
-    // mips sw 视频编码 mpeg4 音频编码 mp3
+    // mips sw loongarch 视频编码 libx264 音频编码 aac
     /*
          * mkv
          ffmpeg -f x11grab -draw_mouse 1 -framerate 25 -video_size 1920x1080 -i :0+0,0 -f pulse -i vokoscreenMix.monitor
@@ -388,6 +388,8 @@ void RecordProcess::recordVideo()
     arguments << QString("%1").arg(m_framerate);
     arguments << QString("-video_size");   // 视频分辨率
     arguments << QString("%1x%2").arg(m_recordRect.width()).arg(m_recordRect.height());   // 录制区域宽高
+    arguments << QString("-probesize");   // 探测大小
+    arguments << QString("24M");
     if (!m_isRecordMouse) {   // 不录制光标
         arguments << QString("-draw_mouse");
         arguments << QString("0");

@@ -6344,6 +6344,18 @@ void MainWindow::startCountdown()
     };
     qDebug() << "record rect:" << recordRect;
 
+    // 裁剪录制区域至屏幕物理边界，防止分数缩放回退导致越界
+    int physScreenWidth = static_cast<int>(m_screenWidth * m_pixelRatio);
+    int physScreenHeight = static_cast<int>(m_screenHeight * m_pixelRatio);
+    if (recordRect.x() < 0)
+        recordRect.setX(0);
+    if (recordRect.y() < 0)
+        recordRect.setY(0);
+    if (recordRect.right() >= physScreenWidth)
+        recordRect.setRight(physScreenWidth - 1);
+    if (recordRect.bottom() >= physScreenHeight)
+        recordRect.setBottom(physScreenHeight - 1);
+
     recordProcess.setRecordInfo(recordRect, selectAreaName);
     recordProcess.setFullScreenRecord(m_isFullScreenRecord);
 
