@@ -17,6 +17,7 @@
 #include <QKeySequence>
 #include <QMouseEvent>
 #include <QPainter>
+#include <QPalette>
 #include <QPainterPath>
 #include <QRegion>
 #include <QResizeEvent>
@@ -301,6 +302,18 @@ void TreelandMaskWindow::showWindow()
     raise();
     activateWindow();
     setFocus(Qt::ActiveWindowFocusReason);
+
+    // Treeland compositor blocks activateWindow() during lock screen, leaving
+    // isActiveWindow() false. Qt then renders child widgets with the inactive
+    // palette, making toolbar buttons appear grayed out. Copy active palette
+    // colors into the inactive group so buttons stay highlighted regardless.
+    QPalette pal = palette();
+    for (int i = 0; i < QPalette::NColorRoles; ++i) {
+        auto role = static_cast<QPalette::ColorRole>(i);
+        pal.setColor(QPalette::Inactive, role,
+                     pal.color(QPalette::Active, role));
+    }
+    setPalette(pal);
 }
 
 void TreelandMaskWindow::closeSilently()
