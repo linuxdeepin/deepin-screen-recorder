@@ -113,6 +113,25 @@ void RecordTimePlugin::clear()
 void RecordTimePlugin::onStart(bool resetTime)
 {
     qCInfo(dsrApp) << "Starting record time plugin, reset time:" << resetTime;
+
+    // Guard: if recording is already in progress, ignore duplicate onStart
+    // to prevent timer reset caused by DBus start signal replay
+    if (m_timeWidget != nullptr && m_timer != nullptr && m_bshow) {
+        qCInfo(dsrApp) << "Recording already in progress, ignoring duplicate onStart. resetTime:" << resetTime;
+        return;
+    }
+
+    // Clean up any existing resources before creating new ones
+    if (m_timer) {
+        m_timer->stop();
+        m_timer->deleteLater();
+        m_timer = nullptr;
+    }
+    if (m_timeWidget) {
+        m_timeWidget->deleteLater();
+        m_timeWidget = nullptr;
+    }
+
     m_timer = new QTimer(this);
     m_timeWidget = new TimeWidget();
     if (resetTime) {
