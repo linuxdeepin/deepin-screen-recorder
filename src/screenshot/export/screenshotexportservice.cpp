@@ -70,10 +70,11 @@ Result ScreenshotExportService::render(const FrozenFrameSet &frames,
         if (source.isEmpty())
             continue;
 
-        const QRectF destination((intersection.left() - selection.left()) * outputScale,
-                                 (intersection.top() - selection.top()) * outputScale,
-                                 intersection.width() * outputScale,
-                                 intersection.height() * outputScale);
+        const qreal frameScale = frame.pixelScale > 0.0 ? frame.pixelScale : outputScale;
+        const QRectF destination((intersection.left() - selection.left()) * frameScale,
+                                 (intersection.top() - selection.top()) * frameScale,
+                                 intersection.width() * frameScale,
+                                 intersection.height() * frameScale);
         painter.drawImage(destination, frame.image, source);
     }
 
