@@ -379,7 +379,9 @@ void ShapesWidget::resetForTextToolSwitch()
     // 这里在工具切换时清理选中态，保证首次点击直接进入文本输入。
     // 工具栏同步“已选中文字”也会切到 text；此时必须保留文字选中态，
     // 否则紧接着的拖拽会被中断。
-    if (!isTreeLandMode() || m_selectedShape.type != "text")
+    if (!isTreeLandMode() && !m_isSelectedText)
+        clearSelected();
+    else if (isTreeLandMode() && m_selectedShape.type != "text")
         clearSelected();
     m_isRotated = false;
     m_isResize = false;
@@ -408,6 +410,7 @@ void ShapesWidget::clearSelected()
     m_selectedIndex = -1;
     m_hoveredIndex = -1;
     m_selectedOrder = -1;
+    m_isSelectedText = false;
     m_selectedShape.points.clear();
     m_hoveredShape.points.clear();
     updateCursorShape();
