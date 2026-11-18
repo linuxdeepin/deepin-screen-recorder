@@ -26,6 +26,7 @@
 #include "widgets/tooltips.h"
 #include "widgets/toolbutton.h"
 #include "dbusinterface/drawinterface.h"
+#include "utils/dbusutils.h"
 #include "accessibility/acTextDefine.h"
 #include "keydefine.h"
 #include "utils/eventlogutils.h"
@@ -4574,7 +4575,7 @@ void MainWindow::onAiAssistantSelected(int func)
     QDBusInterface copilot("com.deepin.copilot",
                                "/com/deepin/copilot",
                                "com.deepin.copilot",
-                               QDBusConnection::sessionBus());
+                               DBusUtils::freshSessionBusConnection());
     copilot.call("version");
 
     if (m_aiAssistantInterface) {
@@ -4583,7 +4584,7 @@ void MainWindow::onAiAssistantSelected(int func)
     }
     m_aiAssistantInterface = new AiAssistantInterface("com.deepin.copilot",
                                                       "/com/deepin/copilot",
-                                                      QDBusConnection::sessionBus(), this);
+                                                      DBusUtils::freshSessionBusConnection(), this);
 
     if (!m_aiAssistantInterface->isValid()) {
         qCWarning(dsrApp) << "AI: AiAssistantInterface is invalid";

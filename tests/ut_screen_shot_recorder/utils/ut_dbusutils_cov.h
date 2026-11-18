@@ -89,3 +89,16 @@ TEST_F(DBusUtilsCovTest, constructorAndDestructorRunClean)
     DBusUtils *u = nullptr;
     EXPECT_NO_FATAL_FAILURE(u = new DBusUtils; delete u;);
 }
+
+// freshSessionBusConnection: creates a fresh DBus connection via
+// connectToBus() using the current DBUS_SESSION_BUS_ADDRESS, bypassing
+// the process-level sessionBus() cache. Must return a connection whose
+// name differs from the shared sessionBus() connection.
+TEST_F(DBusUtilsCovTest, freshSessionBusConnectionReturnsConnection)
+{
+    QDBusConnection conn;
+    EXPECT_NO_FATAL_FAILURE(conn = DBusUtils::freshSessionBusConnection());
+    // The fresh connection must have a different name than the process-level
+    // cached sessionBus() connection, proving it is independently created.
+    EXPECT_NE(conn.name(), QDBusConnection::sessionBus().name());
+}
