@@ -10,14 +10,14 @@
 
 using namespace testing;
 
-// protected 协议事件处理 + selectOptimalFormat：安全纯逻辑
+// protected 协议事件处理 + selectCapturePlan：安全纯逻辑
 ACCESS_PRIVATE_FUN(ExtCaptureSession, void(uint32_t, uint32_t), handleBufferSize);
 ACCESS_PRIVATE_FUN(ExtCaptureSession, void(uint32_t), handleShmFormat);
 ACCESS_PRIVATE_FUN(ExtCaptureSession, void(const QByteArray &), handleDmabufDevice);
 ACCESS_PRIVATE_FUN(ExtCaptureSession, void(uint32_t, const QList<uint64_t> &), handleDmabufFormat);
 ACCESS_PRIVATE_FUN(ExtCaptureSession, void(), handleDone);
 ACCESS_PRIVATE_FUN(ExtCaptureSession, void(), handleStopped);
-ACCESS_PRIVATE_FUN(ExtCaptureSession, void(), selectOptimalFormat);
+ACCESS_PRIVATE_FUN(ExtCaptureSession, void(), selectCapturePlan);
 
 class ExtCaptureSessionTest : public Test
 {
@@ -55,8 +55,8 @@ TEST_F(ExtCaptureSessionTest, protectedHandlers)
     call_private_fun::ExtCaptureSessionhandleDmabufDevice(*m_sess, QByteArray("/dev/dri/renderD128"));
     call_private_fun::ExtCaptureSessionhandleDmabufFormat(*m_sess, 875713112, QList<uint64_t>{0});
 
-    // selectOptimalFormat：已有 shm 格式 -> 选中
-    call_private_fun::ExtCaptureSessionselectOptimalFormat(*m_sess);
+    // selectCapturePlan：已有 shm 格式 -> 选中
+    call_private_fun::ExtCaptureSessionselectCapturePlan(*m_sess);
     EXPECT_NE(m_sess->config().format, 0u);
 }
 
@@ -74,10 +74,10 @@ TEST_F(ExtCaptureSessionTest, handleDoneAndStopped)
     EXPECT_EQ(stoppedSpy.count(), 1);
 }
 
-TEST_F(ExtCaptureSessionTest, selectOptimalFormatNoFormats)
+TEST_F(ExtCaptureSessionTest, selectCapturePlanNoFormats)
 {
     // 无任何格式 -> error + Error 状态
     QSignalSpy errSpy(m_sess, &ExtCaptureSession::error);
-    call_private_fun::ExtCaptureSessionselectOptimalFormat(*m_sess);
+    call_private_fun::ExtCaptureSessionselectCapturePlan(*m_sess);
     EXPECT_GE(errSpy.count(), 1);
 }

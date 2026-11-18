@@ -45,7 +45,7 @@ ACCESS_PRIVATE_FUN(MainWindow, void(QKeyEvent *), keyReleaseEvent);
 
 // COV4-DEDUP: ACCESS_PRIVATE_FUN(MainWindow, void(), initBackground);
 ACCESS_PRIVATE_FUN(MainWindow, void(), setupConnections);
-// DEDUP-REMOVED: ACCESS_PRIVATE_FUN(MainWindow, void(), initializeCapture);
+// MainWindow::initializeCapture() was removed by the TreeLand capture refactor.
 ACCESS_PRIVATE_FUN(MainWindow, void(), handleCaptureFinish);
 ACCESS_PRIVATE_FUN(MainWindow, void(), onFinishClicked);
 // DEDUP-REMOVED: ACCESS_PRIVATE_FUN(MainWindow, void(), hideAllWidget);
@@ -229,7 +229,6 @@ TEST_F(MainWindowCov2Test, keyReleaseEventSafe)
 
 TEST_F(MainWindowCov2Test, initBackgroundSafe)        { EXPECT_NO_FATAL_FAILURE(call_private_fun::MainWindowinitBackground(*m_w)); }
 TEST_F(MainWindowCov2Test, setupConnectionsSafe)      { EXPECT_NO_FATAL_FAILURE(call_private_fun::MainWindowsetupConnections(*m_w)); }
-TEST_F(MainWindowCov2Test, initializeCaptureSafe)     { EXPECT_NO_FATAL_FAILURE(call_private_fun::MainWindowinitializeCapture(*m_w)); }
 TEST_F(MainWindowCov2Test, handleCaptureFinishSafe)   { EXPECT_NO_FATAL_FAILURE(call_private_fun::MainWindowhandleCaptureFinish(*m_w)); }
 TEST_F(MainWindowCov2Test, onFinishClickedSafe)       { EXPECT_NO_FATAL_FAILURE(call_private_fun::MainWindowonFinishClicked(*m_w)); }
 TEST_F(MainWindowCov2Test, hideAllWidgetSafe)         { EXPECT_NO_FATAL_FAILURE(call_private_fun::MainWindowhideAllWidget(*m_w)); }

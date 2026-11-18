@@ -155,12 +155,14 @@ TEST_F(MultiScreenFrameCompositorTest, xbgrFrameKeepsRedAndBlueChannels)
                                    12345);
     // DRM_FORMAT_XBGR8888 is stored as R,G,B,X on little-endian systems.
     // Fill the top-left source pixels with opaque red.
-    for (int pixel = 0; pixel < 4; ++pixel) {
-        const int offset = pixel * 4;
-        frame.frameData[offset] = static_cast<char>(0xff);
-        frame.frameData[offset + 1] = 0;
-        frame.frameData[offset + 2] = 0;
-        frame.frameData[offset + 3] = 0;
+    for (int y = 0; y < 2; ++y) {
+        for (int x = 0; x < 2; ++x) {
+            const int offset = y * frame.stride + x * 4;
+            frame.frameData[offset] = static_cast<char>(0xff);
+            frame.frameData[offset + 1] = 0;
+            frame.frameData[offset + 2] = 0;
+            frame.frameData[offset + 3] = 0;
+        }
     }
 
     ASSERT_TRUE(m_c->addScreenFrame(frame));
@@ -172,8 +174,14 @@ TEST_F(MultiScreenFrameCompositorTest, xbgrFrameKeepsRedAndBlueChannels)
                        2,
                        m_c->getOutputStride(),
                        QImage::Format_RGBA8888);
-    EXPECT_EQ(image.pixelColor(0, 0), QColor(255, 0, 0));
-    EXPECT_EQ(image.pixelColor(1, 1), QColor(255, 0, 0));
+    const QColor firstPixel = image.pixelColor(0, 0);
+    const QColor secondPixel = image.pixelColor(1, 1);
+    EXPECT_EQ(firstPixel.red(), 255);
+    EXPECT_EQ(firstPixel.green(), 0);
+    EXPECT_EQ(firstPixel.blue(), 0);
+    EXPECT_EQ(secondPixel.red(), 255);
+    EXPECT_EQ(secondPixel.green(), 0);
+    EXPECT_EQ(secondPixel.blue(), 0);
 }
 
 TEST_F(MultiScreenFrameCompositorTest, performCompositionSignal)

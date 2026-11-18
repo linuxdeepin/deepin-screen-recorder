@@ -35,6 +35,8 @@
 ACCESS_PRIVATE_FUN(ToolButton, void(QMoveEvent *event), moveEvent);
 ACCESS_PRIVATE_FUN(ToolButton, void(QResizeEvent *event), resizeEvent);
 ACCESS_PRIVATE_FUN(ToolButton, QRect(const QStyleOptionToolButton &opt) const, getIconRect);
+ACCESS_PRIVATE_FIELD(ToolButton, bool, m_isMousePress);
+ACCESS_PRIVATE_FIELD(ToolButton, bool, m_safeCursorManagement);
 
 class ToolButtonExtTest : public ::testing::Test
 {
@@ -245,6 +247,23 @@ TEST_F(ToolButtonExtTest, enterLeaveEventRestoresOverrideCursor)
     while (qApp->overrideCursor())
         qApp->restoreOverrideCursor();
 
+    QEnterEvent enterEvent(QPointF(5, 5), QPointF(5, 5), QPointF(5, 5));
+    QCoreApplication::sendEvent(m_btn, &enterEvent);
+    ASSERT_NE(qApp->overrideCursor(), nullptr);
+
+    // 非安全模式保留 X11 行为：按下时离开才恢复光标。
+    access_private_field::ToolButtonm_isMousePress(*m_btn) = true;
+    QEvent leaveEvent(QEvent::Leave);
+    QCoreApplication::sendEvent(m_btn, &leaveEvent);
+    EXPECT_EQ(qApp->overrideCursor(), nullptr);
+}
+
+TEST_F(ToolButtonExtTest, enterLeaveEventRestoresOverrideCursorInSafeMode)
+{
+    while (qApp->overrideCursor())
+        qApp->restoreOverrideCursor();
+
+    access_private_field::ToolButtonm_safeCursorManagement(*m_btn) = true;
     QEnterEvent enterEvent(QPointF(5, 5), QPointF(5, 5), QPointF(5, 5));
     QCoreApplication::sendEvent(m_btn, &enterEvent);
     ASSERT_NE(qApp->overrideCursor(), nullptr);

@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2022-2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -8,6 +8,7 @@
 #include <QDebug>
 #include "stub.h"
 #include "addr_pri.h"
+#include "ut_toolbarhost_stub.h"
 #include <DApplicationHelper>
 
 #include "../../src/main_window.h"
@@ -70,22 +71,24 @@ class ToolBarWidgetTest:public testing::Test{
 
 public:
     Stub stub;
+    TestToolBarHost m_host;
     ToolBar *m_toolBar;
     MainWindow *m_mainWindow;
     ToolBarWidget *m_toolBarWidget;
     ToolBarWidget *m_toolBarWidget_test;
     virtual void SetUp() override{
         m_mainWindow = new MainWindow;
+        m_host.setAnchorWidget(m_mainWindow);
         m_toolBar = new ToolBar(m_mainWindow);
         //stub.set(ADDR(DesktopInfo,waylandDectected),waylandDectected_true_stub);
         stub.set(ADDR(QVariant,toInt),toInt_one_stub);
-        m_toolBarWidget = new ToolBarWidget(m_mainWindow,m_toolBar);
+        m_toolBarWidget = new ToolBarWidget(&m_host,m_toolBar);
         //stub.reset(ADDR(DesktopInfo,waylandDectected));
         stub.reset(ADDR(QVariant,toInt));
         //stub.set(ADDR(DesktopInfo,waylandDectected),waylandDectected_false_stub);
         stub.set(ADDR(QVariant,toInt),toInt_two_stub);
         Utils::is3rdInterfaceStart = true;
-        m_toolBarWidget_test = new ToolBarWidget(m_mainWindow,m_toolBar);
+        m_toolBarWidget_test = new ToolBarWidget(&m_host,m_toolBar);
     }
 
     virtual void TearDown() override{

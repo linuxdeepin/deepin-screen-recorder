@@ -123,11 +123,11 @@ TEST_F(ExtCaptureRecorderExtTest, onFrameReadyRecordingBufferInitFailure)
     QSignalSpy errSpy(m_rec, &ExtCaptureRecorder::error);
 
     unsigned char data[16] = {0};
-    // width=0 -> frameBuffer->initialize 必然失败 -> emit error 并 return
+    // stride/height 合法以通过短帧检查；width=0 令 frameBuffer->initialize 失败。
     EXPECT_NO_FATAL_FAILURE(QMetaObject::invokeMethod(
         m_rec, "onFrameReady", Qt::DirectConnection,
         Q_ARG(const void *, (const void *)data), Q_ARG(size_t, 16),
-        Q_ARG(int, 0), Q_ARG(int, 0), Q_ARG(int, 0), Q_ARG(uint64_t, 100)));
+        Q_ARG(int, 0), Q_ARG(int, 1), Q_ARG(int, 16), Q_ARG(uint64_t, 100)));
     EXPECT_GE(errSpy.count(), 1);
     EXPECT_EQ(m_rec->frameCount(), 0);
 }

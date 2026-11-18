@@ -26,6 +26,7 @@
 
 #include "stub.h"
 #include "addr_pri.h"
+#include "ut_toolbarhost_stub.h"
 
 #include "../../src/widgets/shapeswidget.h"
 #include "../../src/widgets/sidebar.h"
@@ -61,13 +62,11 @@ ACCESS_PRIVATE_FUN(ToolBar, void(QMouseEvent *), mouseMoveEvent);
 ACCESS_PRIVATE_FUN(CameraWidget, void(QEvent *), enterEvent);
 ACCESS_PRIVATE_FUN(CameraWidget, void(), restartDevices);
 
-ACCESS_PRIVATE_FUN(ImageMenu, void(QPaintEvent *), paintEvent);
 ACCESS_PRIVATE_FUN(ActionWidget, void(QPaintEvent *), paintEvent);
 
 ACCESS_PRIVATE_FIELD(ShapesWidget, int, m_selectedIndex);
 ACCESS_PRIVATE_FIELD(ShapesWidget, int, m_selectedOrder);
 ACCESS_PRIVATE_FIELD(SideBar, bool, m_isPress);
-ACCESS_PRIVATE_FIELD(SideBar, MainWindow *, m_pMainWindow);
 ACCESS_PRIVATE_FIELD(CameraWidget, MajorImageProcessingThread *, m_imgPrcThread);
 ACCESS_PRIVATE_FIELD(ToolBarWidget, ToolButton *, m_closeButton);
 ACCESS_PRIVATE_FIELD(SubToolWidget, ToolButton *, m_cameraButton);
@@ -205,6 +204,7 @@ class SideBarWithMainCovFinalTest : public Test
 {
 public:
     Stub stub;
+    TestToolBarHost m_host;
     MainWindow *m_mw = nullptr;
     SideBar *m_bar = nullptr;
     SideBarWidget *m_sbw = nullptr;
@@ -214,9 +214,10 @@ public:
         stub.set(ADDR(MainWindow, getToolBarStartPressPoint), wcf_noop);
         stub.set(ADDR(MainWindow, getToolBarPoint), wcf_noop);
         m_mw = new MainWindow;
+        m_host.setAnchorWidget(m_mw);
         m_bar = new SideBar;
-        m_bar->initSideBar(m_mw);
-        m_sbw = new SideBarWidget(m_mw, nullptr);
+        m_bar->initSideBar(&m_host);
+        m_sbw = new SideBarWidget(&m_host, nullptr);
         m_sbw->resize(100, 100);
     }
     void TearDown() override { }
@@ -316,24 +317,11 @@ TEST(ActionWidgetCovFinalTest, Destructor)
     EXPECT_NO_FATAL_FAILURE(delete w);
 }
 
-TEST(ImageMenuCovFinalTest, PaintEventDirect)
-{
-    QWidget dummyParent;
-    dummyParent.resize(400, 300);
-    dummyParent.move(10, 10);
-    ImageMenu *m = ImageBorderHelper::instance()->getBorderMenu(ImageBorderHelper::External, "test", &dummyParent);
-    if (m) {
-        m->resize(200, 100);
-        m->move(50, 50);
-        QPaintEvent pe(QRect(0, 0, 100, 50));
-        EXPECT_NO_FATAL_FAILURE(call_private_fun::ImageMenupaintEvent(*m, &pe));
-    }
-}
-
 class ToolBarCovFinalTest : public Test
 {
 public:
     Stub stub;
+    TestToolBarHost m_host;
     MainWindow *m_mw = nullptr;
     ToolBar *m_bar = nullptr;
 
@@ -343,8 +331,9 @@ public:
         stub.set(ADDR(MainWindow, getToolBarStartPressPoint), wcf_noop);
         stub.set(ADDR(MainWindow, getToolBarPoint), wcf_noop);
         m_mw = new MainWindow;
+        m_host.setAnchorWidget(m_mw);
         m_bar = new ToolBar;
-        m_bar->initToolBar(m_mw);
+        m_bar->initToolBar(&m_host);
     }
     void TearDown() override
     {
@@ -381,13 +370,15 @@ TEST_F(ToolBarCovFinalTest, MouseMoveEventNotPressed)
 class ToolBarWidgetCovFinalTest : public Test
 {
 public:
+    TestToolBarHost m_host;
     MainWindow *m_mw = nullptr;
     ToolBarWidget *m_tbw = nullptr;
 
     void SetUp() override
     {
         m_mw = new MainWindow;
-        m_tbw = new ToolBarWidget(m_mw, nullptr, false);
+        m_host.setAnchorWidget(m_mw);
+        m_tbw = new ToolBarWidget(&m_host, nullptr, false);
     }
     void TearDown() override { }
 };
@@ -439,10 +430,8 @@ TEST_F(ToolBarWidgetCovFinalTest, SetHideToolbar)
 
 TEST_F(ToolBarWidgetCovFinalTest, Destructor)
 {
-    MainWindow *mw = new MainWindow;
-    ToolBarWidget *tbw = new ToolBarWidget(mw, nullptr, false);
+    ToolBarWidget *tbw = new ToolBarWidget(&m_host, nullptr, false);
     EXPECT_NO_FATAL_FAILURE(delete tbw);
-    delete mw;
 }
 
 TEST_F(ToolBarWidgetCovFinalTest, ConstructorCloseButtonLambda)
@@ -459,6 +448,7 @@ class SubToolWidgetCovFinalTest : public Test
 {
 public:
     Stub stub;
+    TestToolBarHost m_host;
     MainWindow *m_mw = nullptr;
     SubToolWidget *m_sub = nullptr;
 
@@ -466,7 +456,8 @@ public:
     {
         stub.set(ADDR(MainWindow, getToolBarPoint), wcf_noop);
         m_mw = new MainWindow;
-        m_sub = new SubToolWidget(m_mw);
+        m_host.setAnchorWidget(m_mw);
+        m_sub = new SubToolWidget(&m_host);
         m_sub->switchContent(QStringLiteral("shot"));
     }
     void TearDown() override { }
@@ -598,12 +589,14 @@ TEST_F(SubToolWidgetCovFinalTest, ShotBtnGroupLambda)
 class ShotToolWidgetCovFinalTest : public Test
 {
 public:
+    TestToolBarHost m_host;
     MainWindow *m_mw = nullptr;
     ShotToolWidget *m_stw = nullptr;
     void SetUp() override
     {
         m_mw = new MainWindow;
-        m_stw = new ShotToolWidget(m_mw);
+        m_host.setAnchorWidget(m_mw);
+        m_stw = new ShotToolWidget(&m_host);
     }
     void TearDown() override { }
 };

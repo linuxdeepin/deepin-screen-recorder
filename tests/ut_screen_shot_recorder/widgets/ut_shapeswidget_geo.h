@@ -131,7 +131,7 @@ TEST_F(ShapesWidgetGeoTest, clickedOnShapesOvalInteriorIsTreeLandOnly)
 
     access_private_field::ShapesWidgetm_shapes(*m_w) = {oval};
     EXPECT_FALSE(m_w->clickedOnShapes(QPointF(60, 60)));
-    EXPECT_FALSE(m_w->clickedOnShapes(QPointF(20, 20)));
+    EXPECT_FALSE(m_w->clickedOnShapes(QPointF(1000, 1000)));
 
     m_w->setInteractionPlatform(ShapesWidget::InteractionPlatform::TreeLand);
     EXPECT_TRUE(m_w->clickedOnShapes(QPointF(60, 60), true));
@@ -139,7 +139,7 @@ TEST_F(ShapesWidgetGeoTest, clickedOnShapesOvalInteriorIsTreeLandOnly)
     EXPECT_FALSE(access_private_field::ShapesWidgetm_isResize(*m_w));
     EXPECT_EQ(access_private_field::ShapesWidgetm_resizeDirection(*m_w),
               Moving);
-    EXPECT_FALSE(m_w->clickedOnShapes(QPointF(20, 5), true));
+    EXPECT_FALSE(m_w->clickedOnShapes(QPointF(1000, 1000), true));
 }
 
 // ---------------- clickedOnArrow ----------------

@@ -13,11 +13,11 @@ using namespace testing;
 // 覆盖 extcapturesession.cpp 未触及的安全分支（注意：initialize/createFrame
 // 依赖 Wayland 协议绑定，offscreen 下会 SEGV，故不直接调用）：
 //  - handleDone 重复去重格式（handleShmFormat 已含则不重复 append）
-//  - selectOptimalFormat：dmaFormats 优先于 shmFormats
+//  - selectCapturePlan：优先尝试 DMA-BUF，失败后回退 SHM
 //  - stop()：从 Ready 态停止（emit stopped，d->isInitialized()==false 分支）
 //  - handleDmabufFormat：重复格式不重复 append
 // 所有私有函数（handleBufferSize/handleShmFormat/handleDmabufDevice/handleDmabufFormat/
-// handleDone/handleStopped/selectOptimalFormat）已在 ut_extcapturesession.h 声明，
+// handleDone/handleStopped/selectCapturePlan）已在 ut_extcapturesession.h 声明，
 // 同一 TU 内可直接调用 call_private_fun，不重复声明。
 
 class ExtCaptureSessionCovTest : public Test
@@ -48,21 +48,21 @@ TEST_F(ExtCaptureSessionCovTest, handleDmabufFormatDeduplicates)
     EXPECT_EQ(m_sess->supportedFormats().size(), before);
 }
 
-// selectOptimalFormat：dmaFormats 非空 -> 选中 dma，useDmaBuffer=true
-TEST_F(ExtCaptureSessionCovTest, selectOptimalPrefersDma)
+// selectCapturePlan：仅广告 DMA 格式但尚未协商 bufferSize 时，探测失败并回退 SHM
+TEST_F(ExtCaptureSessionCovTest, selectCapturePlanFallsBackToShm)
 {
     call_private_fun::ExtCaptureSessionhandleDmabufFormat(*m_sess, 875713112, QList<uint64_t>{0});
     call_private_fun::ExtCaptureSessionhandleShmFormat(*m_sess, 875708992);
-    call_private_fun::ExtCaptureSessionselectOptimalFormat(*m_sess);
-    EXPECT_TRUE(m_sess->config().useDmaBuffer);
+    call_private_fun::ExtCaptureSessionselectCapturePlan(*m_sess);
+    EXPECT_FALSE(m_sess->config().useDmaBuffer);
     EXPECT_NE(m_sess->config().format, 0u);
 }
 
-// selectOptimalFormat：仅 shm -> useDmaBuffer=false
-TEST_F(ExtCaptureSessionCovTest, selectOptimalShmOnlyWhenNoDma)
+// selectCapturePlan：仅 shm -> useDmaBuffer=false
+TEST_F(ExtCaptureSessionCovTest, selectCapturePlanShmOnlyWhenNoDma)
 {
     call_private_fun::ExtCaptureSessionhandleShmFormat(*m_sess, 875708992);
-    call_private_fun::ExtCaptureSessionselectOptimalFormat(*m_sess);
+    call_private_fun::ExtCaptureSessionselectCapturePlan(*m_sess);
     EXPECT_FALSE(m_sess->config().useDmaBuffer);
 }
 

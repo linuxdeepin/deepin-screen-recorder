@@ -9,6 +9,7 @@
 #include <QEnterEvent>
 #include <QEvent>
 #include "addr_pri.h"
+#include "ut_toolbarhost_stub.h"
 #include "../../src/widgets/sidebar.h"
 
 using namespace testing;
@@ -16,15 +17,12 @@ using namespace testing;
 // Covers previously-uncovered SideBar / SideBarWidget surface that is safe to
 // exercise offscreen without a fully-wired MainWindow:
 //   - SideBar::changeShotToolFunc / getSideBarWidth / showWidget / hideWidget /
-//     showAt / getInnerWidgetRect (with an inner widget) / initSideBar(nullptr)
+//     showAt / getInnerWidgetRect (with an inner widget) / initSideBar(host)
 //   - SideBarWidget::changeShotToolWidget across all func strings (geometry,
 //     text, effect, aiassistant, default) and getSideBarWidth / isAIMode
 //
-// initSideBar(nullptr) is safe: SideBarWidget only *stores* the MainWindow
-// pointer and registers signal/slot connections; it never dereferences the
-// pointer during construction (verified in ShotToolWidget / AIAssistantWidget
-// ctors). The AI functionSelected -> onAiAssistantSelected lambda only fires on
-// a real user action, which we never trigger here.
+// A no-op ToolBarHost keeps the test independent of a fully initialized
+// MainWindow while still exercising the current ToolBarHost-based API.
 //
 // Skipped (would deref null MainWindow): SideBar::mousePressEvent (calls
 // m_pMainWindow->getToolBarStartPressPoint) and mouseMoveEvent (calls
@@ -37,14 +35,12 @@ ACCESS_PRIVATE_FUN(SideBar, bool(QObject *, QEvent *), eventFilter);
 class SideBarCovTest : public Test
 {
 public:
+    TestToolBarHost m_host;
     SideBar *m_bar = nullptr;
     void SetUp() override
     {
         m_bar = new SideBar;
-        // Build the inner SideBarWidget with a null MainWindow. Construction is
-        // safe (no MainWindow deref in any child ctor); wrapped just in case a
-        // future refactor adds one.
-        EXPECT_NO_FATAL_FAILURE(m_bar->initSideBar(nullptr));
+        EXPECT_NO_FATAL_FAILURE(m_bar->initSideBar(&m_host));
     }
     void TearDown() override { delete m_bar; }
 };

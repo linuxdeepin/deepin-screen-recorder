@@ -11,6 +11,7 @@
 #include <QMetaObject>
 #include "stub.h"
 #include "addr_pri.h"
+#include "ut_toolbarhost_stub.h"
 #include "../../src/main_window.h"
 #include "../../src/widgets/subtoolwidget.h"
 #include "../../src/utils/configsettings.h"
@@ -44,13 +45,15 @@ ACCESS_PRIVATE_FUN(SubToolWidget, void(), initRecordOption);
 class SubToolWidgetCov2Test : public Test
 {
 public:
+    TestToolBarHost m_host;
     MainWindow *m_mainWindow = nullptr;
     SubToolWidget *m_w = nullptr;
 
     void SetUp() override
     {
         m_mainWindow = new MainWindow;
-        m_w = new SubToolWidget(m_mainWindow);
+        m_host.setAnchorWidget(m_mainWindow);
+        m_w = new SubToolWidget(&m_host);
         // ensure shot toolbar + option menu exist
         m_w->switchContent(QStringLiteral("shot"));
     }

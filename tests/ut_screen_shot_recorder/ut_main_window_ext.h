@@ -280,7 +280,6 @@ ACCESS_PRIVATE_FUN(MainWindow, void(), initDynamicLibPath);
 ACCESS_PRIVATE_FUN(MainWindow, void(), hideAllWidget);
 ACCESS_PRIVATE_FUN(MainWindow, void(QString), initShapeWidget);
 ACCESS_PRIVATE_FUN(MainWindow, void(), setDragCursor);
-ACCESS_PRIVATE_FUN(MainWindow, void(), initializeCapture);
 
 TEST_F(MainWindowExtTest, checkIsLockScreenSafe)
 {
@@ -307,9 +306,4 @@ TEST_F(MainWindowExtTest, initShapeWidgetSafe)
 TEST_F(MainWindowExtTest, setDragCursorSafe)
 {
     EXPECT_NO_FATAL_FAILURE(call_private_fun::MainWindowsetDragCursor(*m_w));
-}
-
-TEST_F(MainWindowExtTest, initializeCaptureSafe)
-{
-    EXPECT_NO_FATAL_FAILURE(call_private_fun::MainWindowinitializeCapture(*m_w));
 }
