@@ -12,6 +12,8 @@
 #include <QDBusMessage>
 #include <QDBusObjectPath>
 #include <QDBusConnectionInterface>
+#include <QByteArray>
+#include <QCoreApplication>
 
 DBusUtils::DBusUtils()
 {
@@ -66,9 +68,27 @@ QVariant DBusUtils::redDBusMethod(const QString &service, const QString &path, c
     }
 }
 
+
+// QDBusConnection::sessionBus() caches a single process-wide connection.
+// In the persistent --dbus process this cache is never refreshed after an
+// account switch, so the stale connection still points at the old session
+// bus where com.deepin.copilot is absent.  This helper builds a brand-new
+// connection from the *current* DBUS_SESSION_BUS_ADDRESS every time it is
+// called, ensuring the AI assistant check and D-Bus calls hit the right bus.
+QDBusConnection DBusUtils::freshSessionBusConnection()
+{
+    QByteArray addr = qgetenv("DBUS_SESSION_BUS_ADDRESS");
+    QString connName = QStringLiteral("ai_check_%1").arg(QCoreApplication::applicationPid());
+    QDBusConnection::disconnectFromBus(connName);
+    if (addr.isEmpty()) {
+        return QDBusConnection(connName);
+    }
+    return QDBusConnection::connectToBus(QString::fromUtf8(addr), connName);
+}
+
 bool DBusUtils::isAiAssistantAvailable()
 {
-    QDBusConnection bus = QDBusConnection::sessionBus();
+    QDBusConnection bus = DBusUtils::freshSessionBusConnection();
     if (!bus.isConnected()) return false;
 
 

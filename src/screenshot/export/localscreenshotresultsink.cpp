@@ -3,6 +3,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 
 #include "localscreenshotresultsink.h"
+#include "../../utils/dbusutils.h"
 
 #include "../../dbus_name.h"
 #include "../../dbusinterface/aiassistantinterface.h"
@@ -561,7 +562,7 @@ bool LocalScreenshotResultSink::aiAssistant(const Result &result,
 
     AiAssistantInterface aiAssistant(QStringLiteral("com.deepin.copilot"),
                                      QStringLiteral("/com/deepin/copilot"),
-                                     QDBusConnection::sessionBus());
+                                     DBusUtils::freshSessionBusConnection());
     if (!aiAssistant.isValid()) {
         if (error)
             *error = QStringLiteral("AI 助手服务不可用");

@@ -6,6 +6,7 @@
 #define DBUSUTILS_H
 #include <QVariant>
 #include <QString>
+#include <QDBusConnection>
 
 
 class DBusUtils
@@ -17,6 +18,7 @@ public:
     static QVariant redDBusMethod(const QString &service, const QString &path, const QString &interface, const char *method);
     // 检测 AI 助手能力
     static bool isAiAssistantAvailable();
+    static QDBusConnection freshSessionBusConnection();
 };
 
 #endif // DBUSUTILS_H

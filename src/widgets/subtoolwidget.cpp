@@ -2197,6 +2197,7 @@ void SubToolWidget::switchContent(QString shapeType)
         this->removeWidget(m_recordSubTool);
         setCurrentWidget(m_shotSubTool);
         m_currentType = shapeType;
+        m_aiAssistantButton->setVisible(DBusUtils::isAiAssistantAvailable());
     } else if (shapeType == "scroll") {
         // 滚动截图入口和 TreeLand 的 toolbar 状态切换可能都会请求进入
         // scroll 页；页面只需构建一次，重复构建会让旧按钮残留在布局里。
@@ -2207,6 +2208,7 @@ void SubToolWidget::switchContent(QString shapeType)
         this->removeWidget(m_shotSubTool);
         setCurrentWidget(m_scrollSubTool);
         m_currentType = shapeType;
+        m_aiAssistantScrollButton->setVisible(DBusUtils::isAiAssistantAvailable());
     }
     qCDebug(dsrApp) << __FUNCTION__ << __LINE__ << "已切换工具栏" << shapeType << this->count();
 }
