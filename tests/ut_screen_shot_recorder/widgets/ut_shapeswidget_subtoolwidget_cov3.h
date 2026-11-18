@@ -14,6 +14,7 @@
 #include <QVBoxLayout>
 #include <QSignalSpy>
 #include "addr_pri.h"
+#include "ut_toolbarhost_stub.h"
 #include "../../src/utils/shapesutils.h"
 #include "../../src/widgets/shapeswidget.h"
 #include "../../src/main_window.h"
@@ -52,6 +53,7 @@ class ShapesWidgetSubToolCov3Test : public Test
 public:
     QWidget *m_dummy = nullptr;
     ShapesWidget *m_sw = nullptr;
+    TestToolBarHost m_host;
     MainWindow *m_mw = nullptr;
     SubToolWidget *m_sub = nullptr;
 
@@ -62,10 +64,10 @@ public:
         m_sw = new ShapesWidget(m_dummy);
         m_sw->resize(800, 600);
 
-        // SubToolWidget requires a MainWindow in its ctor; create one lazily
-        // and parent the subtool to the same dummy.
+        // SubToolWidget uses the host abstraction and is parented to the dummy.
         m_mw = new MainWindow;
-        m_sub = new SubToolWidget(m_mw, m_dummy);
+        m_host.setAnchorWidget(m_dummy);
+        m_sub = new SubToolWidget(&m_host, m_dummy);
 
         m_dummy->show();
         m_sw->show();

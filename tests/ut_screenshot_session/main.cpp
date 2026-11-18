@@ -36,6 +36,8 @@
 #include <QElapsedTimer>
 #include <QRandomGenerator>
 #include <QTemporaryDir>
+#include <QFileInfo>
+#include <QStandardPaths>
 #include <QtTest>
 
 using namespace Dsr::Screenshot;
@@ -3499,6 +3501,83 @@ private slots:
         QVERIFY(!args.contains(QStringLiteral("-vsync")));
         QVERIFY(!args.join(' ').contains(QStringLiteral("itsscale")));
         QVERIFY(!args.join(' ').contains(QStringLiteral("passthrough")));
+    }
+
+    void latestFrameStoreSetGetClear()
+    {
+        LatestFrameStore store;
+        auto frame = std::make_shared<CaptureFrameSnapshot>();
+        frame->data = QByteArray(16, '\x11');
+        store.set(frame);
+        QVERIFY(store.get() == frame);
+        store.clear();
+        QVERIFY(!store.get());
+    }
+
+    void framePumpRejectsInvalidDimensions()
+    {
+        QTemporaryDir directory;
+        QVERIFY(directory.isValid());
+        LatestFrameStore store;
+        FramePumpWorker worker(24, directory.filePath(QStringLiteral("invalid.mp4")),
+                               QString(), &store);
+        QSignalSpy errors(&worker, &FramePumpWorker::errorOccurred);
+        QSignalSpy finished(&worker, &FramePumpWorker::finished);
+
+        worker.start(0, 16, 64);
+        QCOMPARE(errors.count(), 1);
+        QVERIFY(errors.first().first().toString().contains(QStringLiteral("Invalid frame dimensions")));
+        QCOMPARE(finished.count(), 1);
+        QCOMPARE(worker.outputFrames(), 0);
+    }
+
+    void framePumpRequiresFirstFrame()
+    {
+        QTemporaryDir directory;
+        QVERIFY(directory.isValid());
+        LatestFrameStore store;
+        FramePumpWorker worker(24, directory.filePath(QStringLiteral("empty.mp4")),
+                               QString(), &store);
+        QSignalSpy errors(&worker, &FramePumpWorker::errorOccurred);
+
+        worker.start(16, 16, 64);
+        QCOMPARE(errors.count(), 1);
+        QVERIFY(errors.first().first().toString().contains(QStringLiteral("No first frame")));
+    }
+
+    void framePumpWritesFramesAndStops()
+    {
+        if (QStandardPaths::findExecutable(QStringLiteral("ffmpeg")).isEmpty())
+            QSKIP("ffmpeg is not available");
+
+        QTemporaryDir directory;
+        QVERIFY(directory.isValid());
+        const QString outputPath = directory.filePath(QStringLiteral("pump.mp4"));
+
+        LatestFrameStore store;
+        auto frame = std::make_shared<CaptureFrameSnapshot>();
+        frame->width = 32;
+        frame->height = 32;
+        frame->stride = frame->width * 4;
+        frame->data = QByteArray(frame->stride * frame->height, '\x20');
+        frame->sequence = 1;
+        store.set(frame);
+
+        FramePumpWorker worker(10, outputPath, QString(), &store);
+        QSignalSpy started(&worker, &FramePumpWorker::started);
+        QSignalSpy finished(&worker, &FramePumpWorker::finished);
+        QSignalSpy errors(&worker, &FramePumpWorker::errorOccurred);
+
+        worker.start(frame->width, frame->height, frame->stride);
+        QCOMPARE(started.count(), 1);
+        QTest::qWait(250);
+        worker.stop();
+
+        QCOMPARE(errors.count(), 0);
+        QCOMPARE(finished.count(), 1);
+        QVERIFY(worker.outputFrames() >= 1);
+        QVERIFY(QFileInfo(outputPath).exists());
+        QVERIFY(QFileInfo(outputPath).size() > 0);
     }
 };
 

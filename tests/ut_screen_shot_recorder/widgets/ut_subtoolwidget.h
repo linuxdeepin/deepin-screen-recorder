@@ -12,6 +12,7 @@
 #define project public
 #include "stub.h"
 #include "addr_pri.h"
+#include "ut_toolbarhost_stub.h"
 #include "../../src/widgets/subtoolwidget.h"
 #include "../../src/main_window.h"
 
@@ -46,12 +47,14 @@ class SubToolWidgetTest: public testing::Test
 
 public:
     Stub stub;
+    TestToolBarHost m_host;
     SubToolWidget *m_subToolWidget;
     MainWindow *m_mainWindow;
     virtual void SetUp() override
     {
         m_mainWindow = new MainWindow;
-        m_subToolWidget = new SubToolWidget(m_mainWindow);
+        m_host.setAnchorWidget(m_mainWindow);
+        m_subToolWidget = new SubToolWidget(&m_host);
         m_subToolWidget->initWidget();
 //        m_subToolWidget->initRecordLabel();
 //        m_subToolWidget->initShotLabel();

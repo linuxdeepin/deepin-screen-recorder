@@ -103,6 +103,7 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 # Input
 HEADERS += test_all_interfaces.h \
+           ut_toolbarhost_stub.h \
            ut_camera_cov.h \
            ut_button_feedback.h \
            ut_countdown_tooltip.h \
@@ -153,6 +154,7 @@ HEADERS += test_all_interfaces.h \
         ../../src/widgets/tooltips.h \
         ../../src/widgets/sidebar.h \
         ../../src/widgets/toolbar.h \
+        ../../src/widgets/toolbarhost.h \
         ../../src/widgets/subtoolwidget.h \
         ../../src/widgets/camerawidget.h \
         ../../src/widgets/toptips.h \
@@ -169,6 +171,7 @@ HEADERS += test_all_interfaces.h \
         ../../src/dbusinterface/pinscreenshotsinterface.h \
         ../../src/constant.h \
         ../../src/utils.h \
+        ../../src/utils/imageeffects.h \
         ../../src/button_feedback.h \
         ../../src/countdown_tooltip.h \
         ../../src/main_window.h \
@@ -232,6 +235,11 @@ HEADERS += test_all_interfaces.h \
     ut_record_process_ext.h \
     widgets/ut_subtoolwidget_ext.h \
     widgets/ut_imagemenu_ext.h \
+    screenshot/ut_screenshot_adapters.h \
+    screenshot/ut_main_shapes_cov.h \
+    widgets/ut_ui_extra_cov.h \
+    ut_generated_dbus_extra_cov.h \
+    utils/ut_utility_extra_cov.h \
     ut_main_window_ext.h \
     # --- P0-2 补全：新增测试头文件 ---
     ut_dbus_name.h \
@@ -258,6 +266,7 @@ HEADERS += test_all_interfaces.h \
     ../../src/ext-image-capture/extcaptureframebuffer.h \
     ../../src/ext-image-capture/extcaptureintegration.h \
     ../../src/ext-image-capture/extcapturerecorder.h \
+    ../../src/ext-image-capture/framepumpworker.h \
     ../../src/ext-image-capture/capturepipelineworker.h \
     ../../src/ext-image-capture/dmaframegpuconverter.h \
     ../../src/ext-image-capture/frame/extcaptureframe.h \
@@ -266,6 +275,38 @@ HEADERS += test_all_interfaces.h \
     ../../src/ext-image-capture/multiscreencapturecoordinator.h \
     ../../src/ext-image-capture/multiscreenframecompositor.h \
     ../../src/ext-image-capture/session/extcapturesession.h \
+    ../../src/screenshot/core/selectionconstraints.h \
+    ../../src/screenshot/core/selectionmodel.h \
+    ../../src/screenshot/core/selectionoverlaygeometry.h \
+    ../../src/screenshot/ports/iannotationeditor.h \
+    ../../src/screenshot/ports/irecordingsession.h \
+    ../../src/screenshot/ports/iscreenshotbackend.h \
+    ../../src/screenshot/ports/iscreenshotoverlayhost.h \
+    ../../src/screenshot/ports/iscreenshotresultsink.h \
+    ../../src/screenshot/ports/iscrollcapture.h \
+    ../../src/screenshot/ports/iscrollmerger.h \
+    ../../src/screenshot/ports/isnaphintsource.h \
+    ../../src/screenshot/ports/iwindowtagger.h \
+    ../../src/screenshot/adapters/shapeswidgetannotationeditor.h \
+    ../../src/screenshot/export/screenshotexportservice.h \
+    ../../src/screenshot/export/localscreenshotresultsink.h \
+    ../../src/screenshot/session/annotationcoordinator.h \
+    ../../src/screenshot/session/screenshotsessioncontroller.h \
+    ../../src/screenshot/session/screenshotsessionfactory.h \
+    ../../src/screenshot/merge/scrollmergecoordinator.h \
+    ../../src/screenshot/platform/treeland/treelandstillcapture.h \
+    ../../src/screenshot/platform/treeland/treelandsnapproxy.h \
+    ../../src/screenshot/platform/treeland/treelandsnaphintsource.h \
+    ../../src/screenshot/platform/treeland/treelandwindowtagger.h \
+    ../../src/screenshot/platform/treeland/treelandannotationeditor.h \
+    ../../src/screenshot/platform/treeland/treelandmaskwindow.h \
+    ../../src/screenshot/platform/treeland/treelandmaskoverlayhost.h \
+    ../../src/screenshot/platform/treeland/treelandrecordingsession.h \
+    ../../src/screenshot/platform/treeland/treelandscrollcapture.h \
+    ../../src/screenshot/platform/treeland/treelandscrollcompositor.h \
+    ../../src/screenshot/platform/treeland/treelandoutputcapture.h \
+    ../../src/screenshot/platform/treeland/recordingfiletransaction.h \
+    ../../src/screenshot/platform/treeland/treelandscreenshotbackend.h \
     ../../src/widgets/zoomIndicatorGL.h \
     ../../src/widgets/shapetoolwidget.h \
     ../../src/widgets/savebutton.h \
@@ -346,6 +387,7 @@ SOURCES += main.cpp \
     ../../src/utils/log.cpp \
     ../../src/utils/dbusutils.cpp \
     ../../src/utils/eventlogutils.cpp \
+    ../../src/utils/imageeffects.cpp \
     ../../src/utils/borderprocessinterface.cpp \
     #../../src/utils/desktopinfo.cpp \
     ../../src/utils/screengrabber.cpp \
@@ -368,6 +410,7 @@ SOURCES += main.cpp \
     ../../src/widgets/tooltips.cpp \
     ../../src/widgets/sidebar.cpp \
     ../../src/widgets/toolbar.cpp \
+    ../../src/widgets/toolbarhost.cpp \
     ../../src/widgets/subtoolwidget.cpp \
     ../../src/widgets/camerawidget.cpp \
     ../../src/widgets/toptips.cpp \
@@ -389,6 +432,7 @@ SOURCES += main.cpp \
     ../../src/ext-image-capture/extcaptureframebuffer.cpp \
     ../../src/ext-image-capture/extcaptureintegration.cpp \
     ../../src/ext-image-capture/extcapturerecorder.cpp \
+    ../../src/ext-image-capture/framepumpworker.cpp \
     ../../src/ext-image-capture/capturepipelineworker.cpp \
     ../../src/ext-image-capture/dmaframegpuconverter.cpp \
     ../../src/ext-image-capture/multiscreencapturecoordinator.cpp \
@@ -397,6 +441,29 @@ SOURCES += main.cpp \
     ../../src/ext-image-capture/manager/extcapturemanager.cpp \
     ../../src/ext-image-capture/manager/extoutputsourcemanager.cpp \
     ../../src/ext-image-capture/session/extcapturesession.cpp \
+    ../../src/screenshot/core/selectionmodel.cpp \
+    ../../src/screenshot/core/selectionoverlaygeometry.cpp \
+    ../../src/screenshot/core/selectionconstraints.cpp \
+    ../../src/screenshot/adapters/shapeswidgetannotationeditor.cpp \
+    ../../src/screenshot/export/screenshotexportservice.cpp \
+    ../../src/screenshot/export/localscreenshotresultsink.cpp \
+    ../../src/screenshot/session/annotationcoordinator.cpp \
+    ../../src/screenshot/session/screenshotsessioncontroller.cpp \
+    ../../src/screenshot/session/screenshotsessionfactory.cpp \
+    ../../src/screenshot/merge/scrollmergecoordinator.cpp \
+    ../../src/screenshot/platform/treeland/treelandstillcapture.cpp \
+    ../../src/screenshot/platform/treeland/treelandsnapproxy.cpp \
+    ../../src/screenshot/platform/treeland/treelandsnaphintsource.cpp \
+    ../../src/screenshot/platform/treeland/treelandwindowtagger.cpp \
+    ../../src/screenshot/platform/treeland/treelandannotationeditor.cpp \
+    ../../src/screenshot/platform/treeland/treelandmaskwindow.cpp \
+    ../../src/screenshot/platform/treeland/treelandmaskoverlayhost.cpp \
+    ../../src/screenshot/platform/treeland/treelandrecordingsession.cpp \
+    ../../src/screenshot/platform/treeland/treelandscrollcapture.cpp \
+    ../../src/screenshot/platform/treeland/treelandscrollcompositor.cpp \
+    ../../src/screenshot/platform/treeland/treelandoutputcapture.cpp \
+    ../../src/screenshot/platform/treeland/recordingfiletransaction.cpp \
+    ../../src/screenshot/platform/treeland/treelandscreenshotbackend.cpp \
     ../../src/menucontroller/menucontroller.cpp \
     ../../src/dbusinterface/dbusnotify.cpp \
     ../../src/dbusinterface/ocrinterface.cpp \
@@ -431,6 +498,11 @@ SOURCES += main.cpp \
     ../../src/protocols/ext-image-copy-capture/wayland-ext-foreign-toplevel-list-v1-protocol.c \
     ../../src/protocols/ext-image-copy-capture/qwayland-ext-image-capture-source-v1.cpp \
     ../../src/protocols/ext-image-copy-capture/wayland-ext-image-capture-source-v1-protocol.c \
+    ../../src/protocols/treeland-snap-target/qwayland-treeland-snap-target-unstable-v1.cpp \
+    ../../src/protocols/treeland-snap-target/wayland-treeland-snap-target-unstable-v1-protocol.c \
+    ../../src/protocols/treeland-snap-target/qwayland-xdg-toplevel-tag-v1.cpp \
+    ../../src/protocols/treeland-snap-target/wayland-xdg-toplevel-tag-v1-protocol.c \
+    ../../src/protocols/treeland-snap-target/wayland-xdg-shell-protocol.c \
     ../../src/capture.cpp \
     ../../src/wayland-treeland-capture-unstable-v1-protocol.c \
     # --- P0-2 补全：新增漏列源文件 ---
@@ -441,6 +513,7 @@ SOURCES += main.cpp \
     ../../src/dbusservice/dbusscreenshotservice.cpp \
     # --- P1: 启用孤儿测试，补入对应源文件 ---
     ../../src/widgets/colorbutton.cpp \
+    ../../src/pin_screenshots/putils.cpp \
     coverage_final.cpp \
     protocols_handle_cov.cpp \
     remaining_cov.cpp \

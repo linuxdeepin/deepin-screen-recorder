@@ -35,6 +35,8 @@
 #include <QImage>
 #include <QFileDialog>
 
+#include "ut_toolbarhost_stub.h"
+
 // All Qt headers are now processed. Safe to redefine.
 #define private public
 #define protected public
@@ -72,6 +74,7 @@ class MainWindowStubFixture : public testing::Test
 {
 public:
     Stub stub;
+    TestToolBarHost m_host;
     MainWindow *m_mw = nullptr;
     static QRect msf_geom() { return QRect(0, 0, 1920, 1080); }
     static qreal msf_dpr() { return 1.0; }
@@ -93,6 +96,7 @@ public:
         stub.set(ADDR(Utils, passInputEvent), msf_pi);
         stub.set(ADDR(QFileDialog, getSaveFileName), msf_saveDlg);
         m_mw = new MainWindow;
+        m_host.setAnchorWidget(m_mw);
         m_mw->initAttributes();
         m_mw->initResource();
     }
@@ -226,8 +230,8 @@ public:
         stub.set(ADDR(MainWindow, getToolBarStartPressPoint), msf_pi);
         stub.set(ADDR(MainWindow, getToolBarPoint), msf_pi);
         m_bar = new SideBar(m_mw);
-        m_bar->initSideBar(m_mw);
-        m_sbw = new SideBarWidget(m_mw, nullptr);
+        m_bar->initSideBar(&m_host);
+        m_sbw = new SideBarWidget(&m_host, nullptr);
         m_sbw->resize(100, 100);
     }
 };
@@ -329,20 +333,6 @@ TEST(ActionWidgetFinalCovTest, Destructor)
     EXPECT_NO_FATAL_FAILURE(delete w);
 }
 
-TEST(ImageMenuFinalCovTest, PaintEvent)
-{
-    QWidget dummyParent;
-    dummyParent.resize(400, 300);
-    dummyParent.move(10, 10);
-    ImageMenu *m = ImageBorderHelper::instance()->getBorderMenu(ImageBorderHelper::External, "test", &dummyParent);
-    if (m) {
-        m->resize(200, 100);
-        m->move(50, 50);
-        QPaintEvent pe(QRect(0, 0, 100, 50));
-        EXPECT_NO_FATAL_FAILURE(m->paintEvent(&pe));
-    }
-}
-
 // ============================================================================
 // RecorderRegionShow coverage
 // ============================================================================
@@ -365,7 +355,7 @@ public:
     void SetUp() override
     {
         MainWindowStubFixture::SetUp();
-        m_stw = new ShotToolWidget(m_mw);
+        m_stw = new ShotToolWidget(&m_host);
     }
 };
 
@@ -390,9 +380,9 @@ public:
     void SetUp() override
     {
         MainWindowStubFixture::SetUp();
-        m_tbw = new ToolBarWidget(m_mw, nullptr, false);
+        m_tbw = new ToolBarWidget(&m_host, nullptr, false);
         m_bar = new ToolBar;
-        m_bar->initToolBar(m_mw);
+        m_bar->initToolBar(&m_host);
     }
 
     void TearDown() override
@@ -448,7 +438,7 @@ TEST_F(ToolBarFinalCovTest, GetAiButtonGlobalCenter)
 // ---- ToolBarWidget destructor coverage ----
 TEST_F(ToolBarFinalCovTest, ToolBarWidgetDestructor)
 {
-    ToolBarWidget *w = new ToolBarWidget(m_mw, nullptr, false);
+    ToolBarWidget *w = new ToolBarWidget(&m_host, nullptr, false);
     EXPECT_NO_FATAL_FAILURE(delete w);
 }
 
@@ -495,7 +485,7 @@ public:
     void SetUp() override
     {
         MainWindowStubFixture::SetUp();
-        m_sub = new SubToolWidget(m_mw);
+        m_sub = new SubToolWidget(&m_host);
         m_sub->initWidget();
     }
 

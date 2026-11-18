@@ -14,7 +14,7 @@
 using namespace testing;
 
 // 覆盖 ut_multiscreenframecompositor.h 未触及的分支：
-//  - convertDmaBufferToQImage：frameData 为空 -> 占位符路径
+//  - convertDmaBufferToQImage：frameData 为空 -> 无可用图像
 //  - calculateDrawRect：裁剪区域相交/不相交/平移坐标
 //  - addScreenFrame：已配置布局后正常更新 + 触发 performComposition（QueuedConnection）
 //  - getLatestTimestamp：取最大时间戳
@@ -47,16 +47,14 @@ public:
     }
 };
 
-// convertDmaBufferToQImage：frameData 为空 -> 返回非空占位图（品红半透明）
-TEST_F(MultiScreenFrameCompositorCovTest, convertDmaBufferPlaceholderWhenNoCpuData)
+// convertDmaBufferToQImage：frameData 为空 -> 返回空图，由调用方跳过该帧
+TEST_F(MultiScreenFrameCompositorCovTest, convertDmaBufferReturnsNullWhenNoCpuData)
 {
     QList<QScreen *> screens = QGuiApplication::screens();
     if (screens.isEmpty()) GTEST_SKIP();
     DmaFrameInfo f = makeEmptyFrame(screens.first(), QRect(0, 0, 4, 4), 4, 4, 1);
     QImage img = call_private_fun::MultiScreenFrameCompositorconvertDmaBufferToQImage(*m_c, f);
-    EXPECT_FALSE(img.isNull());
-    EXPECT_EQ(img.width(), 4);
-    EXPECT_EQ(img.height(), 4);
+    EXPECT_TRUE(img.isNull());
 }
 
 // calculateDrawRect：无裁剪区域 -> 原样返回 screenGeometry

@@ -21,7 +21,9 @@ make -j4
 ./ut_screenshot_session -o report/report_ut_screenshot_session.xml,junitxml
 
 lcov -d . -c -o ut_screenshot_session_coverage.info 2>/dev/null || true
-lcov --extract ./ut_screenshot_session_coverage.info '*/src/screenshot/*' \
+lcov --extract ./ut_screenshot_session_coverage.info \
+    '*/src/screenshot/*' \
+    '*/src/ext-image-capture/framepumpworker.cpp' \
     --output-file ut_screenshot_session_coverage.info 2>/dev/null || true
 
 cp report/report_ut_screenshot_session.xml ../../../build-ut/report/ 2>/dev/null || true

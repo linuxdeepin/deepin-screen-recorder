@@ -9,6 +9,7 @@
 #include <QDebug>
 #include "stub.h"
 #include "addr_pri.h"
+#include "ut_toolbarhost_stub.h"
 #include <DApplicationHelper>
 #include "../../src/main_window.h"
 #include "../../src/widgets/sidebar.h"
@@ -26,14 +27,16 @@ class SideBarWidgetTest:public testing::Test{
 
 public:
     Stub stub;
+    TestToolBarHost m_host;
     SideBar *m_sideBar;
     SideBarWidget *m_sideBarWidget;
     MainWindow *m_window;
     QString m_tips = QString("");
     virtual void SetUp() override{
         m_window = new MainWindow;
+        m_host.setAnchorWidget(m_window);
         m_sideBar = new SideBar(m_window);
-        m_sideBarWidget = new SideBarWidget(m_sideBar);
+        m_sideBarWidget = new SideBarWidget(&m_host);
         //m_sideBar->initSideBar();
     }
 
@@ -46,7 +49,7 @@ public:
 TEST_F(SideBarWidgetTest, changeShotToolWidget)
 {
     stub.set(ADDR(QVariant,toInt),toInt_stub2);
-    SideBarWidget();
+    SideBarWidget(&m_host);
     stub.reset(ADDR(QVariant,toInt));
     m_sideBarWidget->changeShotToolWidget(QString("rectangle"));
     m_sideBarWidget->changeShotToolWidget(QString("oval"));

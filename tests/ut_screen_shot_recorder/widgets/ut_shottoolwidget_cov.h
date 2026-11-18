@@ -6,15 +6,15 @@
 #include <gtest/gtest.h>
 #include <QSignalSpy>
 #include "addr_pri.h"
+#include "ut_toolbarhost_stub.h"
 #include "../../src/widgets/shottoolwidget.h"
 #include "../../src/utils/configsettings.h"
 
 using namespace testing;
 
 // The legacy ut_shottoolwidget.h is disabled (ctor/initRectLabel/m_blurRectButton
-// drift). This file targets the current ShotToolWidget API with a null MainWindow
-// (the ctor only stores the pointer; initWidget/initEffectLabel build UI without
-// dereferencing it). Covers:
+// drift). This file targets the current ShotToolWidget API with a no-op
+// ToolBarHost. Covers:
 //   - switchContent across all branches: thickness-panel shapes (rectangle/oval/
 //     gio/line/arrow/pen -> lazy initThicknessLabel), text (lazy initTextLabel),
 //     effect, empty string, and unknown.
@@ -22,14 +22,15 @@ using namespace testing;
 //   - colorChecked (currently empty body, just ensures it returns).
 //   - installTipHint (creates a ToolTips with the parent; safe with null parent).
 //
-// MainWindow is NOT dereferenced in any covered path, so passing nullptr keeps
-// the test hermetic (no need for the heavy MainWindow stubs).
+// The no-op host keeps the test hermetic (no need for the heavy MainWindow
+// stubs).
 
 class ShotToolWidgetCovTest : public Test
 {
 public:
+    TestToolBarHost m_host;
     ShotToolWidget *m_w = nullptr;
-    void SetUp() override { m_w = new ShotToolWidget(nullptr); }
+    void SetUp() override { m_w = new ShotToolWidget(&m_host); }
     void TearDown() override { delete m_w; }
 };
 

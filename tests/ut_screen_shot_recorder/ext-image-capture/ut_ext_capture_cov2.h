@@ -385,11 +385,11 @@ TEST_F(ExtCaptureSessionCov2Test, getLinuxDmabufReturnsNull)
     EXPECT_EQ(m_sess->getLinuxDmabuf(), nullptr);
 }
 
-// selectOptimalFormat：无任何格式 -> emit error
-TEST_F(ExtCaptureSessionCov2Test, selectOptimalNoFormatsEmitsError)
+// selectCapturePlan：无任何格式 -> emit error
+TEST_F(ExtCaptureSessionCov2Test, selectCapturePlanNoFormatsEmitsError)
 {
     QSignalSpy errSpy(m_sess, &ExtCaptureSession::error);
-    call_private_fun::ExtCaptureSessionselectOptimalFormat(*m_sess);
+    call_private_fun::ExtCaptureSessionselectCapturePlan(*m_sess);
     EXPECT_GE(errSpy.count(), 1);
     EXPECT_EQ(m_sess->state(), ExtCaptureSession::Error);
 }

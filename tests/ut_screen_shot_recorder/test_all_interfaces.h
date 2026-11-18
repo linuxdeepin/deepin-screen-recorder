@@ -85,6 +85,7 @@
 #include "ut_record_process_ext.h"
 #include "widgets/ut_subtoolwidget_ext.h"
 #include "widgets/ut_imagemenu_ext.h"
+#include "screenshot/ut_screenshot_adapters.h"
 #include "ut_main_window_ext.h"
 #include "ut_main_window_ef.h"
 #include "ut_main_window_cov.h"
@@ -179,4 +180,8 @@
 #include "ut_misc_cov_final.h"
 #include "ut_ext_capture_cov_final.h"
 #include "ut_record_process_cov_final.h"
+#include "screenshot/ut_main_shapes_cov.h"
+#include "widgets/ut_ui_extra_cov.h"
+#include "ut_generated_dbus_extra_cov.h"
+#include "utils/ut_utility_extra_cov.h"
 

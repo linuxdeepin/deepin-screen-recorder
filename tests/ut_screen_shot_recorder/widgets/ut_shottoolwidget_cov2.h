@@ -7,6 +7,7 @@
 #include <QSignalSpy>
 #include <QTest>
 #include "addr_pri.h"
+#include "ut_toolbarhost_stub.h"
 #include "../../src/widgets/shottoolwidget.h"
 #include "../../src/utils/configsettings.h"
 
@@ -14,7 +15,7 @@ using namespace testing;
 
 // 覆盖 shottoolwidget.cpp 剩余未覆盖分支：
 //  - switchContent 在已初始化 thickness/text 面板后的二次切换（跳过 lazy init）
-//  - shapeSelected 在 m_pMainWindow 非空时的调用路径（用 nullptr 仍走 if 守卫）
+//  - shapeSelected 在宿主存在时的安全调用路径
 //  - initThicknessLabel / initTextLabel / initEffectLabel 直接调用
 //  - 各种 ConfigSettings 组合下 effect 工具栏的初始化分支
 // 既有 ut_shottoolwidget_cov.h 已覆盖基本 switchContent 分支，这里补充边界与重复调用。
@@ -23,8 +24,9 @@ using namespace testing;
 class ShotToolWidgetCov2Test : public Test
 {
 public:
+    TestToolBarHost m_host;
     ShotToolWidget *m_w = nullptr;
-    void SetUp() override { m_w = new ShotToolWidget(nullptr); }
+    void SetUp() override { m_w = new ShotToolWidget(&m_host); }
     void TearDown() override { delete m_w; }
 };
 
@@ -143,7 +145,7 @@ TEST_F(ShotToolWidgetCov2Test, effectConfigBlurEnabled)
     ConfigSettings::instance()->setValue("effect", "isBlur", true);
     ConfigSettings::instance()->setValue("effect", "isOval", 0);
     // 通过重新构造触发 initEffectLabel 读取配置
-    ShotToolWidget *w = new ShotToolWidget(nullptr);
+    ShotToolWidget *w = new ShotToolWidget(&m_host);
     EXPECT_NO_FATAL_FAILURE(w->initEffectLabel());
     delete w;
 }
@@ -153,7 +155,7 @@ TEST_F(ShotToolWidgetCov2Test, effectConfigMosaicEnabled)
 {
     ConfigSettings::instance()->setValue("effect", "isBlur", false);
     ConfigSettings::instance()->setValue("effect", "isOval", 1);
-    ShotToolWidget *w = new ShotToolWidget(nullptr);
+    ShotToolWidget *w = new ShotToolWidget(&m_host);
     EXPECT_NO_FATAL_FAILURE(w->initEffectLabel());
     delete w;
 }
@@ -163,7 +165,7 @@ TEST_F(ShotToolWidgetCov2Test, effectConfigPenSelected)
 {
     ConfigSettings::instance()->setValue("effect", "isBlur", false);
     ConfigSettings::instance()->setValue("effect", "isOval", 2);
-    ShotToolWidget *w = new ShotToolWidget(nullptr);
+    ShotToolWidget *w = new ShotToolWidget(&m_host);
     EXPECT_NO_FATAL_FAILURE(w->initEffectLabel());
     delete w;
 }
@@ -173,7 +175,7 @@ TEST_F(ShotToolWidgetCov2Test, effectConfigDefaultRectangle)
 {
     ConfigSettings::instance()->setValue("effect", "isBlur", false);
     ConfigSettings::instance()->setValue("effect", "isOval", 999);
-    ShotToolWidget *w = new ShotToolWidget(nullptr);
+    ShotToolWidget *w = new ShotToolWidget(&m_host);
     EXPECT_NO_FATAL_FAILURE(w->initEffectLabel());
     delete w;
 }
