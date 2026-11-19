@@ -1854,8 +1854,8 @@ void MainWindow::fullScreenRecord(const QString fileName)
     this->setFixedSize(m_backgroundRect.size());
     recordX = 0;
     recordY = 0;
-    recordWidth = m_backgroundRect.width();
-    recordHeight = m_backgroundRect.height();
+    recordWidth = m_screenSize.width();
+    recordHeight = m_screenSize.height();
     updateToolBarPos();
     selectAreaName = fileName;
     startCountdown();
@@ -6336,12 +6336,17 @@ void MainWindow::startCountdown()
     if (recordY < 0) {
         recordY = 0;
     }
-    QRect recordRect {
-        static_cast<int>(recordX *m_pixelRatio/* + topLeft.x()*/),
-        static_cast<int>(recordY *m_pixelRatio/* + topLeft.y()*/),
-        static_cast<int>(recordWidth * m_pixelRatio),
-        static_cast<int>(recordHeight * m_pixelRatio)
-    };
+    QRect recordRect;
+    if (m_isFullScreenRecord) {
+        recordRect = QRect(recordX, recordY, recordWidth, recordHeight);
+    } else {
+        recordRect = QRect {
+            static_cast<int>(recordX *m_pixelRatio/* + topLeft.x()*/),
+            static_cast<int>(recordY *m_pixelRatio/* + topLeft.y()*/),
+            static_cast<int>(recordWidth * m_pixelRatio),
+            static_cast<int>(recordHeight * m_pixelRatio)
+        };
+    }
     qDebug() << "record rect:" << recordRect;
 
     recordProcess.setRecordInfo(recordRect, selectAreaName);
