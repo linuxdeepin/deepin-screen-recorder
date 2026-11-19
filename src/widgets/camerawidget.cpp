@@ -5,6 +5,7 @@
 
 #include "camerawidget.h"
 #include "v4l2_core.h"
+#include "../camera/v4l2devicehandle.h"
 #include "../utils/log.h"
 
 #include <QMouseEvent>

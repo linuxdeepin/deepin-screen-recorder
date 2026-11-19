@@ -6,15 +6,11 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
-#include "camview.h"
+#include "v4l2devicehandle.h"
 #include "LPF_V4L2.h"
-#include "gviewaudio.h"
 #include "gviewv4l2core.h"
 #include "v4l2_devices.h"
 #include "v4l2_core.h"
-#include "gviewencoder.h"
-#include "gviewrender.h"
-#include "audio.h"
 #include "core_io.h"
 #include "colorspaces.h"
 
