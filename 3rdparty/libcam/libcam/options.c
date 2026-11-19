@@ -28,7 +28,6 @@
 #include "gviewv4l2core.h"
 #include "gview.h"
 #include "core_io.h"
-#include "gui.h"
 #include "options.h"
 #include "cameraconfig.h"
 

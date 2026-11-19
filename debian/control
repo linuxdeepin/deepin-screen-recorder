@@ -27,7 +27,6 @@ Build-Depends: debhelper,
 # 其他架构编译期裁剪表格识别功能，见 src/pin_screenshots/pin_screenshots.pro
  libdtk6tablerecognizer-dev [amd64 arm64 loong64],
  dde-tray-loader-dev | dde-dock-dev,
- libffmpegthumbnailer-dev,
  deepin-desktop-base,
 # opencv
  libopencv-mobile-dev,
@@ -62,7 +61,6 @@ Build-Depends: debhelper,
  libusb-1.0-0-dev,
  libudev-dev,
  libprocps-dev | libproc2-dev,
- portaudio19-dev,
  libv4l-dev
 Standards-Version: 3.9.8
 Homepage: https://github.com/linuxdeepin/deepin-screen-recorder
@@ -72,7 +70,6 @@ Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}, 
  libgstreamer1.0-0 (>= 1.0.0), 
  ffmpeg, 
- libportaudio2
 Recommends: dde-session-ui,
  deepin-ocr,
  gstreamer1.0-plugins-bad,

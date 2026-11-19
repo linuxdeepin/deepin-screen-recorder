@@ -13,9 +13,7 @@
 //#include <libavutil/dict.h>
 #include <libswscale/swscale.h>
 #include <libswresample/swresample.h>
-#include <libffmpegthumbnailer/videothumbnailerc.h>
 #include <libusb.h>
-#include <portaudio.h>
 #include <libv4l2.h>
 #include <libudev.h>
 
@@ -61,14 +59,6 @@ typedef void (*uos_av_init_packet)(AVPacket *pkt);
 typedef AVPacket *(*uos_av_packet_alloc)(void);
 
 
-typedef video_thumbnailer *(*uos_video_thumbnailer)();
-typedef void (*uos_video_thumbnailer_destroy)(video_thumbnailer *thumbnailer);
-/* create image_data structure */
-typedef image_data *(*uos_video_thumbnailer_create_image_data)(void);
-/* destroy image_data structure */
-typedef void (*uos_video_thumbnailer_destroy_image_data)(image_data *data);
-typedef int (*uos_video_thumbnailer_generate_thumbnail_to_buffer)(video_thumbnailer *thumbnailer, const char *movie_filename, image_data *generated_image_data);
-
 //lswresample
 //void swr_free(struct SwrContext **s);
 typedef void (*uos_swr_free)(struct SwrContext **s);
@@ -79,14 +69,12 @@ typedef void (*uos_sws_freeContext)(struct SwsContext *swsContext);
 
 typedef struct _LoadLibNames {
     char *chAvcodec;
-    char *chFfmpegthumbnailer;
     char *chSwresample;
     char *chSwscale;
     char *chAvformat;
     char *chAvutil;
     char *chUdev;
     char *chUsb;
-    char *chPortaudio;
     char *chV4l2;
 } LoadLibNames;
 
@@ -116,12 +104,6 @@ typedef struct _LoadLibs {
     uos_av_init_packet m_av_init_packet;
     uos_av_packet_alloc m_av_packet_alloc;
 
-
-    uos_video_thumbnailer m_video_thumbnailer;
-    uos_video_thumbnailer_destroy m_video_thumbnailer_destroy;
-    uos_video_thumbnailer_create_image_data m_video_thumbnailer_create_image_data;
-    uos_video_thumbnailer_destroy_image_data m_video_thumbnailer_destroy_image_data;
-    uos_video_thumbnailer_generate_thumbnail_to_buffer m_video_thumbnailer_generate_thumbnail_to_buffer;
 
 
     uos_swr_free m_swr_free;
@@ -351,75 +333,6 @@ typedef struct _LoadUSB {
 } LoadUSB;
 
 LoadUSB *getUSB();
-
-//PaDeviceIndex Pa_GetDeviceCount( void );
-typedef PaDeviceIndex (*uos_Pa_GetDeviceCount)( void );
-//PaError Pa_IsStreamStopped( PaStream *stream );
-typedef PaError (*uos_Pa_IsStreamStopped)( PaStream *stream );
-//const PaDeviceInfo* Pa_GetDeviceInfo( PaDeviceIndex device );
-typedef const PaDeviceInfo *(*uos_Pa_GetDeviceInfo)( PaDeviceIndex device );
-//PaError Pa_Initialize( void );
-typedef PaError (*uos_Pa_Initialize)( void );
-//PaError Pa_IsStreamActive( PaStream *stream );
-typedef PaError (*uos_Pa_IsStreamActive)( PaStream *stream );
-//PaError Pa_Terminate( void );
-typedef PaError (*uos_Pa_Terminate)( void );
-//PaError Pa_AbortStream( PaStream *stream );
-typedef PaError (*uos_Pa_AbortStream)( PaStream *stream );
-//PaError Pa_StopStream( PaStream *stream );
-typedef PaError (*uos_Pa_StopStream)( PaStream *stream );
-//PaError Pa_CloseStream( PaStream *stream );
-typedef PaError (*uos_Pa_CloseStream)( PaStream *stream );
-//PaDeviceIndex Pa_GetDefaultInputDevice( void );
-typedef PaDeviceIndex (*uos_Pa_GetDefaultInputDevice)( void );
-//const PaHostApiInfo * Pa_GetHostApiInfo( PaHostApiIndex hostApi );
-typedef const PaHostApiInfo *(*uos_Pa_GetHostApiInfo)( PaHostApiIndex hostApi );
-//PaDeviceIndex Pa_GetDefaultOutputDevice( void );
-typedef PaDeviceIndex (*uos_Pa_GetDefaultOutputDevice)( void );
-/*PaError Pa_OpenStream( PaStream** stream,
-                       const PaStreamParameters *inputParameters,
-                       const PaStreamParameters *outputParameters,
-                       double sampleRate,
-                       unsigned long framesPerBuffer,
-                       PaStreamFlags streamFlags,
-                       PaStreamCallback *streamCallback,
-                       void *userData );*/
-typedef PaError (*uos_Pa_OpenStream)( PaStream **stream,
-                                      const PaStreamParameters *inputParameters,
-                                      const PaStreamParameters *outputParameters,
-                                      double sampleRate,
-                                      unsigned long framesPerBuffer,
-                                      PaStreamFlags streamFlags,
-                                      PaStreamCallback *streamCallback,
-                                      void *userData );
-//PaError Pa_StartStream( PaStream *stream );
-typedef PaError (*uos_Pa_StartStream)( PaStream *stream );
-//const PaStreamInfo* Pa_GetStreamInfo( PaStream *stream );
-typedef const PaStreamInfo *(*uos_Pa_GetStreamInfo)( PaStream *stream );
-//const char *Pa_GetErrorText( PaError errorCode );
-typedef const char *(*uos_Pa_GetErrorText)( PaError errorCode );
-
-typedef struct _LoadPortAudio {
-    uos_Pa_GetDeviceCount m_Pa_GetDeviceCount;
-    uos_Pa_IsStreamStopped m_Pa_IsStreamStopped;
-    uos_Pa_GetDeviceInfo m_Pa_GetDeviceInfo;
-    uos_Pa_Initialize m_Pa_Initialize;
-    uos_Pa_IsStreamActive m_Pa_IsStreamActive;
-    uos_Pa_Terminate m_Pa_Terminate;
-    uos_Pa_AbortStream m_Pa_AbortStream;
-    uos_Pa_StopStream m_Pa_StopStream;
-    uos_Pa_CloseStream m_Pa_CloseStream;
-    uos_Pa_GetDefaultInputDevice m_Pa_GetDefaultInputDevice;
-    uos_Pa_GetHostApiInfo m_Pa_GetHostApiInfo;
-    uos_Pa_GetDefaultOutputDevice m_Pa_GetDefaultOutputDevice;
-    uos_Pa_OpenStream m_Pa_OpenStream;
-    uos_Pa_StartStream m_Pa_StartStream;
-    uos_Pa_GetStreamInfo m_Pa_GetStreamInfo;
-    uos_Pa_GetErrorText m_Pa_GetErrorText;
-} LoadPortAudio;
-
-LoadPortAudio *getPortAudio();
-
 
 //LIBV4L_PUBLIC int v4l2_ioctl(int fd, unsigned long int request, ...);
 typedef LIBV4L_PUBLIC int (*uos_v4l2_ioctl)(int fd, unsigned long int request, ...);
