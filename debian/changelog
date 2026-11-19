@@ -1,3 +1,18 @@
+deepin-screen-recorder (5.12.20.78-1) unstable; urgency=medium
+
+  * fix: keep recording when switching display scaling in single-screen
+         Wayland sessions (PMS: 383213)
+  * debug: add DSR_SCALE_TRACE switch for display scaling diagnostics
+         (Influence: record and screenshot paths)
+  * fix: remap recording border and selection to the new logical
+         coordinates after scaling changes, keeping encoding size frozen
+         (Influence: recording overlay position only)
+  * fix: refresh the dim-mask base and background capture after a scaling
+         change so the bright region stays aligned with the dim area
+         (Influence: recording overlay rendering)
+
+ -- majiuping <majiuping@uniontech.com>  Thu, 19 Nov 2026 15:30:00 +0800
+
 deepin-screen-recorder (5.12.20) unstable; urgency=medium
 
   * fix: The icon scales and deforms after adjusting the

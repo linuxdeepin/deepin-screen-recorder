@@ -1,5 +1,5 @@
 // Copyright (C) 2020 ~ 2021 Uniontech Software Technology Co.,Ltd.
-// SPDX-FileCopyrightText: 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2022-2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -613,6 +613,18 @@ public slots:
      * @brief 任意屏幕分辨率被改变
      */
     void onScreenResolutionChanged();
+
+    /**
+     * @brief 录制中缩放比变化后，按录制起始时冻结的物理区域重算逻辑选区。
+     *        只影响界面绘制与坐标换算，不改变编码分辨率与裁剪参数。
+     */
+    void remapRecordingSelectionToCurrentScale();
+
+    /**
+     * @brief 采集端报告物理画面已无法继续录制（分辨率切换、拔屏、缓冲规格变化）。
+     *        走独立槽而非复用 onExit，保证日志能区分触发来源。
+     */
+    void onCaptureGeometryChanged();
 protected:
     bool eventFilter(QObject *object, QEvent *event) override;
     void keyPressEvent(QKeyEvent *event) override;
@@ -842,6 +854,14 @@ private:
      * @brief 捕捉区域起始点的x坐标（已缩放）（如果调整了屏幕缩放比，该值也会变化）
      */
     int recordX = 0;
+    /**
+     * @brief 录制起始时冻结的物理录制区域，编码裁剪以它为基准，不随缩放变化
+     */
+    QRect m_recordingPhysicalRect;
+    /**
+     * @brief 录制起始时冻结的缩放比，用于把 m_recordingPhysicalRect 还原为逻辑坐标
+     */
+    qreal m_recordingStartPixelRatio = 0.0;
     /**
      * @brief 捕捉区域起始点的y坐标（已缩放）（如果调整了屏幕缩放比，该值也会变化）
      */
@@ -1142,6 +1162,12 @@ private:
      * @brief m_isSaveClipboard 是否已经保存到剪切板
      */
     bool m_isSaveClipboard = false;
+
+    /**
+     * @brief 重新抓取背景图期间置位，使 paintEvent 跳过遮罩绘制，
+     *        避免把自身绘制的灰遮罩和虚线框拍进新的背景图
+     */
+    bool m_isRefreshingBackground = false;
 
     /**
      * @brief m_toolbarLastPoint 工具栏位置改变后，上一次工具栏的位置

@@ -1,5 +1,5 @@
 // Copyright © 2018 Red Hat, Inc
-// SPDX-FileCopyrightText: 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2022-2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -46,6 +46,7 @@
 
 #include <string.h>
 #include <QMutexLocker>
+#include "utils/scaletrace.h"
 
 
 Q_LOGGING_CATEGORY(XdgDesktopPortalKdeWaylandIntegration, "xdp-kde-wayland-integration")
@@ -67,6 +68,16 @@ void WaylandIntegration::init(QStringList list, GstRecordX *gstRecord)
 bool WaylandIntegration::isEGLInitialized()
 {
     return globalWaylandIntegration->isEGLInitialized();
+}
+
+bool WaylandIntegration::canContinueAfterLogicalResize()
+{
+    return globalWaylandIntegration->canContinueAfterLogicalResize();
+}
+
+QSize WaylandIntegration::recordingPixelSize()
+{
+    return globalWaylandIntegration->recordingPixelSize();
 }
 
 void WaylandIntegration::stopStreaming()
@@ -221,6 +232,24 @@ bool WaylandIntegration::WaylandIntegrationPrivate::isEGLInitialized() const
     return m_eglInitialized;
 }
 
+bool WaylandIntegration::WaylandIntegrationPrivate::canContinueAfterLogicalResize() const
+{
+    return !m_recordingGeometryInvalid && m_recordingBufferStride != 0
+            && m_recordingPixelSize.isValid() && !m_recordingPixelSize.isEmpty()
+            && m_outputPixelSizes.size() == 1
+            && m_outputPixelSizes.first() == m_recordingPixelSize
+            && m_recordingBufferSize == m_recordingPixelSize;
+}
+
+QSize WaylandIntegration::WaylandIntegrationPrivate::recordingPixelSize() const
+{
+    if (m_recordingGeometryInvalid || m_recordingBufferStride == 0
+            || m_outputPixelSizes.size() != 1 || !m_recordingPixelSize.isValid()) {
+        return QSize();
+    }
+    return m_recordingPixelSize;
+}
+
 void WaylandIntegration::WaylandIntegrationPrivate::bindOutput(int outputName, int outputVersion)
 {
     KWayland::Client::Output *output = new KWayland::Client::Output(this);
@@ -230,6 +259,7 @@ void WaylandIntegration::WaylandIntegrationPrivate::bindOutput(int outputName, i
 
 void WaylandIntegration::WaylandIntegrationPrivate::stopStreaming()
 {
+    DSR_SCALE_TRACE("stream-stop", "streaming=" << m_streamingEnabled << " canvas=" << m_screenSize);
     qInfo() << "正在停止远程数据流...";
     qDebug() << "m_streamingEnabled: " << m_streamingEnabled;
     if (m_streamingEnabled) {
@@ -304,6 +334,12 @@ void WaylandIntegration::WaylandIntegrationPrivate::initWayland(QStringList list
 void WaylandIntegration::WaylandIntegrationPrivate::initConnectWayland()
 {
     qDebug() << "正在初始化wayland服务链接... ";
+    m_outputPixelSizes.clear();
+    m_recordingPixelSize = QSize();
+    m_recordingBufferSize = QSize();
+    m_recordingBufferStride = 0;
+    m_recordingBufferFormat = 0;
+    m_recordingGeometryInvalid = false;
     //设置获取视频帧
     setBGetFrame(true);
 
@@ -312,6 +348,8 @@ void WaylandIntegration::WaylandIntegrationPrivate::initConnectWayland()
 
     connect(m_connection, &KWayland::Client::ConnectionThread::connected, this, &WaylandIntegrationPrivate::setupRegistry, Qt::QueuedConnection);
     connect(m_connection, &KWayland::Client::ConnectionThread::connectionDied, this, [this] {
+        DSR_SCALE_TRACE("connection-died", "streaming=" << m_streamingEnabled);
+        m_recordingGeometryInvalid = true;
         qDebug() << "wayland服务链接失败";
 
         if (m_queue)
@@ -335,6 +373,7 @@ void WaylandIntegration::WaylandIntegrationPrivate::initConnectWayland()
         }
     });
     connect(m_connection, &KWayland::Client::ConnectionThread::failed, this, [this] {
+        DSR_SCALE_TRACE("connection-failed", "streaming=" << m_streamingEnabled);
         qDebug() << "wayland服务链接失败";
         m_thread->quit();
         m_thread->wait();
@@ -428,6 +467,17 @@ void WaylandIntegration::WaylandIntegrationPrivate::addOutput(quint32 name, quin
     output->setup(m_registry->bindOutput(name, version));
 
     connect(output, &KWayland::Client::Output::changed, this, [this, name, version, output]() {
+        DSR_SCALE_TRACE("output-changed", "id=" << name << " pixels=" << output->pixelSize()
+                        << " geometry=" << output->geometry() << " scale=" << output->scale());
+        const QSize pixels = output->pixelSize();
+        m_outputPixelSizes.insert(name, pixels);
+        if (m_recordingBufferStride != 0 && m_recordingPixelSize.isValid()
+                && (m_outputPixelSizes.size() != 1 || pixels != m_recordingPixelSize)
+                && !m_recordingGeometryInvalid) {
+            m_recordingGeometryInvalid = true;
+            DSR_SCALE_TRACE("physical-output-changed", "pixels=" << pixels << " initial=" << m_recordingPixelSize);
+            emit recordingGeometryChanged();
+        }
         qDebug() << "wayland输出改变";
         qCDebug(XdgDesktopPortalKdeWaylandIntegration) << "Adding output:";
         qCDebug(XdgDesktopPortalKdeWaylandIntegration) << "    manufacturer: " << output->manufacturer();
@@ -459,6 +509,8 @@ void WaylandIntegration::WaylandIntegrationPrivate::addOutput(quint32 name, quin
 
 void WaylandIntegration::WaylandIntegrationPrivate::removeOutput(quint32 name)
 {
+    DSR_SCALE_TRACE("output-removed", "id=" << name);
+    m_outputPixelSizes.remove(name);
     qDebug() << "正在移除wayland输出...";
     WaylandOutput output = m_outputMap.take(name);
     qCDebug(XdgDesktopPortalKdeWaylandIntegration) << "Removing output:";
@@ -474,6 +526,9 @@ void WaylandIntegration::WaylandIntegrationPrivate::onDeviceChanged(quint32 name
     KWayland::Client::OutputDevice *devT = m_registry->createOutputDevice(name, version);
     if (devT && devT->isValid()) {
         connect(devT, &KWayland::Client::OutputDevice::changed, this, [ = ]() {
+            DSR_SCALE_TRACE("device-changed", "id=" << name << " uuid=" << devT->uuid()
+                            << " geometry=" << devT->geometry() << " scale=" << devT->scale()
+                            << " enabled=" << static_cast<int>(devT->enabled()) << " oldCanvas=" << m_screenSize);
             qDebug() << devT->uuid() << devT->geometry();
             // 保存屏幕id和对应位置大小
             if (devT->enabled() == KWayland::Client::OutputDevice::Enablement::Disabled) {
@@ -1055,6 +1110,56 @@ void WaylandIntegration::WaylandIntegrationPrivate::setupRegistry()
             //qDebug() << "screenGeometry: " << screenGeometry;
             //qDebug() << "rbuf->isValid(): " << rbuf->isValid();
             connect(rbuf, &KWayland::Client::RemoteBuffer::parametersObtained, this, [this, rbuf, screenGeometry] {
+                const QSize bufferSize(static_cast<int>(rbuf->width()), static_cast<int>(rbuf->height()));
+                // 用设备枚举的实际结果判断单屏：m_screenCount 构造时默认 1，
+                // 若首帧早于设备枚举，会拿默认值误判成单屏并记下错误的基线。
+                // 枚举未完成时 m_screenId2Point 为空，此处不会初始化；
+                // 后续帧仍不满足条件则 stride 保持 0，放行判断为 false，走原有停止逻辑。
+                if (m_recordingBufferStride == 0 && m_screenId2Point.size() == 1
+                        && m_outputPixelSizes.size() == 1) {
+                    m_recordingPixelSize = m_outputPixelSizes.first();
+                    m_recordingBufferSize = bufferSize;
+                    m_recordingBufferStride = rbuf->stride();
+                    m_recordingBufferFormat = rbuf->format();
+                    DSR_SCALE_TRACE("recording-baseline", "pixels=" << m_recordingPixelSize
+                                    << " buffer=" << m_recordingBufferSize
+                                    << " stride=" << m_recordingBufferStride
+                                    << " format=" << m_recordingBufferFormat);
+                } else if (m_recordingBufferStride != 0 && !m_recordingGeometryInvalid
+                           && (bufferSize != m_recordingBufferSize || rbuf->stride() != m_recordingBufferStride
+                               || rbuf->format() != m_recordingBufferFormat)) {
+                    m_recordingGeometryInvalid = true;
+                    DSR_SCALE_TRACE("incompatible-buffer", "size=" << bufferSize << " stride=" << rbuf->stride()
+                                    << " format=" << rbuf->format());
+                    emit recordingGeometryChanged();
+                }
+                if (m_recordingGeometryInvalid) {
+#ifdef KWAYLAND_REMOTE_FLAGE_ON
+                    if (rbuf->frame() == 0) {
+                        emit lastFrame();
+                    }
+#endif
+                    close(rbuf->fd());
+#ifdef KWAYLAND_REMOTE_BUFFER_RELEASE_FLAGE_ON
+                    rbuf->release();
+#endif
+                    return;
+                }
+                if (ScaleTrace::enabled()) {
+                    const QString key = QStringLiteral("%1,%2").arg(screenGeometry.x()).arg(screenGeometry.y());
+                    const QString layout = QStringLiteral("%1x%2 stride=%3 format=%4")
+                            .arg(rbuf->width()).arg(rbuf->height()).arg(rbuf->stride()).arg(rbuf->format());
+                    const bool changed = m_scaleTraceBuffers.value(key) != layout;
+                    ++m_scaleTraceFrameCount;
+                    if (changed || m_scaleTraceFrameCount % 120 == 0) {
+                        DSR_SCALE_TRACE("remote-buffer", "count=" << m_scaleTraceFrameCount
+                                        << " geometry=" << screenGeometry << " layout=" << layout
+                                        << " previous=" << m_scaleTraceBuffers.value(key)
+                                        << " changed=" << changed << " canvas=" << m_screenSize
+                                        << " boardType=" << m_boardVendorType);
+                    }
+                    m_scaleTraceBuffers.insert(key, layout);
+                }
                 qDebug() << "正在处理buffer..." << "fd:" << rbuf->fd() << "frameCount: " << frameCount ;
                 if(frameCount == 0)
                 {
@@ -1264,6 +1369,12 @@ void WaylandIntegration::WaylandIntegrationPrivate::appendBuffer(unsigned char *
     }
     qDebug() << "append frame index:" << ++f_count;
     int size = height * stride;
+    if (ScaleTrace::enabled() && (m_bInit || width != m_width || height != m_height || stride != m_stride)) {
+        DSR_SCALE_TRACE("queue-frame-layout", "initializing=" << m_bInit
+                        << " incoming=" << QSize(width, height) << " stride=" << stride
+                        << " allocated=" << (m_bInit ? QSize() : QSize(m_width, m_height))
+                        << " allocatedStride=" << (m_bInit ? 0 : m_stride));
+    }
     unsigned char *ch = nullptr;
     if (m_bInit) {
         m_bInit = false;

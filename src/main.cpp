@@ -1,5 +1,5 @@
 // Copyright (C) 2011 ~ 2018 Deepin, Inc.
-// SPDX-FileCopyrightText: 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2022-2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -10,6 +10,7 @@
 #include "dbusservice/dbusscreenshotservice.h"
 #include "accessibility/acObjectList.h"
 #include "utils/eventlogutils.h"
+#include "utils/scaletrace.h"
 
 #include <DWidget>
 #include <DLog>
@@ -455,6 +456,9 @@ int main(int argc, char *argv[])
         using namespace Dtk::Core;
         Dtk::Core::DLogManager::registerConsoleAppender();
         Dtk::Core::DLogManager::registerFileAppender();
+        DSR_SCALE_TRACE("startup", "executable=" << QCoreApplication::applicationFilePath()
+                        << " qt=" << qVersion() << " wayland=" << Utils::isWaylandMode
+                        << " ffmpeg=" << Utils::isFFmpegEnv);
 
         QCommandLineOption delayOption(QStringList() << "d" << "delay", "Take a screenshot after NUM seconds.", "NUM");
         QCommandLineOption fullscreenOption(QStringList() << "f" << "fullscreen", "Take a screenshot the whole screen.");

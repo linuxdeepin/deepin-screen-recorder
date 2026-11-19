@@ -1,10 +1,11 @@
 // Copyright (C) 2020 ~ 2021 Uniontech Software Technology Co.,Ltd.
-// SPDX-FileCopyrightText: 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2022-2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
 #include "record_process.h"
 #include "utils/configsettings.h"
+#include "utils/scaletrace.h"
 #include "utils.h"
 #include "utils/audioutils.h"
 #include "gstrecord/gstinterface.h"
@@ -127,6 +128,7 @@ RecordProcess::~RecordProcess()
 //设置录屏的基础信息
 void RecordProcess::setRecordInfo(const QRect &recordRect, const QString &filename)
 {
+    DSR_SCALE_TRACE("record-region", "physicalRect=" << recordRect);
     m_recordRect = recordRect;
     saveAreaName = filename;
 }
@@ -184,6 +186,7 @@ void RecordProcess::onTranscodeFinish()
 //录屏结束后弹出通知
 void RecordProcess::onRecordFinish()
 {
+    DSR_SCALE_TRACE("backend-finished", "wayland=" << Utils::isWaylandMode << " type=" << recordType);
     //x11录屏结束
     if (!Utils::isWaylandMode) {
         if (QProcess::ProcessState::NotRunning != m_recorderProcess->exitCode()) {
@@ -887,6 +890,9 @@ void RecordProcess::setFullScreenRecord(bool flag)
 
 void RecordProcess::stopRecord()
 {
+    DSR_SCALE_TRACE("backend-stop", "wayland=" << Utils::isWaylandMode
+                    << " ffmpeg=" << Utils::isFFmpegEnv << " type=" << recordType
+                    << " physicalRect=" << m_recordRect);
     //    QJsonObject obj{
     //        {"tid", EventLogUtils::EndRecording},
     //        {"version", QCoreApplication::applicationVersion()},
