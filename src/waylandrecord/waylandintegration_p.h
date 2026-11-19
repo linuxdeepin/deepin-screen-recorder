@@ -1,5 +1,5 @@
 // Copyright © 2018 Red Hat, Inc
-// SPDX-FileCopyrightText: 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2022-2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -11,6 +11,7 @@
 #include <QObject>
 #include <QMap>
 #include <QImage>
+#include <QVector>
 #include <gbm.h>
 #include <epoxy/egl.h>
 #include <epoxy/gl.h>
@@ -314,20 +315,16 @@ private:
     //双屏情况
     QVector<QPair<QRect, QImage>> m_ScreenDateBuf;
     QVector<QPair<QRect, QImage>> m_curNewImageScreen;
-    //hw双屏
-    unsigned char *m_firstScreenData = nullptr;
-    unsigned char *m_secondScreenData = nullptr;
-
-    //第一次拷贝数据的时候需要开辟内存空间
-    bool m_isExistFirstScreenData = false;
-    bool m_isExistSecondScreenData = false;
-    FrameData m_ScreenDateBufFrames[2];
-    FrameData m_curNewImageScreenFrames[2];
+    //hw多屏
+    QVector<unsigned char *> m_screenData;
+    QVector<bool> m_isExistScreenData;
+    QVector<FrameData> m_ScreenDateBufFrames;
+    QVector<FrameData> m_curNewImageScreenFrames;
 
     /**
      * @brief m_lastScreenData 上一帧数据
      */
-    FrameData m_lastScreenDatas[2];
+    QVector<FrameData> m_lastScreenDatas;
 
     QSize m_screenSize;
     int m_screenCount;
@@ -350,12 +347,12 @@ private:
     /**
      * @brief m_currentScreenRect 当前屏幕的大小
      */
-    QRect m_currentScreenRects[2];
+    QVector<QRect> m_currentScreenRects;
 
     /**
      * @brief m_currentScreenBuf 当前屏幕的远程buffer（remoteaccess传过来的屏幕buffer）
      */
-    KWayland::Client::RemoteBuffer * m_currentScreenBufs[2];
+    QVector<KWayland::Client::RemoteBuffer *> m_currentScreenBufs;
 
     /**
      * @brief m_isScreenExtension 当前屏幕模式是否是扩展模式

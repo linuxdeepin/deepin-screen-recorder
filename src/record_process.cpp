@@ -1,5 +1,5 @@
 // Copyright (C) 2020 ~ 2021 Uniontech Software Technology Co.,Ltd.
-// SPDX-FileCopyrightText: 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2022-2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -210,9 +210,11 @@ void RecordProcess::onRecordFinish()
     // Move file to save directory.
     QString newSavePath = QDir(saveDir).filePath(saveBaseName);
     QFile::remove(newSavePath);
-    QFile::rename(savePath, newSavePath);
-
-    exitRecord(newSavePath);
+    if (!QFile::rename(savePath, newSavePath)) {
+        qWarning() << "Failed to rename" << savePath << "to" << newSavePath;
+    } else {
+        exitRecord(newSavePath);
+    }
 }
 
 bool RecordProcess::processFrameInterpolation(const QString &inputPath, int targetFps)
