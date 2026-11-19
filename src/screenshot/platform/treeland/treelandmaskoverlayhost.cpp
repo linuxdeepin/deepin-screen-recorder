@@ -117,9 +117,7 @@ void initializeCameraLibraries()
     QByteArray avutil = libraryPath(QStringLiteral("libavutil.so"));
     QByteArray udev = libraryPath(QStringLiteral("libudev.so"));
     QByteArray usb = libraryPath(QStringLiteral("libusb-1.0.so"));
-    QByteArray portaudio = libraryPath(QStringLiteral("libportaudio.so"));
     QByteArray v4l2 = libraryPath(QStringLiteral("libv4l2.so"));
-    QByteArray ffmpegthumbnailer = libraryPath(QStringLiteral("libffmpegthumbnailer.so"));
     QByteArray swscale = libraryPath(QStringLiteral("libswscale.so"));
     QByteArray swresample = libraryPath(QStringLiteral("libswresample.so"));
 
@@ -129,9 +127,7 @@ void initializeCameraLibraries()
     names.chAvutil = avutil.data();
     names.chUdev = udev.data();
     names.chUsb = usb.data();
-    names.chPortaudio = portaudio.data();
     names.chV4l2 = v4l2.data();
-    names.chFfmpegthumbnailer = ffmpegthumbnailer.data();
     names.chSwscale = swscale.data();
     names.chSwresample = swresample.data();
     setLibNames(names);

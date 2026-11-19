@@ -8,7 +8,7 @@
 #include <assert.h>
 #include <dlfcn.h>
 #include "load_libs.h"
-#include <encoder.h>
+#include "frame_decoder.h"
 #include <libavformat/avformat.h>
 
 void PrintError(){
@@ -136,22 +136,6 @@ static LoadLibs *newClass(void)
     pLibs->m_av_init_packet = (uos_av_init_packet)dlsym(handle, "av_init_packet");
     PrintError();
     pLibs->m_av_packet_alloc = (uos_av_packet_alloc)dlsym(handle, "av_packet_alloc");
-    PrintError();
-
-    //libffmpegthumbnailer
-    void *handle2 = dlopen(g_ldnames.chFfmpegthumbnailer/*"libffmpegthumbnailer.so.4"*/,RTLD_LAZY);
-    if (!handle2) {
-        PrintError();
-    }
-    pLibs->m_video_thumbnailer = (uos_video_thumbnailer)dlsym(handle2, "video_thumbnailer_create");
-    PrintError();
-    pLibs->m_video_thumbnailer_destroy = (uos_video_thumbnailer_destroy)dlsym(handle2, "video_thumbnailer_destroy");
-    PrintError();
-    pLibs->m_video_thumbnailer_create_image_data = (uos_video_thumbnailer_create_image_data)dlsym(handle2, "video_thumbnailer_create_image_data");
-    PrintError();
-    pLibs->m_video_thumbnailer_destroy_image_data = (uos_video_thumbnailer_destroy_image_data)dlsym(handle2, "video_thumbnailer_destroy_image_data");
-    PrintError();
-    pLibs->m_video_thumbnailer_generate_thumbnail_to_buffer = (uos_video_thumbnailer_generate_thumbnail_to_buffer)dlsym(handle2, "video_thumbnailer_generate_thumbnail_to_buffer");
     PrintError();
 
     //libswresample
@@ -490,69 +474,6 @@ LoadUSB *getUSB()
     return pUSB;
 }
 
-static LoadPortAudio *pPortAudio = NULL;
-static LoadPortAudio *newPortAudio(void)
-{
-    pPortAudio = (LoadPortAudio *)malloc(sizeof(LoadPortAudio));
-    //libportaudio
-    void *handle = dlopen(g_ldnames.chPortaudio/*"libportaudio.so.2"*/,RTLD_LAZY);
-    if (!handle) {
-        PrintError();
-    }
-    pPortAudio->m_Pa_GetDeviceCount = (uos_Pa_GetDeviceCount)dlsym(handle, "Pa_GetDeviceCount");
-    PrintError();
-    pPortAudio->m_Pa_IsStreamStopped = (uos_Pa_IsStreamStopped)dlsym(handle, "Pa_IsStreamStopped");
-    PrintError();
-    pPortAudio->m_Pa_GetDeviceInfo = (uos_Pa_GetDeviceInfo)dlsym(handle, "Pa_GetDeviceInfo");
-    PrintError();
-    pPortAudio->m_Pa_Initialize = (uos_Pa_Initialize)dlsym(handle, "Pa_Initialize");
-    PrintError();
-    pPortAudio->m_Pa_IsStreamActive = (uos_Pa_IsStreamActive)dlsym(handle, "Pa_IsStreamActive");
-    PrintError();
-    pPortAudio->m_Pa_Terminate = (uos_Pa_Terminate)dlsym(handle, "Pa_Terminate");
-    PrintError();
-    pPortAudio->m_Pa_AbortStream = (uos_Pa_AbortStream)dlsym(handle, "Pa_AbortStream");
-    PrintError();
-    pPortAudio->m_Pa_StopStream = (uos_Pa_StopStream)dlsym(handle, "Pa_StopStream");
-    PrintError();
-    pPortAudio->m_Pa_CloseStream = (uos_Pa_CloseStream)dlsym(handle, "Pa_CloseStream");
-    PrintError();
-    pPortAudio->m_Pa_GetDefaultInputDevice = (uos_Pa_GetDefaultInputDevice)dlsym(handle, "Pa_GetDefaultInputDevice");
-    PrintError();
-    pPortAudio->m_Pa_GetHostApiInfo = (uos_Pa_GetHostApiInfo)dlsym(handle, "Pa_GetHostApiInfo");
-    PrintError();
-    pPortAudio->m_Pa_GetDefaultOutputDevice = (uos_Pa_GetDefaultOutputDevice)dlsym(handle, "Pa_GetDefaultOutputDevice");
-    PrintError();
-    pPortAudio->m_Pa_OpenStream = (uos_Pa_OpenStream)dlsym(handle, "Pa_OpenStream");
-    PrintError();
-    pPortAudio->m_Pa_StartStream = (uos_Pa_StartStream)dlsym(handle, "Pa_StartStream");
-    PrintError();
-    pPortAudio->m_Pa_GetStreamInfo = (uos_Pa_GetStreamInfo)dlsym(handle, "Pa_GetStreamInfo");
-    PrintError();
-    pPortAudio->m_Pa_GetErrorText = (uos_Pa_GetErrorText)dlsym(handle, "Pa_GetErrorText");
-    PrintError();
-    assert(pPortAudio != NULL);
-    return pPortAudio;
-}
-
-LoadPortAudio *getPortAudio()
-{
-    static pthread_mutex_t mutexPortAudio;
-    //双检锁
-    if (pPortAudio == NULL) {
-        // 这里要对pUSB加锁
-        pthread_mutex_lock(&mutexPortAudio);
-        if (pPortAudio == NULL)
-        {
-            pPortAudio = newPortAudio();
-        }
-        //退出时解锁
-        pthread_mutex_unlock(&mutexPortAudio);
-    }
-
-    return pPortAudio;
-}
-
 static LoadV4l2 *pV4l2 = NULL;
 static LoadV4l2 *newV4l2(void)
 {
@@ -604,9 +525,6 @@ void setLibNames(LoadLibNames tmp)
    // memset(g_ldnames.chAvcodec,strlen(tmp.chAvcodec),0);
     strcpy(g_ldnames.chAvcodec,tmp.chAvcodec);
 
-    g_ldnames.chFfmpegthumbnailer = ( char*)malloc(strlen(tmp.chFfmpegthumbnailer)+1);
-   // memset(g_ldnames.chFfmpegthumbnailer,strlen(tmp.chFfmpegthumbnailer),0);
-    strcpy(g_ldnames.chFfmpegthumbnailer,tmp.chFfmpegthumbnailer);
 
     g_ldnames.chSwresample = ( char*)malloc(strlen(tmp.chSwresample)+1);
    // memset(g_ldnames.chSwresample,strlen(tmp.chSwresample),0);
@@ -632,9 +550,6 @@ void setLibNames(LoadLibNames tmp)
    // memset(g_ldnames.chUsb,strlen(tmp.chUsb),0);
     strcpy(g_ldnames.chUsb,tmp.chUsb);
 
-    g_ldnames.chPortaudio = ( char*)malloc(strlen(tmp.chPortaudio)+1);
-   // memset(g_ldnames.chPortaudio,strlen(tmp.chPortaudio),0);
-    strcpy(g_ldnames.chPortaudio,tmp.chPortaudio);
 
     g_ldnames.chV4l2 = ( char*)malloc(strlen(tmp.chV4l2)+1);
    // memset(g_ldnames.chV4l2,strlen(tmp.chV4l2),0);

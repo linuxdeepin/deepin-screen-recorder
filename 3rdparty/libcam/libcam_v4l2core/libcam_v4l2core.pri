@@ -5,7 +5,6 @@ HEADERS += \
     $$PWD/core_time.h \
     $$PWD/dct.h \
     $$PWD/frame_decoder.h \
-    $$PWD/gui.h \
     $$PWD/gview.h \
     $$PWD/gviewv4l2core.h \
     $$PWD/jpeg_decoder.h \
@@ -25,7 +24,6 @@ SOURCES += \
     $$PWD/core_time.c \
     $$PWD/dct.c \
     $$PWD/frame_decoder.c \
-    $$PWD/gui.c \
     $$PWD/jpeg_decoder.c \
     $$PWD/save_image_bmp.c \
     $$PWD/save_image.c \

@@ -1053,12 +1053,8 @@ void MainWindow::initDynamicLibPath()
     tmp.chUdev = udev.data();
     QByteArray usb = libPath("libusb-1.0.so").toLatin1();
     tmp.chUsb = usb.data();
-    QByteArray portaudio = libPath("libportaudio.so").toLatin1();
-    tmp.chPortaudio = portaudio.data();
     QByteArray v4l2 = libPath("libv4l2.so").toLatin1();
     tmp.chV4l2 = v4l2.data();
-    QByteArray ffmpegthumbnailer = libPath("libffmpegthumbnailer.so").toLatin1();
-    tmp.chFfmpegthumbnailer = ffmpegthumbnailer.data();
     QByteArray swscale = libPath("libswscale.so").toLatin1();
     tmp.chSwscale = swscale.data();
     QByteArray swresample = libPath("libswresample.so").toLatin1();
