@@ -1,5 +1,5 @@
 // Copyright © 2018 Red Hat, Inc
-// SPDX-FileCopyrightText: 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2022-2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -56,12 +56,20 @@ class WaylandIntegration : public QObject
     Q_OBJECT
 Q_SIGNALS:
     void newBuffer(uint8_t *screenData);
+    void recordingGeometryChanged();
 };
 
 void init(QStringList list);
 void init(QStringList list, GstRecordX *gstRecord);
 
 bool isEGLInitialized();
+bool canContinueAfterLogicalResize();
+
+/**
+ * @brief 录制起始时冻结的物理桌面尺寸，编码裁剪以它为基准。
+ *        非录制状态或非单屏时返回空 QSize。
+ */
+QSize recordingPixelSize();
 
 //bool startStreaming(const WaylandOutput &output);
 void stopStreaming();

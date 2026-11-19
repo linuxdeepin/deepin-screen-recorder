@@ -1,5 +1,5 @@
 // Copyright (C) 2020 ~ 2021 Uniontech Software Technology Co.,Ltd.
-// SPDX-FileCopyrightText: 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2022-2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -24,6 +24,7 @@
 #include "utils/eventlogutils.h"
 #ifdef KF5_WAYLAND_FLAGE_ON
 #include "../3rdparty/displayjack/wayland_client.h"
+#include "waylandrecord/waylandintegration.h"
 #endif
 #ifdef __cplusplus
 extern "C" {
@@ -41,6 +42,8 @@ extern "C" {
 
 #include <QApplication>
 #include <QTimer>
+#include <QCoreApplication>
+#include <QEventLoop>
 #include <QKeyEvent>
 #include <QObject>
 #include <QPainter>
@@ -60,6 +63,7 @@ extern "C" {
 #include <unistd.h>
 #include <time.h>
 #include <cmath>
+#include "utils/scaletrace.h"
 #define EPSILON 1e-10
 //const int MainWindow::CURSOR_BOUND = 5;
 const int MainWindow::RECORD_MIN_SIZE = 580;
@@ -164,7 +168,46 @@ void MainWindow::initMainWindow()
     m_pixelRatio = Utils::devicePixelRatioF();
     // 监控录屏过程中， 特效窗口的变化。
     connect(m_wmHelper, &DWindowManagerHelper::hasCompositeChanged, this, &MainWindow::compositeChanged);
+#ifdef KF5_WAYLAND_FLAGE_ON
+    if (Utils::isWaylandMode) {
+        connect(WaylandIntegration::waylandIntegration(), &WaylandIntegration::WaylandIntegration::recordingGeometryChanged,
+                this, &MainWindow::onCaptureGeometryChanged, Qt::QueuedConnection);
+    }
+#endif
 
+    if (ScaleTrace::enabled()) {
+        auto watchScreen = [this](QScreen *screen) {
+            DSR_SCALE_TRACE("screen-observed", "name=" << screen->name()
+                            << " geometry=" << screen->geometry()
+                            << " dpr=" << screen->devicePixelRatio()
+                            << " physicalMm=" << screen->physicalSize());
+            connect(screen, &QScreen::geometryChanged, this, [this, screen](const QRect &geometry) {
+                DSR_SCALE_TRACE("screen-geometry", "name=" << screen->name()
+                                << " geometry=" << geometry << " dpr=" << screen->devicePixelRatio()
+                                << " status=" << recordButtonStatus);
+            });
+            connect(screen, &QScreen::logicalDotsPerInchChanged, this, [this, screen](qreal dpi) {
+                DSR_SCALE_TRACE("screen-dpi", "name=" << screen->name() << " dpi=" << dpi
+                                << " geometry=" << screen->geometry() << " dpr=" << screen->devicePixelRatio()
+                                << " status=" << recordButtonStatus);
+            });
+        };
+        for (QScreen *screen : qApp->screens()) {
+            watchScreen(screen);
+        }
+        connect(qApp, &QGuiApplication::screenAdded, this, [this, watchScreen](QScreen *screen) {
+            DSR_SCALE_TRACE("screen-added", "name=" << screen->name() << " status=" << recordButtonStatus);
+            watchScreen(screen);
+        });
+        connect(qApp, &QGuiApplication::screenRemoved, this, [this](QScreen *screen) {
+            DSR_SCALE_TRACE("screen-removed", "name=" << screen->name() << " status=" << recordButtonStatus);
+        });
+        connect(QApplication::desktop(), &QDesktopWidget::resized, this, [this](int screen) {
+            DSR_SCALE_TRACE("desktop-resized", "index=" << screen
+                            << " geometry=" << QApplication::desktop()->screenGeometry(screen)
+                            << " status=" << recordButtonStatus);
+        });
+    }
     connect(qApp, &QGuiApplication::screenAdded, this, &MainWindow::onExit);
     connect(qApp, &QGuiApplication::screenRemoved, this, &MainWindow::onExit);
 
@@ -916,8 +959,18 @@ void MainWindow::forciblySavingNotify()
     notification.callWithArgumentList(QDBus::AutoDetect, "Notify", arg);
 }
 
+void MainWindow::onCaptureGeometryChanged()
+{
+    DSR_SCALE_TRACE("capture-geometry-changed", "status=" << recordButtonStatus);
+    qInfo() << "capture geometry no longer compatible with recording, stopping";
+    onExit();
+}
+
 void MainWindow::onExit()
 {
+    DSR_SCALE_TRACE("on-exit", "status=" << recordButtonStatus
+                    << " resolutionChanged=" << m_isScreenResolutionChanged
+                    << " sender=" << sender() << " signalIndex=" << senderSignalIndex());
     qInfo() << "exit screenshot app";
     if (RECORD_BUTTON_RECORDING == recordButtonStatus) {
         stopRecord();
@@ -1743,9 +1796,124 @@ void MainWindow::onExitScreenCapture()
     _Exit(0);
 }
 
+void MainWindow::remapRecordingSelectionToCurrentScale()
+{
+    if (!m_recordingPhysicalRect.isValid()) {
+        return;
+    }
+
+    // 物理采集区域在录制开始时已冻结，缩放变化只改变逻辑坐标空间。
+    // 因此用最新缩放比把同一个物理区域换回逻辑坐标，界面边框随之对齐。
+    const qreal currentRatio = Utils::devicePixelRatioF();
+    if (currentRatio <= 0.0) {
+        return;
+    }
+
+    const QRect newLogical(
+        static_cast<int>(m_recordingPhysicalRect.x() / currentRatio),
+        static_cast<int>(m_recordingPhysicalRect.y() / currentRatio),
+        static_cast<int>(m_recordingPhysicalRect.width() / currentRatio),
+        static_cast<int>(m_recordingPhysicalRect.height() / currentRatio));
+
+    DSR_SCALE_TRACE("selection-remap", "frozenPhysical=" << m_recordingPhysicalRect
+                    << " startRatio=" << m_recordingStartPixelRatio
+                    << " currentRatio=" << currentRatio << " capturePixels="
+                    << WaylandIntegration::recordingPixelSize() << " newLogical=" << newLogical
+                    << " oldRootWindowRect=" << rootWindowRect
+                    << " oldBackgroundRect=" << m_backgroundRect);
+
+    recordX = newLogical.x();
+    recordY = newLogical.y();
+    recordWidth = newLogical.width();
+    recordHeight = newLogical.height();
+    // 逻辑坐标已按新比例重建，换算比同步更新，避免后续 recordX * m_pixelRatio 得到错误物理值
+    m_pixelRatio = currentRatio;
+
+    // 灰遮罩按 rootWindowRect 绘制、亮区来自 m_backgroundPixmap，
+    // 两者都是启动时的旧基准，缩放后必须一起刷新，否则亮区与灰区边界会错位
+    QScreen *primaryScreen = QGuiApplication::primaryScreen();
+    if (primaryScreen) {
+        rootWindowRect = primaryScreen->virtualGeometry();
+        m_backgroundRect = rootWindowRect;
+    }
+
+    // 重建屏幕信息，保证后续 isUniformScreenScale / 坐标换算使用新的比例
+    m_screenInfo.clear();
+    for (QScreen *screen : qApp->screens()) {
+        const QRect rect = screen->geometry();
+        const qreal ratio = Utils::screenFactor(screen);
+        ScreenInfo info;
+        info.x = rect.x();
+        info.y = rect.y();
+        info.width = static_cast<int>(rect.width() * ratio);
+        info.height = static_cast<int>(rect.height() * ratio);
+        info.name = screen->name();
+        info.scaleFactor = ratio;
+        m_screenInfo.append(info);
+    }
+
+    // 背景图按新分辨率重抓；旧图与新逻辑尺寸不匹配，拉伸会糊。
+    // 抓图前先清空本窗口绘制（并让合成器完成一帧），避免把自身灰遮罩和
+    // 虚线框拍进背景图。下面的 processEvents 可能再次投递 resized 信号，
+    // 因此用 m_isRefreshingBackground 同时充当重入保护，并由 RAII 保证复位。
+    if (m_isRefreshingBackground) {
+        return;
+    }
+    struct RefreshGuard {
+        bool &flag;
+        ~RefreshGuard() { flag = false; }
+    };
+    m_isRefreshingBackground = true;
+    RefreshGuard refreshGuard{m_isRefreshingBackground};
+    repaint();
+    QCoreApplication::processEvents(QEventLoop::ExcludeUserInputEvents);
+    const QPixmap refreshed = getPixmapofRect(m_backgroundRect);
+
+    if (!refreshed.isNull()) {
+        m_backgroundPixmap = refreshed;
+        m_resultPixmap = m_backgroundPixmap;
+        TempFile::instance()->setFullScreenPixmap(m_backgroundPixmap);
+    } else {
+        qWarning() << "refresh background after scale change failed, keep previous pixmap";
+    }
+
+    DSR_SCALE_TRACE("overlay-refresh", "newRootWindowRect=" << rootWindowRect
+                    << " backgroundPixmap=" << m_backgroundPixmap.size()
+                    << " pixmapDpr=" << m_backgroundPixmap.devicePixelRatio());
+
+    // 本窗口是覆盖全屏的遮罩宿主，尺寸按新的逻辑桌面重建后重绘，
+    // 亮区（背景图）与灰区（rootWindowRect 减去选区）才能立即对齐
+    this->setFixedSize(m_backgroundRect.size());
+    this->move(m_backgroundRect.topLeft() * m_pixelRatio);
+    update();
+
+    if (m_pRecorderRegion) {
+        m_pRecorderRegion->resize(recordWidth + 2, recordHeight + 2);
+        m_pRecorderRegion->move(std::max(recordX - 1, 0), std::max(recordY - 1, 0));
+    }
+}
+
 void MainWindow::onScreenResolutionChanged()
 {
+    DSR_SCALE_TRACE("resolution-handler", "status=" << recordButtonStatus
+                    << " alreadyHandled=" << m_isScreenResolutionChanged
+                    << " cachedDpr=" << m_pixelRatio << " cachedScreen=" << m_screenSize);
+    if (ScaleTrace::enabled()) {
+        for (QScreen *screen : qApp->screens()) {
+            DSR_SCALE_TRACE("resolution-screen", "name=" << screen->name()
+                            << " geometry=" << screen->geometry() << " dpr=" << screen->devicePixelRatio());
+        }
+    }
     qInfo() << "Screen Resolution has Changed!";
+#ifdef KF5_WAYLAND_FLAGE_ON
+    // Logical desktop geometry can change while the physical capture stays unchanged.
+    if (Utils::isWaylandMode && RECORD_BUTTON_RECORDING == recordButtonStatus
+            && WaylandIntegration::canContinueAfterLogicalResize()) {
+        DSR_SCALE_TRACE("logical-resize-continue", "selectionPhysicalPixelsUnchanged=true");
+        remapRecordingSelectionToCurrentScale();
+        return;
+    }
+#endif
     if (!m_isScreenResolutionChanged) {
         m_isScreenResolutionChanged = true;
         onExit();
@@ -2417,6 +2585,8 @@ void MainWindow::responseEsc()
 void MainWindow::compositeChanged()
 {
     bool newComposite = m_wmHelper->hasComposite();
+    DSR_SCALE_TRACE("compositor-changed", "old=" << m_hasComposite << " new=" << newComposite
+                    << " status=" << recordButtonStatus);
 
     // 滚动截图过程中动态切换为2D模式，直接结束
     if (m_functionType == status::shot) {
@@ -4002,6 +4172,12 @@ void MainWindow::paintEvent(QPaintEvent *event)
     // Just use for debug.
     // repaintCounter++;
     // qDebug() << repaintCounter;
+
+    // 重新抓取背景图的瞬间必须让本窗口不绘制任何内容，
+    // 否则灰遮罩和虚线框会被一并抓进新的背景图，导致亮区越缩放越暗
+    if (m_isRefreshingBackground) {
+        return;
+    }
 
 //    qDebug() << "====== function: " << __func__ << " start ======";
     if (m_shotflag == 1 && status::scrollshot != m_functionType) {
@@ -5825,6 +6001,10 @@ void MainWindow::recordKeyPressEvent(const unsigned char &keyCode)
 //启动录屏
 void MainWindow::startRecord()
 {
+    DSR_SCALE_TRACE("start-record", "previousStatus=" << recordButtonStatus
+                    << " wayland=" << Utils::isWaylandMode << " ffmpeg=" << Utils::isFFmpegEnv
+                    << " selection=" << QRect(recordX, recordY, recordWidth, recordHeight)
+                    << " cachedDpr=" << m_pixelRatio << " cachedScreen=" << m_screenSize);
     recordButtonStatus = RECORD_BUTTON_RECORDING;
     resetCursor();
     repaint();
@@ -6295,6 +6475,10 @@ void MainWindow::iconActivated(QSystemTrayIcon::ActivationReason)
 */
 void MainWindow::stopRecord()
 {
+    DSR_SCALE_TRACE("stop-record", "status=" << recordButtonStatus
+                    << " resolutionChanged=" << m_isScreenResolutionChanged
+                    << " waylandStopGuard=" << m_isStopWaylandRecord
+                    << " sender=" << sender() << " signalIndex=" << senderSignalIndex());
     qInfo() << __FUNCTION__ << __LINE__ << "正在结束录屏...";
     if (recordButtonStatus == RECORD_BUTTON_RECORDING) {
         qDebug() << "MainWindow::stopRecord()!";
@@ -6343,6 +6527,11 @@ void MainWindow::startCountdown()
         static_cast<int>(recordHeight * m_pixelRatio)
     };
     qDebug() << "record rect:" << recordRect;
+
+    // 冻结本次录制的物理区域与缩放比：编码裁剪始终以它为基准，
+    // 录制中缩放变化时只用它反算界面坐标，绝不复用新的缩放比重算编码区域
+    m_recordingPhysicalRect = recordRect;
+    m_recordingStartPixelRatio = m_pixelRatio;
 
     recordProcess.setRecordInfo(recordRect, selectAreaName);
     recordProcess.setFullScreenRecord(m_isFullScreenRecord);

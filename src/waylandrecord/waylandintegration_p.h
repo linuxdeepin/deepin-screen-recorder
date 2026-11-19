@@ -1,5 +1,5 @@
 // Copyright © 2018 Red Hat, Inc
-// SPDX-FileCopyrightText: 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2022-2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -114,6 +114,8 @@ public:
     bool isPangu();
 
     bool isEGLInitialized() const;
+    bool canContinueAfterLogicalResize() const;
+    QSize recordingPixelSize() const;
 
     void bindOutput(int outputName, int outputVersion);
     //bool startStreaming(const WaylandOutput &output);
@@ -197,6 +199,15 @@ protected Q_SLOTS:
     void initEgl();
 
 private:
+    QMap<QString, QString> m_scaleTraceBuffers;
+    quint64 m_scaleTraceFrameCount = 0;
+    QMap<quint32, QSize> m_outputPixelSizes;
+    QSize m_recordingPixelSize;
+    QSize m_recordingBufferSize;
+    quint32 m_recordingBufferStride = 0;
+    quint32 m_recordingBufferFormat = 0;
+    bool m_recordingGeometryInvalid = false;
+
     /**
      * @brief appendBuffer:存视频帧
      * @param frame:视频帧
