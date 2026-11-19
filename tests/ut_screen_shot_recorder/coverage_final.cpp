@@ -284,13 +284,8 @@ class CameraWidgetFinalCovTest : public testing::Test
 {
 public:
     CameraWidget *cw = nullptr;
-    void SetUp() override { cw = new CameraWidget; cw->resize(100, 100); cw->m_imgPrcThread = new MajorImageProcessingThread; }
-    void TearDown() override
-    {
-        // CameraWidget dtor crashes in offscreen mode; the underlying dtor bug
-        // is in the tested code and out of scope for this test-only change
-        /* leak to avoid dtor crash */
-    }
+    void SetUp() override { cw = new CameraWidget; cw->resize(100, 100); }
+    void TearDown() override { delete cw; cw = nullptr; }
 };
 
 TEST_F(CameraWidgetFinalCovTest, EnterEvent)
@@ -299,9 +294,10 @@ TEST_F(CameraWidgetFinalCovTest, EnterEvent)
     EXPECT_NO_FATAL_FAILURE(cw->enterEvent(&e));
 }
 
-TEST_F(CameraWidgetFinalCovTest, RestartDevices)
+TEST_F(CameraWidgetFinalCovTest, StopWithoutThread)
 {
-    EXPECT_NO_FATAL_FAILURE(cw->restartDevices());
+    EXPECT_NO_FATAL_FAILURE(cw->cameraStop());
+    EXPECT_EQ(cw->getCameraStatus(), 0);
 }
 
 // ============================================================================

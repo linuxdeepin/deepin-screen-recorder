@@ -31,8 +31,8 @@
 //
 //   Fix: `CameraV4l2Env::ensureV4l2Ready()` (below) is called once from the
 //   first fixture's SetUp. It replicates `MainWindow::libPath`+`setLibNames`
-//   (all 10 entries -- `setLibNames` does strlen/strcpy on every field, so all
-//   must be non-null) and then calls `v4l2core_init()`. After that
+//   (all remaining entries -- `setLibNames` does strlen/strcpy on every field,
+//   so all must be non-null) and then calls `v4l2core_init()`. After that
 //   `getV4l2()->m_v4l2_open` is non-null, the device list is populated from
 //   /dev/video* and `camInit()`/`timeOutSlot()` run against the real camera.
 
@@ -89,16 +89,14 @@ private:
 
     static bool initOnce()
     {
-        // All 10 fields are mandatory: setLibNames() strlens/copies each one.
+        // All remaining fields are mandatory: setLibNames() copies each one.
         m_avcodec = resolveLib("libavcodec.so");
-        m_ff      = resolveLib("libffmpegthumbnailer.so");
         m_swr     = resolveLib("libswresample.so");
         m_sws     = resolveLib("libswscale.so");
         m_avf     = resolveLib("libavformat.so");
         m_avu     = resolveLib("libavutil.so");
         m_udev    = resolveLib("libudev.so");
         m_usb     = resolveLib("libusb-1.0.so");
-        m_pa      = resolveLib("libportaudio.so");
         m_v4l2    = resolveLib("libv4l2.so");
 
         // chV4l2 + chUdev are the load-bearing ones for device enumeration,
@@ -107,14 +105,12 @@ private:
 
         LoadLibNames names;
         names.chAvcodec = m_avcodec.data();
-        names.chFfmpegthumbnailer = m_ff.data();
         names.chSwresample = m_swr.data();
         names.chSwscale = m_sws.data();
         names.chAvformat = m_avf.data();
         names.chAvutil = m_avu.data();
         names.chUdev = m_udev.data();
         names.chUsb = m_usb.data();
-        names.chPortaudio = m_pa.data();
         names.chV4l2 = m_v4l2.data();
         setLibNames(names);
 
@@ -125,18 +121,16 @@ private:
 
     // Members kept alive for the process: setLibNames strcpys into its own
     // malloc'd storage, but the .data() pointers must be valid across the call.
-    static QByteArray m_avcodec, m_ff, m_swr, m_sws, m_avf, m_avu;
-    static QByteArray m_udev, m_usb, m_pa, m_v4l2;
+    static QByteArray m_avcodec, m_swr, m_sws, m_avf, m_avu;
+    static QByteArray m_udev, m_usb, m_v4l2;
 };
 QByteArray CameraV4l2Env::m_avcodec;
-QByteArray CameraV4l2Env::m_ff;
 QByteArray CameraV4l2Env::m_swr;
 QByteArray CameraV4l2Env::m_sws;
 QByteArray CameraV4l2Env::m_avf;
 QByteArray CameraV4l2Env::m_avu;
 QByteArray CameraV4l2Env::m_udev;
 QByteArray CameraV4l2Env::m_usb;
-QByteArray CameraV4l2Env::m_pa;
 QByteArray CameraV4l2Env::m_v4l2;
 
 // Base fixture: lazily wires the v4l2 stack once for all camera tests.

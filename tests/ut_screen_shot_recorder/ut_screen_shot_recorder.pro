@@ -12,14 +12,11 @@ INCLUDEPATH += . ../../src/ \
             /usr/lib/x86_64-linux-gnu/glib-2.0/include \
             /usr/include/KWayland \
             /usr/include/opencv_mobile \
-            ../../../3rdparty/libcam/libcam/ \
-            ../../../3rdparty/libcam/ \
+            ../../3rdparty/libcam/libcam/ \
+            ../../3rdparty/libcam/ \
             /usr/include/libusb-1.0 \
-            ../../../3rdparty/libcam/libcam_v4l2core/ \
-            ../../../3rdparty/libcam/libcam_render/ \
-            ../../../3rdparty/libcam/libcam_encoder/ \
-            ../../../3rdparty/libcam/libcam_audio/ \
-            ../../../src/ext-image-capture/
+            ../../3rdparty/libcam/libcam_v4l2core/ \
+            ../../src/ext-image-capture/
 DEFINES += DDE_START_FLAGE_ON
 DEFINES += OCR_SCROLL_FLAGE_ON
 DEFINES += ENABLE_UNIT_TEST
@@ -314,6 +311,7 @@ HEADERS += test_all_interfaces.h \
     ../../src/utils_interface.h \
     ../../src/qwayland-treeland-capture-unstable-v1.h \
     ../../src/camera/majorimageprocessingthread.h \
+    ../../src/camera/v4l2devicehandle.h \
     ../../src/widgets/slider.h \
     # --- P0-2 补全：新增源码对应的 moc 头 ---
     ../../src/utils/delaytime.h \
@@ -489,6 +487,7 @@ SOURCES += main.cpp \
     ../../src/utils_interface.cpp \
     ../../src/qwayland-treeland-capture-unstable-v1.cpp \
     ../../src/camera/LPF_V4L2.c \
+    ../../src/camera/v4l2devicehandle.c \
     ../../src/camera/majorimageprocessingthread.cpp \
     ../../src/protocols/ext-image-copy-capture/qwayland-ext-image-copy-capture-v1.cpp \
     ../../src/protocols/ext-image-copy-capture/wayland-ext-image-copy-capture-v1-protocol.c \

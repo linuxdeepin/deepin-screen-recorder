@@ -67,7 +67,6 @@ ACCESS_PRIVATE_FUN(ActionWidget, void(QPaintEvent *), paintEvent);
 ACCESS_PRIVATE_FIELD(ShapesWidget, int, m_selectedIndex);
 ACCESS_PRIVATE_FIELD(ShapesWidget, int, m_selectedOrder);
 ACCESS_PRIVATE_FIELD(SideBar, bool, m_isPress);
-ACCESS_PRIVATE_FIELD(CameraWidget, MajorImageProcessingThread *, m_imgPrcThread);
 ACCESS_PRIVATE_FIELD(ToolBarWidget, ToolButton *, m_closeButton);
 ACCESS_PRIVATE_FIELD(SubToolWidget, ToolButton *, m_cameraButton);
 ACCESS_PRIVATE_FIELD(SubToolWidget, ToolButton *, m_shotButton);
@@ -281,9 +280,12 @@ public:
     {
         cw = new CameraWidget;
         cw->resize(100, 100);
-        access_private_field::CameraWidgetm_imgPrcThread(*cw) = new MajorImageProcessingThread;
     }
-    void TearDown() override { }
+    void TearDown() override
+    {
+        delete cw;
+        cw = nullptr;
+    }
 };
 
 TEST_F(CameraWidgetCovFinalTest, EnterEvent)
@@ -293,9 +295,10 @@ TEST_F(CameraWidgetCovFinalTest, EnterEvent)
     while (qApp->overrideCursor()) qApp->restoreOverrideCursor();
 }
 
-TEST_F(CameraWidgetCovFinalTest, RestartDevices)
+TEST_F(CameraWidgetCovFinalTest, StopWithoutThread)
 {
-    EXPECT_NO_FATAL_FAILURE(call_private_fun::CameraWidgetrestartDevices(*cw));
+    EXPECT_NO_FATAL_FAILURE(cw->cameraStop());
+    EXPECT_EQ(cw->getCameraStatus(), 0);
 }
 
 TEST(ActionWidgetCovFinalTest, PaintEventDirect)
