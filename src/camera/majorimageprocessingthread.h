@@ -17,14 +17,12 @@ extern "C" {
 #endif
 #include "core_io.h"
 #include "LPF_V4L2.h"
-#include "camview.h"
+#include "v4l2devicehandle.h"
 #include "stdlib.h"
 #include "malloc.h"
 #include "stdio.h"
 #include "math.h"
-#include "save_image.h"
 #include "colorspaces.h"
-#include "render.h"
 #ifdef __cplusplus
 }
 #endif

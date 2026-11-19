@@ -135,9 +135,6 @@ INCLUDEPATH += . \
 
 INCLUDEPATH += ../3rdparty/libcam/libcam/ \
                ../3rdparty/libcam/libcam_v4l2core/ \
-               ../3rdparty/libcam/libcam_render/ \
-               ../3rdparty/libcam/libcam_encoder/ \
-               ../3rdparty/libcam/libcam_audio/ \
                ../3rdparty/libcam/load_libs.h \
                ../3rdparty/displayjack/wayland_client.h
 
@@ -244,6 +241,7 @@ HEADERS += main_window.h \
     gstrecord/gstinterface.h \
     camera/devnummonitor.h \
     camera/LPF_V4L2.h \
+    camera/v4l2devicehandle.h \
     camera/majorimageprocessingthread.h \
     utils/eventlogutils.h \
     widgets/slider.h \
@@ -398,6 +396,7 @@ SOURCES += main.cpp \
     camera/devnummonitor.cpp \
     camera/majorimageprocessingthread.cpp \
     camera/LPF_V4L2.c \
+    camera/v4l2devicehandle.c \
     utils/eventlogutils.cpp \
     dbus_name.cpp \
     ext-image-capture/manager/extcapturemanager.cpp \

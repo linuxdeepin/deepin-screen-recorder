@@ -18,7 +18,7 @@
 extern "C"
 {
 #include "v4l2_devices.h"
-#include "camview.h"
+#include "v4l2devicehandle.h"
 }
 
 DevNumMonitor::DevNumMonitor()

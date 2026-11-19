@@ -10,15 +10,11 @@
 extern "C" {
 #endif
 
-#include "gviewaudio.h"
 #include "gviewv4l2core.h"
 #include "v4l2_devices.h"
 #include "v4l2_core.h"
-#include "gviewencoder.h"
-#include "gviewrender.h"
 #include "cameraconfig.h"
 #include "options.h"
-#include "gui.h"
 
 #include <stdio.h>
 #include <stdlib.h>
