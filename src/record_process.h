@@ -1,5 +1,5 @@
 // Copyright (C) 2020 ~ 2021 Uniontech Software Technology Co.,Ltd.
-// SPDX-FileCopyrightText: 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2022-2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -65,7 +65,7 @@ public:
     /**
      * @brief 退出录屏（先停止插件计时，再弹录屏提示，最后退出计时插件）
      */
-    void exitRecord(QString newSavePath);
+    void exitRecord(QString newSavePath, bool success = true);
     /**
      * @brief 定时给任务栏插件发送正在录屏的信号
      */

@@ -1,5 +1,5 @@
 // Copyright (C) 2020 ~ 2021 Uniontech Software Technology Co.,Ltd.
-// SPDX-FileCopyrightText: 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2022-2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -177,8 +177,12 @@ void RecordProcess::onTranscodeFinish()
     QString gifOldPath = path.replace("mp4", "gif");
     QString gifNewPath = QDir(saveDir).filePath(saveBaseName).replace(QString("mp4"), QString("gif"));
     qDebug() << "" << savePath << gifOldPath << gifNewPath;
-    QFile::rename(gifOldPath, gifNewPath);
-    exitRecord(gifNewPath);
+    if (!QFile::rename(gifOldPath, gifNewPath)) {
+        qWarning() << "Failed to rename" << gifOldPath << "to" << gifNewPath << ", using original path";
+        exitRecord(gifOldPath, false);
+    } else {
+        exitRecord(gifNewPath);
+    }
 }
 
 //录屏结束后弹出通知
@@ -210,9 +214,12 @@ void RecordProcess::onRecordFinish()
     // Move file to save directory.
     QString newSavePath = QDir(saveDir).filePath(saveBaseName);
     QFile::remove(newSavePath);
-    QFile::rename(savePath, newSavePath);
-
-    exitRecord(newSavePath);
+    if (!QFile::rename(savePath, newSavePath)) {
+        qWarning() << "Failed to rename" << savePath << "to" << newSavePath << ", using original path";
+        exitRecord(savePath, false);
+    } else {
+        exitRecord(newSavePath);
+    }
 }
 
 bool RecordProcess::processFrameInterpolation(const QString &inputPath, int targetFps)
@@ -779,11 +786,16 @@ void RecordProcess::onExitGstRecord()
 {
     QString newSavePath = QDir(saveDir).filePath(saveBaseName);
     QFile::remove(newSavePath);
-    QFile::rename(savePath, newSavePath);
+    bool renamed = QFile::rename(savePath, newSavePath);
     //注销gstreamer相关库加载
     gstInterface::unloadFunctions();
     qDebug() << "Gstreamer 录屏结束！";
-    exitRecord(newSavePath);
+    if (!renamed) {
+        qWarning() << "Failed to rename" << savePath << "to" << newSavePath << ", using original path";
+        exitRecord(savePath, false);
+    } else {
+        exitRecord(newSavePath);
+    }
 }
 
 void RecordProcess::onRecordMouse(const bool status)
@@ -936,7 +948,7 @@ void RecordProcess::stopRecord()
     }
 }
 //退出录屏（先停止，再弹提示，最后退出）
-void RecordProcess::exitRecord(QString newSavePath)
+void RecordProcess::exitRecord(QString newSavePath, bool success)
 {
     if (!Utils::isRootUser && !m_isFullScreenRecord) {
         qInfo() << __LINE__ << __func__ << "正在弹出保存完成的通知...";
@@ -947,21 +959,28 @@ void RecordProcess::exitRecord(QString newSavePath)
                                     QDBusConnection::sessionBus());
 
         QStringList actions;
-        actions << "_open" << tr("View");
-        actions << "_open1" << tr("Open Folder");
         QVariantMap hints;
-        hints["x-deepin-action-_open"] = QString("xdg-open,%1").arg(newSavePath);
-        QString savepathcommand = QString("dde-file-manager,--show-item,%1").arg(newSavePath);
-        hints["x-deepin-action-_open1"] = savepathcommand;
         int timeout = -1;
         unsigned int id = 0;
+        QString body;
+
+        if (success) {
+            actions << "_open" << tr("View");
+            actions << "_open1" << tr("Open Folder");
+            hints["x-deepin-action-_open"] = QString("xdg-open,%1").arg(newSavePath);
+            QString savepathcommand = QString("dde-file-manager,--show-item,%1").arg(newSavePath);
+            hints["x-deepin-action-_open1"] = savepathcommand;
+            body = tr("Recording finished");
+        } else {
+            body = tr("Recording save failed");
+        }
 
         QList<QVariant> arg;
         arg << (QCoreApplication::applicationName())   // appname
             << id   // id
             << QString("deepin-screen-recorder")   // icon
             << tr("Screen Capture")   // summary
-            << QString(tr("Recording finished"))   // body
+            << body   // body
             << actions   // actions
             << hints   // hints
             << timeout;   // timeout
@@ -989,7 +1008,9 @@ void RecordProcess::exitRecord(QString newSavePath)
     }
 
     //保存到剪切板
-    save2Clipboard(newSavePath);
+    if (success) {
+        save2Clipboard(newSavePath);
+    }
     qInfo() << __LINE__ << __func__ <<"录屏已退出";
     QApplication::quit();
     if (Utils::isWaylandMode) {
