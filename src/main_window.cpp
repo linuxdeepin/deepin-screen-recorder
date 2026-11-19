@@ -22,7 +22,6 @@
 #include "utils/shortcut.h"
 #include "utils/screengrabber.h"
 #include "utils/log.h"
-#include "camera_process.h"
 #include "widgets/tooltips.h"
 #include "widgets/toolbutton.h"
 #include "dbusinterface/drawinterface.h"
@@ -34,13 +33,6 @@
 #endif
 #include "widgets/imagemenu.h"
 #include <signal.h>
-#ifdef __cplusplus
-extern "C" {
-#endif
-#include "load_libs.h"
-#ifdef __cplusplus
-}
-#endif
 #include "dbus_name.h"
 
 #include <QMainWindow>
@@ -1039,60 +1031,9 @@ void MainWindow::checkIsLockScreen()
     }
 #endif
 }
-void MainWindow::initDynamicLibPath()
-{
-#ifndef ENABLE_UNIT_TEST
-    LoadLibNames tmp;
-    QByteArray avcodec = libPath("libavcodec.so").toLatin1();
-    tmp.chAvcodec = avcodec.data();
-    QByteArray avformat = libPath("libavformat.so").toLatin1();
-    tmp.chAvformat = avformat.data();
-    QByteArray avutil = libPath("libavutil.so").toLatin1();
-    tmp.chAvutil = avutil.data();
-    QByteArray udev = libPath("libudev.so").toLatin1();
-    tmp.chUdev = udev.data();
-    QByteArray usb = libPath("libusb-1.0.so").toLatin1();
-    tmp.chUsb = usb.data();
-    QByteArray portaudio = libPath("libportaudio.so").toLatin1();
-    tmp.chPortaudio = portaudio.data();
-    QByteArray v4l2 = libPath("libv4l2.so").toLatin1();
-    tmp.chV4l2 = v4l2.data();
-    QByteArray ffmpegthumbnailer = libPath("libffmpegthumbnailer.so").toLatin1();
-    tmp.chFfmpegthumbnailer = ffmpegthumbnailer.data();
-    QByteArray swscale = libPath("libswscale.so").toLatin1();
-    tmp.chSwscale = swscale.data();
-    QByteArray swresample = libPath("libswresample.so").toLatin1();
-    tmp.chSwresample = swresample.data();
-    setLibNames(tmp);
-#endif
-}
 
-QString MainWindow::libPath(const QString &strlib)
-{
-    QDir dir;
-    QString path = QLibraryInfo::location(QLibraryInfo::LibrariesPath);
-    dir.setPath(path);
-    qCDebug(dsrApp) << " where is libs? where is " << dir;
-    QStringList list =
-        dir.entryList(QStringList() << (strlib + "*"), QDir::NoDotAndDotDot | QDir::Files);  // filter name with strlib
 
-    qCDebug(dsrApp) << strlib << " Is it in there?  there is " << list;
 
-    if (list.isEmpty()) {
-        qCWarning(dsrApp) << dir << "has not any lib with " << (strlib + "*") << ",so the list is empty!";
-    }
-    if (list.contains(strlib))
-        return strlib;
-
-    // 列表为空时 list.last() 是未定义行为（断言在 release 构建中被禁用），
-    // 早期这里直接 Q_ASSERT + list.last()，会在缺库环境（如 CI/测试沙箱）崩溃。
-    if (list.isEmpty()) {
-        qCWarning(dsrApp) << "libPath: no candidate for" << strlib << ", fallback to input.";
-        return strlib;
-    }
-    list.sort();
-    return list.last();
-}
 
 quint32 MainWindow::sendSavingNotify()
 {
@@ -3401,9 +3342,6 @@ void MainWindow::updateToolBarPos()
         if (m_functionType == status::record) {
             initAudioAndCameraWatchers();
         }
-        qCInfo(dsrApp) << "正在加载依赖库...";
-        initDynamicLibPath();
-
         // 检测是否是锁频状态下再打开截图
 
         // TODO: treeland禁用
@@ -3414,10 +3352,6 @@ void MainWindow::updateToolBarPos()
 
     // 延迟初始化相机，仅在切换到录屏界面时执行初始化
     if (status::record == m_functionType && !m_devnumMonitor) {
-        qCInfo(dsrApp) << "正在初始化v4l2core...";
-        v4l2core_init();
-        qCInfo(dsrApp) << "初始化v4l2core已完成";
-
         m_devnumMonitor = new DevNumMonitor();
         m_devnumMonitor->setParent(this);
         m_devnumMonitor->setObjectName("DevMonitorThread");
@@ -4154,6 +4088,23 @@ void MainWindow::changeCameraSelectEvent(bool checked)
         m_cameraWidget->setDevcieName(m_devnumMonitor->availableCamera());
 #endif
         m_cameraWidget->initUI();
+        connect(m_cameraWidget, &CameraWidget::cameraError, this,
+                [this](const QString &message) {
+            qCWarning(dsrApp) << "Camera preview failed:" << message;
+            m_cameraOffFlag = true;
+            m_selectedCamera = false;
+            if (m_cameraWidget)
+                m_cameraWidget->hide();
+            if (m_toolBar)
+                m_toolBar->setCameraDeviceEnable(false);
+
+            // cameraStart() 返回后调用方还会根据 checked 再设置一次探测状态，
+            // 因此延迟到下一轮事件循环恢复探测，避免错误分支被立即覆盖。
+            QTimer::singleShot(0, this, [this]() {
+                if (m_devnumMonitor)
+                    m_devnumMonitor->setCanUse(true);
+            });
+        });
     }
 
     m_selectedCamera = checked;

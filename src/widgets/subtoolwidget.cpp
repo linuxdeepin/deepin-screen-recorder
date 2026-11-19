@@ -4,7 +4,6 @@
 
 #include "subtoolwidget.h"
 #include "toolbarhost.h"
-#include "../camera_process.h"
 #include "../utils/configsettings.h"
 #include "../utils/saveutils.h"
 #include "../settings.h"

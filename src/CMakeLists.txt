@@ -43,7 +43,6 @@ set ( deepin-screen-recorder_HDRS
     event_monitor.h
     button_feedback.h
     process_tree.h
-    camera_process.h
     show_buttons.h
     utils/audioutils.h
     menucontroller/menucontroller.h
@@ -76,6 +75,10 @@ set ( deepin-screen-recorder_HDRS
     dbusservice/dbusscreenshotservice.h
     dbusservice/dbusscreenshot.h
     widgets/camerawidget.h
+    camera/cameracontroller.h
+    camera/qcameracontroller.h
+    camera/cameraavailabilityprobe.h
+    camera/devnummonitor.h
     screenshot.h
     utils/voicevolumewatcher.h
     utils/camerawatcher.h
@@ -107,7 +110,6 @@ set ( deepin-screen-recorder_SRCS
     event_monitor.cpp
     button_feedback.cpp
     process_tree.cpp
-    camera_process.cpp
     show_buttons.cpp
     utils/audioutils.cpp
     menucontroller/menucontroller.cpp
@@ -140,6 +142,9 @@ set ( deepin-screen-recorder_SRCS
     dbusservice/dbusscreenshotservice.cpp
     dbusservice/dbusscreenshot.cpp
     widgets/camerawidget.cpp
+    camera/qcameracontroller.cpp
+    camera/cameraavailabilityprobe.cpp
+    camera/devnummonitor.cpp
     utils/dbusutils.cpp
     screenshot.cpp
     utils/voicevolumewatcher.cpp

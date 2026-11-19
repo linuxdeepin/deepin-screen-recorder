@@ -4,53 +4,81 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 
 #include "camerawidget.h"
-#include "v4l2_core.h"
+
+#include "../camera/cameracontroller.h"
+#include "../camera/qcameracontroller.h"
 #include "../utils/log.h"
 
-#include <QMouseEvent>
-#include <QDebug>
 #include <QApplication>
-#include <QPainter>
-#include <QHBoxLayout>
-#include <QDir>
 #include <QBitmap>
-#include <QtConcurrent>
+#include <QDebug>
+#include <QHBoxLayout>
+#include <QMouseEvent>
+#include <QPainter>
+#include <QPixmap>
 
-#include "../camera/LPF_V4L2.h"
-#include "../camera/majorimageprocessingthread.h"
+namespace {
 
-CameraWidget::CameraWidget(DWidget *parent) : DWidget(parent)
+QString selectDeviceId(const QList<CameraDeviceDescriptor> &devices,
+                       const QString &preferredId)
+{
+    if (devices.isEmpty())
+        return {};
+
+    for (const CameraDeviceDescriptor &device : devices) {
+        if (!preferredId.isEmpty() && device.id == preferredId)
+            return device.id;
+    }
+
+    for (const CameraDeviceDescriptor &device : devices) {
+        if (device.isDefault)
+            return device.id;
+    }
+
+    return devices.first().id;
+}
+
+} // namespace
+
+CameraWidget::CameraWidget(DWidget *parent, CameraControllerFactory factory)
+    : DWidget(parent)
 {
     qCDebug(dsrApp) << "CameraWidget constructor entered";
+
+    m_controller = factory ? factory(this) : new QtCameraController(this);
+    if (m_controller && !m_controller->parent())
+        m_controller->setParent(this);
+
+    if (m_controller) {
+        connect(m_controller, &CameraController::frameReady, this,
+                [this](const QImage &image) { onReceiveMajorImage(image); });
+        connect(m_controller, &CameraController::errorOccurred,
+                this, &CameraWidget::handleControllerError);
+    }
 }
 
 CameraWidget::~CameraWidget()
 {
     qCDebug(dsrApp) << "CameraWidget destructor entered";
-    if (m_imgPrcThread) {
-        qCDebug(dsrApp) << "Stopping image processing thread";
-        m_imgPrcThread->stop();
-        m_imgPrcThread->deleteLater();
-        m_imgPrcThread = nullptr;
-    }
+    cameraStop();
     qCDebug(dsrApp) << "~CameraWidget() finished";
 }
 
-
 void CameraWidget::setRecordRect(int x, int y, int width, int height)
 {
-    qCDebug(dsrApp) << "setRecordRect called with x:" << x << ", y:" << y << ", width:" << width << ", height:" << height;
-    this->recordX = x;
-    this->recordY = y;
-    this->recordWidth = width;
-    this->recordHeight = height;
+    qCDebug(dsrApp) << "setRecordRect called with x:" << x << ", y:" << y
+                    << ", width:" << width << ", height:" << height;
+    recordX = x;
+    recordY = y;
+    recordWidth = width;
+    recordHeight = height;
 }
 
 void CameraWidget::showAt(QPoint pos)
 {
     qCDebug(dsrApp) << "showAt called with position:" << pos;
     if (!isVisible())
-        this->show();
+        show();
     move(pos.x(), pos.y());
 }
 
@@ -66,189 +94,180 @@ QPoint CameraWidget::parentGlobalOffset() const
 
 int CameraWidget::getRecordX()
 {
-    qCDebug(dsrApp) << "getRecordX called, returning:" << recordX;
     return recordX;
 }
+
 int CameraWidget::getRecordY()
 {
-    qCDebug(dsrApp) << "getRecordY called, returning:" << recordY;
     return recordY;
 }
+
 int CameraWidget::getRecordWidth()
 {
-    qCDebug(dsrApp) << "getRecordWidth called, returning:" << recordWidth;
     return recordWidth;
 }
+
 int CameraWidget::getRecordHeight()
 {
-    qCDebug(dsrApp) << "getRecordHeight called, returning:" << recordHeight;
     return recordHeight;
 }
 
 void CameraWidget::initUI()
 {
+    if (m_cameraUI)
+        return;
+
     qCDebug(dsrApp) << "Initializing camera UI...";
     setAttribute(Qt::WA_TranslucentBackground, true);
     setFocusPolicy(Qt::StrongFocus);
     setMouseTracking(true);
     setAcceptDrops(true);
+
     m_cameraUI = new DLabel(this);
+    m_cameraUI->setAlignment(Qt::AlignCenter);
 
-    QHBoxLayout *t_hlayout = new QHBoxLayout(this);
-    t_hlayout->addWidget(m_cameraUI);
-    this->setLayout(t_hlayout);
+    auto *layout = new QHBoxLayout(this);
+    layout->setContentsMargins(0, 0, 0, 0);
+    layout->setSpacing(0);
+    layout->addWidget(m_cameraUI);
+    setLayout(layout);
 
-//    qDebug() << "第一次打开摄像头界面通过QCamera获取摄像头名称:" << QCameraInfo::defaultCamera().isNull();
-//    //第一次打开摄像头界面通过QCamera获取摄像头名称
-//    while (QCameraInfo::defaultCamera().isNull()) {
-//        qDebug() << "正在通过QCamera获取摄像头名称:" << QCameraInfo::defaultCamera().isNull();
-//        QEventLoop loop;
-//        QTimer::singleShot(200, &loop, SLOT(quit()));
-//        loop.exec();
-//    }
-//    m_deviceName = QCameraInfo::defaultCamera().deviceName();
     qCDebug(dsrApp) << "Camera UI initialization completed";
-
 }
 
 void CameraWidget::cameraStart()
 {
     qCDebug(dsrApp) << "cameraStart called";
-    if (!m_isInitCamera) {
-        qCDebug(dsrApp) << "First time initializing camera...";
-        if (m_imgPrcThread == nullptr) {
-            qCDebug(dsrApp) << "Creating MajorImageProcessingThread";
-            m_imgPrcThread = new MajorImageProcessingThread;
-            m_imgPrcThread->setParent(this);
-            m_imgPrcThread->setObjectName("MajorThread");
-            connect(m_imgPrcThread, SIGNAL(SendMajorImageProcessing(QPixmap)),
-                    this, SLOT(onReceiveMajorImage(QPixmap)));
-        }
-        m_isInitCamera = true;
-        startCameraV4l2(m_deviceName.toLatin1());
-        qCDebug(dsrApp) << "First time camera initialization completed!";
-    } else {
-        qCDebug(dsrApp) << "Re-initializing camera...";
-        restartDevices();
-        qCDebug(dsrApp) << "Re-initialization of camera completed!";
-    }
-}
-int CameraWidget::startCameraV4l2(const char *device)
-{
-    qCDebug(dsrApp) << "Initializing camera (" << device << ")...";
-    int ret = camInit(device);
-    v4l2_dev_t *vd =  get_v4l2_device_handler();
 
-    if (vd == nullptr) {
-        qCWarning(dsrApp) << "camInit failed! not found camera device!";
-        return -1;
+    if (!m_controller) {
+        emit cameraError(tr("Camera backend is unavailable"));
+        return;
     }
-    qCDebug(dsrApp) << "videoDevice->videodevice: " << vd->videodevice;
-    if (ret == E_OK) {
-        //m_imgPrcThread->setCameraDevice(vd);
-        qCDebug(dsrApp) << "Starting image processing thread";
-        m_imgPrcThread->start();
-    } else {
-        qCWarning(dsrApp) << "camInit failed";
-        camUnInit();
+
+    if (m_startRequested || m_controller->isActive())
+        return;
+
+    const QList<CameraDeviceDescriptor> devices = m_controller->availableDevices();
+    if (devices.isEmpty()) {
+        qCWarning(dsrApp) << "No camera device found";
+        emit cameraError(tr("No camera device found"));
+        return;
     }
-    qCDebug(dsrApp) << "Camera initialized (" << device << ")";
-    return ret;
+
+    const QString deviceId = selectDeviceId(devices, m_deviceName);
+    m_deviceName = deviceId;
+    clearPreview();
+    qCDebug(dsrApp) << "Starting camera device:" << deviceId;
+
+    m_startRequested = m_controller->start(deviceId);
+    if (!m_startRequested)
+        qCWarning(dsrApp) << "Failed to start camera device:" << deviceId;
+}
+
+void CameraWidget::startCameraById(const QString &preferredId)
+{
+    if (!m_controller)
+        return;
+
+    const QList<CameraDeviceDescriptor> devices = m_controller->availableDevices();
+    if (devices.isEmpty()) {
+        emit cameraError(tr("No camera device found"));
+        return;
+    }
+
+    const QString deviceId = selectDeviceId(devices, preferredId);
+    if (deviceId.isEmpty())
+        return;
+
+    clearPreview();
+    m_deviceName = deviceId;
+    m_startRequested = m_controller->start(deviceId);
 }
 
 void CameraWidget::restartDevices()
 {
     qCDebug(dsrApp) << "restartDevices called";
-    //获取当前的摄像头设备
-    v4l2_dev_t *devicehandler =  get_v4l2_device_handler();
 
-    //停止采集摄像头画面的线程
-    if (m_imgPrcThread != nullptr && m_imgPrcThread->isRunning()) {
-        qCDebug(dsrApp) << "Stopping image processing thread for restart";
-        m_imgPrcThread->stop();
+    if (!m_controller)
+        return;
+
+    const QList<CameraDeviceDescriptor> devices = m_controller->availableDevices();
+    if (devices.isEmpty()) {
+        cameraStop();
+        emit cameraError(tr("No camera device found"));
+        return;
     }
 
-    while (m_imgPrcThread->isRunning());
-    QString str;
-
-    if (devicehandler != nullptr) {
-        qCDebug(dsrApp) << "Closing V4L2 device handler";
-        str = QString(devicehandler->videodevice);
-        close_v4l2_device_handler();
-    }
-
-    v4l2_device_list_t *devlist = get_device_list();
-    qCDebug(dsrApp) << "Number of devices found:" << devlist->num_devices;
-    if (devlist->num_devices == 2) {
-        qCDebug(dsrApp) << "Handling two devices";
-        for (int i = 0 ; i < devlist->num_devices; i++) {
-            QString str1 = QString(devlist->list_devices[i].device);
-            if (str != str1) {
-                qCDebug(dsrApp) << "Attempting to start camera for device:" << str1;
-                if (E_OK == startCameraV4l2(devlist->list_devices[i].device)) {
-                    qCDebug(dsrApp) << "Camera started successfully for device:" << str1;
-                    break;
-                }
-            }
+    int currentIndex = -1;
+    for (int i = 0; i < devices.size(); ++i) {
+        if (devices.at(i).id == m_deviceName) {
+            currentIndex = i;
+            break;
         }
+    }
+
+    QString nextDeviceId;
+    if (currentIndex < 0) {
+        nextDeviceId = selectDeviceId(devices, QString());
     } else {
-        qCDebug(dsrApp) << "Handling multiple devices";
-        for (int i = 0 ; i < devlist->num_devices; i++) {
-            QString str1 = QString(devlist->list_devices[i].device);
-            if (str == str1) {
-                qCDebug(dsrApp) << "Current device found in list:" << str1;
-                if (i == devlist->num_devices - 1) {
-                    qCDebug(dsrApp) << "Current device is last, starting first device";
-                    startCameraV4l2(devlist->list_devices[0].device);
-                } else {
-                    qCDebug(dsrApp) << "Starting next device in list";
-                    startCameraV4l2(devlist->list_devices[i + 1].device);
-                }
-                break;
-            }
-            if (str.isEmpty()) {
-                qCDebug(dsrApp) << "Current device string is empty, starting first device";
-                startCameraV4l2(devlist->list_devices[0].device);
-                break;
-            }
-        }
+        nextDeviceId = devices.at((currentIndex + 1) % devices.size()).id;
     }
+
+    qCDebug(dsrApp) << "Switching camera device to:" << nextDeviceId;
+    startCameraById(nextDeviceId);
 }
 
 void CameraWidget::cameraStop()
 {
     qCDebug(dsrApp) << "cameraStop called";
-    // m_cameraUI 可能为 nullptr（未走完整初始化或测试场景），clear() 会段错误。
-    if (m_cameraUI) {
-        m_cameraUI->clear();
-    }
+    clearPreview();
 
-    if (m_imgPrcThread != nullptr) {
-        qCDebug(dsrApp) << "Stopping image processing thread";
-        m_imgPrcThread->stop();
-    }
-    camUnInit();
+    m_startRequested = false;
+    if (m_controller)
+        m_controller->stop();
+}
+
+void CameraWidget::clearPreview()
+{
+    if (m_cameraUI)
+        m_cameraUI->clear();
+}
+
+void CameraWidget::handleControllerError(const QString &message)
+{
+    qCWarning(dsrApp) << "Camera controller error:" << message;
+    m_startRequested = false;
+    clearPreview();
+    emit cameraError(message);
+
+    // 让调用栈先返回 Qt Multimedia 内部，再停止并释放摄像头资源。
+    QTimer::singleShot(0, this, [this]() {
+        m_startRequested = false;
+        if (m_controller)
+            m_controller->stop();
+    });
 }
 
 void CameraWidget::onReceiveMajorImage(QImage image)
 {
-    qCDebug(dsrApp) << "onReceiveMajorImage (QImage) called";
-    QImage t_image = image.scaled(this->width(), this->height(), Qt::IgnoreAspectRatio, Qt::FastTransformation);
-    QPixmap pixmap = QPixmap::fromImage(image);
-    if (m_cameraUI) {
-        qCDebug(dsrApp) << "Setting pixmap to camera UI";
-        m_cameraUI->setPixmap(pixmap);
-    }
+    if (image.isNull() || !m_cameraUI || width() <= 0 || height() <= 0)
+        return;
+
+    const QImage scaledImage = image.scaled(size(),
+                                            Qt::IgnoreAspectRatio,
+                                            Qt::FastTransformation);
+    m_cameraUI->setPixmap(QPixmap::fromImage(scaledImage));
 }
 
 void CameraWidget::onReceiveMajorImage(QPixmap pixmap)
 {
-    qCDebug(dsrApp) << "onReceiveMajorImage (QPixmap) called";
-    pixmap =  pixmap.scaled(this->width(), this->height());
-    if (m_cameraUI) {
-        qCDebug(dsrApp) << "Setting pixmap to camera UI";
-        m_cameraUI->setPixmap(pixmap);
-    }
+    if (pixmap.isNull() || !m_cameraUI || width() <= 0 || height() <= 0)
+        return;
+
+    pixmap = pixmap.scaled(size(),
+                           Qt::IgnoreAspectRatio,
+                           Qt::FastTransformation);
+    m_cameraUI->setPixmap(pixmap);
 }
 
 void CameraWidget::enterEvent(QEvent *e)
@@ -262,12 +281,8 @@ void CameraWidget::paintEvent(QPaintEvent *e)
 {
     Q_UNUSED(e);
     qCDebug(dsrApp) << "CameraWidget paintEvent";
-//    QPainter painter(this);
-//    painter.setBrush(QColor(0, 0, 0, 255));
-//    painter.setRenderHint(QPainter::Antialiasing);
-//    painter.drawRect(rect());
 
-    QBitmap bmp(this->size());
+    QBitmap bmp(size());
     bmp.fill();
     QPainter p(&bmp);
     p.setPen(Qt::NoPen);
@@ -276,73 +291,42 @@ void CameraWidget::paintEvent(QPaintEvent *e)
     p.setRenderHint(QPainter::Antialiasing, true);
     p.drawRoundedRect(12, 12, width() - 25, height() - 25, 8, 8);
     setMask(bmp);
-
-//    DWidget::paintEvent(e);
 }
+
 void CameraWidget::mousePressEvent(QMouseEvent *event)
 {
     qCDebug(dsrApp) << "CameraWidget mousePressEvent";
-    //当鼠标左键点击时.
     if (event->button() == Qt::LeftButton) {
-        qCDebug(dsrApp) << "Left mouse button pressed, initiating move";
         m_move = true;
-        //记录鼠标的世界坐标.
         m_startPoint = event->globalPos();
-        //记录窗体的世界坐标.
-        m_windowTopLeftPoint = this->frameGeometry().topLeft();
-        m_windowTopRightPoint = this->frameGeometry().topRight();
-        m_windowBottomLeftPoint = this->frameGeometry().bottomLeft();
+        m_windowTopLeftPoint = frameGeometry().topLeft();
+        m_windowTopRightPoint = frameGeometry().topRight();
+        m_windowBottomLeftPoint = frameGeometry().bottomLeft();
     }
 }
 
 void CameraWidget::mouseMoveEvent(QMouseEvent *event)
 {
     qCDebug(dsrApp) << "CameraWidget mouseMoveEvent";
-    if ((event->buttons() & Qt::LeftButton) && m_Immovable == false) {
-        qCDebug(dsrApp) << "Mouse moving with left button pressed and widget is movable";
-//        //移动中的鼠标位置相对于初始位置的相对位置.
-//        QPoint relativePos = event->globalPos() - m_startPoint;
-//        QRect recordRect = QRect(recordX, recordY, recordWidth, recordHeight);
-//        QPoint removePos = m_windowTopLeftPoint + relativePos;
-//        QPoint removeTopRightPos = m_windowTopRightPoint + relativePos;
-//        QPoint removeBottomLeftPos = m_windowBottomLeftPoint + relativePos;
-//        //然后移动窗体即可.
-//        if (recordRect.contains(removePos) &&
-//                recordRect.contains(removeTopRightPos) &&
-//                recordRect.contains(removeBottomLeftPos) ) {
-//            this->move(removePos);
-//        }
+    if ((event->buttons() & Qt::LeftButton) && !m_Immovable) {
+        const QSize widgetSize = size();
+        const QSize parentSize(recordWidth, recordHeight);
+        QPoint curPos(event->globalX() - widgetSize.width() / 2,
+                      event->globalY() - widgetSize.height() / 2);
 
-//        else {
-
-//        }
-        QSize size = this->size();
-        QSize parentSize(recordWidth, recordHeight);
-        QPoint curPos = QPoint(event->globalX() - size.width() / 2,
-                               event->globalY() - size.height() / 2);
-        if (curPos.x() < recordX) { //left
-            qCDebug(dsrApp) << "Adjusting position: left bound reached";
+        if (curPos.x() < recordX)
             curPos.setX(recordX);
-        }
 
-        if (curPos.y() < recordY) { //top
-            qCDebug(dsrApp) << "Adjusting position: top bound reached";
+        if (curPos.y() < recordY)
             curPos.setY(recordY);
-        }
 
-        if ((curPos.x() + size.width()) > (recordX + parentSize.width()))  { //right
-            qCDebug(dsrApp) << "Adjusting position: right bound reached";
-            curPos.setX(recordX + parentSize.width() - size.width());
-        }
+        if ((curPos.x() + widgetSize.width()) > (recordX + parentSize.width()))
+            curPos.setX(recordX + parentSize.width() - widgetSize.width());
 
-        if ((curPos.y() + size.height()) > (recordY + parentSize.height()))  { //bottom
-            qCDebug(dsrApp) << "Adjusting position: bottom bound reached";
-            curPos.setY(recordY + parentSize.height() - size.height());
-        }
+        if ((curPos.y() + widgetSize.height()) > (recordY + parentSize.height()))
+            curPos.setY(recordY + parentSize.height() - widgetSize.height());
 
-//        QPoint resultPos = QPoint(curPos.x() - size.width() / 2,
-//                                  curPos.y() - size.height() / 2);
-        this->move(curPos - m_parentGlobalOffset);
+        move(curPos - m_parentGlobalOffset);
     }
     DWidget::mouseMoveEvent(event);
 }
@@ -351,34 +335,26 @@ void CameraWidget::mouseReleaseEvent(QMouseEvent *event)
 {
     qCDebug(dsrApp) << "CameraWidget mouseReleaseEvent";
     if (event->button() == Qt::LeftButton) {
-        qCDebug(dsrApp) << "Left mouse button released";
-        //改变移动状态.
         m_move = false;
         const QPoint globalTopLeft = mapToGlobal(QPoint(0, 0));
-        int centerX = globalTopLeft.x() + this->width() / 2;
-        int centerY = globalTopLeft.y() + this->height() / 2;
+        const int centerX = globalTopLeft.x() + width() / 2;
+        const int centerY = globalTopLeft.y() + height() / 2;
         QPoint targetGlobalPos;
+
         if (centerX - recordX < recordWidth / 2) {
-            qCDebug(dsrApp) << "Adjusting position: centerX is in left half";
-            if (centerY - recordY < recordHeight / 2) {
-                qCDebug(dsrApp) << "Adjusting position: centerY is in top half, moving to top-left";
+            if (centerY - recordY < recordHeight / 2)
                 targetGlobalPos = QPoint(recordX, recordY);
-            } else {
-                qCDebug(dsrApp) << "Adjusting position: centerY is in bottom half, moving to bottom-left";
-                targetGlobalPos = QPoint(recordX, recordY + recordHeight - this->height());
-            }
+            else
+                targetGlobalPos = QPoint(recordX, recordY + recordHeight - height());
         } else {
-            qCDebug(dsrApp) << "Adjusting position: centerX is in right half";
-            if (centerY - recordY < recordHeight / 2) {
-                qCDebug(dsrApp) << "Adjusting position: centerY is in top half, moving to top-right";
-                targetGlobalPos = QPoint(recordX + recordWidth - this->width(), recordY);
-            } else {
-                qCDebug(dsrApp) << "Adjusting position: centerY is in bottom half, moving to bottom-right";
-                targetGlobalPos = QPoint(recordX + recordWidth - this->width(),
-                                         recordY + recordHeight - this->height());
-            }
+            if (centerY - recordY < recordHeight / 2)
+                targetGlobalPos = QPoint(recordX + recordWidth - width(), recordY);
+            else
+                targetGlobalPos = QPoint(recordX + recordWidth - width(),
+                                         recordY + recordHeight - height());
         }
-        this->move(targetGlobalPos - m_parentGlobalOffset);
+
+        move(targetGlobalPos - m_parentGlobalOffset);
     }
 }
 
@@ -387,27 +363,16 @@ CameraWidget::Position CameraWidget::postion()
     qCDebug(dsrApp) << "postion called";
     const QPoint globalTopLeft = mapToGlobal(QPoint(0, 0));
     if (globalTopLeft.x() == recordX) {
-        qCDebug(dsrApp) << "Widget X matches recordX";
-        if (globalTopLeft.y() == recordY) {
-            qCDebug(dsrApp) << "Widget Y matches recordY, returning leftTop";
+        if (globalTopLeft.y() == recordY)
             return leftTop;
-        } else {
-            qCDebug(dsrApp) << "Widget Y does not match recordY, returning leftBottom";
-            return leftBottom;
-        }
-    } else {
-        qCDebug(dsrApp) << "Widget X does not match recordX";
-        if (globalTopLeft.y() == recordY) {
-            qCDebug(dsrApp) << "Widget Y matches recordY, returning rightTop";
-            return rightTop;
-        } else {
-            qCDebug(dsrApp) << "Widget Y does not match recordY, returning rightBottom";
-            return rightBottom;
-        }
+        return leftBottom;
     }
+
+    if (globalTopLeft.y() == recordY)
+        return rightTop;
+    return rightBottom;
 }
 
-// 设置CameraWidget是否可以拖动
 void CameraWidget::setCameraWidgetImmovable(bool immovable)
 {
     qCDebug(dsrApp) << "setCameraWidgetImmovable called with:" << immovable;
@@ -416,14 +381,7 @@ void CameraWidget::setCameraWidgetImmovable(bool immovable)
 
 int CameraWidget::getCameraStatus()
 {
-    qCDebug(dsrApp) << "getCameraStatus called";
-    if (m_imgPrcThread) {
-        int status = m_imgPrcThread->getStatus();
-        qCDebug(dsrApp) << "Returning camera status:" << status;
-        return status;
-    }
-    qCDebug(dsrApp) << "Image processing thread is null, returning 0";
-    return 0;
+    return m_startRequested || (m_controller && m_controller->isActive()) ? 1 : 0;
 }
 
 void CameraWidget::setDevcieName(const QString &devcieName)

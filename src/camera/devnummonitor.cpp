@@ -5,21 +5,17 @@
 
 #include "devnummonitor.h"
 #include "../utils/log.h"
+#include "cameraavailabilityprobe.h"
 
 #include <QDebug>
+#include <QString>
 
 #if (QT_VERSION_MAJOR == 5)
 #include <QCameraInfo>
 #elif (QT_VERSION_MAJOR == 6)
 #include <QMediaDevices>
+#include <QCameraDevice>
 #endif
-
-#include <QString>
-extern "C"
-{
-#include "v4l2_devices.h"
-#include "camview.h"
-}
 
 DevNumMonitor::DevNumMonitor()
 {
@@ -44,22 +40,18 @@ void DevNumMonitor::init()
     qCDebug(dsrApp) << "Exit: DevNumMonitor::init";
 }
 
-//void DevNumMonitor::run()
-//{
-//    m_pTimer = new QTimer;
-//    m_pTimer->setInterval(500);
-//    connect(m_pTimer, &QTimer::timeout, this, &DevNumMonitor::timeOutSlot);
-//    QObject::connect(this, &QThread::destroyed, m_pTimer, &QTimer::deleteLater);
-//    m_pTimer->start();
-//    this->exec();
-//    qCDebug(dsrApp) << "Start monitoring the number of devices!";
-//}
-
 void DevNumMonitor::timeOutSlot()
 {
     qCDebug(dsrApp) << "Entry: DevNumMonitor::timeOutSlot";
-    check_device_list_events(get_v4l2_device_handler());
-    if (get_device_list()->num_devices < 1) {
+
+#if (QT_VERSION_MAJOR == 5)
+    const QList<QCameraInfo> cameras = QCameraInfo::availableCameras();
+#elif (QT_VERSION_MAJOR == 6)
+    const QList<QCameraDevice> cameras = QMediaDevices::videoInputs();
+#endif
+
+    if (cameras.isEmpty()) {
+        m_availableCamera.clear();
         qCDebug(dsrApp) << "Log: DevNumMonitor::timeOutSlot - No devices found.";
         //没有设备发送信号
         if (!m_noDevice) {
@@ -67,24 +59,32 @@ void DevNumMonitor::timeOutSlot()
             emit existDevice(false);
             m_noDevice = true;
         }
-        //qCDebug(dsrApp) << "There is no camera connected!";
     } else {
-        qCDebug(dsrApp) << "Log: DevNumMonitor::timeOutSlot - Devices found. Number of devices:" << get_device_list()->num_devices;
-        //v23特有处理，由于QCameraInfo::availableCameras().count()在v23上无法获取正确结果故更换为此方式
+        qCDebug(dsrApp) << "Log: DevNumMonitor::timeOutSlot - Devices found. Number of devices:" << cameras.size();
         int isExistAvailableCameras = 0;
-        //qCDebug(dsrApp) << "m_canUse: " << m_canUse;
         if (m_canUse) {
+            m_availableCamera.clear();
             qCDebug(dsrApp) << "Log: DevNumMonitor::timeOutSlot - m_canUse is true. Checking available cameras.";
-            for (int i = 0; i < get_device_list()->num_devices; i++) {
-                qCDebug(dsrApp) << "Log: DevNumMonitor::timeOutSlot - Checking device:" << get_device_list()->list_devices[i].device << "at index:" << i;
-                int ret = camInit(get_device_list()->list_devices[i].device);
-                camUnInit();
-                if (ret == 0) {
-                    qCDebug(dsrApp) << "Log: DevNumMonitor::timeOutSlot - Device is available:" << get_device_list()->list_devices[i].device;
-                    isExistAvailableCameras++;
-                    m_availableCamera = get_device_list()->list_devices[i].device;
+#if (QT_VERSION_MAJOR == 5)
+            for (const QCameraInfo &camera : cameras) {
+                if (CameraAvailabilityProbe::isDeviceAvailable(camera.deviceName(),
+                                                               camera.description())) {
+                    ++isExistAvailableCameras;
+                    m_availableCamera = camera.deviceName();
+                    break;
                 }
             }
+#elif (QT_VERSION_MAJOR == 6)
+            for (const QCameraDevice &camera : cameras) {
+                const QString deviceId = QString::fromUtf8(camera.id());
+                if (CameraAvailabilityProbe::isDeviceAvailable(deviceId,
+                                                               camera.description())) {
+                    ++isExistAvailableCameras;
+                    m_availableCamera = deviceId;
+                    break;
+                }
+            }
+#endif
         }
         if (m_canUse && isExistAvailableCameras == 0) {
             qCDebug(dsrApp) << "Log: DevNumMonitor::timeOutSlot - m_canUse is true and no available cameras found. Emitting existDevice(false).";
@@ -95,11 +95,11 @@ void DevNumMonitor::timeOutSlot()
             qCDebug(dsrApp) << "Log: DevNumMonitor::timeOutSlot - Available cameras found. Emitting existDevice(true).";
             m_noDevice = false;
             emit existDevice(true);
-            //qCDebug(dsrApp) << "There are " << isExistAvailableCameras << " camera connected and free!";
         }
     }
     qCDebug(dsrApp) << "Exit: DevNumMonitor::timeOutSlot";
 }
+
 void DevNumMonitor::setWatch(const bool isWatcher)
 {
     qCDebug(dsrApp) << "Entry: DevNumMonitor::setWatch - isWatcher:" << isWatcher;
@@ -132,15 +132,19 @@ bool DevNumMonitor::isDevicePresent(const QString &device) const
     if (device.isEmpty())
         return false;
 
-    const v4l2_device_list_t *devices = get_device_list();
-    if (!devices)
-        return false;
-
-    const QByteArray target = device.toLocal8Bit();
-    for (int i = 0; i < devices->num_devices; ++i) {
-        if (target == devices->list_devices[i].device)
+#if (QT_VERSION_MAJOR == 5)
+    const QList<QCameraInfo> cameras = QCameraInfo::availableCameras();
+    for (const QCameraInfo &cam : cameras) {
+        if (cam.deviceName() == device)
             return true;
     }
+#elif (QT_VERSION_MAJOR == 6)
+    const QList<QCameraDevice> cameras = QMediaDevices::videoInputs();
+    for (const QCameraDevice &cam : cameras) {
+        if (QString::fromUtf8(cam.id()) == device)
+            return true;
+    }
+#endif
     return false;
 }
 

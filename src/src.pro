@@ -85,7 +85,7 @@ equals(QT_MAJOR_VERSION, 6) {
           sql xml opengl openglwidgets waylandclient waylandclient-private
     
     # Qt6 specific configurations
-    PKGCONFIG += dtk6widget dtk6core dtk6gui xcb xcb-util gstreamer-app-1.0 libusb-1.0
+    PKGCONFIG += dtk6widget dtk6core dtk6gui xcb xcb-util gstreamer-app-1.0
     
     QMAKE_LRELEASE = /usr/lib/qt6/bin/lrelease
     
@@ -103,7 +103,7 @@ equals(QT_MAJOR_VERSION, 6) {
           sql xml
     
     # Qt5 specific configurations 
-    PKGCONFIG += dtkwidget dtkcore dtkgui xcb xcb-util gstreamer-app-1.0 libusb-1.0
+    PKGCONFIG += dtkwidget dtkcore dtkgui xcb xcb-util gstreamer-app-1.0
     
     QMAKE_LRELEASE = lrelease
     
@@ -133,19 +133,12 @@ INCLUDEPATH += . \
             /usr/include/gstreamer-1.0 \
             /usr/include/opencv_mobile
 
-INCLUDEPATH += ../3rdparty/libcam/libcam/ \
-               ../3rdparty/libcam/libcam_v4l2core/ \
-               ../3rdparty/libcam/libcam_render/ \
-               ../3rdparty/libcam/libcam_encoder/ \
-               ../3rdparty/libcam/libcam_audio/ \
-               ../3rdparty/libcam/load_libs.h \
-               ../3rdparty/displayjack/wayland_client.h
+INCLUDEPATH += ../3rdparty/displayjack/wayland_client.h
 
 message("PWD: " $$PWD)
 
 # Include pri files
 include(accessibility/accessible.pri)
-include(../3rdparty/libcam/libcam.pri)
 
 
 # Compiler flags
@@ -242,9 +235,10 @@ HEADERS += main_window.h \
     gstrecord/gstrecordx.h \
     utils/audioutils.h \
     gstrecord/gstinterface.h \
+    camera/cameracontroller.h \
+    camera/qcameracontroller.h \
+    camera/cameraavailabilityprobe.h \
     camera/devnummonitor.h \
-    camera/LPF_V4L2.h \
-    camera/majorimageprocessingthread.h \
     utils/eventlogutils.h \
     widgets/slider.h \
     ext-image-capture/manager/extcapturemanager.h \
@@ -395,9 +389,9 @@ SOURCES += main.cpp \
     gstrecord/gstrecordx.cpp \
     utils/audioutils.cpp \
     gstrecord/gstinterface.cpp \
+    camera/qcameracontroller.cpp \
+    camera/cameraavailabilityprobe.cpp \
     camera/devnummonitor.cpp \
-    camera/majorimageprocessingthread.cpp \
-    camera/LPF_V4L2.c \
     utils/eventlogutils.cpp \
     dbus_name.cpp \
     ext-image-capture/manager/extcapturemanager.cpp \

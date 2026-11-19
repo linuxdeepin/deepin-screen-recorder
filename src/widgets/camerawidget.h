@@ -5,28 +5,20 @@
 
 #ifndef CAMERAWIDGET_H
 #define CAMERAWIDGET_H
-#include "../camera/majorimageprocessingthread.h"
 
-#include <QObject>
-#include <QCamera>
-#if (QT_VERSION_MAJOR == 5)
-#include <QCameraViewfinder>
-#include <QCameraImageCapture>
-#include <QCameraInfo>
-#elif (QT_VERSION_MAJOR == 6)
-#include <QMediaDevices>
-#include <QImageCapture>
-#include <QVideoWidget>
-#endif
-#include <QList>
-#include <QDebug>
+#include <functional>
+
 #include <QImage>
+#include <QList>
+#include <QObject>
+#include <QPixmap>
 #include <QTimer>
 #include <DLabel>
 #include <DWidget>
-#include <QFile>
 
 DWIDGET_USE_NAMESPACE
+
+class CameraController;
 
 class CameraWidget : public DWidget
 {
@@ -38,9 +30,13 @@ public:
         rightTop,
         rightBottom,
     };
-public:
-    explicit CameraWidget(DWidget *parent = nullptr);
-    ~CameraWidget();
+
+    using CameraControllerFactory = std::function<CameraController *(QObject *)>;
+
+    explicit CameraWidget(DWidget *parent = nullptr,
+                          CameraControllerFactory factory = {});
+    ~CameraWidget() override;
+
     /**
      * @brief 设置录屏区域范围
      * @param x: 录屏区域起点x坐标
@@ -49,6 +45,7 @@ public:
      * @param height: 录屏区域高度
      */
     void setRecordRect(int x, int y, int width, int height);
+
     /**
      * @brief 在指定位置显示摄像头界面
      * @param pos: 指定位置
@@ -67,12 +64,12 @@ public:
     void initUI();
 
     /**
-     * @brief 初始化camera，使用v4l2流程
+     * @brief 启动摄像头预览
      */
     void cameraStart();
 
     /**
-     * @brief 停止采集摄像头画面
+     * @brief 停止摄像头预览
      */
     void cameraStop();
 
@@ -82,11 +79,18 @@ public:
     void setCameraWidgetImmovable(bool immovable);
 
     /**
-     * @brief getcameraStatus
+     * @brief getCameraStatus
      */
     int getCameraStatus();
 
     void setDevcieName(const QString &devcieName);
+
+signals:
+    /**
+     * @brief 摄像头启动或运行失败
+     */
+    void cameraError(const QString &message);
+
 protected:
     void enterEvent(QEvent *e);
     void mousePressEvent(QMouseEvent *event);
@@ -95,22 +99,19 @@ protected:
     void paintEvent(QPaintEvent *e);
 
     /**
-     * @brief 重启摄像头设备
+     * @brief 切换到下一个可用摄像头设备
      */
     void restartDevices();
-
-    /**
-     * @brief 开始采集摄像头画面
-     * @param device
-     * @return
-     */
-    int startCameraV4l2(const char *device);
 
 public slots:
     void onReceiveMajorImage(QImage image);
     void onReceiveMajorImage(QPixmap pixmap);
 
 private:
+    void startCameraById(const QString &preferredId);
+    void handleControllerError(const QString &message);
+    void clearPreview();
+
     int recordX = 0;
     int recordY = 0;
     int recordWidth = 0;
@@ -123,10 +124,9 @@ private:
     QPoint m_parentGlobalOffset;
     DLabel *m_cameraUI = nullptr;
     QString m_deviceName;
-
-    bool m_Immovable = false; // 窗口不固定
-    bool m_isInitCamera = false;
-    MajorImageProcessingThread *m_imgPrcThread = nullptr;
+    bool m_Immovable = false; // 窗口固定
+    bool m_startRequested = false;
+    CameraController *m_controller = nullptr;
 };
 
 #endif // CAMERAWIDGET_H

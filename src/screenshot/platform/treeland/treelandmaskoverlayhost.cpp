@@ -17,9 +17,6 @@
 #include "widgets/previewwidget.h"
 #include "widgets/camerawidget.h"
 #include "camera/devnummonitor.h"
-extern "C" {
-#include "load_libs.h"
-}
 #include "../../export/screenshotexportservice.h"
 #include "../../core/coordinatemapper.h"
 #include "../../core/inputregiongeometry.h"
@@ -81,61 +78,11 @@ QSize cameraWidgetSizeForSelection(const QRect &selection)
     return QSize(width, height);
 }
 
-QVersionNumber libraryVersionSuffix(const QString &fileName, const QString &libraryName)
-{
-    QString suffix = fileName.mid(libraryName.size());
-    while (suffix.startsWith(QLatin1Char('.')))
-        suffix.remove(0, 1);
-    return QVersionNumber::fromString(suffix);
-}
 
-QByteArray libraryPath(const QString &libraryName)
-{
-    QDir directory(QLibraryInfo::location(QLibraryInfo::LibrariesPath));
-    QStringList candidates = directory.entryList(
-            QStringList() << (libraryName + QStringLiteral("*")),
-            QDir::NoDotAndDotDot | QDir::Files);
-    if (candidates.contains(libraryName))
-        return libraryName.toLatin1();
-    if (candidates.isEmpty())
-        return libraryName.toLatin1();
-    std::sort(candidates.begin(), candidates.end(),
-              [&libraryName](const QString &left, const QString &right) {
-        const QVersionNumber leftVersion = libraryVersionSuffix(left, libraryName);
-        const QVersionNumber rightVersion = libraryVersionSuffix(right, libraryName);
-        if (leftVersion == rightVersion)
-            return left < right;
-        return leftVersion < rightVersion;
-    });
-    return candidates.last().toLatin1();
-}
 
-void initializeCameraLibraries()
-{
-    QByteArray avcodec = libraryPath(QStringLiteral("libavcodec.so"));
-    QByteArray avformat = libraryPath(QStringLiteral("libavformat.so"));
-    QByteArray avutil = libraryPath(QStringLiteral("libavutil.so"));
-    QByteArray udev = libraryPath(QStringLiteral("libudev.so"));
-    QByteArray usb = libraryPath(QStringLiteral("libusb-1.0.so"));
-    QByteArray portaudio = libraryPath(QStringLiteral("libportaudio.so"));
-    QByteArray v4l2 = libraryPath(QStringLiteral("libv4l2.so"));
-    QByteArray ffmpegthumbnailer = libraryPath(QStringLiteral("libffmpegthumbnailer.so"));
-    QByteArray swscale = libraryPath(QStringLiteral("libswscale.so"));
-    QByteArray swresample = libraryPath(QStringLiteral("libswresample.so"));
 
-    LoadLibNames names{};
-    names.chAvcodec = avcodec.data();
-    names.chAvformat = avformat.data();
-    names.chAvutil = avutil.data();
-    names.chUdev = udev.data();
-    names.chUsb = usb.data();
-    names.chPortaudio = portaudio.data();
-    names.chV4l2 = v4l2.data();
-    names.chFfmpegthumbnailer = ffmpegthumbnailer.data();
-    names.chSwscale = swscale.data();
-    names.chSwresample = swresample.data();
-    setLibNames(names);
-}
+
+
 
 bool isTreeLandAnnotationTool(const QString &tool)
 {
@@ -1266,13 +1213,6 @@ void TreelandMaskOverlayHost::ensureCameraMonitor()
     if (m_cameraMonitor)
         return;
 
-    static bool v4l2CoreInitialized = false;
-    if (!v4l2CoreInitialized) {
-        initializeCameraLibraries();
-        v4l2core_init();
-        v4l2CoreInitialized = true;
-    }
-
     m_cameraMonitor = new DevNumMonitor();
     m_cameraMonitor->setParent(this);
     connect(m_cameraMonitor, &DevNumMonitor::existDevice,
@@ -1335,6 +1275,11 @@ void TreelandMaskOverlayHost::toggleCamera(bool enabled)
     if (!m_cameraWidget) {
         m_cameraWidget = new CameraWidget();
         m_cameraWidget->initUI();
+        connect(m_cameraWidget, &CameraWidget::cameraError, this,
+                [this](const QString &message) {
+            qCWarning(dsrApp) << "TreeLand camera preview failed:" << message;
+            QTimer::singleShot(0, this, [this]() { stopCamera(); });
+        });
     }
 
     const QString deviceName = m_cameraMonitor

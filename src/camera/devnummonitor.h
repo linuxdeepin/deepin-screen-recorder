@@ -9,19 +9,11 @@
 #include <QThread>
 #include <QTimer>
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-#include "LPF_V4L2.h"
-#include "v4l2_core.h"
-#include"v4l2_devices.h"
-#include "stdlib.h"
-#include "malloc.h"
-#include "stdio.h"
-#include "math.h"
-
-#ifdef __cplusplus
-}
+#if (QT_VERSION_MAJOR == 5)
+#include <QCameraInfo>
+#elif (QT_VERSION_MAJOR == 6)
+#include <QMediaDevices>
+#include <QCameraDevice>
 #endif
 
 /**
@@ -39,10 +31,10 @@ public:
     void setWatch(const bool isWatcher);
 
     /**
-     * @brief setCanUse:存在一种特殊的情况，就是摄像头被占用，使用v4l2无法判断，需加上QCameraInfo来判断
-     * 但是使用QCameraInfo来判断需要有一个范围
-     * 在录屏应用未打开摄像头时，可以使用这个判断
-     * 在录屏应用打开摄像头时，不可使用这个判断
+     * @brief setCanUse 控制是否执行摄像头占用探测
+     *
+     * 录屏应用未打开摄像头时允许探测；使用摄像头期间应关闭探测，避免
+     * 探测操作干扰当前采集。
      * @param canUse
      */
     void setCanUse(bool canUse);
@@ -57,7 +49,7 @@ public:
      * @brief 判断指定设备节点当前是否仍在设备列表中
      *
      * 录制期间 m_canUse 为 false，timeOutSlot() 不会重新探测设备是否可用；
-     * 该接口只检查设备节点是否仍被 udev/v4l2 枚举，用于发现当前选中的
+     * 该接口只检查设备节点是否仍被 Qt 枚举，用于发现当前选中的
      * 摄像头被拔出但还有其他摄像头在线的场景。
      */
     bool isDevicePresent(const QString &device) const;

@@ -75,6 +75,12 @@ void RecorderRegionShow::initCameraInfo(const CameraWidget::Position position, c
         m_cameraWidget = nullptr;
     }
     m_cameraWidget = new CameraWidget();
+    connect(m_cameraWidget, &CameraWidget::cameraError, this,
+            [this](const QString &message) {
+        qCWarning(dsrApp) << "Recording camera preview failed:" << message;
+        if (m_cameraWidget)
+            m_cameraWidget->hide();
+    });
 
     QRect r = this->geometry();
     m_cameraWidget->setFixedSize(size);

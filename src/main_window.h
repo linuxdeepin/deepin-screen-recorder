@@ -1043,8 +1043,6 @@ protected:
      * @brief 启动截图录屏时检测是否是锁屏状态
      */
     void checkIsLockScreen();
-    void initDynamicLibPath();
-    QString libPath(const QString &strlib);
 private:
     /**
      * @brief 应用路径设置到成员变量
