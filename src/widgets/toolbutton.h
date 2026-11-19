@@ -1,5 +1,5 @@
 // Copyright (C) 2020 ~ 2021 Uniontech Software Technology Co.,Ltd.
-// SPDX-FileCopyrightText: 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2022-2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -24,6 +24,7 @@ public:
         setCheckable(true);
         m_tips = "";
         this->setFocusPolicy(Qt::NoFocus);
+        this->setStyleSheet("border-radius:8px;");
 //        this->setFocusPolicy(Qt::NoFocus);
 //        DPalette pa = this->palette();
 //        pa.setColor(DPalette::Highlight, Qt::transparent);
