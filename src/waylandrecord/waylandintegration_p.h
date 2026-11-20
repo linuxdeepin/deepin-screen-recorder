@@ -100,6 +100,10 @@ public:
      * @brief 初始化wayland链接
      */
     void initConnectWayland();
+    void setCaptureScale(qreal scale) { m_captureScale = scale; }
+    void initCaptureLayout();
+    QRect captureOutputRect(const QPoint &position) const;
+    void publishFrame(const QRect &rect, const QImage &image);
     /**
      * @brief 从电脑/sys/class/dmi/id/board_vendor文件获取，电脑的厂商
      * @return 0:非hw电脑 1:hw电脑
@@ -331,6 +335,11 @@ private:
 
     QSize m_screenSize;
     int m_screenCount;
+    qreal m_captureScale = 1.0;
+    QRect m_captureDesktop;
+    QMap<QPair<int, int>, QRect> m_captureOutputRects;
+    QMap<QPair<int, int>, int> m_captureOutputIds;
+    QMap<int, unsigned int> m_outputFrameCounts;
 
     /**
      * @brief 是否写入Gstreamer视频帧画面

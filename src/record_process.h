@@ -54,6 +54,7 @@ public:
      * @param filename
      */
     void setRecordInfo(const QRect &recordRect, const QString &filename);
+    void setCaptureScale(qreal scale) { m_captureScale = scale; }
     /**
      * @brief 开始录屏
      */
@@ -191,6 +192,7 @@ private:
      * @brief 录屏的范围
      */
     QRect m_recordRect;
+    qreal m_captureScale = 1.0;
 
     QString savePath;
     QString saveBaseName;
