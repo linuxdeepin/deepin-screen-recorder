@@ -59,7 +59,7 @@ public:
      * @brief 设置滚动截图当前屏幕的背景
      * @param backgroundPixmap
      */
-    void setBackgroundPixmap(QPixmap &backgroundPixmap);
+    void setBackgroundPixmap(const QPixmap &pixmap, const QPoint &globalOrigin = QPoint());
 
 signals:
     /**
@@ -138,6 +138,7 @@ private:
      * @brief 背景图片
      */
     QPixmap m_backgroundPixmap;
+    QPoint m_backgroundGlobalOrigin;
 
 
     /**

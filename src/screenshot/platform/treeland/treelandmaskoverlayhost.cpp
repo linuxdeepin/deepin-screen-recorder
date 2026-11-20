@@ -1050,7 +1050,7 @@ void TreelandMaskOverlayHost::showScrollTip(ScrollTipKind kind)
         background = QPixmap(owner->size());
         background.fill(QColor(0, 0, 0, 160));
     }
-    m_scrollTip->setBackgroundPixmap(background);
+    m_scrollTip->setBackgroundPixmap(background, m_frozenFrames.virtualDesktopRect.topLeft());
     m_scrollTip->move(scrollTipPosition(m_scrollTip->size(), owner));
     m_scrollTip->show();
     m_scrollTip->raise();
