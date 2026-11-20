@@ -364,3 +364,9 @@ TEST_F(WaylandIntegrationPrivateTest, appendFrameToList)
     call_private_fun::WaylandIntegrationPrivateappendFrameToList(*m_waylandIntegrationPrivate);
 }
 
+
+TEST_F(WaylandIntegrationPrivateTest, waitForFrame)
+{
+    m_waylandIntegrationPrivate->waitForFrame();
+    SUCCEED() << "waitForFrame returned without blocking indefinitely";
+}

@@ -960,7 +960,7 @@ void WaylandIntegration::WaylandIntegrationPrivate::gstWriteVideoFrame()
                 qWarning() << "m_gstRecordX is nullptr!";
             }
         } else {
-            //qDebug() << "视频缓冲区无数据！";
+            waitForFrame();
         }
     }
     //等待wayland视频环形队列中的视频帧，全部写入管道
@@ -1278,42 +1278,27 @@ void WaylandIntegration::WaylandIntegrationPrivate::appendBuffer(unsigned char *
         }
     }
     QMutexLocker locker(&m_mutex);
-    if (m_waylandList.size() >= m_bufferSize) {
-        //先进先出
-        //取队首
-        waylandFrame wFrame = m_waylandList.first();
-        memset(wFrame._frame, 0, static_cast<size_t>(size));
-        //拷贝当前帧
-        memcpy(wFrame._frame, frame, static_cast<size_t>(size));
+    while (m_waylandList.size() >= m_bufferSize) {
+        if (!bGetFrame())
+            return;
+        m_bufferNotFull.wait(&m_mutex, 100);
+    }
+    if (m_freeList.size() > 0) {
+        waylandFrame wFrame;
         wFrame._time = time;
         wFrame._width = width;
         wFrame._height = height;
         wFrame._stride = stride;
         wFrame._index = 0;
-        m_waylandList.first()._frame = nullptr;
-        //删队首
-        m_waylandList.removeFirst();
-        //存队尾
+        //分配空闲内存
+        wFrame._frame = m_freeList.first();
+        memset(wFrame._frame, 0, static_cast<size_t>(size));
+        //拷贝wayland推送的视频帧
+        memcpy(wFrame._frame, frame, static_cast<size_t>(size));
         m_waylandList.append(wFrame);
-        //qDebug() << "环形缓冲区已满，删队首，存队尾";
-    } else if (0 <= m_waylandList.size() &&  m_waylandList.size() < m_bufferSize) {
-        if (m_freeList.size() > 0) {
-            waylandFrame wFrame;
-            wFrame._time = time;
-            wFrame._width = width;
-            wFrame._height = height;
-            wFrame._stride = stride;
-            wFrame._index = 0;
-            //分配空闲内存
-            wFrame._frame = m_freeList.first();
-            memset(wFrame._frame, 0, static_cast<size_t>(size));
-            //拷贝wayland推送的视频帧
-            memcpy(wFrame._frame, frame, static_cast<size_t>(size));
-            m_waylandList.append(wFrame);
-            //qDebug() << "环形缓冲区未满，存队尾"
-            //空闲内存占用，仅删除索引，不删除空间
-            m_freeList.removeFirst();
-        }
+        //空闲内存占用，仅删除索引，不删除空间
+        m_freeList.removeFirst();
+        m_bufferNotEmpty.wakeOne();
     }
     //qDebug() << "存视频帧 m_waylandList.size(): " << m_waylandList.size() << " , m_freeList.size(): " << m_freeList.size();
 }
@@ -1404,6 +1389,7 @@ bool WaylandIntegration::WaylandIntegrationPrivate::getFrame(waylandFrame &frame
 //        qint64 time4 = QDateTime::currentMSecsSinceEpoch();
         //回收空闲内存，重复使用
         m_freeList.append(wFrame._frame);
+        m_bufferNotFull.wakeOne();
         //qDebug() << "获取视频帧";
 //        qint64 time5 = QDateTime::currentMSecsSinceEpoch();
 //        qDebug() << "value get time : " << time2-time1;
@@ -1412,6 +1398,14 @@ bool WaylandIntegration::WaylandIntegrationPrivate::getFrame(waylandFrame &frame
 //        qDebug() << "append : " << time5-time4;
 //        qDebug() << "获取视频帧 m_waylandList.size(): " << m_waylandList.size() << " , m_freeList.size(): " << m_freeList.size();
         return true;
+    }
+}
+
+void WaylandIntegration::WaylandIntegrationPrivate::waitForFrame()
+{
+    QMutexLocker locker(&m_mutex);
+    if (m_waylandList.isEmpty()) {
+        m_bufferNotEmpty.wait(&m_mutex, 50);
     }
 }
 
@@ -1440,6 +1434,10 @@ void WaylandIntegration::WaylandIntegrationPrivate::setBGetFrame(bool bGetFrame)
 {
     QMutexLocker locker(&m_bGetFrameMutex);
     m_bGetFrame = bGetFrame;
+    if (!bGetFrame) {
+        m_bufferNotFull.wakeAll();
+        m_bufferNotEmpty.wakeAll();
+    }
 }
 
 int WaylandIntegration::WaylandIntegrationPrivate::getPadStride(int width, int depth, int pad)

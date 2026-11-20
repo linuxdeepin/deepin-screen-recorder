@@ -15,6 +15,7 @@
 #include <epoxy/egl.h>
 #include <epoxy/gl.h>
 #include <QMutex>
+#include <QWaitCondition>
 #include <EGL/egl.h>
 
 enum audioType {
@@ -223,6 +224,7 @@ public:
      * @return
      */
     bool getFrame(waylandFrame &frame);
+    void waitForFrame();
 
     bool isWriteVideo();
 
@@ -264,6 +266,8 @@ private:
     int m_stride = 0;
     bool m_bInit;
     QMutex m_mutex;
+    QWaitCondition m_bufferNotFull;
+    QWaitCondition m_bufferNotEmpty;
     //wayland缓冲区
     QLinkedList<waylandFrame> m_waylandList;
     //空闲内存
