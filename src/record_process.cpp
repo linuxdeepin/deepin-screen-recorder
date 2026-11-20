@@ -51,40 +51,40 @@ const QString DBUS_FUNC_ON_PAUSE = "onPause";
 /**
    @brief 调用托盘图标"录制中"的对应函数，改变显示状态
  */
-static QDBusMessage callTrayTimeIcon(const QString &function)
+static void callTrayTimeIcon(const QString &function)
 {
     qCDebug(dsrApp) << "Calling tray time icon function:" << function;
     QDBusInterface timeInterface("com.deepin.ScreenRecorder.time",
                                  "/com/deepin/ScreenRecorder/time",
                                  "com.deepin.ScreenRecorder.time",
                                  QDBusConnection::sessionBus());
-    return timeInterface.call(function);
+    timeInterface.asyncCall(function);
 }
 
 /**
    @brief 调用托盘图标"截图"的对应函数，改变显示状态
  */
-static QDBusMessage callTrayShotIcon(const QString &function)
+static void callTrayShotIcon(const QString &function)
 {
     qCDebug(dsrApp) << "Calling tray shot icon function:" << function;
     QDBusInterface shotInterface("com.deepin.ShotRecorder.PanelStatus",
                                  "/com/deepin/ShotRecorder/PanelStatus",
                                  "com.deepin.ShotRecorder.PanelStatus",
                                  QDBusConnection::sessionBus());
-    return shotInterface.call(function);
+    shotInterface.asyncCall(function);
 }
 
 /**
    @brief 调用托盘图标"录屏"的对应函数，改变显示状态
  */
-static QDBusMessage callTrayRecorderIcon(const QString &function)
+static void callTrayRecorderIcon(const QString &function)
 {
     qCDebug(dsrApp) << "Calling tray recorder icon function:" << function;
     QDBusInterface recorderInterface("com.deepin.ShotRecorder.Recorder.PanelStatus",
                                      "/com/deepin/ShotRecorder/Recorder/PanelStatus",
                                      "com.deepin.ShotRecorder.Recorder.PanelStatus",
                                      QDBusConnection::sessionBus());
-    return recorderInterface.call(function);
+    recorderInterface.asyncCall(function);
 }
 
 static void closeFdoNotification(quint32 id)
@@ -870,7 +870,7 @@ void RecordProcess::startRecord()
     }
     //1040及以上的版本可通过此方式启动状态栏图标闪烁
     qCDebug(dsrApp) << "通知录屏插件开始录屏! currentTime: " << QTime::currentTime();
-    QDBusMessage message = callTrayTimeIcon(DBUS_FUNC_ON_START);
+    callTrayTimeIcon(DBUS_FUNC_ON_START);
     callTrayShotIcon(DBUS_FUNC_ON_START);
     callTrayRecorderIcon(DBUS_FUNC_ON_START);
 
@@ -884,10 +884,6 @@ void RecordProcess::startRecord()
     QtConcurrent::run([this]() {
         this->emitRecording();
     });
-    if (QDBusMessage::ReplyMessage == message.type()) {
-        if (!message.arguments().takeFirst().toBool())
-            qCDebug(dsrApp) << "dde dock screen-recorder-plugin did not receive start message!";
-    }
 }
 void RecordProcess::emitRecording()
 {
@@ -914,12 +910,7 @@ void RecordProcess::stopRecord()
         qCDebug(dsrApp) << "Pause the screen recording timer!";
 
         //系统托盘图标停止闪烁，时间暂停，但还没有结束
-        QDBusMessage message = callTrayTimeIcon(DBUS_FUNC_ON_PAUSE);
-
-        if (QDBusMessage::ReplyMessage == message.type()) {
-            if (!message.arguments().takeFirst().toBool())
-                qCDebug(dsrApp) << "dde dock screen-recorder-plugin did not receive stop message!";
-        }
+        callTrayTimeIcon(DBUS_FUNC_ON_PAUSE);
         callTrayShotIcon(DBUS_FUNC_ON_PAUSE);
         callTrayRecorderIcon(DBUS_FUNC_ON_PAUSE);
 
