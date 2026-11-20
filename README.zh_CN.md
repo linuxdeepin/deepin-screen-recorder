@@ -10,11 +10,12 @@ libc6 (>= 2.14), libgcc1 (>= 1:3.0), libgl1-mesa-glx | libgl1, libqt5core5a (>= 
 
 ## 编译安装
 
-* mkdir build
-* cd build
-* qmake ..
-* make
-* ./deepin-screen-recorder
+* cmake -S . -B build -DCMAKE_BUILD_TYPE=RelWithDebInfo
+* cmake --build build -j$(nproc)
+* ./build/src/deepin-screen-recorder
+
+使用 CMake 3.16 及以上版本构建，依赖 Qt6 与 DTK6。startdde 启动加速、OCR/滚动
+截图、表格识别等平台特性会自动探测，也可通过 `DSR_ENABLE_*` 选项显式覆盖。
 
 ## 用途
 

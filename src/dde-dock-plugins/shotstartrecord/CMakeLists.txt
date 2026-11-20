@@ -1,34 +1,55 @@
-# SPDX-FileCopyrightText: 2022 UnionTech Software Technology Co., Ltd.
+# SPDX-FileCopyrightText: 2022-2026 UnionTech Software Technology Co., Ltd.
 #
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-cmake_minimum_required( VERSION 3.1.0 )
-set(PLUGIN_NAME "shot-start-record-plugin")
+set(DSR_PLUGIN_TARGET shot-start-record-plugin)
 
-project(PLUGIN_NAME)
+add_library(${DSR_PLUGIN_TARGET} SHARED
+    recordiconwidget_interface.cpp
+    tipswidget.cpp
+    quickpanelwidget.cpp
+    commoniconbutton.cpp
+    shotstartrecordplugin.cpp
+    recordiconwidget.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../dbus_name.cpp
+    recordiconwidget_interface.h
+    tipswidget.h
+    quickpanelwidget.h
+    commoniconbutton.h
+    shotstartrecordplugin.h
+    recordiconwidget.h
+    res.qrc
+)
 
-file(GLOB SRCS "*.h" "*.cpp")
+dsr_set_common_compile_options(${DSR_PLUGIN_TARGET})
+dsr_add_dtk_fallback_includes(${DSR_PLUGIN_TARGET})
+target_compile_definitions(${DSR_PLUGIN_TARGET} PRIVATE QT_PLUGIN)
 
-find_package(PkgConfig REQUIRED)
-find_package(Qt5Widgets REQUIRED)
-find_package(Qt5Svg REQUIRED)
-find_package(Qt5DBus REQUIRED)
-find_package(DtkWidget REQUIRED)
-pkg_check_modules(QGSettings REQUIRED gsettings-qt)
+target_include_directories(${DSR_PLUGIN_TARGET} PRIVATE
+    ${CMAKE_CURRENT_SOURCE_DIR}
+    ${CMAKE_CURRENT_SOURCE_DIR}/../..
+)
 
-add_definitions("${QT_DEFINITIONS} -DQT_PLUGIN")
-add_library(${PLUGIN_NAME} SHARED ${SRCS} res.qrc)
-target_include_directories(${PLUGIN_NAME} PUBLIC
-    ${DtkWidget_INCLUDE_DIRS}
-    ${QGSettings_INCLUDE_DIRS}
-    )
-target_link_libraries(${PLUGIN_NAME} PRIVATE
-    ${Qt5DBus_LIBRARIES}
-    ${DtkWidget_LIBRARIES}
-    ${Qt5Widgets_LIBRARIES}
-    ${Qt5Svg_LIBRARIES}
-    ${QGSettings_LIBRARIES}
-    )
+target_link_libraries(${DSR_PLUGIN_TARGET} PRIVATE
+    Qt6::Core
+    Qt6::Gui
+    Qt6::Widgets
+    Qt6::Network
+    Qt6::DBus
+    Qt6::PrintSupport
+    Dtk6::Widget
+    Dtk6::Gui
+    Dtk6::Core
+    Dtk6::Log
+)
 
-set(CMAKE_INSTALL_PREFIX "/usr")
-install(TARGETS ${PLUGIN_NAME} LIBRARY DESTINATION lib/dde-dock/plugins)
+install(TARGETS ${DSR_PLUGIN_TARGET}
+    LIBRARY DESTINATION lib/dde-dock/plugins
+)
+
+install(FILES com.deepin.dde.dock.module.shot-start-record-plugin.gschema.xml
+    DESTINATION share/glib-2.0/schemas
+)
+install(FILES res/dcc-shot-start-record-plugin.dci
+    DESTINATION share/dde-dock/icons/dcc-setting
+)
