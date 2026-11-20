@@ -22,6 +22,7 @@
 #include "accessibility/acTextDefine.h"
 #include "keydefine.h"
 #include "utils/eventlogutils.h"
+#include "waylandrecord/capturelayout.h"
 #ifdef KF5_WAYLAND_FLAGE_ON
 #include "../3rdparty/displayjack/wayland_client.h"
 #endif
@@ -6344,6 +6345,18 @@ void MainWindow::startCountdown()
     };
     qDebug() << "record rect:" << recordRect;
 
+    if (Utils::isWaylandMode) {
+        QRect desktop;
+        for (QScreen *screen : QGuiApplication::screens()) {
+            desktop = desktop.united(screen->geometry());
+        }
+        // The selection is local to the desktop overlay; the capture canvas starts at (0, 0).
+        recordRect = CaptureLayout::mapRect(QRect(recordX, recordY, recordWidth, recordHeight),
+                                            QPoint(), m_pixelRatio);
+        recordProcess.setCaptureScale(m_pixelRatio);
+        qInfo() << "Wayland capture layout:" << desktop << "scale:" << m_pixelRatio
+                << "selection:" << recordRect;
+    }
     recordProcess.setRecordInfo(recordRect, selectAreaName);
     recordProcess.setFullScreenRecord(m_isFullScreenRecord);
 

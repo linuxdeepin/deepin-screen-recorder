@@ -678,6 +678,7 @@ void RecordProcess::waylandRecord()
     arguments << QString(audioUtils.getDefaultDeviceName(AudioUtils::DefaultAudioType::Source));
     arguments << QString(audioUtils.getDefaultDeviceName(AudioUtils::DefaultAudioType::Sink));
     qDebug() << arguments;
+    WaylandIntegration::setCaptureScale(m_captureScale);
     WaylandIntegration::init(arguments);
 #endif
     return;
@@ -753,6 +754,7 @@ void RecordProcess::GstStartRecord()
         arguments << QString("%1").arg(savePath);
         arguments << QString("%1").arg(recordAudioInputType);
         qDebug() << arguments;
+        WaylandIntegration::setCaptureScale(m_captureScale);
         WaylandIntegration::init(arguments, m_gstRecordX);
 #endif
     } else {

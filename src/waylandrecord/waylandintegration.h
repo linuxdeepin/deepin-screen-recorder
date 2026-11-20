@@ -58,6 +58,7 @@ Q_SIGNALS:
     void newBuffer(uint8_t *screenData);
 };
 
+void setCaptureScale(qreal scale);
 void init(QStringList list);
 void init(QStringList list, GstRecordX *gstRecord);
 
