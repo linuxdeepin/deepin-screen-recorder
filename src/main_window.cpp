@@ -351,6 +351,9 @@ void MainWindow::initTreelandtAttributes() //initTreelandtAttributes
     setMouseTracking(true);
     installEventFilter(this);
     createWinId();
+    if (this->windowHandle()) {
+        this->windowHandle()->setProperty("_d_dwayland_window-type", "override");
+    }
 
     // Treeland 截图工具栏在 sourceReady(captureRegionChanged) 后由 updateCaptureRegion 创建
 
