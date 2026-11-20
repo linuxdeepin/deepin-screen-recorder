@@ -2,79 +2,184 @@
 #
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-cmake_minimum_required( VERSION 3.1.0 )
-set (PROJECT_NAME deepin-screen-recorder)
-set(CMAKE_CXX_STANDARD 14)
-set(CMAKE_INCLUDE_CURRENT_DIR ON)
-set(CMAKE_AUTOMOC ON)
-set(CMAKE_AUTORCC ON)
-set(CMAKE_AUTOUIC ON)
-set(QtModule Core Gui Test Widgets Network DBus Sql PrintSupport Svg Concurrent LinguistTools Multimedia MultimediaWidgets X11Extras)
+set(DSR_MAIN_TARGET deepin-screen-recorder)
 
-project( ${PROJECT_NAME} )
+set(DSR_MAIN_SOURCES
+    accessibility/acObjectList.cpp
+    main.cpp
+    capture.cpp
+    utils/logger.cpp
+    main_window.cpp
+    qwayland-treeland-capture-unstable-v1.cpp
+    record_process.cpp
+    utils.cpp
+    utils/log.cpp
+    countdown_tooltip.cpp
+    constant.cpp
+    event_monitor.cpp
+    button_feedback.cpp
+    show_buttons.cpp
+    menucontroller/menucontroller.cpp
+    utils/proxyaudioport.cpp
+    utils/shapesutils.cpp
+    utils/imageeffects.cpp
+    utils/tempfile.cpp
+    utils/calculaterect.cpp
+    utils/shortcut.cpp
+    utils/configsettings.cpp
+    utils/dbusutils.cpp
+    utils/baseutils.cpp
+    utils/voicevolumewatcher_interface.cpp
+    utils/x_multi_screen_info.cpp
+    utils_interface.cpp
+    wayland-treeland-capture-unstable-v1-protocol.c
+    widgets/toptips.cpp
+    widgets/fineadjusttips.cpp
+    widgets/shapeswidget.cpp
+    widgets/textedit.cpp
+    widgets/zoomIndicator.cpp
+    widgets/toolbar.cpp
+    widgets/toolbarhost.cpp
+    widgets/subtoolwidget.cpp
+    widgets/aiassistantwidget.cpp
+    widgets/keybuttonwidget.cpp
+    widgets/sidebar.cpp
+    widgets/shottoolwidget.cpp
+    widgets/roundedcornerwidget.cpp
+    widgets/colortoolwidget.cpp
+    widgets/shapetoolwidget.cpp
+    widgets/savebutton.cpp
+    widgets/savemenumanager.cpp
+    widgets/toolbutton.cpp
+    dbusinterface/dbusnotify.cpp
+    dbusservice/dbusscreenshotservice.cpp
+    widgets/camerawidget.cpp
+    screenshot.cpp
+    utils/voicevolumewatcher.cpp
+    utils/camerawatcher.cpp
+    widgets/tooltips.cpp
+    widgets/filter.cpp
+    utils/screengrabber.cpp
+    RecorderRegionShow.cpp
+    recordertablet.cpp
+    dbusinterface/ocrinterface.cpp
+    dbusinterface/pinscreenshotsinterface.cpp
+    dbusinterface/aiassistantinterface.cpp
+    widgets/imagemenu.cpp
+    utils/borderprocessinterface.cpp
+    widgets/zoomIndicatorGL.cpp
+    gstrecord/gstrecordx.cpp
+    utils/audioutils.cpp
+    gstrecord/gstinterface.cpp
+    camera/devnummonitor.cpp
+    camera/majorimageprocessingthread.cpp
+    camera/LPF_V4L2.c
+    camera/v4l2devicehandle.c
+    utils/eventlogutils.cpp
+    dbus_name.cpp
+    ext-image-capture/manager/extcapturemanager.cpp
+    ext-image-capture/manager/extoutputsourcemanager.cpp
+    ext-image-capture/session/extcapturesession.cpp
+    ext-image-capture/frame/extcaptureframe.cpp
+    ext-image-capture/extcaptureintegration.cpp
+    ext-image-capture/multiscreencapturecoordinator.cpp
+    ext-image-capture/multiscreenframecompositor.cpp
+    ext-image-capture/extcapturerecorder.cpp
+    ext-image-capture/framepumpworker.cpp
+    ext-image-capture/capturepipelineworker.cpp
+    ext-image-capture/dmaframegpuconverter.cpp
+    ext-image-capture/extcaptureframebuffer.cpp
+    ext-image-capture/extcapturebridge.cpp
+    protocols/ext-image-copy-capture/qwayland-ext-image-copy-capture-v1.cpp
+    protocols/ext-image-copy-capture/wayland-ext-image-copy-capture-v1-protocol.c
+    protocols/ext-image-copy-capture/qwayland-ext-image-capture-source-v1.cpp
+    protocols/ext-image-copy-capture/wayland-ext-image-capture-source-v1-protocol.c
+    protocols/ext-image-copy-capture/qwayland-ext-foreign-toplevel-list-v1.cpp
+    protocols/ext-image-copy-capture/wayland-ext-foreign-toplevel-list-v1-protocol.c
+    protocols/linux-dmabuf/qwayland-linux-dmabuf-unstable-v1.cpp
+    protocols/linux-dmabuf/wayland-linux-dmabuf-unstable-v1-protocol.c
+    protocols/wlr-screencopy/wayland-wlr-screencopy-unstable-v1-protocol.c
+    protocols/treeland-snap-target/qwayland-treeland-snap-target-unstable-v1.cpp
+    protocols/treeland-snap-target/wayland-treeland-snap-target-unstable-v1-protocol.c
+    protocols/treeland-snap-target/qwayland-xdg-toplevel-tag-v1.cpp
+    protocols/treeland-snap-target/wayland-xdg-toplevel-tag-v1-protocol.c
+    protocols/treeland-snap-target/wayland-xdg-shell-protocol.c
+    screenshot/core/selectionmodel.cpp
+    screenshot/core/selectionoverlaygeometry.cpp
+    screenshot/core/selectionconstraints.cpp
+    screenshot/adapters/shapeswidgetannotationeditor.cpp
+    screenshot/export/screenshotexportservice.cpp
+    screenshot/export/localscreenshotresultsink.cpp
+    screenshot/session/annotationcoordinator.cpp
+    screenshot/session/screenshotsessioncontroller.cpp
+    screenshot/session/screenshotsessionfactory.cpp
+    screenshot/merge/scrollmergecoordinator.cpp
+    screenshot/platform/treeland/treelandstillcapture.cpp
+    screenshot/platform/treeland/treelandsnapproxy.cpp
+    screenshot/platform/treeland/treelandsnaphintsource.cpp
+    screenshot/platform/treeland/treelandwindowtagger.cpp
+    screenshot/platform/treeland/treelandannotationeditor.cpp
+    screenshot/platform/treeland/treelandmaskwindow.cpp
+    screenshot/platform/treeland/treelandmaskoverlayhost.cpp
+    screenshot/platform/treeland/treelandrecordingsession.cpp
+    screenshot/platform/treeland/treelandscrollcapture.cpp
+    screenshot/platform/treeland/treelandscrollcompositor.cpp
+    screenshot/platform/treeland/treelandoutputcapture.cpp
+    screenshot/platform/treeland/recordingfiletransaction.cpp
+    screenshot/platform/treeland/treelandscreenshotbackend.cpp
+    utils/cpuvendor.cpp
+    utils/ximageconverter.cpp
+)
 
-set(LINK_DIR X11 Xext Xtst Xfixes Xcursor procps)
-
-if(CMAKE_VERSION VERSION_LESS "3.7.0")
-    set(CMAKE_INCLUDE_CURRENT_DIR ON)
-endif()
-
-find_package(Qt5 CONFIG REQUIRED ${QtModule})
-
-set ( deepin-screen-recorder_HDRS
-    constant.h
-    keydefine.h
-    utils/baseutils.h
-    utils/calculaterect.h
-    utils/saveutils.h
-    utils/shapesutils.h
-    utils/dbusutils.h
-    utils/desktopinfo.h
+set(DSR_MAIN_HEADERS
+    capture.h
+    main_window.h
+    qwayland-treeland-capture-unstable-v1.h
+    record_process.h
+    utils.h
     utils/log.h
     utils/logger.h
-    RecorderRegionShow.h
-    main_window.h
-    record_process.h
-    settings.h
-    utils.h
-    record_button.h
-    record_option_panel.h
     countdown_tooltip.h
+    constant.h
     event_monitor.h
     button_feedback.h
-    process_tree.h
-    camera_process.h
     show_buttons.h
-    utils/audioutils.h
+    keydefine.h
     menucontroller/menucontroller.h
+    utils/proxyaudioport.h
+    utils/voicevolumewatcher_interface.h
+    utils/x_multi_screen_info.h
+    utils_interface.h
+    utils/baseutils.h
     utils/configsettings.h
+    utils/dbusutils.h
     utils/shortcut.h
     utils/tempfile.h
-    widgets/savetips.h
-    widgets/fontsizewidget.h
-    widgets/colorbutton.h
+    utils/calculaterect.h
+    utils/imageeffects.h
+    utils/saveutils.h
+    utils/shapesutils.h
+    wayland-treeland-capture-unstable-v1-client-protocol.h
     widgets/zoomIndicator.h
-    widgets/majtoolbar.h
     widgets/textedit.h
-    widgets/bigcolorbutton.h
     widgets/toptips.h
+    widgets/fineadjusttips.h
     widgets/toolbar.h
-    widgets/savebutton.h
-    widgets/textbutton.h
+    widgets/toolbarhost.h
     widgets/shapeswidget.h
     widgets/toolbutton.h
-    widgets/maintoolwidget.h
     widgets/subtoolwidget.h
+    widgets/aiassistantwidget.h
     widgets/keybuttonwidget.h
     widgets/sidebar.h
     widgets/shottoolwidget.h
+    widgets/roundedcornerwidget.h
     widgets/colortoolwidget.h
-    dbusinterface/dbuszone.h
-    dbusinterface/dbuscontrolcenter.h
+    widgets/shapetoolwidget.h
+    widgets/savebutton.h
+    widgets/savemenumanager.h
     dbusinterface/dbusnotify.h
-    dbusinterface/dbussoundeffect.h
     dbusservice/dbusscreenshotservice.h
-    dbusservice/dbusscreenshot.h
     widgets/camerawidget.h
     screenshot.h
     utils/voicevolumewatcher.h
@@ -82,101 +187,213 @@ set ( deepin-screen-recorder_HDRS
     widgets/tooltips.h
     widgets/filter.h
     utils/screengrabber.h
-    dbusinterface/drawinterface.h
-    screen_shot_event.h
-    lib/GifH/gif.h
-    xgifrecord.h
+    RecorderRegionShow.h
     recordertablet.h
+    dbusinterface/ocrinterface.h
+    dbusinterface/pinscreenshotsinterface.h
+    dbusinterface/aiassistantinterface.h
+    widgets/imagemenu.h
+    utils/borderprocessinterface.h
+    widgets/zoomIndicatorGL.h
+    gstrecord/gstrecordx.h
+    utils/audioutils.h
+    gstrecord/gstinterface.h
+    camera/devnummonitor.h
+    camera/LPF_V4L2.h
+    camera/v4l2devicehandle.h
+    camera/majorimageprocessingthread.h
+    utils/eventlogutils.h
+    widgets/slider.h
+    ext-image-capture/manager/extcapturemanager.h
+    ext-image-capture/manager/extoutputsourcemanager.h
+    ext-image-capture/shmformat.h
+    ext-image-capture/session/extcapturesession.h
+    ext-image-capture/frame/extcaptureframe.h
+    ext-image-capture/extcaptureintegration.h
+    ext-image-capture/multiscreencapturecoordinator.h
+    ext-image-capture/multiscreenframecompositor.h
+    ext-image-capture/extcapturerecorder.h
+    ext-image-capture/framepumpworker.h
+    ext-image-capture/capturepipelineworker.h
+    ext-image-capture/dmaframegpuconverter.h
+    ext-image-capture/extcaptureframebuffer.h
+    ext-image-capture/extcapturebridge.h
+    protocols/ext-image-copy-capture/qwayland-ext-image-copy-capture-v1.h
+    protocols/ext-image-copy-capture/wayland-ext-image-copy-capture-v1-client-protocol.h
+    protocols/ext-image-copy-capture/qwayland-ext-image-capture-source-v1.h
+    protocols/ext-image-copy-capture/wayland-ext-image-capture-source-v1-client-protocol.h
+    protocols/ext-image-copy-capture/qwayland-ext-foreign-toplevel-list-v1.h
+    protocols/ext-image-copy-capture/wayland-ext-foreign-toplevel-list-v1-client-protocol.h
+    protocols/linux-dmabuf/qwayland-linux-dmabuf-unstable-v1.h
+    protocols/linux-dmabuf/wayland-linux-dmabuf-unstable-v1-client-protocol.h
+    protocols/wlr-screencopy/wayland-wlr-screencopy-unstable-v1-client-protocol.h
+    protocols/treeland-snap-target/qwayland-treeland-snap-target-unstable-v1.h
+    protocols/treeland-snap-target/wayland-treeland-snap-target-unstable-v1-client-protocol.h
+    protocols/treeland-snap-target/qwayland-xdg-toplevel-tag-v1.h
+    protocols/treeland-snap-target/wayland-xdg-toplevel-tag-v1-client-protocol.h
+    protocols/treeland-snap-target/wayland-xdg-shell-client-protocol.h
+    screenshot/core/screenshottypes.h
+    screenshot/core/coordinatemapper.h
+    screenshot/core/selectionoverlaygeometry.h
+    screenshot/core/selectionmodel.h
+    screenshot/core/selectionconstraints.h
+    screenshot/ports/iscreenshotbackend.h
+    screenshot/ports/iscreenshotoverlayhost.h
+    screenshot/ports/iannotationeditor.h
+    screenshot/ports/irecordingsession.h
+    screenshot/ports/iscrollcapture.h
+    screenshot/ports/iscrollmerger.h
+    screenshot/ports/iscreenshotresultsink.h
+    screenshot/ports/isnaphintsource.h
+    screenshot/ports/iwindowtagger.h
+    screenshot/adapters/shapeswidgetannotationeditor.h
+    screenshot/core/inputregiongeometry.h
+    screenshot/session/annotationcoordinator.h
+    screenshot/merge/scrollmergecoordinator.h
+    screenshot/export/screenshotexportservice.h
+    screenshot/export/localscreenshotresultsink.h
+    screenshot/export/aiscreenshotfile.h
+    screenshot/session/screenshotsessioncontroller.h
+    screenshot/session/screenshotsessionfactory.h
+    screenshot/session/platformdetection.h
+    screenshot/platform/treeland/treelandstillcapture.h
+    screenshot/platform/treeland/treelandsnapproxy.h
+    screenshot/platform/treeland/treelandsnaphintsource.h
+    screenshot/platform/treeland/treelandwindowtagger.h
+    screenshot/platform/treeland/treelandannotationeditor.h
+    screenshot/platform/treeland/treelandmaskwindow.h
+    screenshot/platform/treeland/treelandmaskoverlayhost.h
+    screenshot/platform/treeland/treelandrecordingsession.h
+    screenshot/platform/treeland/treelandscrollcapture.h
+    screenshot/platform/treeland/treelandscrollcompositor.h
+    screenshot/platform/treeland/treelandoutputcapture.h
+    screenshot/platform/treeland/recordingfiletransaction.h
+    screenshot/platform/treeland/treelandscreenshotbackend.h
+    utils/cpuvendor.h
+    utils/ximageconverter.h
+    accessibility/accessiblefunctions.h
+    accessibility/acObjectList.h
+    accessibility/acTextDefine.h
+)
+
+if(DSR_ENABLE_OCR_SCROLL)
+    list(APPEND DSR_MAIN_SOURCES
+        widgets/scrollshottip.cpp
+        utils/pixmergethread.cpp
+        utils/scrollScreenshot.cpp
+        widgets/previewwidget.cpp
     )
-
-set ( deepin-screen-recorder_SRCS
-    utils/cpuvendor.cpp
-    utils/log.cpp
-    utils/logger.cpp
-    utils/calculaterect.cpp
-    utils/shapesutils.cpp
-    main.cpp
-    main_window.cpp
-    record_process.cpp
-    settings.cpp
-    utils.cpp
-    record_button.cpp
-    record_option_panel.cpp
-    countdown_tooltip.cpp
-    constant.cpp
-    event_monitor.cpp
-    button_feedback.cpp
-    process_tree.cpp
-    camera_process.cpp
-    show_buttons.cpp
-    utils/audioutils.cpp
-    menucontroller/menucontroller.cpp
-    utils/tempfile.cpp
-    utils/shortcut.cpp
-    utils/configsettings.cpp
-    utils/baseutils.cpp
-    widgets/savebutton.cpp
-    widgets/toptips.cpp
-    widgets/shapeswidget.cpp
-    widgets/textbutton.cpp
-    widgets/colorbutton.cpp
-    widgets/fontsizewidget.cpp
-    widgets/textedit.cpp
-    widgets/bigcolorbutton.cpp
-    widgets/zoomIndicator.cpp
-    widgets/majtoolbar.cpp
-    widgets/savetips.cpp
-    widgets/toolbar.cpp
-    widgets/maintoolwidget.cpp
-    widgets/subtoolwidget.cpp
-    widgets/keybuttonwidget.cpp
-    widgets/sidebar.cpp
-    widgets/shottoolwidget.cpp
-    widgets/colortoolwidget.cpp
-    dbusinterface/dbusnotify.cpp
-    dbusinterface/dbuszone.cpp
-    dbusinterface/dbuscontrolcenter.cpp
-    dbusinterface/dbussoundeffect.cpp
-    dbusservice/dbusscreenshotservice.cpp
-    dbusservice/dbusscreenshot.cpp
-    widgets/camerawidget.cpp
-    utils/dbusutils.cpp
-    screenshot.cpp
-    utils/voicevolumewatcher.cpp
-    utils/camerawatcher.cpp
-    widgets/tooltips.cpp
-    widgets/filter.cpp
-    utils/desktopinfo.cpp
-    utils/screengrabber.cpp
-    dbusinterface/drawinterface.cpp
-    screen_shot_event.cpp
-    RecorderRegionShow.cpp
-    xgifrecord.cpp
-    recordertablet.cpp
+    list(APPEND DSR_MAIN_HEADERS
+        widgets/scrollshottip.h
+        utils/pixmergethread.h
+        utils/scrollScreenshot.h
+        widgets/previewwidget.h
     )
+endif()
 
-set ( deepin-screen-recorder_RSCS
-    ../assets/image/deepin-screen-recorder.qrc
-    ../assets/resources/resources.qrc
-    ../assets/icons/icons.qrc
-    )
+file(GLOB DSR_LIBCAM_SOURCES CONFIGURE_DEPENDS
+    ${CMAKE_SOURCE_DIR}/3rdparty/libcam/libcam/*.c
+    ${CMAKE_SOURCE_DIR}/3rdparty/libcam/libcam_v4l2core/*.c
+    ${CMAKE_SOURCE_DIR}/3rdparty/libcam/load_libs.c
+)
 
-add_executable(${PROJECT_NAME}
-    ${deepin-screen-recorder_HDRS} ${deepin-screen-recorder_SRCS} ${deepin-screen-recorder_RSCS}
-    )
+set(DSR_MAIN_RESOURCES
+    ${CMAKE_SOURCE_DIR}/assets/image/deepin-screen-recorder.qrc
+    ${CMAKE_SOURCE_DIR}/assets/icons/icons.qrc
+)
 
-qt5_use_modules(${PROJECT_NAME} ${QtModule})
-find_package(PkgConfig REQUIRED)
-pkg_check_modules(3rd_lib REQUIRED
-    dtkwidget dtkgui xcb xcb-util
-    )
-target_include_directories(${PROJECT_NAME} PUBLIC ${3rd_lib_INCLUDE_DIRS} )
-target_link_libraries(${PROJECT_NAME} ${3rd_lib_LIBRARIES} ${LINK_DIR} )
+add_executable(${DSR_MAIN_TARGET}
+    ${DSR_MAIN_SOURCES}
+    ${DSR_MAIN_HEADERS}
+    ${DSR_LIBCAM_SOURCES}
+    ${DSR_MAIN_RESOURCES}
+)
 
-install(DIRECTORY ${CMAKE_SOURCE_DIR}/assets/deepin-screen-recorder DESTINATION /usr/share/deepin-manual/manual-assets/application)
+dsr_set_common_compile_options(${DSR_MAIN_TARGET})
+dsr_apply_platform_definitions(${DSR_MAIN_TARGET})
+dsr_apply_executable_hardening(${DSR_MAIN_TARGET})
+dsr_apply_arch_flags(${DSR_MAIN_TARGET})
+dsr_add_dtk_fallback_includes(${DSR_MAIN_TARGET})
+set_target_properties(${DSR_MAIN_TARGET} PROPERTIES AUTOMOC OFF)
 
-# DConfig meta：log_rules（deepin-debug-config 调试模式适配）与已有的 record 配置
-set(DCONFIG_APPID org.deepin.screen-recorder)
-set(DCONFIG_FILES
-    ${CMAKE_SOURCE_DIR}/assets/configs/org.deepin.screen-recorder.json)
-install(FILES ${DCONFIG_FILES} DESTINATION share/dsg/configs/${DCONFIG_APPID})
+set(_dsr_main_include_dirs
+    ${CMAKE_CURRENT_SOURCE_DIR}
+    ${CMAKE_CURRENT_SOURCE_DIR}/accessibility
+    ${CMAKE_SOURCE_DIR}/3rdparty/libcam
+    ${CMAKE_SOURCE_DIR}/3rdparty/libcam/libcam
+    ${CMAKE_SOURCE_DIR}/3rdparty/libcam/libcam_v4l2core
+)
+target_include_directories(${DSR_MAIN_TARGET} PRIVATE ${_dsr_main_include_dirs})
+include_directories(${_dsr_main_include_dirs})
+
+# The combined mocs_compilation.cpp generated by CMake leaks Xlib's
+# object-like macros (None, CursorShape, ...) into unrelated headers. Generate
+# one moc unit per header like qmake did, so each translation unit keeps its
+# own include order.
+set(_dsr_main_moc_headers "")
+foreach(_header IN LISTS DSR_MAIN_HEADERS)
+    file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/${_header}" _moc_marker
+        REGEX "Q_OBJECT|Q_GADGET|Q_NAMESPACE" LIMIT_COUNT 1)
+    if(_moc_marker)
+        list(APPEND _dsr_main_moc_headers "${CMAKE_CURRENT_SOURCE_DIR}/${_header}")
+    endif()
+endforeach()
+qt6_wrap_cpp(DSR_MAIN_MOC_SOURCES ${_dsr_main_moc_headers})
+target_sources(${DSR_MAIN_TARGET} PRIVATE ${DSR_MAIN_MOC_SOURCES})
+
+pkg_check_modules(DSR_MAIN_DEPENDENCIES REQUIRED IMPORTED_TARGET
+    xcb
+    xcb-util
+    gstreamer-app-1.0
+    libusb-1.0
+)
+pkg_check_modules(DSR_MAIN_XLIBS REQUIRED IMPORTED_TARGET
+    x11
+    xext
+    xtst
+    xfixes
+    xcursor
+    xinerama
+    libdrm
+    gbm
+)
+
+target_link_libraries(${DSR_MAIN_TARGET} PRIVATE
+    Qt6::Core
+    Qt6::Gui
+    Qt6::Widgets
+    Qt6::Network
+    Qt6::DBus
+    Qt6::Sql
+    Qt6::Xml
+    Qt6::PrintSupport
+    Qt6::Svg
+    Qt6::Concurrent
+    Qt6::Multimedia
+    Qt6::MultimediaWidgets
+    Qt6::OpenGL
+    Qt6::OpenGLWidgets
+    Qt6::WaylandClient
+    Qt6::WaylandClientPrivate
+    Dtk6::Widget
+    Dtk6::Gui
+    Dtk6::Core
+    Dtk6::Log
+    PkgConfig::DSR_MAIN_DEPENDENCIES
+    PkgConfig::DSR_MAIN_XLIBS
+    OpenGL::GL
+    OpenGL::EGL
+    ${CMAKE_DL_LIBS}
+)
+
+if(DSR_ENABLE_OCR_SCROLL)
+    find_library(DSR_OPENCV_SMALL NAMES opencv_small REQUIRED)
+    if(EXISTS /usr/include/opencv_mobile)
+        target_include_directories(${DSR_MAIN_TARGET} PRIVATE /usr/include/opencv_mobile)
+    endif()
+    target_link_libraries(${DSR_MAIN_TARGET} PRIVATE ${DSR_OPENCV_SMALL})
+endif()
+
+install(TARGETS ${DSR_MAIN_TARGET}
+    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+)
