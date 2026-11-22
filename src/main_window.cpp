@@ -1,5 +1,5 @@
 // Copyright (C) 2020 ~ 2021 Uniontech Software Technology Co.,Ltd.
-// SPDX-FileCopyrightText: 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2022-2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -1831,7 +1831,7 @@ void MainWindow::fullScreenshot()
     if (Utils::isWaylandMode) {
         exitApp();
     } else {
-        QTimer::singleShot(10, [ = ] {
+        QTimer::singleShot(500, [ = ] {
             exitApp();
         });
     }
@@ -1953,7 +1953,7 @@ void MainWindow::topWindow()
     save2Clipboard(screenShotPix);
     sendNotify(m_saveIndex, m_saveFileName, r);
 
-    QTimer::singleShot(10, [ = ] {
+    QTimer::singleShot(500, [ = ] {
         exitApp();
     });
 }
@@ -3540,7 +3540,7 @@ void MainWindow::saveScreenShot()
     if (Utils::isWaylandMode) {
         exitApp();
     } else {
-        QTimer::singleShot(10, [ = ] {
+        QTimer::singleShot(500, [ = ] {
             exitApp();
         });
     }
