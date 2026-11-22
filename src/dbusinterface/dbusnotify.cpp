@@ -1,5 +1,5 @@
 // Copyright (C) 2020 ~ 2021 Uniontech Software Technology Co.,Ltd.
-// SPDX-FileCopyrightText: 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2022-2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -25,6 +25,6 @@ DBusNotify::~DBusNotify()
 {
     QDBusConnection::sessionBus().disconnect(service(), path(),
     "org.freedesktop.DBus.Properties", "PropertiesChanged", "sa{sv}as",
-                                             this, SLOT(propertyChanged(QDBusMessage)));
+                                             this, SLOT(__propertyChanged__(QDBusMessage)));
 }
 

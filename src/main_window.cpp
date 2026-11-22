@@ -1,5 +1,5 @@
 // Copyright (C) 2020 ~ 2021 Uniontech Software Technology Co.,Ltd.
-// SPDX-FileCopyrightText: 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2022-2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -1829,9 +1829,11 @@ void MainWindow::fullScreenshot()
     save2Clipboard(m_resultPixmap);
 
     if (Utils::isWaylandMode) {
-        exitApp();
+        QTimer::singleShot(200, [ = ] {
+            exitApp();
+        });
     } else {
-        QTimer::singleShot(10, [ = ] {
+        QTimer::singleShot(200, [ = ] {
             exitApp();
         });
     }
@@ -1953,7 +1955,7 @@ void MainWindow::topWindow()
     save2Clipboard(screenShotPix);
     sendNotify(m_saveIndex, m_saveFileName, r);
 
-    QTimer::singleShot(10, [ = ] {
+    QTimer::singleShot(200, [ = ] {
         exitApp();
     });
 }
@@ -1989,7 +1991,9 @@ void MainWindow::saveTopWindow()
     save2Clipboard(screenShotPix);
     const auto r = saveAction(screenShotPix);
     sendNotify(m_saveIndex, m_saveFileName, r);
-    exitApp();
+    QTimer::singleShot(200, [ = ] {
+        exitApp();
+    });
 }
 
 void MainWindow::savePath(const QString &path)
@@ -3538,9 +3542,11 @@ void MainWindow::saveScreenShot()
 
     qInfo() << __FUNCTION__ << __LINE__ << "通知消息已发送！";
     if (Utils::isWaylandMode) {
-        exitApp();
+        QTimer::singleShot(200, [ = ] {
+            exitApp();
+        });
     } else {
-        QTimer::singleShot(10, [ = ] {
+        QTimer::singleShot(200, [ = ] {
             exitApp();
         });
     }
@@ -3588,10 +3594,6 @@ void MainWindow::sendNotify(SaveAction saveAction, QString saveFilePath, const b
 
     const bool remote_dde_notify_obj_exist = remote_dde_notify_obj.isValid();
 
-    QDBusInterface notification("org.freedesktop.Notifications", "/org/freedesktop/Notifications", "org.freedesktop.Notifications",
-                                QDBusConnection::sessionBus());
-
-
     QStringList actions;
     QVariantMap hints;
 
@@ -3616,23 +3618,15 @@ void MainWindow::sendNotify(SaveAction saveAction, QString saveFilePath, const b
     }
 
     qDebug() << "saveFilePath:" << saveFilePath;
-    QList<QVariant> arg;
     int timeout = 5000;
     unsigned int id = 0;
     QString saveBody = tr("Screenshot finished");
     if (saveFilePath == QString(tr("Clipboard"))) {
         saveBody = tr("Screenshot finished and copy to clipboard");
     }
-    arg << (QCoreApplication::applicationName())   // appname
-        << id   // id
-        << QString("deepin-screen-recorder")   // icon
-        << tr("Screen Capture")   // summary
-        << saveBody   // body
-        << actions   // actions
-        << hints   // hints
-        << timeout;
-    notification.callWithArgumentList(QDBus::AutoDetect, "Notify", arg);// timeout
-    //    }
+    DBusNotify notify;
+    notify.Notify(QCoreApplication::applicationName(), id, QString("deepin-screen-recorder"),
+                  tr("Screen Capture"), saveBody, actions, hints, timeout);
 }
 
 bool MainWindow::saveAction(const QPixmap &pix)
