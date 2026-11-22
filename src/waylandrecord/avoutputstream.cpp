@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2022-2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -503,6 +503,7 @@ bool CAVOutputStream::open(QString path)
             avlibInterface::m_av_dict_set(&param, "preset", "ultrafast", 0);
             avlibInterface::m_av_dict_set(&param, "tune", "zerolatency", 0);
             avlibInterface::m_av_dict_set(&param, "crf", "30", 0);            // 质量较低，文件较大但编码更快
+            avlibInterface::m_av_dict_set(&param, "level", "4.0", 0);
         }
 
         if (avlibInterface::m_avcodec_open2(pCodecCtx, pCodec, &param) < 0) {

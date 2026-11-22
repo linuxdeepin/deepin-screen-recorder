@@ -1,5 +1,5 @@
 // Copyright (C) 2020 ~ 2021 Uniontech Software Technology Co.,Ltd.
-// SPDX-FileCopyrightText: 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2022-2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -447,6 +447,8 @@ void RecordProcess::recordVideo()
     arguments << QString("23");
     arguments << QString("-preset");
     arguments << QString("ultrafast");
+    arguments << QString("-level");
+    arguments << QString("4.0");
     arguments << QString("-vsync");
     arguments << QString("passthrough");
     if (settings->value("recordConfig", "lossless_recording").toBool()) {
@@ -535,6 +537,8 @@ void RecordProcess::recordVideo()
     }
     arguments << QString("-preset");
     arguments << QString("ultrafast");
+    arguments << QString("-level");
+    arguments << QString("4.0");
     arguments << QString("-vsync");
     arguments << QString("passthrough");
     arguments << QString("-vf");
