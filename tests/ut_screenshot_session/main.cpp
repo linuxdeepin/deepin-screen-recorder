@@ -4,6 +4,7 @@
 
 #include "screenshot/core/selectionmodel.h"
 #include "screenshot/core/selectionoverlaygeometry.h"
+#include "screenshot/export/aiscreenshotfile.h"
 #include "screenshot/export/screenshotexportservice.h"
 #include "screenshot/ports/iannotationeditor.h"
 #include "screenshot/ports/irecordingsession.h"
@@ -3512,6 +3513,33 @@ private slots:
         QVERIFY(store.get() == frame);
         store.clear();
         QVERIFY(!store.get());
+    }
+
+    void aiScreenshotFileIsPrivateAndUnique()
+    {
+        QImage image(8, 6, QImage::Format_ARGB32);
+        image.fill(QColor(30, 80, 150, 200));
+        auto first = saveAiScreenshotFile(image);
+        auto second = saveAiScreenshotFile(image);
+        QVERIFY(first);
+        QVERIFY(second);
+        QVERIFY(first->fileName() != second->fileName());
+        QCOMPARE(QFileInfo(first->fileName()).suffix(), QStringLiteral("png"));
+        const auto permissions = first->permissions();
+        const auto owner = QFileDevice::ReadOwner | QFileDevice::WriteOwner;
+        const auto effectiveUser = QFileDevice::ReadUser | QFileDevice::WriteUser | QFileDevice::ExeUser;
+        QCOMPARE(permissions & ~effectiveUser, owner);
+
+        const QString abandonedPath = first->fileName();
+        first.reset();
+        QVERIFY(!QFileInfo::exists(abandonedPath));
+
+        const QString handedOffPath = retainAiScreenshotPath(*second);
+        second.reset();
+        const QImage restored(handedOffPath, "PNG");
+        QVERIFY(QFile::remove(handedOffPath));
+        QCOMPARE(restored, image);
+        QVERIFY(!saveAiScreenshotFile(QImage()));
     }
 
     void framePumpRejectsInvalidDimensions()

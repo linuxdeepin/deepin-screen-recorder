@@ -17,6 +17,7 @@
 #include "record_option_panel.h"
 #include "countdown_tooltip.h"
 #include "constant.h"
+#include "screenshot/export/aiscreenshotfile.h"
 #include "utils/tempfile.h"
 #include "utils/configsettings.h"
 #include "utils/shortcut.h"
@@ -143,6 +144,22 @@ void applyOverrideCursorShape(int shape)
     } else if (*current != cursor) {
         qApp->changeOverrideCursor(cursor);
     }
+}
+
+int screenshotSaveQuality(const QPixmap &pix, bool isPng, bool isZhaoxin)
+{
+    const QString architecture = QSysInfo::currentCpuArchitecture();
+    if (architecture.startsWith("loongarch64"))
+        return 60;
+    if (isPng && pix.width() * pix.height() > 1920 * 1080) {
+        if (architecture.startsWith("x86"))
+            return isZhaoxin ? 70 : 60;
+        if (architecture.startsWith("arm"))
+            return 75;
+        if (architecture.startsWith("mips"))
+            return 80;
+    }
+    return -1;
 }
 }  // namespace
 #ifdef KF5_WAYLAND_FLAGE_ON
@@ -2928,26 +2945,6 @@ bool MainWindow::saveImg(const QPixmap &pix, const QString &fileName, const char
     qCInfo(dsrApp) << "目录是否存在：" << dir.exists();
     qCInfo(dsrApp) << "目录是否可写：" << QFileInfo(fileInfo.path()).isWritable();
 
-    int quality = -1;
-    // qt5环境，经测试quality值对png效果明显，对jpg和bmp不明显
-    if (pix.width() * pix.height() > 1920 * 1080 && QString("PNG") == QString(format).toUpper()) {
-        if (QSysInfo::currentCpuArchitecture().startsWith("x86") && !m_isZhaoxin) {
-            qCInfo(dsrApp) << "x86 not zhaoxin, qaulity=60";
-            quality = 60;
-        } else if (QSysInfo::currentCpuArchitecture().startsWith("x86") && m_isZhaoxin) {
-            qCInfo(dsrApp) << "x86 zhaoxin, qaulity=70";
-            quality = 70;
-        } else if (QSysInfo::currentCpuArchitecture().startsWith("arm")) {
-            qCInfo(dsrApp) << "arm, qaulity=75";
-            quality = 75;
-        } else if (QSysInfo::currentCpuArchitecture().startsWith("mips")) {
-            qCInfo(dsrApp) << "mips, qaulity=80";
-            quality = 80;
-        }
-    }
-    if (QSysInfo::currentCpuArchitecture().startsWith("loongarch64")) {
-        quality = 60;
-    }
     if (status::pinscreenshots == m_functionType)
         return false;
 
@@ -2957,6 +2954,7 @@ bool MainWindow::saveImg(const QPixmap &pix, const QString &fileName, const char
     // 以图像实际 alpha 为准，才能保证透明圆角不会在 JPEG/BMP 中被编码成黑角。
     QPixmap savePix = pix;
     const QString fmt = QString::fromLatin1(format).toUpper();
+    const int quality = screenshotSaveQuality(pix, fmt == QLatin1String("PNG"), m_isZhaoxin);
     if (fmt != QLatin1String("PNG") && pix.hasAlphaChannel()) {
         savePix = RoundedCornerWidget::compositeOnWhite(pix);
     }
@@ -4538,34 +4536,16 @@ void MainWindow::onAiAssistantSelected(int func)
     qCWarning(dsrApp) << __FUNCTION__ << __LINE__ << "正在执行AI助手截图保存流程...:func"<<func;
     
     prepareScreenshot();
-    
-    SaveAction originalSaveIndex = m_saveIndex;
-    SaveWays originalSaveWays = ConfigSettings::instance()->getValue("shot", "save_ways").value<SaveWays>();
-    auto originalFunctionType = m_functionType;
-    bool originalHideToolBar = isHideToolBar;
-    
-    isHideToolBar = true;                 
-    m_functionType = status::shot;        
-    m_saveIndex = SaveAction::CustomScreenSave;
-    
-    ConfigSettings::instance()->setValue("shot", "save_ways", static_cast<int>(SaveWays::SpecifyLocation));
-    
-    bool saveResult = saveAction(m_resultPixmap);
+
+    const int quality = screenshotSaveQuality(m_resultPixmap, true, m_isZhaoxin);
+    auto screenshotFile = Dsr::Screenshot::saveAiScreenshotFile(m_resultPixmap.toImage(), quality);
     save2Clipboard(m_resultPixmap);
-    
-    ConfigSettings::instance()->setValue("shot", "save_ways", static_cast<int>(originalSaveWays));
-    
-    if (!saveResult || m_saveFileName.isEmpty()) {
+
+    if (!screenshotFile) {
         qCWarning(dsrApp) << "AI: failed to save screenshot";
-        isHideToolBar = originalHideToolBar;
-        m_functionType = originalFunctionType;
-        m_saveIndex = originalSaveIndex;
         exitApp();
         return;
     }
-    
-    qCWarning(dsrApp) << "AI: screenshot saved to:" << m_saveFileName;
-
 
     QDBusInterface copilot("com.deepin.copilot",
                                "/com/deepin/copilot",
@@ -4583,7 +4563,7 @@ void MainWindow::onAiAssistantSelected(int func)
 
     if (!m_aiAssistantInterface->isValid()) {
         qCWarning(dsrApp) << "AI: AiAssistantInterface is invalid";
-        m_saveIndex = originalSaveIndex;
+        screenshotFile.reset(); // exitApp() can bypass local destructors.
         exitApp();
         return;
     }
@@ -4597,9 +4577,10 @@ void MainWindow::onAiAssistantSelected(int func)
     default: mode = 1; break;
     }
     qCWarning(dsrApp) << __FUNCTION__ << __LINE__ << "正在执行AI助手截图保存流程...: mode:"<<mode;
+    const QString imagePath = Dsr::Screenshot::retainAiScreenshotPath(*screenshotFile);
     QDBusPendingReply<> reply;
     if (mode == 4) {
-        reply = m_aiAssistantInterface->launchChatUploadImage(m_saveFileName);
+        reply = m_aiAssistantInterface->launchChatUploadImage(imagePath);
     } else {
         QPoint cursorPos = QCursor::pos();
         QScreen *screen = QGuiApplication::screenAt(cursorPos);
@@ -4608,11 +4589,11 @@ void MainWindow::onAiAssistantSelected(int func)
         }
         QRect screenGeom = screen ? screen->geometry() : QRect(0, 0, m_backgroundRect.width(), m_backgroundRect.height());
         QPoint pos(screenGeom.center().x(), screenGeom.top() + screenGeom.height() / 3);
-        reply = m_aiAssistantInterface->launchAiQuickOCR(mode, "", pos, false, m_saveFileName);
+        reply = m_aiAssistantInterface->launchAiQuickOCR(mode, "", pos, false, imagePath);
     }
     
     QDBusPendingCallWatcher *watcher = new QDBusPendingCallWatcher(reply, this);
-    connect(watcher, &QDBusPendingCallWatcher::finished, this, [this, originalSaveIndex, originalHideToolBar, originalFunctionType](QDBusPendingCallWatcher *watcher) {
+    connect(watcher, &QDBusPendingCallWatcher::finished, this, [this](QDBusPendingCallWatcher *watcher) {
         QDBusPendingReply<> reply = *watcher;
         if (reply.isError()) {
             qCWarning(dsrApp) << "AI: DBus call failed:" << reply.error().name() << reply.error().message();
@@ -4620,9 +4601,6 @@ void MainWindow::onAiAssistantSelected(int func)
             qCDebug(dsrApp) << "AI: DBus call successful";
         }
         
-        isHideToolBar = originalHideToolBar;
-        m_functionType = originalFunctionType;
-        m_saveIndex = originalSaveIndex;
         exitApp();
         
         watcher->deleteLater();

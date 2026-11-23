@@ -3,6 +3,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 
 #include "localscreenshotresultsink.h"
+#include "aiscreenshotfile.h"
 
 #include "../../dbus_name.h"
 #include "../../dbusinterface/aiassistantinterface.h"
@@ -542,13 +543,10 @@ bool LocalScreenshotResultSink::aiAssistant(const Result &result,
     }
 
     const Result decorated = applyConfiguredBorder(result);
-    const QString tempDirectory =
-            QStandardPaths::writableLocation(QStandardPaths::TempLocation);
-    const QString imagePath = QDir(tempDirectory).filePath(
-            defaultFileName(ScreenshotFormat::Png));
-    if (!decorated.image.save(imagePath, "PNG")) {
+    auto screenshotFile = saveAiScreenshotFile(decorated.image);
+    if (!screenshotFile) {
         if (error)
-            *error = QStringLiteral("AI 助手截图保存失败：%1").arg(imagePath);
+            *error = QStringLiteral("AI 助手截图保存失败");
         return false;
     }
 
@@ -568,6 +566,7 @@ bool LocalScreenshotResultSink::aiAssistant(const Result &result,
         return false;
     }
 
+    const QString imagePath = retainAiScreenshotPath(*screenshotFile);
     QDBusPendingReply<> reply;
     if (function == 3) {
         reply = aiAssistant.launchChatUploadImage(imagePath);
