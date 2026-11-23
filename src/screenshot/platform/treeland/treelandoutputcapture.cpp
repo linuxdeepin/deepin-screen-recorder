@@ -4,6 +4,7 @@
 
 #include "treelandoutputcapture.h"
 
+#include "../../../ext-image-capture/shmformat.h"
 #include "../../../protocols/ext-image-copy-capture/wayland-ext-image-capture-source-v1-client-protocol.h"
 #include "../../../protocols/ext-image-copy-capture/wayland-ext-image-copy-capture-v1-client-protocol.h"
 #include "../../../utils/log.h"
@@ -11,6 +12,7 @@
 #include <QElapsedTimer>
 #include <QList>
 #include <QSet>
+#include <QStringList>
 #include <QTransform>
 
 #include <cerrno>
@@ -32,22 +34,6 @@ constexpr int ProtocolTimeoutMs = 1500;
 // normally completes in a few milliseconds on TreeLand, so this timeout only
 // catches a compositor/protocol failure rather than a slow path.
 constexpr int FrameTimeoutMs = 1500;
-
-QImage::Format imageFormatForShm(uint32_t format)
-{
-    switch (format) {
-    case WL_SHM_FORMAT_ARGB8888:
-        return QImage::Format_ARGB32;
-    case WL_SHM_FORMAT_XRGB8888:
-        return QImage::Format_RGB32;
-    case WL_SHM_FORMAT_ABGR8888:
-        return QImage::Format_RGBA8888;
-    case WL_SHM_FORMAT_XBGR8888:
-        return QImage::Format_RGBX8888;
-    default:
-        return QImage::Format_Invalid;
-    }
-}
 
 QImage applyTransform(const QImage &image, uint32_t transform)
 {
@@ -488,21 +474,19 @@ bool TreelandOutputCapture::Private::waitForConstraints(Session *target, QString
 
 bool TreelandOutputCapture::Private::selectShmFormat(Session *target, QString *error)
 {
-    static constexpr uint32_t kPreferredFormats[] = {
-        WL_SHM_FORMAT_XRGB8888,
-        WL_SHM_FORMAT_ARGB8888,
-        WL_SHM_FORMAT_XBGR8888,
-        WL_SHM_FORMAT_ABGR8888,
-    };
-
-    for (uint32_t format : kPreferredFormats) {
-        if (target->shmFormats.contains(format)) {
-            target->format = format;
-            return true;
-        }
+    if (const auto *info = ExtImageCapture::selectShmFormat(target->shmFormats)) {
+        target->format = info->waylandFormat;
+        return true;
     }
-    if (error)
-        *error = QStringLiteral("TreeLand 输出捕获没有可用的共享内存格式");
+
+    if (error) {
+        QStringList advertised;
+        for (uint32_t format : target->shmFormats) {
+            advertised.append(Dsr::ExtImageCapture::shmFormatToString(format));
+        }
+        *error = QStringLiteral("TreeLand 输出捕获没有可用的共享内存格式：%1")
+                         .arg(advertised.join(QStringLiteral(", ")));
+    }
     return false;
 }
 
@@ -517,24 +501,28 @@ bool TreelandOutputCapture::Private::captureFromSession(Session *target,
         return false;
     }
 
-    const QImage::Format imageFormat = imageFormatForShm(target->format);
-    if (imageFormat == QImage::Format_Invalid) {
-        if (error)
-            *error = QStringLiteral("TreeLand 输出捕获返回了不支持的格式");
-        return false;
-    }
-
     Frame state;
     state.width = target->width;
     state.height = target->height;
-    state.stride = state.width * 4;
     state.format = target->format;
-    state.size = static_cast<size_t>(state.stride) * state.height;
+    const int stride = ExtImageCapture::strideForShm(state.format, state.width);
+    const int size = ExtImageCapture::bufferSizeForShm(stride, state.height);
+    if (!size) {
+        if (error)
+            *error = QStringLiteral("TreeLand 输出捕获的共享内存布局无效：%1×%2，格式 %3")
+                             .arg(state.width).arg(state.height)
+                             .arg(ExtImageCapture::shmFormatToString(state.format));
+        return false;
+    }
+    state.stride = stride;
+    state.size = size;
     state.fd = memfd_create("treeland-output-scroll-capture", MFD_CLOEXEC);
     if (state.fd < 0 || ftruncate(state.fd, static_cast<off_t>(state.size)) < 0) {
         if (error)
             *error = QStringLiteral("创建输出截图共享内存失败：%1")
                              .arg(QString::fromLocal8Bit(std::strerror(errno)));
+        if (state.fd >= 0)
+            close(state.fd);
         return false;
     }
     state.data = mmap(nullptr, state.size, PROT_READ | PROT_WRITE, MAP_SHARED, state.fd, 0);
@@ -546,7 +534,7 @@ bool TreelandOutputCapture::Private::captureFromSession(Session *target,
         return false;
     }
 
-    state.pool = wl_shm_create_pool(shm, state.fd, static_cast<int>(state.size));
+    state.pool = wl_shm_create_pool(shm, state.fd, size);
     state.buffer = state.pool
             ? wl_shm_pool_create_buffer(state.pool,
                                         0,
@@ -608,11 +596,8 @@ bool TreelandOutputCapture::Private::captureFromSession(Session *target,
                                  .arg(state.failureReason);
         }
     } else {
-        const QImage source(static_cast<const uchar *>(state.data),
-                            static_cast<int>(state.width),
-                            static_cast<int>(state.height),
-                            static_cast<int>(state.stride),
-                            imageFormat);
+        const QImage source = ExtImageCapture::shmImageView(state.data, state.size, state.width,
+                                                          state.height, state.stride, state.format);
         *image = applyTransform(source.copy(), state.transform);
         *timestampNs = state.timestampNs;
         success = !image->isNull();

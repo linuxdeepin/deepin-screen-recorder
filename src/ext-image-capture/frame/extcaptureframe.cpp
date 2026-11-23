@@ -5,6 +5,7 @@
 
 #include "extcaptureframe.h"
 #include "../session/extcapturesession.h"
+#include "../shmformat.h"
 #include "../../protocols/ext-image-copy-capture/qwayland-ext-image-copy-capture-v1.h"
 
 #include <QDebug>
@@ -355,17 +356,23 @@ bool ExtCaptureFrame::createShmBuffer()
 #ifdef ENABLE_UNIT_TEST
     return false; // 单测桩：SHM 缓冲区需真实 Wayland，跳过
 #else
-    // createBuffer() calls this as a fallback from DMA-BUF. Keep the frame's
-    // advertised buffer type in sync so consumers take the SHM path.
+    // Keep the frame's advertised buffer type in sync so consumers take the
+    // SHM path even if this is ever reached as a DMA-BUF fallback.
     d->config.useDmaBuffer = false;
 
-    // 计算缓冲区大小（假设RGBA格式，4字节/像素）
-    uint32_t width = d->config.bufferSize.width();
-    uint32_t height = d->config.bufferSize.height();
-    uint32_t stride = width * 4;  // RGBA
-    d->bufferSize = stride * height;
-    
-    d->frameData.stride = stride;
+    const int width = d->config.bufferSize.width();
+    const int height = d->config.bufferSize.height();
+    const int stride = Dsr::ExtImageCapture::strideForShm(d->config.format, width);
+    const int size = Dsr::ExtImageCapture::bufferSizeForShm(stride, height);
+    if (!size) {
+        qCWarning(dsrApp) << "ExtCaptureFrame::createShmBuffer: invalid SHM layout"
+                          << d->config.bufferSize
+                          << Dsr::ExtImageCapture::shmFormatToString(d->config.format);
+        return false;
+    }
+    d->bufferSize = size;
+
+    d->frameData.stride = static_cast<uint32_t>(stride);
     
     // 创建共享内存文件
     d->bufferFd = memfd_create("ext-capture-buffer", MFD_CLOEXEC);
@@ -412,7 +419,7 @@ bool ExtCaptureFrame::createShmBuffer()
         return false;
     }
     
-    auto *pool = wl_shm_create_pool(shm, d->bufferFd, d->bufferSize);
+    auto *pool = wl_shm_create_pool(shm, d->bufferFd, size);
     if (!pool) {
         qCWarning(dsrApp) << "Failed to create shm pool";
         return false;
@@ -537,7 +544,8 @@ bool ExtCaptureFrame::createDmaBuffer()
     d->frameData.size = d->bufferSize;
     d->bufferFd = planeFd;
 
-    qCWarning(dsrApp) << "ExtCaptureFrame: DMA BO created"
+    // 逐帧打印，属调试信息；用 qCDebug 避免录屏时刷满日志。
+    qCDebug(dsrApp) << "ExtCaptureFrame: DMA BO created"
                       << "device:" << d->config.dmaDevicePath
                       << "format:" << Qt::hex << format
                       << "stride:" << stride

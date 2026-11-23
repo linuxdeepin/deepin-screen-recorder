@@ -271,6 +271,7 @@ HEADERS += test_all_interfaces.h \
     ../../src/ext-image-capture/manager/extoutputsourcemanager.h \
     ../../src/ext-image-capture/multiscreencapturecoordinator.h \
     ../../src/ext-image-capture/multiscreenframecompositor.h \
+    ../../src/ext-image-capture/shmformat.h \
     ../../src/ext-image-capture/session/extcapturesession.h \
     ../../src/screenshot/core/selectionconstraints.h \
     ../../src/screenshot/core/selectionmodel.h \
@@ -335,6 +336,7 @@ HEADERS += test_all_interfaces.h \
     ext-image-capture/ut_extcapturerecorder_cov.h \
     ext-image-capture/ut_extcaptureframe_cov.h \
     ext-image-capture/ut_extcapturesession_cov.h \
+    ext-image-capture/ut_shmformat.h \
     ext-image-capture/ut_extcaptureintegration_cov.h \
     ext-image-capture/ut_extcapturemanager_cov.h \
     ext-image-capture/ut_extoutputsourcemanager_cov.h \

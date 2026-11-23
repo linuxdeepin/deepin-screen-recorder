@@ -36,7 +36,6 @@ public:
 private:
     bool waitForManager(QString *error);
     static QImage imageFromFrame(ExtCaptureFrame *frame, QString *error);
-    static QImage::Format imageFormatForShm(uint32_t format);
 
     ExtCaptureManager *m_manager = nullptr;
 };

@@ -6,6 +6,7 @@
 #include "extcapturesession.h"
 #include "../dmaframegpuconverter.h"
 #include "../frame/extcaptureframe.h"
+#include "../shmformat.h"
 #include "../../protocols/ext-image-copy-capture/qwayland-ext-image-copy-capture-v1.h"
 #include "../../protocols/ext-image-copy-capture/wayland-ext-image-copy-capture-v1-client-protocol.h"
 #include "../../protocols/linux-dmabuf/qwayland-linux-dmabuf-unstable-v1.h"
@@ -15,6 +16,7 @@
 #include <QGuiApplication>
 #include <QDir>
 #include <QFile>
+#include <QStringList>
 #include <qpa/qplatformnativeinterface.h>
 #include <QPointer>
 #include "../utils/log.h"
@@ -731,23 +733,25 @@ void ExtCaptureSession::selectCapturePlan()
     if (!d->shmFormats.isEmpty()) {
         // Still-image capture deliberately uses wl_shm. DMA-BUF remains the
         // recording path, where frames are consumed as transparent handles.
-        // Pick a format with a known QImage mapping instead of trusting the
-        // arbitrary order in which the compositor advertised constraints.
-        const uint32_t preferredFormats[] = {
-            WL_SHM_FORMAT_XRGB8888,
-            WL_SHM_FORMAT_ARGB8888,
-            WL_SHM_FORMAT_XBGR8888,
-            WL_SHM_FORMAT_ABGR8888
-        };
-        d->config.format = d->shmFormats.first();
-        for (uint32_t format : preferredFormats) {
-            if (d->shmFormats.contains(format)) {
-                d->config.format = format;
-                break;
+        // 只从"本客户端能解码"的格式里选（见 shmformat.h），而不是盲取合成器
+        // 广告列表的第一个——否则会选中一个后续解码不了的格式。
+        const auto *formatInfo = Dsr::ExtImageCapture::selectShmFormat(d->shmFormats);
+        if (!formatInfo) {
+            QStringList advertised;
+            for (uint32_t format : d->shmFormats) {
+                advertised.append(Dsr::ExtImageCapture::shmFormatToString(format));
             }
+            const QString message = QStringLiteral("合成器提供的 SHM 格式均不受支持：%1")
+                                            .arg(advertised.join(QStringLiteral(", ")));
+            qCWarning(dsrApp) << "ExtCaptureSession:" << message;
+            setState(Error);
+            emit error(message);
+            return;
         }
+        d->config.format = formatInfo->waylandFormat;
+
         qCWarning(dsrApp) << "ExtCaptureSession: capture transport=SHM"
-                          << "format=" + QStringLiteral("0x%1").arg(d->config.format, 0, 16)
+                          << "format=" + Dsr::ExtImageCapture::shmFormatToString(d->config.format)
                           << "size:" << d->config.bufferSize
                           << "reason:" << (d->preferDmaBuffer
                                                    ? dmaFailure

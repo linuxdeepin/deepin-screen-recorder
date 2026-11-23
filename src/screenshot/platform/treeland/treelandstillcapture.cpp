@@ -7,6 +7,7 @@
 #include "../../../ext-image-capture/frame/extcaptureframe.h"
 #include "../../../ext-image-capture/manager/extcapturemanager.h"
 #include "../../../ext-image-capture/session/extcapturesession.h"
+#include "../../../ext-image-capture/shmformat.h"
 
 #include <QDebug>
 #include <QEventLoop>
@@ -15,7 +16,6 @@
 #include <QSet>
 #include <QTimer>
 #include <QTransform>
-#include <wayland-client.h>
 
 #include <utility>
 
@@ -207,19 +207,15 @@ QImage TreelandStillCapture::imageFromFrame(ExtCaptureFrame *frame, QString *err
     }
 
     const FrameData &data = frame->frameData();
-    const QImage::Format format = imageFormatForShm(data.format);
-    if (!data.data || data.dimensions.isEmpty() || format == QImage::Format_Invalid) {
+    QImage image = ExtImageCapture::shmImageView(data.data, data.size, data.dimensions.width(),
+                                               data.dimensions.height(), data.stride, data.format).copy();
+    if (image.isNull()) {
         if (error)
-            *error = QStringLiteral("截图帧格式无效：%1").arg(data.format);
+            *error = QStringLiteral("截图帧无法读取：%1×%2，stride=%3，格式 %4")
+                         .arg(data.dimensions.width()).arg(data.dimensions.height()).arg(data.stride)
+                         .arg(ExtImageCapture::shmFormatToString(data.format));
         return {};
     }
-
-    QImage image(static_cast<const uchar *>(data.data),
-                 data.dimensions.width(),
-                 data.dimensions.height(),
-                 static_cast<int>(data.stride),
-                 format);
-    image = image.copy();
 
     switch (data.transform) {
     case FrameTransform::Rotate90:
@@ -255,22 +251,6 @@ bool TreelandStillCapture::waitForManager(QString *error)
     if (error)
         *error = QStringLiteral("ext-image-copy-capture 协议不可用");
     return false;
-}
-
-QImage::Format TreelandStillCapture::imageFormatForShm(uint32_t format)
-{
-    switch (format) {
-    case WL_SHM_FORMAT_ARGB8888:
-        return QImage::Format_ARGB32;
-    case WL_SHM_FORMAT_XRGB8888:
-        return QImage::Format_RGB32;
-    case WL_SHM_FORMAT_XBGR8888:
-        return QImage::Format_RGBX8888;
-    case WL_SHM_FORMAT_ABGR8888:
-        return QImage::Format_RGBA8888;
-    default:
-        return QImage::Format_Invalid;
-    }
 }
 
 } // namespace Dsr::Screenshot
