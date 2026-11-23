@@ -4,6 +4,7 @@
 #include "capturepipelineworker.h"
 #include "dmaframegpuconverter.h"
 #include "multiscreenframecompositor.h"
+#include "shmformat.h"
 #include "../utils/log.h"
 
 #include <QDebug>
@@ -133,7 +134,7 @@ bool makeDmaFrameSource(int fd, void *gbmBo, int width, int height, int stride,
 }
 
 bool makeShmFrameSource(int fd, size_t size, int width, int height, int stride,
-                        uint64_t timestamp, quint64 sequence,
+                         uint32_t format, uint64_t timestamp, quint64 sequence,
                         ShmFrameSourcePtr *source, QString *error)
 {
     if (source)
@@ -143,10 +144,13 @@ bool makeShmFrameSource(int fd, size_t size, int width, int height, int stride,
 
     if (fd < 0)
         return fail(error, QStringLiteral("SHM 帧缺少 memfd"));
-    if (width <= 0 || height <= 0 || stride <= 0)
-        return fail(error, QStringLiteral("SHM 帧尺寸或 stride 无效"));
+    const int bpp = Dsr::ExtImageCapture::bytesPerPixelForShm(format);
+    const int bytes = Dsr::ExtImageCapture::bufferSizeForShm(stride, height);
+    if (!bpp || !bytes || width <= 0 || static_cast<qint64>(width) * bpp > stride)
+        return fail(error, QStringLiteral("SHM 帧布局无效，格式 %1")
+                                   .arg(Dsr::ExtImageCapture::shmFormatToString(format)));
 
-    const size_t required = static_cast<size_t>(stride) * static_cast<size_t>(height);
+    const auto required = static_cast<size_t>(bytes);
     if (size < required)
         return fail(error, QStringLiteral("SHM 帧数据不足：%1 < %2")
                                .arg(static_cast<qulonglong>(size))
@@ -161,6 +165,7 @@ bool makeShmFrameSource(int fd, size_t size, int width, int height, int stride,
     auto frame = std::make_shared<ShmFrameSource>();
     frame->fd = duplicatedFd;
     frame->size = size;
+    frame->format = format;
     frame->width = width;
     frame->height = height;
     frame->stride = stride;
@@ -404,21 +409,12 @@ QByteArray CapturePipelineWorker::convertShm(const ShmFrameSourcePtr &source, QS
         return {};
     }
 
-    const int outStride = source->width * 4;
-    QByteArray result;
-    result.resize(static_cast<int>(static_cast<qint64>(outStride) * source->height));
-    char *dst = result.data();
-    const char *src = static_cast<const char *>(mapped);
-    const size_t copyWidth = std::min(static_cast<size_t>(outStride),
-                                      static_cast<size_t>(source->stride));
-
-    for (int y = 0; y < source->height; ++y) {
-        std::memcpy(dst + static_cast<qint64>(y) * outStride,
-                    src + static_cast<qint64>(y) * source->stride,
-                    copyWidth);
-    }
-
+    auto result = Dsr::ExtImageCapture::shmToRgba(mapped, source->size, source->width,
+                                                  source->height, source->stride, source->format);
     munmap(mapped, source->size);
+    if (result.isEmpty())
+        fail(error, QStringLiteral("SHM 帧无法转换为 RGBA，源格式 %1")
+                            .arg(Dsr::ExtImageCapture::shmFormatToString(source->format)));
     return result;
 }
 
@@ -530,7 +526,6 @@ void CapturePipelineWorker::processMultiRound(quint64 roundId,
         info.width = input.width;
         info.height = input.height;
         // convertDma() 输出已重排为 width*4 紧密行。
-        info.stride = (input.isDma || input.shm) ? input.width * 4 : input.stride;
         info.timestamp = input.timestamp;
         info.ready = true;
 
@@ -558,9 +553,21 @@ void CapturePipelineWorker::processMultiRound(quint64 roundId,
                                       roundId);
                 return;
             }
+        } else if (input.cpuShmFormat) {
+            info.frameData = Dsr::ExtImageCapture::shmToRgba(input.cpuData.constData(),
+                    input.cpuData.size(), input.width, input.height, input.stride, *input.cpuShmFormat);
+            if (info.frameData.isEmpty()) {
+                m_compositor->reset();
+                m_activeRoundId = 0;
+                emit multiFrameFailed(QStringLiteral("输出 %1 的 SHM 帧无法转换为 RGBA")
+                                              .arg(input.screenName), roundId);
+                return;
+            }
         } else {
             info.frameData = input.cpuData;
         }
+        info.stride = (input.isDma || input.shm || input.cpuShmFormat)
+                ? Dsr::ExtImageCapture::rgbaBytesPerLine(input.width) : input.stride;
 
         if (!m_compositor->addScreenFrame(info)) {
             m_compositor->reset();

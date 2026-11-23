@@ -171,7 +171,7 @@ private slots:
     void onRecordingStopped();
     void onFrameReady(const void *data, size_t size, int width, int height, int stride, uint64_t timestamp);
     void onShmFrameReady(int shmFd, size_t size, int width, int height, int stride,
-                         uint64_t timestamp);
+                         uint32_t format, uint64_t timestamp);
     void onDmaFrameReady(int dmaBufferFd, void *gbmBo, size_t size, int width, int height, int stride, uint64_t timestamp);
     void onMultiScreenFrameReady(const QByteArray &data, int width, int height,
                                  int stride, uint64_t timestamp);

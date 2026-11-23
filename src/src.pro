@@ -247,6 +247,7 @@ HEADERS += main_window.h \
     widgets/slider.h \
     ext-image-capture/manager/extcapturemanager.h \
     ext-image-capture/manager/extoutputsourcemanager.h \
+    ext-image-capture/shmformat.h \
     ext-image-capture/session/extcapturesession.h \
     ext-image-capture/frame/extcaptureframe.h \
     ext-image-capture/extcaptureintegration.h \

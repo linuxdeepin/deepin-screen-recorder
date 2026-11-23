@@ -250,7 +250,7 @@ void ExtCaptureIntegration::onFrameReady(ExtCaptureFrame *frame)
         if (shmFd >= 0) {
             emit shmFrameReady(shmFd, frameData.size,
                                frameData.dimensions.width(), frameData.dimensions.height(),
-                               frameData.stride, frameData.timestamp);
+                               frameData.stride, frameData.format, frameData.timestamp);
         }
 
         // SHM Buffer模式：传统方式映射内存
@@ -264,8 +264,8 @@ void ExtCaptureIntegration::onFrameReady(ExtCaptureFrame *frame)
 
         // 发射帧就绪信号
         emit frameReady(data, frameData.size, 
-                       frameData.dimensions.width(), frameData.dimensions.height(),
-                       frameData.stride, frameData.timestamp);
+                        frameData.dimensions.width(), frameData.dimensions.height(),
+                        frameData.stride, frameData.format, frameData.timestamp);
         
         // 取消映射
         frame->unmapBuffer();

@@ -9,6 +9,7 @@
 #include "framepumpworker.h"
 #include "capturepipelineworker.h"
 #include "dmaframegpuconverter.h"
+#include "shmformat.h"
 #include "../utils/log.h"
 
 #include <QDebug>
@@ -61,7 +62,20 @@ ExtCaptureRecorder::ExtCaptureRecorder(QObject *parent)
     connect(m_extCapture, &ExtCaptureIntegration::recordingStopped,
             this, &ExtCaptureRecorder::onRecordingStopped);
     connect(m_extCapture, &ExtCaptureIntegration::frameReady,
-            this, &ExtCaptureRecorder::onFrameReady);
+            this, [this](const void *data, size_t size, int width, int height, int stride,
+                         uint32_t format, uint64_t timestamp) {
+                if (m_streamingMode || m_state != Recording)
+                    return;
+                const auto rgba = Dsr::ExtImageCapture::shmToRgba(data, size, width, height,
+                                                                stride, format);
+                if (rgba.isEmpty()) {
+                    emit error(QStringLiteral("SHM 帧无法转换为 RGBA"));
+                    scheduleNextCapture();
+                    return;
+                }
+                onFrameReady(rgba.constData(), rgba.size(), width, height,
+                             Dsr::ExtImageCapture::rgbaBytesPerLine(width), timestamp);
+            });
     connect(m_extCapture, &ExtCaptureIntegration::shmFrameReady,
             this, &ExtCaptureRecorder::onShmFrameReady);
     connect(m_extCapture, &ExtCaptureIntegration::dmaFrameReady,
@@ -473,7 +487,7 @@ void ExtCaptureRecorder::onFrameReady(const void *data, size_t size, int width, 
 }
 
 void ExtCaptureRecorder::onShmFrameReady(int shmFd, size_t size, int width, int height,
-                                         int stride, uint64_t timestamp)
+                                         int stride, uint32_t format, uint64_t timestamp)
 {
     if (!m_streamingMode || shmFd < 0)
         return;
@@ -496,7 +510,7 @@ void ExtCaptureRecorder::onShmFrameReady(int shmFd, size_t size, int width, int 
     const quint64 jobId = ++m_pipelineJobId;
     ShmFrameSourcePtr source;
     QString error;
-    if (!makeShmFrameSource(shmFd, size, width, height, stride, timestamp, jobId,
+    if (!makeShmFrameSource(shmFd, size, width, height, stride, format, timestamp, jobId,
                             &source, &error)) {
         QMetaObject::invokeMethod(this, [this, error]() {
             onExtCaptureError(error.isEmpty()

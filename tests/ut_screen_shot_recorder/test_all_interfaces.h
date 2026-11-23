@@ -115,6 +115,7 @@
 #include "ext-image-capture/ut_extcapturerecorder_cov.h"
 #include "ext-image-capture/ut_extcaptureframe_cov.h"
 #include "ext-image-capture/ut_extcapturesession_cov.h"
+#include "ext-image-capture/ut_shmformat.h"
 #include "ext-image-capture/ut_extcaptureintegration_cov.h"
 #include "ext-image-capture/ut_extcapturemanager_cov.h"
 #include "ext-image-capture/ut_extoutputsourcemanager_cov.h"
@@ -184,4 +185,3 @@
 #include "widgets/ut_ui_extra_cov.h"
 #include "ut_generated_dbus_extra_cov.h"
 #include "utils/ut_utility_extra_cov.h"
-

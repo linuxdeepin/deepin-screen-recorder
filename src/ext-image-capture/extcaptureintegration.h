@@ -126,7 +126,8 @@ signals:
      * @param stride 行字节数
      * @param timestamp 时间戳
      */
-    void frameReady(const void *data, size_t size, int width, int height, int stride, uint64_t timestamp);
+    void frameReady(const void *data, size_t size, int width, int height, int stride,
+                    uint32_t format, uint64_t timestamp);
 
     /**
      * @brief wl_shm 帧 memfd 就绪
@@ -134,7 +135,7 @@ signals:
      * fd 仅在当前信号调用栈内有效；需要异步使用时必须 dup()。
      */
     void shmFrameReady(int shmFd, size_t size, int width, int height, int stride,
-                       uint64_t timestamp);
+                       uint32_t format, uint64_t timestamp);
 
     /**
      * @brief DMA Buffer帧就绪

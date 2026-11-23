@@ -5,6 +5,8 @@
 #pragma once
 #include <gtest/gtest.h>
 #include <QSignalSpy>
+#include <drm/drm_fourcc.h>
+#include <wayland-client.h>
 #include "addr_pri.h"
 #include "../../src/ext-image-capture/session/extcapturesession.h"
 
@@ -49,21 +51,24 @@ TEST_F(ExtCaptureSessionTest, protectedHandlers)
     call_private_fun::ExtCaptureSessionhandleBufferSize(*m_sess, 100, 50);
     EXPECT_EQ(m_sess->config().bufferSize, QSize(100, 50));
 
-    call_private_fun::ExtCaptureSessionhandleShmFormat(*m_sess, 875713112); // WL_SHM_FORMAT_XBGR8888
+    call_private_fun::ExtCaptureSessionhandleShmFormat(*m_sess, WL_SHM_FORMAT_XBGR8888);
     EXPECT_FALSE(m_sess->supportedFormats().isEmpty());
 
     call_private_fun::ExtCaptureSessionhandleDmabufDevice(*m_sess, QByteArray("/dev/dri/renderD128"));
-    call_private_fun::ExtCaptureSessionhandleDmabufFormat(*m_sess, 875713112, QList<uint64_t>{0});
+    // No modifiers: exercise the SHM fallback without probing the host GPU.
+    call_private_fun::ExtCaptureSessionhandleDmabufFormat(*m_sess, DRM_FORMAT_XRGB8888,
+                                                         QList<uint64_t>{});
 
     // selectCapturePlan：已有 shm 格式 -> 选中
     call_private_fun::ExtCaptureSessionselectCapturePlan(*m_sess);
-    EXPECT_NE(m_sess->config().format, 0u);
+    EXPECT_FALSE(m_sess->config().useDmaBuffer);
+    EXPECT_EQ(m_sess->config().format, WL_SHM_FORMAT_XBGR8888);
 }
 
 TEST_F(ExtCaptureSessionTest, handleDoneAndStopped)
 {
     QSignalSpy readySpy(m_sess, &ExtCaptureSession::ready);
-    call_private_fun::ExtCaptureSessionhandleShmFormat(*m_sess, 875713112);
+    call_private_fun::ExtCaptureSessionhandleShmFormat(*m_sess, WL_SHM_FORMAT_XBGR8888);
     call_private_fun::ExtCaptureSessionhandleDone(*m_sess);
     EXPECT_EQ(m_sess->state(), ExtCaptureSession::Ready);
     EXPECT_EQ(readySpy.count(), 1);

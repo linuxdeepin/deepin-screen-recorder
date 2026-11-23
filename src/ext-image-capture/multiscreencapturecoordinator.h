@@ -187,7 +187,7 @@ private:
     void submitScreenFrame(QScreen* screen, const QByteArray& frameData,
                            int shmBufferFd, int dmaBufferFd, void* gbmBo,
                            int width, int height, int stride, size_t size,
-                           uint64_t timestamp);
+                           uint64_t timestamp, std::optional<uint32_t> shmFormat = std::nullopt);
 
     /**
      * @brief 计算虚拟桌面布局

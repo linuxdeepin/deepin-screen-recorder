@@ -5,6 +5,8 @@
 #pragma once
 #include <gtest/gtest.h>
 #include <QSignalSpy>
+#include <drm/drm_fourcc.h>
+#include <wayland-client.h>
 #include "addr_pri.h"
 #include "../../src/ext-image-capture/session/extcapturesession.h"
 
@@ -31,11 +33,11 @@ public:
 // handleShmFormat：同一格式重复传入 -> 仅 append 一次
 TEST_F(ExtCaptureSessionCovTest, handleShmFormatDeduplicates)
 {
-    call_private_fun::ExtCaptureSessionhandleShmFormat(*m_sess, 875713112);
+    call_private_fun::ExtCaptureSessionhandleShmFormat(*m_sess, WL_SHM_FORMAT_XRGB8888);
     int before = m_sess->supportedFormats().size();
-    call_private_fun::ExtCaptureSessionhandleShmFormat(*m_sess, 875713112); // 重复
+    call_private_fun::ExtCaptureSessionhandleShmFormat(*m_sess, WL_SHM_FORMAT_XRGB8888);
     EXPECT_EQ(m_sess->supportedFormats().size(), before);
-    call_private_fun::ExtCaptureSessionhandleShmFormat(*m_sess, 875708992); // WL_SHM_FORMAT_ARGB8888
+    call_private_fun::ExtCaptureSessionhandleShmFormat(*m_sess, WL_SHM_FORMAT_ARGB8888);
     EXPECT_GT(m_sess->supportedFormats().size(), before);
 }
 
@@ -52,24 +54,51 @@ TEST_F(ExtCaptureSessionCovTest, handleDmabufFormatDeduplicates)
 TEST_F(ExtCaptureSessionCovTest, selectCapturePlanFallsBackToShm)
 {
     call_private_fun::ExtCaptureSessionhandleDmabufFormat(*m_sess, 875713112, QList<uint64_t>{0});
-    call_private_fun::ExtCaptureSessionhandleShmFormat(*m_sess, 875708992);
+    call_private_fun::ExtCaptureSessionhandleShmFormat(*m_sess, WL_SHM_FORMAT_XRGB8888);
     call_private_fun::ExtCaptureSessionselectCapturePlan(*m_sess);
     EXPECT_FALSE(m_sess->config().useDmaBuffer);
-    EXPECT_NE(m_sess->config().format, 0u);
+    EXPECT_EQ(m_sess->config().format, WL_SHM_FORMAT_XRGB8888);
 }
 
 // selectCapturePlan：仅 shm -> useDmaBuffer=false
 TEST_F(ExtCaptureSessionCovTest, selectCapturePlanShmOnlyWhenNoDma)
 {
-    call_private_fun::ExtCaptureSessionhandleShmFormat(*m_sess, 875708992);
+    call_private_fun::ExtCaptureSessionhandleShmFormat(*m_sess, WL_SHM_FORMAT_BGR888);
+    call_private_fun::ExtCaptureSessionhandleShmFormat(*m_sess, WL_SHM_FORMAT_ARGB8888);
     call_private_fun::ExtCaptureSessionselectCapturePlan(*m_sess);
     EXPECT_FALSE(m_sess->config().useDmaBuffer);
+    EXPECT_EQ(m_sess->config().format, WL_SHM_FORMAT_ARGB8888);
+}
+
+TEST_F(ExtCaptureSessionCovTest, selectsBg24AfterUnknownShmFormat)
+{
+    call_private_fun::ExtCaptureSessionhandleBufferSize(*m_sess, 1366, 768);
+    call_private_fun::ExtCaptureSessionhandleShmFormat(*m_sess, WL_SHM_FORMAT_RGB565);
+    call_private_fun::ExtCaptureSessionhandleShmFormat(*m_sess, WL_SHM_FORMAT_BGR888);
+    call_private_fun::ExtCaptureSessionhandleDone(*m_sess);
+    EXPECT_EQ(m_sess->state(), ExtCaptureSession::Ready);
+    EXPECT_FALSE(m_sess->config().useDmaBuffer);
+    EXPECT_EQ(m_sess->config().format, WL_SHM_FORMAT_BGR888);
+}
+
+TEST_F(ExtCaptureSessionCovTest, rejectsUnsupportedShmFormatsBeforeReady)
+{
+    QSignalSpy readySpy(m_sess, &ExtCaptureSession::ready);
+    QSignalSpy errorSpy(m_sess, &ExtCaptureSession::error);
+    call_private_fun::ExtCaptureSessionhandleShmFormat(*m_sess, DRM_FORMAT_XRGB8888);
+    call_private_fun::ExtCaptureSessionhandleShmFormat(*m_sess, DRM_FORMAT_ARGB8888);
+    call_private_fun::ExtCaptureSessionhandleShmFormat(*m_sess, WL_SHM_FORMAT_RGB565);
+    call_private_fun::ExtCaptureSessionhandleDone(*m_sess);
+    EXPECT_EQ(m_sess->state(), ExtCaptureSession::Error);
+    EXPECT_EQ(readySpy.count(), 0);
+    ASSERT_EQ(errorSpy.count(), 1);
+    EXPECT_TRUE(errorSpy.first().first().toString().contains(QStringLiteral("RG16")));
 }
 
 // handleDone：设置 constraintsReceived 并转 Ready，可重复调用
 TEST_F(ExtCaptureSessionCovTest, handleDoneTransitionsToReady)
 {
-    call_private_fun::ExtCaptureSessionhandleShmFormat(*m_sess, 875713112);
+    call_private_fun::ExtCaptureSessionhandleShmFormat(*m_sess, WL_SHM_FORMAT_XRGB8888);
     QSignalSpy readySpy(m_sess, &ExtCaptureSession::ready);
     call_private_fun::ExtCaptureSessionhandleDone(*m_sess);
     EXPECT_EQ(m_sess->state(), ExtCaptureSession::Ready);
@@ -82,7 +111,7 @@ TEST_F(ExtCaptureSessionCovTest, handleDoneTransitionsToReady)
 // stop()：从 Ready 态停止 -> emit stopped（d->isInitialized()==false 走跳过分支）
 TEST_F(ExtCaptureSessionCovTest, stopFromReadyEmitsStopped)
 {
-    call_private_fun::ExtCaptureSessionhandleShmFormat(*m_sess, 875713112);
+    call_private_fun::ExtCaptureSessionhandleShmFormat(*m_sess, WL_SHM_FORMAT_XRGB8888);
     call_private_fun::ExtCaptureSessionhandleDone(*m_sess);
     ASSERT_EQ(m_sess->state(), ExtCaptureSession::Ready);
 

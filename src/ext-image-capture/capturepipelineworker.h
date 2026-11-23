@@ -16,6 +16,7 @@
 
 #include <cstddef>
 #include <memory>
+#include <optional>
 
 #include "multiscreenframecompositor.h"
 
@@ -56,6 +57,7 @@ struct ShmFrameSource
 {
     int fd = -1;
     size_t size = 0;
+    uint32_t format = 0;
     int width = 0;
     int height = 0;
     int stride = 0;
@@ -81,6 +83,7 @@ struct FrameInput
     DmaFrameSourcePtr dma;
     ShmFrameSourcePtr shm;
     QByteArray cpuData;
+    std::optional<uint32_t> cpuShmFormat;
     int width = 0;
     int height = 0;
     int stride = 0;
@@ -94,7 +97,7 @@ bool makeDmaFrameSource(int fd, void *gbmBo, int width, int height, int stride,
                         QString *error);
 
 bool makeShmFrameSource(int fd, size_t size, int width, int height, int stride,
-                        uint64_t timestamp, quint64 sequence,
+                         uint32_t format, uint64_t timestamp, quint64 sequence,
                         ShmFrameSourcePtr *source, QString *error);
 
 /**

@@ -405,7 +405,7 @@ void MultiScreenCaptureCoordinator::onScreenShmFrameReady(QScreen *screen, ExtCa
     if (shmFd >= 0) {
         // 只 dup memfd，真正 mmap/拷贝在采集工作线程完成。
         submitScreenFrame(screen, QByteArray(), shmFd, -1, nullptr, width, height,
-                          stride, size, source.timestamp);
+                          stride, size, source.timestamp, source.format);
         return;
     }
 
@@ -419,14 +419,15 @@ void MultiScreenCaptureCoordinator::onScreenShmFrameReady(QScreen *screen, ExtCa
     const QByteArray frameData(static_cast<const char *>(data), static_cast<int>(size));
     frame->unmapBuffer();
     submitScreenFrame(screen, frameData, -1, -1, nullptr, width, height,
-                      stride, size, source.timestamp);
+                      stride, size, source.timestamp, source.format);
 }
 
 void MultiScreenCaptureCoordinator::submitScreenFrame(QScreen *screen, const QByteArray &frameData,
                                                       int shmBufferFd, int dmaBufferFd,
                                                       void *gbmBo, int width, int height,
                                                       int stride, size_t size,
-                                                      uint64_t timestamp)
+                                                      uint64_t timestamp,
+                                                      std::optional<uint32_t> shmFormat)
 {
     if (!screen || !m_capturing || !m_captureInFlight)
         return;
@@ -476,8 +477,8 @@ void MultiScreenCaptureCoordinator::submitScreenFrame(QScreen *screen, const QBy
         }
     } else if (shmBufferFd >= 0) {
         QString error;
-        if (!makeShmFrameSource(shmBufferFd, size, width, height, stride, timestamp,
-                                m_roundId, &input.shm, &error)) {
+        if (!shmFormat || !makeShmFrameSource(shmBufferFd, size, width, height, stride,
+                                              *shmFormat, timestamp, m_roundId, &input.shm, &error)) {
             qCWarning(dsrApp) << "MultiScreenCaptureCoordinator: failed to describe SHM frame for"
                               << targetLayout->name << ":" << error;
             return;
@@ -485,6 +486,7 @@ void MultiScreenCaptureCoordinator::submitScreenFrame(QScreen *screen, const QBy
     } else {
         input.isDma = false;
         input.cpuData = frameData;
+        input.cpuShmFormat = shmFormat;
         if (input.cpuData.isEmpty()) {
             qCWarning(dsrApp) << "MultiScreenCaptureCoordinator: empty CPU frame for output"
                               << targetLayout->name;
