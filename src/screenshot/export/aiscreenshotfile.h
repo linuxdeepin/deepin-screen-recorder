@@ -2,7 +2,8 @@
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
-#pragma once
+#ifndef AI_SCREENSHOT_FILE_H
+#define AI_SCREENSHOT_FILE_H
 
 #include <QDir>
 #include <QImage>
@@ -34,3 +35,5 @@ inline QString retainAiScreenshotPath(QTemporaryFile &file)
 }
 
 } // namespace Dsr::Screenshot
+
+#endif // AI_SCREENSHOT_FILE_H
