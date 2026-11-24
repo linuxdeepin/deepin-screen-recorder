@@ -55,6 +55,10 @@ public:
     void cancelInteraction() override;
     void clearContent() override;
     void undo() override;
+    void undoAll();
+    void deleteSelected();
+    void adjustSelected(const QString &direction);
+    void setShiftPressed(bool pressed);
     void render(QPainter &painter,
                 const QRect &globalSelection,
                 qreal pixelScale) const override;

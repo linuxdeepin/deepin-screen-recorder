@@ -1017,12 +1017,13 @@ void ScreenshotSessionController::onScrollStopRequested()
     requestScrollExport(ScrollExport::Save);
 }
 
-void ScreenshotSessionController::requestScrollExport(ScrollExport exportMode)
+void ScreenshotSessionController::requestScrollExport(ScrollExport exportMode, int aiFunction)
 {
     if (m_state != State::Scrolling || m_scrollStopping)
         return;
 
     m_scrollExport = exportMode;
+    m_scrollAiFunction = aiFunction;
     m_scrollStopping = true;
     m_state = State::Exporting;
     if (m_scrollResumeTimeout)
@@ -1249,6 +1250,30 @@ void ScreenshotSessionController::exportScrollResult()
         return;
     }
 
+    if (m_scrollExport != ScrollExport::Save) {
+        QString error;
+        bool sent = false;
+        switch (m_scrollExport) {
+        case ScrollExport::Ocr:
+            sent = m_resultSink->ocr(result, &error);
+            break;
+        case ScrollExport::Table:
+            sent = m_resultSink->tableRecognize(result, &error);
+            break;
+        case ScrollExport::AiAssistant:
+            sent = m_resultSink->aiAssistant(result, m_scrollAiFunction, &error);
+            break;
+        default:
+            break;
+        }
+        if (!sent) {
+            fail(error);
+            return;
+        }
+        finish(State::Completed);
+        return;
+    }
+
     QString path;
     QString error;
     bool cancelled = false;
@@ -1450,6 +1475,10 @@ void ScreenshotSessionController::onPinRequested()
 
 void ScreenshotSessionController::onOcrRequested()
 {
+    if (m_state == State::Scrolling) {
+        requestScrollExport(ScrollExport::Ocr);
+        return;
+    }
     if (m_finished || m_selection->geometry().isEmpty())
         return;
     if (m_state != State::Selecting && m_state != State::Editing)
@@ -1480,6 +1509,10 @@ void ScreenshotSessionController::onOcrRequested()
 
 void ScreenshotSessionController::onTableRecognizeRequested()
 {
+    if (m_state == State::Scrolling) {
+        requestScrollExport(ScrollExport::Table);
+        return;
+    }
     if (m_finished || m_selection->geometry().isEmpty())
         return;
     if (m_state != State::Selecting && m_state != State::Editing)
@@ -1511,6 +1544,10 @@ void ScreenshotSessionController::onTableRecognizeRequested()
 
 void ScreenshotSessionController::onAiAssistantRequested(int function)
 {
+    if (m_state == State::Scrolling) {
+        requestScrollExport(ScrollExport::AiAssistant, function);
+        return;
+    }
     if (m_finished || m_selection->geometry().isEmpty())
         return;
     if (m_state != State::Selecting && m_state != State::Editing)

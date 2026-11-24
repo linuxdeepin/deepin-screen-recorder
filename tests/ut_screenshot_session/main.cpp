@@ -19,6 +19,7 @@
 #include "screenshot/ports/isnaphintsource.h"
 #include "screenshot/ports/iwindowtagger.h"
 #include "screenshot/platform/treeland/recordingfiletransaction.h"
+#include "screenshot/platform/treeland/treelandmaskwindow.h"
 #include "screenshot/platform/treeland/treelandscrollcompositor.h"
 #include "ext-image-capture/framepumpworker.h"
 #include "screenshot/session/annotationcoordinator.h"
@@ -31,6 +32,7 @@
 
 #include <QColor>
 #include <QImage>
+#include <QLineEdit>
 #include <QPainter>
 #include <QPainterPath>
 #include <QSignalSpy>
@@ -1639,6 +1641,101 @@ private slots:
                                    tip,
                                    2.0),
                  QPoint(100, 145));
+    }
+
+    void maskDistinguishesPinFromPencilAndPreservesEditorInput()
+    {
+        TreelandMaskWindow mask(makeFrame(QRect(0, 0, 400, 300), Qt::white).output);
+        QSignalSpy tools(&mask, &TreelandMaskWindow::toolShortcutRequested);
+        QSignalSpy enter(&mask, &TreelandMaskWindow::enterRequested);
+        QLineEdit editor(&mask);
+        editor.hide();
+        mask.show();
+        mask.setFocus();
+
+        QTest::keyClick(&mask, Qt::Key_P, Qt::AltModifier);
+        QTest::keyClick(&mask, Qt::Key_P);
+        QCOMPARE(tools.size(), 2);
+        QCOMPARE(tools.at(0).at(0).toString(), QStringLiteral("pinScreenshots"));
+        QCOMPARE(tools.at(1).at(0).toString(), QStringLiteral("pen"));
+        QTest::keyClick(&mask, Qt::Key_Enter, Qt::KeypadModifier);
+        QCOMPARE(enter.size(), 1);
+
+        editor.show();
+        editor.setFocus();
+        QTRY_VERIFY(editor.hasFocus());
+        QTest::keyClick(&editor, Qt::Key_P);
+        QTest::keyClick(&editor, Qt::Key_Return);
+        QCOMPARE(editor.text(), QStringLiteral("p"));
+        QCOMPARE(tools.size(), 2);
+        QCOMPARE(enter.size(), 1);
+    }
+
+    void maskDoesNotCancelActiveRecordingOnEscape()
+    {
+        TreelandMaskWindow mask(makeFrame(QRect(0, 0, 400, 300), Qt::white).output);
+        QSignalSpy cancel(&mask, &TreelandMaskWindow::cancelRequested);
+        QSignalSpy stop(&mask, &TreelandMaskWindow::stopRecordingRequested);
+        mask.setRecordingMode(true, QRect(0, 0, 200, 200));
+
+        QTest::keyClick(&mask, Qt::Key_Escape);
+        QCOMPARE(cancel.size(), 0);
+        QTest::keyClick(&mask, Qt::Key_R, Qt::ControlModifier | Qt::AltModifier);
+        QCOMPARE(stop.size(), 1);
+
+        mask.setRecordingMode(false);
+        QTest::keyClick(&mask, Qt::Key_R, Qt::ControlModifier | Qt::AltModifier);
+        QCOMPARE(stop.size(), 1);
+        QTest::keyClick(&mask, Qt::Key_Escape);
+        QCOMPARE(cancel.size(), 1);
+    }
+
+    void controllerExportsLongImageToRecognitionOrAi_data()
+    {
+        QTest::addColumn<int>("operation");
+        QTest::newRow("ocr") << 0;
+        QTest::newRow("table") << 1;
+        QTest::newRow("ai") << 2;
+    }
+
+    void controllerExportsLongImageToRecognitionOrAi()
+    {
+        QFETCH(int, operation);
+        auto *backend = new FakeBackend;
+        backend->frames.virtualDesktopRect = QRect(0, 0, 800, 600);
+        backend->frames.outputs = {makeFrame(QRect(0, 0, 800, 600), Qt::red)};
+        auto *overlay = new FakeOverlay;
+        auto *sink = new FakeResultSink;
+        auto *capture = new FakeScrollCapture;
+        auto *merger = new FakeScrollMerger;
+        merger->result = QImage(200, 420, QImage::Format_ARGB32_Premultiplied);
+        merger->result.fill(Qt::blue);
+
+        ScreenshotSessionController controller(backend, overlay, nullptr, nullptr, sink);
+        controller.setScrollCapture(capture);
+        controller.setScrollMerger(merger);
+        Request request;
+        request.mode = Mode::Scroll;
+        request.enableWindowSnap = false;
+        request.initialRegion = QRect(100, 100, 200, 200);
+        QVERIFY(controller.start(request));
+        overlay->scrollStart();
+        QCOMPARE(controller.state(), ScreenshotSessionController::State::Scrolling);
+
+        switch (operation) {
+        case 0: overlay->ocr(); break;
+        case 1: overlay->tableRecognize(); break;
+        case 2: overlay->aiAssistant(3); break;
+        }
+        QTRY_COMPARE(controller.state(), ScreenshotSessionController::State::Completed);
+        QCOMPARE(sink->ocrCount, operation == 0 ? 1 : 0);
+        QCOMPARE(sink->tableRecognizeCount, operation == 1 ? 1 : 0);
+        QCOMPARE(sink->aiAssistantCount, operation == 2 ? 1 : 0);
+        if (operation == 2)
+            QCOMPARE(sink->aiAssistantFunction, 3);
+        QCOMPARE(sink->saveCount, 0);
+        QCOMPARE(sink->lastResult.image, merger->result);
+        QCOMPARE(sink->lastResult.globalSelection, QRect(100, 100, 200, 420));
     }
 
     void controllerStartsScrollAndSavesLongImage()
