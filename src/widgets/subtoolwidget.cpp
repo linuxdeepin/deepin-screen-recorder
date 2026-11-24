@@ -17,6 +17,7 @@
 #include "../utils/dbusutils.h"
 
 #include <QActionGroup>
+#include <QKeyEvent>
 #include "../main_window.h"
 #include "imagemenu.h"
 
@@ -2138,11 +2139,20 @@ QPoint SubToolWidget::getAiButtonGlobalCenter() const
 }
 
 // 屏蔽DMenu，触发QAction Trigger时，收回菜单
+#undef KeyPress
 bool SubToolWidget::eventFilter(QObject *watched, QEvent *event)
 {
 
 
     if (watched == m_recordOptionMenu || watched == m_optionMenu || watched == m_scrollOptionMenu || watched == m_saveToSpecialPathMenu || watched == m_scrollSaveToSpecialPathMenu) {
+        if (Utils::isTreelandMode && event->type() == QEvent::KeyPress) {
+            auto *key = static_cast<QKeyEvent *>(event);
+            if (key->key() == Qt::Key_F3 && key->modifiers() == Qt::NoModifier) {
+                if (!key->isAutoRepeat())
+                    static_cast<DMenu *>(watched)->hide();
+                return true;
+            }
+        }
         if (event->type() == QEvent::MouseButtonPress) {
             QAction *action = static_cast<DMenu *>(watched)->actionAt(static_cast<QMouseEvent *>(event)->pos());
             if (action) {
@@ -2252,8 +2262,10 @@ void SubToolWidget::shapeClickedFromWidget(QString shape)
             if (!m_scrollShotButton->isChecked())
                 m_scrollShotButton->click();
         } else if (shape == "ocr") {
-            if (!m_ocrButton->isChecked())
-                m_ocrButton->click();
+            auto *button = Utils::isTreelandMode && currentWidget() == m_scrollSubTool
+                    ? m_ocrScrollButton : m_ocrButton;
+            if (button && !button->isChecked())
+                button->click();
         } else if (shape == "tableRecogn") {
 #ifdef DSR_HAVE_TABLE_RECOGNIZER
             m_tableButton->click();
@@ -2298,7 +2310,12 @@ void SubToolWidget::shapeClickedFromWidget(QString shape)
             }
         } else if (shape == "aiassistant") {
             qCWarning(dsrApp) << "AI assistant mode: showing AI assistant tool.";
-            if (m_aiAssistantButton) {
+            if (Utils::isTreelandMode && currentWidget() == m_scrollSubTool) {
+                if (m_aiAssistantScrollButton && m_aiAssistantScrollButton->isVisible())
+                    m_aiAssistantScrollButton->click();
+            } else if (m_aiAssistantButton) {
+                if (Utils::isTreelandMode && !m_aiAssistantButton->isVisible())
+                    return;
                 if (!m_aiAssistantButton->isChecked())
                     m_aiAssistantButton->click();
             } else {

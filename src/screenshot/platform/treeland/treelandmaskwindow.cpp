@@ -9,15 +9,18 @@
 #include "../../../utils/baseutils.h"
 #include "../../../utils/log.h"
 
+#include <QAbstractSpinBox>
 #include <QApplication>
 #include <QCloseEvent>
 #include <QDebug>
 #include <QGuiApplication>
 #include <QKeyEvent>
 #include <QKeySequence>
+#include <QLineEdit>
 #include <QMouseEvent>
 #include <QPainter>
 #include <QPainterPath>
+#include <QPlainTextEdit>
 #include <QRegion>
 #include <QResizeEvent>
 #include <QScreen>
@@ -454,12 +457,14 @@ void TreelandMaskWindow::mousePressEvent(QMouseEvent *event)
         return;
     }
     const QPoint globalPos = toGlobal(eventPosition(event));
+    emit drawingModifiersChanged(event->modifiers());
     emit pointerPressed(globalPos);
     event->accept();
 }
 
 void TreelandMaskWindow::mouseMoveEvent(QMouseEvent *event)
 {
+    emit drawingModifiersChanged(event->modifiers());
     emit pointerMoved(toGlobal(eventPosition(event)));
     event->accept();
 }
@@ -471,6 +476,7 @@ void TreelandMaskWindow::mouseReleaseEvent(QMouseEvent *event)
         return;
     }
     const QPoint globalPos = toGlobal(eventPosition(event));
+    emit drawingModifiersChanged(event->modifiers());
     emit pointerReleased(globalPos);
     event->accept();
 }
@@ -487,12 +493,34 @@ void TreelandMaskWindow::mouseDoubleClickEvent(QMouseEvent *event)
 
 void TreelandMaskWindow::keyPressEvent(QKeyEvent *event)
 {
-    if (event->key() == Qt::Key_Escape) {
+    // Ignored key events from child editors can propagate to the mask.
+    for (QWidget *focus = QApplication::focusWidget(); focus && focus->window() == this;
+         focus = focus->parentWidget()) {
+        if (qobject_cast<QLineEdit *>(focus) || qobject_cast<QAbstractSpinBox *>(focus)
+                || qobject_cast<QPlainTextEdit *>(focus)) {
+            QWidget::keyPressEvent(event);
+            return;
+        }
+    }
+
+    const int key = event->key();
+    const Qt::KeyboardModifiers modifiers = event->modifiers() & ~Qt::KeypadModifier;
+    if (m_recordingMode) {
+        if (!event->isAutoRepeat() && key == Qt::Key_R
+                && modifiers == (Qt::ControlModifier | Qt::AltModifier)) {
+            emit stopRecordingRequested();
+            return;
+        }
+        QWidget::keyPressEvent(event);
+        return;
+    }
+
+    if (key == Qt::Key_Escape && modifiers == Qt::NoModifier) {
         emit cancelRequested();
         return;
     }
-    if (event->key() == Qt::Key_Return || event->key() == Qt::Key_Enter) {
-        emit copyRequested();
+    if ((key == Qt::Key_Return || key == Qt::Key_Enter) && modifiers == Qt::NoModifier) {
+        emit enterRequested();
         return;
     }
     if (event->matches(QKeySequence::Save)) {
@@ -503,36 +531,79 @@ void TreelandMaskWindow::keyPressEvent(QKeyEvent *event)
         emit copyRequested();
         return;
     }
-    if (event->modifiers() == Qt::AltModifier && event->key() == Qt::Key_O) {
-        emit ocrRequested();
-        return;
-    }
-    if (event->modifiers() == Qt::AltModifier && event->key() == Qt::Key_T) {
-        emit tableRecognizeRequested();
-        return;
-    }
     if (event->matches(QKeySequence::Undo)) {
         emit undoRequested();
         return;
     }
+    if (key == Qt::Key_Z && modifiers == (Qt::ControlModifier | Qt::ShiftModifier)) {
+        emit undoAllRequested();
+        return;
+    }
+    if ((key == Qt::Key_Delete || key == Qt::Key_Backspace) && modifiers == Qt::NoModifier) {
+        emit deleteAnnotationRequested();
+        return;
+    }
+    if (key == Qt::Key_F1 && modifiers == Qt::NoModifier) {
+        if (!event->isAutoRepeat())
+            emit helpRequested();
+        return;
+    }
+    if ((key == Qt::Key_Slash && modifiers == (Qt::ControlModifier | Qt::ShiftModifier))
+            || (key == Qt::Key_Question && (modifiers & ~Qt::ShiftModifier) == Qt::ControlModifier)) {
+        if (!event->isAutoRepeat())
+            emit shortcutPanelRequested();
+        return;
+    }
 
-    const Qt::KeyboardModifiers modifiers = event->modifiers();
+    const char *tool = nullptr;
+    if (modifiers == Qt::AltModifier) {
+        switch (key) {
+        case Qt::Key_P: tool = "pinScreenshots"; break;
+        case Qt::Key_A: tool = "aiassistant"; break;
+        case Qt::Key_S: tool = "sequence"; break;
+        case Qt::Key_I: tool = "scrollShot"; break;
+        case Qt::Key_O: tool = "ocr"; break;
+        case Qt::Key_T: tool = "tableRecogn"; break;
+        }
+    } else if (modifiers == Qt::NoModifier) {
+        switch (key) {
+        case Qt::Key_R: tool = "rect"; break;
+        case Qt::Key_O: tool = "circ"; break;
+        case Qt::Key_L: tool = "line"; break;
+        case Qt::Key_X: tool = "arrow"; break;
+        case Qt::Key_B: tool = "effect"; break;
+        case Qt::Key_P: tool = "pen"; break;
+        case Qt::Key_T: tool = "text"; break;
+        case Qt::Key_F3: tool = "option"; break;
+        case Qt::Key_C: tool = "camera"; break;
+        case Qt::Key_K: tool = "keyBoard"; break;
+        }
+    }
+    if (tool) {
+        if (!event->isAutoRepeat())
+            emit toolShortcutRequested(QString::fromLatin1(tool));
+        return;
+    }
+
+    if ((key == Qt::Key_Left || key == Qt::Key_Right || key == Qt::Key_Up || key == Qt::Key_Down)
+            && (modifiers == Qt::NoModifier || modifiers == Qt::ControlModifier
+                || modifiers == (Qt::ControlModifier | Qt::ShiftModifier))) {
+        emit arrowShortcutRequested(static_cast<Qt::Key>(key), modifiers);
+        return;
+    }
+
     if (modifiers == Qt::NoModifier) {
         QPoint delta;
-        switch (event->key()) {
-        case Qt::Key_Left:
+        switch (key) {
         case Qt::Key_A:
             delta = QPoint(-1, 0);
             break;
-        case Qt::Key_Right:
         case Qt::Key_D:
             delta = QPoint(1, 0);
             break;
-        case Qt::Key_Up:
         case Qt::Key_W:
             delta = QPoint(0, -1);
             break;
-        case Qt::Key_Down:
         case Qt::Key_S:
             delta = QPoint(0, 1);
             break;
@@ -541,13 +612,6 @@ void TreelandMaskWindow::keyPressEvent(QKeyEvent *event)
         }
         if (!delta.isNull()) {
             emit selectionMoveRequested(delta);
-            return;
-        }
-    } else if (modifiers == Qt::ControlModifier
-               || modifiers == (Qt::ControlModifier | Qt::ShiftModifier)) {
-        if (event->key() == Qt::Key_Left || event->key() == Qt::Key_Right
-                || event->key() == Qt::Key_Up || event->key() == Qt::Key_Down) {
-            emit selectionResizeRequested(static_cast<Qt::Key>(event->key()), modifiers);
             return;
         }
     }

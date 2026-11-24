@@ -49,14 +49,20 @@ signals:
     void pointerMoved(const QPoint &globalPos);
     void pointerReleased(const QPoint &globalPos);
     void pointerDoubleClicked(const QPoint &globalPos);
+    void drawingModifiersChanged(Qt::KeyboardModifiers modifiers);
     void selectionMoveRequested(const QPoint &delta);
-    void selectionResizeRequested(Qt::Key key, Qt::KeyboardModifiers modifiers);
+    void arrowShortcutRequested(Qt::Key key, Qt::KeyboardModifiers modifiers);
+    void enterRequested();
     void confirmRequested();
     void copyRequested();
-    void ocrRequested();
-    void tableRecognizeRequested();
+    void toolShortcutRequested(const QString &tool);
     void cancelRequested();
     void undoRequested();
+    void undoAllRequested();
+    void deleteAnnotationRequested();
+    void helpRequested();
+    void shortcutPanelRequested();
+    void stopRecordingRequested();
 
 protected:
     void paintEvent(QPaintEvent *event) override;

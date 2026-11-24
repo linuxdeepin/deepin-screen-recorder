@@ -127,9 +127,12 @@ private:
     void stopScrollCapture();
     enum class ScrollExport {
         Save,
-        Copy
+        Copy,
+        Ocr,
+        Table,
+        AiAssistant
     };
-    void requestScrollExport(ScrollExport exportMode);
+    void requestScrollExport(ScrollExport exportMode, int aiFunction = 0);
     void exportScrollResult();
     void stopRecordingCountdown();
     void startRecordingAfterCountdown();
@@ -190,6 +193,7 @@ private:
     QRect m_scrollSelection;
     QImage m_lastScrollPreview;
     ScrollExport m_scrollExport = ScrollExport::Save;
+    int m_scrollAiFunction = 0;
     QTimer *m_startDelayTimer = nullptr;
     QTimer *m_scrollStopTimeout = nullptr;
     QTimer *m_scrollTipHideTimeout = nullptr;

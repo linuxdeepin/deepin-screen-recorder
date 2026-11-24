@@ -494,6 +494,29 @@ bool TreelandAnnotationEditor::eventFilter(QObject *watched, QEvent *event)
     return IAnnotationEditor::eventFilter(watched, event);
 }
 
+void TreelandAnnotationEditor::undoAll()
+{
+    finishInlineEdit(true);
+    m_documentWidget->undoAllDrawShapes();
+}
+
+void TreelandAnnotationEditor::deleteSelected()
+{
+    if (hasSelectedContent())
+        m_documentWidget->deleteCurrentShape();
+}
+
+void TreelandAnnotationEditor::adjustSelected(const QString &direction)
+{
+    if (!isInteracting())
+        m_documentWidget->microAdjust(direction);
+}
+
+void TreelandAnnotationEditor::setShiftPressed(bool pressed)
+{
+    m_documentWidget->setShiftKeyPressed(pressed);
+}
+
 void TreelandAnnotationEditor::render(QPainter &painter,
                                       const QRect &globalSelection,
                                       qreal pixelScale) const

@@ -92,6 +92,10 @@ private:
     void hideMagnifier();
     qreal selectionPixelScale() const;
     void handleToolChanged(const QString &tool);
+    void handleToolShortcut(const QString &tool);
+    void handleArrowShortcut(Qt::Key key, Qt::KeyboardModifiers modifiers);
+    void showShortcutPanel();
+    void showHelp();
     void checkInputReady();
     void undoAnnotation();
     void ensureCameraMonitor();
@@ -115,12 +119,14 @@ private:
     CameraWidget *m_cameraWidget = nullptr;
     DevNumMonitor *m_cameraMonitor = nullptr;
     QString m_cameraDeviceName;
+    QString m_sideBarTool;
     QRect m_selection;
     QRect m_scrollSelection;
     QPoint m_globalCursor = QPoint(-1, -1);
     FrozenFrameSet m_frozenFrames;
     bool m_finalized = false;
     bool m_annotationToolActive = false;
+    bool m_aiToolActive = false;
     bool m_prepared = false;
     bool m_effectSourceReady = false;
     bool m_inputReadyPending = false;

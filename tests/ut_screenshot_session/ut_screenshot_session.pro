@@ -2,7 +2,7 @@
 #
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-QT += core gui widgets dbus testlib
+QT += core gui widgets dbus testlib waylandclient-private
 CONFIG += c++17 testcase console link_pkgconfig
 PKGCONFIG += dtk6widget dtk6gui dtk6core
 TARGET = ut_screenshot_session
@@ -11,7 +11,7 @@ INCLUDEPATH += ../../src /usr/include/opencv_mobile
 
 QMAKE_CXXFLAGS += -g -Wall -fprofile-arcs -ftest-coverage -O0
 QMAKE_LFLAGS += -g -Wall -fprofile-arcs -ftest-coverage -O0
-LIBS += -lopencv_small
+LIBS += -lopencv_small -lwayland-client
 
 SOURCES += \
     main.cpp \
@@ -23,9 +23,11 @@ SOURCES += \
     ../../src/screenshot/session/annotationcoordinator.cpp \
     ../../src/screenshot/session/screenshotsessioncontroller.cpp \
     ../../src/screenshot/platform/treeland/recordingfiletransaction.cpp \
+    ../../src/screenshot/platform/treeland/treelandmaskwindow.cpp \
     ../../src/screenshot/platform/treeland/treelandscrollcompositor.cpp \
     ../../src/ext-image-capture/framepumpworker.cpp \
     ../../src/recordertablet.cpp \
+    ../../src/utils/baseutils.cpp \
     ../../src/utils/configsettings.cpp \
     ../../src/utils/imageeffects.cpp \
     ../../src/utils/log.cpp \
@@ -55,6 +57,7 @@ HEADERS += \
     ../../src/screenshot/session/platformdetection.h \
     ../../src/screenshot/session/screenshotsessioncontroller.h \
     ../../src/screenshot/platform/treeland/recordingfiletransaction.h \
+    ../../src/screenshot/platform/treeland/treelandmaskwindow.h \
     ../../src/screenshot/platform/treeland/treelandscrollcompositor.h \
     ../../src/ext-image-capture/framepumpworker.h \
     ../../src/utils/configsettings.h \
