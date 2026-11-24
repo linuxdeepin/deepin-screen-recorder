@@ -1832,7 +1832,7 @@ void MainWindow::initScrollShot()
     connect(m_scrollShotTip, &ScrollShotTip::adjustCaptureArea, this, &MainWindow::onAdjustCaptureArea);
     // 选择提示类型
     m_scrollShotTip->showTip(TipType::StartScrollShotTip);
-    m_scrollShotTip->setBackgroundPixmap(m_backgroundPixmap);
+    m_scrollShotTip->setBackgroundPixmap(m_backgroundPixmap, QPoint());
     // 根据工具栏获取滚动截图提示框的坐标
     QPoint tipPosition = getScrollShotTipPosition();
     // 提示信息移动到指定位置
@@ -7357,7 +7357,7 @@ void MainWindow::onScrollShotMerageImgState(PixMergeThread::MergeErrorValue stat
     m_scrollShotTip->move(tipPosition);
     // 抓取当前提示的背景图
     QPixmap currentBackgroundPixmap = getPixmapofRect(m_backgroundRect);
-    m_scrollShotTip->setBackgroundPixmap(currentBackgroundPixmap);
+    m_scrollShotTip->setBackgroundPixmap(currentBackgroundPixmap, QPoint());
     // 显示提示
     m_scrollShotTip->show();
     // m_scrollShotTip->setVisible(true);

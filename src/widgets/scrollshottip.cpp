@@ -175,15 +175,30 @@ QPixmap ScrollShotTip::getTooltipBackground()
     const int radius = 10;
     int imgWidth = 0;
     int imgHeight = 0;
-    //qDebug() << "this->x(): " << this->x() << "this->y(): " << this->y() <<"this->width(): " << this->width() <<"this->height(): " << this->height() ;
 
-    //用当前提示窗口的位置和提示框的大小构建一个矩形框
-    QRect target(static_cast<int>(this->x()),
-                 static_cast<int>(this->y()),
-                 static_cast<int>(this->width()),
-                 static_cast<int>(this->height()));
-    QPixmap tmpImg = m_backgroundPixmap.copy(target);
-    //qDebug() << "tmpImg.width1(),tmpImg.height1()" << tmpImg.width() << "," << tmpImg.height();
+    auto ratio = qApp->devicePixelRatio();
+    QRect target;
+    QPixmap source;
+    if (m_backgroundPixmap.isNull()) {
+        // X11 path: parent owns the screenshot canvas, x()/y() are the
+        // coordinates expected by TempFile's fullscreen pixmap.
+        target = QRect(static_cast<int>(this->x() * ratio),
+                       static_cast<int>(this->y() * ratio),
+                       static_cast<int>(this->width() * ratio),
+                       static_cast<int>(this->height() * ratio));
+        source = TempFile::instance()->getFullscreenPixmap();
+    } else {
+        // TreeLand path: frozen output image is injected explicitly and
+        // positioned relative to the output origin.
+        const QPoint globalTopLeft = mapToGlobal(QPoint(0, 0));
+        const QPoint sourceTopLeft = globalTopLeft - m_backgroundGlobalOrigin;
+        target = QRect(static_cast<int>(sourceTopLeft.x() * ratio),
+                       static_cast<int>(sourceTopLeft.y() * ratio),
+                       static_cast<int>(this->width() * ratio),
+                       static_cast<int>(this->height() * ratio));
+        source = m_backgroundPixmap;
+    }
+    QPixmap tmpImg = source.copy(target);
 
     if (!tmpImg.isNull()) {
         qCDebug(dsrApp) << "Background pixmap is not null, scaling it.";
@@ -191,7 +206,6 @@ QPixmap ScrollShotTip::getTooltipBackground()
         imgHeight = tmpImg.height();
         tmpImg = tmpImg.scaled(imgWidth / radius, imgHeight / radius, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
         tmpImg = tmpImg.scaled(imgWidth, imgHeight, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
-        //qDebug() << "tmpImg.width(),tmpImg.height()" << tmpImg.width() << "," << tmpImg.height();
     } else {
         qCDebug(dsrApp) << "Background pixmap is null.";
     }
@@ -234,11 +248,11 @@ TipType ScrollShotTip::getTipType()
     return m_tipType;
 }
 
-void ScrollShotTip::setBackgroundPixmap(QPixmap &backgroundPixmap)
+void ScrollShotTip::setBackgroundPixmap(const QPixmap &pixmap, const QPoint &globalOrigin)
 {
     qCDebug(dsrApp) << "ScrollShotTip::setBackgroundPixmap called.";
-    m_backgroundPixmap = backgroundPixmap;
-
+    m_backgroundPixmap = pixmap;
+    m_backgroundGlobalOrigin = globalOrigin;
 }
 
 
