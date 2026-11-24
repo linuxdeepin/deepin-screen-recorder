@@ -93,3 +93,16 @@ void PinScreenShots::openImageAndName(QImage image, QString imageName, QPoint po
         qCWarning(dsrApp) << "Attempted to open invalid image with name:" << imageName;
     }
 }
+
+void PinScreenShots::openImageAtGeometry(QImage image, QString imageName, QRect geometry)
+{
+    if (image.isNull() || !geometry.isValid())
+        return;
+
+    auto *window = new MainWindow;
+    if (!window->openImageAtGeometry(image, imageName, geometry)) {
+        delete window;
+        return;
+    }
+    window->show();
+}

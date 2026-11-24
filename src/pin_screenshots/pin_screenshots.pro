@@ -6,7 +6,11 @@
 
 # Qt 模块配置
 equals(QT_MAJOR_VERSION, 6) {
-    QT += core gui widgets dbus
+    QT += core gui widgets dbus waylandclient-private
+    CONFIG += wayland-scanner
+    WAYLANDCLIENTSOURCES += $$PWD/../protocols/treeland-dde-shell/treeland-dde-shell-v2.xml
+    SOURCES += platform/treeland/treelandpinplacement.cpp
+    HEADERS += platform/treeland/treelandpinplacement.h
     
     # Qt6 specific configurations
     PKGCONFIG += dtk6widget dtk6core
@@ -130,5 +134,3 @@ RESOURCES += \
 
 INCLUDEPATH += ../utils
 INCLUDEPATH += ../widgets
-
-
