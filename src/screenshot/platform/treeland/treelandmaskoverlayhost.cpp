@@ -1566,16 +1566,25 @@ TreelandMaskWindow *TreelandMaskOverlayHost::windowForGlobalPoint(
 
 qreal TreelandMaskOverlayHost::selectionPixelScale() const
 {
-    qreal scale = 1.0;
-    for (const OutputFrame &frame : m_frozenFrames.outputs) {
-        if (frame.pixelScale <= 0.0)
-            continue;
-        if (m_selection.isEmpty()
-                || m_selection.intersects(frame.output.logicalGeometry)) {
-            scale = qMax(scale, frame.pixelScale);
+    if (m_selection.isEmpty()) {
+        for (const OutputFrame &frame : m_frozenFrames.outputs) {
+            if (frame.pixelScale <= 0.0)
+                continue;
+            return frame.pixelScale;
         }
+        return 1.0;
     }
-    return scale;
+
+    TreelandMaskWindow *owner = selectionOwnerWindow();
+    if (!owner)
+        return 1.0;
+
+    const QString &ownerId = owner->output().outputId;
+    for (const OutputFrame &frame : m_frozenFrames.outputs) {
+        if (frame.output.outputId == ownerId)
+            return frame.pixelScale > 0.0 ? frame.pixelScale : 1.0;
+    }
+    return 1.0;
 }
 
 void TreelandMaskOverlayHost::updateRoundedCornerWidget()

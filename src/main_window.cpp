@@ -223,7 +223,9 @@ void MainWindow::initMainWindow()
         m_pixelRatio = 1.0;
         qCDebug(dsrApp) << "Force resetting scale factor to 1.0";
     } else {
-        m_pixelRatio = qApp->primaryScreen()->devicePixelRatio();
+        QScreen *cursorScreen = QGuiApplication::screenAt(m_currentCursor);
+        m_pixelRatio = cursorScreen ? cursorScreen->devicePixelRatio()
+                                    : qApp->primaryScreen()->devicePixelRatio();
         qCDebug(dsrApp) << "Using system pixel ratio:" << m_pixelRatio;
     }
 
