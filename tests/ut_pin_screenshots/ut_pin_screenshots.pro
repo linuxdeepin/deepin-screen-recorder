@@ -9,6 +9,9 @@ CONFIG          += c++11 plugin link_pkgconfig
 PKGCONFIG += dtk6gui dtk6widget
 include(../../3rdparty/stub_linux/stub.pri)
 
+# memfd_create and F_ADD_SEALS used by the pin FD transfer tests.
+DEFINES += _GNU_SOURCE
+
 TARGET = ut_pin_screenshots
 
 QMAKE_CXXFLAGS += -g -Wno-error=deprecated-declarations -Wno-deprecated-declarations -Wall -fprofile-arcs -ftest-coverage -O0
@@ -49,6 +52,7 @@ SOURCES += \
 
 HEADERS += \
     ut_pin_screenshots.h \
+    ut_pin_geometry_receiver.h \
     ut_pin_settings.h \
     ut_pinsavemenumanager.h \
     ut_putils.h \
