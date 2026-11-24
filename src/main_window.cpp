@@ -9063,12 +9063,32 @@ void MainWindow::applyLockedRatioToSelection()
     const int maxWidth = leftEdge ? anchorRight : (m_backgroundRect.width() - dragRecordX);
     const int maxHeight = topEdge ? anchorBottom : (m_backgroundRect.height() - dragRecordY);
 
-    int newWidth = qMax(RECORD_MIN_SHOT_SIZE, recordWidth);
-    int newHeight = qMax(RECORD_MIN_SHOT_SIZE, recordHeight);
+    int newWidth = recordWidth;
+    int newHeight = recordHeight;
     if (widthDriven) {
-        newHeight = qMax(RECORD_MIN_SHOT_SIZE, qRound(newWidth / lockedRatio));
+        newWidth = qMax(RECORD_MIN_SHOT_SIZE, newWidth);
+        newHeight = qRound(newWidth / lockedRatio);
     } else {
-        newWidth = qMax(RECORD_MIN_SHOT_SIZE, qRound(newHeight * lockedRatio));
+        newHeight = qMax(RECORD_MIN_SHOT_SIZE, newHeight);
+        newWidth = qRound(newHeight * lockedRatio);
+    }
+
+    // 推导边触底时按比例抬升驱动边：宽度被夹到最小值后，高度若按比例算出小于
+    // 最小值，必须以高度为基准重新放大宽度，否则宽高各自夹取会让锁定比例退化成
+    // 1:1（例如 3:2 拖到最小变成 10×10，期望 15×10）。
+    if (newWidth < RECORD_MIN_SHOT_SIZE) {
+        newWidth = RECORD_MIN_SHOT_SIZE;
+        newHeight = qRound(newWidth / lockedRatio);
+    }
+    if (newHeight < RECORD_MIN_SHOT_SIZE) {
+        newHeight = RECORD_MIN_SHOT_SIZE;
+        newWidth = qRound(newHeight * lockedRatio);
+    }
+    if (newWidth < RECORD_MIN_SHOT_SIZE) {
+        newWidth = RECORD_MIN_SHOT_SIZE;
+    }
+    if (newHeight < RECORD_MIN_SHOT_SIZE) {
+        newHeight = RECORD_MIN_SHOT_SIZE;
     }
 
     // 限制在屏幕可用范围内，受限时按比例回退
