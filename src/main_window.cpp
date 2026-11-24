@@ -1,5 +1,5 @@
 // Copyright (C) 2020 ~ 2021 Uniontech Software Technology Co.,Ltd.
-// SPDX-FileCopyrightText: 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2022-2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -1854,8 +1854,27 @@ void MainWindow::fullScreenRecord(const QString fileName)
     this->setFixedSize(m_backgroundRect.size());
     recordX = 0;
     recordY = 0;
-    recordWidth = m_backgroundRect.width();
-    recordHeight = m_backgroundRect.height();
+    // m_screenSize mixes logical x/y with physical width/height (each screen's
+    // geometry().x() is logical but width is logical * scaleFactor), so under
+    // mixed DPI it does not equal the true physical desktop size.  Compute the
+    // physical desktop bounding rect the same way globalDeviceToLocalLogical()
+    // does: along the layout axis accumulate each screen's native (physical)
+    // size, on the non-layout axis convert the logical origin by the screen's
+    // own scale factor — the value x11grab needs.
+    int deviceOffset = 0;
+    int physLeft = 0, physTop = 0;
+    int physRight = 0, physBottom = 0;
+    for (const ScreenInfo &info : m_screenInfo) {
+        const int px = m_isScreenVertical ? static_cast<int>(info.x * info.scaleFactor) : deviceOffset;
+        const int py = m_isScreenVertical ? deviceOffset : static_cast<int>(info.y * info.scaleFactor);
+        physLeft = qMin(physLeft, px);
+        physTop = qMin(physTop, py);
+        physRight = qMax(physRight, px + info.width);
+        physBottom = qMax(physBottom, py + info.height);
+        deviceOffset += m_isScreenVertical ? info.height : info.width;
+    }
+    recordWidth = physRight - physLeft;
+    recordHeight = physBottom - physTop;
     updateToolBarPos();
     selectAreaName = fileName;
     startCountdown();
@@ -6336,11 +6355,14 @@ void MainWindow::startCountdown()
     if (recordY < 0) {
         recordY = 0;
     }
+    // Full-screen: recordX/Y/W/H are already physical pixels (computed in
+    // fullScreenRecord()).  Area/tablet: they are logical values that must be
+    // multiplied by m_pixelRatio to get physical pixels for x11grab.
     QRect recordRect {
-        static_cast<int>(recordX *m_pixelRatio/* + topLeft.x()*/),
-        static_cast<int>(recordY *m_pixelRatio/* + topLeft.y()*/),
-        static_cast<int>(recordWidth * m_pixelRatio),
-        static_cast<int>(recordHeight * m_pixelRatio)
+        static_cast<int>(m_isFullScreenRecord ? recordX : recordX *m_pixelRatio/* + topLeft.x()*/),
+        static_cast<int>(m_isFullScreenRecord ? recordY : recordY *m_pixelRatio/* + topLeft.y()*/),
+        static_cast<int>(m_isFullScreenRecord ? recordWidth : recordWidth * m_pixelRatio),
+        static_cast<int>(m_isFullScreenRecord ? recordHeight : recordHeight * m_pixelRatio)
     };
     qDebug() << "record rect:" << recordRect;
 
@@ -6382,8 +6404,17 @@ void MainWindow::startCountdown()
         //adjustLayout(countdownLayout, countdownTooltip->rect().width(), countdownTooltip->rect().height());
         //countdownTooltip->move(recordRect.x() + recordRect.width() / 2 - countdownTooltip->width() / 2, recordRect.y() + recordRect.height() / 2 - countdownTooltip->height() / 2);
 
-        countdownTooltip->move(static_cast<int>((recordRect.x() / m_pixelRatio + (recordRect.width() / m_pixelRatio  - countdownTooltip->width()) / 2)),
-                               static_cast<int>((recordRect.y() / m_pixelRatio + (recordRect.height() / m_pixelRatio - countdownTooltip->height()) / 2)));
+        if (m_isFullScreenRecord) {
+            // Fullscreen: recordRect is already physical, and m_pixelRatio is
+            // the primary screen's ratio — dividing by it is wrong under mixed
+            // DPI.  The window covers m_backgroundRect (logical virtual
+            // geometry), so centre the tooltip within it directly.
+            countdownTooltip->move(static_cast<int>((m_backgroundRect.width() - countdownTooltip->width()) / 2),
+                                   static_cast<int>((m_backgroundRect.height() - countdownTooltip->height()) / 2));
+        } else {
+            countdownTooltip->move(static_cast<int>((recordRect.x() / m_pixelRatio + (recordRect.width() / m_pixelRatio  - countdownTooltip->width()) / 2)),
+                                   static_cast<int>((recordRect.y() / m_pixelRatio + (recordRect.height() / m_pixelRatio - countdownTooltip->height()) / 2)));
+        }
 
 
         if (m_isFullScreenRecord) {
