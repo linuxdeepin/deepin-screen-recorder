@@ -373,3 +373,88 @@
   role: "MenuItem"
   source: "src/widgets/subtoolwidget.cpp"
   description: "录音源-系统声音选项"
+
+# --- Sequence Number Annotation Tool (new feature) ---
+# src/widgets/subtoolwidget.cpp
+- name: "sequence_button"
+  role: "Button"
+  source: "src/widgets/subtoolwidget.cpp"
+  description: "序号标注按钮（Alt+S）"
+
+# --- Table Recognition (screenshot mode, new feature) ---
+# src/widgets/subtoolwidget.cpp
+- name: "table_recognize_button"
+  role: "Button"
+  source: "src/widgets/subtoolwidget.cpp"
+  description: "表格识别按钮（截图模式）"
+
+# --- Rounded Corner & Size Ratio Panel (new feature) ---
+# src/widgets/roundedcornerwidget.cpp
+- name: "RoundedCornerButton"
+  role: "Button"
+  source: "src/widgets/roundedcornerwidget.cpp"
+  description: "圆角按钮"
+- name: "SizeRatioButton"
+  role: "Button"
+  source: "src/widgets/roundedcornerwidget.cpp"
+  description: "尺寸比例按钮"
+- name: "CornerRadiusSlider"
+  role: "Slider"
+  source: "src/widgets/roundedcornerwidget.cpp"
+  description: "圆角半径滑块"
+- name: "CornerRadiusSpinBox"
+  role: "SpinBox"
+  source: "src/widgets/roundedcornerwidget.cpp"
+  description: "圆角半径输入框"
+- name: "SizeRatioModeButton"
+  role: "Button"
+  source: "src/widgets/roundedcornerwidget.cpp"
+  description: "尺寸比例模式按钮"
+- name: "SelectionWidthEdit"
+  role: "Edit"
+  source: "src/widgets/roundedcornerwidget.cpp"
+  description: "选区宽度输入"
+- name: "SelectionHeightEdit"
+  role: "Edit"
+  source: "src/widgets/roundedcornerwidget.cpp"
+  description: "选区高度输入"
+- name: "SelectionSizeSeparator"
+  role: "Separator"
+  source: "src/widgets/roundedcornerwidget.cpp"
+  description: "选区尺寸分隔符"
+- name: "RatioLockButton"
+  role: "Button"
+  source: "src/widgets/roundedcornerwidget.cpp"
+  description: "比例锁定按钮"
+
+# --- Fine Adjust Tips (new feature) ---
+# src/widgets/fineadjusttips.cpp
+- name: "FineAdjustTips"
+  role: "Label"
+  source: "src/widgets/fineadjusttips.cpp"
+  description: "精细调整提示面板"
+
+# --- Pin Screenshot Table Recognition (new feature) ---
+# src/pin_screenshots/ui/subtoolwidget.cpp
+- name: "pin_table_but"
+  role: "Button"
+  source: "src/pin_screenshots/ui/subtoolwidget.cpp"
+  description: "贴图表格识别按钮"
+
+# src/pin_screenshots/ui/tableresultdialog.cpp
+- name: "pin_table_result_dialog"
+  role: "Dialog"
+  source: "src/pin_screenshots/ui/tableresultdialog.cpp"
+  description: "贴图表格识别结果对话框"
+- name: "table_result_illustration"
+  role: "Label"
+  source: "src/pin_screenshots/ui/tableresultdialog.cpp"
+  description: "表格识别结果说明图"
+- name: "table_result_message"
+  role: "Label"
+  source: "src/pin_screenshots/ui/tableresultdialog.cpp"
+  description: "表格识别结果消息文字"
+- name: "table_result_copy_button"
+  role: "Button"
+  source: "src/pin_screenshots/ui/tableresultdialog.cpp"
+  description: "表格识别结果-复制为Excel格式按钮"

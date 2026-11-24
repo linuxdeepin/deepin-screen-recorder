@@ -24,8 +24,8 @@
 metadata:
   generated_at: "2025-08-19T00:00:00"
   source: "统信桌面操作系统-V25-用例-截图录屏.xlsx"
-  total_cases: 316
-  total_suites: 64
+  total_cases: 327
+  total_suites: 75
 cases:
 - id: suite_screenshot_tools_geometric
   name: "截图工具栏-几何工具（矩形/圆形/箭头/画笔/马赛克/文字）"
@@ -562,6 +562,189 @@ cases:
       description: "快捷键面板显示"
     - step_type: "action"
       description: "关闭快捷键面板"
+
+
+# ============================================================
+# 模块 I: 截图新功能工具 (New Screenshot Tools)
+# ============================================================
+- id: suite_new_screenshot_tools_sequence_display
+  name: "截图工具栏-序号标注按钮显示"
+  module: "new_screenshot_tools"
+  status: "active"
+  annotation:
+    测试界面: "截图工具栏-序号标注按钮"
+    测试功能: "序号标注按钮显示"
+    前置条件: "Ctrl+Alt+A 启动截图，框选区域后工具栏显示"
+    AT元素引用: ["sequence_button"]
+  steps:
+    - step_type: "action"
+      description: "框选区域后验证序号标注按钮存在"
+    - step_type: "assert"
+      description: "序号标注按钮显示正常"
+
+- id: suite_new_screenshot_tools_sequence_click
+  name: "截图工具栏-点击序号标注按钮切换工具"
+  module: "new_screenshot_tools"
+  status: "active"
+  annotation:
+    测试界面: "截图工具栏-序号标注按钮"
+    测试功能: "序号标注工具切换"
+    前置条件: "Ctrl+Alt+A 启动截图，框选区域后工具栏显示"
+    AT元素引用: ["sequence_button"]
+  steps:
+    - step_type: "action"
+      description: "点击序号标注按钮切换工具"
+    - step_type: "assert"
+      description: "序号标注工具切换成功"
+
+- id: suite_new_screenshot_tools_table_recognize
+  name: "截图工具栏-表格识别按钮显示"
+  module: "new_screenshot_tools"
+  status: "active"
+  annotation:
+    测试界面: "截图工具栏-表格识别按钮"
+    测试功能: "表格识别按钮显示"
+    前置条件: "Ctrl+Alt+A 启动截图，框选区域后工具栏显示"
+    AT元素引用: ["table_recognize_button"]
+  steps:
+    - step_type: "action"
+      description: "框选区域后验证表格识别按钮存在"
+    - step_type: "assert"
+      description: "表格识别按钮显示正常"
+
+- id: suite_new_screenshot_tools_alt_s_shortcut
+  name: "截图工具栏-Alt+S快捷键切换序号标注工具"
+  module: "new_screenshot_tools"
+  status: "active"
+  annotation:
+    测试界面: "截图工具栏-序号标注按钮"
+    测试功能: "Alt+S快捷键切换序号标注工具"
+    前置条件: "Ctrl+Alt+A 启动截图，框选区域后工具栏显示"
+    AT元素引用: ["sequence_button"]
+  steps:
+    - step_type: "action"
+      description: "按Alt+S快捷键切换到序号标注工具"
+    - step_type: "assert"
+      description: "序号标注工具切换成功"
+
+# ============================================================
+# 模块 J: 截图圆角与尺寸比例面板 (Screenshot Corner Panel)
+# ============================================================
+- id: suite_screenshot_corner_panel_rounded_corner
+  name: "截图圆角面板-圆角按钮显示"
+  module: "screenshot_corner_panel"
+  status: "active"
+  annotation:
+    测试界面: "截图圆角面板"
+    测试功能: "圆角按钮显示"
+    前置条件: "Ctrl+Alt+A 启动截图，框选区域后工具栏显示"
+    AT元素引用: ["RoundedCornerButton"]
+  steps:
+    - step_type: "action"
+      description: "框选区域后验证圆角按钮存在"
+    - step_type: "assert"
+      description: "圆角按钮显示正常"
+
+- id: suite_screenshot_corner_panel_size_ratio
+  name: "截图尺寸比例面板-比例按钮显示"
+  module: "screenshot_corner_panel"
+  status: "active"
+  annotation:
+    测试界面: "截图尺寸比例面板"
+    测试功能: "比例按钮显示"
+    前置条件: "Ctrl+Alt+A 启动截图，框选区域后工具栏显示"
+    AT元素引用: ["SizeRatioButton"]
+  steps:
+    - step_type: "action"
+      description: "框选区域后验证比例按钮存在"
+    - step_type: "assert"
+      description: "比例按钮显示正常"
+
+- id: suite_screenshot_corner_panel_radius_controls
+  name: "截图圆角面板-点击圆角按钮后显示半径滑块和输入框"
+  module: "screenshot_corner_panel"
+  status: "active"
+  annotation:
+    测试界面: "截图圆角面板-半径控制区"
+    测试功能: "圆角半径滑块和输入框显示"
+    前置条件: "Ctrl+Alt+A 启动截图，框选区域后工具栏显示"
+    AT元素引用: ["RoundedCornerButton", "CornerRadiusSlider", "CornerRadiusSpinBox"]
+  steps:
+    - step_type: "action"
+      description: "点击圆角按钮"
+    - step_type: "assert"
+      description: "圆角半径滑块显示"
+    - step_type: "assert"
+      description: "圆角半径输入框显示"
+
+- id: suite_screenshot_corner_panel_size_controls
+  name: "截图尺寸比例面板-点击比例按钮后显示宽高输入和模式按钮"
+  module: "screenshot_corner_panel"
+  status: "active"
+  annotation:
+    测试界面: "截图尺寸比例面板-尺寸控制区"
+    测试功能: "宽高输入、模式按钮、比例锁定显示"
+    前置条件: "Ctrl+Alt+A 启动截图，框选区域后工具栏显示"
+    AT元素引用: ["SizeRatioButton", "SizeRatioModeButton", "SelectionWidthEdit", "SelectionHeightEdit", "RatioLockButton"]
+  steps:
+    - step_type: "action"
+      description: "点击比例按钮"
+    - step_type: "assert"
+      description: "尺寸比例模式按钮显示"
+    - step_type: "assert"
+      description: "选区宽度输入显示"
+    - step_type: "assert"
+      description: "选区高度输入显示"
+    - step_type: "assert"
+      description: "比例锁定按钮显示"
+
+- id: suite_screenshot_corner_panel_fine_adjust
+  name: "截图选区-精细调整提示面板显示"
+  module: "screenshot_corner_panel"
+  status: "active"
+  annotation:
+    测试界面: "截图选区-精细调整提示"
+    测试功能: "精细调整提示面板显示"
+    前置条件: "Ctrl+Alt+A 启动截图，框选区域后工具栏显示"
+    AT元素引用: ["FineAdjustTips"]
+  steps:
+    - step_type: "assert"
+      description: "精细调整提示面板显示正常"
+
+# ============================================================
+# 模块 K: 贴图表格识别 (Pin Table Recognition)
+# ============================================================
+- id: suite_pin_table_recognition_button_display
+  name: "贴图工具栏-表格识别按钮显示"
+  module: "pin_table_recognition"
+  status: "active"
+  annotation:
+    测试界面: "贴图工具栏-表格识别按钮"
+    测试功能: "贴图表格识别按钮显示"
+    前置条件: "Ctrl+Alt+A 启动截图，框选区域后点击贴图按钮"
+    AT元素引用: ["pinscreenshots_button", "pin_table_but"]
+  steps:
+    - step_type: "action"
+      description: "点击贴图按钮进入贴图模式"
+    - step_type: "assert"
+      description: "贴图表格识别按钮显示正常"
+
+- id: suite_pin_table_recognition_click_show_dialog
+  name: "贴图表格识别-点击按钮后显示结果对话框"
+  module: "pin_table_recognition"
+  status: "active"
+  annotation:
+    测试界面: "贴图表格识别结果对话框"
+    测试功能: "表格识别结果对话框和复制按钮显示"
+    前置条件: "贴图模式已启动，贴图工具栏已显示"
+    AT元素引用: ["pin_table_but", "pin_table_result_dialog", "table_result_copy_button"]
+  steps:
+    - step_type: "action"
+      description: "点击贴图表格识别按钮"
+    - step_type: "assert"
+      description: "表格识别结果对话框显示"
+    - step_type: "assert"
+      description: "复制为Excel格式按钮显示"
 
 # ============================================================
 # 非 GUI 用例（埋点检查）
