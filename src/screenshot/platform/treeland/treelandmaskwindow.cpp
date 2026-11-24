@@ -294,6 +294,9 @@ bool TreelandMaskWindow::prepareWindow()
     // is called synchronously by setVisible(true). surfaceRoleCreated is
     // emitted before the first wl_surface commit, so the tag must be sent from
     // that callback rather than after expose.
+    if (windowHandle()) {
+        windowHandle()->setProperty("_d_dwayland_window-type", "override");
+    }
     showFullScreen();
     return getXdgToplevel(windowHandle()) != nullptr;
 }
