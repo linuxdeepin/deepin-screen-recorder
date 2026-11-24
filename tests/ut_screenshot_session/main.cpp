@@ -1155,7 +1155,7 @@ private slots:
         QCOMPARE(right.at(2), QLineF(0, 160, 380, 160));
     }
 
-    void crossOutputSnapTargetUsesDominantOutput()
+    void crossOutputSnapTargetPreservesWindowBounds()
     {
         const QList<QRect> outputs = {
             QRect(0, 0, 1920, 1080),
@@ -1164,8 +1164,24 @@ private slots:
         const QRect resolved = SelectionOverlayGeometry::snapRegionForOutputs(
                 QRect(1904, -10, 1952, 1085), outputs);
 
-        QCOMPARE(resolved, QRect(1920, 0, 1920, 1080));
-        QVERIFY(!resolved.intersects(outputs.first()));
+        QCOMPARE(resolved, QRect(1904, 0, 1936, 1075));
+        QVERIFY(resolved.intersects(outputs.first()));
+        QVERIFY(resolved.intersects(outputs.last()));
+    }
+
+    void verticallyStackedCrossOutputSnapTargetPreservesWindowBounds()
+    {
+        const QList<QRect> outputs = {
+            QRect(0, 0, 1536, 864),
+            QRect(0, 864, 1920, 1080)
+        };
+        const QRect target(100, 700, 1000, 700);
+        const QRect resolved = SelectionOverlayGeometry::snapRegionForOutputs(
+                target, outputs);
+
+        QCOMPARE(resolved, target);
+        QVERIFY(resolved.intersects(outputs.first()));
+        QVERIFY(resolved.intersects(outputs.last()));
     }
 
     void singleOutputSnapTargetKeepsWindowBounds()
@@ -3167,7 +3183,7 @@ private slots:
         QVERIFY(overlay->finalized);
     }
 
-    void crossOutputCompositorSnapIsResolvedOnDominantOutput()
+    void crossOutputCompositorSnapPreservesWindowBounds()
     {
         FakeBackend *backend = new FakeBackend;
         backend->frames.virtualDesktopRect = QRect(0, 0, 3840, 1080);
@@ -3189,7 +3205,7 @@ private slots:
         QVERIFY(controller.start(request));
         snapHints->setRegion(QRect(1904, -10, 1952, 1085));
 
-        QCOMPARE(overlay->snapHint, QRect(1920, 0, 1920, 1080));
+        QCOMPARE(overlay->snapHint, QRect(1904, 0, 1936, 1075));
     }
 
     void overlayEditorPublishedDuringCreationIsBoundBeforeInput()
