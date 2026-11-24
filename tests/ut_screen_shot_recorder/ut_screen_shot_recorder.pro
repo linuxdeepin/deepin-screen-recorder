@@ -120,6 +120,7 @@ HEADERS += test_all_interfaces.h \
            #utils/ut_dbusutils.h \
            #utils/ut_desktopinfo.h \
            utils/ut_screengrabber.h \
+           utils/ut_treelandtoolbarplacement.h \
            utils/ut_shortcut.h \
            utils/ut_tempfile.h \
            utils/ut_utils_other.h \
@@ -134,6 +135,7 @@ HEADERS += test_all_interfaces.h \
         #../../src/utils/dbusutils.h \
         #../../src/utils/desktopinfo.h \
         ../../src/utils/screengrabber.h \
+        ../../src/utils/treelandtoolbarplacement.h \
         ../../src/utils/shortcut.h \
         ../../src/utils/tempfile.h \
         ../../src/utils/shapesutils.h \
@@ -391,6 +393,7 @@ SOURCES += main.cpp \
     ../../src/utils/borderprocessinterface.cpp \
     #../../src/utils/desktopinfo.cpp \
     ../../src/utils/screengrabber.cpp \
+    ../../src/utils/treelandtoolbarplacement.cpp \
     ../../src/utils/shortcut.cpp \
     ../../src/utils/tempfile.cpp \
     ../../src/utils/shapesutils.cpp \
