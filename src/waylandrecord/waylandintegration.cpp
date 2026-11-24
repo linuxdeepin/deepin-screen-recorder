@@ -1,5 +1,5 @@
 // Copyright © 2018 Red Hat, Inc
-// SPDX-FileCopyrightText: 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2022-2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -190,9 +190,15 @@ WaylandIntegration::WaylandIntegrationPrivate::WaylandIntegrationPrivate()
     m_bGetFrame = true;
     m_screenCount = 1;
     //m_recordTIme = -1;
+    m_ScreenDateBufFrames.resize(m_screenCount);
+    m_curNewImageScreenFrames.resize(m_screenCount);
+    m_lastScreenDatas.resize(m_screenCount);
+    m_currentScreenRects.resize(m_screenCount);
+    m_currentScreenBufs.resize(m_screenCount);
+    m_screenData.resize(m_screenCount);
+    m_isExistScreenData.resize(m_screenCount);
+    m_screenBufEverReceived.resize(m_screenCount);
     initScreenFrameBuffer();
-    m_currentScreenBufs[0] = nullptr;
-    m_currentScreenBufs[1] = nullptr;
 }
 
 WaylandIntegration::WaylandIntegrationPrivate::~WaylandIntegrationPrivate()
@@ -214,6 +220,14 @@ WaylandIntegration::WaylandIntegrationPrivate::~WaylandIntegrationPrivate()
         delete m_recordAdmin;
         m_recordAdmin = nullptr;
     }
+    for (int i = 0; i < m_screenData.size(); ++i) {
+        delete[] m_screenData[i];
+    }
+    m_screenData.clear();
+    for (int i = 0; i < m_lastScreenDatas.size(); ++i) {
+        delete[] m_lastScreenDatas[i]._frame;
+    }
+    m_lastScreenDatas.clear();
 }
 
 bool WaylandIntegration::WaylandIntegrationPrivate::isEGLInitialized() const
@@ -482,7 +496,36 @@ void WaylandIntegration::WaylandIntegrationPrivate::onDeviceChanged(quint32 name
             }
 
             m_screenId2Point.insert(devT->uuid(), devT->geometry());
-            m_screenCount = m_screenId2Point.size();
+            {
+                int newScreenCount = m_screenId2Point.size();
+                m_isAppendRemoteBuffer = false;
+                if (m_appendRemoteBufferFuture.isRunning()) {
+                    m_appendRemoteBufferFuture.waitForFinished();
+                }
+                QMutexLocker deviceLocker(&m_bGetScreenImageMutex);
+                for (int i = newScreenCount; i < m_currentScreenBufs.size(); ++i) {
+                    if (m_currentScreenBufs[i] != nullptr) {
+                        close(m_currentScreenBufs[i]->fd());
+                        m_currentScreenBufs[i]->release();
+                        m_currentScreenBufs[i] = nullptr;
+                    }
+                }
+                for (int i = newScreenCount; i < m_screenData.size(); ++i) {
+                    delete[] m_screenData[i];
+                }
+                for (int i = newScreenCount; i < m_lastScreenDatas.size(); ++i) {
+                    delete[] m_lastScreenDatas[i]._frame;
+                }
+                m_ScreenDateBufFrames.resize(newScreenCount);
+                m_curNewImageScreenFrames.resize(newScreenCount);
+                m_lastScreenDatas.resize(newScreenCount);
+                m_currentScreenRects.resize(newScreenCount);
+                m_currentScreenBufs.resize(newScreenCount);
+                m_screenData.resize(newScreenCount);
+                m_isExistScreenData.resize(newScreenCount);
+                m_screenBufEverReceived.resize(newScreenCount);
+                m_screenCount = newScreenCount;
+            }
 
             for (auto p = m_screenId2Point.begin(); p != m_screenId2Point.end(); ++p) {
                 if (devT->enabled() == KWayland::Client::OutputDevice::Enablement::Disabled){
@@ -594,9 +637,9 @@ void WaylandIntegration::WaylandIntegrationPrivate::processBufferHw(const KWayla
     //QString pngName = "/home/uos/Desktop/test/"+QDateTime::currentDateTime().toString(QLatin1String("hh:mm:ss.zzz ") + QString("%1_").arg(rect.x()));
     //QImage(mapData, width, height, QImage::Format_RGB32).copy().save(pngName + ".png");
     if (m_screenCount == 1 || !m_isScreenExtension) {
-        if (!m_isExistFirstScreenData) {
-            m_firstScreenData = new unsigned char[stride * height];
-            m_isExistFirstScreenData = true;
+        if (!m_isExistScreenData[0]) {
+            m_screenData[0] = new unsigned char[stride * height];
+            m_isExistScreenData[0] = true;
 #ifdef KWAYLAND_REMOTE_BUFFER_RELEASE_FLAGE_ON
             m_lastScreenDatas[0]._frame = new unsigned char[stride * height];
             m_lastScreenDatas[0]._width = width;
@@ -608,80 +651,64 @@ void WaylandIntegration::WaylandIntegrationPrivate::processBufferHw(const KWayla
         }
         //单屏
         //qDebug() << ">>>>>> new unsigned char: " << stride *height;
-        //memcpy(m_firstScreenData, mapData, stride * height);
-        copyBuffer(m_firstScreenData, mapData, rbuf);
+        //memcpy(m_screenData[0], mapData, stride * height);
+        copyBuffer(m_screenData[0], mapData, rbuf);
 #ifdef KWAYLAND_REMOTE_BUFFER_RELEASE_FLAGE_ON
         //memcpy(m_lastScreenDatas[0]._frame, mapData, stride * height);
         copyBuffer(m_lastScreenDatas[0]._frame, mapData, rbuf);
 #endif
         //qDebug() << ">>>>>> memcpy: " << stride *height;
         QMutexLocker locker(&m_bGetScreenImageMutex);
-        m_curNewImageData._frame = m_firstScreenData;
+        m_curNewImageData._frame = m_screenData[0];
         m_curNewImageData._width = width;
         m_curNewImageData._height = height;
         m_curNewImageData._format = QImage::Format_RGBA8888;
         m_curNewImageData._rect = QRect(0, 0, 0, 0);
-    } else if (m_screenCount == 2 && m_isScreenExtension) {
-        //避免重复开辟内存空间,采用固定数组减小数据访问复杂度。两个屏幕的数据大小可能不同，所以需要区分开
-        if (screenId == 0) {
-            if (!m_isExistFirstScreenData) {
-                m_firstScreenData = new unsigned char[stride * height];
-                m_isExistFirstScreenData = true;
+    } else if (m_screenCount >= 2 && m_isScreenExtension) {
+        //避免重复开辟内存空间,采用动态数组减小数据访问复杂度。多个屏幕的数据大小可能不同，所以需要区分开
+        if (screenId >= 0 && screenId < m_screenCount) {
+            if (!m_isExistScreenData[screenId]) {
+                m_screenData[screenId] = new unsigned char[stride * height];
+                m_isExistScreenData[screenId] = true;
 #ifdef KWAYLAND_REMOTE_BUFFER_RELEASE_FLAGE_ON
-                m_lastScreenDatas[0]._frame = new unsigned char[stride * height];
-                m_lastScreenDatas[0]._width = width;
-                m_lastScreenDatas[0]._height = height;
-                m_lastScreenDatas[0]._stride = height;
-                m_lastScreenDatas[0]._format = getImageFormat(rbuf->format());
-                m_lastScreenDatas[0]._rect = rect;
+                m_lastScreenDatas[screenId]._frame = new unsigned char[stride * height];
+                m_lastScreenDatas[screenId]._width = width;
+                m_lastScreenDatas[screenId]._height = height;
+                m_lastScreenDatas[screenId]._stride = height;
+                m_lastScreenDatas[screenId]._format = getImageFormat(rbuf->format());
+                m_lastScreenDatas[screenId]._rect = rect;
 #endif
             }
             //qDebug() << ">>>>>> memcpy1: " << stride *height;
-            //memcpy(m_firstScreenData, mapData, stride * height);
-            copyBuffer(m_firstScreenData, mapData, rbuf);
+            //memcpy(m_screenData[screenId], mapData, stride * height);
+            copyBuffer(m_screenData[screenId], mapData, rbuf);
 #ifdef KWAYLAND_REMOTE_BUFFER_RELEASE_FLAGE_ON
-            //memcpy(m_lastScreenDatas[0]._frame, mapData, stride * height);
-            copyBuffer(m_lastScreenDatas[0]._frame, mapData, rbuf);
+            //memcpy(m_lastScreenDatas[screenId]._frame, mapData, stride * height);
+            copyBuffer(m_lastScreenDatas[screenId]._frame, mapData, rbuf);
 #endif
             //qDebug() << ">>>>>> memcpy2: " << stride *height;
-            m_ScreenDateBufFrames[0]._frame = m_firstScreenData;
-            m_ScreenDateBufFrames[0]._width = width;
-            m_ScreenDateBufFrames[0]._height = height;
-            m_ScreenDateBufFrames[0]._format = getImageFormat(rbuf->format());
-            m_ScreenDateBufFrames[0]._rect = rect;
-            m_ScreenDateBufFrames[0]._flag = true;
-        } else {
-            if (!m_isExistSecondScreenData) {
-                m_secondScreenData = new unsigned char[stride * height];
-                m_isExistSecondScreenData = true;
-#ifdef KWAYLAND_REMOTE_BUFFER_RELEASE_FLAGE_ON
-                m_lastScreenDatas[1]._frame = new unsigned char[stride * height];
-                m_lastScreenDatas[1]._width = width;
-                m_lastScreenDatas[1]._height = height;
-                m_lastScreenDatas[1]._stride = height;
-                m_lastScreenDatas[1]._format = getImageFormat(rbuf->format());
-                m_lastScreenDatas[1]._rect = rect;
-#endif
-            }
-            //qDebug() << ">>>>>> memcpy1: " << stride *height;
-            //memcpy(m_secondScreenData, mapData, stride * height);
-            copyBuffer(m_secondScreenData, mapData, rbuf);
-#ifdef KWAYLAND_REMOTE_BUFFER_RELEASE_FLAGE_ON
-            //memcpy(m_lastScreenDatas[1]._frame, mapData, stride * height);
-            copyBuffer(m_lastScreenDatas[1]._frame, mapData, rbuf);
-#endif
-            //qDebug() << ">>>>>> memcpy2: " << stride *height;
-            m_ScreenDateBufFrames[1]._frame = m_secondScreenData;
-            m_ScreenDateBufFrames[1]._width = width;
-            m_ScreenDateBufFrames[1]._height = height;
-            m_ScreenDateBufFrames[1]._format = getImageFormat(rbuf->format());
-            m_ScreenDateBufFrames[1]._rect = rect;
-            m_ScreenDateBufFrames[1]._flag = true;
+            m_ScreenDateBufFrames[screenId]._frame = m_screenData[screenId];
+            m_ScreenDateBufFrames[screenId]._width = width;
+            m_ScreenDateBufFrames[screenId]._height = height;
+            m_ScreenDateBufFrames[screenId]._format = getImageFormat(rbuf->format());
+            m_ScreenDateBufFrames[screenId]._rect = rect;
+            m_ScreenDateBufFrames[screenId]._flag = true;
         }
 
-        if (m_ScreenDateBufFrames[0]._flag  && m_ScreenDateBufFrames[1]._flag) {
+        bool allFlagsSet = true;
+        for (int i = 0; i < m_screenCount; i++) {
+            if (!m_screenBufEverReceived[i]) {
+                qWarning() << "Screen" << i << "never produced a buffer, skipping in allFlagsSet";
+                continue;
+            }
+            if (!m_ScreenDateBufFrames[i]._flag) {
+                allFlagsSet = false;
+                break;
+            }
+        }
+        if (allFlagsSet) {
             QMutexLocker locker(&m_bGetScreenImageMutex);
-            for (int i = 0; i < 2; i++) {
+            for (int i = 0; i < m_screenCount; i++) {
                 m_curNewImageScreenFrames[i]._frame  = m_ScreenDateBufFrames[i]._frame  ;
                 m_curNewImageScreenFrames[i]._width  = m_ScreenDateBufFrames[i]._width  ;
                 m_curNewImageScreenFrames[i]._height = m_ScreenDateBufFrames[i]._height ;
@@ -691,24 +718,14 @@ void WaylandIntegration::WaylandIntegrationPrivate::processBufferHw(const KWayla
                 m_ScreenDateBufFrames[i]._flag = false;
             }
         }
-    } else {
-        qWarning() << "screen count > 2!!!";
     }
 #ifdef KWAYLAND_REMOTE_BUFFER_RELEASE_FLAGE_ON
-    if (screenId == 0) {
-        if(m_currentScreenBufs[0] != nullptr){
-            close(m_currentScreenBufs[0]->fd());
-            m_currentScreenBufs[0]->release();
-            m_currentScreenBufs[0] = nullptr;
-            //qDebug() << "m_currentScreenBufs[0] is release!";
-            m_mutex.unlock();
-        }
-    }else{
-        if(m_currentScreenBufs[1] != nullptr){
-            close(m_currentScreenBufs[1]->fd());
-            m_currentScreenBufs[1]->release();
-            m_currentScreenBufs[1] = nullptr;
-            //qDebug() << "m_currentScreenBufs[1] is release!";
+    if (screenId >= 0 && screenId < m_currentScreenBufs.size()) {
+        if(m_currentScreenBufs[screenId] != nullptr){
+            close(m_currentScreenBufs[screenId]->fd());
+            m_currentScreenBufs[screenId]->release();
+            m_currentScreenBufs[screenId] = nullptr;
+            //qDebug() << "m_currentScreenBufs[screenId] is release!";
             m_mutex.unlock();
         }
     }
@@ -728,27 +745,29 @@ void WaylandIntegration::WaylandIntegrationPrivate::copyScreenData(int screenId)
         m_curNewImageData._format = m_lastScreenDatas[0]._format;
         m_curNewImageData._rect = m_lastScreenDatas[0]._rect;
         m_curNewImageData._flag = true;
-    }else if(m_screenCount == 2 && m_isScreenExtension){
-        if(screenId ==0){
-            m_ScreenDateBufFrames[0]._frame = m_lastScreenDatas[0]._frame;
-            m_ScreenDateBufFrames[0]._width = m_lastScreenDatas[0]._width;
-            m_ScreenDateBufFrames[0]._height = m_lastScreenDatas[0]._height;
-            m_ScreenDateBufFrames[0]._format = m_lastScreenDatas[0]._format;
-            m_ScreenDateBufFrames[0]._rect = m_lastScreenDatas[0]._rect;
-            m_ScreenDateBufFrames[0]._flag = true;
-        }else{
-            m_ScreenDateBufFrames[1]._frame = m_lastScreenDatas[1]._frame;
-            m_ScreenDateBufFrames[1]._width = m_lastScreenDatas[1]._width;
-            m_ScreenDateBufFrames[1]._height = m_lastScreenDatas[1]._height;
-            m_ScreenDateBufFrames[1]._format = m_lastScreenDatas[1]._format;
-            m_ScreenDateBufFrames[1]._rect = m_lastScreenDatas[1]._rect;
-            m_ScreenDateBufFrames[1]._flag = true;
+    }else if(m_screenCount >= 2 && m_isScreenExtension){
+        if(screenId >= 0 && screenId < m_screenCount){
+            m_ScreenDateBufFrames[screenId]._frame = m_lastScreenDatas[screenId]._frame;
+            m_ScreenDateBufFrames[screenId]._width = m_lastScreenDatas[screenId]._width;
+            m_ScreenDateBufFrames[screenId]._height = m_lastScreenDatas[screenId]._height;
+            m_ScreenDateBufFrames[screenId]._format = m_lastScreenDatas[screenId]._format;
+            m_ScreenDateBufFrames[screenId]._rect = m_lastScreenDatas[screenId]._rect;
+            m_ScreenDateBufFrames[screenId]._flag = true;
         }
-        if (m_ScreenDateBufFrames[0]._flag  && m_ScreenDateBufFrames[1]._flag &&
-                m_lastScreenDatas[0]._frame != nullptr &&
-                m_lastScreenDatas[1]._frame != nullptr) {
+        bool allFlagsSet = true;
+        for (int i = 0; i < m_screenCount; i++) {
+            if (!m_screenBufEverReceived[i]) {
+                qWarning() << "Screen" << i << "never produced a buffer, skipping in allFlagsSet";
+                continue;
+            }
+            if (!m_ScreenDateBufFrames[i]._flag || m_lastScreenDatas[i]._frame == nullptr) {
+                allFlagsSet = false;
+                break;
+            }
+        }
+        if (allFlagsSet) {
             QMutexLocker locker(&m_bGetScreenImageMutex);
-            for (int i = 0; i < 2; i++) {
+            for (int i = 0; i < m_screenCount; i++) {
                 m_curNewImageScreenFrames[i]._frame  = m_ScreenDateBufFrames[i]._frame  ;
                 m_curNewImageScreenFrames[i]._width  = m_ScreenDateBufFrames[i]._width  ;
                 m_curNewImageScreenFrames[i]._height = m_ScreenDateBufFrames[i]._height ;
@@ -904,8 +923,16 @@ void WaylandIntegration::WaylandIntegrationPrivate::appendFrameToList()
             {
                 QMutexLocker locker(&m_bGetScreenImageMutex);
                 if (m_boardVendorType) {
-                    if (!m_curNewImageScreenFrames[0]._flag || !m_curNewImageScreenFrames[1]._flag) continue;
-                    for (int i = 0 ; i < 2 ; i++) {
+                    bool allFlagsSet = true;
+                    for (int i = 0; i < m_screenCount; i++) {
+                        if (!m_screenBufEverReceived[i]) {
+                            qWarning() << "Screen" << i << "never produced a buffer, skipping in appendFrameToList";
+                            continue;
+                        }
+                        if (!m_curNewImageScreenFrames[i]._flag) { allFlagsSet = false; break; }
+                    }
+                    if (!allFlagsSet) continue;
+                    for (int i = 0 ; i < m_screenCount ; i++) {
                         QImage tempImage = QImage(m_curNewImageScreenFrames[i]._frame,
                                                   static_cast<int>(m_curNewImageScreenFrames[i]._width),
                                                   static_cast<int>(m_curNewImageScreenFrames[i]._height),
@@ -1071,7 +1098,7 @@ void WaylandIntegration::WaylandIntegrationPrivate::setupRegistry()
                 }
 
 #ifdef KWAYLAND_REMOTE_BUFFER_RELEASE_FLAGE_ON
-                qDebug()<< "m_screenCount: "<< m_screenCount << "m_isScreenExtension: " << m_isScreenExtension << screenGeometry << "m_currentScreenBufs[0]->" <<  (m_currentScreenBufs[0] ? "true":"false") << "m_currentScreenBufs[1]->" << (m_currentScreenBufs[1] ? "true":"false");;
+                qDebug()<< "m_screenCount: "<< m_screenCount << "m_isScreenExtension: " << m_isScreenExtension << screenGeometry;
                 if (m_screenCount == 1 || !m_isScreenExtension)
                 {
                     if(m_currentScreenBufs[0] == nullptr)
@@ -1090,40 +1117,65 @@ void WaylandIntegration::WaylandIntegrationPrivate::setupRegistry()
 
                         qInfo() << "Single-How many frames of data are waiting? " << frameCount ;
                         frameCount = 0;
-                        QtConcurrent::run(this, &WaylandIntegrationPrivate::appendRemoteBuffer);
+                        m_appendRemoteBufferFuture = QtConcurrent::run(this, &WaylandIntegrationPrivate::appendRemoteBuffer);
                     }
-                }else if(m_screenCount == 2 && m_isScreenExtension){
-                    if(screenGeometry.x() == 0 /* && screenGeometry.y() == 0*/) // when two screen not aligned recorder may not record
-                    {
-                        if(m_currentScreenBufs[0] == nullptr)
-                        {
-                            m_isReleaseCurrentBuffer = false;
-                            m_currentScreenRects[0] = screenGeometry;
-                            m_currentScreenBufs[0] = rbuf;
-                            //qDebug() << "m_currentScreenBufs[0] is save! fd:" << rbuf->fd();
-                        }else{
-                            //qDebug() << "m_currentScreenBufs[0] m_isReleaseCurrentBuffer";
-                            m_isReleaseCurrentBuffer = true;
+                }else if(m_screenCount >= 2 && m_isScreenExtension){
+                    // Find screen index by matching screenGeometry against m_screenId2Point
+                    int screenIndex = -1;
+                    int idx = 0;
+                    for (auto it = m_screenId2Point.begin(); it != m_screenId2Point.end(); ++it, ++idx) {
+                        if (it.value() == screenGeometry) {
+                            screenIndex = idx;
+                            break;
                         }
-                    }else{
-                        if(m_currentScreenBufs[1] == nullptr)
+                    }
+                    if (screenIndex < 0) {
+                        // fallback: x()==0 maps to slot 0; otherwise find first
+                        // available null slot starting from 1 (non-overwrite)
+                        if (screenGeometry.x() == 0) {
+                            screenIndex = 0;
+                        } else {
+                            for (int i = 1; i < m_screenCount; i++) {
+                                if (m_currentScreenBufs[i] == nullptr) {
+                                    screenIndex = i;
+                                    break;
+                                }
+                            }
+                            if (screenIndex < 0) {
+                                qWarning() << "No available screen slot for geometry" << screenGeometry;
+                                screenIndex = 0;
+                            }
+                        }
+                    }
+                    if(screenIndex >= 0 && screenIndex < m_screenCount)
+                    {
+                        if(m_currentScreenBufs[screenIndex] == nullptr)
                         {
                             m_isReleaseCurrentBuffer = false;
-                            m_currentScreenBufs[1]  = rbuf;
-                            m_currentScreenRects[1] = screenGeometry;
-                            //qDebug() << "m_currentScreenBufs[1] is save! fd:" << rbuf->fd();
+                            m_currentScreenRects[screenIndex] = screenGeometry;
+                            m_currentScreenBufs[screenIndex] = rbuf;
+                            m_screenBufEverReceived[screenIndex] = true;
+                            //qDebug() << "m_currentScreenBufs[screenIndex] is save! fd:" << rbuf->fd();
                         }else{
-                            //qDebug() << "m_currentScreenBufs[1] m_isReleaseCurrentBuffer";
+                            //qDebug() << "m_currentScreenBufs[screenIndex] m_isReleaseCurrentBuffer";
                             m_isReleaseCurrentBuffer = true;
                         }
                     }
                     frameCount++;
-                    if((m_currentScreenBufs[0] != nullptr && m_currentScreenBufs[1] != nullptr) &&
-                            !m_isAppendRemoteBuffer){
+                    bool allBufsReady = true;
+                    int effectiveCount = 0;
+                    for (int i = 0; i < m_screenCount; i++) {
+                        if (!m_screenBufEverReceived[i])
+                            continue;
+                        effectiveCount++;
+                        if (m_currentScreenBufs[i] == nullptr) { allBufsReady = false; break; }
+                    }
+                    if (effectiveCount == 0) allBufsReady = false;
+                    if(allBufsReady && !m_isAppendRemoteBuffer){
                         m_isAppendRemoteBuffer = true;
-                        qInfo() << "Double-How many frames of data are waiting? " << frameCount ;
+                        qInfo() << "Multi-How many frames of data are waiting? " << frameCount ;
                         frameCount = 0;
-                        QtConcurrent::run(this, &WaylandIntegrationPrivate::appendRemoteBuffer);
+                        m_appendRemoteBufferFuture = QtConcurrent::run(this, &WaylandIntegrationPrivate::appendRemoteBuffer);
                     }
                 }
 #else
@@ -1145,20 +1197,30 @@ void WaylandIntegration::WaylandIntegrationPrivate::setupRegistry()
                         }
                     }
                 }
-                else if(m_screenCount == 2 && m_isScreenExtension){
+                else if(m_screenCount >= 2 && m_isScreenExtension){
+                    // Derive screenId from geometry matching m_screenId2Point
+                    screenId = -1;
+                    int idx = 0;
+                    for (auto it = m_screenId2Point.begin(); it != m_screenId2Point.end(); ++it, ++idx) {
+                        if (it.value() == screenGeometry) {
+                            screenId = idx;
+                            break;
+                        }
+                    }
+                    if (screenId < 0) {
+                        qWarning() << "No matching screen slot for geometry" << screenGeometry;
+                        screenId = 0;
+                    }
                     if (frameCount == 0) {
                         //第一帧画面的坐标不是从（0,0）开始，从第二帧开始取
                         if (screenGeometry.x() != 0 || screenGeometry.y() != 0) {
                             frameCount += 1;
                         }
                     }
-                    //抽帧（数据过来60帧，取一半）
-                    if (frameCount % 4 == 0) {
-                        screenId = 0;
-                    } else if ((frameCount - 1) % 4 == 0) {
-                        screenId = 1;
-                    }
-                    flag = (frameCount % 4 == 0) || (((frameCount - 1) != 0) && (frameCount - 1) % 4 == 0);
+                    //抽帧（数据过来60帧，取一半），N屏每N*2帧取N帧
+                    int period = m_screenCount * 2;
+                    int mod = frameCount % period;
+                    flag = (mod < m_screenCount);
                     frameCount++;
                     if (flag)
                     {
@@ -1320,30 +1382,24 @@ void WaylandIntegration::WaylandIntegrationPrivate::appendBuffer(unsigned char *
 
 void WaylandIntegration::WaylandIntegrationPrivate::initScreenFrameBuffer()
 {
-    m_ScreenDateBufFrames[0]._frame = nullptr;
-    m_ScreenDateBufFrames[0]._width = 0;
-    m_ScreenDateBufFrames[0]._height = 0;
-    m_ScreenDateBufFrames[0]._format =  QImage::Format_RGBA8888;
-    m_ScreenDateBufFrames[0]._rect = QRect(0, 0, 0, 0);
-    m_ScreenDateBufFrames[0]._flag = false;
-    m_ScreenDateBufFrames[1]._frame = nullptr;
-    m_ScreenDateBufFrames[1]._width = 0;
-    m_ScreenDateBufFrames[1]._height = 0;
-    m_ScreenDateBufFrames[1]._format =  QImage::Format_RGBA8888;
-    m_ScreenDateBufFrames[1]._rect = QRect(0, 0, 0, 0);
-    m_ScreenDateBufFrames[1]._flag = false;
-    m_curNewImageScreenFrames[0]._frame = nullptr;
-    m_curNewImageScreenFrames[0]._width = 0;
-    m_curNewImageScreenFrames[0]._height = 0;
-    m_curNewImageScreenFrames[0]._format =  QImage::Format_RGBA8888;
-    m_curNewImageScreenFrames[0]._rect = QRect(0, 0, 0, 0);
-    m_curNewImageScreenFrames[0]._flag = false;
-    m_curNewImageScreenFrames[1]._frame = nullptr;
-    m_curNewImageScreenFrames[1]._width = 0;
-    m_curNewImageScreenFrames[1]._height = 0;
-    m_curNewImageScreenFrames[1]._format =  QImage::Format_RGBA8888;
-    m_curNewImageScreenFrames[1]._rect = QRect(0, 0, 0, 0);
-    m_curNewImageScreenFrames[1]._flag = false;
+    for (int i = 0; i < m_screenCount; i++) {
+        if (i < m_ScreenDateBufFrames.size()) {
+            m_ScreenDateBufFrames[i]._frame = nullptr;
+            m_ScreenDateBufFrames[i]._width = 0;
+            m_ScreenDateBufFrames[i]._height = 0;
+            m_ScreenDateBufFrames[i]._format =  QImage::Format_RGBA8888;
+            m_ScreenDateBufFrames[i]._rect = QRect(0, 0, 0, 0);
+            m_ScreenDateBufFrames[i]._flag = false;
+        }
+        if (i < m_curNewImageScreenFrames.size()) {
+            m_curNewImageScreenFrames[i]._frame = nullptr;
+            m_curNewImageScreenFrames[i]._width = 0;
+            m_curNewImageScreenFrames[i]._height = 0;
+            m_curNewImageScreenFrames[i]._format =  QImage::Format_RGBA8888;
+            m_curNewImageScreenFrames[i]._rect = QRect(0, 0, 0, 0);
+            m_curNewImageScreenFrames[i]._flag = false;
+        }
+    }
 }
 
 void WaylandIntegration::WaylandIntegrationPrivate::appendRemoteBuffer()
@@ -1358,13 +1414,15 @@ void WaylandIntegration::WaylandIntegrationPrivate::appendRemoteBuffer()
         }else{
             copyScreenData(0);
         }
-        if(m_screenCount == 2 && m_isScreenExtension){
-            if(m_currentScreenBufs[1] != nullptr)
-            {
-                m_mutex.lock();
-                processBufferHw(m_currentScreenBufs[1] , m_currentScreenRects[1],1);
-            }else{
-                copyScreenData(1);
+        if(m_screenCount >= 2 && m_isScreenExtension){
+            for(int i = 1; i < m_screenCount; i++){
+                if(m_currentScreenBufs[i] != nullptr)
+                {
+                    m_mutex.lock();
+                    processBufferHw(m_currentScreenBufs[i] , m_currentScreenRects[i],i);
+                }else{
+                    copyScreenData(i);
+                }
             }
         }
     }
