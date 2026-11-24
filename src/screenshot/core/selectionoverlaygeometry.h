@@ -42,11 +42,10 @@ QList<QLineF> dashedFrameForOutput(const QRect &globalSelection,
                                    const QRect &outputGeometry);
 
 // Resolves a compositor snap target against the output layout. Treeland
-// reports one global rectangle for a window that crosses outputs. Keeping that
-// rectangle would paint fragments on an adjacent output and make a
-// bottom-aligned target stop outside the dominant output's edge. Cross-output
-// targets therefore fall back to the output with the largest visible overlap;
-// a target contained by one output keeps its exact bounds.
+// reports one global rectangle for a window that crosses outputs. Keep the
+// window's visible bounds by intersecting it with every output it covers and
+// uniting those intersections. This preserves cross-output window snapping
+// while excluding shadows or decorations outside the output layout.
 QRect snapRegionForOutputs(const QRect &globalRegion,
                            const QList<QRect> &outputGeometries);
 

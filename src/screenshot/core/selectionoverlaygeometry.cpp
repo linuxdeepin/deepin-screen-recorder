@@ -122,22 +122,17 @@ QRect snapRegionForOutputs(const QRect &globalRegion,
     if (region.isEmpty() || outputGeometries.isEmpty())
         return region;
 
-    int intersectingOutputs = 0;
-    QRect singleOutput;
+    QRect visibleRegion;
     for (const QRect &geometry : outputGeometries) {
         const QRect output = normalizedNonEmpty(geometry);
-        if (!region.intersects(output))
+        const QRect intersection = region.intersected(output);
+        if (intersection.isEmpty())
             continue;
-        ++intersectingOutputs;
-        singleOutput = output;
+        visibleRegion = visibleRegion.isNull()
+                ? intersection
+                : visibleRegion.united(intersection);
     }
-    if (intersectingOutputs == 0)
-        return region;
-    if (intersectingOutputs == 1)
-        return region.intersected(singleOutput);
-
-    const int owner = largestSelectionIntersectionIndex(region, outputGeometries);
-    return owner >= 0 ? normalizedNonEmpty(outputGeometries.at(owner)) : region;
+    return visibleRegion.isNull() ? region : visibleRegion;
 }
 
 QList<QPoint> handlesForOutput(const QRect &globalSelection,
