@@ -1,3 +1,21 @@
+deepin-screen-recorder (6.7.3) unstable; urgency=medium
+
+  * fix: preserve cross-output window snapping on Treeland
+  * test: cover Treeland pin file descriptor transfer
+  * fix: match pinned screenshot geometry on Treeland
+  * fix: restore in-app shortcuts on Treeland capture
+  * fix: keep the locked ratio when the selection reaches the minimum size
+  * fix: unify wl_shm format handling for Treeland capture
+  * style: use an include guard for AI screenshot files
+  * fix: use private temporary files for AI screenshots
+  * test: adapt camera tests to in-tree V4L2 handling
+  * refactor(camera): remove unused libcam modules and deps
+  * feat(camera): add in-tree V4L2 device handling
+  * test: align upstream unit tests and improve coverage
+  * [skip CI] Translate deepin-screen-recorder.ts in ru
+
+ -- dengzhongyuan <dengzhongyuan@uniontech.com>  Tue, 24 Nov 2026 22:20:59 +0800
+
 deepin-screen-recorder (6.7.2) unstable; urgency=medium
 
   * fix: correct text rendering and size input commit
