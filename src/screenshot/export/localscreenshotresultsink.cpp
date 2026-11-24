@@ -27,6 +27,7 @@
 #include <QDBusPendingCallWatcher>
 #include <QDir>
 #include <QEventLoop>
+#include <QFile>
 #include <QFileDialog>
 #include <QFileInfo>
 #include <QImage>
@@ -35,6 +36,10 @@
 #include <QScreen>
 #include <QStandardPaths>
 #include <QTimer>
+
+#include <fcntl.h>
+#include <sys/mman.h>
+#include <unistd.h>
 
 namespace Dsr::Screenshot {
 
@@ -244,6 +249,25 @@ Result applyConfiguredBorder(const Result &result)
 }
 
 constexpr int DBusServiceTimeoutMs = 15000;
+
+QDBusUnixFileDescriptor makePinImageFd(const QImage &image)
+{
+    const int fd = memfd_create("deepin-pin-screenshot", MFD_CLOEXEC | MFD_ALLOW_SEALING);
+    if (fd < 0)
+        return {};
+
+    QFile file;
+    if (!file.open(fd, QIODevice::WriteOnly, QFileDevice::AutoCloseHandle)) {
+        close(fd);
+        return {};
+    }
+    if (!image.save(&file, "PNG") || !file.flush()
+            || fcntl(fd, F_ADD_SEALS, F_SEAL_WRITE | F_SEAL_GROW | F_SEAL_SHRINK) < 0) {
+        return {};
+    }
+
+    return QDBusUnixFileDescriptor(fd);
+}
 
 bool waitForDBusService(const QDBusPendingCall &pendingCall,
                         const QString &serviceName,
@@ -488,11 +512,31 @@ bool LocalScreenshotResultSink::pin(const Result &result, QString *error)
     PinScreenShotsInterface pinInterface(QStringLiteral("com.deepin.PinScreenShots"),
                                          QStringLiteral("/com/deepin/PinScreenShots"),
                                          QDBusConnection::sessionBus());
-    const QDBusPendingReply<> reply = pinInterface.openImageAndName(
-            decorated.image,
-            defaultFileName(ScreenshotFormat::Png),
-            decorated.globalSelection.topLeft());
-    return waitForDBusService(reply, QStringLiteral("贴图服务"), error);
+    const QString name = defaultFileName(ScreenshotFormat::Png);
+    // Keep the selection's logical size and account for any border added in pixels.
+    const QSize selection = result.globalSelection.size();
+    const QSize logicalSize(qMax(1, qRound(qreal(decorated.image.width()) * selection.width() / result.image.width())),
+                            qMax(1, qRound(qreal(decorated.image.height()) * selection.height() / result.image.height())));
+    const QRect geometry(result.globalSelection.topLeft(), logicalSize);
+    if (!pinInterface.connection().connectionCapabilities().testFlag(QDBusConnection::UnixFileDescriptorPassing)) {
+        if (error)
+            *error = QStringLiteral("D-Bus 连接不支持传递文件描述符");
+        return false;
+    }
+    const auto fd = makePinImageFd(decorated.image);
+    if (!fd.isValid()) {
+        if (error)
+            *error = QStringLiteral("无法创建贴图 PNG 文件描述符");
+        return false;
+    }
+    const auto reply = pinInterface.openImageAtGeometry(fd, name, geometry);
+    if (!waitForDBusService(reply, QStringLiteral("贴图服务"), error))
+        return false;
+    if (reply.value())
+        return true;
+    if (error)
+        *error = QStringLiteral("贴图服务拒绝了 PNG 文件或窗口尺寸");
+    return false;
 }
 
 bool LocalScreenshotResultSink::ocr(const Result &result, QString *error)

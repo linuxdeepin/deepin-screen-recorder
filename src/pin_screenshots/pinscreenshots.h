@@ -7,6 +7,7 @@
 
 #include <QObject>
 #include <QImage>
+#include <QRect>
 class PinScreenShots : public QObject
 {
     Q_OBJECT
@@ -19,6 +20,7 @@ public:
     Q_INVOKABLE void openImage(QImage image);
 
     Q_INVOKABLE void openImageAndName(QImage image, QString imageName, QPoint point);
+    Q_INVOKABLE void openImageAtGeometry(QImage image, QString imageName, QRect geometry);
 
 #ifdef DSR_HAVE_TABLE_RECOGNIZER
     // 打开图片并进行表格识别

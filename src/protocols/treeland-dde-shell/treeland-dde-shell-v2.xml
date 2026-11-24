@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<protocol name="treeland_dde_shell_v2">
+    <copyright><![CDATA[
+SPDX-FileCopyrightText: 2026 UnionTech Software Technology Co., Ltd.
+SPDX-License-Identifier: MIT
+]]></copyright>
+
+    <description summary="DDE shell placement and window roles on Treeland">
+        Version 1 of the treeland_dde_shell_manager_v2 and shell surface interfaces.
+    </description>
+
+    <interface name="treeland_dde_shell_manager_v2" version="1">
+        <request name="destroy" type="destructor"/>
+        <request name="get_shell_surface">
+            <arg name="id" type="new_id" interface="treeland_dde_shell_surface_v2"/>
+            <arg name="surface" type="object" interface="wl_surface"/>
+        </request>
+    </interface>
+
+    <interface name="treeland_dde_shell_surface_v2" version="1">
+        <request name="destroy" type="destructor"/>
+        <request name="set_role">
+            <arg name="role" type="uint"/>
+        </request>
+        <request name="set_position_hint">
+            <description summary="suggest an initial position relative to an output">
+                The compositor may adjust the position to keep the window accessible.
+                A null output uses the primary output as the anchor.
+            </description>
+            <arg name="output" type="object" interface="wl_output" allow-null="true"/>
+            <arg name="x" type="int"/>
+            <arg name="y" type="int"/>
+        </request>
+        <request name="set_cursor_placement_hint">
+            <arg name="x_offset" type="int"/>
+            <arg name="y_offset" type="int"/>
+        </request>
+        <request name="set_skip_flags">
+            <arg name="flags" type="uint"/>
+        </request>
+        <request name="set_accept_keyboard_focus">
+            <arg name="accept" type="uint"/>
+        </request>
+    </interface>
+</protocol>

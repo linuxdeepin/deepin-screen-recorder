@@ -4,8 +4,14 @@
 
 #include "dbuspinscreenshotsadaptor.h"
 #include <QtCore/QMetaObject>
+#include <QFile>
 #include <QImage>
+#include <QImageReader>
+#include <QRect>
 #include "../../utils/log.h"
+
+#include <fcntl.h>
+#include <sys/stat.h>
 
 DbusPinScreenShotsAdaptor::DbusPinScreenShotsAdaptor(QObject *parent)
     : QDBusAbstractAdaptor(parent)
@@ -42,6 +48,32 @@ void DbusPinScreenShotsAdaptor::openImageAndName(QByteArray images, QString imag
     image.loadFromData(data);
     QMetaObject::invokeMethod(parent(), "openImageAndName", Q_ARG(QImage, image), Q_ARG(QString, imageName), Q_ARG(QPoint, point));
     qCDebug(dsrApp) << "Invoked openImageAndName method on parent object.";
+}
+
+bool DbusPinScreenShotsAdaptor::openImageAtGeometry(const QDBusUnixFileDescriptor &descriptor,
+                                                   const QString &imageName, const QRect &geometry)
+{
+    if (!descriptor.isValid() || !geometry.isValid())
+        return false;
+
+    const int fd = descriptor.fileDescriptor();
+    const int seals = fcntl(fd, F_GET_SEALS);
+    constexpr int RequiredSeals = F_SEAL_WRITE | F_SEAL_GROW | F_SEAL_SHRINK;
+    struct stat info {};
+    if (seals < 0 || (seals & RequiredSeals) != RequiredSeals
+            || fstat(fd, &info) != 0 || !S_ISREG(info.st_mode)
+            || info.st_size <= 0) {
+        return false;
+    }
+
+    // The received descriptor shares the sender's offset, which may be at EOF.
+    QFile file;
+    if (!file.open(fd, QIODevice::ReadOnly, QFileDevice::DontCloseHandle) || !file.seek(0))
+        return false;
+    QImageReader reader(&file, "PNG");
+    const QImage image = reader.read();
+    return !image.isNull() && QMetaObject::invokeMethod(parent(), "openImageAtGeometry",
+                            Q_ARG(QImage, image), Q_ARG(QString, imageName), Q_ARG(QRect, geometry));
 }
 
 #ifdef DSR_HAVE_TABLE_RECOGNIZER

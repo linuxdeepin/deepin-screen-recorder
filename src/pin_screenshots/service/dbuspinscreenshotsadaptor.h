@@ -34,6 +34,12 @@ class DbusPinScreenShotsAdaptor: public QDBusAbstractAdaptor
                 "      <arg direction=\"in\" type=\"s\" name=\"imageName\"/>\n"
                 "      <arg direction=\"in\" type=\"(ii)\" name=\"point\"/>\n"
                 "    </method>\n"
+                "    <method name=\"openImageAtGeometry\">\n"
+                "      <arg direction=\"in\" type=\"h\" name=\"fd\"/>\n"
+                "      <arg direction=\"in\" type=\"s\" name=\"imageName\"/>\n"
+                "      <arg direction=\"in\" type=\"(iiii)\" name=\"geometry\"/>\n"
+                "      <arg direction=\"out\" type=\"b\"/>\n"
+                "    </method>\n"
 #ifdef DSR_HAVE_TABLE_RECOGNIZER
                 "    <method name=\"openImageAndNameForTable\">\n"
                 "      <arg direction=\"in\" type=\"ay\" name=\"images\"/>\n"
@@ -56,6 +62,7 @@ public:
 public Q_SLOTS: // METHODS
     void openImage(QByteArray images);
     void openImageAndName(QByteArray images, QString imageName, QPoint point);
+    bool openImageAtGeometry(const QDBusUnixFileDescriptor &fd, const QString &imageName, const QRect &geometry);
 #ifdef DSR_HAVE_TABLE_RECOGNIZER
     void openImageAndNameForTable(QByteArray images, QString imageName, QPoint point);
 #endif

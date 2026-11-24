@@ -7,6 +7,7 @@
 #include "putils.h"
 #include "settings.h"
 #include "../utils/log.h"
+#include "platform/treeland/treelandpinplacement.h"
 
 #include <QDebug>
 #include <QDBusInterface>
@@ -123,10 +124,7 @@ bool MainWindow::openImage(const QImage &image)
 bool MainWindow::openImageAndName(const QImage &image, const QString &name, const QPoint &point)
 {
     qCDebug(dsrApp) << "Opening image with name and point. Name:" << name << ", Point:" << point;
-    m_image = image;
-    m_lastImagePath = name;
-    m_imageName = QString(tr("Screenshot") + "_%1").arg(QDateTime::currentDateTime().
-                                                        toString("yyyyMMddHHmmss"));
+    prepareImage(image, name);
     int width = static_cast<int>(m_image.width() / m_pixelRatio);
     int height = static_cast<int>(m_image.height() / m_pixelRatio);
     qCDebug(dsrApp) << "Image dimensions (scaled):" << width << "x" << height;
@@ -159,13 +157,49 @@ bool MainWindow::openImageAndName(const QImage &image, const QString &name, cons
     //移动到指定位置
     move(m_showPosition);
     qCDebug(dsrApp) << "Window moved to show position.";
+    updateImageGeometry();
+    return true;
+}
+
+bool MainWindow::openImageAtGeometry(const QImage &image, const QString &name, const QRect &geometry)
+{
+    if (image.isNull() || !geometry.isValid())
+        return false;
+
+    prepareImage(image, name);
+    m_showPosition = geometry.topLeft();
+    if (QScreen *screen = QGuiApplication::screenAt(m_showPosition))
+        setScreen(screen);
+    resize(geometry.size());
+    if (PUtils::isTreelandMode && QGuiApplication::platformName() == QLatin1String("wayland")) {
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+        createWinId();
+        if (!m_initialPlacement)
+            m_initialPlacement = Dsr::PinScreenshots::requestTreelandPinPlacement(windowHandle(), m_showPosition);
+#endif
+    } else {
+        move(m_showPosition);
+    }
+    qCDebug(dsrApp) << "Pin window logical geometry:" << QRect(m_showPosition, size());
+    updateImageGeometry();
+    return true;
+}
+
+void MainWindow::prepareImage(const QImage &image, const QString &name)
+{
+    m_image = image;
+    m_lastImagePath = name;
+    m_imageName = QString(tr("Screenshot") + "_%1").arg(QDateTime::currentDateTime().toString("yyyyMMddHHmmss"));
+}
+
+void MainWindow::updateImageGeometry()
+{
     update();
     proportion = static_cast<double>(this->width())  / this->height();
     qCDebug(dsrApp) << "Calculated proportion:" << proportion;
     m_isfirstTime = true; //解决119157Bug采用的标识
     updateToolBarPosition();// 更新位置
     qCDebug(dsrApp) << "Tool bar position updated.";
-    return true;
 }
 #ifdef DSR_HAVE_TABLE_RECOGNIZER
 // 表格识别
@@ -1276,5 +1310,3 @@ void MainWindow::saveToClipboard()
     // 发送通知
     sendNotify("", true);
 }
-
-

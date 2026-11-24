@@ -9,6 +9,7 @@
 #include <QtDBus/QtDBus>
 #include "../utils/log.h"
 #include <QImage>
+#include <QRect>
 
 class PinScreenShotsInterface: public QDBusAbstractInterface
 {
@@ -77,6 +78,12 @@ public Q_SLOTS: // METHODS
         data = qCompress(data, 9);
         data = data.toBase64();
         return asyncCall(QStringLiteral("openImageAndName"), QVariant::fromValue(data), imageName, point);
+    }
+
+    inline QDBusPendingReply<bool> openImageAtGeometry(const QDBusUnixFileDescriptor &fd,
+                                                      const QString &imageName, const QRect &geometry)
+    {
+        return asyncCall(QStringLiteral("openImageAtGeometry"), QVariant::fromValue(fd), imageName, geometry);
     }
 
     /*

@@ -26,6 +26,7 @@
 #include <QShortcut>
 #include <QTimer>
 #include <QMenu>
+#include <memory>
 
 DWIDGET_USE_NAMESPACE
 
@@ -71,6 +72,7 @@ public:
      * @return
      */
     bool openImageAndName(const QImage &image, const QString &name = "", const QPoint &point = QPoint(0, 0));
+    bool openImageAtGeometry(const QImage &image, const QString &name, const QRect &geometry);
 
 #ifdef DSR_HAVE_TABLE_RECOGNIZER
     /**
@@ -195,6 +197,9 @@ protected:
 #endif
 
 private:
+    void prepareImage(const QImage &image, const QString &name);
+    void updateImageGeometry();
+    std::unique_ptr<QObject> m_initialPlacement;
     /**
      * @brief 按下鼠标的位置
      */
