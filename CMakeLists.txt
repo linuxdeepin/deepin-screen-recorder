@@ -75,14 +75,20 @@ message(STATUS "  OCR / scroll capture   : ${DSR_ENABLE_OCR_SCROLL}")
 message(STATUS "  Legacy KF5 Wayland     : ${DSR_ENABLE_KF5_WAYLAND}")
 message(STATUS "  Table recognition      : ${DSR_ENABLE_TABLE_RECOGNIZER}")
 
+option(DSR_BUILD_TESTS "Build the unit and regression tests" OFF)
+if(DSR_BUILD_TESTS)
+    option(DSR_TEST_COVERAGE "Instrument unit tests for gcov/lcov" OFF)
+    find_package(Qt6 REQUIRED COMPONENTS Test)
+    enable_testing()
+    include(cmake/DSRTests.cmake)
+endif()
+
 add_subdirectory(src)
 add_subdirectory(src/pin_screenshots)
 add_subdirectory(src/dde-dock-plugins)
 
-option(DSR_BUILD_TESTS "Build the CMake-native regression tests" OFF)
 if(DSR_BUILD_TESTS)
-    enable_testing()
-    add_subdirectory(tests/startup)
+    add_subdirectory(tests)
 endif()
 
 include(cmake/DSRTranslations.cmake)

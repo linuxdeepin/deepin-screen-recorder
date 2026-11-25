@@ -4,8 +4,11 @@
 #
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-export DISPLAY=":0"
-export QT_QPA_PLATFORM=
+HERE=$(cd "$(dirname "$0")" && pwd) || exit 1
+source "$HERE/../../build-unit-test.sh"
+cd "$HERE/../.." || exit 1
+export DISPLAY="${DISPLAY:-:0}"
+export QT_QPA_PLATFORM="${QT_QPA_PLATFORM:-offscreen}"
 
 rm -rf ./ut_dde_dock_plugins/ut_shot_start_record/build-ut
 mkdir ./ut_dde_dock_plugins/ut_shot_start_record/build-ut
@@ -15,9 +18,7 @@ cd ./ut_dde_dock_plugins/ut_shot_start_record/build-ut
 mkdir -p html
 mkdir -p report
 
-export QT_SELECT=qt6
-qmake6 ../
-make -j4
+dsr_build_unit_test "$PWD" ut_shot_start_record || exit 1
 
 executable=ut_shot_start_record #可执行程序的文件名
 
@@ -25,14 +26,13 @@ executable=ut_shot_start_record #可执行程序的文件名
 extract_info="*/dde-dock-plugins/*" #针对当前目录进行覆盖率操作
 remove_info="*tests* *build-ut*" #排除当前目录进行覆盖率操作
 
-ASAN_OPTIONS="fast_unwind_on_malloc=1"
-./${executable} --gtest_output=xml:report/report_${executable}.xml
+test_status=0
+ASAN_OPTIONS="fast_unwind_on_malloc=1" "./$executable" \
+    --gtest_output="xml:report/report_${executable}.xml" || test_status=$?
 
 lcov -d . -c -o ${executable}_coverage.info
 
 lcov --extract ./${executable}_coverage.info ${extract_info} --output-file  ${executable}_coverage.info
-
-lcov --list-full-path -e ${executable}_coverage.info –o ./coverage-stripped.info
 
 # genhtml 和 cp 由主脚本 test-prj-running.sh 统一处理（合并所有模块 .info 后生成一份整体 HTML 报告），
 # 此处仅复制 JUnit XML 报告供 CI 统计用例数。
@@ -40,5 +40,4 @@ cp -r ./report/ ../../../../build-ut 2>/dev/null || true
 # 收集 ASAN 日志（若存在）
 cp ./asan_${executable}.log ../../../../build-ut 2>/dev/null || true
 
-exit 0
-
+exit "$test_status"

@@ -4,8 +4,11 @@
 #
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-export DISPLAY=":0"
-export QT_QPA_PLATFORM=
+HERE=$(cd "$(dirname "$0")" && pwd) || exit 1
+source "$HERE/../build-unit-test.sh"
+cd "$HERE/.." || exit 1
+export DISPLAY="${DISPLAY:-:0}"
+export QT_QPA_PLATFORM="${QT_QPA_PLATFORM:-offscreen}"
 
 export QT_LOGGING_RULES="qt.qpa.xcb.xcberror=false"
 export QT_LOGGING_RULES="qt.qpa.xcb.*=false"
@@ -16,12 +19,10 @@ rm -rf ./ut_screen_shot_recorder/build-ut
 mkdir ./ut_screen_shot_recorder/build-ut
 
 cd ./ut_screen_shot_recorder/build-ut
-export QT_SELECT=qt6
-qmake6 ../
-make -j4
+dsr_build_unit_test "$PWD" ut_screen_shot_recorder || exit 1
 
 #workdir=$(cd ../../$(dirname $0)/build-filemanager-unknown-Debug/test; pwd)
-workdir=$(cd ../../$(dirname $0)/build-ut; pwd)
+workdir="$PWD"
 executable=ut_screen_shot_recorder #可执行程序的文件名
 
 #下面是覆盖率目录操作，一种正向操作，一种逆向操作
@@ -38,14 +39,16 @@ ASAN_OPTIONS="fast_unwind_on_malloc=1:disable_coredump=1:abort_on_error=0"
 # only loses its own gcda instead of poisoning the whole run. gcda counters
 # accumulate across processes. Slow/hang-prone tests are skipped for coverage
 # but still counted in the report (marked as error).
-test_list=$build_dir/${executable}_tests.txt
-$build_dir/$executable --gtest_list_tests > $test_list 2>/dev/null
+test_list="$build_dir/${executable}_tests.txt"
+"$build_dir/$executable" --gtest_list_tests > "$test_list" || exit 1
 # 所有原先的过滤规则（SKIP_TESTS 跳过清单）已移除：每个用例都实际执行，
 # 崩/hang 的用例由 per-case timeout 兜底，不再以 skip(77) 方式过滤。
 # 逐用例生成 JUnit XML 报告（供 CI 统计用例数）；崩/hang 用例无 XML，合并时标记为 error。
-mkdir -p "$build_dir/report_individual"
+mkdir -p "$build_dir/report_individual" "$build_dir/report"
 : > "$build_dir/ssr_results.tsv"
 last_suite=""
+test_status=0
+test_count=0
 while IFS= read -r line; do
   case "$line" in
     " "*)
@@ -55,13 +58,17 @@ while IFS= read -r line; do
       safe_name="${tname//[^A-Za-z0-9_]/_}"
       timeout 25 $build_dir/$executable --gtest_filter="$tname" \
         --gtest_output=xml:"report_individual/${safe_name}.xml" >/dev/null 2>&1
-      printf '%s\t%d\n' "$tname" "$?" >> "$build_dir/ssr_results.tsv"
+      rc=$?
+      test_count=$((test_count+1))
+      [ "$rc" -eq 0 ] || test_status=1
+      printf '%s\t%d\n' "$tname" "$rc" >> "$build_dir/ssr_results.tsv"
       ;;
     *)
       last_suite="$line"
       ;;
   esac
-done < $test_list
+done < "$test_list"
+[ "$test_count" -gt 0 ] || { echo "[ERROR] No recorder unit tests found." >&2; exit 1; }
 
 # 合并逐用例 XML 报告为单一 JUnit XML（供 CI 统计全部用例数）。
 # 崩/hang/skip 用例无 XML，按退出码标记为 error，确保用例总数完整。
@@ -141,6 +148,7 @@ for sname, tests in sorted(suites.items()):
 ET.ElementTree(root).write(out_path, encoding='UTF-8', xml_declaration=True)
 print(f"[INFO] 合并 ssr 报告：{total} 用例，{total_fail} 失败，{total_err} 错误 -> {out_path}")
 PYEOF
+[ "$?" -eq 0 ] || test_status=1
 
 lcov -d $build_dir -c -o $build_dir/coverage.info
 
@@ -151,7 +159,6 @@ lcov --remove $build_dir/coverage.info $remove_info --output-file $build_dir/cov
 # proxyaudioport/camerawatcher/event_monitor 等整文件排除）已全部移除。
 # 现在覆盖率统计覆盖 src/ 下全部源码，不再过滤任何生产源码文件，
 # 以真实反映函数覆盖率，驱动补全单测达成 100% 函数覆盖目标。
-lcov --list-full-path -e $build_dir/coverage.info –o $build_dir/coverage-stripped.info
 
 genhtml -o $result_coverage_dir $build_dir/coverage.info
 
@@ -163,4 +170,4 @@ cp $build_dir/asan_ut_screen_shot_recorder.log.* ../../../build-ut/asan_ut_scree
 #nohup x-www-browser $result_report_dir &
  
 #lcov -d $build_dir –z
-exit 0
+exit "$test_status"

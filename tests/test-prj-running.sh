@@ -22,6 +22,7 @@ HERE=$(cd "$(dirname "$0")" && pwd)        # .../tests
 # --gtest_list_tests 等子进程在 dxcb 平台初始化时 SEGV → 收集到 0 个用例。
 cd "$HERE" || exit 1
 ROOT=$(cd "$HERE/.." && pwd)               # 仓库根
+source "$HERE/build-unit-test.sh"
 OUT="$ROOT/build-ut"
 SSR_TEST_TIMEOUT="${SSR_TEST_TIMEOUT:-75}"
 
@@ -59,21 +60,21 @@ rm -rf "$SSR_DIR"
 mkdir -p "$SSR_DIR"
 # ssr 编译失败不再静默跳过：仍继续运行其余模块以产出部分覆盖率，但整体退出码
 # 置非 0，避免 CI 上"用例数骤减/主工程用例全部缺失"被 exit 0 掩盖。
-SSR_BUILD_FAILED=0
-(
-    cd "$SSR_DIR" || exit 1
-    export QT_SELECT=qt6
-    qmake6 ../
-    make -j4
-) || { SSR_BUILD_FAILED=1; echo "[ERROR] ut_screen_shot_recorder 编译失败，其用例将全部缺失（仍继续其余模块以产出部分覆盖率）。" >&2; }
+TEST_FAILED=0
+dsr_build_unit_test "$SSR_DIR" ut_screen_shot_recorder \
+    || { TEST_FAILED=1; echo "[ERROR] ut_screen_shot_recorder 编译失败，其用例将全部缺失（仍继续其余模块以产出部分覆盖率）。" >&2; }
 
 # 1.5) 逐用例隔离运行 ssr（规避崩/hang 丢覆盖；.gcda 跨用例累积）
 SSR_BIN="$SSR_DIR/ut_screen_shot_recorder"
 if [ -x "$SSR_BIN" ]; then
     find "$SSR_DIR" -name "*.gcda" -delete 2>/dev/null
-    mapfile -t SSR_TESTS < <("$SSR_BIN" --gtest_list_tests 2>/dev/null | awk '
+    mapfile -t SSR_TESTS < <(QT_QPA_PLATFORM=offscreen "$SSR_BIN" --gtest_list_tests 2>/dev/null | awk '
         /^[A-Za-z0-9_]+.*\.$/{s=$0; sub(/\.$/, "", s)}
         /^  [A-Za-z0-9_]+/{gsub(/^ +/, ""); print s"."$0}')
+    if [ "${#SSR_TESTS[@]}" -eq 0 ]; then
+        TEST_FAILED=1
+        echo "[ERROR] 未发现 ut_screen_shot_recorder 用例。" >&2
+    fi
     ssr_ok=0; ssr_bad=0
     # 逐用例生成 JUnit XML 报告（供 CI 统计用例数）；崩/hang 用例无 XML，合并时标记为 error。
     mkdir -p "$SSR_DIR/report_individual"
@@ -92,7 +93,10 @@ if [ -x "$SSR_BIN" ]; then
         # 失败用例即时回显到主日志：逐用例输出已重定向 /dev/null，不回显的话
         # CI 日志只有汇总计数，定位失败必须人工到机器上翻 XML/tsv。
         # rc=1 断言失败；rc=124 超时 hang；rc=134/139 等为崩溃。
-        [ "$rc" -ne 0 ] && echo "[FAIL] $t rc=$rc"
+        if [ "$rc" -ne 0 ]; then
+            TEST_FAILED=1
+            echo "[FAIL] $t rc=$rc"
+        fi
         printf '%s\t%d\n' "$t" "$rc" >> "$SSR_DIR/ssr_results.tsv"
     done
     echo "[INFO] ssr 逐用例：$ssr_ok 正常退出，$ssr_bad 崩/hang 跳过（共 ${#SSR_TESTS[@]} 个）。"
@@ -176,9 +180,10 @@ for sname, tests in sorted(suites.items()):
 ET.ElementTree(root).write(out_path, encoding='UTF-8', xml_declaration=True)
 print(f"[INFO] 合并 ssr 报告：{total} 用例，{total_fail} 失败，{total_err} 错误 -> {out_path}")
 PYEOF
+    [ "$?" -eq 0 ] || TEST_FAILED=1
 else
     echo "[ERROR] ssr 二进制不存在，跳过其运行（仅 recordtime 覆盖）。" >&2
-    SSR_BUILD_FAILED=1
+    TEST_FAILED=1
 fi
 
 # 2) 编译 + 运行 dock 插件测试（ut_record_time + ut_shot_start + ut_shot_start_record）
@@ -186,15 +191,17 @@ fi
 # （由本主脚本统一合并 .info 后生成一份整体 HTML 报告）
 for mod in ut_record_time ut_shot_start ut_shot_start_record; do
     echo "[INFO] 运行 dock 插件子模块：$mod"
-    ( cd "$HERE" && ./ut_dde_dock_plugins/"$mod"/build_run_ut.sh ) || echo "[WARN] $mod 运行失败，继续后续模块。"
+    "$HERE/ut_dde_dock_plugins/$mod/build_run_ut.sh" \
+        || { TEST_FAILED=1; echo "[WARN] $mod 运行失败，继续后续模块。"; }
 done
 
 # 2.5) 编译 + 运行 ut_pin_screenshots（贴图模块单元测试）
-( cd "$HERE" && ./ut_pin_screenshots/build_run_ut.sh ) || echo "[WARN] ut_pin_screenshots 运行失败，继续。"
+"$HERE/ut_pin_screenshots/build_run_ut.sh" \
+    || { TEST_FAILED=1; echo "[WARN] ut_pin_screenshots 运行失败，继续。"; }
 
 # 2.6) 编译 + 运行截图会话基座测试（不依赖 compositor）
-( cd "$HERE" && ./ut_screenshot_session/build_run_ut.sh ) \
-    || echo "[WARN] ut_screenshot_session 运行失败，继续。"
+"$HERE/ut_screenshot_session/build_run_ut.sh" \
+    || { TEST_FAILED=1; echo "[WARN] ut_screenshot_session 运行失败，继续。"; }
 
 # 3) 聚合覆盖率（所有模块 .info 合并为一份统一报告）
 #
@@ -356,5 +363,4 @@ export reportdir=build-ut
 
 python3 "$HERE/gen-ut-summary.py"
 
-# ssr 编译失败时以非 0 退出，让 CI 立即看到主工程用例缺失，而非 288/288 假绿。
-exit "$SSR_BUILD_FAILED"
+exit "$TEST_FAILED"

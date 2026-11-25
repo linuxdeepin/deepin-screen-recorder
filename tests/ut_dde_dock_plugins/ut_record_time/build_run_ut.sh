@@ -4,17 +4,18 @@
 #
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-export DISPLAY=":0"
-export QT_QPA_PLATFORM=
+HERE=$(cd "$(dirname "$0")" && pwd) || exit 1
+source "$HERE/../../build-unit-test.sh"
+cd "$HERE/../.." || exit 1
+export DISPLAY="${DISPLAY:-:0}"
+export QT_QPA_PLATFORM="${QT_QPA_PLATFORM:-offscreen}"
 
 rm -rf ./ut_dde_dock_plugins/ut_record_time/build-ut
 mkdir ./ut_dde_dock_plugins/ut_record_time/build-ut
 
 cd ./ut_dde_dock_plugins/ut_record_time/build-ut
 pwd
-export QT_SELECT=qt6
-qmake6 ../
-make -j4
+dsr_build_unit_test "$PWD" ut_record_time || exit 1
 
 workdir=$(pwd)
 executable=ut_record_time #可执行程序的文件名
@@ -26,8 +27,10 @@ remove_info="*/ut_record_time/* *build-ut*"  # 精确匹配测试目录，避免
 build_dir=$workdir
 result_coverage_dir=$build_dir/html
 result_report_dir=$build_dir/report/report_ut_record_time.xml
-ASAN_OPTIONS="fast_unwind_on_malloc=1"
-$build_dir/$executable --gtest_output=xml:$result_report_dir
+mkdir -p "$build_dir/report" || exit 1
+test_status=0
+ASAN_OPTIONS="fast_unwind_on_malloc=1" "$build_dir/$executable" \
+    --gtest_output="xml:$result_report_dir" || test_status=$?
 
 lcov -d $build_dir -c -o $build_dir/coverage.info
 
@@ -39,4 +42,4 @@ lcov --remove $build_dir/coverage.info $remove_info --output-file $build_dir/cov
 cp $build_dir/report/report_ut_record_time.xml ../../../../build-ut/report/report_ut_record_time.xml 2>/dev/null || true
 # 收集 ASAN 日志（若存在）
 cp $build_dir/asan_ut_record_time.log.* ../../../../build-ut/asan_ut_record_time.log 2>/dev/null || true  
-exit 0
+exit "$test_status"

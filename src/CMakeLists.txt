@@ -397,3 +397,9 @@ endif()
 install(TARGETS ${DSR_MAIN_TARGET}
     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
 )
+
+if(DSR_BUILD_TESTS)
+    set(DSR_MAIN_SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}")
+    add_subdirectory(${CMAKE_SOURCE_DIR}/tests/ut_screen_shot_recorder
+                     ${CMAKE_BINARY_DIR}/tests/ut_screen_shot_recorder)
+endif()
