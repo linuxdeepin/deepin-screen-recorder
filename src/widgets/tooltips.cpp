@@ -52,7 +52,7 @@ ToolTips::ToolTips(const QString &text, QWidget *parent):
     Q_D(ToolTips);
 
     setAttribute(Qt::WA_DeleteOnClose);
-//    setWindowFlags(Qt::ToolTip | Qt::CustomizeWindowHint);
+    setWindowFlags(Qt::ToolTip | Qt::CustomizeWindowHint);
     setAttribute(Qt::WA_TranslucentBackground);
 //    setMaximumWidth(_fontMinWidth);
     setObjectName("ToolTips");
