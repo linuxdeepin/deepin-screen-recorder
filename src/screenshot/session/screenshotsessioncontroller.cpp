@@ -436,8 +436,13 @@ void ScreenshotSessionController::onBackendPrepared(const FrozenFrameSet &frames
         m_scrollCapture->setFrozenFrames(frames);
     m_selection->setDesktopBounds(frames.virtualDesktopRect);
     m_annotationCoordinator->syncBounds();
+    // Record 模式与 X11 的 --screenRecord 行为对齐：启动即以整个虚拟桌面
+    // 作为初始选区，让选区立即进入 Ready、工具栏随之显示。否则启动后
+    // 选区为空，工具栏会被 updateToolBar() 隐藏，用户看到的是「按快捷键
+    // 没有任何反应」。若调用方显式传入了初始区域，仍优先使用该区域。
     if (m_request.mode == Mode::FullScreen
-            || m_request.mode == Mode::RecordFullScreen) {
+            || m_request.mode == Mode::RecordFullScreen
+            || (m_request.mode == Mode::Record && m_request.initialRegion.isEmpty())) {
         m_selection->setGeometry(frames.virtualDesktopRect);
     } else if (!m_request.initialRegion.isEmpty()) {
         m_selection->setGeometry(m_request.initialRegion);
