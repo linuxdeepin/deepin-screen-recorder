@@ -61,6 +61,8 @@ Build-Depends: debhelper,
  libepoxy-dev,
  libusb-1.0-0-dev,
  libudev-dev,
+ libgtest-dev,
+ libgmock-dev,
  libprocps-dev | libproc2-dev,
  libv4l-dev
 Standards-Version: 3.9.8
